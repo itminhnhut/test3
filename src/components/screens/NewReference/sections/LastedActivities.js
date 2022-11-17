@@ -94,13 +94,11 @@ const LastedActivities = ({ id }) => {
         });
     }, [])
 
-    console.log('lastedFriends', lastedFriends)
-
     const renderData = () => {
         switch (tab) {
             case tags[0].value:
                 return !lastedCommissions.length ? <><NoData text="Không có dữ liệu" /></> : lastedCommissions.map((data, index) =>
-                    <>
+                    <div key={index}>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
                                 <div>
@@ -120,11 +118,11 @@ const LastedActivities = ({ id }) => {
                             </div>
                         </div>
                         {lastedCommissions.length === index + 1 ? null : <Line className='my-4' />}
-                    </>
+                    </div>
                 )
             case tags[1].value:
                 return !lastedFriends.length ? <><NoData text="Không có dữ liệu" /></> : lastedFriends.map(data =>
-                    <>
+                    <div key={data.userId}>
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
                             <div className='font-semibold text-sm leading-6 text-darkBlue'>
@@ -134,7 +132,7 @@ const LastedActivities = ({ id }) => {
                         <div>
                             <RefInfo data={data} language={language} className='mb-6 mt-4' />
                         </div>
-                    </>
+                    </div>
                 )
             default:
                 return null
@@ -147,10 +145,12 @@ const LastedActivities = ({ id }) => {
             <CollapsibleRefCard title={title[language]}  >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
-                        {tags.map(e =>
-                            <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
-                                {e[language]}
-                            </TabItem>
+                        {tags.map((e, index) =>
+                            <div key={index}>
+                                <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
+                                    {e[language]}
+                                </TabItem>
+                            </div>
                         )}
                     </Tabs>
                     <div className='mt-6'>
@@ -164,7 +164,7 @@ const LastedActivities = ({ id }) => {
 
 const UserIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="28" height="28" rx="14" fill="#00C8BC" />
-    <g clip-path="url(#clip0_15284_45563)">
+    <g clipPath="url(#clip0_15284_45563)">
         <path d="M14.5 12C14.5 10.895 13.605 10 12.5 10C11.395 10 10.5 10.895 10.5 12C10.5 13.105 11.395 14 12.5 14C13.605 14 14.5 13.105 14.5 12ZM15.5 13V14H17V15.5H18V14H19.5V13H18V11.5H17V13H15.5ZM8.5 17V18H16.5V17C16.5 15.67 13.835 15 12.5 15C11.165 15 8.5 15.67 8.5 17Z" fill="#F6F6F6" />
     </g>
     <defs>

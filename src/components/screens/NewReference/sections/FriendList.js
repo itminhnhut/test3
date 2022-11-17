@@ -205,7 +205,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                 </div>
                 <div className="flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>Tình trạng</div>
-                    <div className="flex">
+                    <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
                             className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"
                             tabs={arrStatus}

@@ -98,10 +98,12 @@ const Chart = ({ id }) => {
             <CollapsibleRefCard title={title[language]} >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
-                        {tags.map(e =>
-                            <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
-                                {e[language]}
-                            </TabItem>
+                        {tags.map((e, index) =>
+                            <div key={index}>
+                                <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
+                                    {e[language]}
+                                </TabItem>
+                            </div>
                         )}
                     </Tabs>
                     <div className='mt-6'>
@@ -116,7 +118,7 @@ const Chart = ({ id }) => {
                             gridTemplateColumns: 'repeat(3, 200px)'
                         }}>
                             {colors.map((color, index) => (
-                                <div className='flex items-center gap-2 leading-5 text-xs font-medium text-gray-1'>
+                                <div className='flex items-center gap-2 leading-5 text-xs font-medium text-gray-1' key={index}>
                                     <SmallCircle color={color} /> Cấp {index + 1}
                                 </div>
                             ))}

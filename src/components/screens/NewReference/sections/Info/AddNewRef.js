@@ -28,7 +28,7 @@ const AddNewRef = ({ isShow = false, onClose }) => {
             isVisible={isShow}
             onBackdropCb={onClose}
             title='Thêm giới thiệu mới'
-            zIndex={1000}
+            useAboveAll
         >
             <div className='font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4'>
                 <div>

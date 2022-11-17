@@ -71,7 +71,7 @@ const Info = ({ data }) => {
                         <Progressbar
                             background='#00C8BC'
                             percent={
-                                ((50) / 100) * 100
+                                (data?.volume?.current ?? 1 / data?.volume?.target?.spot ?? 1) * 100
                             }
                             height={4}
                         />

@@ -213,9 +213,9 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>{t('common:assets')}</div>
-                    <div className="flex">
+                    <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
-                            className="!px-4 !py-3 !font-medium !text-sm"
+                            className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"
                             tabs={assetTabs}
                             type={state.currency}
                             setType={(e) => onChange('currency', e)}

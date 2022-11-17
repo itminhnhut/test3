@@ -72,7 +72,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                 <EditNote isShow={showEditNote} onClose={() => setShowEditNote(false)} code={code} doRefresh={() => setDoRefresh(!doRefresh)} />
                 <div className='!max-h-[calc(100vh-206px)] !overflow-auto no-scrollbar'>
                     {!refs.length ? <NoData text='No data' className='mt-4' /> : refs.map((data, index) => (
-                        <>
+                        <div key={data.code}>
                             <div className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
                                 <div className='flex gap-2 items-center'>
                                     {data.code}
@@ -137,7 +137,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                 </div>
                             </div>
                             {refs.length === index + 1 ? null : <Line className='my-4' />}
-                        </>
+                        </div>
                     ))}
                 </div>
                 <div className='h-[116px] w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0' style={{
@@ -155,11 +155,11 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
 }
 
 const FriendListIcon = () => <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" />
 </svg>
 
 const NoteIcon = () => <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#s8m7dixeoa)" stroke="#718096" stroke-linecap="round" stroke-linejoin="round">
+    <g clipPath="url(#s8m7dixeoa)" stroke="#718096" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
         <path d="M10 .94a1.06 1.06 0 0 0-.75.31L4.5 6 4 8l2-.5 4.75-4.75A1.06 1.06 0 0 0 10 .94z" />
     </g>

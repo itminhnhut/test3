@@ -50,8 +50,8 @@ const QnA = () => {
     const renderData = () => {
         return QnAData.map((data, index) => {
             const [doShow, setDoShow] = useState(false)
-            return useMemo(() => <>
-                <div className='text-sm leading-6' key={index}>
+            return useMemo(() => <div key={index}>
+                <div className='text-sm leading-6' >
                     <div className='text-darkBlue font-semibold cursor-pointer' onClick={() => setDoShow(!doShow)}>
                         {data.q[language]}
                     </div>
@@ -60,7 +60,7 @@ const QnA = () => {
                     </div> : null}
                 </div>
                 {QnAData.length === index + 1 ? null : <Line className='my-4' />}
-            </>, [doShow])
+            </div>, [doShow])
         })
     }
     return (

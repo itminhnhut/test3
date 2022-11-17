@@ -22,7 +22,7 @@ const FriendList = ({ isShow, onClose }) => {
             isVisible={isShow}
             onBackdropCb={onClose}
             title='Danh sách bạn bè'
-            zIndex={1000}
+            useAboveAll
         >
             {fakeData.length ? <div>
                 <div className='flex w-full justify-between text-gray-1 font-normal text-xs mb-3'>
@@ -34,9 +34,9 @@ const FriendList = ({ isShow, onClose }) => {
                     </div>
                 </div>
                 <div className='flex flex-col gap-2 justify-center'>
-                    {fakeData.map(data => {
+                    {fakeData.map((data, index) => {
                         return (
-                            <div className='w-full flex items-center justify-between text-sm font-medium leading-6'>
+                            <div className='w-full flex items-center justify-between text-sm font-medium leading-6' key={index}>
                                 <div>
                                     {data.userId}
                                 </div>

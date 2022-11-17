@@ -30,7 +30,7 @@ const DownArrow = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="no
 
 
 export const FilterIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <g clip-path="url(#wxdsk0dsia)">
+    <g clipPath="url(#wxdsk0dsia)">
         <path d="M6.667 12h2.666v-1.333H6.667V12zM2 4v1.333h12V4H2zm2 4.667h8V7.333H4v1.334z" fill="#718096" />
     </g>
     <defs>
