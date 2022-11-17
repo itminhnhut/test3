@@ -10,7 +10,7 @@ const InviteModal = ({ isShow, onClose, code }) => {
             onBackdropCb={onClose}
             useCenter
             background="url('/images/reference/invite_background.png')"
-            contentClassname='!h-[621px]'
+            contentClassname='!h-[620px] !w-[340px]'
             title={(<img src='/images/logo/nami-logo.png' className='w-auto h-6' />)}
         >
             <div className='font-medium text-sm text-white leading-6 flex flex-col gap-4'>

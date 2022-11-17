@@ -85,7 +85,7 @@ const PopupModal = ({
                     >
                         {!useCenter && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
                         <div ref={wrapperRef} className={classNames(`${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[100%] overflow-y-auto`, { 'h-full !rounded-none': useFullScreen }, { '!rounded-xl !px-6': useCenter })}
-                            style={{ backgroundImage: background ?? null, backgroundSize: background ? "cover" : null }}
+                            style={{ backgroundImage: background ?? null, backgroundSize: background ? "contain" : null }}
                         >
                             {useFullScreen || useCenter ? null : <div style={{ transform: 'translate(-50%,0)' }}
                                 className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 ">
