@@ -92,7 +92,7 @@ const LastedActivities = ({ id }) => {
     const renderData = () => {
         switch (tab) {
             case tags[0].value:
-                return !lastedCommissions.length ? <><NoData text="Không có dữ liệu" /></> : lastedCommissions.map((data, index) =>
+                return !lastedCommissions.length ? <><NoData text={t('reference:referral.no_commission')}  /></> : lastedCommissions.map((data, index) =>
                     <div key={index}>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
@@ -116,7 +116,7 @@ const LastedActivities = ({ id }) => {
                     </div>
                 )
             case tags[1].value:
-                return !lastedFriends.length ? <><NoData text="Không có dữ liệu" /></> : lastedFriends.map(data =>
+                return !lastedFriends.length ? <><NoData text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
                     <div key={data.userId}>
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
@@ -139,7 +139,7 @@ const LastedActivities = ({ id }) => {
         <div className='px-4' id={id} >
             <CollapsibleRefCard title={t('reference:referral.recent_activities')}  >
                 <div className='w-auto'>
-                    <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
+                    <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>

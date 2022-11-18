@@ -73,7 +73,7 @@ const PopupModal = ({
                             ref={wrapperRef}
                             className={classNames(
                                 `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[100%] overflow-y-auto`,
-                                { 'h-full !rounded-none': useFullScreen },
+                                { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                 { '!rounded-xl !px-6': useCenter }
                             )}
                             style={{ backgroundImage: background ?? null, backgroundSize: background ? 'contain' : null }}
@@ -90,11 +90,16 @@ const PopupModal = ({
                                     className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
                                     onClick={() => onBackdropCb && onBackdropCb()}
                                 >
-                                    <X size={18} color={useCenter ? '#fff' : '#718096'} />
+                                    {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m6 6 12 12M6 18 18 6" stroke={useCenter ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
                                 </div>
                             </div>
-                            {useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-3 mb-6" />}
-                            {children}
+                            {useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
+                            <div className='mt-7'>
+                                {children}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,7 +131,7 @@ export const copy = (text, cb) => {
         cb?.();
     }
 };
-export const CopyIcon = ({ size = 12, color = '#B2B7BC', className = '', data }) => {
+export const CopyIcon = ({ size = 12, color = '#718096', className = '', data }) => {
     const [isClicked, setIsClicked] = useState(false);
     const onClick = () => {
         copy(data);

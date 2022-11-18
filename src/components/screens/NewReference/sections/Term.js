@@ -3,12 +3,7 @@ import React from 'react'
 import { Line } from '..'
 import CollapsibleRefCard from '../CollapsibleRefCard'
 
-const title = {
-    en: 'Term and Policy',
-    vi: 'Điều khoản và điều kiện'
-}
-
-const Term = () => {
+const Term = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const renderData = () => {
         return (
@@ -23,8 +18,8 @@ const Term = () => {
     }
 
     return (
-        <div className='px-4'>
-            <CollapsibleRefCard title={title[language]} hide={true}>
+        <div className='px-4' id={id}>
+            <CollapsibleRefCard title={t('reference:referral.term')} hide={true}>
                 <div className='w-auto'>
                     {renderData()}
                 </div>

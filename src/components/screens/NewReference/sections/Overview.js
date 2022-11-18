@@ -1,3 +1,5 @@
+import classNames from 'classnames'
+import useWindowSize from 'hooks/useWindowSize'
 import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { renderRefInfo } from '../PopupModal'
@@ -6,6 +8,7 @@ import InviteModal from './InviteModal'
 
 const Overview = ({ data, id }) => {
     const { t } = useTranslation()
+    const { width } = useWindowSize()
     const [showInvite, setShowInvite] = useState(false)
     const renderSocials = () => {
         const icons = [{
@@ -79,12 +82,10 @@ const Overview = ({ data, id }) => {
         )
     }
 
-    console.log('data', data);
-
     return (
         <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }} id={id}>
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode}/>
-            <div className='font-semibold text-3xl text-gray-4'>
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode} />
+            <div className={classNames('font-semibold text-3xl text-gray-4', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
             </div>
@@ -102,14 +103,14 @@ const Overview = ({ data, id }) => {
                             <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo(data?.defaultRefCode)}
+                            {renderRefInfo(data?.defaultRefCode, null, 16)}
                         </div>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
                             <div>{t('reference:referral.ref_link')}</div>
                             <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode)}
+                            {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode, null, 16)}
                         </div>
                         <div className='mt-6'>
                             {renderSocials()}

@@ -13,13 +13,13 @@ import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 
-const DatePicker = ({ date, isCalendar, onChange }) => {
+const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false }) => {
     const {
         t,
         i18n: { language }
     } = useTranslation();
     const wrapperRef = useRef(null);
-    const [showPicker, setShowPicker] = useState(false);
+    const [showPicker, setShowPicker] = useState(allwaysOpen);
     const handleOutside = () => {
         setShowPicker(false);
     };
@@ -58,7 +58,7 @@ const DatePicker = ({ date, isCalendar, onChange }) => {
 
     return (
         <div className="relative" ref={wrapperRef}>
-            <div
+            {allwaysOpen ? null : <div
                 className={classNames(
                     `py-[9px] text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white`,
                     {
@@ -82,9 +82,9 @@ const DatePicker = ({ date, isCalendar, onChange }) => {
                         <X size={16} />
                     </div>
                 )}
-            </div>
+            </div>}
             <Transition
-                show={showPicker}
+                show={allwaysOpen || showPicker}
                 as={Fragment}
                 enter="transition ease-out duration-200"
                 enterFrom="opacity-0 translate-y-1"
@@ -93,7 +93,10 @@ const DatePicker = ({ date, isCalendar, onChange }) => {
                 leaveFrom="opacity-100 translate-y-0"
                 leaveTo="opacity-0 translate-y-1"
             >
-                <div className="relative date-range-picker nami-exchange flex justify-center mt-2 w-full">
+                <div
+                    className={classNames("relative date-range-picker nami-exchange flex justify-center mt-2 w-full",
+                        { 'white-background': allwaysOpen })}
+                >
                     <Component
                         className={`relative h-full ${isCalendar ? 'single-select' : ''} w-full`}
                         date={date}

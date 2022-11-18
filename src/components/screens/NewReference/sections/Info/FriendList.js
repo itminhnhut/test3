@@ -6,10 +6,19 @@ import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_FRIENDS_BY_REF } from 'redux/actions/apis';
+import { useRef } from 'react';
 
 const FriendList = ({ isShow, onClose, code }) => {
     const { t } = useTranslation()
     const [friendList, setFriendList] = useState([])
+    const [more, setMore] = useState(10)
+    const hasNext = useRef(false)
+
+    const doClose = () => {
+        setFriendList([])
+        onClose()
+        setMore(10)
+    }
 
     useEffect(() => {
         FetchApi({
@@ -17,19 +26,23 @@ const FriendList = ({ isShow, onClose, code }) => {
             options: {
                 method: 'GET',
             },
+            params: {
+                limit: more
+            }
         }).then(({ data, status }) => {
             if (status === 'ok') {
-                setFriendList(data)
+                hasNext.current = data.hasNext
+                setFriendList(data.results)
             } else {
                 setFriendList([])
             }
         });
-    }, [code])
+    }, [more, code])
 
     return (
         <PopupModal
             isVisible={isShow}
-            onBackdropCb={onClose}
+            onBackdropCb={doClose}
             title={t('reference:referral.friend_list')}
             useAboveAll
         >
@@ -42,7 +55,7 @@ const FriendList = ({ isShow, onClose, code }) => {
                         {t('reference:referral.referral_date')}
                     </div>
                 </div>
-                <div className='flex flex-col gap-2 justify-center'>
+                <div className='flex flex-col gap-2 max-h-[700px] h-full overflow-auto no-scrollbar'>
                     {friendList.map((data, index) => {
                         return (
                             <div className='w-full flex items-center justify-between text-sm font-medium leading-6' key={index}>
@@ -56,9 +69,11 @@ const FriendList = ({ isShow, onClose, code }) => {
                         )
                     })}
                 </div>
-                <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'>
+                {hasNext.current ? <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'
+                    onClick={() => setMore(more + 5)}
+                >
                     {t('reference:referral.show_more')}
-                </div>
+                </div> : null}
             </div> : <div className='w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} /></div>}
         </PopupModal>
     )

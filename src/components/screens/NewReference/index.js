@@ -15,6 +15,7 @@ import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_OVERVIEW } from 'redux/actions/apis'
 import SvgEmpty from 'components/svg/SvgEmpty'
 import classNames from 'classnames'
+import _ from 'lodash'
 
 const tabs = {
     Overview: 'overview',
@@ -22,6 +23,8 @@ const tabs = {
     Chart: 'chart',
     FriendList: 'friend_list',
     CommissionHistory: 'commission_history',
+    FAQ: 'faq',
+    Term: 'Term',
 }
 
 function NewReference() {
@@ -45,19 +48,35 @@ function NewReference() {
     }, [])
 
 
-    const handleClickTab = (tab) => {
-        setTab(tab)
-        setDoScroll(!doScroll)
+    const handleClickTab = (tabId) => {
+        const scrollTo = document.getElementById(tabId)
+        const yOffset = -120;
+        const y = scrollTo.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        // scrollTo.scrollIntoView({ behavior: 'smooth' }, true)
+        setTimeout(() => setTab(tabId), 500)
+        // setDoScroll(!doScroll)
     }
 
-    useEffect(() => {
-        const scrollTo = document.getElementById(tab)
-        scrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }, [doScroll])
+    // useEffect(() => {
+    //     const scrollTo = document.getElementById(tab)
+    //     scrollTo.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    // }, [doScroll])
 
+    // const [fixed, setFixed] = useState(false)
+    // const doSetFixed = () => {
+    //     console.log(window.scrollY)
+    //     if (window.scrollY >= 55) setFixed(true)
+    //     else setFixed(false)
+    // }
+
+    // useEffect(() => {
+    //     window.addEventListener('scroll', doSetFixed)
+    //     return () => window.removeEventListener('scroll', doSetFixed)
+    // }, [])
     return (
         <div className="bg-[#f5f6f7] pb-[68px]">
-            <div className="bg-white">
+            <div className={classNames("bg-white fixed z-10")}>
                 <Tabs tab={tab}>
                     <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
                         {t('reference:referral.info')}
@@ -74,19 +93,25 @@ function NewReference() {
                     <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
                         {t('reference:referral.commission_histories')}
                     </TabItem>
+                    <TabItem value={tabs.FAQ} onClick={() => handleClickTab(tabs.FAQ)}>
+                        {t('reference:referral.faq')}
+                    </TabItem>
+                    <TabItem value={tabs.Term} onClick={() => handleClickTab(tabs.Term)}>
+                        {t('reference:referral.term')}
+                    </TabItem>
                 </Tabs>
             </div>
-            <div className='flex flex-col gap-8'>
+            <div className='flex flex-col gap-8 pt-[44px]'>
                 <Overview data={overviewData} id={tabs.Overview} />
                 <Info data={overviewData} />
                 <LastedActivities id={tabs.LastedActivities} />
                 <Chart id={tabs.Chart} />
                 <FriendList id={tabs.FriendList} />
                 <CommissionHistory id={tabs.CommissionHistory} />
-                <QnA />
-                <Term />
+                <QnA id={tabs.FAQ} />
+                <Term id={tabs.Term} />
             </div>
-        </div>
+        </div >
     );
 }
 
@@ -112,7 +137,7 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                         className={classNames(
                             `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === tab.value
                                 ? `bg-gray-4 rounded-md text-darkBlue`
-                                : 'text-darkBlue-5'
+                                : 'text-gray-1'
                             } ${className}`
                         )}
                         onClick={_.debounce(() => {

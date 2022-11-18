@@ -14,9 +14,9 @@ const Reference = () => {
                 hideFooter
                 navOverComponent
                 navMode={currentTheme}
-                // navStyle={{
-                //     boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)'
-                // }}
+                navStyle={{
+                    position: 'fixed'
+                }}
             >
                 <div className="pt-[64px] h-full">
                     <NewReference />

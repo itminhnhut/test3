@@ -184,9 +184,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                         <div className="w-full text-center border-r-[1px] text-sm font-medium">
                                             <div className="text-gray-1 leading-5">{t('reference:referral.referred')}</div>
                                             <div className="text-darkBlue leading-6">
-                                                {t('common:users', {
-                                                    value: formatNumber(data.invitedCount)
-                                                })}
+                                                {formatNumber(data.invitedCount)} {t('reference:referral.friends')}
                                             </div>
                                         </div>
                                         <div className="w-full text-center text-sm font-medium">

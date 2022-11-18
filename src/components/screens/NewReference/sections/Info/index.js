@@ -25,7 +25,7 @@ const Info = ({ data }) => {
     const user = useSelector(state => state.auth.user) || null;
     return (
         <div className='w-full px-4'>
-            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} t={t}/>
+            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode}/>
             <RefCard>
                 <div className='flex h-12 gap-4'>
                     <img src={user?.avatar || "/images/default_avatar.png"} className='h-full w-12 rounded-full' />

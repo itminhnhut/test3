@@ -6,7 +6,7 @@ import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_ADD_REF } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 
-const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
+const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 20, defaultRef }) => {
     const { t } = useTranslation()
 
     const [percent, setPercent] = useState(5)
@@ -40,6 +40,9 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
         setIsDefault(false)
     }
 
+    const handleInput = (e, length) => {
+        if (e.target.value.length > length) e.target.value = e.target.value.slice(0, length)
+    }
 
     const handleAddNewRef = _.throttle(async () => {
         const { status } = await FetchApi({
@@ -83,8 +86,15 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
                 </div>
                 <div>
                     {t('reference:referral.referral_code')}
-                    <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6'>
-                        <input className='text-darkBlue w-full' maxLength={8} style={{ textTransform: "uppercase" }} placeholder='FGJSH986' onChange={handleInputRefCode} />
+                    <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4'>
+                        <div className='flex w-full justify-between items-center'>
+                            <input className='text-darkBlue font-medium w-full' maxLength={8} style={{ textTransform: "uppercase" }} placeholder={defaultRef} onChange={handleInputRefCode} value={refCode} onInput={(e) => handleInput(e, 8)} />
+                            {refCode.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                onClick={() => setRefCode('')}
+                            >
+                                <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> : null}
+                        </div>
                         <div className='w-10'>
                             {refCode.length}/8
                         </div>
@@ -92,15 +102,22 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
                 </div>
                 <div>
                     {t('reference:referral.note')}
-                    <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6'>
-                        <input className='text-darkBlue w-full' maxLength={30} onChange={handleInputNote} />
+                    <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4'>
+                        <div className='w-full justify-between items-center flex'>
+                            <input className='text-darkBlue font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+                            {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                onClick={() => setNote('')}
+                            >
+                                <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                            </svg> : null}
+                        </div>
                         <div className='w-10'>
                             {note.length}/30
                         </div>
                     </div>
                 </div>
-                <div className='flex items-center gap-2'>
-                    <input type="checkbox" id="vehicle1" height={16} width={16} className='rounded-sm' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
+                <div className='flex items-center gap-2 text-xs font-medium'>
+                    <input type="checkbox" id="vehicle1" className='rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
                     {t('reference:referral.set_default')}
                 </div>
                 <div className='w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer'

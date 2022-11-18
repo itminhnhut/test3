@@ -76,6 +76,7 @@
     },
     "referral": {
         "faq": "FAQ",
+        "term": "Term",
         "info": "Info",
         "recent_activities": "Recent Activities",
         "statistic": "Statistic",
@@ -106,7 +107,7 @@
         "set_default": "Set as default",
         "link": "Referral link",
         "you_friends_get": "You get / Friends get",
-        "friends": "Friend(s)",
+        "friends": "Friends",
         "note": "Note",
         "add_ref_code": "Add Referral Code",
         "update_success": "Successful update",

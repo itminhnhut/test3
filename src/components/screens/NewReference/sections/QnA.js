@@ -41,11 +41,7 @@ const QnAData = [{
     }
 },]
 
-const title = {
-    en: 'Common questions',
-    vi: 'Các câu hỏi thường gặp'
-}
-const QnA = () => {
+const QnA = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const renderData = () => {
         return QnAData.map((data, index) => {
@@ -64,8 +60,8 @@ const QnA = () => {
         })
     }
     return (
-        <div className='px-4'>
-            <CollapsibleRefCard title={title[language]} hide={true} >
+        <div className='px-4' id={id}>
+            <CollapsibleRefCard title='FAQ' hide={true} >
                 <div className='w-auto'>
                     {renderData()}
                 </div>

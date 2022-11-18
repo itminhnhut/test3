@@ -1,4 +1,3 @@
-import SvgNamiCoin from 'components/svg/SvgNamiCoin'
 import React from 'react'
 import PopupModal from '../PopupModal'
 import QRCode from 'qrcode.react';

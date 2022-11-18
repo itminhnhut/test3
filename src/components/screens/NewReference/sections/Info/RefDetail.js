@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
 import { Line, NoData } from '../..'
-import PopupModal, { copy, CopyIcon } from '../../PopupModal'
+import PopupModal, { CopyIcon } from '../../PopupModal'
 import FriendList from './FriendList'
 import AddNewRef from './AddNewRef'
 import EditNote from './EditNote'
@@ -10,16 +10,22 @@ import { API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT } from 'redux/actions/ap
 import FetchApi from 'utils/fetch-api';
 import { commisionConfig } from 'config/referral'
 import showNotification from 'utils/notificationService';
+import _ from 'lodash'
 
-const RefDetail = ({ isShow = false, onClose, rank }) => {
-    const { t, i18n: { language } } = useTranslation()
+const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    const { t } = useTranslation()
     const [refs, setRefs] = useState([])
     const [showAddRef, setShowAddRef] = useState(false)
     const [showFriendList, setShowFriendList] = useState(false)
     const [showEditNote, setShowEditNote] = useState(false)
     const [doRefresh, setDoRefresh] = useState(false)
     const [code, setCode] = useState('')
+    const [currentNote, setCurrentNote] = useState('')
+
     useEffect(() => {
+        if (!isShow) return
         FetchApi({
             url: API_NEW_REFERRAL,
             options: {
@@ -27,12 +33,13 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
             },
         }).then(({ data, status }) => {
             if (status === 'ok') {
+                data.sort(e => e.status)
                 setRefs(data)
             } else {
                 setRefs([])
             }
         });
-    }, [doRefresh])
+    }, [isShow, doRefresh])
 
     const handleSetDefault = _.throttle(async (code) => {
         const { status } = await FetchApi({
@@ -52,7 +59,12 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                 },
                 1800,
             );
-            setDoRefresh(!doRefresh)
+            // setDoRefresh(!doRefresh)
+            setRefs(refs.map(e => {
+                if (e.code === code) e.status = 1
+                else e.status = 0
+                return e
+            }))
         } else {
         }
     }, 1000)
@@ -65,10 +77,12 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
             useFullScreen
         >
             <div>
-                <AddNewRef isShow={showAddRef} onClose={() => setShowAddRef(false)} doRefresh={() => setDoRefresh(!doRefresh)} />
-                <FriendList isShow={showFriendList} onClose={() => setShowFriendList(false)} code={code} />
-                <EditNote isShow={showEditNote} onClose={() => setShowEditNote(false)} code={code} doRefresh={() => setDoRefresh(!doRefresh)} />
-                <div className='!max-h-[calc(100vh-206px)] !overflow-auto no-scrollbar'>
+                {showAddRef && <AddNewRef totalRate={commisionConfig?.[rank].direct.futures ?? 20} isShow={showAddRef} onClose={() => setShowAddRef(false)} doRefresh={() => setDoRefresh(!doRefresh)} defaultRef={defaultRef} />}
+                {showFriendList && <FriendList isShow={showFriendList} onClose={() => setShowFriendList(false)} code={code} />}
+                {showEditNote && <EditNote isShow={showEditNote} currentNote={currentNote} onClose={() => setShowEditNote(false)} code={code} doRefresh={() => setDoRefresh(!doRefresh)} />}
+                <div className='!overflow-auto no-scrollbar pb-[112px] relative'
+                    style={{ maxHeight: 'calc(var(--vh, 1vh) * 100 - 206px)' }}
+                >
                     {!refs.length ? <NoData text='No data' className='mt-4' /> : refs.map((data, index) => (
                         <div key={data.code}>
                             <div className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
@@ -101,11 +115,11 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                     </div>
                                     <div className='text-darkBlue text-sm flex gap-2 justify-end items-center w-fit'>
                                         <div className='max-w-[140px] truncate'>
-                                            {data.code}
+                                            https://nami.exchange/ref/{data.code}
                                         </div>
                                         <CopyIcon
                                             data={`https://nami.exchange/ref/${data.code}`}
-                                            size={12}
+                                            size={13.5}
                                             className="cursor-pointer"
                                         />
                                     </div>
@@ -130,6 +144,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                     <div className='text-darkBlue text-sm flex items-center gap-1'
                                         onClick={() => {
                                             setCode(data.code)
+                                            setCurrentNote(data.note ?? '')
                                             setShowEditNote(true)
                                         }}
                                     >
@@ -141,7 +156,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                         </div>
                     ))}
                 </div>
-                <div className='h-[116px] w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0' style={{
+                <div className='h-[116px] z-20 bg-white w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0' style={{
                     boxShadow: '0 -7px 23px 0 rgba(0, 0, 0, 0.05)'
                 }}>
                     <div className='h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm'

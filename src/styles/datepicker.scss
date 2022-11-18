@@ -1,5 +1,12 @@
 $width: 42px;
 $height: 32px;
+
+.white-background {
+    .rdrMonths {
+        background-color: white;
+    } 
+}
+
 .nami-exchange {
     .rdrCalendarWrapper {
         width: 100%;
@@ -9,6 +16,10 @@ $height: 32px;
     .rdrSelected {
         background-color: #00c8bc !important;
         color: white !important;
+    }
+
+    .rdrMonths {
+        justify-content: center;
     }
 
     .rdrInRange,
@@ -63,6 +74,7 @@ $height: 32px;
 .date-range-picker {
     display: flex;
     align-items: center;
+    justify-items: center;
 
     .rdrCalendarWrapper,
     .rdrDateRangeWrapper {

@@ -21,7 +21,7 @@ const Tabs = ({ children, tab, borderWidth = 2, className = '' }) => {
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', 'font-semibold', 'text-black')
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', 'text-darkBlue')
                 }
             })
         }
@@ -53,7 +53,7 @@ const Tabs = ({ children, tab, borderWidth = 2, className = '' }) => {
 }
 
 const Tab = styled.div.attrs(({ className }) => ({
-    className: `h-full overflow-auto no-scrollbar flex items-center relative ${className}`,
+    className: `h-full overflow-auto w-screen no-scrollbar flex items-center relative ${className}`,
 }))`
     &:before {
         content: '';
@@ -75,7 +75,7 @@ const Tab = styled.div.attrs(({ className }) => ({
 `
 
 export const TabItem = styled.div.attrs(({ value, className = '' }) => ({
-    className: classnames('px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max text-gray tab-item sm:px-12', className),
+    className: classnames('text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max text-gray-1 tab-item sm:px-12', className),
     id: `tab-item-${value}`,
 }))``
 
