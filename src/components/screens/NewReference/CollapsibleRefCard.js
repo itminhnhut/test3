@@ -1,24 +1,20 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 
-const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = false }) => {
-    const [isCollapsed, setIsCollapsed] = useState(hide)
+const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = false, isTitle = true }) => {
+    const [isCollapsed, setIsCollapsed] = useState(hide);
     return (
         <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
-            <div className='text-base font-semibold leading-5 flex w-full justify-between items-center'
-                onClick={() => setIsCollapsed(!isCollapsed)}
-            >
-                <div>{title}</div>
-                <div className='cursor-pointer' >
-                    {isCollapsed ? <DownArrow /> : <UpArrow />}
+            {isTitle && (
+                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center" onClick={() => setIsCollapsed(!isCollapsed)}>
+                    <div>{title}</div>
+                    <div className="cursor-pointer">{isCollapsed ? <DownArrow /> : <UpArrow />}</div>
                 </div>
-            </div>
-            <div>
-                {isCollapsed ? null : <div className='mt-4'>{children}</div>}
-            </div>
+            )}
+            <div>{isCollapsed ? null : <div className="mt-4">{children}</div>}</div>
         </div>
-    )
-}
+    );
+};
 
 const UpArrow = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="m15 12.5-5-5-5 5" stroke="#718096" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" />
