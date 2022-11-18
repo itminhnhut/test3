@@ -19,7 +19,8 @@ const title = {
 
 const CommissionHistory = ({ id }) => {
     const {
-        t
+        t,
+        i18n: { language }
     } = useTranslation();
     const levelTabs = [
         { title: t('common:all'), value: null },
@@ -44,9 +45,9 @@ const CommissionHistory = ({ id }) => {
     ];
 
     const [dataSource, setDataSource] = useState([]);
-    const hasNext = useRef(false);
     const [loading, setLoading] = useState(true);
     const [showFilter, setShowFilter] = useState(false);
+    const [showAllData, setShowAllData] = useState(false);
     const [filter, setFilter] = useState({
         kind: typeTabs[0].value,
         level: levelTabs[0].value,
@@ -55,9 +56,7 @@ const CommissionHistory = ({ id }) => {
             startDate: null,
             endDate: new Date(''),
             key: 'selection'
-        },
-        limit: 10,
-        skip: 0
+        }
     });
 
     const getCommissonHistory = async () => {
@@ -73,9 +72,7 @@ const CommissionHistory = ({ id }) => {
                 params: params
             });
             if (data) {
-                const _dataSource = !params.skip ? data.results : [...dataSource].concat(data.results);
-                hasNext.current = data.hasNext;
-                setDataSource(_dataSource);
+                setDataSource(data.results);
             }
         } catch (e) {
             console.log(e);
@@ -85,99 +82,40 @@ const CommissionHistory = ({ id }) => {
     };
 
     useEffect(() => {
-        setLoading(true);
         getCommissonHistory();
     }, [filter]);
 
-    const handleShowMore = () => {
-        if (loading) return;
-        setFilter({ ...filter, skip: filter.limit + filter.skip });
-    };
-
-    const onConfirm = (e) => {
-        setFilter({ ...filter, ...e, skip: 0 });
-        setShowFilter(false);
-    };
-
-    const dataFilter = useMemo(() => {
-        return {
-            kind: typeTabs.find((rs) => rs.value === filter.kind)?.title,
-            range: filter.range.startDate ? formatTime(filter.range.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(filter.range.endDate, 'dd/MM/yyyy') : null,
-            level: levelTabs.find((rs) => rs.value === filter.level)?.title,
-            currency: assetTabs.find((rs) => rs.value === filter.currency)?.title
-        };
-    }, [filter, t]);
-
     return (
         <div className="px-4" id={id}>
-            {showFilter && (
-                <FilterModal
-                    isVisible={showFilter}
-                    onClose={() => setShowFilter(false)}
-                    onConfirm={onConfirm}
-                    t={t}
-                    filter={filter}
-                    levelTabs={levelTabs}
+            {showAllData && (
+                <AllDataModal
+                    onClose={() => setShowAllData(false)}
+                    language={language}
+                    isAll
+                    dataSource={dataSource}
                     typeTabs={typeTabs}
+                    levelTabs={levelTabs}
                     assetTabs={assetTabs}
+                    filter={filter}
+                    setFilter={setFilter}
+                    showFilter={showFilter}
+                    setShowFilter={setShowFilter}
+                    loading={loading}
+                    setShowAllData={setShowAllData}
                 />
             )}
-            <CollapsibleRefCard title={t('reference:referral.commission_histories')}>
-                <div className="w-auto">
-                    <div className="flex flex-wrap gap-2">
-                        <FilterContainer onClick={() => setShowFilter(true)}>
-                            <FilterIcon /> {t('common:filter')}
-                        </FilterContainer>
-                        {dataFilter.range && <FilterContainer onClick={() => setShowFilter(true)}>Thời gian: {dataFilter.range}</FilterContainer>}
-                        <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('reference:referral.level')}: {dataFilter.level}
-                        </FilterContainer>
-                        <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('reference:referral.commission_type')}: {dataFilter.kind}
-                        </FilterContainer>
-                        <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('reference:referral.asset_type')}: {dataFilter.currency}
-                        </FilterContainer>
-                    </div>
-                </div>
-                <div className="mt-6">
-                    {dataSource.length <= 0 && !loading ? (
-                        <TableNoData />
-                    ) : (
-                        dataSource?.map((data, index) => {
-                            const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
-                            return (
-                                <Fragment key={index}>
-                                    <div className="flex items-center space-x-2">
-                                        <AssetLogo size={36} assetId={data.currency} />
-                                        <div className="flex flex-col w-full">
-                                            <div className="flex items-center justify-between">
-                                                <div className="font-semibold text-sm leading-6 text-darkBlue">
-                                                    {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
-                                                </div>
-                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
-                                            </div>
-                                            <div className="flex items-center justify-between">
-                                                <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
-                                                <div className="font-medium text-xs text-gray-1">
-                                                    {t('broker:commission_type')}: {asset}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {dataSource.length !== index + 1 && <Line className="my-4" />}
-                                </Fragment>
-                            );
-                        })
-                    )}
-                </div>
-
-                {hasNext.current && (
-                    <div className="mt-6 text-center text-sm font-medium text-teal underline" onClick={() => handleShowMore()}>
-                        {loading ? <IconLoading color={colors.teal} /> : t('common:show_more')}
-                    </div>
-                )}
-            </CollapsibleRefCard>
+            <ListData
+                dataSource={dataSource}
+                typeTabs={typeTabs}
+                levelTabs={levelTabs}
+                assetTabs={assetTabs}
+                filter={filter}
+                setFilter={setFilter}
+                showFilter={showFilter}
+                setShowFilter={setShowFilter}
+                loading={loading}
+                setShowAllData={setShowAllData}
+            />
         </div>
     );
 };
@@ -191,8 +129,9 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
     const _onConfirm = () => {
         onConfirm(state);
     };
+
     return (
-        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả">
+        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll>
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.referral_date')}</div>
@@ -223,6 +162,113 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
                 </div>
                 <RefButton onClick={_onConfirm} title={t('common:confirm')} />
             </div>
+        </PopupModal>
+    );
+};
+
+const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilter, showFilter, setShowFilter, loading, setShowAllData, isAll }) => {
+    const { t } = useTranslation();
+
+    const onConfirm = (e) => {
+        setFilter(e);
+        setShowFilter(false);
+    };
+
+    const onShowAll = () => {
+        setShowAllData(true);
+    };
+
+    const general = useMemo(() => {
+        return {
+            kind: typeTabs.find((rs) => rs.value === filter.kind)?.title,
+            range: filter.range.startDate ? formatTime(filter.range.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(filter.range.endDate, 'dd/MM/yyyy') : null,
+            level: levelTabs.find((rs) => rs.value === filter.level)?.title,
+            currency: assetTabs.find((rs) => rs.value === filter.currency)?.title
+        };
+    }, [filter, t]);
+
+    const dataFilter = useMemo(() => {
+        return isAll ? dataSource : dataSource.slice(0, 10);
+    }, [dataSource, isAll]);
+
+    return (
+        <>
+            {showFilter && (
+                <FilterModal
+                    isVisible={showFilter}
+                    onClose={() => setShowFilter(false)}
+                    onConfirm={onConfirm}
+                    t={t}
+                    filter={filter}
+                    levelTabs={levelTabs}
+                    typeTabs={typeTabs}
+                    assetTabs={assetTabs}
+                />
+            )}
+            <CollapsibleRefCard title={t('reference:referral.commission_histories')} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
+                <div className="w-auto">
+                    <div className="flex flex-wrap gap-2">
+                        <FilterContainer onClick={() => setShowFilter(true)}>
+                            <FilterIcon /> {t('common:filter')}
+                        </FilterContainer>
+                        {general.range && <FilterContainer onClick={() => setShowFilter(true)}>Thời gian: {general.range}</FilterContainer>}
+                        <FilterContainer onClick={() => setShowFilter(true)}>
+                            {t('reference:referral.level')}: {general.level}
+                        </FilterContainer>
+                        <FilterContainer onClick={() => setShowFilter(true)}>
+                            {t('reference:referral.commission_type')}: {general.kind}
+                        </FilterContainer>
+                        <FilterContainer onClick={() => setShowFilter(true)}>
+                            {t('reference:referral.asset_type')}: {general.currency}
+                        </FilterContainer>
+                    </div>
+                </div>
+                <div className="mt-6">
+                    {dataSource.length <= 0 && !loading ? (
+                        <TableNoData />
+                    ) : (
+                        dataFilter?.map((data, index) => {
+                            const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
+                            return (
+                                <Fragment key={index}>
+                                    <div className="flex items-center space-x-2">
+                                        <AssetLogo size={36} assetId={data.currency} />
+                                        <div className="flex flex-col w-full">
+                                            <div className="flex items-center justify-between">
+                                                <div className="font-semibold text-sm leading-6 text-darkBlue">
+                                                    {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
+                                                </div>
+                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
+                                                <div className="font-medium text-xs text-gray-1">
+                                                    {t('broker:commission_type')}: {asset}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {dataSource.length !== index + 1 && <Line className="my-4" />}
+                                </Fragment>
+                            );
+                        })
+                    )}
+                </div>
+
+                {dataSource.length > 10 && !isAll && (
+                    <div className="mt-6 text-center text-sm font-medium text-teal underline" onClick={() => onShowAll()}>
+                        {loading ? <IconLoading color={colors.teal} /> : t('common:show_more')}
+                    </div>
+                )}
+            </CollapsibleRefCard>
+        </>
+    );
+};
+
+const AllDataModal = ({ onClose, language, ...props }) => {
+    return (
+        <PopupModal isVisible={true} onBackdropCb={onClose} title={title[language]} useFullScreen>
+            <ListData {...props} />
         </PopupModal>
     );
 };

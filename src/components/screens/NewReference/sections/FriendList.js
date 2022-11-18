@@ -22,7 +22,6 @@ const FriendList = ({ id }) => {
         t,
         i18n: { language }
     } = useTranslation();
-
     const arrStatus = [
         { title: t('common:all'), value: null },
         { title: t('broker:kyc_draft'), value: 0 },
@@ -38,8 +37,8 @@ const FriendList = ({ id }) => {
             key: 'selection'
         }
     });
-
     const [showFilter, setShowFilter] = useState(false);
+    const [showAllData, setShowAllData] = useState(false);
     const [dataSource, setdataSource] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -71,12 +70,52 @@ const FriendList = ({ id }) => {
         getListFriends();
     }, [filter]);
 
+    return (
+        <div className="px-4" id={id}>
+            {showAllData && (
+                <AllDataModal
+                    onClose={() => setShowAllData(false)}
+                    language={language}
+                    isAll
+                    dataSource={dataSource}
+                    arrStatus={arrStatus}
+                    filter={filter}
+                    setFilter={setFilter}
+                    showFilter={showFilter}
+                    setShowFilter={setShowFilter}
+                    loading={loading}
+                />
+            )}
+            <ListData
+                dataSource={dataSource}
+                arrStatus={arrStatus}
+                filter={filter}
+                setFilter={setFilter}
+                showFilter={showFilter}
+                setShowFilter={setShowFilter}
+                loading={loading}
+                setShowAllData={setShowAllData}
+            />
+        </div>
+    );
+};
+
+const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setShowAllData }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
     const onConfirm = (e) => {
         setFilter(e);
         setShowFilter(false);
     };
 
-    const dataFilter = useMemo(() => {
+    const onShowAll = () => {
+        setShowAllData(true);
+    };
+
+    const general = useMemo(() => {
         return {
             kycStatus: arrStatus.find((rs) => rs.value === filter.kycStatus)?.title,
             invitedAt: formatTime(filter.invitedAt, 'dd/MM/yyyy'),
@@ -86,21 +125,32 @@ const FriendList = ({ id }) => {
         };
     }, [filter]);
 
+    const dataFilter = useMemo(() => {
+        return isAll ? dataSource : dataSource.slice(0, 10);
+    }, [dataSource, isAll]);
+
+
     return (
-        <div className="px-4" id={id}>
+        <>
             {showFilter && (
                 <FilterModal isVisible={showFilter} onClose={() => setShowFilter(false)} onConfirm={onConfirm} t={t} filter={filter} arrStatus={arrStatus} />
             )}
-            <CollapsibleRefCard title={title[language]}>
+            <CollapsibleRefCard title={title[language]} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
                 <div className="w-auto">
                     <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
                         </FilterContainer>
-                        {dataFilter.invitedAt && <FilterContainer onClick={() => setShowFilter(true)}>{t('reference:referral.referral_date')}: {dataFilter.invitedAt}</FilterContainer>}
-                        <FilterContainer onClick={() => setShowFilter(true)}>{t('reference:referral.status')}: {dataFilter.kycStatus}</FilterContainer>
-                        {dataFilter.totalCommission && (
-                            <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {dataFilter.totalCommission}</FilterContainer>
+                        {general.invitedAt && (
+                            <FilterContainer onClick={() => setShowFilter(true)}>
+                                {t('reference:referral.referral_date')}: {general.invitedAt}
+                            </FilterContainer>
+                        )}
+                        <FilterContainer onClick={() => setShowFilter(true)}>
+                            {t('reference:referral.status')}: {general.kycStatus}
+                        </FilterContainer>
+                        {general.totalCommission && (
+                            <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {general.totalCommission}</FilterContainer>
                         )}
                     </div>
                 </div>
@@ -108,7 +158,7 @@ const FriendList = ({ id }) => {
                     {dataSource.length <= 0 && !loading ? (
                         <TableNoData />
                     ) : (
-                        dataSource.map((data, index) => {
+                        dataFilter.map((data, index) => {
                             const status = arrStatus.find((rs) => rs.value === data.kycStatus)?.title;
                             return (
                                 <div key={index}>
@@ -176,8 +226,13 @@ const FriendList = ({ id }) => {
                         })
                     )}
                 </div>
+                {dataSource.length > 10 && !isAll && (
+                    <div className="mt-6 text-center text-sm font-medium text-teal underline" onClick={() => onShowAll()}>
+                        {t('common:show_more')}
+                    </div>
+                )}
             </CollapsibleRefCard>
-        </div>
+        </>
     );
 };
 
@@ -193,7 +248,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
     };
 
     return (
-        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" contentClassname="px-6">
+        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll contentClassname="px-6" >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.referral_date')}</div>
@@ -216,6 +271,14 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                 </div>
                 <RefButton onClick={_onConfirm} title={t('common:confirm')} />
             </div>
+        </PopupModal>
+    );
+};
+
+const AllDataModal = ({ onClose, language, ...props }) => {
+    return (
+        <PopupModal isVisible={true} onBackdropCb={onClose} title={title[language]} useFullScreen >
+            <ListData {...props} />
         </PopupModal>
     );
 };
