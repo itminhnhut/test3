@@ -13,11 +13,11 @@ import Tooltip from 'components/common/Tooltip';
 import TableNoData from 'src/components/common/table.old/TableNoData';
 
 const title = {
-    en: 'Friend list',
+    en: 'Friend List',
     vi: 'Danh sách bạn bè'
 };
 
-const FriendList = () => {
+const FriendList = ({ id }) => {
     const {
         t,
         i18n: { language }
@@ -87,7 +87,7 @@ const FriendList = () => {
     }, [filter]);
 
     return (
-        <div className="px-4">
+        <div className="px-4" id={id}>
             {showFilter && (
                 <FilterModal isVisible={showFilter} onClose={() => setShowFilter(false)} onConfirm={onConfirm} t={t} filter={filter} arrStatus={arrStatus} />
             )}
@@ -97,8 +97,8 @@ const FriendList = () => {
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
                         </FilterContainer>
-                        {dataFilter.invitedAt && <FilterContainer onClick={() => setShowFilter(true)}>Ngày giới thiệu: {dataFilter.invitedAt}</FilterContainer>}
-                        <FilterContainer onClick={() => setShowFilter(true)}>Tình trạng: {dataFilter.kycStatus}</FilterContainer>
+                        {dataFilter.invitedAt && <FilterContainer onClick={() => setShowFilter(true)}>{t('reference:referral.referral_date')}: {dataFilter.invitedAt}</FilterContainer>}
+                        <FilterContainer onClick={() => setShowFilter(true)}>{t('reference:referral.status')}: {dataFilter.kycStatus}</FilterContainer>
                         {dataFilter.totalCommission && (
                             <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {dataFilter.totalCommission}</FilterContainer>
                         )}
@@ -118,7 +118,7 @@ const FriendList = () => {
                                                 {data.code} {ReferralLevelIcon(data.rank)}
                                             </div>
                                             <div className="leading-[14px] font-medium text-xs text-gray-1">
-                                                Ngày giới thiệu: {formatTime(data.invitedAt, 'dd/MM/yyyy')}
+                                                {t('reference:referral.referral_date')}: {formatTime(data.invitedAt, 'dd/MM/yyyy')}
                                             </div>
                                         </div>
                                         <div
@@ -132,7 +132,7 @@ const FriendList = () => {
                                     </div>
                                     <div className="my-3 py-2 rounded-md border-[1px] border-gray-2/[.15] flex">
                                         <div className="w-full text-center border-r-[1px] text-sm font-medium">
-                                            <div className="text-gray-1 leading-5">Đã giới thiệu</div>
+                                            <div className="text-gray-1 leading-5">{t('reference:referral.referred')}</div>
                                             <div className="text-darkBlue leading-6">
                                                 {t('common:users', {
                                                     value: formatNumber(data.invitedCount)
@@ -147,7 +147,7 @@ const FriendList = () => {
                                     <div className="text-sm font-medium flex flex-col gap-1">
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
-                                                <span>Tổng hoa hồng trực tiếp</span>
+                                                <span>{t('reference:referral.total_direct_commissions')}</span>
                                                 <div data-tip="1231312" data-for="liquidate-fee">
                                                     <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                                                 </div>
@@ -159,7 +159,7 @@ const FriendList = () => {
                                         </div>
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
-                                                <span>hoa hồng gián tiếp</span>
+                                                <span>{t('reference:referral.total_indirect_commissions')}</span>
                                                 <div data-tip="1231312" data-for="liquidate-fee">
                                                     <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                                                 </div>
@@ -196,15 +196,15 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
         <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" contentClassname="px-6">
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
-                    <div>Ngày giới thiệu</div>
+                    <div>{t('reference:referral.referral_date')}</div>
                     <DatePicker isCalendar date={state.invitedAt} onChange={(e) => onChange('invitedAt', e)} />
                 </div>
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
-                    <div>Tổng hoa hồng theo thời gian</div>
+                    <div>{t('reference:referral.total_commissions')}</div>
                     <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} />
                 </div>
                 <div className="flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4">
-                    <div>Tình trạng</div>
+                    <div>{t('reference:referral.status')}</div>
                     <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
                             className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"

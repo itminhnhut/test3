@@ -9,19 +9,8 @@ import EditNote from './EditNote'
 import { API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
 import { commisionConfig } from 'config/referral'
+import showNotification from 'utils/notificationService';
 
-const languages = {
-    isDefault: {
-        1: {
-            en: 'Default',
-            vi: 'Mặc định'
-        },
-        0: {
-            en: 'Set default',
-            vi: 'Đặt làm mặc định'
-        }
-    },
-}
 const RefDetail = ({ isShow = false, onClose, rank }) => {
     const { t, i18n: { language } } = useTranslation()
     const [refs, setRefs] = useState([])
@@ -30,7 +19,6 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
     const [showEditNote, setShowEditNote] = useState(false)
     const [doRefresh, setDoRefresh] = useState(false)
     const [code, setCode] = useState('')
-
     useEffect(() => {
         FetchApi({
             url: API_NEW_REFERRAL,
@@ -54,6 +42,16 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
             },
         })
         if (status === 'ok') {
+            showNotification(
+                {
+                    title: t('reference:referral.update_success'),
+                    // title: t('common:success'),
+                    type: 'success',
+                    position: 'top',
+                    container: 'top-left'
+                },
+                1800,
+            );
             setDoRefresh(!doRefresh)
         } else {
         }
@@ -63,12 +61,12 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
         <PopupModal
             isVisible={isShow}
             onBackdropCb={onClose}
-            title='Quản lý Referral'
+            title={t('reference:referral.referral_code_management')}
             useFullScreen
         >
             <div>
                 <AddNewRef isShow={showAddRef} onClose={() => setShowAddRef(false)} doRefresh={() => setDoRefresh(!doRefresh)} />
-                <FriendList isShow={showFriendList} onClose={() => setShowFriendList(false)} />
+                <FriendList isShow={showFriendList} onClose={() => setShowFriendList(false)} code={code} />
                 <EditNote isShow={showEditNote} onClose={() => setShowEditNote(false)} code={code} doRefresh={() => setDoRefresh(!doRefresh)} />
                 <div className='!max-h-[calc(100vh-206px)] !overflow-auto no-scrollbar'>
                     {!refs.length ? <NoData text='No data' className='mt-4' /> : refs.map((data, index) => (
@@ -82,16 +80,16 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                         className="cursor-pointer"
                                     />
                                 </div>
-                                <div onClick={() => handleSetDefault(data.code)}>
+                                <div onClick={data.status ? null : () => handleSetDefault(data.code)}>
                                     <div className={classNames('px-2 py-1 rounded-md font-semibold text-sm leading-6', data.status ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]')}>
-                                        {languages?.isDefault[data.status][language]}
+                                        {data.status ? t('reference:referral.default') : t('reference:referral.set_default')}
                                     </div>
                                 </div>
                             </div>
                             <div className='mt-3 font-medium leading-5 flex flex-col gap-2'>
                                 <div className='w-full flex justify-between items-center'>
                                     <div className='text-gray-1 text-xs '>
-                                        Bạn nhận / Bạn bè nhận
+                                        {t('reference:referral.you_friends_get')}
                                     </div>
                                     <div className='text-teal text-sm'>
                                         {data.remunerationRate}% / {commisionConfig[rank]?.direct?.futures - data.remunerationRate}%
@@ -99,7 +97,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
                                     <div className='text-gray-1 text-xs'>
-                                        Ref Link
+                                        {t('reference:referral.link')}
                                     </div>
                                     <div className='text-darkBlue text-sm flex gap-2 justify-end items-center w-fit'>
                                         <div className='max-w-[140px] truncate'>
@@ -114,17 +112,20 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
                                     <div className='text-gray-1 text-xs '>
-                                        Bạn bè
+                                        {t('reference:referral.friends')}
                                     </div>
                                     <div className='text-darkBlue text-sm flex items-center gap-1'
-                                        onClick={() => setShowFriendList(true)}
+                                        onClick={() => {
+                                            setCode(data.code)
+                                            setShowFriendList(true)
+                                        }}
                                     >
                                         {data.invitedCount ?? 0} <FriendListIcon />
                                     </div>
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
                                     <div className='text-gray-1 text-xs '>
-                                        Ghi chú
+                                        {t('reference:referral.note')}
                                     </div>
                                     <div className='text-darkBlue text-sm flex items-center gap-1'
                                         onClick={() => {
@@ -146,7 +147,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                     <div className='h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm'
                         onClick={() => setShowAddRef(true)}
                     >
-                        Thêm Referral mới
+                        {t('reference:referral.add_ref_code')}
                     </div>
                 </div>
             </div>

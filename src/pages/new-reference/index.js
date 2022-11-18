@@ -14,9 +14,9 @@ const Reference = () => {
                 hideFooter
                 navOverComponent
                 navMode={currentTheme}
-                navStyle={{
-                    boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)'
-                }}
+                // navStyle={{
+                //     boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)'
+                // }}
             >
                 <div className="pt-[64px] h-full">
                     <NewReference />
@@ -31,10 +31,9 @@ export const getStaticProps = async ({ locale }) => ({
         ...(await serverSideTranslations(locale, [
             'common',
             'navbar',
-            'wallet',
-            'modal',
             'reference',
-            'broker'
+            'broker',
+            'futures'
         ]))
     }
 });

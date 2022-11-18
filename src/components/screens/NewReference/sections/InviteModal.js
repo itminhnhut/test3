@@ -2,8 +2,10 @@ import SvgNamiCoin from 'components/svg/SvgNamiCoin'
 import React from 'react'
 import PopupModal from '../PopupModal'
 import QRCode from 'qrcode.react';
+import { useTranslation } from 'next-i18next';
 
 const InviteModal = ({ isShow, onClose, code }) => {
+    const { t } = useTranslation()
     return (
         <PopupModal
             isVisible={isShow}
@@ -15,11 +17,12 @@ const InviteModal = ({ isShow, onClose, code }) => {
         >
             <div className='font-medium text-sm text-white leading-6 flex flex-col gap-4'>
                 <div className=''>
-                    Đăng ký ngay. Cùng nhau kiếm tiền.
+                    {t('reference:referral.invite_your_friends')}
                 </div>
                 <div className='w-full h-[333px] flex flex-col items-center text-darkBlue'>
                     <div className='text-xs font-medium leading-5 mt-4'>
-                        ID giới thiệu
+                        {t('reference:referral.referral_code')}
+
                     </div>
                     <div className='font-semibold text-base leading-8'>
                         {code}

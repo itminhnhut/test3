@@ -1,9 +1,11 @@
+import { useTranslation } from 'next-i18next'
 import React, { useState } from 'react'
 import { renderRefInfo } from '../PopupModal'
 import RefCard from '../RefCard'
 import InviteModal from './InviteModal'
 
 const Overview = ({ data, id }) => {
+    const { t } = useTranslation()
     const [showInvite, setShowInvite] = useState(false)
     const renderSocials = () => {
         const icons = [{
@@ -76,32 +78,33 @@ const Overview = ({ data, id }) => {
             </div>
         )
     }
+
     return (
-        <div className="px-4 py-[60px]" style={{backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover'}} id={id}>
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode}/>
+        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }} id={id}>
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode} t={t}/>
             <div className='font-semibold text-3xl text-gray-4'>
-                Mời Bạn Bè Mới <br />
-                Thêm Thu Nhập Thụ Động
+                {t('reference:referral.introduce1')} <br />
+                {t('reference:referral.introduce2')}
             </div>
             <div className='font-medium text-lg text-gray-4 mt-6'>
-                Mời bạn bè tận hưởng ưu đãi giao dịch không tính phí và nhận hoa hồng đến 250 USDT.
+                {t('reference:referral.introduce3')}
             </div>
             <div className='text-sm leading-6 text-gray-4 mt-3'>
-                Xem thêm <a href='#' target={'_blank'}><span className='text-teal underline'>Cơ chế hoa hồng</span></a>
+                {t('reference:referral.readmore')} <a href='#' target={'_blank'}><span className='text-teal underline'>{t('reference:referral.referral_policy')}</span></a>
             </div>
             <div className='mt-[30px]'>
                 <RefCard>
                     <div className='pb-2'>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue'>
-                            <div>Ref Code</div>
-                            <div>Ban nhan 10% - Ban be nhan 5%</div>
+                            <div> {t('reference:referral.referral_code')}</div>
+                            <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
                         </div>
                         <div className='mt-1'>
                             {renderRefInfo(data?.defaultRefCode)}
                         </div>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
-                            <div>Ref Link</div>
-                            <div>Ban nhan 10% - Ban be nhan 5%</div>
+                            <div>{t('reference:referral.ref_link')}</div>
+                            <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
                         </div>
                         <div className='mt-1'>
                             {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode)}
@@ -114,7 +117,7 @@ const Overview = ({ data, id }) => {
                 <div className='w-full mt-8 h-11 bg-teal flex items-center justify-center text-sm font-medium text-gray-4 rounded-md'
                     onClick={() => setShowInvite(true)}
                 >
-                    Moi ngay
+                    {t('reference:referral.invite_friends')}
                 </div>
             </div>
         </div>

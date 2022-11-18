@@ -24,31 +24,8 @@ const tabs = {
     CommissionHistory: 'commission_history',
 }
 
-const languages = {
-    [tabs.Overview]: {
-        en: 'Overview',
-        vi: 'Tổng quan'
-    },
-    [tabs.LastedActivities]: {
-        en: 'Lasted Activities',
-        vi: 'Hoạt động mới nhất'
-    },
-    [tabs.Chart]: {
-        en: 'Chart',
-        vi: 'Biểu đồ'
-    },
-    [tabs.FriendList]: {
-        en: 'Friend List',
-        vi: 'Danh sách bạn bè'
-    },
-    [tabs.CommissionHistory]: {
-        en: 'Commission History',
-        vi: 'Lịch sử hoàn phí hoa hồng'
-    }
-};
-
 function NewReference() {
-    const { t, i18n: { language } } = useTranslation()
+    const { t } = useTranslation()
     const [tab, setTab] = useState(tabs.Overview)
     const [doScroll, setDoScroll] = useState(false)
     const [overviewData, setOverviewData] = useState()
@@ -83,31 +60,31 @@ function NewReference() {
             <div className="bg-white">
                 <Tabs tab={tab}>
                     <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
-                        {languages[tabs.Overview][language]}
+                        {t('reference:referral.info')}
                     </TabItem>
                     <TabItem value={tabs.LastedActivities} onClick={() => handleClickTab(tabs.LastedActivities)}>
-                        {languages[tabs.LastedActivities][language]}
+                        {t('reference:referral.recent_activities')}
                     </TabItem>
                     <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
-                        {languages[tabs.Chart][language]}
+                        {t('reference:referral.statistic')}
                     </TabItem>
                     <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
-                        {languages[tabs.FriendList][language]}
+                        {t('reference:referral.friend_list')}
                     </TabItem>
                     <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
-                        {languages[tabs.CommissionHistory][language]}
+                        {t('reference:referral.commission_histories')}
                     </TabItem>
                 </Tabs>
             </div>
             <div className='flex flex-col gap-8'>
-                <Overview data={overviewData} id={tabs.Overview} />
-                <Info data={overviewData} />
-                <LastedActivities id={tabs.LastedActivities} />
-                <Chart id={tabs.Chart} />
-                <FriendList id={tabs.FriendList} />
-                <CommissionHistory id={tabs.CommissionHistory} />
-                <QnA />
-                <Term />
+                <Overview data={overviewData} id={tabs.Overview} t={t}/>
+                <Info data={overviewData} t={t} />
+                <LastedActivities id={tabs.LastedActivities} t={t}/>
+                <Chart id={tabs.Chart} t={t}/>
+                <FriendList id={tabs.FriendList} t={t}/>
+                <CommissionHistory id={tabs.CommissionHistory} t={t}/>
+                <QnA t={t}/>
+                <Term t={t}/>
             </div>
         </div>
     );
@@ -133,10 +110,9 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                     <div
                         key={index}
                         className={classNames(
-                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${
-                                type === tab.value
-                                    ? `bg-gray-4 rounded-md text-darkBlue`
-                                    : 'text-darkBlue-5'
+                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === tab.value
+                                ? `bg-gray-4 rounded-md text-darkBlue`
+                                : 'text-darkBlue-5'
                             } ${className}`
                         )}
                         onClick={_.debounce(() => {

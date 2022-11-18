@@ -5,36 +5,36 @@ import { Line } from '../..'
 import RefCard from '../../RefCard'
 import RefDetail from './RefDetail'
 import { formatNumber } from 'redux/actions/utils';
+import { useSelector } from 'react-redux'
 
-const rank = {
-    '0': { vi: 'THƯỜNG', en: 'CASUAL' },
-    '1': { vi: 'CHÍNH THỨC', en: 'OFFICAL' },
-    '2': { vi: 'BẠC', en: 'SILVER' },
-    '3': { vi: 'VÀNG', en: 'GOLD' },
-    '4': { vi: 'BẠCH KIM', en: 'PLATINUM' },
-    '5': { vi: 'KIM CƯƠNG', en: 'DIAMOND' },
-}
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact',
 })
 
 const Info = ({ data }) => {
+    const { t } = useTranslation()
     const [showRef, setShowRef] = useState(false)
-    const { t, i18n: { language } } = useTranslation()
+    const rank = {
+        '0': t('reference:referral.normal'),
+        '1': t('reference:referral.official'),
+        '2': t('reference:referral.gold'),
+        '3': t('reference:referral.platinum'),
+        '4': t('reference:referral.diamond'),
+    }
+    const user = useSelector(state => state.auth.user) || null;
     return (
         <div className='w-full px-4'>
-            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}/>
+            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} t={t}/>
             <RefCard>
                 <div className='flex h-12 gap-4'>
-                    <div className='bg-red h-full w-12 rounded-full'>
-                    </div>
+                    <img src={user?.avatar || "/images/default_avatar.png"} className='h-full w-12 rounded-full' />
                     <div className='h-full flex flex-col justify-center'>
                         <div className='font-semibold text-base text-darkBlue'>
                             {data?.name ?? t('common:unknown')}
                         </div>
-                        <div className='font-medium text-xs text-gray-1'>
-                            CAP BAC: <span className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0'][language]}</span>
+                        <div className='font-medium text-xs text-gray-1 uppercase'>
+                            {t('reference:referral.ranking')}: <span className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,7 @@ const Info = ({ data }) => {
                 <div className='flex flex-col gap-1' >
                     <div className='h-6 flex items-center w-full justify-between font-medium text-sm'>
                         <div className='font-medium text-sm text-gray-1'>
-                            Giao dich Spot
+                            {t('reference:referral.exchange_volume')}
                         </div>
                         <div className='text-darkBlue'>
                             +{formatNumber(data?.volume?.mine?.spot, 2)} VNDC
@@ -50,10 +50,10 @@ const Info = ({ data }) => {
                     </div>
                     <div className='flex w-full justify-between font-medium text-sm'>
                         <div className='text-gray-1'>
-                            Giao dich Futures
+                            {t('reference:referral.futures_volume')}
                         </div>
                         <div className='text-darkBlue'>
-                            +{formatNumber(data?.volume?.mine?.futures, 2)} VNDC VNDC
+                            +{formatNumber(data?.volume?.mine?.futures, 2)} VNDC
                         </div>
                     </div>
                 </div>
@@ -61,10 +61,10 @@ const Info = ({ data }) => {
                 <div className='flex flex-col gap-2'>
                     <div className='w-full flex h-6 items-center justify-between text-gray-1 font-medium text-xs'>
                         <div>
-                            Volume hien tai
+                            {t('reference:referral.current_volume')}
                         </div>
                         <div>
-                            Cap tiep theo
+                            {t('reference:referral.next_level')}
                         </div>
                     </div>
                     <div className='w-full bg-[#f2f4f7]'>
@@ -99,7 +99,7 @@ const Info = ({ data }) => {
                     <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
-                        Quản lý Referral
+                        {t('reference:referral.referral_code_management')}
                     </div>
                 </div>
             </RefCard>

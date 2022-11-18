@@ -8,19 +8,11 @@ import classNames from 'classnames';
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_NEW_COMMISSIONS, API_NEW_REFERRAL_NEW_FRIENDS } from 'redux/actions/apis';
 
-const tags = [{
-    value: 'receivedCommision',
-    vi: 'Nhận hoa hồng',
-    en: 'Received Commision'
-}, {
-    value: 'lastedUser',
-    vi: 'Người dùng mới nhất',
-    en: 'Lasted user'
-},]
+
 const tier = {
     1: {
         vi: 'Thường',
-        en: 'Casual'
+        en: 'Normal'
     },
     2: {
         vi: 'Chính thức',
@@ -41,11 +33,11 @@ const tier = {
 }
 const languages = {
     newUser: {
-        en: 'New user',
-        vi: 'Người dùng mới'
+        en: 'New Friend',
+        vi: 'Bạn bè mới'
     },
     refUser: {
-        en: 'Referral',
+        en: 'Referrer',
         vi: 'Người giới thiệu'
     },
     level: {
@@ -53,19 +45,22 @@ const languages = {
         vi: 'Cấp bậc'
     },
     tier: {
-        en: 'Tier',
-        vi: 'Cấp'
+        en: 'Ranking',
+        vi: 'Hạng'
     }
-}
-const title = {
-    en: 'Lasted actitivies',
-    vi: 'Hoạt động mới nhất'
 }
 
 const LastedActivities = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const [lastedCommissions, setLastedCommissions] = useState([])
     const [lastedFriends, setLastedFriends] = useState([])
+    const tags = [{
+        value: 'receivedCommision',
+        content: t('futures:mobile.commission')
+    }, {
+        value: 'lastedUser',
+        content: t('reference:referral.new_friends')
+    },]
     const [tab, setTab] = useState(tags[0].value)
     useEffect(() => {
         FetchApi({
@@ -102,7 +97,7 @@ const LastedActivities = ({ id }) => {
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
                                 <div>
-                                    {data.formUserCode} (Cấp {data.level < 10 ? 0 : null}{data.level})
+                                    {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
                                 <div className='text-teal'>
                                     +{formatNumber(data.value, 2)} VNDC
@@ -113,7 +108,7 @@ const LastedActivities = ({ id }) => {
                                     {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
                                 </div>
                                 <div>
-                                    Loại hoa hồng: {data.kind}
+                                    {t('reference:referral.type')}: {data.kind}
                                 </div>
                             </div>
                         </div>
@@ -126,7 +121,7 @@ const LastedActivities = ({ id }) => {
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
                             <div className='font-semibold text-sm leading-6 text-darkBlue'>
-                                {languages.newUser[language]}: {data.userId}
+                                {t('reference:referral.new_friend')}: {data.code}
                             </div>
                         </div>
                         <div>
@@ -142,13 +137,13 @@ const LastedActivities = ({ id }) => {
 
     return (
         <div className='px-4' id={id} >
-            <CollapsibleRefCard title={title[language]}  >
+            <CollapsibleRefCard title={t('reference:referral.recent_activities')}  >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7' >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
-                                    {e[language]}
+                                    {e.content}
                                 </TabItem>
                             </div>
                         )}
@@ -185,7 +180,7 @@ const RefInfo = ({ data, language, className }) => (
                     NamiID
                 </div>
                 <div className='text-darkBlue'>
-                    {data.userId}
+                    {data.invitedBy?.code}
                 </div>
             </div>
             <Line className='my-1' />

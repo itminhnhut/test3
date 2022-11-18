@@ -17,10 +17,9 @@ const title = {
     en: 'Commission history'
 };
 
-const CommissionHistory = () => {
+const CommissionHistory = ({ id }) => {
     const {
-        t,
-        i18n: { language }
+        t
     } = useTranslation();
     const levelTabs = [
         { title: t('common:all'), value: null },
@@ -107,10 +106,10 @@ const CommissionHistory = () => {
             level: levelTabs.find((rs) => rs.value === filter.level)?.title,
             currency: assetTabs.find((rs) => rs.value === filter.currency)?.title
         };
-    }, [filter]);
+    }, [filter, t]);
 
     return (
-        <div className="px-4">
+        <div className="px-4" id={id}>
             {showFilter && (
                 <FilterModal
                     isVisible={showFilter}
@@ -123,7 +122,7 @@ const CommissionHistory = () => {
                     assetTabs={assetTabs}
                 />
             )}
-            <CollapsibleRefCard title={title[language]}>
+            <CollapsibleRefCard title={t('reference:referral.commission_histories')}>
                 <div className="w-auto">
                     <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
@@ -131,13 +130,13 @@ const CommissionHistory = () => {
                         </FilterContainer>
                         {dataFilter.range && <FilterContainer onClick={() => setShowFilter(true)}>Thời gian: {dataFilter.range}</FilterContainer>}
                         <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('common:level')}: {dataFilter.level}
+                            {t('reference:referral.level')}: {dataFilter.level}
                         </FilterContainer>
                         <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('navbar:menu:product')}: {dataFilter.kind}
+                            {t('reference:referral.commission_type')}: {dataFilter.kind}
                         </FilterContainer>
                         <FilterContainer onClick={() => setShowFilter(true)}>
-                            {t('common:assets')}: {dataFilter.currency}
+                            {t('reference:referral.asset_type')}: {dataFilter.currency}
                         </FilterContainer>
                     </div>
                 </div>
@@ -196,23 +195,23 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
         <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả">
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
-                    <div>Ngày giới thiệu</div>
+                    <div>{t('reference:referral.referral_date')}</div>
                     <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} />
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
-                    <div>{t('common:level')}</div>
+                    <div>{t('reference:referral.level')}</div>
                     <div className="flex">
                         <FilterTabs className="!px-4 !py-3 !font-medium !text-sm" tabs={levelTabs} type={state.level} setType={(e) => onChange('level', e)} />
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
-                    <div>{t('navbar:menu:product')}</div>
+                    <div>{t('reference:referral.commission_type')}</div>
                     <div className="flex">
                         <FilterTabs className="!px-4 !py-3 !font-medium !text-sm" tabs={typeTabs} type={state.kind} setType={(e) => onChange('kind', e)} />
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1 mb-4">
-                    <div>{t('common:assets')}</div>
+                    <div>{t('reference:referral.asset_type')}</div>
                     <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
                             className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"

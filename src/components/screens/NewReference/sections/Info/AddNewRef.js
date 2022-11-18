@@ -71,10 +71,10 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
                     </div>
                     <div className='flex justify-between items-center font-medium text-xs leading-5'>
                         <div>
-                            Bạn nhận {percent}%
+                            Bạn nhận {totalRate-percent}%
                         </div>
                         <div>
-                            Bạn bè nhận {totalRate-percent}%
+                            Bạn bè nhận {percent}%
                         </div>
                     </div>
                 </div>
