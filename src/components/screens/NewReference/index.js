@@ -77,14 +77,14 @@ function NewReference() {
                 </Tabs>
             </div>
             <div className='flex flex-col gap-8'>
-                <Overview data={overviewData} id={tabs.Overview} t={t}/>
-                <Info data={overviewData} t={t} />
-                <LastedActivities id={tabs.LastedActivities} t={t}/>
-                <Chart id={tabs.Chart} t={t}/>
-                <FriendList id={tabs.FriendList} t={t}/>
-                <CommissionHistory id={tabs.CommissionHistory} t={t}/>
-                <QnA t={t}/>
-                <Term t={t}/>
+                <Overview data={overviewData} id={tabs.Overview} />
+                <Info data={overviewData} />
+                <LastedActivities id={tabs.LastedActivities} />
+                <Chart id={tabs.Chart} />
+                <FriendList id={tabs.FriendList} />
+                <CommissionHistory id={tabs.CommissionHistory} />
+                <QnA />
+                <Term />
             </div>
         </div>
     );

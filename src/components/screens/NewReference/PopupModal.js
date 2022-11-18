@@ -91,7 +91,7 @@ const PopupModal = ({
                                 className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 ">
                             </div>}
                             <div className='w-full flex justify-between items-center'>
-                                <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] px-4 max-h-screen': useFullScreen })}>
+                                <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen })}>
                                     {title}
                                 </div>
                                 <div className='absolute top-0 right-0'>

@@ -79,9 +79,11 @@ const Overview = ({ data, id }) => {
         )
     }
 
+    console.log('data', data);
+
     return (
         <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }} id={id}>
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode} t={t}/>
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode}/>
             <div className='font-semibold text-3xl text-gray-4'>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
@@ -89,7 +91,7 @@ const Overview = ({ data, id }) => {
             <div className='font-medium text-lg text-gray-4 mt-6'>
                 {t('reference:referral.introduce3')}
             </div>
-            <div className='text-sm leading-6 text-gray-4 mt-3'>
+            <div className='font-medium text-sm leading-6 text-gray-4 mt-3'>
                 {t('reference:referral.readmore')} <a href='#' target={'_blank'}><span className='text-teal underline'>{t('reference:referral.referral_policy')}</span></a>
             </div>
             <div className='mt-[30px]'>

@@ -4,8 +4,11 @@ import PopupModal from '../../PopupModal'
 import _ from 'lodash'
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_ADD_REF } from 'redux/actions/apis';
+import { useTranslation } from 'next-i18next';
 
 const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
+    const { t } = useTranslation()
+
     const [percent, setPercent] = useState(5)
     const onPercentChange = ({ x }) => {
         setPercent(x)
@@ -38,7 +41,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
     }
 
 
-    const handleAddNewRef = _.throttle(async() => {
+    const handleAddNewRef = _.throttle(async () => {
         const { status } = await FetchApi({
             url: API_NEW_REFERRAL_ADD_REF,
             options: {
@@ -60,26 +63,26 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
         <PopupModal
             isVisible={isShow}
             onBackdropCb={onClose}
-            title='Thêm giới thiệu mới'
+            title={t('reference:referral.add_new_referral')}
             useAboveAll
         >
             <div className='font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4'>
                 <div>
-                    Tỷ lệ hoa hồng
+                    {t('reference:referral.commission_rate')}
                     <div className='mt-4 mb-2'>
                         <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} />
                     </div>
                     <div className='flex justify-between items-center font-medium text-xs leading-5'>
                         <div>
-                            Bạn nhận {totalRate-percent}%
+                            {t('reference:referral.you_get')} {totalRate - percent}%
                         </div>
                         <div>
-                            Bạn bè nhận {percent}%
+                            {t('reference:referral.friends_get')} {percent}%
                         </div>
                     </div>
                 </div>
                 <div>
-                    RefCode
+                    {t('reference:referral.referral_code')}
                     <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6'>
                         <input className='text-darkBlue w-full' maxLength={8} style={{ textTransform: "uppercase" }} placeholder='FGJSH986' onChange={handleInputRefCode} />
                         <div className='w-10'>
@@ -88,7 +91,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
                     </div>
                 </div>
                 <div>
-                    Ghi chú
+                    {t('reference:referral.note')}
                     <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6'>
                         <input className='text-darkBlue w-full' maxLength={30} onChange={handleInputNote} />
                         <div className='w-10'>
@@ -98,12 +101,12 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 25 }) => {
                 </div>
                 <div className='flex items-center gap-2'>
                     <input type="checkbox" id="vehicle1" height={16} width={16} className='rounded-sm' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
-                    Đặt làm mặc định
+                    {t('reference:referral.set_default')}
                 </div>
                 <div className='w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer'
                     onClick={() => handleAddNewRef()}
                 >
-                    Xác nhận
+                    {t('common:confirm')}
                 </div>
             </div>
         </PopupModal>

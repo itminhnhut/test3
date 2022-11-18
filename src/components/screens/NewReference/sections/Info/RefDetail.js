@@ -92,7 +92,7 @@ const RefDetail = ({ isShow = false, onClose, rank }) => {
                                         {t('reference:referral.you_friends_get')}
                                     </div>
                                     <div className='text-teal text-sm'>
-                                        {data.remunerationRate}% / {commisionConfig[rank]?.direct?.futures - data.remunerationRate}%
+                                        {commisionConfig[rank]?.direct?.futures - data.remunerationRate}% / {data.remunerationRate}%
                                     </div>
                                 </div>
                                 <div className='w-full flex justify-between items-center'>
