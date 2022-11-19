@@ -262,8 +262,10 @@ export default function FundingHistoryTable({ currency }) {
             x: {
                 ticks: {
                     color: colors.darkBlue5,
-                    callback: function (val, index) {
-                        return index % 3 === 0 ? this.getLabelForValue(val) : '';
+                    callback: function (val, index, ticks) {
+                        const label = this.getLabelForValue(val)
+                        if(!label) return ''
+                        return index % 3 === 0 ? ((label.split(' '))?.[0]) : '';
                     },
                 },
                 grid: {
@@ -280,7 +282,7 @@ export default function FundingHistoryTable({ currency }) {
 
     let dataReverse = [...data.dataSource]
     reverse(dataReverse)
-    const labels = dataReverse.map(item => formatTime(item.calcTime, 'dd/MM'));
+    const labels = dataReverse.map(item => formatTime(item.calcTime, 'dd/MM HH:mm'));
     const dataLine = {
         labels,
         datasets: [
