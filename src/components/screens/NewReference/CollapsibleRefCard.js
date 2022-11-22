@@ -6,7 +6,7 @@ const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = fal
     return (
         <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
             {isTitle && (
-                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center" onClick={() => setIsCollapsed(!isCollapsed)}>
+                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-darkBlue" onClick={() => setIsCollapsed(!isCollapsed)}>
                     <div>{title}</div>
                     <div className="cursor-pointer">{isCollapsed ? <DownArrow /> : <UpArrow />}</div>
                 </div>

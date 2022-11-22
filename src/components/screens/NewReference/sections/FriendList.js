@@ -129,7 +129,6 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
         return isAll ? dataSource : dataSource.slice(0, 10);
     }, [dataSource, isAll]);
 
-
     return (
         <>
             {showFilter && (
@@ -149,9 +148,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             {t('reference:referral.status')}: {general.kycStatus}
                         </FilterContainer>
-                        {general.totalCommission && (
-                            <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {general.totalCommission}</FilterContainer>
-                        )}
+                        {general.totalCommission && <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {general.totalCommission}</FilterContainer>}
                     </div>
                 </div>
                 <div className="mt-6">
@@ -195,7 +192,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                     <div className="text-sm font-medium flex flex-col gap-1">
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
-                                                <span>{t('reference:referral.total_direct_commissions')}</span>
+                                                <span className="text-gray-1">{t('reference:referral.total_direct_commissions')}</span>
                                                 <div data-tip="1231312" data-for="liquidate-fee">
                                                     <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                                                 </div>
@@ -207,7 +204,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                         </div>
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
-                                                <span>{t('reference:referral.total_indirect_commissions')}</span>
+                                                <span className="text-gray-1">{t('reference:referral.total_indirect_commissions')}</span>
                                                 <div data-tip="1231312" data-for="liquidate-fee">
                                                     <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                                                 </div>
@@ -246,7 +243,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
     };
 
     return (
-        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll contentClassname="px-6" >
+        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll contentClassname="px-6">
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.referral_date')}</div>
@@ -275,7 +272,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
 
 const AllDataModal = ({ onClose, language, ...props }) => {
     return (
-        <PopupModal isVisible={true} onBackdropCb={onClose} title={title[language]} useFullScreen >
+        <PopupModal isVisible={true} onBackdropCb={onClose} title={title[language]} useFullScreen>
             <ListData {...props} />
         </PopupModal>
     );
