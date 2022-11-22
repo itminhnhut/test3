@@ -96,14 +96,14 @@ const LastedActivities = ({ id }) => {
                     <div key={index}>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
-                                <div>
+                                <div className='text-darkBlue'>
                                     {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
                                 <div className='text-teal'>
                                     +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>
-                            <div className='flex w-full justify-between items-center text-gray-1 font-medium text-xs leading-[14px]'>
+                            <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
                                 <div>
                                     {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
                                 </div>
