@@ -1,21 +1,21 @@
-import { useTranslation } from 'next-i18next'
-import React, { useMemo, useRef, useState } from 'react'
-import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
-import Info from './sections/Info'
-import Overview from './sections/Overview'
-import styled from 'styled-components'
-import LastedActivities from './sections/LastedActivities'
-import Chart from './sections/Chart'
-import FriendList from './sections/FriendList'
-import CommissionHistory from './sections/CommissionHistory'
-import QnA from './sections/QnA'
-import Term from './sections/Term'
-import { useEffect } from 'react'
+import { useTranslation } from 'next-i18next';
+import React, { useMemo, useRef, useState } from 'react';
+import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
+import Info from './sections/Info';
+import Overview from './sections/Overview';
+import styled from 'styled-components';
+import LastedActivities from './sections/LastedActivities';
+import Chart from './sections/Chart';
+import FriendList from './sections/FriendList';
+import CommissionHistory from './sections/CommissionHistory';
+import QnA from './sections/QnA';
+import Term from './sections/Term';
+import { useEffect } from 'react';
 import FetchApi from 'utils/fetch-api';
-import { API_NEW_REFERRAL_OVERVIEW } from 'redux/actions/apis'
-import SvgEmpty from 'components/svg/SvgEmpty'
-import classNames from 'classnames'
-import _ from 'lodash'
+import { API_NEW_REFERRAL_OVERVIEW } from 'redux/actions/apis';
+import SvgEmpty from 'components/svg/SvgEmpty';
+import classNames from 'classnames';
+import _ from 'lodash';
 
 const tabs = {
     Overview: 'overview',
@@ -24,39 +24,76 @@ const tabs = {
     FriendList: 'friend_list',
     CommissionHistory: 'commission_history',
     FAQ: 'faq',
-    Term: 'Term',
-}
+    Term: 'Term'
+};
 
 function NewReference() {
-    const { t } = useTranslation()
-    const [tab, setTab] = useState(tabs.Overview)
-    const [doScroll, setDoScroll] = useState(false)
-    const [overviewData, setOverviewData] = useState()
+    const { t } = useTranslation();
+    const [tab, setTab] = useState(tabs.Overview);
+    const [doScroll, setDoScroll] = useState(false);
+    const [overviewData, setOverviewData] = useState();
+    const tabRef = useRef(null);
+    const isClickTab = useRef(false);
     useEffect(() => {
         FetchApi({
             url: API_NEW_REFERRAL_OVERVIEW,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         }).then(({ data, status }) => {
             if (status === 'ok') {
-                setOverviewData(data)
+                setOverviewData(data);
             } else {
-                setOverviewData(null)
+                setOverviewData(null);
             }
         });
-    }, [])
+    }, []);
 
+    useEffect(() => {
+        document.addEventListener('scroll', onScroll);
+        return () => {
+            document.removeEventListener('scroll', onScroll);
+            inViewObserver.disconnect();
+        };
+    }, []);
+
+    const inViewObserver = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    const _tab = entry.target.getAttribute('id');
+                    setTab(_tab);
+                    inViewObserver.unobserve(document.getElementById(_tab));
+                }
+            });
+        },
+        { root: null, threshold: 0.7, rootMargin: "0px" }
+    );
+
+    const timer = useRef(null);
+    const onScroll = (e) => {
+        clearTimeout(timer.current);
+        if (isClickTab.current) {
+            timer.current = setTimeout(() => {
+                isClickTab.current = false;
+            }, 500);
+            return;
+        }
+        tabRef.current?.ref.querySelectorAll('.tab-item').forEach((el) => {
+            const id = el.getAttribute('value');
+            inViewObserver.observe(document.getElementById(id));
+        });
+    };
 
     const handleClickTab = (tabId) => {
-        const scrollTo = document.getElementById(tabId)
-        const yOffset = -120;
-        const y = scrollTo.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-        // scrollTo.scrollIntoView({ behavior: 'smooth' }, true)
-        setTimeout(() => setTab(tabId), 500)
-        // setDoScroll(!doScroll)
-    }
+        const el = document.getElementById(tabId);
+        window.scrollTo({
+            top: el.offsetTop - 120,
+            behavior: 'smooth'
+        });
+        isClickTab.current = true;
+        setTab(tabId);
+    };
 
     // useEffect(() => {
     //     const scrollTo = document.getElementById(tab)
@@ -76,8 +113,8 @@ function NewReference() {
     // }, [])
     return (
         <div className="bg-[#f5f6f7] pb-[68px]">
-            <div className={classNames("bg-white fixed z-10")}>
-                <Tabs tab={tab}>
+            <div className={classNames('bg-white fixed z-10')}>
+                <Tabs ref={tabRef} tab={tab}>
                     <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
                         {t('reference:referral.info')}
                     </TabItem>
@@ -101,7 +138,7 @@ function NewReference() {
                     </TabItem>
                 </Tabs>
             </div>
-            <div className='flex flex-col gap-8 pt-[44px]'>
+            <div className="flex flex-col gap-8 pt-[44px]">
                 <Overview data={overviewData} id={tabs.Overview} />
                 <Info data={overviewData} />
                 <LastedActivities id={tabs.LastedActivities} />
@@ -111,7 +148,7 @@ function NewReference() {
                 <QnA id={tabs.FAQ} />
                 <Term id={tabs.Term} />
             </div>
-        </div >
+        </div>
     );
 }
 
@@ -135,9 +172,8 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                     <div
                         key={index}
                         className={classNames(
-                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === tab.value
-                                ? `bg-gray-4 rounded-md text-darkBlue`
-                                : 'text-gray-1'
+                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${
+                                type === tab.value ? `bg-gray-4 rounded-md text-darkBlue` : 'text-gray-1'
                             } ${className}`
                         )}
                         onClick={_.debounce(() => {
@@ -153,12 +189,30 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
 };
 
 export const RefButton = ({ title, onClick }) => (
-    <div
-        className="w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6"
-        onClick={onClick}
-    >
+    <div className="w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6" onClick={onClick}>
         {title}
     </div>
-)
+);
 
-export const NoData = ({ text, className }) => (<div className={classNames('w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2', className)}><SvgEmpty />{text}</div>)
+export const NoData = ({ text, className }) => (
+    <div className={classNames('w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2', className)}>
+        <SvgEmpty />
+        {text}
+    </div>
+);
+
+const useIsInViewport = (ref) => {
+    const [isIntersecting, setIsIntersecting] = useState(false);
+
+    const observer = useMemo(() => new IntersectionObserver(([entry]) => setIsIntersecting(entry.isIntersecting)), []);
+
+    useEffect(() => {
+        observer.observe(ref.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [ref, observer]);
+
+    return isIntersecting;
+};
