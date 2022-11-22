@@ -47,7 +47,6 @@ function NewReference() {
         });
     }, [])
 
-
     const handleClickTab = (tabId) => {
         const scrollTo = document.getElementById(tabId)
         const yOffset = -120;

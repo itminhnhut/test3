@@ -5,6 +5,7 @@ import _ from 'lodash'
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_ADD_REF } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
+import classNames from 'classnames';
 
 const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 20, defaultRef }) => {
     const { t } = useTranslation()
@@ -120,8 +121,8 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, totalRate = 20, default
                     <input type="checkbox" id="vehicle1" className='rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
                     {t('reference:referral.set_default')}
                 </div>
-                <div className='w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer'
-                    onClick={() => handleAddNewRef()}
+                <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': refCode.length !== 8 })}
+                    onClick={refCode.length !== 8 ? null : () => handleAddNewRef()}
                 >
                     {t('common:confirm')}
                 </div>

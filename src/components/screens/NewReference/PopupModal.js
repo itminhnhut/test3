@@ -97,7 +97,7 @@ const PopupModal = ({
                                 </div>
                             </div>
                             {useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
-                            <div className='mt-7'>
+                            <div className={classNames('mt-7', {'!mt-0': useCenter})}>
                                 {children}
                             </div>
                         </div>

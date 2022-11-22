@@ -4,7 +4,7 @@ import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { FilterTabs, Line, RefButton } from '..';
-import ReferralLevelIcon from '../../../svg/DiamondIcon';
+import ReferralLevelIcon from '../../../svg/RefIcons';
 import PopupModal from '../PopupModal';
 import DatePicker from '../../../common/DatePicker/DatePicker';
 import fetchApi from 'utils/fetch-api';
@@ -202,7 +202,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                                 <Tooltip id="liquidate-fee" place="top" effect="solid" />
                                             </div>
                                             <div className="text-teal">
-                                                +{formatNumber(data?.directCommission)} {data.symbol} VNDC
+                                                +{formatNumber(data?.directCommission)} {data.symbol} USDT
                                             </div>
                                         </div>
                                         <div className="flex justify-between w-full">
@@ -214,7 +214,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                                 <Tooltip id="liquidate-fee" place="top" effect="solid" />
                                             </div>
                                             <div className="text-teal">
-                                                +{formatNumber(data?.undirectCommission)} {data.symbol} VNDC
+                                                +{formatNumber(data?.undirectCommission)} {data.symbol} USDT
                                             </div>
                                         </div>
                                     </div>

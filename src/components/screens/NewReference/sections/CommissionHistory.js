@@ -86,7 +86,7 @@ const CommissionHistory = ({ id }) => {
     }, [filter]);
 
     return (
-        <div className="px-4" id={id}>
+        <div className="px-4" id={id} >
             {showAllData && (
                 <AllDataModal
                     onClose={() => setShowAllData(false)}
@@ -238,7 +238,7 @@ const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilte
                                                 <div className="font-semibold text-sm leading-6 text-darkBlue">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} USDT</div>
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>

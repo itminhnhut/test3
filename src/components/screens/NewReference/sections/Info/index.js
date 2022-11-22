@@ -6,6 +6,7 @@ import RefCard from '../../RefCard'
 import RefDetail from './RefDetail'
 import { formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux'
+import ReferralLevelIcon from 'components/svg/RefIcons'
 
 
 const formatter = Intl.NumberFormat('en', {
@@ -16,19 +17,24 @@ const Info = ({ data }) => {
     const { t } = useTranslation()
     const [showRef, setShowRef] = useState(false)
     const rank = {
-        '0': t('reference:referral.normal'),
-        '1': t('reference:referral.official'),
-        '2': t('reference:referral.gold'),
-        '3': t('reference:referral.platinum'),
-        '4': t('reference:referral.diamond'),
+        '1': t('reference:referral.normal'),
+        '2': t('reference:referral.official'),
+        '3': t('reference:referral.gold'),
+        '4': t('reference:referral.platinum'),
+        '5': t('reference:referral.diamond'),
     }
     const user = useSelector(state => state.auth.user) || null;
     return (
         <div className='w-full px-4'>
-            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode}/>
+            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode} />
             <RefCard>
                 <div className='flex h-12 gap-4'>
-                    <img src={user?.avatar || "/images/default_avatar.png"} className='h-full w-12 rounded-full' />
+                    <div className='flex relative'>
+                        <img src={user?.avatar || "/images/default_avatar.png"} className='h-full w-12 rounded-full' />
+                        <div className='absolute bottom-[-3px] right-[-8px]'>
+                            {ReferralLevelIcon(data?.rank ?? 1, 22)}
+                        </div>
+                    </div>
                     <div className='h-full flex flex-col justify-center'>
                         <div className='font-semibold text-base text-darkBlue'>
                             {data?.name ?? t('common:unknown')}
@@ -45,7 +51,7 @@ const Info = ({ data }) => {
                             {t('reference:referral.exchange_volume')}
                         </div>
                         <div className='text-darkBlue'>
-                            +{formatNumber(data?.volume?.mine?.spot, 2)} VNDC
+                            +{formatNumber(data?.volume?.mine?.spot, 2)} USDT
                         </div>
                     </div>
                     <div className='flex w-full justify-between font-medium text-sm'>
@@ -53,7 +59,7 @@ const Info = ({ data }) => {
                             {t('reference:referral.futures_volume')}
                         </div>
                         <div className='text-darkBlue'>
-                            +{formatNumber(data?.volume?.mine?.futures, 2)} VNDC
+                            +{formatNumber(data?.volume?.mine?.futures, 2)} USDT
                         </div>
                     </div>
                 </div>
@@ -79,20 +85,20 @@ const Info = ({ data }) => {
                     <div className='w-full flex flex-col'>
                         <div className='w-full flex justify-between font-medium text-xs text-[#17e5d4]'>
                             <div>
-                                Spot: {formatter.format(data?.volume?.current?.spot)} VNDC
+                                Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
                             <div>
-                                Spot: {formatter.format(data?.volume?.target?.spot)} VNDC
+                                Spot: {formatter.format(data?.volume?.target?.spot)} USDT
                             </div>
 
                         </div>
                         <div className='w-full flex justify-between font-medium text-xs text-[#00c8bc]'>
 
                             <div>
-                                Futures: {formatter.format(data?.volume?.current?.futures)} VNDC
+                                Futures: {formatter.format(data?.volume?.current?.futures)} USDT
                             </div>
                             <div>
-                                Futures: {formatter.format(data?.volume?.target?.futures)} VNDC
+                                Futures: {formatter.format(data?.volume?.target?.futures)} USDT
                             </div>
                         </div>
                     </div>

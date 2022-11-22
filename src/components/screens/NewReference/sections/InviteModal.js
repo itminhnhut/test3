@@ -11,7 +11,7 @@ const InviteModal = ({ isShow, onClose, code }) => {
             onBackdropCb={onClose}
             useCenter
             background="url('/images/reference/invite_background.png')"
-            contentClassname='!h-[620px] !w-[340px]'
+            contentClassname='!h-[620px] !w-[340px] '
             title={(<img src='/images/logo/nami-logo.png' className='w-auto h-6' />)}
         >
             <div className='font-medium text-sm text-white leading-6 flex flex-col gap-4'>
@@ -32,7 +32,7 @@ const InviteModal = ({ isShow, onClose, code }) => {
                             size={190}
                         />
                     </div>
-                    <img className='absolute bottom-[100px] w-[90px] h-[85px]' src='/images/icon/ic_nami_icon.png' />
+                    <img className='absolute bottom-[75px] w-[124px] h-[120px]' src='/images/icon/ic_nami_icon.png' />
                 </div>
             </div>
         </PopupModal>
