@@ -210,7 +210,7 @@ const NoteIcon = () => (
 
 const Container = styled.div`
     overflow-y: auto;
-    height: calc(var(--vh, 1vh) * 100 - 260px);
+    height: calc(var(--vh, 1vh) * 100 - 230px);
 `;
 
 export default RefDetail;
