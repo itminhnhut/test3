@@ -159,8 +159,8 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                 <div className='h-[116px] z-20 bg-white w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0' style={{
                     boxShadow: '0 -7px 23px 0 rgba(0, 0, 0, 0.05)'
                 }}>
-                    <div className='h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm'
-                        onClick={() => setShowAddRef(true)}
+                    <div className={classNames('h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm', { '!bg-gray-3': refs.length >= 20 })}
+                        onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}
                     >
                         {t('reference:referral.add_ref_code')}
                     </div>

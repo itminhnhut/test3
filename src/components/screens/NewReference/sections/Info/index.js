@@ -77,7 +77,7 @@ const Info = ({ data }) => {
                         />
                     </div>
                     <div className='w-full flex flex-col'>
-                        <div className='w-full flex justify-between font-medium text-xs text-darkBlue-1'>
+                        <div className='w-full flex justify-between font-medium text-xs text-[#17e5d4]'>
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} VNDC
                             </div>
@@ -86,7 +86,7 @@ const Info = ({ data }) => {
                             </div>
 
                         </div>
-                        <div className='w-full flex justify-between font-medium text-xs text-darkBlue-1'>
+                        <div className='w-full flex justify-between font-medium text-xs text-[#00c8bc]'>
 
                             <div>
                                 Futures: {formatter.format(data?.volume?.current?.futures)} VNDC
