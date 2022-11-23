@@ -2,7 +2,7 @@ import { X } from 'react-feather';
 import Bell from 'src/components/svg/Bell';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { addSeconds } from 'date-fns';
+import { addHours, addSeconds } from 'date-fns';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const expireKey = 'announcement_expire_at';
@@ -21,7 +21,7 @@ export default function AnnouncementPopup() {
     }, []);
 
     const close = () => {
-        localStorage.setItem(expireKey, addSeconds(new Date(), 20).valueOf().toString());
+        localStorage.setItem(expireKey, addHours(new Date(), 1).valueOf().toString());
         setOpen(false);
     };
 
