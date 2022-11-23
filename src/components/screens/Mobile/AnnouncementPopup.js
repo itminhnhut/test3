@@ -2,7 +2,7 @@ import { X } from 'react-feather';
 import Bell from 'src/components/svg/Bell';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { addHours, addSeconds } from 'date-fns';
+import { addHours } from 'date-fns';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const expireKey = 'announcement_expire_at';
@@ -37,7 +37,7 @@ export default function AnnouncementPopup() {
 
     return <div className='fixed inset-x-0 z-50 p-4 bg-red mx-4 mt-3 bg-onus-bg3 rounded'>
         <div className='flex justify-between items-center'>
-            <div className='flex'>
+            <div className='flex items-center'>
                 <Bell className='mr-3' size={22} />
                 <span className='bg-onus-base rounded text-xs text-onus-white leading-2 font-semibold px-2 py-1'>
                     {t('common:mobile:announcement')}
