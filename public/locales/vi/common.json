@@ -318,8 +318,8 @@
     "mobile": {
         "markets": "Thị trường",
         "wallets": "Ví",
-        "announcement": "Thông báo",
-        "announcement_content": "Bảo trì nâng cấp hệ thống"
+        "announcement": "Thông báo quan trọng",
+        "announcement_content": "Bảo trì nâng cấp hệ thống vào 00:00 (UTC+7) ngày 28/11/2022"
     },
     "collapse": "Thu gọn",
     "confirm_2": "Chọn",

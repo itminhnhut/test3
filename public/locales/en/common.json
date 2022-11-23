@@ -322,8 +322,8 @@
     "mobile": {
         "markets": "Markets",
         "wallets": "Wallets",
-        "announcement": "Announcement",
-        "announcement_content": "System Upgrade Maintenance"
+        "announcement": "Important Notice",
+        "announcement_content": "System Upgrade Maintenance at 00:00 (UTC+7) 28/11/2022"
     },
     "collapse": "Collapse",
     "confirm_2": "Confirm",
