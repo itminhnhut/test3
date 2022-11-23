@@ -317,7 +317,9 @@
     },
     "mobile": {
         "markets": "Thị trường",
-        "wallets": "Ví"
+        "wallets": "Ví",
+        "announcement": "Thông báo",
+        "announcement_content": "Bảo trì nâng cấp hệ thống"
     },
     "collapse": "Thu gọn",
     "confirm_2": "Chọn",

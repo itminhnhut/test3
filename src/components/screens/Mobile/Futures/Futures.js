@@ -18,6 +18,7 @@ import EventModalMobile from './EventModalMobile';
 import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
+import AnnouncementPopup from 'components/screens/Mobile/AnnouncementPopup';
 
 const INITIAL_STATE = {
     loading: false,
@@ -237,6 +238,7 @@ const FuturesMobile = () => {
 
     return (
         <>
+            <AnnouncementPopup/>
             <FuturesPageTitle
                 pair={state.pair}
                 pricePrecision={pairConfig?.pricePrecision}

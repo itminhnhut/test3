@@ -321,7 +321,9 @@
     },
     "mobile": {
         "markets": "Markets",
-        "wallets": "Wallets"
+        "wallets": "Wallets",
+        "announcement": "Announcement",
+        "announcement_content": "System Upgrade Maintenance"
     },
     "collapse": "Collapse",
     "confirm_2": "Confirm",
