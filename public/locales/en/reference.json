@@ -75,7 +75,7 @@
         "login_to_continue": "Login to continue"
     },
     "referral": {
-        "faq": "FAQ",
+        "faq": "FAQ and Term",
         "term": "Term",
         "info": "Info",
         "recent_activities": "Recent Activities",
@@ -131,12 +131,19 @@
         "status": "Status",
         "ktc": "KYC",
         "not_kyc": "Not KYC yet",
-        "referred": "referred",
+        "referred": "Referred",
         "total_direct_commissions": "Total Direct Commissions",
         "total_indirect_commissions": "Total Indirect Commissions",
         "asset_type": "Asset Type",
         "exchange_commission": "Exchange Commission",
         "custom": "Custom",
-        "commission_type": "Commission Type"
+        "commission_type": "Commission Type",
+        "ref_placeholder": "Enter the desired referral code",
+        "addref": "Create",
+        "addref_title": "Referral Code (Optional)",
+        "addref_success": "Referral code <span class='text-teal'>{{value}}</span> successfully generated",
+        "addref_error_1": "Please type in all 8 characters",
+        "addref_error_2": "Referral code already exists",
+        "addref_error_3": "Referral code <span class='text-teal'>{{value}}</span> already exists, please try again!"
     }
 }

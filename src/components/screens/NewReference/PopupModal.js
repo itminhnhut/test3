@@ -21,7 +21,8 @@ const PopupModal = ({
     useFullScreen = false,
     useAboveAll = false,
     useCenter = false,
-    background
+    background,
+    bgClassName
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
@@ -57,14 +58,15 @@ const PopupModal = ({
                         'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
-                        { '!z-[1000]': useAboveAll }
+                        { '!z-[200]': useAboveAll },
+                        { bgClassName },
                     )}
                 />
                 <div
                     className={classNames(
                         `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-transparent left-0 top-0 w-full h-full p-0 z-[101]`,
                         containerClassName,
-                        { '!z-[1001]': useAboveAll }
+                        { '!z-[201]': useAboveAll }
                     )}
                 >
                     <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}>
@@ -84,9 +86,18 @@ const PopupModal = ({
                                     className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 "
                                 ></div>
                             )}
-                            <div className="w-full flex justify-between items-center">
-                                <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen })}>{title}</div>
-                                <div
+                            <div className={classNames("w-full flex justify-between items-center",
+                                { '!justify-start': useFullScreen })}
+                                
+                            >
+                                {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m15 18-6-6 6-6" stroke="#223050" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                    : null}
+                                {title && <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen })}>{title}</div>}
+                                {useFullScreen ? null : <div
                                     className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
                                     onClick={() => onBackdropCb && onBackdropCb()}
                                 >
@@ -94,10 +105,10 @@ const PopupModal = ({
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="m6 6 12 12M6 18 18 6" stroke={useCenter ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                </div>
+                                </div>}
                             </div>
                             {useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
-                            <div className={classNames('mt-7', {'!mt-0': useCenter})}>
+                            <div className={classNames('mt-7', { '!mt-0': useCenter })}>
                                 {children}
                             </div>
                         </div>

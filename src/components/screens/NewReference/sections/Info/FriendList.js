@@ -55,7 +55,7 @@ const FriendList = ({ isShow, onClose, code }) => {
                         {t('reference:referral.referral_date')}
                     </div>
                 </div>
-                <div className='flex flex-col gap-2 max-h-[700px] h-full overflow-auto no-scrollbar'>
+                <div className='flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar'>
                     {friendList.map((data, index) => {
                         return (
                             <div className='w-full flex items-center justify-between text-sm font-medium leading-6' key={index}>

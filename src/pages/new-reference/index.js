@@ -16,6 +16,7 @@ const Reference = () => {
             </Head>
             <DynamicNoSsr>
                 <MaldivesLayout
+                    hideNavBar
                     hideFooter
                     navOverComponent
                     navMode={currentTheme}
@@ -23,7 +24,7 @@ const Reference = () => {
                         position: 'fixed'
                     }}
                 >
-                    <div className="pt-[64px] h-full">
+                    <div className="h-full">
                         <NewReference />
                     </div>
                 </MaldivesLayout>

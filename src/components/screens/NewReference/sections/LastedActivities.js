@@ -50,7 +50,7 @@ const languages = {
     }
 }
 
-const LastedActivities = ({ id }) => {
+const LastedActivities = () => {
     const { t, i18n: { language } } = useTranslation()
     const [lastedCommissions, setLastedCommissions] = useState([])
     const [lastedFriends, setLastedFriends] = useState([])
@@ -136,7 +136,7 @@ const LastedActivities = ({ id }) => {
     }
 
     return (
-        <div className='px-4' id={id} >
+        <div className='px-4'   >
             <CollapsibleRefCard title={t('reference:referral.recent_activities')}  >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' >

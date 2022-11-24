@@ -6,10 +6,16 @@ import { renderRefInfo } from '../PopupModal'
 import RefCard from '../RefCard'
 import InviteModal from './InviteModal'
 
-const Overview = ({ data, id }) => {
+const Overview = ({ data, commisionConfig }) => {
     const { t } = useTranslation()
     const { width } = useWindowSize()
     const [showInvite, setShowInvite] = useState(false)
+
+    const rank = data?.rank ?? 1
+    const commisionRate = commisionConfig[rank]?.direct.futures
+    const friendsGet = data?.defaultRefCode?.remunerationRate / commisionRate * 100
+    const youGet = 100 - friendsGet
+
     const renderSocials = () => {
         const icons = [{
             svg: <svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -83,8 +89,8 @@ const Overview = ({ data, id }) => {
     }
 
     return (
-        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }} id={id}>
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode} />
+        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }}  >
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} />
             <div className={classNames('font-semibold text-3xl text-gray-4', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
@@ -100,17 +106,17 @@ const Overview = ({ data, id }) => {
                     <div className='pb-2'>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue'>
                             <div> {t('reference:referral.referral_code')}</div>
-                            <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
+                            <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo(data?.defaultRefCode, null, 16)}
+                            {renderRefInfo(data?.defaultRefCode?.code, null, 16)}
                         </div>
                         <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
                             <div>{t('reference:referral.ref_link')}</div>
-                            <div>{t('reference:referral.rate', { value1: 5, value2: 20 })}</div>
+                            <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
                         </div>
                         <div className='mt-1'>
-                            {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode, null, 16)}
+                            {renderRefInfo('https://nami.exchange/ref/' + data?.defaultRefCode?.code, null, 16)}
                         </div>
                         <div className='mt-6'>
                             {renderSocials()}

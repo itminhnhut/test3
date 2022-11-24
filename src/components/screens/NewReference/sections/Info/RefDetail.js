@@ -84,7 +84,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
             <div>
                 {showAddRef && (
                     <AddNewRef
-                        totalRate={commisionConfig?.[rank].direct.futures ?? 20}
+                        // totalRate={commisionConfig?.[rank].direct.futures ?? 20}
                         isShow={showAddRef}
                         onClose={() => setShowAddRef(false)}
                         doRefresh={() => setDoRefresh(!doRefresh)}
@@ -127,7 +127,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-gray-1 text-xs ">{t('reference:referral.you_friends_get')}</div>
                                         <div className="text-teal text-sm">
-                                            {commisionConfig[rank]?.direct?.futures - data.remunerationRate}% / {data.remunerationRate}%
+                                            {(100 - data.remunerationRate)}% / {data.remunerationRate}%
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">

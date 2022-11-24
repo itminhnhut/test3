@@ -3,7 +3,7 @@ import React from 'react'
 import { Line } from '..'
 import CollapsibleRefCard from '../CollapsibleRefCard'
 
-const Term = ({ id }) => {
+const Term = () => {
     const { t, i18n: { language } } = useTranslation()
     const renderData = () => {
         return (
@@ -18,8 +18,8 @@ const Term = ({ id }) => {
     }
 
     return (
-        <div className='px-4' id={id}>
-            <CollapsibleRefCard title={t('reference:referral.term')} hide={true}>
+        <div className='px-4 w-screen'>
+            <CollapsibleRefCard title={t('reference:referral.term')}>
                 <div className='w-auto'>
                     {renderData()}
                 </div>

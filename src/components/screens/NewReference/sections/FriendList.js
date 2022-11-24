@@ -11,13 +11,14 @@ import fetchApi from 'utils/fetch-api';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import Tooltip from 'components/common/Tooltip';
 import TableNoData from 'src/components/common/table.old/TableNoData';
+import RePagination from 'components/common/ReTable/RePagination';
 
 const title = {
     en: 'Friend List',
     vi: 'Danh sách bạn bè'
 };
 
-const FriendList = ({ id }) => {
+const FriendList = () => {
     const {
         t,
         i18n: { language }
@@ -38,8 +39,12 @@ const FriendList = ({ id }) => {
         }
     });
     const [showFilter, setShowFilter] = useState(false);
-    const [showAllData, setShowAllData] = useState(false);
-    const [dataSource, setdataSource] = useState([]);
+    const [page, setPage] = useState(1)
+    const [dataSource, setdataSource] = useState({
+        results: [],
+        hasNext: false,
+        total: 0
+    });
     const [loading, setLoading] = useState(true);
 
     const getListFriends = async () => {
@@ -54,10 +59,14 @@ const FriendList = ({ id }) => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_LIST_FRIENDS,
-                params: params
+                params: { 
+                    ...params,
+                    limit: 6,
+                    skip: 6 * (page - 1)
+                }
             });
             if (data) {
-                setdataSource(data.results);
+                setdataSource(data);
             }
         } catch (e) {
             console.log(e);
@@ -68,11 +77,11 @@ const FriendList = ({ id }) => {
 
     useEffect(() => {
         getListFriends();
-    }, [filter]);
+    }, [filter, page]);
 
     return (
-        <div className="px-4" id={id}>
-            {showAllData && (
+        <div className="px-4 w-screen"  >
+            {/* {showAllData && (
                 <AllDataModal
                     onClose={() => setShowAllData(false)}
                     language={language}
@@ -85,22 +94,24 @@ const FriendList = ({ id }) => {
                     setShowFilter={setShowFilter}
                     loading={loading}
                 />
-            )}
+            )} */}
             <ListData
-                dataSource={dataSource}
+                dataSource={dataSource.results}
+                total={dataSource.total}
+                setPage={setPage}
+                page={page}
                 arrStatus={arrStatus}
                 filter={filter}
                 setFilter={setFilter}
                 showFilter={showFilter}
                 setShowFilter={setShowFilter}
                 loading={loading}
-                setShowAllData={setShowAllData}
             />
         </div>
     );
 };
 
-const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setShowAllData }) => {
+const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setPage, page }) => {
     const {
         t,
         i18n: { language }
@@ -109,10 +120,6 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
     const onConfirm = (e) => {
         setFilter(e);
         setShowFilter(false);
-    };
-
-    const onShowAll = () => {
-        setShowAllData(true);
     };
 
     const general = useMemo(() => {
@@ -153,7 +160,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                 </div>
                 <div className="mt-6">
                     {dataSource.length <= 0 && !loading ? (
-                        <TableNoData />
+                        <TableNoData className='h-[300px]' title={t('reference:referral.no_friends')} />
                     ) : (
                         dataFilter.map((data, index) => {
                             const status = arrStatus.find((rs) => rs.value === data.kycStatus)?.title;
@@ -185,7 +192,7 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                                             </div>
                                         </div>
                                         <div className="w-full text-center text-sm font-medium">
-                                            <div className="text-gray-1 leading-5">Tỷ lệ hoa hồng</div>
+                                            <div className="text-gray-1 leading-5">{t('reference:referral.commission_rate')}</div>
                                             <div className="text-darkBlue leading-6">{formatNumber(data.rate)}%</div>
                                         </div>
                                     </div>
@@ -221,11 +228,19 @@ const ListData = ({ dataSource, arrStatus, filter, setFilter, showFilter, setSho
                         })
                     )}
                 </div>
-                {dataSource.length > 10 && !isAll && (
+                {/* {dataSource.length > 10 && !isAll && (
                     <div className="mt-6 text-center text-sm font-medium text-teal underline" onClick={() => onShowAll()}>
                         {t('common:show_more')}
                     </div>
-                )}
+                )} */}
+                <div className='w-full flex justify-center items-center mt-8'>
+                    <RePagination
+                        total={total}
+                        pageSize={6}
+                        current={page}
+                        onChange={(page) => setPage(page)}
+                    />
+                </div>
             </CollapsibleRefCard>
         </>
     );

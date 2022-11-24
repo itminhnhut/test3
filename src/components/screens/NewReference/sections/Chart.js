@@ -12,7 +12,7 @@ import FetchApi from 'utils/fetch-api';
 import PopupModal from '../PopupModal';
 import DatePicker from 'components/common/DatePicker/DatePicker';
 
-const Chart = ({ id }) => {
+const Chart = () => {
     const { t } = useTranslation()
     const tags = [{
         value: 'partners',
@@ -22,10 +22,10 @@ const Chart = ({ id }) => {
         content: t('reference:referral.total_commissions')
     },]
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: '1d' },
-        { title: '1 ' + t('futures:week'), value: '1w' },
-        { title: '1 ' + t('futures:month'), value: '1M' },
-        { title: t('reference:referral.custom'), value: 'custom' },
+        { title: '1 ' + t('futures:day'), value: '1d', format: 'hh' },
+        { title: '1 ' + t('futures:week'), value: '1w', format: 'DD' },
+        { title: '1 ' + t('futures:month'), value: '1M', format: 'W' },
+        // { title: t('reference:referral.custom'), value: 'custom' },
     ]
     const [tab, setTab] = useState(tags[0].value)
     const [timeTab, setTimeTab] = useState(timeTabs[0].value)
@@ -79,11 +79,11 @@ const Chart = ({ id }) => {
                 method: 'GET',
             },
             params: {
-                interval: timeTab !== timeTabs[3].value ? timeTab : timeTabs[0].value,
+                interval: timeTab,
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: 'dd/MM'
+                format: timeTabs.find(e => e.value === timeTab).format
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {
@@ -183,7 +183,7 @@ const Chart = ({ id }) => {
     }
 
     return (
-        <div className='px-4' id={id}>
+        <div className='px-4'  >
             {showCustom && <CustomFilter isShow={showCustom} onClose={() => setShowCustom(false)} t={t} filter={filter} onConfirm={setFilter} />}
             <CollapsibleRefCard title={t('reference:referral.statistic')} >
                 <div className='w-auto'>

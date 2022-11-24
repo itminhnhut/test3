@@ -68,7 +68,7 @@
         "login_to_continue": "Đăng nhập ngay"
     },
     "referral": {
-        "faq": "FAQ",
+        "faq": "Câu hỏi thường gặp",
         "term": "Điều khoản",
         "info": "Thông tin",
         "recent_activities": "Hoạt động gần đây",
@@ -130,6 +130,13 @@
         "asset_type": "Loại tài sản",
         "exchange_commission": "Hoa hồng Exchange",
         "custom": "Tuỳ chỉnh",
-        "commission_type": "Loại hoa hồng"
+        "commission_type": "Loại hoa hồng",
+        "ref_placeholder": "Nhập mã giới thiệu mong muốn",
+        "addref": "Tạo mới",
+        "addref_title": "Mã giới thiệu (Tùy chọn)",
+        "addref_success": "Mã giới thiệu <span class='text-teal'>{{value}}</span> được tạo thành công",
+        "addref_error_1": "Vui lòng nhập đủ 8 ký tự",
+        "addref_error_2": "Mã giới thiệu đã tồn tại",
+        "addref_error_3": "Mã giới thiệu <span class='text-teal'>{{value}}</span> đã tồn tại, vui lòng nhập lại!"
     }
 }

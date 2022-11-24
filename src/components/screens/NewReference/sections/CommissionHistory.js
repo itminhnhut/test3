@@ -12,12 +12,13 @@ import { WalletCurrency } from '../../OnusWithdrawGate/helper';
 import { IconLoading } from 'src/components/common/Icons';
 import colors from 'styles/colors';
 import TableNoData from 'src/components/common/table.old/TableNoData';
+import RePagination from 'components/common/ReTable/RePagination';
 const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
 };
 
-const CommissionHistory = ({ id }) => {
+const CommissionHistory = () => {
     const {
         t,
         i18n: { language }
@@ -44,10 +45,13 @@ const CommissionHistory = ({ id }) => {
         { title: 'ONUS', value: WalletCurrency.ONUS }
     ];
 
-    const [dataSource, setDataSource] = useState([]);
+    const [dataSource, setDataSource] = useState({
+        results: [],
+        total: 0
+    });
     const [loading, setLoading] = useState(true);
     const [showFilter, setShowFilter] = useState(false);
-    const [showAllData, setShowAllData] = useState(false);
+    const [page, setPage] = useState(1);
     const [filter, setFilter] = useState({
         kind: typeTabs[0].value,
         level: levelTabs[0].value,
@@ -69,10 +73,14 @@ const CommissionHistory = ({ id }) => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_COMMISSON_HISTORY,
-                params: params
+                params: {
+                    ...params,
+                    limit: 6,
+                    skip: 6 * (page - 1)
+                }
             });
             if (data) {
-                setDataSource(data.results);
+                setDataSource(data);
             }
         } catch (e) {
             console.log(e);
@@ -83,11 +91,11 @@ const CommissionHistory = ({ id }) => {
 
     useEffect(() => {
         getCommissonHistory();
-    }, [filter]);
+    }, [filter, page]);
 
     return (
-        <div className="px-4" id={id} >
-            {showAllData && (
+        <div className="px-4 w-screen"   >
+            {/* {showAllData && (
                 <AllDataModal
                     onClose={() => setShowAllData(false)}
                     language={language}
@@ -103,9 +111,12 @@ const CommissionHistory = ({ id }) => {
                     loading={loading}
                     setShowAllData={setShowAllData}
                 />
-            )}
+            )} */}
             <ListData
-                dataSource={dataSource}
+                dataSource={dataSource.results}
+                total={dataSource.total}
+                page={page}
+                setPage={setPage}
                 typeTabs={typeTabs}
                 levelTabs={levelTabs}
                 assetTabs={assetTabs}
@@ -114,7 +125,6 @@ const CommissionHistory = ({ id }) => {
                 showFilter={showFilter}
                 setShowFilter={setShowFilter}
                 loading={loading}
-                setShowAllData={setShowAllData}
             />
         </div>
     );
@@ -166,7 +176,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
     );
 };
 
-const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilter, showFilter, setShowFilter, loading, setShowAllData, isAll }) => {
+const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, assetTabs, filter, setFilter, showFilter, setShowFilter, loading, isAll }) => {
     const { t } = useTranslation();
 
     const onConfirm = (e) => {
@@ -174,9 +184,7 @@ const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilte
         setShowFilter(false);
     };
 
-    const onShowAll = () => {
-        setShowAllData(true);
-    };
+
 
     const general = useMemo(() => {
         return {
@@ -225,7 +233,7 @@ const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilte
                 </div>
                 <div className="mt-6">
                     {dataSource.length <= 0 && !loading ? (
-                        <TableNoData />
+                        <TableNoData  className='h-[300px]' title={t('reference:referral.no_commission')}/>
                     ) : (
                         dataFilter?.map((data, index) => {
                             const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
@@ -254,12 +262,19 @@ const ListData = ({ dataSource, typeTabs, levelTabs, assetTabs, filter, setFilte
                         })
                     )}
                 </div>
-
-                {dataSource.length > 10 && !isAll && (
+                {/* {dataSource.length > 10 && !isAll && (
                     <div className="mt-6 text-center text-sm font-medium text-teal underline" onClick={() => onShowAll()}>
                         {loading ? <IconLoading color={colors.teal} /> : t('common:show_more')}
                     </div>
-                )}
+                )} */}
+                <div className='w-full flex justify-center items-center mt-8'>
+                    <RePagination
+                        total={total}
+                        pageSize={6}
+                        current={page}
+                        onChange={(page) => setPage(page)}
+                    />
+                </div>
             </CollapsibleRefCard>
         </>
     );

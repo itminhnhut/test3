@@ -1,17 +1,15 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 
-const CollapsibleRefCard = ({ wrapperClassName = '', children, title, hide = false, isTitle = true }) => {
-    const [isCollapsed, setIsCollapsed] = useState(hide);
+const CollapsibleRefCard = ({ wrapperClassName = '', children, title, isTitle = true }) => {
     return (
         <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
             {isTitle && (
-                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-darkBlue" onClick={() => setIsCollapsed(!isCollapsed)}>
+                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-darkBlue">
                     <div>{title}</div>
-                    <div className="cursor-pointer">{isCollapsed ? <DownArrow /> : <UpArrow />}</div>
                 </div>
             )}
-            <div>{isCollapsed ? null : <div className="mt-4">{children}</div>}</div>
+            <div className="mt-4">{children}</div>
         </div>
     );
 };

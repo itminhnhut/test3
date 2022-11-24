@@ -6,42 +6,42 @@ import CollapsibleRefCard from '../CollapsibleRefCard'
 const QnAData = [{
     q: {
         vi: 'Cơ chế chương trình giới thiệu Referral là bao lâu?',
-        en: ''
+        en: 'Cơ chế chương trình giới thiệu Referral là bao lâu?'
     },
     a: {
         vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: ''
+        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
     }
 }, {
     q: {
         vi: 'Chương trình giới thiệu Referral là gì?',
-        en: ''
+        en: 'Chương trình giới thiệu Referral là gì?'
     },
     a: {
         vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: ''
+        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
     }
 }, {
     q: {
         vi: 'Thế nào là người giới thiệu đủ điều kiện?',
-        en: ''
+        en: 'Thế nào là người giới thiệu đủ điều kiện?'
     },
     a: {
         vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: ''
+        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
     }
 }, {
     q: {
         vi: 'Người được giới thiệu quên sử dụng mã/liên kết giới thiệu của tôi. Tôi vẫn được nhận thưởng chứ?',
-        en: ''
+        en: 'Người được giới thiệu quên sử dụng mã/liên kết giới thiệu của tôi. Tôi vẫn được nhận thưởng chứ?'
     },
     a: {
         vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: ''
+        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
     }
 },]
 
-const QnA = ({ id }) => {
+const QnA = ()  => {
     const { t, i18n: { language } } = useTranslation()
     const renderData = () => {
         return QnAData.map((data, index) => {
@@ -60,8 +60,8 @@ const QnA = ({ id }) => {
         })
     }
     return (
-        <div className='px-4' id={id}>
-            <CollapsibleRefCard title='FAQ' hide={true} >
+        <div className='px-4 w-screen'  >
+            <CollapsibleRefCard title={t('reference:referral.faq')}>
                 <div className='w-auto'>
                     {renderData()}
                 </div>

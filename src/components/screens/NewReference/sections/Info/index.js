@@ -7,6 +7,7 @@ import RefDetail from './RefDetail'
 import { formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux'
 import ReferralLevelIcon from 'components/svg/RefIcons'
+import classNames from 'classnames'
 
 
 const formatter = Intl.NumberFormat('en', {
@@ -26,7 +27,7 @@ const Info = ({ data }) => {
     const user = useSelector(state => state.auth.user) || null;
     return (
         <div className='w-full px-4'>
-            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode} />
+            <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode?.code} />
             <RefCard>
                 <div className='flex h-12 gap-4'>
                     <div className='flex relative'>
@@ -45,41 +46,32 @@ const Info = ({ data }) => {
                     </div>
                 </div>
                 <Line className='mt-4 mb-[18px]' />
-                <div className='flex flex-col gap-1' >
-                    <div className='h-6 flex items-center w-full justify-between font-medium text-sm'>
-                        <div className='font-medium text-sm text-gray-1'>
-                            {t('reference:referral.exchange_volume')}
-                        </div>
-                        <div className='text-darkBlue'>
-                            +{formatNumber(data?.volume?.mine?.spot, 2)} USDT
-                        </div>
-                    </div>
-                    <div className='flex w-full justify-between font-medium text-sm'>
-                        <div className='text-gray-1'>
-                            {t('reference:referral.futures_volume')}
-                        </div>
-                        <div className='text-darkBlue'>
-                            +{formatNumber(data?.volume?.mine?.futures, 2)} USDT
-                        </div>
-                    </div>
-                </div>
-                <Line className='mt-4 mb-[18px]' />
+
                 <div className='flex flex-col gap-2'>
                     <div className='w-full flex h-6 items-center justify-between text-gray-1 font-medium text-xs'>
                         <div>
                             {t('reference:referral.current_volume')}
                         </div>
                         <div>
-                            {t('reference:referral.next_level')}
+                            {data?.rank !== 5 ? t('reference:referral.next_level') : null}
                         </div>
                     </div>
-                    <div className='w-full bg-[#f2f4f7]'>
+                    <div className='w-full bg-[#f2f4f7] flex'>
+                        <Progressbar
+                            background='#17e5d4'
+                            percent={
+                                (data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100
+                            }
+                            height={4}
+                            className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
+                        />
                         <Progressbar
                             background='#00C8BC'
                             percent={
-                                (data?.volume?.current ?? 1 / data?.volume?.target?.spot ?? 1) * 100
+                                (data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100
                             }
                             height={4}
+                            className='!rounded-r-lg'
                         />
                     </div>
                     <div className='w-full flex flex-col'>
@@ -87,19 +79,18 @@ const Info = ({ data }) => {
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
-                            <div>
+                           {data?.rank !== 5 ? <div>
                                 Spot: {formatter.format(data?.volume?.target?.spot)} USDT
-                            </div>
+                            </div> : null}
 
                         </div>
                         <div className='w-full flex justify-between font-medium text-xs text-[#00c8bc]'>
-
                             <div>
                                 Futures: {formatter.format(data?.volume?.current?.futures)} USDT
                             </div>
-                            <div>
+                            {data?.rank !== 5 ? <div>
                                 Futures: {formatter.format(data?.volume?.target?.futures)} USDT
-                            </div>
+                            </div> : null}
                         </div>
                     </div>
                     <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'
@@ -113,8 +104,8 @@ const Info = ({ data }) => {
     )
 }
 
-const Progressbar = styledComponents.div.attrs(({ height = 10 }) => ({
-    className: `rounded-lg transition-all`,
+const Progressbar = styledComponents.div.attrs(({ height = 10, className }) => ({
+    className: classNames(`transition-all`, className),
 }))`
     background: ${({ background }) =>
         background
