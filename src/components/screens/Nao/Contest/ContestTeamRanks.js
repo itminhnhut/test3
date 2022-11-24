@@ -95,7 +95,6 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
         )
     }
 
-    console.log(top_ranks_team)
 
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
