@@ -93,4 +93,4 @@ const moduleExports = withPlugins([
         distDir: process.env.BUILD_DIR || 'build'
     });
 
-module.exports = false ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;
+module.exports = process.env.NODE_ENV === 'production' ? withSentryConfig(moduleExports, sentryWebpackPluginOptions) : moduleExports;
