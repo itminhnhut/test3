@@ -382,7 +382,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 </div>
                             </CardNao>
                         )}
-                        {visibleStatus &&
+                        {/* {visibleStatus &&
                             (loading ? (
                                 <div className="w-full">
                                     <Skeletor className="!rounded-xl" onusMode height={92} width={'100%'} colors={colors.nao.grey} />
@@ -401,7 +401,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         </div>
                                     </CardNao>
                                 )
-                            ))}
+                            ))} */}
                     </div>
                     {isMobile ? (
                         <CardNao noBg className="mt-8 !py-6 !px-4">
