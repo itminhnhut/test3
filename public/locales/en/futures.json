@@ -477,6 +477,8 @@
     "min_limit_order_price": "Min Activation Price",
     "max_limit_order_price": "Max Activation Price",
     "liq_fee_rate": "Liquidation Fee Rate",
+    "min_difference_ratio": "% price range",
+    "min_difference_ratio_tooltip": "Minimum range by percentage with market price for setting limit price, this index is constantly updated based on market status.",
     "max_leverage": "Max Leverage",
     "swap_fee": "Swap Fee Rate",
     "order": "orders",

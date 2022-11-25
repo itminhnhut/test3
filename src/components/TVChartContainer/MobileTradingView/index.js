@@ -667,7 +667,6 @@ const Funding = ({ symbol }) => {
     const [showModal, setShowModal] = React.useState(false)
     const timesync = useSelector(state => state.utils.timesync)
     const marketWatch = useSelector((state) => state.futures.marketWatch);
-    if (timesync) console.log('__ timesync 111', timesync.now());
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}

@@ -479,6 +479,8 @@
     "min_limit_order_price": "Giá kích hoạt tối thiểu",
     "max_limit_order_price": "Giá kích hoạt tối đa",
     "liq_fee_rate": "Phí thanh lý",
+    "min_difference_ratio": "Tỷ lệ khoảng cách giá",
+    "min_difference_ratio_tooltip": "Khoảng cách tối thiểu theo tỷ lệ % với giá thị trường để cài đặt các mức giá giới hạn, tỷ lệ này sẽ liên tục được cập nhật theo diễn biến thị trường",
     "max_leverage": "Đòn bẩy tối đa",
     "swap_fee": "Phí swap",
     "order": "lệnh",

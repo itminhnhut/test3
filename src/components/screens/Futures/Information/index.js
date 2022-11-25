@@ -63,6 +63,11 @@ const ITEMS_WITH_TOOLTIPS = [
         tooltip: 'liq_fee_rate_tooltips',
         leftPercent: 41
     },
+    {
+        title: 'min_difference_ratio',
+        tooltip: 'min_difference_ratio_tooltip',
+        leftPercent: 41
+    },
     // {
     //     title: 'swap_fee',
     //     tooltip: 'swap_fee_tooltips',
@@ -175,8 +180,16 @@ export default function OrderInformation({ pair }) {
                 return (currentExchangeConfig.exchange?.leverageConfig?.max || '-') + 'x';
             case 'liq_fee_rate':
                 return '1%';
-            case 'swap_fee':
-                return '0.0015%';
+            case 'min_difference_ratio': {
+                const _minRatio = currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio
+                return (
+                    formatNumber(
+                        _minRatio*100,
+                        3
+                    ) +
+                    '%'
+                );
+            }
             case 'funding_countdown': {
                 return <div>
                     <span>{formatFundingRate(_pairPrice?.fundingRate * 100)}</span> /

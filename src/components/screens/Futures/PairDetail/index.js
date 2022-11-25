@@ -448,6 +448,7 @@ const FuturesPairDetail = ({
                         quoteAsset
                     );
                 }
+
                 case 'max_limit_order_price': {
                     const _maxPrice = currentExchangeConfig?.priceFilter?.maxPrice;
                     return (
@@ -466,8 +467,15 @@ const FuturesPairDetail = ({
                     return (currentExchangeConfig?.config?.leverageConfig?.max || '-') + 'x';
                 case 'liq_fee_rate':
                     return '1%';
-                case 'swap_fee':
-                    return '0.0015%';
+                case 'min_difference_ratio':
+                    const _minRatio = currentExchangeConfig?.percentPriceFilter?.minDifferenceRatio
+                    return (
+                        formatNumber(
+                            _minRatio*100,
+                            3
+                        ) +
+                        '%'
+                    );
                 default:
                     return '-';
             }
@@ -820,10 +828,10 @@ const RIGHT_ITEMS_WITH_TOOLTIPS = [
         leftPercent: 41
     },
     {
-        title: 'swap_fee',
-        tooltip: 'swap_fee_tooltips',
-        leftPercent: 30
-    }
+        title: 'min_difference_ratio',
+        tooltip: 'min_difference_ratio_tooltip',
+        leftPercent: 41
+    },
 ];
 
 const Row = styled.div.attrs({
