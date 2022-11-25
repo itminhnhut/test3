@@ -166,7 +166,7 @@ function TabTransactionsHistory({
             const orderId = getOrderIdFromNote(item?.note);
             const isUSDT = assetConfig.assetCode === 'USDT';
             const assetDigit = assetConfig?.assetDigit ?? 0;
-            const decimal = item?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 2 : 0) : (isUSDT ? assetDigit + 2 : assetDigit);
+            const decimal = item?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 0) : (isUSDT ? assetDigit + 2 : assetDigit);
 
             let orderIdItem = <span>--</span>;
 
@@ -350,7 +350,7 @@ const TransactionDetail = ({
     }
     const assetDigit = assetConfig?.assetDigit ?? 0;
     const isUSDT = assetConfig.assetCode === 'USDT';
-    const decimal = transaction?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 2 : 0) : (isUSDT ? assetDigit + 2 : assetDigit);
+    const decimal = transaction?.category === TransactionCategory.FUTURE_FUNDING_FEE ? (isUSDT ? 6 : 0) : (isUSDT ? assetDigit + 2 : assetDigit);
     const _renderCategory = (item) => {
         if (!item) return '-';
         const note = (item.note).toLowerCase();

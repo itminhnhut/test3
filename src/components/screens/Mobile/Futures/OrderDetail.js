@@ -113,7 +113,7 @@ const OrderDetail = ({
         if (!order) return '-';
         const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
-        const decimalFunding = currency === 72 ? 0 : 2
+        const decimalFunding = currency === 72 ? 0 : 6
         const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
         const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
