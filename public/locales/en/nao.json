@@ -211,7 +211,9 @@
         "join_success": "Successfully Joined",
         "team_invitations": "Team Invitations",
         "date_2": "<div class='font-semibold'>{{hours}}&nbsp;hours&nbsp;{{minutes}}&nbsp;minutes</div>",
-        "last_updated_time": "Last updated"
+        "last_updated_time": "Last updated",
+        "tournaments": "Tournaments",
+        "master_ranking": "Master Ranking"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",

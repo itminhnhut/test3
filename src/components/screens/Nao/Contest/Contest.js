@@ -9,6 +9,7 @@ import InvitationsDetail from 'components/screens/Nao/Contest/season2/Invitation
 import { API_CONTEST_LAST_TIME_SCAN } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
+import ContestMasterRank from 'components/screens/Nao/Contest/ContestMasterRank';
 
 export const seasons = [
     {
@@ -80,6 +81,24 @@ export const seasons = [
         active: true,
         top_ranks_per: 20,
         top_ranks_team: 10
+    },
+    {
+        season: 6, start: '2022-11-30T17:00:00.000Z', end: '2022-12-31T17:00:00.000Z',
+        contest_id: 9,
+        title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 3', en: 'ONUS Futures VNDC – Nami Championship Season 3' },
+        title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 3', en: 'ONUS Futures VNDC – Nami Championship Season 3' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-3',
+        total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
+        time_to_create: { start: '2022-11-25T17:00:00.000Z', end: '2022-12-09T17:00:00.000Z' },
+        active: false,
+        top_ranks_per: 20,
+        top_ranks_team: 10,
+        top_ranks_master: 3,
     },
 ]
 
@@ -165,6 +184,7 @@ const Contest = (props) => {
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
                 <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
                 <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.team} />
+               {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
             </div>
         </LayoutNaoToken>
     );

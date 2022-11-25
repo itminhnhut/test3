@@ -234,7 +234,7 @@ export const Table = ({
     const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
     return (
         <CardNao id="nao-table" noBg className={
-            classNames("mt-8 !p-6 !justify-start bg-nao-bg4", classWrapper)
+            classNames("mt-8 !p-6 !justify-start", classWrapper)
         }>
             <div
                 ref={content}

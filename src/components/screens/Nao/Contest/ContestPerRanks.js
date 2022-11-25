@@ -10,6 +10,7 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router'
+import TickFbIcon from 'components/svg/TickFbIcon';
 
 const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdatedTime, sort, params, top_ranks_per }) => {
     const [tab, setTab] = useState(sort);
@@ -69,14 +70,20 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
 
     const renderName = (data, item) => {
         return (
-            <div className='flex items-center gap-2'>
-                <div className='w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <ImageNao className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
-                        src={item?.avatar} width="32" height="32" alt="" />
+            <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center">
+                    <ImageNao
+                        className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        src={item?.avatar}
+                        width="32"
+                        height="32"
+                        alt=""
+                    />
                 </div>
                 <div>{capitalize(data)}</div>
+                {item?.is_onus_master && <TickFbIcon size={16} />}
             </div>
-        )
+        );
     }
 
     const renderRank = (data, item) => {
@@ -117,18 +124,19 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                 <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem]">
                     {top3.map((item, index) => (
                         <CardNao key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                            <div className="flex items-center justify-between flex-1 gap-5 mb-4">
+                            <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
-                                    <div className="w-[2.875rem] h-[2.875rem] rounded-[50%] relative">
+                                    <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
-                                            className="min-w-[2.875rem] min-h-[2.875rem] max-w-[2.875rem] max-h-[2.875rem] rounded-[50%] object-cover" alt="" />
+                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover" alt="" />
                                         {/*{item?.[rank] > 0 && <img className="absolute bottom-0 -translate-x-1/2 translate-y-3 left-1/2" src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}*/}
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
-                                            {capitalize(item?.name)}
+                                            <span>{capitalize(item?.name)}</span>
+                                            {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
-                                        <span className="text-sm font-medium cursor-pointer text-nao-grey">{item?.onus_user_id}</span>
+                                        <span className="text-sm font-medium cursor-pointer text-onus-grey">{item?.onus_user_id}</span>
                                     </div>
                                 </div>
                                 <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
@@ -137,25 +145,25 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
+                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
                                     <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                 </div>
                                 {!previous &&
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-nao-text">{t('common:ext_gate:time')}</div>
+                                        <div className="text-sm text-onus-grey">{t('common:ext_gate:time')}</div>
                                         <span className="font-semibold leading-8">{formatNumber(item?.time, 2)} {t('common:hours')}</span>
                                     </div>
                                 }
                                 {
                                     tab === 'pnl'
                                         ? <div className="flex items-center justify-between gap-2">
-                                            <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
+                                            <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
                                             <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                                 {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
                                             </span>
                                         </div>
                                         : <div className="flex items-center justify-between gap-2">
-                                            <div className="text-sm text-nao-text">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
                                             <span className={`font-semibold leading-8`}>
                                                 {formatNumber(item?.total_order)}
                                             </span>
@@ -188,7 +196,10 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                         <div className="flex-1 text-sm">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
+                                                    <div className='flex items-center space-x-2'>
+                                                        <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
+                                                        {item?.is_onus_master && <TickFbIcon size={16} />}
+                                                    </div>
                                                     <div className="font-medium leading-6 cursor-pointer text-nao-grey">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className=''>
