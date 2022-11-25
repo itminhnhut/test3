@@ -133,7 +133,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
                                             <span>{capitalize(item?.name)}</span>
-                                            {item?.is_group_master && <TickFbIcon size={16} />}
+                                            {item?.is_group_master && <TickFbIcon size={18} />}
                                             {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
                                         <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>

@@ -327,7 +327,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                             <div className="text-2xl leading-8 font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
-                                            {dataSource?.is_group_master && <TickFbIcon size={20} />}
+                                            {dataSource?.is_group_master && <TickFbIcon size={24} />}
                                             {visibleStatus &&
                                                 (loading ? (
                                                     <Skeletor onusMode width={50} height={24} />
@@ -410,7 +410,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     dataSource?.members.map((item, index) => {
                                         return (
                                             <div key={index} className={'p-4 rounded-xl border border-nao-grey/[0.2]'}>
-                                                <div className="flex items-center justify-between">
+                                                <div className="flex items-center justify-between space-x-4">
                                                     <div className="flex items-center space-x-4">
                                                         <div className="bg-onus-bgModal rounded-[50%] min-w-[36px] min-h-[36px]">
                                                             {item?.name && (
@@ -485,7 +485,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         <Table dataSource={dataSource?.members ?? []}>
                             <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:no')} fieldName={'index'} />
                             <Column
-                                minWidth={180}
+                                minWidth={220}
                                 ellipsis
                                 className="font-semibold capitalize"
                                 title={t('nao:contest:name')}

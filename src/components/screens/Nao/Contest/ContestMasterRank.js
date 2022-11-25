@@ -156,7 +156,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
                                             <span>{capitalize(item?.name)}</span>
-                                            <TickFbIcon size={16} />
+                                            <TickFbIcon size={18} />
                                         </div>
                                         <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
