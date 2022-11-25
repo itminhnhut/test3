@@ -30,6 +30,7 @@ const Privacy = () => {
                             <li>What does this notice cover?</li>
                             <li>What personal data do we process?</li>
                             <li>How do we use this personal data, and what is the legal basis for this use?</li>
+                            <li>What rights do you have?</li>
                             <li>Fully-automated decision-making that could have significant effects on you</li>
                             <li>Relying on our legitimate interests</li>
                             <li>Withdrawing consent or otherwise objecting to direct marketing</li>
@@ -114,6 +115,16 @@ const Privacy = () => {
                             we explain at that time.</p>
                         <p>For purposes which are required by law, in particular: in response to requests by relevant
                             courts and public authorities, such as those conducting an investigation.</p>
+                        <p className="mt-6 mb-2 text-base"><strong>What rights do you have?</strong></p>
+                        Subject to applicable law, as outlined below, you have a number of rights in relation to your privacy and the protection of your personal information. You have the right to request access to, correct, and delete your personal information, and to ask for data portability. You may also object to our processing of your personal information or ask that we restrict the processing of your personal information in certain instances. In addition, when you consent to our processing of your personal information for a specified purpose, you may withdraw your consent at any time. If you want to exercise any of your rights please contact us at support@nami.exchange. These rights may be limited in some situations - for example, where we can demonstrate we have a legal requirement to process your personal data.
+                        <ul>
+                            <li>Right to access: you have the right to obtain confirmation that your personal information are processed and to obtain a copy of it as well as certain information related to its processing;</li>
+                            <li>Right to rectify: you can request the rectification of your personal information which are inaccurate, and also add to it. You can also change your personal information in your Account at any time;</li>
+                            <li>Right to delete: you can, in some cases, have your personal information deleted by contacting us;</li>
+                            <li>Right to object: you can object, for reasons relating to your particular situation, to the processing of your personal information. For instance, you have the right to object where we rely on legitimate interest or where we process your data for direct marketing purposes;</li>
+                            <li>Right to restrict processing: You have the right, in certain cases, to temporarily restrict the processing of your personal information by us, provided there are valid grounds for doing so. We may continue to process your personal information if it is necessary for the defense of legal claims, or for any other exceptions permitted by applicable law;</li>
+                            <li>Right to portability: in some cases, you can ask to receive your personal information which you have provided to us in a structured, commonly used and machine-readable format, or, when this is possible, that we communicate your personal information on your behalf directly to another data controller;</li>
+                        </ul>
                         <p className="mt-6 mb-2 text-base"><strong>Fully-automated decision-making that could have
                             significant effects on you</strong></p>
                         <p>As the service documentation on our site and our terms of service explain, our trading

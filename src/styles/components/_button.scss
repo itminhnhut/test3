@@ -22,7 +22,8 @@
 }
 
 .btn {
-  @apply flex items-center justify-center px-8 h-9 whitespace-nowrap text-sm font-semibold rounded-md text-txtPrimary;
+  @apply items-center justify-center px-8 h-9 whitespace-nowrap text-sm font-semibold rounded-md text-txtPrimary;
+  display: flex!important;
   cursor: pointer;
 
   &.btn-icon {
