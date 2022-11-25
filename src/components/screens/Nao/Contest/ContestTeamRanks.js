@@ -71,7 +71,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                         src={item?.avatar} width="32" height="32" alt="" />
                 </div>
                 <div>{data}</div>
-              {item?.is_group_master && <TickFbIcon size={14} />}
+              {item?.is_group_master && <TickFbIcon size={16} />}
             </div>
         )
     }
@@ -124,41 +124,39 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
                         <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                            <div className="flex justify-between flex-1 mb-4 gap-5">
-                                <div className="flex flex-col">
-                                    <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
+                        <div className="flex items-center justify-between flex-1 gap-5">
+                                <div className="flex items-center space-x-4">
+                                    <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
+                                        <ImageNao src={item?.avatar}
+                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover" alt="" />
+                                    </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="text-lg font-semibold leading-8 uppercase flex items-center gap-2">
-                                            <div className='flex items-center space-x-2'>
-                                                <span>{item?.name}</span>
-                                              {item?.is_group_master && <TickFbIcon size={14} />}
-                                            </div>
-                                            {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
+                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
+                                            <span>{capitalize(item?.name)}</span>
+                                            {item?.is_group_master && <TickFbIcon size={16} />}
+                                            {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
-                                        <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
+                                        <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
-                                <div className="w-[4.25rem] h-[4.25rem] rounded-[50%]">
-                                    <ImageNao src={item?.avatar}
-                                        className="min-w-[4.25rem] min-h-[4.25rem] max-w-[4.25rem max-h-[4.25rem] rounded-[50%] object-cover" alt="" />
-                                </div>
+                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
                             </div>
+                            <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-nao-text">{t('nao:contest:volume')}</div>
+                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
                                     <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                 </div>
-                                <div className="h-[1px] bg-nao-grey/[0.2] w-full my-2"></div>
                                 {
                                     tab === 'pnl'
                                         ? <div className="flex items-center justify-between gap-2">
-                                            <div className="text-sm text-nao-text">{t('nao:contest:per_pnl')}</div>
+                                            <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
                                             <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                                 {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}{formatNumber(item?.pnl, 2, 0, true)}%
                                             </span>
                                         </div>
                                         : <div className="flex items-center justify-between gap-2">
-                                            <div className="text-sm text-nao-text">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
                                             <span className={`font-semibold leading-8`}>
                                                 {formatNumber(item?.total_order)}
                                             </span>
@@ -192,7 +190,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                                 <div>
                                                     <div className="font-semibold leading-6 uppercase flex items-center space-x-2">
                                                         <span>{item?.name} </span>
-                                                        {item?.is_group_master && <TickFbIcon size={14} />}
+                                                        {item?.is_group_master && <TickFbIcon size={16} />}
                                                     </div>
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{capitalize(item?.leader_name)}</div>
                                                 </div>
