@@ -3,14 +3,13 @@ import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleR
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
-import { FilterTabs, Line, RefButton } from '..';
+import { FilterTabs, Line, NoData, RefButton } from '..';
 import ReferralLevelIcon from '../../../svg/RefIcons';
 import PopupModal from '../PopupModal';
 import DatePicker from '../../../common/DatePicker/DatePicker';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import Tooltip from 'components/common/Tooltip';
-import TableNoData from 'src/components/common/table.old/TableNoData';
 import RePagination from 'components/common/ReTable/RePagination';
 
 const title = {
@@ -59,7 +58,7 @@ const FriendList = () => {
         try {
             const { data } = await fetchApi({
                 url: API_GET_LIST_FRIENDS,
-                params: { 
+                params: {
                     ...params,
                     limit: 6,
                     skip: 6 * (page - 1)
@@ -160,7 +159,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                 </div>
                 <div className="mt-6">
                     {dataSource.length <= 0 && !loading ? (
-                        <TableNoData className='h-[300px]' title={t('reference:referral.no_friends')} />
+                        <NoData text={t('reference:referral.no_friends')} className='h-[300px]' />
                     ) : (
                         dataFilter.map((data, index) => {
                             const status = arrStatus.find((rs) => rs.value === data.kycStatus)?.title;
