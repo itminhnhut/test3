@@ -9,6 +9,7 @@ import InvitationsDetail from 'components/screens/Nao/Contest/season2/Invitation
 import { API_CONTEST_LAST_TIME_SCAN } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
+import ContestMasterRank from 'components/screens/Nao/Contest/ContestMasterRank';
 
 export const seasons = [
     {
@@ -96,7 +97,8 @@ export const seasons = [
         time_to_create: { start: '2022-11-25T17:00:00.000Z', end: '2022-12-09T17:00:00.000Z' },
         active: false,
         top_ranks_per: 20,
-        top_ranks_team: 10
+        top_ranks_team: 10,
+        top_ranks_master: 3,
     },
 ]
 
@@ -182,6 +184,7 @@ const Contest = (props) => {
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
                 <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
                 <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.team} />
+               {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
             </div>
         </LayoutNaoToken>
     );

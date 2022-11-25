@@ -14,6 +14,7 @@ import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import AddMemberModal from './season2/AddMemberModal';
 import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
+import TickFbIcon from 'components/svg/TickFbIcon';
 
 const statusMember = {
     PENDING: 0, ACCEPTED: 1, DENIED: 2, CANCELED: 3,
@@ -211,6 +212,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                         src={item?.avatar} width="24" height="24" alt="" />}
                 </div>
                 <div>{capitalize(data) ?? t('nao:contest:member', { value: item?.rowIndex + 1 })}</div>
+                {item?.is_onus_master && <TickFbIcon size={14} />}
             </div>
         )
     }
@@ -228,7 +230,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     const isMobile = width <= 640;
     const rank = sortName === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
-
+    
     return (
         <>
             {showAddMemberModal && <AddMemberModal onClose={onAddMember} contest_id={contest_id} />}
@@ -252,7 +254,10 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     <LeadIcon />
                                     <div className="text-xs leading-6 capitalize">{t('nao:contest:captain')}: {capitalize(dataSource?.leader_name) ?? '-'}</div>
                                 </div>
-                                <div className="text-lg leading-8 font-semibold uppercase">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-'}</div>
+                                <div className='flex items-center space-x-2'>
+                                    <div className="text-lg leading-8 font-semibold uppercase">{loading ? <Skeletor onusMode width={100} height={10} /> : dataSource?.name ?? '-' }</div>
+                                    {dataSource?.is_group_master && <TickFbIcon size={14} />}
+                                </div>
                                 {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
                                     <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
                                         <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
@@ -278,6 +283,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                             <div className="text-2xl leading-8 font-semibold uppercase">
                                                 {loading ? <Skeletor onusMode width={100} height={24} /> : dataSource?.name ?? '-'}
                                             </div>
+                                           {dataSource?.is_group_master && <TickFbIcon size={20} />}
                                             {/* {loading ? <Skeletor onusMode width={50} height={24} /> :
                                                 <div className="bg-bgCondition rounded-[800px] px-2">
                                                     <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-onus-orange' : 'text-nao-blue3'}`}>
@@ -342,8 +348,9 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                             {item?.name && <ImageNao className="rounded-[50%] min-w-[36px] min-h-[36px] max-w-[36px] max-h-[36px] object-cover"
                                                                 src={item?.avatar} />}
                                                         </div>
-                                                        <div className="text-sm font-semibold leading-5 capitalize">
-                                                            {capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}
+                                                        <div className="text-sm font-semibold leading-5 capitalize flex items-center space-x-2">
+                                                            <span>{capitalize(item?.name) ?? t('nao:contest:member', { value: index + 1 })}</span>
+                                                            {item?.is_onus_master && <TickFbIcon size={14} />}
                                                         </div>
                                                     </div>
                                                     {item?.name && renderStatusMember(item?.status)}

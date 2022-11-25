@@ -211,7 +211,9 @@
         "join_success": "Tham gia đội thành công",
         "team_invitations": "Lời mời tham gia đội",
         "date_2": "<div class='font-semibold'>{{hours}}&nbsp;giờ&nbsp;{{minutes}}&nbsp;phút</div>",
-        "last_updated_time": "Cập nhật lần cuối vào"
+        "last_updated_time": "Cập nhật lần cuối vào",
+        "tournaments": "Danh sách giải đấu",
+        "master_ranking": "Bảng xếp hạng master"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",
@@ -230,7 +232,7 @@
         "the_promotion_end_title": "Chương trình đã kết thúc",
         "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau."
     },
-    "ended": "đã kết thúc",
-    "going_on": "đang diễn ra",
-    "coming_soon_2": "sắp diễn ra"
+    "ended": "Đã kết thúc",
+    "going_on": "Đang diễn ra",
+    "coming_soon_2": "Sắp diễn ra"
 }

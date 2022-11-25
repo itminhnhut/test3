@@ -10,6 +10,7 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router'
+import TickFbIcon from 'components/svg/TickFbIcon';
 
 const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdatedTime, sort, params, top_ranks_per }) => {
     const [tab, setTab] = useState(sort);
@@ -69,14 +70,20 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
 
     const renderName = (data, item) => {
         return (
-            <div className='flex items-center gap-2'>
-                <div className='w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center'>
-                    <ImageNao className='rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]'
-                        src={item?.avatar} width="32" height="32" alt="" />
+            <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center">
+                    <ImageNao
+                        className="rounded-[50%] object-cover min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
+                        src={item?.avatar}
+                        width="32"
+                        height="32"
+                        alt=""
+                    />
                 </div>
                 <div>{capitalize(data)}</div>
+                {item?.is_onus_master && <TickFbIcon size={14} />}
             </div>
-        )
+        );
     }
 
     const renderRank = (data, item) => {
@@ -126,7 +133,8 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
-                                            {capitalize(item?.name)}
+                                            <span>{capitalize(item?.name)}</span>
+                                            {item?.is_onus_master && <TickFbIcon size={14} />}
                                         </div>
                                         <span className="text-sm font-medium cursor-pointer text-nao-grey">{item?.onus_user_id}</span>
                                     </div>
@@ -188,7 +196,10 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                                         <div className="flex-1 text-sm">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
+                                                    <div className='flex items-center space-x-2'>
+                                                        <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
+                                                        {item?.is_onus_master && <TickFbIcon size={14} />}
+                                                    </div>
                                                     <div className="font-medium leading-6 cursor-pointer text-nao-grey">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className=''>

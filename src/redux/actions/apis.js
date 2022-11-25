@@ -260,6 +260,10 @@ export const API_CONTEST_GET_INVITATIONS =
 export const API_CONTEST_POST_ACCEPT_INVITATION =
     API_PREFIX + "event/futures-contest/process-invite";
 
+export const API_CONTEST_GET_MASTER_GROUP_PNL =
+API_PREFIX + "event/futures-contest/group-master-pnl";
+
+
 //VOTE
 export const API_USER_VOTE = API_V3_PREFIX + "nao-dashboard/user-vote";
 export const API_USER_POOL = API_V3_PREFIX + "nao-dashboard/user-vote/getuserpool";

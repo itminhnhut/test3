@@ -10,6 +10,7 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router'
+import TickFbIcon from 'components/svg/TickFbIcon';
 
 const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_team }) => {
     const [tab, setTab] = useState(sort);
@@ -70,6 +71,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                         src={item?.avatar} width="32" height="32" alt="" />
                 </div>
                 <div>{data}</div>
+              {item?.is_group_master && <TickFbIcon size={14} />}
             </div>
         )
     }
@@ -127,7 +129,10 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                     <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
                                     <div className="sm:space-y-[2px] flex flex-col">
                                         <div className="text-lg font-semibold leading-8 uppercase flex items-center gap-2">
-                                            <div>{item?.name}</div>
+                                            <div className='flex items-center space-x-2'>
+                                                <span>{item?.name}</span>
+                                              {item?.is_group_master && <TickFbIcon size={14} />}
+                                            </div>
                                             {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />}
                                         </div>
                                         <span className="text-nao-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
@@ -185,7 +190,10 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <div className="font-semibold leading-6 uppercase">{item?.name} </div>
+                                                    <div className="font-semibold leading-6 uppercase flex items-center space-x-2">
+                                                        <span>{item?.name} </span>
+                                                        {item?.is_group_master && <TickFbIcon size={14} />}
+                                                    </div>
                                                     <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">{capitalize(item?.leader_name)}</div>
                                                 </div>
                                                 <div className=''>
