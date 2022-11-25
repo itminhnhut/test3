@@ -8,11 +8,11 @@ const Term = () => {
     const renderData = () => {
         return (
             <div className='font-medium text-sm text-darkBlue text-justify'>
-                1. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
+                1. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng VNDC. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
                 <Line className='my-4' />
-                2. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
+                2. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng VNDC. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
                 <Line className='my-4' />
-                3. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
+                3. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng VNDC. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.
             </div>
         )
     }

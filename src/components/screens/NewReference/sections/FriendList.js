@@ -9,8 +9,10 @@ import PopupModal from '../PopupModal';
 import DatePicker from '../../../common/DatePicker/DatePicker';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
-import Tooltip from 'components/common/Tooltip';
 import RePagination from 'components/common/ReTable/RePagination';
+import { Code } from 'react-feather';
+import ReactTooltip from 'react-tooltip';
+import { commisionConfig } from 'config/referral';
 
 const title = {
     en: 'Friend List',
@@ -110,6 +112,13 @@ const FriendList = () => {
     );
 };
 
+const commissionType = {
+    spot: 'Giao ngay',
+    futures: 'Futures',
+    swap: 'Quy đổi',
+    staking: 'Staking'
+}
+
 const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setPage, page }) => {
     const {
         t,
@@ -142,7 +151,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
             )}
             <CollapsibleRefCard title={title[language]} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
                 <div className="w-auto">
-                    <div className="flex flex-wrap gap-2">
+                    {dataSource.length ? <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
                         </FilterContainer>
@@ -155,7 +164,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                             {t('reference:referral.status')}: {general.kycStatus}
                         </FilterContainer>
                         {general.totalCommission && <FilterContainer onClick={() => setShowFilter(true)}>Tổng HH: {general.totalCommission}</FilterContainer>}
-                    </div>
+                    </div> : null}
                 </div>
                 <div className="mt-6">
                     {dataSource.length <= 0 && !loading ? (
@@ -168,7 +177,29 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                     <div className="flex items-center justify-between">
                                         <div className="flex flex-col justify-center items-start">
                                             <div className="leading-6 font-semibold text-sm text-darkBlue flex gap-1 items-center">
-                                                {data.code} {ReferralLevelIcon(data.rank)}
+                                                {/* {data.code} {ReferralLevelIcon(data.rank)} */}
+                                                {data.code} <div data-tip="" data-for={'info' + data.code} data-offset="{'left': 16}">
+                                                    <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
+                                                </div>
+                                                <Tooltip id={'info' + data.code} place="top" data-offset="{'left': 16}" effect="solid" className='w-[calc(100vw-32px)] !left-4 !p-0'>
+                                                    <div className='w-full pt-6 pb-2 px-3 font-semibold text-base'>
+                                                        <div className='w-full rounded-md border-[1px] border-teal h-10 flex items-center justify-center'>
+                                                            {data.code}
+                                                        </div>
+                                                        <div className='mt-4'>
+                                                            <div className='text-teal'>
+                                                                Tỷ lệ hoa hồng trực tiếp
+                                                            </div>
+                                                            <div className='text-darkBlue font-medium text-xs flex'>
+                                                                {Object.values(commisionConfig[data?.rank ?? 1]?.direct).map(config => {
+                                                                    return (
+                                                                        <span>{}{config.direct}</span>
+                                                                    )
+                                                                })}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Tooltip>
                                             </div>
                                             <div className="leading-[14px] font-medium text-xs text-gray-1">
                                                 {t('reference:referral.referral_date')}: {formatTime(data.invitedAt, 'dd/MM/yyyy')}
@@ -199,25 +230,37 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
                                                 <span className="text-gray-1">{t('reference:referral.total_direct_commissions')}</span>
-                                                <div data-tip="1231312" data-for="liquidate-fee">
-                                                    <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                                                <div data-tip="" data-for={'direct' + data.code}>
+                                                    <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
-                                                <Tooltip id="liquidate-fee" place="top" effect="solid" />
+                                                <Tooltip id={'direct' + data.code} place="top" effect="solid">
+                                                    <div className='flex flex-col w-full min-w-[120px]'>
+                                                        <div className='flex justify-between w-full'><div className=''>VNDC</div> {formatNumber(data?.directCommission?.['72'], 2)}</div>
+                                                        <div className='flex justify-between w-full'><div className=''>USDT</div> {formatNumber(data?.directCommission?.['22'], 2)}</div>
+                                                        <div className='flex justify-between w-full'><div className=''>NAO</div> {formatNumber(data?.directCommission?.['447'], 2)}</div>
+                                                    </div>
+                                                </Tooltip>
                                             </div>
                                             <div className="text-teal">
-                                                +{formatNumber(data?.directCommission)} {data.symbol} USDT
+                                                +{formatNumber(data?.directCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
                                                 <span className="text-gray-1">{t('reference:referral.total_indirect_commissions')}</span>
-                                                <div data-tip="1231312" data-for="liquidate-fee">
-                                                    <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
+                                                <div data-tip="" data-for={'indirect' + data.code}>
+                                                    <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
-                                                <Tooltip id="liquidate-fee" place="top" effect="solid" />
+                                                <Tooltip id={'indirect' + data.code} place="top" effect="solid" arrowColor='#fff'>
+                                                    <div className='flex flex-col w-full min-w-[120px] !bg-white'>
+                                                        <div className='flex justify-between w-full'><div className=''>VNDC</div> {formatNumber(data?.indirectCommission?.['72'], 2)}</div>
+                                                        <div className='flex justify-between w-full'><div className=''>USDT</div> {formatNumber(data?.indirectCommission?.['22'], 2)}</div>
+                                                        <div className='flex justify-between w-full'><div className=''>NAO</div> {formatNumber(data?.indirectCommission?.['447'], 2)}</div>
+                                                    </div>
+                                                </Tooltip>
                                             </div>
                                             <div className="text-teal">
-                                                +{formatNumber(data?.undirectCommission)} {data.symbol} USDT
+                                                +{formatNumber(data?.undirectCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
                                     </div>
@@ -291,5 +334,22 @@ const AllDataModal = ({ onClose, language, ...props }) => {
         </PopupModal>
     );
 };
+
+
+const Tooltip = ({ children, place, offset, arrowColor, className, ...restProps }) => {
+    const ref = useRef()
+    return (
+        <ReactTooltip
+            ref={ref}
+            className={classNames('!bg-white !rounded-lg !opacity-100 !text-darkBlue !shadow-ref', className)}
+            place={place}
+            effect='solid'
+            {...restProps}
+        >
+            {children}
+        </ReactTooltip>
+    )
+}
+
 
 export default FriendList;

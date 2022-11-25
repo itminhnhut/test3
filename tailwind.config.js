@@ -428,7 +428,8 @@ module.exports = {
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)'
+                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
+                ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
             },
             cursor: {
                 grabbing: 'grabbing',

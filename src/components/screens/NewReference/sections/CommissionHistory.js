@@ -3,7 +3,7 @@ import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleR
 import AssetLogo from 'components/wallet/AssetLogo';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
-import { FilterTabs, Line, RefButton } from '..';
+import { FilterTabs, Line, NoData, RefButton } from '..';
 import PopupModal from '../PopupModal';
 import DatePicker from '../../../common/DatePicker/DatePicker';
 import fetchApi from 'utils/fetch-api';
@@ -39,7 +39,7 @@ const CommissionHistory = () => {
     const assetTabs = [
         { title: t('common:all'), value: null },
         { title: 'VNDC', value: WalletCurrency.VNDC },
-        { title: 'USDT', value: WalletCurrency.USDT },
+        { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
         { title: 'ONUS', value: WalletCurrency.ONUS }
@@ -214,7 +214,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                 />
             )}
             <CollapsibleRefCard title={t('reference:referral.commission_histories')} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
-                <div className="w-auto">
+                {!dataSource.length ? null : <div className="w-auto">
                     <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
@@ -230,10 +230,10 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                             {t('reference:referral.asset_type')}: {general.currency}
                         </FilterContainer>
                     </div>
-                </div>
+                </div>}
                 <div className="mt-6">
                     {dataSource.length <= 0 && !loading ? (
-                        <TableNoData  className='h-[300px]' title={t('reference:referral.no_commission')}/>
+                        <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
                             const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
@@ -246,7 +246,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-darkBlue">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} USDT</div>
+                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
                                             </div>
                                             <div className="flex items-center justify-between">
                                                 <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>

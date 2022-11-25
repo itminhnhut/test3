@@ -92,7 +92,7 @@ const LastedActivities = () => {
     const renderData = () => {
         switch (tab) {
             case tags[0].value:
-                return !lastedCommissions.length ? <><NoData text={t('reference:referral.no_commission')}  /></> : lastedCommissions.map((data, index) =>
+                return !lastedCommissions.length ? <><NoData className='my-20' text={t('reference:referral.no_commission')}  /></> : lastedCommissions.map((data, index) =>
                     <div key={index}>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
@@ -100,7 +100,7 @@ const LastedActivities = () => {
                                     {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
                                 <div className='text-teal'>
-                                    +{formatNumber(data.value, 2)} USDT
+                                    +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>
                             <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
@@ -116,7 +116,7 @@ const LastedActivities = () => {
                     </div>
                 )
             case tags[1].value:
-                return !lastedFriends.length ? <><NoData text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
+                return !lastedFriends.length ? <><NoData className='my-20' text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
                     <div key={data.userId}>
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
@@ -136,7 +136,7 @@ const LastedActivities = () => {
     }
 
     return (
-        <div className='px-4'   >
+        <div className='px-4'>
             <CollapsibleRefCard title={t('reference:referral.recent_activities')}  >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' >

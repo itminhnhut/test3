@@ -80,17 +80,18 @@ function NewReference() {
             }, 200);
             return;
         }
+        const refSectionContainer = document.getElementById('refSectionContainer');
         const tabsArray = Object.values(tabs)
-        const width = window.innerWidth
+        const width = refSectionContainer.offsetWidth
         const left = e.currentTarget.scrollLeft
-        const index = left / (width + 24)
-        if (Math.round(index) === Math.round(index - 0.9)) setTab(tabsArray[Math.round(index + 0.05) ?? 0])
-
+        const index = left / (width + 100)
+        console.log(left, width, index)
+        if (Math.round(index) === Math.round(index - 0.8)) setTab(tabsArray[Math.round(index + 0.05) ?? 0])
     };
 
     const newRenderContent = useMemo(() => {
         return (
-            <Container className='no-scrollbar gap-6' style={{ flexFlow: 'row nowrap' }} id='refSectionContainer' >
+            <Container className='no-scrollbar gap-[100px]' style={{ flexFlow: 'row nowrap' }} id='refSectionContainer' >
                 <Section id={tabs.Overview}>
                     <Overview data={overviewData} commisionConfig={commisionConfig} />
                     <div className='h-8'></div>
