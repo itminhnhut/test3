@@ -223,6 +223,9 @@ const PocketFooter = ({ active, parentState }) => {
                               className="cursor-pointer">
                             {language === LANGUAGE_TAG.VI ? 'Lịch sử funding' : 'Funding Rate History'}
                         </Link>
+                        <a  className="cursor-pointer">
+                            support@nami.exchange
+                        </a>
 
                         <a onClick={() => window.fcWidget.open()}
                            className="cursor-pointer invisible">
