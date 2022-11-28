@@ -11,24 +11,24 @@ export default function AnnouncementPopup() {
     const { t, i18n: { language } } = useTranslation()
     const [open, setOpen] = useState(false);
 
-    // useEffect(() => {
-    //     const now = new Date().valueOf();
-    //     const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
-    //     const endAt = new Date(2022, 10, 28, 0).valueOf();
-    //     if (now > expireAt || now > endAt) {
-    //         setOpen(true);
-    //     }
-    // }, []);
+    useEffect(() => {
+        const now = new Date().valueOf();
+        const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
+        const endAt = new Date('2022-11-29T10:00:00.000Z').valueOf();
+        if (now > expireAt || now > endAt) {
+            setOpen(true);
+        }
+    }, []);
 
     const close = () => {
-        localStorage.setItem(expireKey, addHours(new Date(), 1).valueOf().toString());
+        localStorage.setItem(expireKey, addHours(new Date(), 6).valueOf().toString());
         setOpen(false);
     };
 
     const onClick = () => {
         const link = {
-            [LANGUAGE_TAG.VI]: 'https://goonus.io/thong-bao-bao-tri-nang-cap-he-thong-4/',
-            [LANGUAGE_TAG.EN]: 'https://goonus.io/en/announcement-system-upgrade-maintenance-4/',
+            [LANGUAGE_TAG.VI]: 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-huy-niem-yet-cvc-tren-nami-futures-va-onus-futures',
+            [LANGUAGE_TAG.EN]: 'https://nami.exchange/en/support/announcement/announcement/delisting-cvc-on-nami-futures-and-onus-futures',
         }[language]
         window.open(link)
     }
