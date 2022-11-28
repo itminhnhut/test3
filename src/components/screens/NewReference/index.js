@@ -110,8 +110,8 @@ function NewReference() {
                 </Section>
                 <Section className='pt-8' id={tabs.FAQandTerm}>
                     <QnA />
-                    <div className='h-8'></div>
-                    <Term />
+                    {/* <div className='h-8'></div>
+                    <Term /> */}
                 </Section>
             </Container>
         )

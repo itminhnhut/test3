@@ -203,7 +203,7 @@ const Chart = () => {
                         <div className='h-100 mt-4'>
                             {renderChart()}
                         </div>
-                        <div className='px-2 mt-4 flex flex-wrap items-center' >
+                        <div className='px-2 mt-4 flex flex-wrap items-center gap-4'>
                             {colors.map((color, index) => (
                                 <div className='flex items-center gap-2 leading-5 text-xs font-medium text-gray-1 min-w-[70px]' key={index}>
                                     <SmallCircle color={color} />  {t('reference:referral.level')} {index + 1}

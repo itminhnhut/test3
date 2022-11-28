@@ -12,8 +12,8 @@ const Overview = ({ data, commisionConfig }) => {
     const [showInvite, setShowInvite] = useState(false)
 
     const rank = data?.rank ?? 1
-    const commisionRate = commisionConfig[rank]?.direct.futures
-    const friendsGet = data?.defaultRefCode?.remunerationRate / commisionRate * 100
+    // const commisionRate = commisionConfig[rank]?.direct.futures
+    const friendsGet = data?.defaultRefCode?.remunerationRate
     const youGet = 100 - friendsGet
 
     const renderSocials = () => {

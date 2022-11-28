@@ -53,6 +53,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef }) => {
     const handleInput = (e, length) => {
         if (e.target.value.length > length) e.target.value = e.target.value.slice(0, length)
         e.target.value = e.target.value.toUpperCase()
+        setError('')
     }
 
     const renderError = (error) => {
@@ -113,10 +114,11 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef }) => {
         })
     }, 200), [])
 
+
     const doCheckRef = useCallback((refCode) => {
-        if(!refCode.length) return setError('')
+        if (refCode.length === 8 && error.length) return setError('')
         if (refCode.length < 8 && refCode.length > 0) return setError(renderError('MIN_8'))
-        checkRef(refCode)
+        if (refCode.length === 8) checkRef(refCode)
     }, [])
 
     const renderResult = useMemo(() => {
@@ -214,8 +216,8 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef }) => {
                         <input type="checkbox" id="vehicle1" className='rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length })}
-                        onClick={refCode.length !== 8 || error.length ? null : () => handleAddNewRef()}
+                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length || (refCode.length && refCode.length !== 8) })}
+                        onClick={refCode.length !== 8 || error.length || (refCode.length && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}
                     </div>

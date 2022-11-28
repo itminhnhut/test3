@@ -74,7 +74,7 @@ const PopupModal = ({
                         <div
                             ref={wrapperRef}
                             className={classNames(
-                                `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[100%] overflow-y-auto`,
+                                `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[90%] overflow-y-auto`,
                                 { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                 { '!rounded-xl !px-6': useCenter }
                             )}

@@ -4,10 +4,19 @@ import { useSelector } from 'react-redux';
 import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
 import NewReference from 'src/components/screens/NewReference';
 import DynamicNoSsr from 'components/DynamicNoSsr';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Head from 'next/head';
+import { useEffect } from 'react';
 
 const Reference = () => {
-    const currentTheme = useSelector((state) => state.user.theme);
+    // const currentTheme = useSelector((state) => state.user.theme);
+    const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
+
+    useEffect(() => {
+        const root = document.querySelector(":root");
+        root.classList.add("light");
+        setTheme(THEME_MODE.LIGHT);
+    }, [])
 
     return (
         <>
@@ -19,7 +28,7 @@ const Reference = () => {
                     hideNavBar
                     hideFooter
                     navOverComponent
-                    navMode={currentTheme}
+                    light
                     navStyle={{
                         position: 'fixed'
                     }}

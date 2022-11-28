@@ -5,43 +5,53 @@ import CollapsibleRefCard from '../CollapsibleRefCard'
 
 const QnAData = [{
     q: {
-        vi: 'Cơ chế chương trình giới thiệu Referral là bao lâu?',
-        en: 'Cơ chế chương trình giới thiệu Referral là bao lâu?'
+        vi: '1. Chương trình giới thiệu là gì? Khi nào tôi nhận được hoa hồng thưởng?',
+        en: ''
     },
     a: {
-        vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
+        vi: 'Với mỗi người dùng mới được giới thiệu thành công và sử dụng các sản phẩm của Nami, người giới thiệu sẽ nhận được phần thưởng từ phí giao dịch của các sản phẩm Futures, Spot, Swap và lãi Staking khi người được giới thiệu phát sinh giao dịch. Hoa hồng sẽ được cộng gộp mỗi giờ một lần và chuyển trực tiếp vào ví người dùng.',
+        en: ''
     }
 }, {
     q: {
-        vi: 'Chương trình giới thiệu Referral là gì?',
-        en: 'Chương trình giới thiệu Referral là gì?'
+        vi: '2. Liệu tôi có thể thay đổi / chỉnh sửa  mã giới thiệu không?',
+        en: ''
     },
     a: {
-        vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
+        vi: 'Không, bạn không thể thay đổi, xóa mã giới thiệu hoặc đường dẫn giới thiệu sau khi đã thiết lập quan hệ giới thiệu. Thay vào đó, người dùng có thể tạo mới Mã giới thiệu với tuỳ chọn tỷ lệ phần thưởng nhận và chia sẻ. Mỗi người dùng được thiết lập tối đa 20 mã giới thiệu.',
+        en: ''
     }
 }, {
     q: {
-        vi: 'Thế nào là người giới thiệu đủ điều kiện?',
-        en: 'Thế nào là người giới thiệu đủ điều kiện?'
+        vi: '3. Tài sản thanh toán của hoa hồng giới thiệu là gì?',
+        en: ''
     },
     a: {
-        vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
+        vi: `Người giới thiệu nhận phần thưởng dựa trên đơn vị tính phí của giao dịch phát sinh.
+        Ví dụ: Người được giới thiệu dùng VNDC làm phí giao dịch Futures, với mỗi giao dịch phát sinh, người giới thiệu nhận được phần trăm hoa hồng tương ứng bằng VNDC.Trong trường hợp giao dịch mua spot, phí giao dịch sẽ được mặc định tính bằng tài sản mua về, người giới thiệu sẽ nhận được hoa hồng tương ứng bằng chính loại tài sản đó`,
+        en: ''
     }
 }, {
     q: {
-        vi: 'Người được giới thiệu quên sử dụng mã/liên kết giới thiệu của tôi. Tôi vẫn được nhận thưởng chứ?',
+        vi: '4. Tôi có thể chia sẻ hoa hồng cho bạn bè gắn mã giới thiệu của mình không?',
         en: 'Người được giới thiệu quên sử dụng mã/liên kết giới thiệu của tôi. Tôi vẫn được nhận thưởng chứ?'
     },
     a: {
-        vi: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.',
-        en: 'Chương trình giới thiệu Referral của Nami bắt đầu lúc 10:00 ngày 17/06/2022 (giờ UTC) và là một sự kiện dài hạn. Người được bạn giới thiệu phải đăng ký và.'
+        vi: 'Có, bạn có thể chia sẻ hoa hồng của mình cho bạn bè bằng cách thiết lập tỷ lệ chia sẻ khi tạo mã giới thiệu, bạn không thể thay đổi tỷ lệ này sau khi đã thiết lập mã giới thiệu, nhưng luôn có thể tạo các mã giới thiệu mới, tối đa lên tới 20 mã giới thiệu cùng lúc',
+        en: ''
+    }
+}, {
+    q: {
+        vi: '5. Làm sao để đủ điều kiện nhận hoa hồng?',
+        en: 'Người được giới thiệu quên sử dụng mã/liên kết giới thiệu của tôi. Tôi vẫn được nhận thưởng chứ?'
+    },
+    a: {
+        vi: 'Chỉ cần bạn bè gắn mã giới thiệu của mình và sử dụng sản phẩm của Nami thì bạn đã có thể nhận hoa hồng từ phí giao dịch của bạn bè. Tuy nhiên, để nhận được tỷ lệ hoa hồng cao hơn, bạn cần đăng ký trở thành đối tác kinh doanh chính thức của Nami.',
+        en: ''
     }
 },]
 
-const QnA = ()  => {
+const QnA = () => {
     const { t, i18n: { language } } = useTranslation()
     const renderData = () => {
         return QnAData.map((data, index) => {
@@ -51,7 +61,7 @@ const QnA = ()  => {
                     <div className='text-darkBlue font-semibold cursor-pointer' onClick={() => setDoShow(!doShow)}>
                         {data.q[language]}
                     </div>
-                    {doShow ? <div className='text-gray-1 font-medium mt-1'>
+                    {doShow ? <div className='text-gray-1 font-medium mt-1 text-justify' style={{ whiteSpace: "pre-line" }}>
                         {data.a[language]}
                     </div> : null}
                 </div>
@@ -64,6 +74,9 @@ const QnA = ()  => {
             <CollapsibleRefCard title={t('reference:referral.faq')}>
                 <div className='w-auto'>
                     {renderData()}
+                    <div className='text-teal underline font-medium text-sm text-center mt-6'>
+                        <a href='#' target='_blank'>Xem thêm: Chính sách đối tác kinh doanh Nami Exchange</a>
+                    </div>
                 </div>
             </CollapsibleRefCard>
         </div>

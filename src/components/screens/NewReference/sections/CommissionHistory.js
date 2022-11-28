@@ -11,8 +11,8 @@ import { API_GET_COMMISSON_HISTORY } from 'redux/actions/apis';
 import { WalletCurrency } from '../../OnusWithdrawGate/helper';
 import { IconLoading } from 'src/components/common/Icons';
 import colors from 'styles/colors';
-import TableNoData from 'src/components/common/table.old/TableNoData';
 import RePagination from 'components/common/ReTable/RePagination';
+import classNames from 'classnames';
 const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
@@ -21,8 +21,10 @@ const title = {
 const CommissionHistory = () => {
     const {
         t,
-        i18n: { language }
     } = useTranslation();
+
+    const limit = (window.innerHeight - 300) / 66
+
     const levelTabs = [
         { title: t('common:all'), value: null },
         { title: '01', value: 1 },
@@ -71,12 +73,13 @@ const CommissionHistory = () => {
         }
         delete params.range;
         try {
+            setLoading(true);
             const { data } = await fetchApi({
                 url: API_GET_COMMISSON_HISTORY,
                 params: {
                     ...params,
-                    limit: 6,
-                    skip: 6 * (page - 1)
+                    limit: limit,
+                    skip: limit * (page - 1)
                 }
             });
             if (data) {
@@ -125,6 +128,7 @@ const CommissionHistory = () => {
                 showFilter={showFilter}
                 setShowFilter={setShowFilter}
                 loading={loading}
+                limit={limit}
             />
         </div>
     );
@@ -176,15 +180,13 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
     );
 };
 
-const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, assetTabs, filter, setFilter, showFilter, setShowFilter, loading, isAll }) => {
+const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, assetTabs, filter, setFilter, showFilter, setShowFilter, loading, isAll, limit }) => {
     const { t } = useTranslation();
 
     const onConfirm = (e) => {
         setFilter(e);
         setShowFilter(false);
     };
-
-
 
     const general = useMemo(() => {
         return {
@@ -231,8 +233,8 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         </FilterContainer>
                     </div>
                 </div>}
-                <div className="mt-6">
-                    {dataSource.length <= 0 && !loading ? (
+                <div className={classNames("mt-6", { "!mt-8": loading })}>
+                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
@@ -251,7 +253,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                             <div className="flex items-center justify-between">
                                                 <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
                                                 <div className="font-medium text-xs text-gray-1">
-                                                    {t('broker:commission_type')}: {asset}
+                                                    {t('reference:referral.commission_type')}: {asset}
                                                 </div>
                                             </div>
                                         </div>
@@ -270,7 +272,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                 <div className='w-full flex justify-center items-center mt-8'>
                     <RePagination
                         total={total}
-                        pageSize={6}
+                        pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
                     />

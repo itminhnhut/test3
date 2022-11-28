@@ -122,11 +122,14 @@
         "total_commissions": "Tổng hoa hồng",
         "referral_date": "Ngày giới thiệu",
         "status": "Tình trạng",
-        "ktc": "Đã KYC",
+        "kyc": "Đã KYC",
         "not_kyc": "Chưa KYC",
+        "pending_kyc": "Đang chờ xác minh ",
         "referred": "Đã giới thiệu",
         "total_direct_commissions": "Tổng hoa hồng trực tiếp",
         "total_indirect_commissions": "Tổng hoa hồng gián tiếp",
+        "direct_commissions_rate": "Tỷ lệ hoa hồng trực tiếp",
+        "indirect_commissions_rate": "Tỷ lệ hoa hồng gián tiếp",
         "asset_type": "Loại tài sản",
         "exchange_commission": "Hoa hồng Exchange",
         "custom": "Tuỳ chỉnh",
@@ -137,6 +140,12 @@
         "addref_success": "Mã giới thiệu <span class='text-teal'>{{value}}</span> được tạo thành công",
         "addref_error_1": "Vui lòng nhập đủ 8 ký tự",
         "addref_error_2": "Mã giới thiệu đã tồn tại",
-        "addref_error_3": "Mã giới thiệu <span class='text-teal'>{{value}}</span> đã tồn tại, vui lòng nhập lại!"
+        "addref_error_3": "Mã giới thiệu <span class='text-teal'>{{value}}</span> đã tồn tại, vui lòng nhập lại!",
+        "commission_types": {
+            "spot": "Giao ngay",
+            "futures": "Futures",
+            "swap": "Quy đổi",
+            "staking": "Staking"
+        }
     }
 }
