@@ -294,6 +294,7 @@ export const API_NEW_REFERRAL_FRIENDS_BY_REF = API_V3_PREFIX + "users/referral/:
 export const API_NEW_REFERRAL_SET_DEFAULT = API_V3_PREFIX + "users/referral/:code/set-default"; // .replace(':code', realCode)
 export const API_NEW_REFERRAL_EDIT_NOTE = API_V3_PREFIX + "users/referral/:code/change-note"; // .replace(':code', realCode)
 export const API_NEW_REFERRAL_STATISTIC = API_V3_PREFIX + "users/referral/chart"
+export const API_NEW_REFERRAL_CREATE_INVITE = API_V3_PREFIX + "users/referral/invite";
 export const API_NEW_REFERRAL_CHECK_REF = API_V3_PREFIX + "users/referral/check-duplicate"
 
 
