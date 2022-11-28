@@ -11,14 +11,14 @@ export default function AnnouncementPopup() {
     const { t, i18n: { language } } = useTranslation()
     const [open, setOpen] = useState(false);
 
-    useEffect(() => {
-        const now = new Date().valueOf();
-        const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
-        const endAt = new Date(2022, 10, 28, 6).valueOf();
-        if (now > expireAt || now > endAt) {
-            setOpen(true);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const now = new Date().valueOf();
+    //     const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
+    //     const endAt = new Date(2022, 10, 28, 0).valueOf();
+    //     if (now > expireAt || now > endAt) {
+    //         setOpen(true);
+    //     }
+    // }, []);
 
     const close = () => {
         localStorage.setItem(expireKey, addHours(new Date(), 1).valueOf().toString());
