@@ -22,6 +22,8 @@ import MCard from 'components/common/MCard';
 import { ChevronDown } from 'react-feather';
 import { Countdown } from 'redux/actions/utils';
 import useLanguage from 'hooks/useLanguage';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
 
 export const CURRENCIES = [
     {
@@ -108,7 +110,8 @@ export default function FundingHistory({ currency }) {
     const [isLoading, setIsLoading] = useState(true);
     const tableRef = useRef(null);
     const firstLoadRef = useRef(true)
-    const marketWatch = useSelector((state) => state.futures?.marketWatch);
+    // const marketWatch = useSelector((state) => state.futures?.marketWatch);
+    const [marketWatch, setMarketWatch] = useState([])
     const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allAssetConfig = useSelector((state) => state.utils.assetConfig);
 
@@ -126,24 +129,34 @@ export default function FundingHistory({ currency }) {
         publicSocket.emit('subscribe:futures:mini_ticker', 'all');
     };
 
+    useEffect(() => {
+        FetchApi({
+            url: API_GET_FUTURES_MARKET_WATCH,
+        })
+            .then(({ data = [] }) => {
+                setMarketWatch(data)
+            })
+            .catch((err) => console.error(err))
+    }, [])
+
     /**
      * It generates the data table for the funding history page.
      */
-    const generateDataTable = () => {
+    const generateDataTable = useMemo(() => {
         const marketWatchKies = Object.entries(marketWatch || {});
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
-            if (data?.quoteAsset === currency) {
+            if (data?.q === currency) {
                 // const config = allAssetConfig?.find((item) => item?.baseAsset === data?.baseAsset);                // console.log("config", config);
                 return [
                     ...pre,
                     {
                         asset: (
                             <div className="flex items-center">
-                                <AssetLogo assetCode={data?.baseAsset} size={32} />
+                                <AssetLogo assetCode={data?.b} size={32} />
                                 <div className="ml-3 lg:ml-4">
                                     <p className="text-base font-semibold lg:font-medium leading-[22px] lg:leading-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                        {`${data?.baseAsset + '/' + data?.quoteAsset} `}
+                                        {`${data?.b + '/' + data?.q} `}
                                         <span className="ml-2 lg:ml-[5px]">
                                             {t('futures:funding_history_tab:perpetual')}
                                         </span>
@@ -151,13 +164,13 @@ export default function FundingHistory({ currency }) {
                                 </div>
                             </div>
                         ),
-                        symbol: data?.baseAsset,
-                        key: data?.baseAsset,
-                        fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true),
-                        fundingTime: data?.fundingTime,
+                        symbol: data?.b,
+                        key: data?.b,
+                        fundingRate: +formatNumber(data?.r * 100, 0, 4, true),
+                        fundingTime: data?.ft,
                         [RETABLE_SORTBY]: {
-                            asset: data?.baseAsset,
-                            fundingRate: +formatNumber(data?.fundingRate * 100, 0, 4, true)
+                            asset: data?.b,
+                            fundingRate: +formatNumber(data?.r * 100, 0, 4, true)
                         }
                     }
                 ];
@@ -175,8 +188,8 @@ export default function FundingHistory({ currency }) {
         //         setIsLoading(false);
         //     }, 700);
         // }
-
-    };
+        console.log(marketWatch)
+    }, [marketWatch]);
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -187,18 +200,18 @@ export default function FundingHistory({ currency }) {
         const marketWatchKies = Object.entries(marketWatch || {});
         if (dataTable?.length) return;
 
-        if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 100) return setReload(!reload);
+        // if (!marketWatch || !allAssetConfig || marketWatchKies?.length < 100) return setReload(!reload);
         if (currency !== prevCurrency) {
             setIsLoading(true);
             setCurrentPage(1);
         }
-        generateDataTable();
+        generateDataTable
     }, [marketWatch, currency, prevCurrency, dataTable]);
 
     useEffect(() => {
         if (prevCurrency !== currency && dataTable?.length) {
             setCurrentPage(1);
-            generateDataTable();
+            generateDataTable
         }
     }, [dataTable, prevCurrency, currency, reload]);
 
@@ -208,7 +221,7 @@ export default function FundingHistory({ currency }) {
      * @param item - The item that was selected from the dropdown.
      */
     const handleChangeFilter = (item) => {
-        generateDataTable();
+        generateDataTable;
         setSelectedFilter(item);
         setCurrentPage(1);
     };
