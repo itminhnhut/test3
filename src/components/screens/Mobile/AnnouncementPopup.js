@@ -15,7 +15,7 @@ export default function AnnouncementPopup() {
         const now = new Date().valueOf();
         const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
         const endAt = new Date('2022-11-29T10:00:00.000Z').valueOf();
-        if (now > expireAt || now > endAt) {
+        if (now > expireAt && now < endAt) {
             setOpen(true);
         }
     }, []);
