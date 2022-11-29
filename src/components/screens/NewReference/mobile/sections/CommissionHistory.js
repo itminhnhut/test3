@@ -1,15 +1,15 @@
 import React, { useMemo, useState, useEffect, useRef, Fragment } from 'react';
-import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleRefCard';
+import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../../CollapsibleRefCard';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { FilterTabs, Line, NoData, RefButton } from '..';
-import PopupModal from '../PopupModal';
-import DatePicker from '../../../common/DatePicker/DatePicker';
+import PopupModal from '../../PopupModal';
+import DatePicker from 'components/common/DatePicker/DatePicker';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_COMMISSON_HISTORY } from 'redux/actions/apis';
-import { WalletCurrency } from '../../OnusWithdrawGate/helper';
-import { IconLoading } from 'src/components/common/Icons';
+import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
+import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
 import RePagination from 'components/common/ReTable/RePagination';
 import classNames from 'classnames';
@@ -23,7 +23,7 @@ const CommissionHistory = () => {
         t,
     } = useTranslation();
 
-    const limit = (window.innerHeight - 300) / 66
+    const limit = 6
 
     const levelTabs = [
         { title: t('common:all'), value: null },
@@ -40,7 +40,6 @@ const CommissionHistory = () => {
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
-        { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
@@ -97,7 +96,7 @@ const CommissionHistory = () => {
     }, [filter, page]);
 
     return (
-        <div className="px-4 w-screen"   >
+        <div className="px-4 w-screen">
             {/* {showAllData && (
                 <AllDataModal
                     onClose={() => setShowAllData(false)}
@@ -148,7 +147,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
         <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll>
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
-                    <div>{t('reference:referral.referral_date')}</div>
+                    <div>{t('reference:referral.date')}</div>
                     <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} />
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">

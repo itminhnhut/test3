@@ -1,16 +1,16 @@
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import CollapsibleRefCard from '../CollapsibleRefCard'
+import CollapsibleRefCard from 'src/components/screens/NewReference/CollapsibleRefCard'
 import { formatNumber } from 'redux/actions/utils';
 import baseColors from 'styles/colors';
-import ChartJS from '../../Portfolio/charts/ChartJS';
+import ChartJS from 'src/components/screens/Portfolio/charts/ChartJS';
 import { FilterTabs } from '..';
-import styledComponents from 'styled-components';
 import { API_NEW_REFERRAL_STATISTIC } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import PopupModal from '../PopupModal';
-import DatePicker from 'components/common/DatePicker/DatePicker';
+import PopupModal from 'src/components/screens/NewReference/PopupModal';
+import DatePicker from 'src/components/common/DatePicker/DatePicker';
+import styledComponents from 'styled-components'
 
 const Chart = () => {
     const { t } = useTranslation()

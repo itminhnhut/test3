@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
-import PopupModal from '../../PopupModal';
+import PopupModal from 'src/components/screens/NewReference/PopupModal';
 import FetchApi from 'utils/fetch-api';
 import _ from 'lodash';
 import { API_NEW_REFERRAL_EDIT_NOTE } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import { scrollFocusInput } from 'redux/actions/utils';
+import classNames from 'classnames';
 
-const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote }) => {
+const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDesktop }) => {
     const { t } = useTranslation();
     const [note, setNote] = useState(currentNote ?? '');
     const refInput = useRef(null);
@@ -52,8 +53,16 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote }) => 
     };
 
     return (
-        <PopupModal isVisible={isShow} onBackdropCb={doClose} title={t('reference:referral.modify_note')} useAboveAll>
-            <div className="font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4">
+        <PopupModal
+            isVisible={isShow}
+            onBackdropCb={doClose}
+            title={t('reference:referral.modify_note')}
+            useAboveAll
+            isDesktop={isDesktop}
+            useCenter={isDesktop}
+            contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+        >
+            <div className={classNames("font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4", { 'px-4': isDesktop })}>
                 <div>
                     {t('reference:referral.note')}
                     <div className="mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4">

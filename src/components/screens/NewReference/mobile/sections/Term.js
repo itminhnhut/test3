@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next'
 import React from 'react'
 import { Line } from '..'
-import CollapsibleRefCard from '../CollapsibleRefCard'
+import CollapsibleRefCard from '../../CollapsibleRefCard'
 
 const Term = () => {
     const { t, i18n: { language } } = useTranslation()

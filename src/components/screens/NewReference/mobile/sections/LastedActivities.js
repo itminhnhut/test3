@@ -1,7 +1,7 @@
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import CollapsibleRefCard from '../CollapsibleRefCard'
+import CollapsibleRefCard from '../../CollapsibleRefCard'
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { Line, NoData } from '..';
 import classNames from 'classnames';
@@ -157,7 +157,7 @@ const LastedActivities = () => {
     )
 }
 
-const UserIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const UserIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="28" height="28" rx="14" fill="#00C8BC" />
     <g clipPath="url(#clip0_15284_45563)">
         <path d="M14.5 12C14.5 10.895 13.605 10 12.5 10C11.395 10 10.5 10.895 10.5 12C10.5 13.105 11.395 14 12.5 14C13.605 14 14.5 13.105 14.5 12ZM15.5 13V14H17V15.5H18V14H19.5V13H18V11.5H17V13H15.5ZM8.5 17V18H16.5V17C16.5 15.67 13.835 15 12.5 15C11.165 15 8.5 15.67 8.5 17Z" fill="#F6F6F6" />
@@ -169,7 +169,7 @@ const UserIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fill="non
     </defs>
 </svg>
 
-const RefInfo = ({ data, language, className }) => (
+export const RefInfo = ({ data, language, className }) => (
     <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 text-gray-1 font-medium', className)}>
         <div className='text-xs mt-[-22px]'>
             {languages.refUser[language]}:

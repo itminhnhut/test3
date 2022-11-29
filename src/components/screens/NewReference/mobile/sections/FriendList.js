@@ -1,36 +1,36 @@
 import React, { useEffect, useRef, useState, Fragment, useMemo } from 'react';
-import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../CollapsibleRefCard';
+import CollapsibleRefCard, { FilterContainer, FilterIcon } from '../../CollapsibleRefCard';
 import { formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { FilterTabs, Line, NoData, RefButton } from '..';
-import PopupModal from '../PopupModal';
-import DatePicker from '../../../common/DatePicker/DatePicker';
+import PopupModal from '../../PopupModal';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import RePagination from 'components/common/ReTable/RePagination';
 import { Code } from 'react-feather';
 import ReactTooltip from 'react-tooltip';
-import { commisionConfig } from 'config/referral';
-import { IconLoading } from 'src/components/common/Icons';
+import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
+import DatePicker from 'components/common/DatePicker/DatePicker';
 
 const title = {
     en: 'Friend List',
     vi: 'Danh sách bạn bè'
 };
 
-const FriendList = () => {
+const FriendList = ({ commisionConfig }) => {
     const {
         t,
     } = useTranslation();
-    const limit = (window.innerHeight - 248) / 187
+    const limit = 6
 
     const arrStatus = [
-        { title: t('common:all'), value: null },
+        { title: t('reference:referral.not_kyc'), value: null },
         { title: t('reference:referral.not_kyc'), value: 0 },
         { title: t('reference:referral.pending_kyc'), value: 1 },
-        { title:t('reference:referral.kyc'), value: 2 }
+        { title: t('reference:referral.kyc'), value: 2 },
+        { title: t('reference:referral.not_kyc'), value: 3 },
     ];
     const [filter, setFilter] = useState({
         kycStatus: arrStatus[0].value,
@@ -111,12 +111,13 @@ const FriendList = () => {
                 setShowFilter={setShowFilter}
                 loading={loading}
                 limit={limit}
+                commisionConfig={commisionConfig}
             />
         </div>
     );
 };
 
-const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setPage, page, limit }) => {
+const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter, setShowFilter, loading, isAll, setPage, page, limit, commisionConfig }) => {
     const {
         t,
         i18n: { language }
@@ -126,7 +127,6 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
         setFilter(e);
         setShowFilter(false);
     };
-
 
     const commissionType = {
         0: t('reference:referral.commission_types.spot'),
@@ -368,7 +368,7 @@ const AllDataModal = ({ onClose, language, ...props }) => {
 };
 
 
-const Tooltip = ({ children, place, offset, arrowColor, className, ...restProps }) => {
+export const Tooltip = ({ children, place, offset, arrowColor, className, ...restProps }) => {
     const ref = useRef()
     return (
         <ReactTooltip

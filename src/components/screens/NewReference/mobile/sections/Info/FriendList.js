@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import PopupModal from '../../PopupModal'
+import PopupModal from 'src/components/screens/NewReference/PopupModal'
 import { formatTime } from 'redux/actions/utils';
 import { NoData } from '../..';
 import { useTranslation } from 'next-i18next';
@@ -7,11 +7,14 @@ import { useEffect } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_FRIENDS_BY_REF } from 'redux/actions/apis';
 import { useRef } from 'react';
+import { IconLoading } from 'components/common/Icons';
+import colors from 'styles/colors';
 
-const FriendList = ({ isShow, onClose, code }) => {
+const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation()
     const [friendList, setFriendList] = useState([])
     const [more, setMore] = useState(10)
+    const [loading, setLoading] = useState(false)
     const hasNext = useRef(false)
 
     const doClose = () => {
@@ -21,6 +24,7 @@ const FriendList = ({ isShow, onClose, code }) => {
     }
 
     useEffect(() => {
+        setLoading(true)
         FetchApi({
             url: API_NEW_REFERRAL_FRIENDS_BY_REF.replace(':code', code),
             options: {
@@ -36,6 +40,7 @@ const FriendList = ({ isShow, onClose, code }) => {
             } else {
                 setFriendList([])
             }
+            setLoading(false)
         });
     }, [more, code])
 
@@ -45,8 +50,11 @@ const FriendList = ({ isShow, onClose, code }) => {
             onBackdropCb={doClose}
             title={t('reference:referral.friend_list')}
             useAboveAll
+            isDesktop={isDesktop}
+            useCenter={isDesktop}
+            contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
         >
-            {friendList.length ? <div>
+            {loading ? <IconLoading color={colors.teal} /> : friendList.length ? <div className={isDesktop ? 'px-4' : null}>
                 <div className='flex w-full justify-between text-gray-1 font-normal text-xs mb-3'>
                     <div>
                         NamiID
@@ -70,7 +78,7 @@ const FriendList = ({ isShow, onClose, code }) => {
                     })}
                 </div>
                 {hasNext.current ? <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'
-                    onClick={() => setMore(more + 5)}
+                    onClick={() => setMore(99999999999)}
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}

@@ -1,5 +1,5 @@
 import React from 'react'
-import PopupModal from '../PopupModal'
+import PopupModal from '../../PopupModal'
 import QRCode from 'qrcode.react';
 import { useTranslation } from 'next-i18next';
 

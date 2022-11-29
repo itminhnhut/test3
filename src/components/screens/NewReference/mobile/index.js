@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React, { useMemo, useRef, useState } from 'react';
-import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import Info from './sections/Info';
 import Overview from './sections/Overview';
 import styled from 'styled-components';
@@ -12,13 +12,14 @@ import QnA from './sections/QnA';
 import Term from './sections/Term';
 import { useEffect } from 'react';
 import FetchApi from 'utils/fetch-api';
-import { API_NEW_REFERRAL_OVERVIEW } from 'redux/actions/apis';
+import { API_NEW_REFERRAL_OVERVIEW, API_NEW_REFERRAL_CONFIG } from 'redux/actions/apis';
 import SvgEmpty from 'components/svg/SvgEmpty';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { commisionConfig } from 'config/referral';
-import useHorizontalSwipe from 'hooks/useHorizontalSwipe'
-import useWindowSize from 'hooks/useWindowSize';
+import { useCallback } from 'react';
+import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
+import 'swiper/css'
 
 const tabs = {
     Overview: 'overview',
@@ -29,13 +30,15 @@ const tabs = {
     FAQandTerm: 'faq',
 };
 
+
 function NewReference() {
     const { t } = useTranslation();
     const [tab, setTab] = useState(tabs.Overview);
     const [overviewData, setOverviewData] = useState();
+    const [config, setConfig] = useState(commisionConfig)
     const tabRef = useRef(null);
-    const contentRef = useRef(null);
-    const isClickTab = useRef(false);
+    const [swiper, setSwiper] = useState(null);
+    const slideTo = (index) => swiper.slideTo(index);
 
     useEffect(() => {
         FetchApi({
@@ -50,75 +53,99 @@ function NewReference() {
                 setOverviewData(null);
             }
         });
+        FetchApi({
+            url: API_NEW_REFERRAL_CONFIG,
+            options: {
+                method: 'GET'
+            }
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                const type = {
+                    1: 'direct',
+                    2: 'indirect',
+                    3: 'indirect',
+                    4: 'indirect',
+                    5: 'indirect',
+                    6: 'indirect',
+                    7: 'indirect',
+                }
+                const config = commisionConfig
+                data.sort((pre, current) => pre.rankId - current.rankId)
+                try {
+                    data.map(e => {
+                        config[e.rankId ?? 1][type[e.commissionFloor ?? 1]][e.type.toLowerCase() ?? 'futures'] = e.commissionRate ?? 0
+                        if (config.commissionLevel < e.commissionFloor) config.commissionLevel = e.commissionFloor
+                    })
+                    setConfig(config)
+                } catch (error) {
+                    setConfig(commisionConfig)
+                }
+            } else {
+            }
+        });
     }, []);
 
     const handleClickTab = (tabId) => {
-        const el = document.getElementById(tabId);
-        const refSectionContainer = document.getElementById('refSectionContainer');
-        refSectionContainer.scrollTo({
-            left: el.offsetLeft,
-            behavior: 'smooth'
-        });
-        isClickTab.current = true;
+        slideTo(Object.values(tabs).indexOf(tabId))
         setTab(tabId);
-    };
-
-    useEffect(() => {
-        const refSectionContainer = document.getElementById('refSectionContainer');
-        refSectionContainer.addEventListener('scroll', onScroll);
-        return () => {
-            refSectionContainer.removeEventListener('scroll', onScroll);
-        };
-    }, []);
-
-    const timer = useRef(null)
-    const onScroll = (e) => {
-        clearTimeout(timer.current);
-        if (isClickTab.current) {
-            timer.current = setTimeout(() => {
-                isClickTab.current = false;
-            }, 200);
-            return;
-        }
-        const refSectionContainer = document.getElementById('refSectionContainer');
-        const tabsArray = Object.values(tabs)
-        const width = refSectionContainer.offsetWidth
-        const left = e.currentTarget.scrollLeft
-        const index = left / (width + 100)
-        console.log(left, width, index)
-        if (Math.round(index) === Math.round(index - 0.8)) setTab(tabsArray[Math.round(index + 0.05) ?? 0])
     };
 
     const newRenderContent = useMemo(() => {
         return (
-            <Container className='no-scrollbar gap-[100px]' style={{ flexFlow: 'row nowrap' }} id='refSectionContainer' >
-                <Section id={tabs.Overview}>
-                    <Overview data={overviewData} commisionConfig={commisionConfig} />
-                    <div className='h-8'></div>
-                    <Info data={overviewData} />
-                    <div className='h-8'></div>
-                    <LastedActivities />
-                </Section>
-                <Section className='pt-8' id={tabs.Chart}>
-                    <Chart />,
-                </Section>
-                <Section className='pt-8' id={tabs.FriendList} >
-                    <FriendList />,
-                </Section>
-                <Section className='pt-8' id={tabs.CommissionHistory}>
-                    <CommissionHistory />,
-                </Section>
-                <Section className='pt-8' id={tabs.FAQandTerm}>
-                    <QnA />
-                    {/* <div className='h-8'></div>
-                    <Term /> */}
-                </Section>
-            </Container>
+            // <Container className='no-scrollbar gap-[100px]' style={{ flexFlow: 'row nowrap' }} id='refSectionContainer' >
+
+            // </Container>
+            <Swiper
+                className="flex"
+                slidesPerView={1}
+                onSlideChange={({ activeIndex }) => {
+                    const thisTabs = {
+                        0: 'overview',
+                        // LastedActivities: 'lasted_activities',
+                        1: 'chart',
+                        2: 'friendlist',
+                        3: 'commissionhistory',
+                        4: 'faq',
+                    };
+                    setTab(thisTabs[activeIndex])
+                }}
+                onSwiper={setSwiper}
+            >
+                <SwiperSlide id={tabs.Overview} key={0}>
+                    <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] w-screen pb-12'>
+                        <Overview data={overviewData} commisionConfig={config} />
+                        <div className='h-8'></div>
+                        <Info data={overviewData} />
+                        <div className='h-8'></div>
+                        <LastedActivities />
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide id={tabs.Chart} key={1}>
+                    <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
+                        <Chart />
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide id={tabs.FriendList} key={2}>
+                    <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
+                        <FriendList commisionConfig={config} />,
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide id={tabs.CommissionHistory} key={3}>
+                    <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
+                        <CommissionHistory />
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide id={tabs.FAQandTerm} key={4}>
+                    <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
+                        <QnA />
+                    </div>
+                </SwiperSlide>
+            </Swiper>
         )
     }, [overviewData])
 
     return (
-        <div className="bg-[#f5f6f7] pb-[68px] h-full">
+        <div className="bg-[#f5f6f7] h-full overflow-hidden">
             <div className={classNames('bg-white z-10')}>
                 <Tabs ref={tabRef} tab={tab}>
                     <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
@@ -141,11 +168,9 @@ function NewReference() {
                     </TabItem>
                 </Tabs>
             </div>
-            <div className={classNames("flex flex-col gap-8")} ref={contentRef}>
-                {newRenderContent}
-            </div>
+            {newRenderContent}
         </div>
-    );
+    )
 }
 
 export const Line = styled.div.attrs(({ className }) => ({
@@ -199,9 +224,12 @@ export const NoData = ({ text, className }) => (
 const Container = styled.div`
     display: flex;
     scroll-snap-type: x mandatory;
+    scroll-snap-stop: always;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 `;
 const Section = styled.div`
     scroll-snap-align: center;
+    scroll-snap-stop: always;
     width: 100vw;
 `;

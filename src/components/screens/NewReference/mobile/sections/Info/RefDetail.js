@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 import { Line, NoData } from '../..';
-import PopupModal, { CopyIcon } from '../../PopupModal';
+import PopupModal, { CopyIcon } from 'components/screens/NewReference/PopupModal';
 import FriendList from './FriendList';
 import AddNewRef from './AddNewRef';
 import EditNote from './EditNote';
@@ -188,13 +188,13 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     );
 };
 
-const FriendListIcon = () => (
+export const FriendListIcon = () => (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-const NoteIcon = () => (
+export const NoteIcon = () => (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#s8m7dixeoa)" stroke="#718096" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
@@ -208,7 +208,7 @@ const NoteIcon = () => (
     </svg>
 );
 
-const Container = styled.div`
+export const Container = styled.div`
     overflow-y: auto;
     height: calc(var(--vh, 1vh) * 100 - 230px);
 `;

@@ -75,7 +75,7 @@
         "login_to_continue": "Login to continue"
     },
     "referral": {
-        "faq": "FAQ and Term",
+        "faq": "FAQ",
         "term": "Term",
         "info": "Info",
         "recent_activities": "Recent Activities",
@@ -153,6 +153,7 @@
             "futures": "Futures",
             "swap": "Swap",
             "staking": "Staking"
-        }
+        },
+        "date": "Date"
     }
 }

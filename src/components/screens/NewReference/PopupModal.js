@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import { useOutside } from 'components/screens/Nao/NaoStyle';
-import { Line } from '.';
+import { Line } from './mobile';
 import React from 'react';
 import { useState } from 'react';
 
@@ -22,13 +22,14 @@ const PopupModal = ({
     useAboveAll = false,
     useCenter = false,
     background,
-    bgClassName
+    bgClassName,
+    isDesktop
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
 
     const handleOutside = () => {
-        if (onBackdropCb && center && !isAlertModal) onBackdropCb();
+        if (onBackdropCb) onBackdropCb();
     };
 
     useOutside(wrapperRef, handleOutside, container);
@@ -76,7 +77,7 @@ const PopupModal = ({
                             className={classNames(
                                 `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[90%] overflow-y-auto`,
                                 { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
-                                { '!rounded-xl !px-6': useCenter }
+                                { '!rounded-xl !px-6': useCenter && !isDesktop }
                             )}
                             style={{ backgroundImage: background ?? null, backgroundSize: background ? 'contain' : null }}
                         >
@@ -87,8 +88,10 @@ const PopupModal = ({
                                 ></div>
                             )}
                             <div className={classNames("w-full flex justify-between items-center",
-                                { '!justify-start': useFullScreen })}
-                                
+                                {
+                                    '!justify-start': useFullScreen,
+                                    'px-4': isDesktop
+                                })}
                             >
                                 {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,20 +100,22 @@ const PopupModal = ({
                                 </div>
                                     : null}
                                 {title && <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen })}>{title}</div>}
+
                                 {useFullScreen ? null : <div
                                     className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
                                     onClick={() => onBackdropCb && onBackdropCb()}
                                 >
                                     {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m6 6 12 12M6 18 18 6" stroke={useCenter ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="m6 6 12 12M6 18 18 6" stroke={useCenter && !isDesktop ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>}
                             </div>
-                            {useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
-                            <div className={classNames('mt-7', { '!mt-0': useCenter })}>
+                            {isDesktop ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
+                            {isDesktop ? <Line className="w-full mt-3 mb-6" /> : null}
+                            {isDesktop ? children : <div className={classNames('mt-7', { '!mt-0': useCenter })}>
                                 {children}
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </div>
@@ -178,12 +183,12 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
     );
 };
 
-export const renderRefInfo = (text, className = '', size = 15) => {
+export const renderRefInfo = (text, className = '', size = 15, originalText) => {
     return (
         <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]', className)}>
-            <div className="font-medium text-sm text-darkBlue w-3/4 truncate">{text}</div>
+            <div className="font-medium text-sm text-darkBlue w-3/4">{text}</div>
             <div>
-                <CopyIcon data={text} size={size} className="cursor-pointer" />
+                <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />
             </div>
         </div>
     );

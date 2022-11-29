@@ -146,6 +146,7 @@
             "futures": "Futures",
             "swap": "Quy đổi",
             "staking": "Staking"
-        }
+        },
+        "date": "Thời gian"
     }
 }

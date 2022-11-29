@@ -13,7 +13,7 @@ import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 
-const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false }) => {
+const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, hasShadow, wrapperClassname, text }) => {
     const {
         t,
         i18n: { language }
@@ -51,38 +51,39 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false }) => {
     };
 
     const onClear = () => {
-        isCalendar ? onDatesChange(null) : onDatesChange({ [date['key']]: { startDate: null, endDate: new Date(''), key: date['key'] } });
+        isCalendar ? onDatesChange(null) : onDatesChange({ [date['key']]: { startDate: null, endDate: new Date(), key: date['key'] } });
     };
 
     const issetValue = isCalendar ? date : date?.startDate;
 
     return (
-        <div className="relative" ref={wrapperRef}>
-            {allwaysOpen ? null : <div
-                className={classNames(
-                    `py-[9px] text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white`,
-                    {
-                        '!border-teal': showPicker
-                    }
-                )}
-            >
-                <div className="flex items-center w-full" onClick={() => setShowPicker(true)}>
-                    <CalendarIcon />
-                    <div className="text-darkBlue leading-6 px-2">
-                        {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
+        <div className={classNames("relative", wrapperClassname)} ref={wrapperRef}>
+            {allwaysOpen ? null :
+                text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
+                    className={classNames(
+                        `relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white w-auto`,
+                        {
+                            '!border-teal': showPicker
+                        },
+                    )}
+                >
+                    <div className="flex items-center w-auto" onClick={() => setShowPicker(!showPicker)}>
+                        <CalendarIcon />
+                        <div className="text-darkBlue leading-6 px-2">
+                            {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
 
-                        {!isCalendar &&
-                            (date?.startDate
-                                ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
-                                : 'DD/MM/YYYY - DD/MM/YYYY')}
+                            {!isCalendar &&
+                                (date?.startDate
+                                    ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
+                                    : 'DD/MM/YYYY - DD/MM/YYYY')}
+                        </div>
                     </div>
-                </div>
-                {issetValue && (
-                    <div className="" onClick={onClear}>
-                        <X size={16} />
-                    </div>
-                )}
-            </div>}
+                    {issetValue && (
+                        <div className="" onClick={onClear}>
+                            <X size={16} />
+                        </div>
+                    )}
+                </div>}
             <Transition
                 show={allwaysOpen || showPicker}
                 as={Fragment}
@@ -95,13 +96,18 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false }) => {
             >
                 <div
                     className={classNames("relative date-range-picker nami-exchange flex justify-center mt-2 w-full",
-                        { 'white-background': allwaysOpen })}
+                        {
+                            'white-background': allwaysOpen,
+                            '!left-0 !absolute z-20 !w-auto !bg-white': month && !text,
+                            '!right-0 !absolute z-20 !w-auto !bg-white': text,
+
+                        })}
                 >
                     <Component
-                        className={`relative h-full ${isCalendar ? 'single-select' : ''} w-full`}
+                        className={classNames(`relative h-full ${isCalendar ? 'single-select' : ''} w-full`, { 'datepicker-shadow': hasShadow })}
                         date={date}
                         ranges={!isCalendar ? [date] : []}
-                        months={1}
+                        months={month ?? 1}
                         onChange={onDatesChange}
                         moveRangeOnFirstSelection={isCalendar}
                         direction="horizontal"

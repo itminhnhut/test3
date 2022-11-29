@@ -2,11 +2,11 @@ import { useTranslation } from 'next-i18next'
 import React, { useMemo, useState } from 'react'
 import styledComponents from 'styled-components'
 import { Line } from '../..'
-import RefCard from '../../RefCard'
+import RefCard from 'src/components/screens/NewReference/RefCard'
 import RefDetail from './RefDetail'
 import { formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux'
-import ReferralLevelIcon from 'components/svg/RefIcons'
+import ReferralLevelIcon from 'src/components/svg/RefIcons'
 import classNames from 'classnames'
 
 
@@ -104,7 +104,7 @@ const Info = ({ data }) => {
     )
 }
 
-const Progressbar = styledComponents.div.attrs(({ height = 10, className }) => ({
+export const Progressbar = styledComponents.div.attrs(({ height = 10, className }) => ({
     className: classNames(`transition-all`, className),
 }))`
     background: ${({ background }) =>

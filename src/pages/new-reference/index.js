@@ -2,11 +2,14 @@ import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useSelector } from 'react-redux';
 import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
-import NewReference from 'src/components/screens/NewReference';
-import DynamicNoSsr from 'components/DynamicNoSsr';
+import NewReference from 'src/components/screens/NewReference/mobile';
+import DynamicNoSsr from 'src/components/DynamicNoSsr';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import { useWindowSize } from 'react-use';
+import RefDesktopScreen from 'src/components/screens/NewReference/desktop';
+import classNames from 'classnames';
 
 const Reference = () => {
     // const currentTheme = useSelector((state) => state.user.theme);
@@ -18,6 +21,9 @@ const Reference = () => {
         setTheme(THEME_MODE.LIGHT);
     }, [])
 
+    const { width } = useWindowSize()
+
+    const isMobile = width < 830
     return (
         <>
             <Head>
@@ -25,16 +31,18 @@ const Reference = () => {
             </Head>
             <DynamicNoSsr>
                 <MaldivesLayout
-                    hideNavBar
-                    hideFooter
+                    hideNavBar={isMobile}
+                    hideFooter={isMobile}
                     navOverComponent
                     light
-                    navStyle={{
+                    navStyle={isMobile ? {
                         position: 'fixed'
+                    } : {
+                        boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}
                 >
-                    <div className="h-full">
-                        <NewReference />
+                    <div className={classNames("h-full ", { 'flex justify-center': !isMobile })}>
+                        {!isMobile ? <RefDesktopScreen />  :<NewReference />}
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>
