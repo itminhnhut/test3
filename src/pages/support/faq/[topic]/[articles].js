@@ -66,6 +66,7 @@ const FaqArticle = (props) => {
     }
 
     useEffect(() => {
+        console.log('Props ', props)
     }, [props])
 
     return (
@@ -89,30 +90,11 @@ const FaqArticle = (props) => {
     )
 }
 
-export async function getServerSideProps({ locale, query, resolvedUrl, req }) {
+export async function getServerSideProps({ res, locale, query }) {
     try {
         const article = await getArticle(query.articles)
         const lastedArticles = await getLastedArticles('faq', 8, 1, locale)
-        const english = /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/i; 
-        if (english.test(article.title)) {
-            if (!req.originalUrl.includes('/en/')) {
-                return {
-                    redirect: {
-                        permanent: false,
-                        destination: '/en' + resolvedUrl
-                    }
-                }
-            }
-        } else {
-            if (!req.originalUrl.includes('/vi/')) {
-                return {
-                    redirect: {
-                        permanent: false,
-                        destination: '/vi' + resolvedUrl
-                    }
-                }
-            }
-        }
+
         return {
             props: {
                 data: {
@@ -127,7 +109,6 @@ export async function getServerSideProps({ locale, query, resolvedUrl, req }) {
             },
         }
     } catch (e) {
-        console.log(e)
         return {
             redirect: {
                 permanent: false,

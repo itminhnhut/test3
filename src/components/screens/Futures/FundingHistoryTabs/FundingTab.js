@@ -142,7 +142,7 @@ export default function FundingHistory({ currency }) {
     /**
      * It generates the data table for the funding history page.
      */
-    const generateDataTable = useMemo(() => {
+    const generateDataTable = () => {
         const marketWatchKies = Object.entries(marketWatch || {});
         const res = marketWatchKies.reduce((pre, currentValue) => {
             const [value, data] = currentValue;
@@ -189,7 +189,7 @@ export default function FundingHistory({ currency }) {
         //     }, 700);
         // }
         console.log(marketWatch)
-    }, [marketWatch]);
+    }
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -205,13 +205,13 @@ export default function FundingHistory({ currency }) {
             setIsLoading(true);
             setCurrentPage(1);
         }
-        generateDataTable
+        generateDataTable()
     }, [marketWatch, currency, prevCurrency, dataTable]);
 
     useEffect(() => {
         if (prevCurrency !== currency && dataTable?.length) {
             setCurrentPage(1);
-            generateDataTable
+            generateDataTable()
         }
     }, [dataTable, prevCurrency, currency, reload]);
 
@@ -221,7 +221,8 @@ export default function FundingHistory({ currency }) {
      * @param item - The item that was selected from the dropdown.
      */
     const handleChangeFilter = (item) => {
-        generateDataTable;
+
+        generateDataTable();
         setSelectedFilter(item);
         setCurrentPage(1);
     };
