@@ -1,13 +1,13 @@
 import TopicsLayout from 'components/screens/Support/TopicsLayout';
-import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
-import {getArticle, getLastedArticles} from 'utils';
-import {formatTime} from 'redux/actions/utils';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { getArticle, getLastedArticles } from 'utils';
+import { formatTime } from 'redux/actions/utils';
 import GhostContent from 'components/screens/Support/GhostContent';
-import {ChevronLeft} from 'react-feather';
+import { ChevronLeft } from 'react-feather';
 import useApp from 'hooks/useApp';
-import {useRouter} from 'next/router';
-import {SupportCategories} from 'constants/faqHelper';
-import {useTranslation} from 'next-i18next';
+import { useRouter } from 'next/router';
+import { SupportCategories } from 'constants/faqHelper';
+import { useTranslation } from 'next-i18next';
 import SupportCenterHead from 'components/common/SupportCenterHead';
 import SEO from "components/common/SEO";
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
@@ -19,7 +19,7 @@ const AnnouncementArticle = (props) => {
     const router = useRouter()
     const isApp = useApp()
     const {
-        i18n: {language},
+        i18n: { language },
     } = useTranslation()
     const [theme, , setTheme] = useDarkMode();
 
@@ -58,7 +58,7 @@ const AnnouncementArticle = (props) => {
                 onClick={router?.back}
                 className='active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium'
             >
-                <ChevronLeft size={16} className='mr-2.5'/>
+                <ChevronLeft size={16} className='mr-2.5' />
                 {topic}
                 {topic && <span className='mx-2'>|</span>}
                 Nami Announcement
@@ -90,17 +90,36 @@ const AnnouncementArticle = (props) => {
                     className='sm:mt-2 text-[10px] sm:text-xs lg:text-[16px] lg:mt-4 font-medium text-txtSecondary dark:text-txtSecondary-dark'>
                     {formatTime(props?.data?.article?.created_at, 'dd-MM-yyyy')}
                 </div>
-                <GhostContent content={props?.data?.article?.html}/>
+                <GhostContent content={props?.data?.article?.html} />
             </TopicsLayout>
         </>
     )
 }
 
-export async function getServerSideProps({locale, query}) {
+export async function getServerSideProps({ locale, query, req, resolvedUrl }) {
     try {
         const article = await getArticle(query.articles)
         const lastedArticles = await getLastedArticles('noti', 8, 1, locale)
-
+        const english = /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/i;
+        if (english.test(article.title)) {
+            if (!req.originalUrl.includes('/en/')) {
+                return {
+                    redirect: {
+                        permanent: false,
+                        destination: '/en' + resolvedUrl
+                    }
+                }
+            }
+        } else {
+            if (!req.originalUrl.includes('/vi/')) {
+                return {
+                    redirect: {
+                        permanent: false,
+                        destination: '/vi' + resolvedUrl
+                    }
+                }
+            }
+        }
         return {
             props: {
                 data: {
