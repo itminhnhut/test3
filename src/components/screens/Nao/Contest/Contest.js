@@ -78,7 +78,7 @@ export const seasons = [
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-2',
         total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
         time_to_create: { start: '2022-10-25T17:00:00.000Z', end: '2022-11-09T17:00:00.000Z' },
-        active: true,
+        active: false,
         top_ranks_per: 20,
         top_ranks_team: 10
     },
@@ -93,7 +93,7 @@ export const seasons = [
             isHtml: false
         },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-3',
-        total_rewards: '1,000,000,000 VNDC', quoteAsset: 'VNDC',
+        total_rewards: '500,000,000 VNDC', quoteAsset: 'VNDC',
         time_to_create: { start: '2022-11-25T17:00:00.000Z', end: '2022-12-09T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,

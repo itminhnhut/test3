@@ -115,9 +115,12 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                     <ButtonNao
                         onClick={() => onFilter('volume')}
                         className={`px-4 py-2 !rounded-md ${tab === 'volume' ? 'font-semibold' : '!bg-nao-bg3'}`}>{t('nao:contest:volume')}</ButtonNao>
-                    <ButtonNao
-                        onClick={() => onFilter('pnl')}
-                        className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>{t('nao:contest:per_pnl')}</ButtonNao>
+                    {
+                        contest_id !== 9 && <ButtonNao
+                            onClick={() => onFilter('pnl')}
+                            className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>{t('nao:contest:per_pnl')}</ButtonNao>
+
+                    }
                 </div>
             </div>
             {top3.length > 0 &&
