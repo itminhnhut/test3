@@ -1,19 +1,36 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import React, { useEffect, useState } from 'react';
+import {
+    capitalize,
+    CardNao,
+    Column,
+    getColor,
+    ImageNao,
+    renderPnl,
+    Table,
+    TextLiner,
+    Tooltip
+} from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_MASTER_GROUP_PNL } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import { getS3Url, formatNumber } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
-import { formatTime } from 'utils/reference-utils';
-import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 
-const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_master }) => {
+const ContestMasterRank = ({
+    onShowDetail,
+    previous,
+    contest_id,
+    minVolumeTeam,
+    quoteAsset,
+    lastUpdatedTime,
+    sort,
+    top_ranks_master
+}) => {
     const [tab, setTab] = useState(sort);
     const {
         t,
@@ -23,25 +40,27 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [total, setTotal] = useState(0)
-    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
         getRanks(tab);
-    }, [contest_id, page]);
+    }, [contest_id]);
 
     const rank = tab === 'pnl' ? 'current_rank_master_pnl' : 'current_rank_master_volume';
     const getRanks = async (tab) => {
         const _rank = tab === 'pnl' ? 'current_rank_master_pnl' : 'current_rank_master_volume';
         try {
-            const { data: originalData, status } = await fetchApi({
+            const {
+                data: originalData,
+                status
+            } = await fetchApi({
                 url: API_CONTEST_GET_MASTER_GROUP_PNL,
                 params: { contest_id: contest_id }
             });
-            let data = originalData
-            setTotal(data.length)
-            data = data.slice((page - 1) * 10, page * 10)
+            let data = originalData;
+            setTotal(data.length);
             if (data && status === ApiStatus.SUCCESS) {
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
@@ -77,7 +96,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                     />
                 </div>
                 <div>{data}</div>
-                <TickFbIcon size={16} />
+                <TickFbIcon size={16}/>
             </div>
         );
     };
@@ -108,6 +127,8 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             </div>
         );
     };
+
+    const showData = dataSource.slice((page - 1) * 10, page * 10);
 
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
@@ -153,28 +174,34 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
-                        <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                        <CardNao onClick={() => onShowDetail(item, tab)} key={index}
+                                 className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
-                                            className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover" alt="" />
+                                                  className="min-w-[3rem] min-h-[3rem] max-w-[3rem] max-h-[3rem] rounded-[50%] object-cover"
+                                                  alt=""/>
                                     </div>
                                     <div className="sm:space-y-[2px] flex flex-col">
-                                        <div className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
+                                        <div
+                                            className="flex items-center gap-2 text-lg font-semibold leading-8 capitalize">
                                             <span>{capitalize(item?.name)}</span>
-                                            <TickFbIcon size={18} />
+                                            <TickFbIcon size={18}/>
                                         </div>
-                                        <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
+                                        <span
+                                            className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
-                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
+                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0"
+                                           liner>{item?.[rank] > 0 ? `#${index + 1}` : '-'}</TextLiner>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
                                     <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
-                                    <span className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
+                                    <span
+                                        className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)} {quoteAsset}</span>
                                 </div>
                                 {
                                     tab === 'pnl'
@@ -198,13 +225,14 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             )}
             {width <= 640 ? (
                 <CardNao noBg className="mt-5 !py-[1.125rem] !px-3">
-                    <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                    <div
+                        className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
                     <div className="mt-3">
-                        {Array.isArray(dataSource) && dataSource?.length > 0 ? (
-                            dataSource.map((item, index) => {
+                        {Array.isArray(showData) && showData?.length > 0 ? (
+                            showData.map((item, index) => {
                                 return (
                                     <div
                                         onClick={() => onShowDetail(item, tab)}
@@ -213,7 +241,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                     >
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium ">
                                             {loading ? (
-                                                <Skeletor width={24} height={24} circle />
+                                                <Skeletor width={24} height={24} circle/>
                                             ) : item?.[rank] && item?.[rank] <= top_ranks_master ? (
                                                 <img
                                                     src={getS3Url(`/images/nao/contest/ic_top_${index + 4}.png`)}
@@ -229,11 +257,13 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                         <div className="text-sm flex-1">
                                             <div className="flex items-center justify-between">
                                                 <div>
-                                                    <div className="font-semibold leading-6 uppercase flex items-center space-x-2">
+                                                    <div
+                                                        className="font-semibold leading-6 uppercase flex items-center space-x-2">
                                                         <span>{item?.name} </span>
-                                                        <TickFbIcon size={16} />
+                                                        <TickFbIcon size={16}/>
                                                     </div>
-                                                    <div className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">
+                                                    <div
+                                                        className="text-nao-grey font-medium leading-6 cursor-pointer capitalize">
                                                         {capitalize(item?.leader_name)}
                                                     </div>
                                                 </div>
@@ -249,7 +279,8 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                             </div>
 
                                             <div className="flex items-center font-medium justify-between pt-2">
-                                                <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
+                                                <label
+                                                    className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">
                                                     {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                                 </span>
@@ -263,7 +294,8 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                                         {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
                                                     </span>
                                                 ) : (
-                                                    <span className={`text-right`}>{formatNumber(item?.total_order)}</span>
+                                                    <span
+                                                        className={`text-right`}>{formatNumber(item?.total_order)}</span>
                                                 )}
                                             </div>
                                             <div
@@ -278,16 +310,20 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             })
                         ) : (
                             <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100}
+                                     height={100}/>
                                 <div className="text-xs text-nao-grey mt-1">{t('nao:contest:no_rank')}</div>
                             </div>
                         )}
                     </div>
                 </CardNao>
             ) : (
-                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)}>
-                    <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
-                    <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
+                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={showData}
+                       onRowClick={(e) => onShowDetail(e, tab)}>
+                    <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')}
+                            fieldName={rank} cellRender={renderRank}/>
+                    <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')}
+                            fieldName="name" cellRender={renderTeam}/>
                     <Column
                         minWidth={150}
                         className="text-nao-text capitalize"
@@ -325,11 +361,12 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             decimal={0}
                         />
                     )}
-                    <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
+                    <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''}
+                            cellRender={renderActions}/>
                 </Table>
             )}
             {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
-            <div className='w-full flex justify-center mt-6'>
+            <div className="w-full flex justify-center mt-6">
                 <RePagination
                     total={total}
                     current={page}

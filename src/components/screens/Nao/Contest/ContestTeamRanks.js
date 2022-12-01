@@ -27,7 +27,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     useEffect(() => {
         setLoading(true)
         getRanks(tab);
-    }, [contest_id, page])
+    }, [contest_id])
 
     useEffect(() => {
         const queryString = window.location.search;
@@ -47,7 +47,6 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
             });
             let data = originalData
             setTotal(data.length)
-            data = data.slice((page - 1) * 10, page * 10)
             if (data && status === ApiStatus.SUCCESS) {
                 const dataFilter = data.filter(rs => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
@@ -103,8 +102,6 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
             </div>
         )
     }
-
-
     return (
         <section className="contest_individual_ranks pt-[4.125rem]">
             {minVolumeTeam && <Tooltip className="!px-3 !py-1 sm:min-w-[282px] sm:!max-w-[282px]"
@@ -182,7 +179,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     </div>
                     <div className="mt-3">
                         {Array.isArray(dataSource) && dataSource?.length > 0 ?
-                            dataSource.map((item, index) => {
+                            dataSource?.slice((page-1)*10, page*10).map((item, index) => {
                                 return (
                                     <div onClick={() => onShowDetail(item, tab)} key={index} className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
                                         <div className="min-w-[31px] text-nao-grey text-sm font-medium ">
@@ -241,7 +238,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     </div>
                 </CardNao>
                 :
-                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)} >
+                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource.slice((page-1)*10, page*10)} onRowClick={(e) => onShowDetail(e, tab)} >
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column minWidth={150} className="text-nao-text capitalize" title={t('nao:contest:captain')} fieldName="leader_name" cellRender={renderLeader} />
