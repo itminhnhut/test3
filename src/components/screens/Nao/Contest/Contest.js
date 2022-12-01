@@ -182,9 +182,9 @@ const Contest = (props) => {
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
+                {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
                 <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.team} />
-               {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
+                <ContestPerRanks  {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
             </div>
         </LayoutNaoToken>
     );

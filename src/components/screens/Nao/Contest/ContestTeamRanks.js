@@ -11,6 +11,7 @@ import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router'
 import TickFbIcon from 'components/svg/TickFbIcon';
+import RePagination from 'components/common/ReTable/RePagination';
 
 const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_team }) => {
     const [tab, setTab] = useState(sort);
@@ -20,10 +21,13 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const [total, setTotal] = useState(0)
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
+        setLoading(true)
         getRanks(tab);
-    }, [contest_id])
+    }, [contest_id, page])
 
     useEffect(() => {
         const queryString = window.location.search;
@@ -37,10 +41,13 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const getRanks = async (tab) => {
         const _rank = tab === 'pnl' ? 'current_rank_pnl' : 'current_rank_volume';
         try {
-            const { data, status } = await fetchApi({
+            const { data: originalData, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
                 params: { contest_id: contest_id },
             });
+            let data = originalData
+            setTotal(data.length)
+            data = data.slice((page - 1) * 10, page * 10)
             if (data && status === ApiStatus.SUCCESS) {
                 const dataFilter = data.filter(rs => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length
@@ -71,7 +78,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                         src={item?.avatar} width="32" height="32" alt="" />
                 </div>
                 <div>{data}</div>
-              {item?.is_group_master && <TickFbIcon size={16} />}
+                {item?.is_group_master && <TickFbIcon size={16} />}
             </div>
         )
     }
@@ -124,7 +131,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
                         <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                        <div className="flex items-center justify-between flex-1 gap-5">
+                            <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
@@ -249,6 +256,15 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                 </Table>
             }
             {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            <div className='w-full flex justify-center mt-6'>
+                <RePagination
+                    total={total}
+                    current={page}
+                    pageSize={10}
+                    onChange={(page) => setPage(page)}
+                    name=""
+                />
+            </div>
         </section>
     );
 };

@@ -11,6 +11,7 @@ import Skeletor from 'components/common/Skeletor';
 import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
+import RePagination from 'components/common/ReTable/RePagination';
 
 const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_master }) => {
     const [tab, setTab] = useState(sort);
@@ -22,19 +23,25 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const [dataSource, setDataSource] = useState([]);
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [total, setTotal] = useState(0)
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
+        setLoading(true)
         getRanks(tab);
-    }, [contest_id]);
+    }, [contest_id, page]);
 
     const rank = tab === 'pnl' ? 'current_rank_master_pnl' : 'current_rank_master_volume';
     const getRanks = async (tab) => {
         const _rank = tab === 'pnl' ? 'current_rank_master_pnl' : 'current_rank_master_volume';
         try {
-            const { data, status } = await fetchApi({
+            const { data: originalData, status } = await fetchApi({
                 url: API_CONTEST_GET_MASTER_GROUP_PNL,
                 params: { contest_id: contest_id }
             });
+            let data = originalData
+            setTotal(data.length)
+            data = data.slice((page - 1) * 10, page * 10)
             if (data && status === ApiStatus.SUCCESS) {
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
@@ -147,7 +154,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
                         <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
-                        <div className="flex items-center justify-between flex-1 gap-5">
+                            <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
                                         <ImageNao src={item?.avatar}
@@ -278,7 +285,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                     </div>
                 </CardNao>
             ) : (
-                <Table  loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)}>
+                <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} onRowClick={(e) => onShowDetail(e, tab)}>
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column
@@ -322,6 +329,15 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                 </Table>
             )}
             {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            <div className='w-full flex justify-center mt-6'>
+                <RePagination
+                    total={total}
+                    current={page}
+                    pageSize={10}
+                    onChange={(page) => setPage(page)}
+                    name=""
+                />
+            </div>
         </section>
     );
 };
