@@ -133,7 +133,7 @@
     "ICEBERG_PARTS": "Lệnh ICEBERG sẽ chia thành quá nhiều phần; icebergQty quá nhỏ.",
     "MARKET_LOT_SIZE": "Khối lượng giao dịch quá cao, quá thấp hoặc không tuân theo quy tắc bước nhảy cho cặp giao dịch.",
     "MAX_POSITION": "Vị thế của tài khoản đã đạt đến giới hạn xác định tối đa.",
-    "MAX_TOTAL_VOLUME": "Tổng khối lượng giao dịch của các vị thế/lệnh với cặp tiền này không được vượt quá {{value}}",
+    "MAX_TOTAL_VOLUME": "Để đảm bảo thanh khoản, tổng khối lượng giao dịch mỗi người dùng với cặp giao dịch này không được vượt quá {{max_notional}}",
     "MAX_NUM_ORDERS": "Tài khoản có quá nhiều lệnh mở trên cặp giao dịch.",
     "MAX_ALGO_ORDERS": "Tài khoản có quá nhiều lệnh cắt lỗ và/hoặc chốt lời đang mở trên cặp giao dịch.",
     "MAX_NUM_ICEBERG_ORDERS": "Tài khoản có quá nhiều lệnh mở về tảng băng trôi trên cặp giao dịch.",

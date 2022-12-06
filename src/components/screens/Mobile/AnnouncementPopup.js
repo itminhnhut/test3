@@ -4,31 +4,31 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { addHours } from 'date-fns';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
-
+import { useRouter } from 'next/router';
 const expireKey = 'announcement_expire_at';
 
 export default function AnnouncementPopup() {
     const { t, i18n: { language } } = useTranslation()
     const [open, setOpen] = useState(false);
-
+    const router = useRouter();
     useEffect(() => {
         const now = new Date().valueOf();
         const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
-        const endAt = new Date('2022-11-29T10:00:00.000Z').valueOf();
-        if (now > expireAt && now < endAt) {
+        const endAt = new Date('2022-12-07T17:00:00.000Z').valueOf();
+        if (router?.query?.pair && router?.query?.pair.includes('CTSI') && now > expireAt && now < endAt) {
             setOpen(true);
         }
     }, []);
 
     const close = () => {
-        localStorage.setItem(expireKey, addHours(new Date(), 6).valueOf().toString());
+        localStorage.setItem(expireKey, addHours(new Date(), 4).valueOf().toString());
         setOpen(false);
     };
 
     const onClick = () => {
         const link = {
-            [LANGUAGE_TAG.VI]: 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-huy-niem-yet-cvc-tren-nami-futures-va-onus-futures',
-            [LANGUAGE_TAG.EN]: 'https://nami.exchange/en/support/announcement/announcement/delisting-cvc-on-nami-futures-and-onus-futures',
+            [LANGUAGE_TAG.VI]: 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-thong-tin-giao-dich-futures-voi-ctsi',
+            [LANGUAGE_TAG.EN]: 'https://nami.exchange/en/support/announcement/announcement/update-futures-trading-rules-with-ctsi',
         }[language]
         window.open(link)
     }

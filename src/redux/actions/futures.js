@@ -187,7 +187,7 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             let message = data?.message;
             if (t(`error:futures${data?.status}`)) {
                 if (data.status === 'MAX_TOTAL_VOLUME') {
-                    message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.data?.notional)} ${params.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
+                    message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.data?.max_notional)} ${params.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
                 } else {
                     message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
                 }
