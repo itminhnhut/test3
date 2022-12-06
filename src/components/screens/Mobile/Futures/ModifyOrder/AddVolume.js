@@ -249,9 +249,12 @@ const AddVolume = ({
                     }
                 );
             } else {
-                const requestId =
-                    data?.requestId && `(${data?.requestId.substring(0, 8)})`;
-                context.alert.show("error", t("common:failed"), t(`error:futures:${status || "UNKNOWN"}`), requestId);
+                const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`;
+                let message =  t(`error:futures:${status || "UNKNOWN"}`)
+                if(status === 'MAX_TOTAL_VOLUME'){
+                    message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.max_notional)} ${order?.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
+                }
+                context.alert.show("error", t("common:failed"), message, requestId);
             }
         } catch (e) {
             if (e.message === "Network Error" || !navigator?.onLine) {
