@@ -206,10 +206,10 @@ export default function OrderInformation({ pair }) {
                 </div>;
             }
             case 'max_order_size_limit': {
-                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQty * _pairPrice?.lastPrice, decimal)
+                return formatNumber(currentExchangeConfig?.quantityFilter?.maxQuoteQty, decimal)
             }
             case 'max_order_size_market': {
-                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQty * _pairPrice?.lastPrice, decimal)
+                return formatNumber(currentExchangeConfig?.quantityFilterMarket?.maxQuoteQty, decimal)
             }
             default:
                 return '-';

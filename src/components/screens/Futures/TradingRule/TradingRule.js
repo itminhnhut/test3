@@ -183,9 +183,9 @@ const TradingRule = () => {
             case 'min_order_size':
                 return formatPrice(minNotionalFilter?.notional,) + ' ' + quoteAsset;
             case 'max_order_size_limit':
-                return lastPrice ? formatNumber(quantityFilter?.maxQty * lastPrice, decimal) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatNumber(quantityFilter?.maxQuoteQty, decimal) + ' ' + quoteAsset : '-';
             case 'max_order_size_market':
-                return lastPrice ? formatNumber(quantityFilterMarket?.maxQty * lastPrice, decimal) + ' ' + quoteAsset : '-';
+                return lastPrice ? formatNumber(quantityFilterMarket?.maxQuoteQty, decimal) + ' ' + quoteAsset : '-';
             case 'max_number_order':
                 return (maxNumOrderFilter?.limit || 0) + ' ' + t('futures:order');
             case 'min_limit_order_price':
