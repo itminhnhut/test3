@@ -9,8 +9,8 @@
     "distributed_today": "Phân phối hôm nay",
     "coming_soon": "Sắp ra mắt",
     "onus_performance": {
-        "title": "Thống kê về ONUS Futures",
-        "description": "Các thông tin cập nhật về sản phẩm ONUS Futures",
+        "title": "Thống kê về NAO Futures",
+        "description": "Các thông tin cập nhật về sản phẩm NAO Futures",
         "total_volume": "Khối lượng giao dịch",
         "total_orders": "Số lệnh giao dịch",
         "total_fee": "Tổng phí giao dịch",
@@ -132,7 +132,7 @@
     "holders_wallet": "Ví holder",
     "liq_pools": "Pool thanh khoản",
     "contest": {
-        "title": "Đua TOP giao dịch ONUS Futures mùa {{value}}",
+        "title": "Đua TOP giao dịch NAO Futures mùa {{value}}",
         "season": "Mùa {{value}}",
         "first": "đầu tiên",
         "second": "hai",
@@ -186,7 +186,7 @@
         "not_eligible": "Chưa đủ điều kiện",
         "eligible": "Đủ điều kiện",
         "rules_for_season_2": "Đội chưa đủ điều kiện tham gia dự thi và xếp hạng. Để biết thêm thông tin chi tiết, vui lòng truy cập vào trang {{value}}",
-        "rules_content": "Thể lệ cuộc thi Đua Top giao dịch ONUS Futures mùa hai",
+        "rules_content": "Thể lệ cuộc thi Đua Top giao dịch NAO Futures mùa hai",
         "status_pending": "Đợi phản hồi",
         "status_declined": "Đã từ chối",
         "status_joined": "Đã tham gia",
@@ -218,7 +218,7 @@
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",
         "ticket_title": "Bạn có {{value}} vé may mắn",
-        "ticket_des": "Đạt khối lượng giao dịch ngày {{vndc}} VNDC để có cơ hội nhận {{nao}} NAO từ ONUS Futures",
+        "ticket_des": "Đạt khối lượng giao dịch ngày {{vndc}} VNDC để có cơ hội nhận {{nao}} NAO từ NAO Futures",
         "received_tickets": "Bạn đã sử dụng hết vé may mắn ngày hôm nay, chúc bạn một ngày giao dịch thành công.",
         "trade": "Giao dịch ngay",
         "open_now": "Mở ngay",

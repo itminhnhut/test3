@@ -15,8 +15,8 @@ export const seasons = [
     {
         season: 1, start: '2022-07-07T17:00:00.000Z', end: '2022-07-27T17:00:00.000Z',
         contest_id: 4, button: 'nao:contest:last_season',
-        title_detail: { vi: 'ONUS Futures mùa đầu tiên', en: 'ONUS Futures Trading Contest Season 1' },
-        title: { vi: 'Đua TOP giao dịch ONUS Futures mùa đầu tiên', en: 'ONUS Futures Trading Contest Season 1' },
+        title_detail: { vi: 'NAO Futures mùa đầu tiên', en: 'NAO Futures Trading Contest Season 1' },
+        title: { vi: 'Đua TOP giao dịch NAO Futures mùa đầu tiên', en: 'NAO Futures Trading Contest Season 1' },
         minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC', isHtml: true },
         minVolumeTeam: { vi: '5 tỷ VNDC', en: '5 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/dang-ky-tham-gia-dua-top-onus-futures-mua-dau-tien',
@@ -28,8 +28,8 @@ export const seasons = [
     {
         season: 2, start: '2022-08-07T17:00:00.000Z', end: '2022-08-30T17:00:00.000Z',
         contest_id: 5,
-        title_detail: { vi: 'ONUS Futures mùa hai', en: 'ONUS Futures Trading Contest Season 2' },
-        title: { vi: 'Đua TOP giao dịch ONUS Futures mùa hai', en: 'ONUS Futures Trading Contest Season 2' },
+        title_detail: { vi: 'NAO Futures mùa hai', en: 'NAO Futures Trading Contest Season 2' },
+        title: { vi: 'Đua TOP giao dịch NAO Futures mùa hai', en: 'NAO Futures Trading Contest Season 2' },
         minVolumeInd: { vi: '10 tỷ VNDC', en: '10 billion VNDC', isHtml: true },
         minVolumeTeam: { vi: '50 tỷ VNDC', en: '50 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-dua-top-giao-dich-onus-futures-mua-02',
@@ -41,8 +41,8 @@ export const seasons = [
     {
         season: 3, start: '2022-09-04T17:00:00.000Z', end: '2022-10-02T17:00:00.000Z',
         contest_id: 6,
-        title_detail: { vi: 'ONUS Futures USDT – Nami Championship mùa 1', en: 'ONUS Futures USDT – Nami Championship Season 1' },
-        title: { vi: 'Giải đấu ONUS Futures USDT – Nami Championship mùa 1', en: 'ONUS Futures USDT – Nami Championship Season 1' },
+        title_detail: { vi: 'NAO Futures USDT – Nami Championship mùa 1', en: 'NAO Futures USDT – Nami Championship Season 1' },
+        title: { vi: 'Giải đấu NAO Futures USDT – Nami Championship mùa 1', en: 'NAO Futures USDT – Nami Championship Season 1' },
         minVolumeInd: { vi: '50,000 USDT', en: '50,000 USDT', isHtml: true },
         minVolumeTeam: { vi: '50,000 USDT', en: '50,000 USDT', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-usdt-nami-championship-mua-1',
@@ -54,8 +54,8 @@ export const seasons = [
     {
         season: 4, start: '2022-09-30T17:00:00.000Z', end: '2022-10-28T17:00:00.000Z',
         contest_id: 7,
-        title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 1', en: 'ONUS Futures VNDC – Nami Championship Season 1' },
-        title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 1', en: 'ONUS Futures VNDC – Nami Championship Season 1' },
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 1', en: 'NAO Futures VNDC – Nami Championship Season 1' },
+        title: { vi: 'Giải đấu NAO Futures VNDC – Nami Championship mùa 1', en: 'NAO Futures VNDC – Nami Championship Season 1' },
         minVolumeInd: { vi: '1 tỷ VNDC', en: '1 billion VNDC', isHtml: true },
         minVolumeTeam: { vi: '10 tỷ VNDC', en: '10 billion VNDC', isHtml: true },
         rules: 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-1',
@@ -68,8 +68,8 @@ export const seasons = [
     {
         season: 5, start: '2022-10-31T17:00:00.000Z', end: '2022-11-29T17:00:00.000Z',
         contest_id: 8,
-        title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 2', en: 'ONUS Futures VNDC – Nami Championship Season 2' },
-        title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 2', en: 'ONUS Futures VNDC – Nami Championship Season 2' },
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 2', en: 'NAO Futures VNDC – Nami Championship Season 2' },
+        title: { vi: 'Giải đấu NAO Futures VNDC – Nami Championship mùa 2', en: 'NAO Futures VNDC – Nami Championship Season 2' },
         minVolumeInd: {
             vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
             en: 'Traders need to meet the Basic Conditions to be ranked. For details',
@@ -85,8 +85,8 @@ export const seasons = [
     {
         season: 6, start: '2022-11-30T17:00:00.000Z', end: '2022-12-31T17:00:00.000Z',
         contest_id: 9,
-        title_detail: { vi: 'ONUS Futures VNDC – Nami Championship mùa 3', en: 'ONUS Futures VNDC – Nami Championship Season 3' },
-        title: { vi: 'Giải đấu ONUS Futures VNDC – Nami Championship mùa 3', en: 'ONUS Futures VNDC – Nami Championship Season 3' },
+        title_detail: { vi: 'NAO Futures VNDC – Nami Championship mùa 3', en: 'NAO Futures VNDC – Nami Championship Season 3' },
+        title: { vi: 'Giải đấu NAO Futures VNDC – Nami Championship mùa 3', en: 'NAO Futures VNDC – Nami Championship Season 3' },
         minVolumeInd: {
             vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
             en: 'Traders need to meet the Basic Conditions to be ranked. For details',
