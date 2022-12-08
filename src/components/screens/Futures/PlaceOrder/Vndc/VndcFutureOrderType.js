@@ -64,7 +64,7 @@ export const getProfitVndc = (order, lastPrice = 0, isOnus) => {
     }
     const swap = order?.swap || 0
     // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
-    fee += swap 
+    fee += swap
     try {
         let buyProfitVNDC = 0;
         buyProfitVNDC = quantity * (closePrice - open_price);
@@ -157,7 +157,7 @@ export const getMaxQuoteQty = (price, type, side, leverage, availableAsset, pair
                 ? o?.filterType === 'MARKET_LOT_SIZE'
                 : o?.filterType === 'LOT_SIZE'
         ) || {};
-    const _maxConfig = lotSize?.maxQty * (isQuoteQty ? price : 1); //maxConfig quoteQty
+    const _maxConfig = isQuoteQty ? lotSize?.maxQuoteQty : lotSize?.maxQty; //maxConfig quoteQty
     const _maxQty = side === VndcFutureOrderType.Side.BUY ? maxBuy : maxSell;
     return isAuth ? Math.min(_maxConfig, _maxQty) : _maxConfig;
 };
