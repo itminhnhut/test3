@@ -165,7 +165,7 @@ export default function OrderInformation({ pair }) {
                 return formatPrice(currentExchangeConfig.minNotionalFilter?.notional,)
             }
             case 'max_order_size': {
-                return formatPrice(currentExchangeConfig.quantityFilter.maxQty * _pairPrice?.lastPrice)
+                return formatPrice(currentExchangeConfig.quantityFilter.maxQuoteQty)
             }
             case 'total_max_trading_volumn':
                 return formatPrice(currentExchangeConfig.maxNumberVolumeFilter?.notional || 0)
