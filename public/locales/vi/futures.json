@@ -351,6 +351,7 @@
         "info_swap_fee": "Với mỗi vị thế Futures đang mở, Nami Exchange áp dụng mức phí duy trì vị thế là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì vị thế và được tính vào lợi nhuận dự kiến của vị thế.",
         "hours": "giờ",
         "info_liquidate_fee": "Với mỗi lệnh bị thanh lý, phí thanh lý được tính bằng 1% khối lượng giao dịch và được thanh toán bằng số dư tài khoản Futures",
+        "info_liquidate_price": "Mốc giá mà tại đó vị thế có lợi nhuận âm 100%",
         "invalid_session_title": "Phiên làm việc hết hạn",
         "invalid_session_content": "Vui lòng thử lại để tiếp tục Giao dịch Futures",
         "invalid_session_button": "Đồng ý",

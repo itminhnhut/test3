@@ -351,6 +351,7 @@
         "info_swap_fee": "For every active futures position, Nami Exchange applies a swap fee of 0.0015% of position’s volume minus margin for every maintaining hour and is calculated to the position’s PnL",
         "hours": "hours",
         "info_liquidate_fee": "For each order liquidated, the liquidation fee is calculated at 1% of the volume and is paid by the Futures account balance.",
+        "info_liquidate_price": "A price at which position PnL hits negative 100%",
         "invalid_session_title": "Session expired",
         "invalid_session_content": "Please reload to continue Futures trading",
         "invalid_session_button": "Refresh",
