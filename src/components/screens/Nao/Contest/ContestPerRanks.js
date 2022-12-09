@@ -248,7 +248,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource} >
                     <Column minWidth={50} className="font-medium text-nao-grey" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={150} className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
+                    <Column minWidth={150} className="text-nao-text" title={'ID NAO Futures'} fieldName="onus_user_id" />
                     <Column minWidth={150} align="right" className="font-medium" title={`${t('nao:contest:volume')} (${quoteAsset})`} decimal={0} fieldName="total_volume" />
                     <Column minWidth={150} visible={!previous} align="right" className="font-medium" title={t('common:ext_gate:time')} decimal={2} fieldName="time" suffix={t('common:hours')} />
                     {

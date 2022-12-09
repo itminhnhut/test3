@@ -9,8 +9,8 @@
     "distributed_today": "Distributed today",
     "coming_soon": "Coming soon",
     "onus_performance": {
-        "title": "ONUS Futures performance",
-        "description": "Update information about ONUS Futures product",
+        "title": "NAO Futures performance",
+        "description": "Update information about NAO Futures product",
         "total_volume": "Total volume",
         "total_orders": "Total trades",
         "total_fee": "Total fee",
@@ -132,7 +132,7 @@
     "holders_wallet": "Holders wallet",
     "liq_pools": "Liquidity pools",
     "contest": {
-        "title": "ONUS Futures Trading Contest Season {{value}}",
+        "title": "NAO Futures Trading Contest Season {{value}}",
         "season": "Season {{value}}",
         "first": "1",
         "second": "2",
@@ -218,7 +218,7 @@
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",
         "ticket_title": "You've {{value}} lucky tickets",
-        "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from ONUS Futures",
+        "ticket_des": "Reach {{vndc}} VNDC daily volume to have a chance of winning {{nao}} NAO from NAO Futures",
         "received_tickets": "You have used up all your lucky tickets today, wish you a successful trading day.",
         "trade": "Trade now",
         "open_now": "Open",

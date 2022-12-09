@@ -492,7 +492,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                 fieldName="name"
                                 cellRender={renderName}
                             />
-                            <Column minWidth={200} ellipsis className="text-nao-text" title={'ID ONUS Futures'} fieldName="onus_user_id" />
+                            <Column minWidth={200} ellipsis className="text-nao-text" title={'ID NAO Futures'} fieldName="onus_user_id" />
                             <Column
                                 visible={visibleStatus}
                                 minWidth={isPending.group ? 100 : 120}

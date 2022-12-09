@@ -415,7 +415,7 @@ const FuturesPairDetail = ({
                 case 'max_order_size': {
                     return (
                         formatPrice(
-                            currentExchangeConfig?.quantityFilter?.maxQty * lastPrice || 0
+                            currentExchangeConfig?.quantityFilter?.maxQuoteQty || 0
                         ) +
                         ' ' +
                         quoteAsset
