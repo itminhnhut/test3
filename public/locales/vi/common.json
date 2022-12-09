@@ -328,5 +328,8 @@
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
     "custom_date": "Tùy chỉnh",
-    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ"
+    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ",
+    "users": "{{value}} người",
+    "level": "Cấp {{level}}",
+    "show_more": "Xem thêm danh sách"
 }

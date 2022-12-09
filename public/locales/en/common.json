@@ -332,5 +332,8 @@
     "filter": "Filter",
     "custom": "Custom",
     "custom_date": "Custom Date",
-    "countdown_tooltip": "For reference only, actual funding time will be determined based on server time"
+    "countdown_tooltip": "For reference only, actual funding time will be determined based on server time",
+    "users": "{{value}} users",
+    "level": "Level {{level}}",
+    "show_more": "Show More"
 }
