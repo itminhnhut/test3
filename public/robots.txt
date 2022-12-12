@@ -2,6 +2,11 @@
 User-agent: *
 Allow: /
 
+Disallow: /*mobile/futures/order/*
+Disallow: /*library/*
+Disallow: /*_next/*
+
+
 # Host
 Host: https://nami.exchange
 
