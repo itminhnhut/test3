@@ -98,8 +98,8 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
         if (amount > balance) {
             return { msg: `${t('nao:maximum_amount')} ${formatNumber(balance, assetNao?.assetDigit)}`, isValid: false };
         }
-        if (amount < 10000 && isLock) {
-            return { msg: `${t('nao:minimum_amount')} ${formatNumber(10000)}`, isValid: false };
+        if (amount < 1000 && isLock) {
+            return { msg: `${t('nao:minimum_amount')} ${formatNumber(1000)}`, isValid: false };
         }
         return { isValid: true };
     }
@@ -163,7 +163,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         </CardNao>
                         <div className="flex items-center justify-between">
                             {isLock ?
-                                <div className="text-nao-yellow text-sm italic">{t('nao:minimun', { value: '10,000 NAO' })}</div>
+                                <div className="text-nao-yellow text-sm italic">{t('nao:minimun', { value: '1,000 NAO' })}</div>
                                 : <div />
                             }
                             <div className="text-sm font-medium leading-6 flex justify-end">
