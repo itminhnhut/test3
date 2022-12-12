@@ -230,7 +230,16 @@
         "conditions": "Bonus conditions",
         "vol_trade": "Trade volume today",
         "the_promotion_end_title": "The promotion has ended",
-        "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later."
+        "the_promotion_end_description": "The Daily Trading Rewards Lucky Draw promotion has ended, please come back later.",
+        "reward_title": "Daily Trading Reward",
+        "reward_desc": "Trading everyday to claim your rewards for each milestone of trading volume",
+        "today_trading": "Today's trading volume:",
+        "claim_now": "Claim Now",
+        "claim_success": "Congratulations, you have received",
+        "volume_tooltip": "Daily volume includes both VNDC and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
+        "start": "Start",
+        "back_to_trading": "Back to trading",
+        "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus."
     },
     "ended": "Ended",
     "going_on": "Going on",

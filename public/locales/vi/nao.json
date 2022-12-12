@@ -230,7 +230,16 @@
         "conditions": "Điều kiện nhận thưởng",
         "vol_trade": "KL giao dịch hôm nay",
         "the_promotion_end_title": "Chương trình đã kết thúc",
-        "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau."
+        "the_promotion_end_description": "Chương trình rút vé may mắn nhận thưởng theo khối lượng giao dịch đã kết thúc, vui lòng quay lại sau.",
+        "reward_title": "Thưởng giao dịch hàng ngày",
+        "reward_desc": "Giao dịch đủ Khối lượng mỗi ngày để nhận thưởng theo các mốc tương ứng",
+        "today_trading": "Khối lượng giao dịch hôm nay:",
+        "claim_now": "Nhận thưởng ngay",
+        "claim_success": "Chức mừng, bạn đã nhận được",
+        "volume_tooltip": "KLGD ngày bao gồm cả VNDC và USDT Futures và sẽ được tự động cài đặt lại vào 0h sáng mỗi ngày",
+        "start": "Bắt đầu",
+        "back_to_trading": "Tiếp tục giao dịch",
+        "reward_desc_trading":"KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}."
     },
     "ended": "Đã kết thúc",
     "going_on": "Đang diễn ra",
