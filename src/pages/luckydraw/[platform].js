@@ -379,7 +379,7 @@ const Background = styled.div.attrs({
 const BackgroundImage = styled.div.attrs(({ width }) => ({
     className: classnames('min-w-full h-full flex flex-col justify-between relative', { 'px-4 pt-8 pb-6': width > 360 }, { 'p-4': width <= 360 })
 }))`
-    background-image: ${({ url }) => `url(${url})`};
+    background-image: ${({ url }) => `url(${getS3Url(url)})`};
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
@@ -390,7 +390,7 @@ const BgModalClaim = styled.div.attrs(({ width }) => ({
         'max-w-[330px] max-h-[560px] h-full w-full rounded-t-3xl px-4 pb-8 pt-[5rem] relative mx-[1.875rem] text-center flex flex-col items-center justify-between'
     )
 }))`
-    background-image: ${({ url }) => `url(${url})`};
+    background-image: ${({ url }) => `url(${getS3Url(url)})`};
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
