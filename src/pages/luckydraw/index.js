@@ -30,7 +30,7 @@ const Luckydraw = () => {
     const volume = useRef(0)
 
     useEffect(() => {
-        // getTickets();
+        getTickets();
     }, [])
 
     const onClaim = async (code) => {
