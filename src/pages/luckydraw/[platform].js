@@ -21,6 +21,7 @@ import Portal from 'components/hoc/Portal';
 import { API_GET_TICKET_DETAIL, API_CLAIM_TICKET } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import Tooltip from 'components/common/Tooltip';
+import { sumBy } from 'lodash';
 
 const Luckydraw = ({ platform }) => {
     const {
@@ -240,7 +241,7 @@ const Luckydraw = ({ platform }) => {
 
     return (
         <LayoutNaoToken isHeader={false}>
-            <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} platform={platform} getImage={getImage} ticket={dataSource?.[active]} />
+            <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} platform={platform} getImage={getImage} ticket={dataSource?.[active]} tickets={dataSource} />
             <Tooltip
                 id={'volume_tooltip'}
                 place="top"
@@ -321,7 +322,7 @@ const Luckydraw = ({ platform }) => {
     );
 };
 
-const ModalClaim = ({ onClose, visible, platform, getImage, ticket }) => {
+const ModalClaim = ({ onClose, visible, platform, getImage, ticket, tickets }) => {
     const { t } = useTranslation();
     const wrapperRef = useRef(null);
 
@@ -352,7 +353,8 @@ const ModalClaim = ({ onClose, visible, platform, getImage, ticket }) => {
                             <span>{formatTime(ticket?.time, 'yyyy-MM-dd HH:mm')}</span>
                         </div>
                         <div className="text-lg leading-6 mt-3">{t('nao:luckydraw:claim_success')}</div>
-                        <div className="text-[2rem] leading-10 mt-2 font-semibold">{formatNumber(ticket?.value)} VNDC</div>
+                        <div className="text-[2rem] leading-10 mt-2 font-semibold">{formatNumber(
+                            sumBy(tickets, function(o) { return o.can_receive ?  o.value : 0 }))} VNDC</div>
                     </div>
                     <div
                         className={classNames('font-semibold leading-6 py-2.5 cursor-pointer relative w-full', {
