@@ -82,6 +82,7 @@ const Luckydraw = ({ platform }) => {
     };
 
     const claim = async () => {
+        setShowClaim(true);
         if (!can_receive.current) {
             emitWebViewEvent('back');
             return;
@@ -102,13 +103,14 @@ const Luckydraw = ({ platform }) => {
     };
 
     const active = useMemo(() => {
-        return dataSource.findIndex((rs) => rs.vol_condition > metadata.current) - 1;
+        const index = dataSource.findIndex((rs) => rs.vol_condition > metadata.current);
+        return index !== -1 ? index - 1 : dataSource.length - 1;
     }, [dataSource]);
 
     const percent = useMemo(() => {
         const current = metadata.current - dataSource?.[active]?.vol_condition;
         const next = dataSource?.[active + 1]?.vol_condition - dataSource?.[active]?.vol_condition;
-        return 1 - Math.abs(current - next) / next;
+        return dataSource?.[active + 1]?.vol_condition ? 1 - Math.abs(current - next) / next : 0;
     }, [dataSource, active]);
 
     const renderItem = (rs, idx, count, reverse, length) => {
@@ -134,7 +136,9 @@ const Luckydraw = ({ platform }) => {
                         {active >= count ? (
                             <>
                                 <div
-                                    style={{ width: active === count ? (idx === length - 1 ? 48 : 50) + percent * 80 : '101%' }}
+                                    style={{
+                                        width: active === count ? (idx === length - 1 ? 48 : 50) + percent * (idx === length - 1 ? 44 : 80) : '101%'
+                                    }}
                                     className={classNames('h-[6px] transition absolute z-10', {
                                         'rounded-l-xl !ml-0.5': idx === 0 && !reverse,
                                         'rounded-r-xl -ml-1': (active === count || idx === length - 1) && !reverse,
@@ -199,13 +203,10 @@ const Luckydraw = ({ platform }) => {
                 <div className={`grid grid-cols-4 relative`}>
                     {!reverse && (
                         <div
-                            className={classNames(
-                                'flex items-center justify-center absolute right-0 -bottom-10 w-[10px] h-[calc(100%+6px)] rounded-xl mb-[-1px]',
-                                {
-                                    'bg-[#3255A7]': platform === 'frame',
-                                    'bg-[#0B454B]': platform === 'nami'
-                                }
-                            )}
+                            className={classNames('flex items-center justify-center absolute right-0 -bottom-10 w-[10px] h-[calc(100%+5px)] rounded-xl ', {
+                                'bg-[#3255A7]': platform === 'frame',
+                                'bg-[#0B454B]': platform === 'nami'
+                            })}
                         >
                             {active >= size && (
                                 <div
@@ -337,7 +338,7 @@ const ModalClaim = ({ onClose, visible, platform, getImage, ticket }) => {
         <Portal portalId="PORTAL_MODAL">
             <div
                 className={classNames(
-                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20]  overflow-hidden',
+                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[99]  overflow-hidden',
                     { invisible: !visible },
                     { visible: visible, 'bg-nao-bgShadow/[0.9]': platform === 'frame', 'bg-nao-nami/[0.95]': platform === 'nami' }
                 )}
