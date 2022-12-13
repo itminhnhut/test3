@@ -21,7 +21,6 @@ import Portal from 'components/hoc/Portal';
 import { API_GET_TICKET_DETAIL, API_CLAIM_TICKET } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import Tooltip from 'components/common/Tooltip';
-import { sumBy } from 'lodash';
 
 const Luckydraw = ({ platform }) => {
     const {
@@ -34,6 +33,7 @@ const Luckydraw = ({ platform }) => {
     const metadata = useRef(0);
     const [dataSource, setDataSource] = useState([]);
     const can_receive = useRef(false);
+    const total_reward = useRef(0);
 
     const getIcon = (act) => {
         if (act) {
@@ -83,7 +83,6 @@ const Luckydraw = ({ platform }) => {
     };
 
     const claim = async () => {
-        setShowClaim(true);
         if (!can_receive.current) {
             emitWebViewEvent('back');
             return;
@@ -94,6 +93,7 @@ const Luckydraw = ({ platform }) => {
                 options: { method: 'POST' }
             });
             if (data) {
+                total_reward.current = data?.total_reward;
                 can_receive.current = false;
                 setShowClaim(true);
             }
@@ -241,7 +241,14 @@ const Luckydraw = ({ platform }) => {
 
     return (
         <LayoutNaoToken isHeader={false}>
-            <ModalClaim visible={showClaim} onClose={() => setShowClaim(false)} platform={platform} getImage={getImage} ticket={dataSource?.[active]} tickets={dataSource} />
+            <ModalClaim
+                visible={showClaim}
+                onClose={() => setShowClaim(false)}
+                platform={platform}
+                getImage={getImage}
+                ticket={dataSource?.[active]}
+                total_reward={total_reward.current}
+            />
             <Tooltip
                 id={'volume_tooltip'}
                 place="top"
@@ -322,7 +329,7 @@ const Luckydraw = ({ platform }) => {
     );
 };
 
-const ModalClaim = ({ onClose, visible, platform, getImage, ticket, tickets }) => {
+const ModalClaim = ({ onClose, visible, platform, getImage, ticket, total_reward }) => {
     const { t } = useTranslation();
     const wrapperRef = useRef(null);
 
@@ -353,8 +360,7 @@ const ModalClaim = ({ onClose, visible, platform, getImage, ticket, tickets }) =
                             <span>{formatTime(ticket?.time, 'yyyy-MM-dd HH:mm')}</span>
                         </div>
                         <div className="text-lg leading-6 mt-3">{t('nao:luckydraw:claim_success')}</div>
-                        <div className="text-[2rem] leading-10 mt-2 font-semibold">{formatNumber(
-                            sumBy(tickets, function(o) { return o.can_receive ?  o.value : 0 }))} VNDC</div>
+                        <div className="text-[2rem] leading-10 mt-2 font-semibold">{formatNumber(total_reward)} VNDC</div>
                     </div>
                     <div
                         className={classNames('font-semibold leading-6 py-2.5 cursor-pointer relative w-full', {
