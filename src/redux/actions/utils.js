@@ -994,9 +994,9 @@ export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio =
 
     export const checkInFundingTime = () => {
         const now = new Date()
-        const hour = now.getHours()
+        const hour = now.getUTCHours()
         const min = now.getMinutes()
-        return (min === 0 && hour % 2 === 0) || (min >= 50 && hour % 2 === 1);
+        return (min === 0 && hour % 8 === 0) || (min >= 50 && hour % 8 === 7);
 
     }
 
