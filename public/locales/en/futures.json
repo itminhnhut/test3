@@ -211,6 +211,7 @@
     "cancel": "Cancel",
     "place_order_success_message": "Your request of opening an order is processing",
     "high_volume_note": "Risk Warning: Orders with high volume will need longer time to be executed, please manage your positions carefully to reduce risks",
+    "high_funding_note": "Risk Warning: Marker order request requires longer time to be executed around funding time, please consider carefully before trading.",
     "place_order_failed": "Place order failed",
     "place_order": "Place order",
     "mobile": {

@@ -992,6 +992,14 @@ export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio =
 }
 
 
+    export const checkInFundingTime = () => {
+        const now = new Date()
+        const hour = now.getHours()
+        const min = now.getMinutes()
+        return (min === 0 && hour % 2 === 0) || (min >= 50 && hour % 2 === 1);
+
+    }
+
 export const Countdown = ({ date, onEnded, isDays = false }) => {
     const timer = useRef(null)
     const [count, setCount] = useState({

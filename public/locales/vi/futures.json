@@ -211,6 +211,7 @@
     "cancel": "Hủy",
     "place_order_success_message": "Yêu cầu đặt lệnh của bạn đang được xử lý",
     "high_volume_note": "Lưu ý: Lệnh có khối lượng lớn sẽ cần thời gian xử lý lâu hơn, hãy quản lý tốt vị thế để giảm thiểu rủi ro khi giao dịch",
+    "high_funding_note": "Cảnh báo rủi ro: Giao dịch dạng lệnh thị trường quanh mốc funding sẽ cần thời gian xử lý lệnh lâu hơn, hãy cân nhắc kỹ trước khi giao dịch.",
     "place_order_failed": "Đặt lệnh không thành công",
     "place_order": "Đặt lệnh",
     "mobile": {
