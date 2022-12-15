@@ -150,8 +150,12 @@ const OrderOpenDetail = ({
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
+                let message = t(`error:futures:${status || 'UNKNOWN'}`)
+                if (status === 'MIN_DIFFERENCE_ACTIVE_PRICE' || status === 'MIN_DIFFERENCE_SL_TP_PRICE') {
+                    message = t(`error:futures:${data.status}`, { value: `${formatNumber(data?.differencePercent, 2)}` });
+                }
                 const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`;
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
+                context.alert.show('error', t('common:failed'), message, requestId);
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {

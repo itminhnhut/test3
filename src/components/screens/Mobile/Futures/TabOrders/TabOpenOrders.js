@@ -8,7 +8,7 @@ import fetchApi from 'utils/fetch-api';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import OrderItemMobile from './OrderItemMobile';
 import { getShareModalData } from './ShareFutureMobile';
-import { countDecimals, emitWebViewEvent } from 'redux/actions/utils';
+import { countDecimals, emitWebViewEvent, formatNumber } from 'redux/actions/utils';
 import ModifyOrder from '../ModifyOrder';
 import { find } from 'lodash';
 import EditSLTPVndcMobile from '../EditSLTPVndcMobile';
@@ -119,7 +119,11 @@ const TabOpenOrders = ({
                 if (cb) cb(data?.orders);
             } else {
                 const requestId = data?.requestId && `(${data?.requestId.substring(0, 8)})`;
-                context.alert.show('error', t('common:failed'), t(`error:futures:${status || 'UNKNOWN'}`), requestId);
+                let message = t(`error:futures:${status || 'UNKNOWN'}`)
+                if (status === 'MIN_DIFFERENCE_ACTIVE_PRICE' || status === 'MIN_DIFFERENCE_SL_TP_PRICE') {
+                    message = t(`error:futures:${status}`, { value: `${formatNumber(data?.differencePercent, 2)}` });
+                }
+                context.alert.show('error', t('common:failed'), message, requestId);
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {

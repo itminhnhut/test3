@@ -195,6 +195,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (t(`error:futures${data?.status}`)) {
                 if (data.status === 'MAX_TOTAL_VOLUME') {
                     message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.data?.max_notional)} ${params.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
+                } else if (data.status === 'MIN_DIFFERENCE_ACTIVE_PRICE' || data.status === 'MIN_DIFFERENCE_SL_TP_PRICE') {
+                    message = t(`error:futures:${data.status}`, { value: `${formatNumber(data?.data?.differencePercent, 2)}` });
                 } else {
                     message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
                 }
