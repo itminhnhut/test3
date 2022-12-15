@@ -321,7 +321,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
-                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:margin')}</Label>
@@ -341,7 +341,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
-                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:adjust_margin:remove_margin_funding')}</Label>
@@ -360,7 +360,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
-                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 {item?.metadata?.modify_tp &&
                     <Row>
@@ -407,7 +407,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
-                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
@@ -461,7 +461,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:time')}</Label>
-                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(item?.createdAt, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:volume')}</Label>
@@ -527,7 +527,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:reason_close')}</Label>
@@ -582,7 +582,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:reason_close')}</Label>
@@ -683,7 +683,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
-                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss')}</Span>
+                    <Span>{formatTime(order?.opened_at, 'yyyy-MM-dd HH:mm:ss:SSS')}</Span>
                 </Row>
                 {order?.type !== VndcFutureOrderType.Type.MARKET && order.status === VndcFutureOrderType.Status.CLOSED && !order.open_price &&
                     <Row>
@@ -698,7 +698,7 @@ const OrderDetail = ({
                 {!isAddedVolOrClose && <>
                     <Row>
                         <Label>{t('futures:mobile:close_time')}</Label>
-                        <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss') : '-'}</Span>
+                        <Span>{order?.closed_at ? formatTime(order?.closed_at, 'yyyy-MM-dd HH:mm:ss:SSS') : '-'}</Span>
                     </Row>
                     <Row>
                         <Label>{t('futures:order_table:close_price')}</Label>
