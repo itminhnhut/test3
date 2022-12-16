@@ -71,7 +71,12 @@ const initColumns = [
         title: 'liq_fee_rate',
         tooltip: 'liq_fee_rate_tooltips',
         width: 180,
-    }
+    },
+    {
+        title: 'min_difference_ratio',
+        tooltip: 'min_difference_ratio_tooltip',
+        width: 180,
+    },
 ]
 
 const limit = 10
@@ -200,6 +205,15 @@ const TradingRule = () => {
                 return (item?.leverageConfig?.max || '-') + 'x';
             case 'liq_fee_rate':
                 return '1%';
+            case 'min_difference_ratio':
+                const _minRatio = percentPriceFilter?.minDifferenceRatio
+                return (
+                    formatNumber(
+                        _minRatio*100,
+                        3
+                    ) +
+                    '%'
+                );
             default:
                 return '-';
         }
