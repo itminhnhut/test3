@@ -152,7 +152,7 @@ const OrderOpenDetail = ({
             } else {
                 let message = t(`error:futures:${status || 'UNKNOWN'}`)
                 if (status === 'MIN_DIFFERENCE_ACTIVE_PRICE' || status === 'MIN_DIFFERENCE_SL_TP_PRICE') {
-                    message = t(`error:futures:${data.status}`, { value: `${formatNumber(data?.differencePercent, 2)}` });
+                    message = t(`error:futures:${status}`, { value: `${formatNumber(data?.differencePercent, 2)}` });
                 }
                 const requestId = data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`;
                 context.alert.show('error', t('common:failed'), message, requestId);
