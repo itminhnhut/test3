@@ -221,8 +221,9 @@ const EditSLTPVndcMobile = ({
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                let _activePrice = order.price;
-              
+                let _activePrice = order.status === FuturesOrderEnum.Status.PENDING
+                    ? order.price
+                    : _lastPrice
                 // Truong hop dat lenh market
                 const lowerBound = {
                     min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
@@ -543,7 +544,7 @@ const EditSLTPVndcMobile = ({
                                 allowedDecimalSeparators={[',', '.']}
                                 validator={{
                                     isValid: false,
-                                    msg: 'abc'
+                                    msg: ''
                                 }}
                             />
                         </div>
