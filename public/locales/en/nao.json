@@ -239,7 +239,10 @@
         "volume_tooltip": "Daily volume includes both VNDC and USDT Futures and will automatically reset at 00:00 everyday (UTC+7)",
         "start": "Start",
         "back_to_trading": "Back to trading",
-        "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus."
+        "reward_desc_trading": "Trading volume is not enough to claim next reward, please trade an additional volume of {{vol}} for {{value}} bonus.",
+        "reward_desc_trading_over": "Congratulations on getting all your bonus milestones today. Wishing you efficient and successful trading!",
+        "updated_vol": "Updated every 20 minutes",
+        "last_updated_time": "Last Updated"
     },
     "ended": "Ended",
     "going_on": "Going on",
