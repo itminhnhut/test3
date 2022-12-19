@@ -500,6 +500,12 @@ const PlaceOrder = ({
                         onConfirm={onConfirmSLTP}
                         lastPrice={lastPrice}
                         isMobile
+                        decimals={decimals}
+                        side={side}
+                        type={type}
+                        pair={pair}
+                        price={price}
+                        stopPrice={stopPrice}
                     />
                 }
                 {collapse &&

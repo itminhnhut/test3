@@ -274,6 +274,7 @@ const FuturesMobile = () => {
                                    isAuth={!!auth}
                                    setForceRender={setForceRender} forceRender={forceRender}
                                    isFullScreen={futuresScreen.isFullScreen}
+                                   decimals={decimals}
                         />
                     </Section>
                 </Container>
