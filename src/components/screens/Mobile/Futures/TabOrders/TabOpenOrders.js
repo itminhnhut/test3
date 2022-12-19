@@ -246,12 +246,6 @@ const TabOpenOrders = ({
                     pairTicker={marketWatch}
                     isMobile
                     disabled={disabled}
-                    decimals={decimals}
-                    side={rowData.current.side}
-                    type={rowData.current.type}
-                    pair={rowData.current.symbol}
-                    price={rowData.current.openPrice}
-                    stopPrice={rowData.current.openPrice}
                     isPosition
                 />
             }

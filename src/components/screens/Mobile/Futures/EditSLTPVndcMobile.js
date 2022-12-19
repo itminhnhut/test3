@@ -17,15 +17,6 @@ import { isNumeric } from 'utils';
 import classNames from 'classnames';
 import { createSelector } from 'reselect';
 
-
-const getPairPrice = createSelector(
-    [
-        state => state.futures,
-        (state, pair) => pair
-    ],
-    (futures, pair) => futures.marketWatch[pair]
-);
-
 const EditSLTPVndcMobile = ({
     onClose,
     isVisible,
@@ -37,12 +28,6 @@ const EditSLTPVndcMobile = ({
     isMobile,
     onusMode = false,
     disabled,
-    decimals,
-    side,
-    type,
-    pair,
-    price,
-    stopPrice,
     isPosition
 }) => {
     const { t } = useTranslation();
@@ -79,12 +64,7 @@ const EditSLTPVndcMobile = ({
     const decimalSymbol = find(assetConfig, { id: pairConfig?.quoteAssetId })?.assetDigit ?? 0;
     if (!pairConfig) return null;
     const isChangeSlide = useRef(false);
-    const priceFromMarketWatch = useSelector(state => getPairPrice(state, pair));
-    const [pairPrice, setPairPrice] = useState(null);
-    const _pairPrice = pairPrice || priceFromMarketWatch;
     const initValue = useRef(null)
-
-    console.log('initValue', initValue)
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -210,6 +190,8 @@ const EditSLTPVndcMobile = ({
         });
     };
 
+    console.log(' order',  order)
+
     const [slError, setSlError] = useState({
         isValid: true,
         msg: null
@@ -221,7 +203,7 @@ const EditSLTPVndcMobile = ({
     const validatorSLTPByInput = (mode, { sl = undefined, tp = undefined }) => {
         let isValid = true;
         let msg = null;
-        if (isPosition && (sl === initValue.current.sl || tp === initValue.current.tp)) return {
+        if (isPosition && (sl === initValue.current?.sl || tp === initValue.current?.tp)) return {
             isValid, msg
         }
         switch (mode) {
@@ -239,15 +221,8 @@ const EditSLTPVndcMobile = ({
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                let _activePrice = _pairPrice?.lastPrice ?? lastPrice;
-                if (mode !== 'price') {
-                    if (type === 'LIMIT') {
-                        _activePrice = price;
-                    } else if (type === 'STOP_MARKET') {
-                        _activePrice = stopPrice;
-                    }
-                }
-
+                let _activePrice = order.price;
+              
                 // Truong hop dat lenh market
                 const lowerBound = {
                     min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
@@ -260,70 +235,30 @@ const EditSLTPVndcMobile = ({
                 };
 
                 let bound = lowerBound;
-                if (side === FuturesOrderEnum.Side.BUY) {
+                if (order.side === FuturesOrderEnum.Side.BUY) {
                     bound = mode === 'stop_loss' ? lowerBound : upperBound;
                 } else {
                     bound = mode === 'stop_loss' ? upperBound : lowerBound;
                 }
 
                 if (mode === 'stop_loss') {
-                    bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
+                    bound = order.side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
                     // Modify bound base on type
                     if (sl < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimalSymbol, 0, true)}`;
                     } else if (sl > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimalSymbol, 0, true)}`;
                     }
                 } else if (mode === 'take_profit') {
-                    bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
+                    bound = order.side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
                     if (tp < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimalSymbol, 0, true)}`;
                     } else if (tp > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
-                    }
-                } else if (mode === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
-                    const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price;
-                    if (side === FuturesOrderEnum.Side.BUY) {
-                        // Truong hop la buy thi gia limit phai nho hon gia hien tai
-                        if (type === 'LIMIT') {
-                            if (price < lowerBound.min) {
-                                isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
-                            } else if (price > lowerBound.max) {
-                                isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
-                            }
-                        } else if (type === 'STOP_MARKET') {
-                            if (stopPrice < upperBound.min) {
-                                isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
-                            } else if (stopPrice > upperBound.max) {
-                                isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
-                            }
-                        }
-                    } else if (side === FuturesOrderEnum.Side.SELL) {
-                        if (type === 'LIMIT') {
-                            if (price < upperBound.min) {
-                                isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
-                            } else if (price > upperBound.max) {
-                                isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
-                            }
-                        } else if (type === 'STOP_MARKET') {
-                            if (stopPrice < lowerBound.min) {
-                                isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
-                            } else if (stopPrice > lowerBound.max) {
-                                isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
-                            }
-                        }
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimalSymbol, 0, true)}`;
                     }
                 }
                 return {
@@ -703,7 +638,7 @@ const EditSLTPVndcMobile = ({
                 type="primary"
                 className={`!h-[3rem] !text-[1rem] !font-semibold`}
                 componentType="button"
-                disabled={disabled || !tpError.isValid || !slError.isValid}
+                disabled={disabled || (show?.tp && !tpError.isValid) || (show?.sl && !slError.isValid)}
                 onClick={() => {
                     const newData = {
                         ...data,
