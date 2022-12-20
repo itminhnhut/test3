@@ -9,16 +9,22 @@ import useApp from 'hooks/useApp';
 import { appUrlHandler, SupportCategories } from 'constants/faqHelper';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
-import { ghost } from 'utils';
+import { getLastedArticles, ghost } from 'utils';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
+import dynamic from 'next/dynamic';
+
+const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
 
 const FaqTopics = (props) => {
     const [currentGroup, setCurrentGroup] = useState(null)
-    const { articles } = props?.data || []
     const [theme, , setTheme] = useDarkMode();
+    const [page, setPage] = useState(1);
+    const [articles, setArticles] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [search, setSearch] = useState('');
 
 
     const router = useRouter()
@@ -31,6 +37,19 @@ const FaqTopics = (props) => {
         SupportCategories.faq[language]?.find(
             (o) => o.displaySlug === router?.query?.topic
         )?.subCats || false
+
+    useEffect(() => {
+        getLastedArticles(
+            `faq-${language || 'en'}-${router?.query?.topic}`,
+            25,
+            page,
+            language
+        )
+            .then((articles) => {
+                setArticles(articles);
+                setTotal(articles.meta?.pagination?.total);
+            });
+    }, [page, router]);
 
     const renderGroup = () => {
         return (
@@ -60,7 +79,20 @@ const FaqTopics = (props) => {
             ))
         )
     }
-
+    const renderPagination = useCallback(() => {
+        if (!total) return null;
+        return (
+            <div className="flex items-center justify-center mt-8">
+                <RePagination
+                    total={total}
+                    current={page}
+                    pageSize={25}
+                    showTitle={false}
+                    onChange={(currentPage) => setPage(currentPage)}
+                />
+            </div>
+        );
+    }, [page, articles, total]);
     const renderAppHeader = () => {
         if (!isApp) return null
         const topic = props?.data?.tags?.find(
@@ -180,21 +212,17 @@ const FaqTopics = (props) => {
                     </div>
                 )}
                 <div className=''>{renderLastedArticles()}</div>
+                {renderPagination()}
             </TopicsLayout>
         </>
     )
 }
 
 export async function getServerSideProps({ locale, query }) {
-    const articles = await ghost.posts.browse({
-        filter: `tags:faq-${locale || 'en'}-${query?.topic}`,
-        include: `tags`,
-    })
-
     return {
         props: {
             data: {
-                articles,
+                articles: [],
             },
             ...(await serverSideTranslations(locale, [
                 'common',
