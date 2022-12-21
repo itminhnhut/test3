@@ -672,9 +672,10 @@ const Funding = ({ symbol }) => {
     const context = useContext(AlertContext);
 
     useEffect(() => {
-        const notShowFundingWarning = localStorage.getItem('notShowFundingWarning')
+        const localKey = 'notShowFundingWarning' + symbol
+        const notShowFundingWarning = localStorage.getItem(localKey)
         if (notShowFundingWarning?.length && Number(notShowFundingWarning) < Date.now()) {
-            localStorage.removeItem('notShowFundingWarning')
+            localStorage.removeItem(localKey)
             return
         }
         if(notShowFundingWarning?.length) return
@@ -687,7 +688,7 @@ const Funding = ({ symbol }) => {
                 t("futures:funding_history_tab:funding_warning"),
                 t("futures:funding_history_tab:funding_warning_content"),
                 null,
-                () => { localStorage.setItem('notShowFundingWarning', (Date.now() + 900000).toString()) },
+                () => { localStorage.setItem(localKey, (Date.now() + 900000).toString()) },
                 null,
                 {
                     hideCloseButton: true,
