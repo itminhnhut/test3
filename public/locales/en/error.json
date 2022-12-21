@@ -253,7 +253,7 @@
     "error": "Something went wrong, please provide the error code below to the support team.",
     "UNKNOWN": "Something went wrong, please provide the error code below to the support team.",
     "PROCESSING_FUTURES_ORDER": "Your request failed because the order was closed",
-    "PRICE_CHANGED": "Your request are expired or the current price has changed, please request new price",
+    "PRICE_CHANGED": "This contract has extremely low liquidity at the moment, please try again later.",
     "NETWORK_ERROR": "Network error, Please check your connection again",
     "INVALID_IMAGE": "Image is not valid, please try again.",
     "CAN_NOT_FOUND_USER": "Invalid Onus ID",

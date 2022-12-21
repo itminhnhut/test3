@@ -142,7 +142,7 @@
     "error": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
     "UNKNOWN": "Có lỗi xảy ra trong quá trình xử lý, vui lòng cung cấp mã lỗi dưới đây cho đội ngũ hỗ trợ.",
     "PROCESSING_FUTURES_ORDER": "Yêu cầu của bạn không thành công do lệnh đã đóng trước đó",
-    "PRICE_CHANGED": "Yêu cầu của bạn đã hết hạn hoặc giá đã thay đổi so với báo giá cũ, vui lòng thử lại để nhận giá mới nhất",
+    "PRICE_CHANGED": "Cặp giao dịch này thanh khoản rất yếu ở thời điểm hiện tại, vui lòng thử lại sau.",
     "NETWORK_ERROR": "Lỗi mạng, Vui lòng kiểm tra lại kết nối của bạn",
     "INVALID_IMAGE": "Hình ảnh không hợp lệ, vui lòng thử lại.",
     "CAN_NOT_FOUND_USER": "Onus ID không hợp lệ",
