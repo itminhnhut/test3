@@ -672,15 +672,18 @@ const Funding = ({ symbol }) => {
     const context = useContext(AlertContext);
 
     useEffect(() => {
-        const localKey = 'notShowFundingWarning' + symbol
+        const localKey = `notShowFundingWarning:${symbol}`
         const notShowFundingWarning = localStorage.getItem(localKey)
-        if (notShowFundingWarning?.length && Number(notShowFundingWarning) < Date.now()) {
-            localStorage.removeItem(localKey)
-            return
+        if (notShowFundingWarning?.length  ) {
+            if(Number(notShowFundingWarning) >= Date.now()){
+                return
+            }else{
+                localStorage.removeItem(localKey)
+            }
         }
-        if(notShowFundingWarning?.length) return
         const showWarningRate = (marketWatch[symbol]?.fundingRate * 100) >= 0.5
         const showWarningTime = ((marketWatch[symbol]?.fundingTime - Date.now()) / 60000) <= 15
+
         const showWarning = showWarningRate && showWarningTime
         if (showWarning) {
             context.alert.show(
@@ -697,7 +700,7 @@ const Funding = ({ symbol }) => {
                     noUseOutside: true
                 });
         }
-    }, [])
+    }, [symbol])
 
 
     return (
