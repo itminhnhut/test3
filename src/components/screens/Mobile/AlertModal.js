@@ -3,6 +3,7 @@ import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import {useTranslation} from 'next-i18next';
 import {getS3Url} from 'redux/actions/utils';
+import classNames from 'classnames';
 
 const AlertModal = forwardRef((props, ref) => {
     const {t} = useTranslation();
@@ -68,7 +69,7 @@ const AlertModal = forwardRef((props, ref) => {
 
     if (!options.current.title) return null;
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
+        <Modal onusMode={true} isVisible={true} onBackdropCb={!options?.current?.noUseOutside ? onCancel : null}
                modalClassName="z-[99999999999]"
                containerStyle={{width: 'calc(100vw - 30px)', transform: 'translate(-50%,0)', left: '50%'}}
                onusClassName="!px-9 !pb-10 min-h-[334px] !bottom-[50px] rounded-[16px]"
@@ -80,7 +81,7 @@ const AlertModal = forwardRef((props, ref) => {
                 <div className='text-lg font-semibold mb-3 leading-6'>
                     {options.current.title}
                 </div>
-                <div className='text-center text-onus-grey font-normal leading-[1.375rem]'
+                <div className={classNames('text-center text-onus-grey font-normal leading-[1.375rem]', options?.current?.textClassname )}
                      dangerouslySetInnerHTML={{__html: options.current.messages}}>
                 </div>
                 {options.current.note && <div className='text-xs text-center mt-[10px] text-[#FF9F1A]'>

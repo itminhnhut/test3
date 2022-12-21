@@ -18,6 +18,7 @@ import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux'
 import Tooltip from 'components/common/Tooltip';
+import { AlertContext } from "components/common/layouts/LayoutMobile";
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.8';
@@ -31,6 +32,8 @@ import { formatPrice } from 'src/redux/actions/utils';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useContext } from 'react';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -661,12 +664,57 @@ export class MobileTradingView extends React.PureComponent {
     }
 }
 
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
 const Funding = ({ symbol }) => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = React.useState(false)
     const timesync = useSelector(state => state.utils.timesync)
     const marketWatch = useSelector((state) => state.futures.marketWatch);
+    const context = useContext(AlertContext);
+
+    useEffect(() => {
+        const notShowFundingWarning = localStorage.getItem('notShowFundingWarning')
+        if (notShowFundingWarning?.length && Number(notShowFundingWarning) < Date.now()) {
+            localStorage.removeItem('notShowFundingWarning')
+            return
+        }
+        if(notShowFundingWarning?.length) return
+        const showWarningRate = (marketWatch[symbol]?.fundingRate * 100) >= 0.5
+        const showWarningTime = ((marketWatch[symbol]?.fundingTime - Date.now()) / 60000) <= 15
+        const showWarning = showWarningRate && showWarningTime
+        if (showWarning) {
+            context.alert.show(
+                "warning",
+                t("futures:funding_history_tab:funding_warning"),
+                t("futures:funding_history_tab:funding_warning_content"),
+                null,
+                () => { localStorage.setItem('notShowFundingWarning', (Date.now() + 900000).toString()) },
+                null,
+                {
+                    hideCloseButton: true,
+                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    textClassname: '!text-left overflow-y-auto !max-h-[300px]',
+                    noUseOutside: true
+                });
+        }
+    }, [])
+
+
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
