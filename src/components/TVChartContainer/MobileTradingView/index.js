@@ -682,7 +682,7 @@ const Funding = ({ symbol }) => {
         const showWarningRate = (marketWatch[symbol]?.fundingRate * 100) >= 0.5
         const showWarningTime = ((marketWatch[symbol]?.fundingTime - Date.now()) / 60000) <= 15
         const showWarning = showWarningRate && showWarningTime
-        if (showWarning) {
+        if (true) {
             context.alert.show(
                 "warning",
                 t("futures:funding_history_tab:funding_warning"),
@@ -693,7 +693,7 @@ const Funding = ({ symbol }) => {
                 {
                     hideCloseButton: true,
                     confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
-                    textClassname: '!text-left overflow-y-auto !max-h-[300px]',
+                    textClassname: '!text-left !text-white overflow-y-auto !max-h-[300px] yes-scrollbar',
                     noUseOutside: true
                 });
         }
