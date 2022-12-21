@@ -682,7 +682,7 @@ const Funding = ({ symbol }) => {
         const showWarningRate = (marketWatch[symbol]?.fundingRate * 100) >= 0.5
         const showWarningTime = ((marketWatch[symbol]?.fundingTime - Date.now()) / 60000) <= 15
         const showWarning = showWarningRate && showWarningTime
-        if (true) {
+        if (showWarning) {
             context.alert.show(
                 "warning",
                 t("futures:funding_history_tab:funding_warning"),
