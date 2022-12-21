@@ -617,9 +617,9 @@ input[type="number"] {
 }
 
 /* Hide scrollbar for IE, Edge and Firefox */
-.yes-scrollbar {
-  -ms-overflow-style: initial; /* IE and Edge */
-  scrollbar-width: initial; /* Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .rounded-qr-canvas {
