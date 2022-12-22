@@ -681,8 +681,8 @@ const Funding = ({ symbol }) => {
                 localStorage.removeItem(localKey)
             }
         }
-        const showWarningRate = (marketWatch[symbol]?.fundingRate * 100) >= 0.5
-        const showWarningTime = ((marketWatch[symbol]?.fundingTime - Date.now()) / 60000) <= 15
+        const showWarningRate = Math.abs(marketWatch?.[symbol]?.fundingRate * 100) >= 0.5
+        const showWarningTime = ((marketWatch?.[symbol]?.fundingTime - Date.now()) / 60000) <= 15
 
         const showWarning = showWarningRate && showWarningTime
         if (showWarning) {
