@@ -290,13 +290,13 @@ export default function OrderInformation({ pair }) {
                                     <div className="flex items-center space-x-1">
                                         <Label className=""> Funding
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
                                             </div>
                                         </Label>
                                         <span className="text-onus-grey ">/</span>
                                         <Label className="">{t('futures:countdown')}
                                             <div className="flex px-2" data-tip="" data-for={'countdown-tooltip'} >
-                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
                                             </div>
                                         </Label>
                                     </div>
@@ -306,7 +306,7 @@ export default function OrderInformation({ pair }) {
                                         <Label className="">
                                             {t('futures:' + title)}
                                             <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                                <img src={getS3Url('/images/icon/ic_help.png')} height={14} width={14} />
+                                                <img src={getS3Url('/images/icon/ic_help.png')} className="min-w-[14px] min-h-[14px] max-w-[14px] max-h-[14px]" height={14} width={14} />
                                             </div>
                                         </Label>
                                         <Span className="">{renderContent(title)}</Span>
