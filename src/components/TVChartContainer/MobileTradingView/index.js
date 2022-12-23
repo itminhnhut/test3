@@ -744,14 +744,14 @@ const ModalFundingRate = ({ onClose, t }) => {
     const router = useRouter()
 
     const onRedirect = () => {
-        window.open(`/${router.locale}/futures/funding-history?theme=dark&source=app`)
+        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`)
     }
 
     const onDetail = () => {
         const url = router.locale === 'en'
-            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=app'
-            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=app'
-        window.open(url)
+            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=frame'
+            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=frame'
+        router.push(url)
     }
 
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
