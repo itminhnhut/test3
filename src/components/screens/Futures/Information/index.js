@@ -217,7 +217,7 @@ export default function OrderInformation({ pair }) {
     };
 
     const onViewAll = () => {
-        window.open(`/${router.locale}/futures/trading-rule?theme=dark&source=app`)
+        window.open(`/${router.locale}/futures/trading-rule?theme=dark&source=frame`)
     }
 
     return (
