@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 import { ImageNao } from 'components/screens/Nao/NaoStyle';
+import { getS3Url } from 'redux/actions/utils';
 
 export default function Rank1Card({
     record,
@@ -11,7 +12,7 @@ export default function Rank1Card({
             className='hidden lg:block'
             width={253}
             height={150}
-            src='/images/nao/year_summary/rank_1.png'
+            src={getS3Url('/images/nao/year_summary/rank_1.png')}
             alt='Nami NAO rank 1'
         />
         <div
@@ -23,7 +24,7 @@ export default function Rank1Card({
                 className='absolute top-[14px] left-[14px] md:top-[-22px] md:left-[-16px]'
                 width={36}
                 height={36}
-                src='/images/nao/year_summary/bxs-crown.png'
+                src={getS3Url('/images/nao/year_summary/bxs-crown.png')}
                 alt='Nami NAO'
             />
             <div className='flex justify-between items-center flex-1'>

@@ -7,7 +7,7 @@ import {
     API_CONTEST_NAO_YEAR_SUMMARY_PNL,
     API_CONTEST_NAO_YEAR_SUMMARY_VOLUME
 } from 'redux/actions/apis';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import NaoFuturesPerformance from 'components/screens/Nao/YearSummary/NaoFuturesPerformance';
 import classNames from 'classnames';
@@ -48,13 +48,17 @@ export default function () {
                     <p className='text-lg text-nao-text mt-2 text-center md:text-left'>
                         {t('nao:year_summary:content')}{' '}
                         <a href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
-                           target="_blank"
+                           target='_blank'
                            className='text-onus-base underline cursor-pointer block md:inline'>{t('nao:year_summary:see_detailed_rules')}</a>
                     </p>
                 </div>
                 <div className='flex justify-center md:mt-0 mt-10'>
-                    <img width={353} className='w-[300px] md:w-[353]' src='/images/nao/year_summary/banner.png'
-                         alt='Nami Nao' />
+                    <img
+                        width={353}
+                        className='w-[300px] md:w-[353]'
+                        src={getS3Url('/images/nao/year_summary/banner.png')}
+                        alt='Nami Nao'
+                    />
                 </div>
             </div>
 
@@ -63,6 +67,7 @@ export default function () {
             <h3 className='font-semibold mb-12 mt-20'>{t('nao:year_summary:pnl_ranking')}</h3>
             <RankList
                 url={API_CONTEST_NAO_YEAR_SUMMARY_PNL}
+                rankFieldName="rank_pnl"
                 information={[
                     {
                         label: t('nao:year_summary:volume'),
@@ -80,6 +85,7 @@ export default function () {
             <h3 className='font-semibold mb-12 mt-20'>{t('nao:year_summary:volume_ranking')}</h3>
             <RankList
                 url={API_CONTEST_NAO_YEAR_SUMMARY_VOLUME}
+                rankFieldName="rank_volume"
                 information={[
                     {
                         label: t('nao:year_summary:volume'),
@@ -96,6 +102,7 @@ export default function () {
             <h3 className='font-semibold mb-12 mt-20'>{t('nao:year_summary:total_trade_ranking')}</h3>
             <RankList
                 url={API_CONTEST_NAO_YEAR_SUMMARY_ORDER}
+                rankFieldName="rank_order"
                 information={[
                     {
                         label: t('nao:year_summary:volume'),
@@ -111,7 +118,7 @@ export default function () {
             />
 
             <div className='mt-20 flex flex-col items-center'>
-                <img width={100} src='/images/nao/year_summary/footer.png' />
+                <img width={100} src={getS3Url('/images/nao/year_summary/footer.png')} />
                 <span className='mt-5'>{t('nao:year_summary:tks')}</span>
             </div>
         </LayoutNaoToken>

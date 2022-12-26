@@ -4,10 +4,12 @@ import fetchApi from 'utils/fetch-api';
 import { useTranslation } from 'next-i18next';
 import Rank1Card from 'components/screens/Nao/YearSummary/Rank1Card';
 import useWindowSize from 'hooks/useWindowSize';
+import { getS3Url } from 'redux/actions/utils';
 
 function RankList({
     url = '',
-    information = []
+    information = [],
+    rankFieldName = ''
 }) {
     const [data, setData] = useState({
         users: [],
@@ -47,7 +49,7 @@ function RankList({
             <div
                 className='relative w-6 h-6'
                 style={{
-                    backgroundImage: 'url("/images/nao/year_summary/bg-rank-nao.png")',
+                    backgroundImage: `url(${getS3Url("/images/nao/year_summary/bg-rank-nao.png")})`,
                     backgroundSize: 'cover'
                 }}
             >
@@ -79,11 +81,11 @@ function RankList({
                         <div>{t('nao:contest:information')}</div>
                     </div>
                     <div>
-                        {restUsers.map((record) => {
+                        {restUsers.map((record, index) => {
                             return (
                                 <div key={record._id}
                                      className='flex justify-between p-3 gap-6 even:bg-nao/[0.15] even:rounded-lg'>
-                                    <div className='min-w-[31px]'>{renderRank(record.rank_order)}</div>
+                                    <div className='min-w-[31px]'>{renderRank(record[rankFieldName] || index + 2)}</div>
                                     <div className='flex-1'>
                                         <div className='flex justify-between items-center mb-2'>
                                             <div className='min-w-0'>
@@ -118,7 +120,7 @@ function RankList({
                 <Table loading={false} noItemsMessage={t('nao:contest:no_rank')} dataSource={restUsers}>
                     <Column minWidth={50}
                             className='text-nao-grey font-medium' title={t('nao:contest:rank')}
-                            fieldName='rank_order' cellRender={renderRank} />
+                            fieldName={rankFieldName} cellRender={renderRank} />
                     <Column minWidth={200} title={t('nao:contest:name')} fieldName='name'
                             cellRender={renderUser} />
                     <Column minWidth={150} className='text-nao-text capitalize' title={'ID ONUS Futures'}
