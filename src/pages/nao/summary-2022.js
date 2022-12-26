@@ -11,9 +11,16 @@ import { formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import NaoFuturesPerformance from 'components/screens/Nao/YearSummary/NaoFuturesPerformance';
 import classNames from 'classnames';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+
+const seeDetailedVIURL = 'https://goonus.io/onus-x-nami-giai-dau-onus-futures-vndc-nami-championship-mua-3/';
+const seeDetailedENURL = 'https://goonus.io/en/onus-x-nami-onus-futures-vndc-tournament-nami-championship-season-3/';
 
 export default function () {
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
 
     const renderVolume = (value, className = '') => {
         return <span
@@ -40,7 +47,9 @@ export default function () {
                     <h4 className='font-semibold text-[2.125rem] leading-10 text-center md:text-left'>{t('nao:year_summary:title')} 2022</h4>
                     <p className='text-lg text-nao-text mt-2 text-center md:text-left'>
                         {t('nao:year_summary:content')}{' '}
-                        <a className='text-onus-base underline cursor-pointer block md:inline'>{t('nao:year_summary:see_detailed_rules')}</a>
+                        <a href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
+                           target="_blank"
+                           className='text-onus-base underline cursor-pointer block md:inline'>{t('nao:year_summary:see_detailed_rules')}</a>
                     </p>
                 </div>
                 <div className='flex justify-center md:mt-0 mt-10'>

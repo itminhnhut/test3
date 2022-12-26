@@ -7,7 +7,7 @@ import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { Check } from 'react-feather';
 import colors from 'styles/colors';
 import { Fragment, useEffect, useState } from 'react';
-import { merge, range } from 'lodash';
+import { range } from 'lodash';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import format from 'date-fns/format';
 import fetchApi from 'utils/fetch-api';
@@ -22,7 +22,7 @@ function NaoFuturesPerformance() {
     const [filters, setFilters] = useState({
         year: 2022,
         month: null,
-        currency: 22
+        currency: 72
     });
     const {
         t,
@@ -121,7 +121,7 @@ const RangePopover = ({
             return t('nao:year_summary:year', { year: 2022 });
         }
         if (language === LANGUAGE_TAG.EN) {
-            option = format(new Date(1970, option, 1), 'MMMM');
+            option = format(new Date(1970, option - 1, 1), 'MMMM');
         }
         return t('nao:year_summary:month', { month: option });
     };

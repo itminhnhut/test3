@@ -35,7 +35,7 @@ function RankList({
         rank1User,
         restUsers
     } = useMemo(() => {
-        const users = data.users?.sort((a, b) => a.rank_order - b.rank_order) || [];
+        const users = data.users || []
         return {
             rank1User: users[0] || {},
             restUsers: users.slice(1)
