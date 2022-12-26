@@ -121,9 +121,9 @@ const RangePopover = ({
             return t('nao:year_summary:year', { year: 2022 });
         }
         if (language === LANGUAGE_TAG.EN) {
-            option = format(new Date(1970, option - 1, 1), 'MMMM');
+            option = format(new Date(2022, option - 1, 1), 'MMMM 2022');
         }
-        return t('nao:year_summary:month', { month: option });
+        return t('nao:year_summary:month', { month: option, year: 2022 });
     };
 
     return <Popover className={classNames('relative flex', popoverClassName)}>
@@ -149,7 +149,7 @@ const RangePopover = ({
                     leaveTo='opacity-0 translate-y-1'
                 >
                     <Popover.Panel
-                        className='absolute min-w-[8rem] shadow-onlyLight top-8 right-0 z-50 bg-nao-bg3 rounded-xl mt-3'>
+                        className='absolute min-w-[10rem] shadow-onlyLight top-8 right-0 z-50 bg-nao-bg3 rounded-xl mt-3'>
                         <div className='font-medium text-xs flex flex-col'>
                             {[2022, ...range(12, 5, -1)]
                                 .map(option => {

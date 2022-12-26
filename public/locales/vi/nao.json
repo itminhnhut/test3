@@ -248,7 +248,7 @@
 
         "nao_futures_performance": "Thống kê về NAO Futures",
         "year": "Năm {{year}}",
-        "month": "Tháng {{month}}",
+        "month": "Tháng {{month}} {{year}}",
         "volume_trades": "Khối lượng giao dịch",
         "order_number": "Số lệnh giao dịch",
         "user_count": "Số người giao dịch",
