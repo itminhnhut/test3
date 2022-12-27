@@ -7,7 +7,7 @@ import RefCard from '../../RefCard'
 import InviteModal from './InviteModal'
 
 const Overview = ({ data, commisionConfig }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
     const [showInvite, setShowInvite] = useState(false)
 
@@ -19,31 +19,32 @@ const Overview = ({ data, commisionConfig }) => {
     const handleCompactLink = (address, first, last) => {
         return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : ''
     }
+    const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' +  language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk'
 
     return (
-        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background.png')", backgroundSize: 'cover' }}  >
+        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/new_background.png')", backgroundSize: 'cover' }}  >
             <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} />
-            <div className={classNames('font-semibold text-3xl text-gray-4', { '!text-2xl': width < 400 })}>
+            <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
             </div>
-            <div className='font-medium text-lg text-gray-4 mt-6'>
+            <div className='font-normal text-base text-gray-6 mt-6'>
                 {t('reference:referral.introduce3')}
             </div>
-            <div className='font-medium text-sm leading-6 text-gray-4 mt-3'>
-                {t('reference:referral.readmore')} <a href='#' target={'_blank'}><span className='text-teal underline'>{t('reference:referral.referral_policy')}</span></a>
+            <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
+                {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
             </div>
             <div className='mt-[30px]'>
                 <RefCard>
-                    <div className='pb-2'>
-                        <div className='flex w-full justify-between text-xs font-medium text-darkBlue'>
+                    <div className='pb-2 text-namiapp-gray'>
+                        <div className='flex w-full justify-between text-xs font-medium'>
                             <div> {t('reference:referral.referral_code')}</div>
                             <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
                         </div>
                         <div className='mt-1'>
                             {renderRefInfo(data?.defaultRefCode?.code, null, 16)}
                         </div>
-                        <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
+                        <div className='flex w-full justify-between text-xs font-medium mt-4'>
                             <div>{t('reference:referral.ref_link')}</div>
                             <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
                         </div>
@@ -55,7 +56,7 @@ const Overview = ({ data, commisionConfig }) => {
                         </div>
                     </div>
                 </RefCard>
-                <div className='w-full mt-8 h-11 bg-teal flex items-center justify-center text-sm font-medium text-gray-4 rounded-md'
+                <div className='w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-medium text-white rounded-md'
                     onClick={() => setShowInvite(true)}
                 >
                     {t('reference:referral.invite_friends')}

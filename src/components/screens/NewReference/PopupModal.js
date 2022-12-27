@@ -23,7 +23,8 @@ const PopupModal = ({
     useCenter = false,
     background,
     bgClassName,
-    isDesktop
+    isDesktop,
+    isMobile = false
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
@@ -77,7 +78,10 @@ const PopupModal = ({
                             className={classNames(
                                 `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[90%] overflow-y-auto`,
                                 { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
-                                { '!rounded-xl !px-6': useCenter && !isDesktop }
+                                {
+                                    '!rounded-xl !px-6': useCenter && !isDesktop,
+                                    '!bg-namiapp-black': isMobile
+                                }
                             )}
                             style={{ backgroundImage: background ?? null, backgroundSize: background ? 'contain' : null }}
                         >
@@ -186,7 +190,7 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
 export const renderRefInfo = (text, className = '', size = 15, originalText) => {
     return (
         <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]', className)}>
-            <div className="font-medium text-sm text-darkBlue w-3/4">{text}</div>
+            <div className="font-medium text-sm text-namiapp-black-3 w-3/4">{text}</div>
             <div>
                 <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />
             </div>

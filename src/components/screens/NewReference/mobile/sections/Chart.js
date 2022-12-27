@@ -37,7 +37,7 @@ const Chart = () => {
         }
     });
     const [showCustom, setShowCustom] = useState(false)
-    const colors = ['#C0F9EE', '#b2ede3', '#7de3d2', '#5ed1be']
+    const colors = ['#19a65b', '#47cc85', '#7ee5ae', '#e6faef']
     const [dataSource, setDataSource] = useState({
         data: [],
         labels: []
@@ -72,7 +72,7 @@ const Chart = () => {
     }, [timeTab])
 
     useEffect(() => {
-        if(!filter.range.startDate) return
+        if (!filter.range.startDate) return
         FetchApi({
             url: API_NEW_REFERRAL_STATISTIC,
             options: {
@@ -159,11 +159,11 @@ const Chart = () => {
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {
-                            return baseColors.darkBlue
+                            return baseColors.namiapp.gray[1]
                         }
                     },
-                    backgroundColor: baseColors.white,
-                    titleColor: baseColors.grey1,
+                    backgroundColor: baseColors.namiapp.black[2],
+                    titleColor: baseColors.namiapp.gray.DEFAULT,
                     displayColors: false,
                 },
             },
@@ -171,6 +171,25 @@ const Chart = () => {
                 x: {
                     stacked: true,
                     // combined: true,
+                    ticks: {
+                        color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
+                        //fontSize: 14,
+                        font: {
+                          size: 9 // 'size' now within object 'font {}'
+                        },
+                        
+                      }
+                },
+                y: {
+                    // combined: true,
+                    ticks: {
+                        color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
+                        //fontSize: 14,
+                        font: {
+                          size: 9 // 'size' now within object 'font {}'
+                        },
+                        
+                      }
                 },
             },
         }
@@ -185,7 +204,7 @@ const Chart = () => {
     return (
         <div className='px-4'  >
             {showCustom && <CustomFilter isShow={showCustom} onClose={() => setShowCustom(false)} t={t} filter={filter} onConfirm={setFilter} />}
-            <CollapsibleRefCard title={t('reference:referral.statistic')} >
+            <CollapsibleRefCard title={t('reference:referral.statistic')} isBlack>
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' >
                         {tags.map((e, index) =>
@@ -198,7 +217,7 @@ const Chart = () => {
                     </Tabs>
                     <div className='mt-6'>
                         <div className='flex justify-start gap-1'>
-                            <FilterTabs tabs={timeTabs} type={timeTab} setType={setTimeTab} />
+                            <FilterTabs tabs={timeTabs} type={timeTab} setType={setTimeTab} isMobile />
                         </div>
                         <div className='h-100 mt-4'>
                             {renderChart()}

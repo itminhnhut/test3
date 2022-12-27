@@ -154,7 +154,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
             {showFilter && (
                 <FilterModal isVisible={showFilter} onClose={() => setShowFilter(false)} onConfirm={onConfirm} t={t} filter={filter} arrStatus={arrStatus} />
             )}
-            <CollapsibleRefCard title={title[language]} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
+            <CollapsibleRefCard title={title[language]} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll} isBlack>
                 <div className="w-auto">
                     {dataSource.length ? <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
@@ -179,43 +179,43 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                             const status = arrStatus.find((rs) => rs.value === data.kycStatus)?.title;
                             return (
                                 <div key={index}>
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between text-gray-7">
                                         <div className="flex flex-col justify-center items-start">
-                                            <div className="leading-6 font-semibold text-sm text-darkBlue flex gap-1 items-center">
+                                            <div className="leading-6 font-semibold text-sm text-gray-6 flex gap-1 items-center">
                                                 {/* {data.code} {ReferralLevelIcon(data.rank)} */}
                                                 {data.code} <div data-tip="" data-for={'info' + data.code} data-offset="{'left': 16}">
                                                     <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
-                                                <Tooltip id={'info' + data.code} place="top" data-offset="{'left': 16}" effect="solid" className={classNames('w-[calc(100vw-32px)] !left-4 !p-0', { '!mt-6': index === 0 })}>
-                                                    <div className='w-full pt-6 pb-2 px-3 font-semibold text-base'>
-                                                        <div className='w-full rounded-md border-[1px] border-teal h-10 flex items-center justify-center'>
-                                                            <div className='absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-white'>
+                                                <Tooltip id={'info' + data.code} place="top" data-offset="{'left': 16}" effect="solid" className={classNames('w-[calc(100vw-32px)] !left-4 !p-0', { '!mt-10': index === 0 })}>
+                                                    <div className='w-full pt-6 pb-2 px-3 font-semibold text-base text-gray-6'>
+                                                        <div className='w-full rounded-md border-[1px] border-namiapp-green h-10 flex items-center justify-center'>
+                                                            <div className='absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-namiapp-black-1'>
                                                                 Ref Code
                                                             </div>
-                                                            <div className='font-semibold text-sm text-darkBlue leading-6'>
+                                                            <div className='font-semibold text-sm leading-6'>
                                                                 {data.byRefCode}
                                                             </div>
                                                         </div>
                                                         <div className='mt-4'>
-                                                            <div className='text-teal leading-6 font-semibold text-sm'>
+                                                            <div className='text-namiapp-green-1 leading-6 font-semibold text-sm'>
                                                                 {t('reference:referral.direct_commissions_rate')}
                                                             </div>
-                                                            <div className='text-darkBlue font-medium text-xs flex flex-wrap'>
+                                                            <div className='font-medium text-xs flex flex-wrap'>
                                                                 {Object.values(commisionConfig[data?.rank ?? 1]?.direct).map((config, index) => {
                                                                     return (
-                                                                        <span className='pr-2 mt-[2px] leading-6 text-darkBlue font-medium text-xs'>{commissionType[index]}: {config}%</span>
+                                                                        <span className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
                                                                     )
                                                                 })}
                                                             </div>
                                                         </div>
                                                         <div className='mt-4'>
-                                                            <div className='text-teal leading-6 font-semibold text-sm'>
+                                                            <div className='text-namiapp-green-1 leading-6 font-semibold text-sm'>
                                                                 {t('reference:referral.indirect_commissions_rate')}
                                                             </div>
-                                                            <div className='text-darkBlue font-medium text-xs flex flex-wrap'>
+                                                            <div className='font-medium text-xs flex flex-wrap'>
                                                                 {Object.values(commisionConfig[data?.rank ?? 1]?.indirect).map((config, index) => {
                                                                     return (
-                                                                        <span className='pr-2 mt-[2px] leading-6 text-darkBlue font-medium text-xs'>{commissionType[index]}: {config}%</span>
+                                                                        <span className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
                                                                     )
                                                                 })}
                                                             </div>
@@ -223,41 +223,42 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="leading-[14px] font-medium text-xs text-gray-1">
+                                            <div className="leading-[14px] font-medium text-xs">
                                                 {t('reference:referral.referral_date')}: {formatTime(data.invitedAt, 'dd/MM/yyyy')}
                                             </div>
                                         </div>
                                         <div
                                             className={classNames(
-                                                'px-2 py-1 rounded-md font-semibold text-sm leading-6',
-                                                data.kycStatus === 2 ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]'
+                                                'px-3 py-1 rounded-md font-normal text-xxs flex items-center',
+                                                data.kycStatus === 2 ? 'text-namiapp-green-1 bg-teal/[.05]' : 'text-gray-7 bg-gray-1/[.05]'
                                             )}
                                         >
+                                            {data.kycStatus === 2 ? <CheckIcon className='mr-1' /> : null}
                                             {status}
                                         </div>
                                     </div>
-                                    <div className="my-3 py-2 rounded-md border-[1px] border-gray-2/[.15] flex">
+                                    <div className="my-3 py-2 rounded-md border-[1px] border-gray-2/[.15] flex text-gray-7">
                                         <div className="w-full text-center border-r-[1px] text-sm font-medium">
-                                            <div className="text-gray-1 leading-5">{t('reference:referral.referred')}</div>
-                                            <div className="text-darkBlue leading-6">
+                                            <div className="leading-5">{t('reference:referral.referred')}</div>
+                                            <div className="text-gray-6 leading-6">
                                                 {formatNumber(data.invitedCount)} {t('reference:referral.friends')}
                                             </div>
                                         </div>
                                         <div className="w-full text-center text-sm font-medium">
-                                            <div className="text-gray-1 leading-5">{t('reference:referral.level')}</div>
-                                            <div className="text-darkBlue leading-6">{formatNumber(data.rank ?? 0)}</div>
+                                            <div className="leading-5">{t('reference:referral.level')}</div>
+                                            <div className="text-gray-6 leading-6">{formatNumber(data.rank ?? 0)}</div>
                                         </div>
                                     </div>
-                                    <div className="text-sm font-medium flex flex-col gap-1">
+                                    <div className="text-sm font-medium flex flex-col gap-1 text-gray-7">
                                         <div className="flex justify-between w-full">
                                             <div className="flex items-center space-x-2">
-                                                <span className="text-gray-1">{t('reference:referral.total_direct_commissions')}</span>
+                                                <span className="">{t('reference:referral.total_direct_commissions')}</span>
                                                 <div data-tip="" data-for={'direct' + data.code}>
                                                     <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
                                                 <Tooltip id={'direct' + data.code} place="top" effect="solid" arrowColor='#fff'>
-                                                    <div className='text-xs !bg-white min-w-[120px] w-full'>
-                                                        <div className='mb-2 font-semibold text-gray-1'>
+                                                    <div className='text-xs !bg-namiapp-black-2 min-w-[120px] w-full'>
+                                                        <div className='mb-2 font-semibold'>
                                                             {t('reference:referral.total_direct_commissions')}
                                                         </div>
                                                         <div className='flex flex-col'>
@@ -268,19 +269,19 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-teal">
+                                            <div className="text-namiapp-green-1">
                                                 ~ {formatNumber(data?.directCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
-                                        <div className="flex justify-between w-full">
+                                        <div className="flex justify-between w-full text-gray-7">
                                             <div className="flex items-center space-x-2">
-                                                <span className="text-gray-1">{t('reference:referral.total_indirect_commissions')}</span>
+                                                <span className="">{t('reference:referral.total_indirect_commissions')}</span>
                                                 <div data-tip="" data-for={'indirect' + data.code}>
                                                     <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
                                                 <Tooltip id={'indirect' + data.code} place="top" effect="solid" arrowColor='#fff'>
                                                     <div className='text-xs !bg-white min-w-[120px] w-full'>
-                                                        <div className='mb-2 font-semibold text-gray-1'>
+                                                        <div className='mb-2 font-semibold '>
                                                             {t('reference:referral.total_indirect_commissions')}
                                                         </div>
                                                         <div className='flex flex-col'>
@@ -291,7 +292,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-teal">
+                                            <div className="text-namiapp-green-1">
                                                 ~ {formatNumber(data?.undirectCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
@@ -359,21 +360,12 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
     );
 };
 
-const AllDataModal = ({ onClose, language, ...props }) => {
-    return (
-        <PopupModal isVisible={true} onBackdropCb={onClose} title={title[language]} useFullScreen>
-            <ListData {...props} />
-        </PopupModal>
-    );
-};
-
-
 export const Tooltip = ({ children, place, offset, arrowColor, className, ...restProps }) => {
     const ref = useRef()
     return (
         <ReactTooltip
             ref={ref}
-            className={classNames('!bg-white !rounded-lg !opacity-100 !text-darkBlue !shadow-ref !px-3', className)}
+            className={classNames('!bg-namiapp-black-2 !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
             place={place}
             effect='solid'
             {...restProps}
@@ -382,6 +374,12 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
         </ReactTooltip>
     )
 }
+
+const CheckIcon = ({className}) => <svg width="12" className={className} height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M6 1C3.243 1 1 3.243 1 6s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5zM5 8.207 3.144 6.354l.706-.708L5 6.793l2.646-2.647.708.708L5 8.207z" fill="#47CC85" />
+</svg>
+
+
 
 
 export default FriendList;

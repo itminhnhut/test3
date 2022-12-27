@@ -59,10 +59,10 @@ const QnA = () => {
             const [doShow, setDoShow] = useState(false)
             return useMemo(() => <div key={index}>
                 <div className='text-sm leading-6' >
-                    <div className='text-darkBlue font-semibold cursor-pointer' onClick={() => setDoShow(!doShow)}>
+                    <div className='text-gray-6 font-semibold cursor-pointer' onClick={() => setDoShow(!doShow)}>
                         {data.q[language]}
                     </div>
-                    {doShow ? <div className='text-gray-1 font-medium mt-1 text-justify' style={{ whiteSpace: "pre-line" }}>
+                    {doShow ? <div className='text-gray-7 font-medium mt-1 text-justify' style={{ whiteSpace: "pre-line" }}>
                         {data.a[language]}
                     </div> : null}
                 </div>
@@ -70,13 +70,16 @@ const QnA = () => {
             </div>, [doShow])
         })
     }
+
+    const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' +  language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk'
+
     return (
         <div className='px-4 w-screen'  >
-            <CollapsibleRefCard title={t('reference:referral.faq')}>
+            <CollapsibleRefCard title={t('reference:referral.faq')} isBlack>
                 <div className='w-auto'>
                     {renderData()}
-                    <div className='text-teal underline font-medium text-sm text-center mt-6'>
-                        <a href='https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=h.xbf5p1sj3fsj' target='_blank'>{language === 'vi' ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange' : "Read more: Nami Exchange's policy on business partners"}</a>
+                    <div className='text-namiapp-green-1 underline font-medium text-sm text-center mt-6'>
+                        <a href={policyLink} target='_blank'>{language === 'vi' ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange' : "Read more: Nami Exchange's policy on business partners"}</a>
                     </div>
                 </div>
             </CollapsibleRefCard>

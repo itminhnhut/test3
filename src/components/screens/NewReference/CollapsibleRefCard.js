@@ -1,11 +1,11 @@
 import classNames from 'classnames'
 import React, { useState } from 'react'
 
-const CollapsibleRefCard = ({ wrapperClassName = '', children, title, isTitle = true }) => {
+const CollapsibleRefCard = ({ wrapperClassName = '', children, title, isTitle = true, isBlack = false }) => {
     return (
-        <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName)}>
+        <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName, {'!bg-namiapp-black-1': isBlack, })}>
             {isTitle && (
-                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-darkBlue">
+                <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-gray-6">
                     <div>{title}</div>
                 </div>
             )}
@@ -34,7 +34,7 @@ export const FilterIcon = () => <svg width="16" height="16" viewBox="0 0 16 16" 
     </defs>
 </svg>
 
-export const FilterContainer = ({ children, onClick }) => <div onClick={onClick} className='text-gray-1 text-xs leading-5 font-medium flex gap-2 items-center bg-[#f5f6f7] py-1 px-2 rounded-md'>
+export const FilterContainer = ({ children, onClick }) => <div onClick={onClick} className='text-gray-7 border-[1px] border-[#222940] text-xs leading-5 font-medium flex gap-2 items-center py-1 px-2 rounded-[800px]'>
     {children}
 </div>
 

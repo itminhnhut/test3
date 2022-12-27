@@ -1,14 +1,14 @@
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useSelector } from 'react-redux';
-import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
-import NewReference from 'src/components/screens/NewReference/mobile';
-import DynamicNoSsr from 'src/components/DynamicNoSsr';
+import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
+import NewReference from 'components/screens/NewReference/mobile';
+import DynamicNoSsr from 'components/DynamicNoSsr';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import { useWindowSize } from 'react-use';
-import RefDesktopScreen from 'src/components/screens/NewReference/desktop';
+import RefDesktopScreen from 'components/screens/NewReference/desktop';
 import classNames from 'classnames';
 
 const Reference = () => {
@@ -36,7 +36,7 @@ const Reference = () => {
                     navOverComponent
                     light
                     navStyle={isMobile ? {
-                        position: 'fixed'
+                        position: 'fixed',
                     } : {
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}

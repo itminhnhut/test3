@@ -20,6 +20,7 @@ const commonColors = {
     gray4: '#F2F4F6',
     gray5: '#EDF1F6',
     gray6: '#E2E8F0',
+    gray7: '#8694b2',
 
     white: 'white',
     teal: '#00C8BC',
@@ -103,6 +104,7 @@ module.exports = {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
             inter: ['Inter', 'sans-serif'],
+            manrope: ['Manrope', 'sans-serif'],
         },
         fontSize: {
             xxs: [
@@ -259,6 +261,7 @@ module.exports = {
                 4: commonColors.gray4,
                 5: commonColors.gray5,
                 6: commonColors.gray6,
+                7: commonColors.gray7,
             },
             teal: {
                 DEFAULT: '#00C8BC',
@@ -303,12 +306,29 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao,
             },
+            namiapp: {
+                black: {
+                    DEFAULT: '#0c0e14',
+                    1: '#141921',
+                    2: '#1c232e',
+                    3: '#1f2633',
+                    4: '#222940',
+                },
+                green: {
+                    DEFAULT: '#30bf73',
+                    1: '#47cc85',
+                    2: '#7ee5ae',
+                },
+                gray: {
+                    DEFAULT: '#8593a6',
+                },
+            },
         },
         extend: {
             screens: {
                 'nao': '1160px',
                 'xsm': '320px',
-                'xxs': '360px'
+                'xxs': '360px',
             },
             spacing: {
                 128: '32rem',

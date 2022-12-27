@@ -8,6 +8,7 @@ import { formatNumber } from 'redux/actions/utils';
 import { useSelector } from 'react-redux'
 import ReferralLevelIcon from 'src/components/svg/RefIcons'
 import classNames from 'classnames'
+import colors from 'styles/colors'
 
 
 const formatter = Intl.NumberFormat('en', {
@@ -28,7 +29,7 @@ const Info = ({ data }) => {
     return (
         <div className='w-full px-4'>
             <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode?.code} />
-            <RefCard>
+            <RefCard isBlack>
                 <div className='flex h-12 gap-4'>
                     <div className='flex relative'>
                         <img src={user?.avatar || "/images/default_avatar.png"} className='h-full w-12 rounded-full' />
@@ -37,18 +38,18 @@ const Info = ({ data }) => {
                         </div>
                     </div>
                     <div className='h-full flex flex-col justify-center'>
-                        <div className='font-semibold text-base text-darkBlue'>
+                        <div className='font-semibold text-base text-gray-6'>
                             {data?.name ?? t('common:unknown')}
                         </div>
                         <div className='font-medium text-xs text-gray-1 uppercase'>
-                            {t('reference:referral.ranking')}: <span className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
+                            {t('reference:referral.ranking')}: <span className='text-namiapp-green font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
                         </div>
                     </div>
                 </div>
                 <Line className='mt-4 mb-[18px]' />
 
                 <div className='flex flex-col gap-2'>
-                    <div className='w-full flex h-6 items-center justify-between text-gray-1 font-medium text-xs'>
+                    <div className='w-full flex h-6 items-center justify-between text-gray-7 font-medium text-xs'>
                         <div>
                             {t('reference:referral.current_volume')}
                         </div>
@@ -56,9 +57,9 @@ const Info = ({ data }) => {
                             {data?.rank !== 5 ? t('reference:referral.next_level') : null}
                         </div>
                     </div>
-                    <div className='w-full bg-[#f2f4f7] flex'>
+                    <div className='w-full bg-namiapp-black-2 flex'>
                         <Progressbar
-                            background='#17e5d4'
+                            background={colors.namiapp.green[2]}
                             percent={
                                 (data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100
                             }
@@ -66,7 +67,7 @@ const Info = ({ data }) => {
                             className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
                         />
                         <Progressbar
-                            background='#00C8BC'
+                            background={colors.namiapp.green.DEFAULT}
                             percent={
                                 (data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100
                             }
@@ -75,7 +76,7 @@ const Info = ({ data }) => {
                         />
                     </div>
                     <div className='w-full flex flex-col'>
-                        <div className='w-full flex justify-between font-medium text-xs text-[#17e5d4]'>
+                        <div className='w-full flex justify-between font-medium text-xs text-namiapp-green-2'>
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
@@ -84,7 +85,7 @@ const Info = ({ data }) => {
                             </div> : null}
 
                         </div>
-                        <div className='w-full flex justify-between font-medium text-xs text-[#00c8bc]'>
+                        <div className='w-full flex justify-between font-medium text-xs text-namiapp-green-1'>
                             <div>
                                 Futures: {formatter.format(data?.volume?.current?.futures)} USDT
                             </div>
@@ -93,7 +94,7 @@ const Info = ({ data }) => {
                             </div> : null}
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'
+                    <div className='mt-6 text-center leading-6 font-medium text-sm text-namiapp-green-1 underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
                         {t('reference:referral.referral_code_management')}

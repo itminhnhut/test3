@@ -145,46 +145,57 @@ function NewReference() {
     }, [overviewData])
 
     return (
-        <div className="bg-[#f5f6f7] h-full overflow-hidden">
-            <div className={classNames('bg-white z-10')}>
-                <Tabs ref={tabRef} tab={tab}>
-                    <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
-                        {t('reference:referral.info')}
-                    </TabItem>
-                    {/* <TabItem value={tabs.LastedActivities} onClick={() => handleClickTab(tabs.LastedActivities)}>
-                        {t('reference:referral.recent_activities')}
-                    </TabItem> */}
-                    <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
-                        {t('reference:referral.statistic')}
-                    </TabItem>
-                    <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
-                        {t('reference:referral.friend_list')}
-                    </TabItem>
-                    <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
-                        {t('reference:referral.commission_histories')}
-                    </TabItem>
-                    <TabItem value={tabs.FAQandTerm} onClick={() => handleClickTab(tabs.FAQandTerm)}>
-                        FAQ
-                    </TabItem>
-                </Tabs>
+        <MobileFont>
+            <div className="bg-namiapp h-full overflow-hidden">
+                <div className={classNames('bg-namiapp z-10')}>
+                    <Tabs ref={tabRef} tab={tab}>
+                        <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
+                            {t('reference:referral.info')}
+                        </TabItem>
+                        {/* <TabItem value={tabs.LastedActivities} onClick={() => handleClickTab(tabs.LastedActivities)}>
+                            {t('reference:referral.recent_activities')}
+                        </TabItem> */}
+                        <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
+                            {t('reference:referral.statistic')}
+                        </TabItem>
+                        <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
+                            {t('reference:referral.friend_list')}
+                        </TabItem>
+                        <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
+                            {t('reference:referral.commission_histories')}
+                        </TabItem>
+                        <TabItem value={tabs.FAQandTerm} onClick={() => handleClickTab(tabs.FAQandTerm)}>
+                            FAQ
+                        </TabItem>
+                    </Tabs>
+                </div>
+                {newRenderContent}
             </div>
-            {newRenderContent}
-        </div>
+        </MobileFont>
     )
 }
 
-export const Line = styled.div.attrs(({ className }) => ({
+export const Line = styled.div.attrs(({ className, isMobile = false }) => ({
     className
 }))`
     width: 100%;
     height: 1px;
     flex-grow: 0;
     transform: rotate(-360deg);
-    background-color: rgba(160, 174, 192, 0.15);
+    background-color: ${({ isMobile }) => isMobile ? 'rgba(34, 41, 64, 0.5)' : 'rgba(160, 174, 192, 0.15)'};
 `;
+
+const MobileFont = styled.div.attrs(({ className }) => ({
+    className
+}))`
+    font-family: 'Manrope', sans-serif;
+    background-color: #0c0e14;
+`;
+
+
 export default NewReference;
 
-export const FilterTabs = ({ tabs, type, setType, reversed = false, className = '' }) => {
+export const FilterTabs = ({ tabs, type, setType, reversed = false, className = '', isMobile = false }) => {
     const bgColor = reversed ? 'bg-white' : 'bg-gray-4';
     return (
         <>
@@ -193,8 +204,12 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                     <div
                         key={index}
                         className={classNames(
-                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer ${type === tab.value ? `bg-gray-4 rounded-md text-darkBlue` : 'text-gray-1'
-                            } ${className}`
+                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer`, className, {
+                                'text-gray-1': !isMobile,
+                                'text-gray-7': isMobile,
+                                'bg-gray-4 rounded-md text-darkBlue': type === tab.value && !isMobile,
+                                'bg-transparent text-gray-6': type === tab.value && isMobile,
+                            }
                         )}
                         onClick={_.debounce(() => {
                             setType(tab.value), 200;
@@ -215,7 +230,7 @@ export const RefButton = ({ title, onClick }) => (
 );
 
 export const NoData = ({ text, className }) => (
-    <div className={classNames('w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2', className)}>
+    <div className={classNames('w-full flex flex-col justify-center items-center text-gray-7 font-medium text-sm gap-2', className)}>
         <SvgEmpty />
         {text}
     </div>

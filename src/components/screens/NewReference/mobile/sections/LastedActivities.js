@@ -96,14 +96,14 @@ const LastedActivities = () => {
                     <div key={index}>
                         <div className='flex flex-col gap-1'>
                             <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
-                                <div className='text-darkBlue'>
+                                <div className='text-gray-6'>
                                     {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
-                                <div className='text-teal'>
+                                <div className='text-namiapp-green-1'>
                                     +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>
-                            <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
+                            <div className='flex w-full justify-between items-center !text-gray-7 font-medium text-xs leading-[14px]'>
                                 <div>
                                     {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
                                 </div>
@@ -120,7 +120,7 @@ const LastedActivities = () => {
                     <div key={data.userId}>
                         <div className='flex gap-2 items-center'>
                             <UserIcon />
-                            <div className='font-semibold text-sm leading-6 text-darkBlue'>
+                            <div className='font-semibold text-sm leading-6 text-gray-6'>
                                 {t('reference:referral.new_friend')}: {data.code}
                             </div>
                         </div>
@@ -137,7 +137,7 @@ const LastedActivities = () => {
 
     return (
         <div className='px-4'>
-            <CollapsibleRefCard title={t('reference:referral.recent_activities')}  >
+            <CollapsibleRefCard title={t('reference:referral.recent_activities')} isBlack >
                 <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' >
                         {tags.map((e, index) =>
@@ -170,7 +170,7 @@ export const UserIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fi
 </svg>
 
 export const RefInfo = ({ data, language, className }) => (
-    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 text-gray-1 font-medium', className)}>
+    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 text-gray-7 font-medium', className)}>
         <div className='text-xs mt-[-22px]'>
             {languages.refUser[language]}:
         </div>
@@ -179,7 +179,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     NamiID
                 </div>
-                <div className='text-darkBlue'>
+                <div className='text-gray-6'>
                     {data.invitedBy?.code}
                 </div>
             </div>
@@ -188,7 +188,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     {languages.level[language]}
                 </div>
-                <div className='text-darkBlue'>
+                <div className='text-gray-6'>
                     {data.rank < 10 ? 0 : null}{data.rank}
                 </div>
             </div>
@@ -197,7 +197,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     {languages.tier[language]}
                 </div>
-                <div className='text-darkBlue'>
+                <div className='text-gray-6'>
                     {tier[data.rank][language]}
                 </div>
             </div>

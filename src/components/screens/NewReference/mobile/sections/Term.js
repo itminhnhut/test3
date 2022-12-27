@@ -19,7 +19,7 @@ const Term = () => {
 
     return (
         <div className='px-4 w-screen'>
-            <CollapsibleRefCard title={t('reference:referral.term')}>
+            <CollapsibleRefCard title={t('reference:referral.term')} isBlack>
                 <div className='w-auto'>
                     {renderData()}
                 </div>

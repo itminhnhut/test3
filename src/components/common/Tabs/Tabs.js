@@ -25,7 +25,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '' }, ref
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', 'text-darkBlue');
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', '!text-gray-6');
                 }
             });
         }
@@ -71,7 +71,7 @@ const Tab = styled.div.attrs(({ className }) => ({
         position: absolute;
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
-        background-color: ${() => colors.teal};
+        background-color: ${() => colors.namiapp.green[1]};
         width: ${({ offset }) => offset?.w_after};
         left: ${({ offset }) => offset?.l_after};
         transition: all 0.2s;
@@ -80,7 +80,7 @@ const Tab = styled.div.attrs(({ className }) => ({
 
 export const TabItem = styled.div.attrs(({ value, className = '' }) => ({
     className: classnames(
-        'text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max text-gray-1 tab-item sm:px-12',
+        'text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max text-gray-7 tab-item sm:px-12',
         className
     ),
     id: `tab-item-${value}`

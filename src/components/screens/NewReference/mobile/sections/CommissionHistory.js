@@ -214,7 +214,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                     assetTabs={assetTabs}
                 />
             )}
-            <CollapsibleRefCard title={t('reference:referral.commission_histories')} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll}>
+            <CollapsibleRefCard title={t('reference:referral.commission_histories')} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll} isBlack>
                 {!dataSource.length ? null : <div className="w-auto">
                     <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
@@ -244,20 +244,20 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                         <AssetLogo size={36} assetId={data.currency} />
                                         <div className="flex flex-col w-full">
                                             <div className="flex items-center justify-between">
-                                                <div className="font-semibold text-sm leading-6 text-darkBlue">
+                                                <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
                                             </div>
-                                            <div className="flex items-center justify-between">
-                                                <div className="font-medium text-xs text-gray-1">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
-                                                <div className="font-medium text-xs text-gray-1">
+                                            <div className="flex items-center justify-between text-gray-7">
+                                                <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
+                                                <div className="font-medium text-xs">
                                                     {t('reference:referral.commission_type')}: {asset}
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    {dataSource.length !== index + 1 && <Line className="my-4" />}
+                                    {dataSource.length !== index + 1 && <Line isMobile className="my-4" />}
                                 </Fragment>
                             );
                         })
@@ -274,6 +274,12 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
+                        className='!text-namiapp-green-1'
+                        style={{
+                            fontColor: colors.namiapp.green[1]
+                        }}
+                        isDark
+                        isNamiApp
                     />
                 </div>
             </CollapsibleRefCard>
