@@ -178,17 +178,6 @@ export default function FundingHistory({ currency }) {
         }, []);
         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
         setIsLoading(false);
-        // if(firstLoadRef.current){
-        //     setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        //     setIsLoading(false);
-        //     firstLoadRef.current = false
-        // }else{
-        //     setTimeout(() => {
-        //         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        //         setIsLoading(false);
-        //     }, 700);
-        // }
-        console.log(marketWatch)
     }
 
     useEffect(() => {
