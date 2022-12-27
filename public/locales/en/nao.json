@@ -264,6 +264,7 @@
         "name": "Name",
         "id_nao_futures": "ID NAO Futures",
         "pnl_rate": "% PnL",
+        "last_time_update": "Last time update",
         "tks": "Thank you for endlessly trusting and supporting the NAO Futures project!"
     },
     "ended": "Ended",

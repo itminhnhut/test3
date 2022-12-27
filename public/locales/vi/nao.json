@@ -264,6 +264,7 @@
         "name": "Tên",
         "id_nao_futures": "ID NAO Futures",
         "pnl_rate": "Tỷ lệ lợi nhuận",
+        "last_time_update": "Cập nhật lần cuối vào",
         "tks": "Cảm ơn cộng đồng người dùng đã tin tưởng và ủng hộ dự án NAO Futures!"
     },
     "ended": "Đã kết thúc",
