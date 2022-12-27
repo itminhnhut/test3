@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import Rank1Card from 'components/screens/Nao/YearSummary/Rank1Card';
 import useWindowSize from 'hooks/useWindowSize';
 import { getS3Url } from 'redux/actions/utils';
+import { format } from 'date-fns';
 
 function RankList({
     url = '',
@@ -61,7 +62,7 @@ function RankList({
 
     const renderUser = (name, record) => {
         return <div className='flex items-center'>
-            <ImageNao className='rounded-full' width={24} height={24} src={record.avatar} alt={name} />
+            <ImageNao className='rounded-full w-6 h-6 object-cover' src={record.avatar} alt={name} />
             <span className='font-bold ml-3'>{name}</span>
         </div>;
     };
@@ -94,9 +95,7 @@ function RankList({
                                                     className='text-sm text-nao-grey font-medium break-words'><span className='hidden xsm:inline'>ID: </span>{record.onus_user_id}</span>
                                             </div>
                                             <ImageNao
-                                                className='rounded-full'
-                                                width={44}
-                                                height={44}
+                                                className='w-[44px] h-[44px] object-cover rounded-full'
                                                 src={record.avatar}
                                             />
                                         </div>
@@ -137,6 +136,9 @@ function RankList({
                     })}
                 </Table>
             )}
+            <div className='text-nao-grey font-medium text-sm mt-6'>
+                <span>{t('nao:year_summary:last_time_update')}{': '}</span><span>{format(new Date(data.last_time_update), 'HH:mm:ss dd/MM/yyy')}</span>
+                </div>
         </div>
     );
 }
