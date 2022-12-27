@@ -241,6 +241,30 @@
         "back_to_trading": "Tiếp tục giao dịch",
         "reward_desc_trading":"KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}."
     },
+    "year_summary": {
+        "title": "Tổng kết dự án NAO Futures {{year}}",
+        "content": "Dự án Nami Frame Futures xin công bố số liệu tổng hợp cho năm 2022, cùng với đó là bảng xếp hạng cho những hạng mục giải thưởng năm tương ứng.",
+        "see_detailed_rules": "Xem thông tin chi tiết",
+
+        "nao_futures_performance": "Thống kê về NAO Futures",
+        "year": "Năm {{year}}",
+        "month": "Tháng {{month}} {{year}}",
+        "volume_trades": "Khối lượng giao dịch",
+        "order_number": "Số lệnh giao dịch",
+        "user_count": "Số người giao dịch",
+
+        "pnl_ranking": "BXH lợi nhuận",
+        "volume_ranking": "BXH khối lượng",
+        "total_trade_ranking": "BXH số lượng vị thế ",
+
+        "volume": "Khối lượng",
+        "total_trades": "Số vị thế",
+        "orders": "lệnh",
+        "name": "Tên",
+        "id_nao_futures": "ID NAO Futures",
+        "pnl_rate": "Tỷ lệ lợi nhuận",
+        "tks": "Cảm ơn cộng đồng người dùng đã tin tưởng và ủng hộ dự án NAO Futures!"
+    },
     "ended": "Đã kết thúc",
     "going_on": "Đang diễn ra",
     "coming_soon_2": "Sắp diễn ra"
