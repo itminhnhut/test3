@@ -202,14 +202,16 @@ const Contest = (props) => {
     //     renderLastUpdated(6);
     // });
 
+    const showPnl = ![9, 10].includes(props?.contest_id);
+
     const params = useMemo(() => {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         return {
-            individual: urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl',
-            team: urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl'
+            individual: !showPnl ? 'volume' : urlParams.get('individual') !== 'pnl' ? 'volume' : 'pnl',
+            team: !showPnl ? 'volume' : urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl'
         };
-    }, []);
+    }, [props?.contest_id]);
 
     return (
         <LayoutNaoToken>
@@ -227,8 +229,15 @@ const Contest = (props) => {
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
                 {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
-                <ContestTeamRanks {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.team} />
-                <ContestPerRanks {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} />
+                <ContestTeamRanks
+                    {...props}
+                    onShowDetail={onShowDetail}
+                    lastUpdatedTime={lastUpdatedTime}
+                    params={params}
+                    sort={params.team}
+                    showPnl={showPnl}
+                />
+                <ContestPerRanks {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} showPnl={showPnl} />
             </div>
         </LayoutNaoToken>
     );
