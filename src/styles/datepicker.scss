@@ -7,6 +7,70 @@ $height: 32px;
     } 
 }
 
+
+.black-background {
+    .rdrMonths {
+        background-color: #0c0e14;
+    }
+    .rdrDays .rdrDayNumber span {
+        color: #e2e8f0 !important;
+    }
+
+    .rdrCalendarWrapper {
+        width: 100%;
+        box-shadow: none
+    }
+    .rdrDayHovered,
+    .rdrSelected {
+        background-color: #47cc85 !important;
+        color: white !important;
+    }
+
+    .rdrMonths {
+        justify-content: center;
+    }
+
+    .rdrInRange,
+    .rdrDayInPreview {
+        color: #47cc85 !important;
+    }
+    .rdrMonthName {
+        padding-top: 12px !important;
+    }
+    .rdrWeekDays .rdrWeekDay {
+        color: #8694b2 !important;
+    }
+    .rdrDays .rdrDayNumber {
+        font-weight: 500 !important;
+    }
+    .rdrMonthName {
+        color: #e2e8f0 !important;
+    }
+    .rdrDayStartOfMonth .rdrInRange,
+    .rdrDayStartOfMonth .rdrEndEdge,
+    .rdrDayStartOfWeek .rdrInRange,
+    .rdrDayStartOfWeek .rdrEndEdge,
+    .rdrDayEndOfMonth .rdrInRange,
+    .rdrDayEndOfMonth .rdrStartEdge,
+    .rdrDayEndOfWeek .rdrInRange,
+    .rdrDayEndOfWeek .rdrStartEdge,
+    .rdrDayStartOfMonth .rdrDayInPreview,
+    .rdrDayStartOfMonth .rdrDayEndPreview,
+    .rdrDayStartOfWeek .rdrDayInPreview,
+    .rdrDayStartOfWeek .rdrDayEndPreview,
+    .rdrDayEndOfMonth .rdrDayInPreview,
+    .rdrDayEndOfMonth .rdrDayStartPreview,
+    .rdrDayEndOfWeek .rdrDayInPreview,
+    .rdrDayEndOfWeek .rdrDayStartPreview,
+    .rdrDay:not(.rdrDayPassive) .rdrInRange ~ .rdrDayNumber span,
+    .rdrDayInPreview ~ .rdrDayNumber span {
+        color: #47cc85 !important;
+    }
+    .rdrDayToday .rdrDayNumber span {
+        color: #7ee5ae !important;
+    }
+}
+
 .nami-exchange {
     .rdrCalendarWrapper {
         width: 100%;
@@ -71,6 +135,7 @@ $height: 32px;
         color: white !important;
     }
 }
+
 .date-range-picker {
     display: flex;
     align-items: center;

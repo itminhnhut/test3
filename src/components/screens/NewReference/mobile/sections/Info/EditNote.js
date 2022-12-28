@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import PopupModal from 'src/components/screens/NewReference/PopupModal';
+import PopupModal from 'components/screens/NewReference/PopupModal';
 import FetchApi from 'utils/fetch-api';
 import _ from 'lodash';
 import { API_NEW_REFERRAL_EDIT_NOTE } from 'redux/actions/apis';
@@ -61,20 +61,24 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
             isDesktop={isDesktop}
             useCenter={isDesktop}
             contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+            isMobile
         >
-            <div className={classNames("font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4", { 'px-4': isDesktop })}>
+            <div className={classNames("font-medium text-sm text-gray-7 leading-6 flex flex-col gap-4", { 'px-4': isDesktop })}>
                 <div>
                     {t('reference:referral.note')}
-                    <div className="mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4">
+                    <div className="mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4">
                         <div className="flex justify-between items-center w-full">
                             <input
                                 onFocus={onFocus}
-                                className="text-darkBlue w-full font-medium text-sm leading-6"
+                                className="text-gray-6 w-full font-medium text-sm leading-6"
                                 maxLength={30}
                                 onChange={handleInputNote}
                                 value={note ?? ''}
                                 ref={refInput}
                                 autoFocus
+                                style={{
+                                    outline: 'none'
+                                }}
                             />
                             {note.length ? (
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setNote('')}>
@@ -86,7 +90,7 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                     </div>
                 </div>
                 <div
-                    className="w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer"
+                    className="w-full h-11 mt-4 bg-namiapp-green-1 rounded-md font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer text-white"
                     onClick={() => handleSubmitEditNote()}
                 >
                     {t('common:confirm')}

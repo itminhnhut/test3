@@ -49,3 +49,11 @@
 .swiper {
   height: auto !important;
 }
+
+#setdefault123 {
+  accent-color: #47cc85;
+  &:checked {
+    background-color: white !important;
+    color: white !important
+  }
+}

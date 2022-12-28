@@ -144,32 +144,33 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
     };
 
     return (
-        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll>
+        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll isMobile>
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.date')}</div>
-                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} />
+                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} isNamiApp/>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.level')}</div>
                     <div className="flex">
-                        <FilterTabs className="!px-4 !py-3 !font-medium !text-sm" tabs={levelTabs} type={state.level} setType={(e) => onChange('level', e)} />
+                        <FilterTabs className="!px-4 !py-2 !font-medium !text-sm" tabs={levelTabs} type={state.level} setType={(e) => onChange('level', e)} isMobile/>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.commission_type')}</div>
                     <div className="flex">
-                        <FilterTabs className="!px-4 !py-3 !font-medium !text-sm" tabs={typeTabs} type={state.kind} setType={(e) => onChange('kind', e)} />
+                        <FilterTabs className="!px-4 !py-2 !font-medium !text-sm" tabs={typeTabs} type={state.kind} setType={(e) => onChange('kind', e)} isMobile/>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>{t('reference:referral.asset_type')}</div>
                     <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
-                            className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"
+                            className="!px-4 !py-2 !font-medium !text-sm whitespace-nowrap"
                             tabs={assetTabs}
                             type={state.currency}
                             setType={(e) => onChange('currency', e)}
+                            isMobile
                         />
                     </div>
                 </div>
@@ -215,7 +216,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                 />
             )}
             <CollapsibleRefCard title={t('reference:referral.commission_histories')} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll} isBlack>
-                {!dataSource.length ? null : <div className="w-auto">
+                <div className="w-auto">
                     <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
@@ -231,7 +232,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                             {t('reference:referral.asset_type')}: {general.currency}
                         </FilterContainer>
                     </div>
-                </div>}
+                </div>
                 <div className={classNames("mt-6", { "!mt-8": loading })}>
                     {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />

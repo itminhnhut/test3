@@ -130,7 +130,8 @@ const colors = {
         },
         gray: {
             DEFAULT: '#8694b2',
-            1: '#E2E8F0'
+            1: '#E2E8F0',
+            2: '#8593a6'
         }
     },
 };

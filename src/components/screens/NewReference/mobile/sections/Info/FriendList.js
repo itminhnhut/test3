@@ -53,9 +53,10 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
             isDesktop={isDesktop}
             useCenter={isDesktop}
             contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+            isMobile
         >
             {loading ? <IconLoading color={colors.teal} /> : friendList.length ? <div className={isDesktop ? 'px-4' : null}>
-                <div className='flex w-full justify-between text-gray-1 font-normal text-xs mb-3'>
+                <div className='flex w-full justify-between text-gray-7 font-normal text-xs mb-3'>
                     <div>
                         NamiID
                     </div>
@@ -63,7 +64,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                         {t('reference:referral.referral_date')}
                     </div>
                 </div>
-                <div className='flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar'>
+                <div className='flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar text-gray-6 text-sm font-semibold'>
                     {friendList.map((data, index) => {
                         return (
                             <div className='w-full flex items-center justify-between text-sm font-medium leading-6' key={index}>
@@ -77,7 +78,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                         )
                     })}
                 </div>
-                {hasNext.current ? <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'
+                {hasNext.current ? <div className='mt-2 text-namiapp-green-1 underline text-sm font-medium leading-6 text-center cursor-pointer'
                     onClick={() => setMore(99999999999)}
                 >
                     {t('reference:referral.show_more')}

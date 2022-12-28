@@ -57,18 +57,19 @@ const PopupModal = ({
                 <div
                     onClick={() => onBackdropCb && onBackdropCb()}
                     className={classNames(
-                        'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]',
+                        'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]', bgClassName,
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
                         { '!z-[200]': useAboveAll },
-                        { bgClassName },
+                        { '!bg-[#000] !bg-opacity-80': isMobile },
                     )}
                 />
                 <div
                     className={classNames(
                         `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-transparent left-0 top-0 w-full h-full p-0 z-[101]`,
                         containerClassName,
-                        { '!z-[201]': useAboveAll }
+                        { '!z-[201]': useAboveAll },
+                        // { '!bg-black bg-opacity-80': isMobile },
                     )}
                 >
                     <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}>
@@ -99,11 +100,11 @@ const PopupModal = ({
                             >
                                 {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m15 18-6-6 6-6" stroke="#223050" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="m15 18-6-6 6-6" stroke="#e2e8f0" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>
                                     : null}
-                                {title && <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen })}>{title}</div>}
+                                {title ? <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen, '!text-gray-6': isMobile })}>{title}</div> : <div></div>}
 
                                 {useFullScreen ? null : <div
                                     className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
@@ -111,11 +112,11 @@ const PopupModal = ({
                                 >
                                     {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m6 6 12 12M6 18 18 6" stroke={useCenter && !isDesktop ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                 </div>}
                             </div>
-                            {isDesktop ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
+                            {(isDesktop || isMobile) ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
                             {isDesktop ? <Line className="w-full mt-3 mb-6" /> : null}
                             {isDesktop ? children : <div className={classNames('mt-7', { '!mt-0': useCenter })}>
                                 {children}
@@ -173,13 +174,13 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
         <svg onClick={() => onClick()} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z"
-                stroke="#718096"
+                stroke={color}
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />
             <path
                 d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889"
-                stroke="#718096"
+                stroke={color}
                 strokeLinecap="round"
                 strokeLinejoin="round"
             />

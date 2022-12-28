@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import Slider from 'src/components/trade/InputSlider'
-import PopupModal from 'src/components/screens/NewReference/PopupModal'
+import Slider from 'components/trade/InputSlider'
+import PopupModal from 'components/screens/NewReference/PopupModal'
 import _ from 'lodash'
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_ADD_REF, API_NEW_REFERRAL_CHECK_REF } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
-import Modal from 'src/components/common/ReModal';
+import Modal from 'components/common/ReModal';
 import { useMemo } from 'react';
+import colors from 'styles/colors';
 
 // goodluck for who maintain this code
 const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }) => {
@@ -123,17 +124,26 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     const renderResult = useMemo(() => {
         if (!resultData.message.length) return null
         const Icon = resultData.isSucess ? <SuccessIcon /> : <ErrorIcon />
-        return <Modal
-            center
-            isVisible
-            containerClassName='!px-6 !py-8 top-[50%]'
+        const title = resultData.isSucess ? t('reference:referral.success') : t('reference:referral.error')
+        return <PopupModal
+            isVisible={true}
+            onBackdropCb={onClose}
+            // useAboveAll
+            isDesktop={isDesktop}
+            useCenter={isDesktop}
+            isMobile
+            bgClassName='!z-[400]'
+            containerClassName='!z-[401]'
         >
-            <div className='w-full flex justify-center items-center flex-col text-center'>
-                {Icon}
-                <div className='text-sm font-medium mt-6'>
+            <div className='w-full flex justify-center items-center flex-col text-center px-2'>
+                <div className='mt-6'>{Icon}</div>
+                <div className='text-gray-6 text-[20px] leading-8 font-semibold mt-6'>
+                    {title}
+                </div>
+                <div className='text-sm font-medium mt-3 text-gray-7'>
                     <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                 </div>
-                <div className='w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6'
+                <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
                     onClick={() => {
                         setResultData({
                             isSucess: false,
@@ -145,7 +155,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     {t('common:confirm')}
                 </div>
             </div>
-        </Modal >
+        </PopupModal>
     }, [resultData])
 
     return (
@@ -159,12 +169,13 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                 isDesktop={isDesktop}
                 useCenter={isDesktop}
                 contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+                isMobile
             >
-                <div className={classNames('font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4', { 'px-4': isDesktop })}>
+                <div className={classNames('font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4', { 'px-4': isDesktop })}>
                     <div>
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
-                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} />
+                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.namiapp.green[1]} bgColorActive={colors.namiapp.green[1]} BgColorLine={colors.namiapp.black[2]} bgColorDot={colors.namiapp.black[2]} />
                         </div>
                         <div className='flex justify-between items-center font-medium text-xs leading-5'>
                             <div>
@@ -177,13 +188,17 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.addref_title')}
-                        <div className={classNames('mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
-                            <div className='flex w-full justify-between items-center '>
-                                <input id='refCode' className='text-darkBlue font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
+                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
+                            <div className='flex w-full justify-between items-center'>
+                                <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
                                     onInput={(e) => {
                                         handleInput(e, 8)
-                                    }} />
+                                    }}
+                                    style={{
+                                        outline: 'none'
+                                    }}
+                                />
                                 {refCode.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                     onClick={() => {
                                         setRefCode('')
@@ -204,13 +219,16 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.note')}
-                        <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4'>
+                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4'>
                             <div className='w-full justify-between items-center flex'>
-                                <input id='note' className='text-darkBlue font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+                                <input id='note' className='text-gray-6 font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                     onClick={() => {
                                         setNote('')
                                         document.getElementById("note").focus();
+                                    }}
+                                    style={{
+                                        outline: 'none'
                                     }}
                                 >
                                     <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
@@ -222,10 +240,14 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>
                     </div>
                     <div className='flex items-center gap-2 text-xs font-medium'>
-                        <input type="checkbox" id="vehicle1" className='rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
+                        <input type="checkbox" id="setdefault123" className='bg-namiapp-green-1 rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
+                            style={{
+                                outline: 'none'
+                            }}
+                        />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length || (refCode.length && refCode.length !== 8) })}
+                    <div className={classNames('w-full h-11 mt-4 bg-namiapp-green-1 rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-namiapp-black-2 !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
                         onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}
@@ -236,23 +258,11 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     )
 }
 
-const SuccessIcon = () => {
-    return (
-        <svg width="66" height="66" viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#o4e049auza)">
-                <path d="M33 63.443c16.814 0 30.444-13.63 30.444-30.444 0-16.813-13.63-30.443-30.444-30.443S2.556 16.186 2.556 32.999c0 16.814 13.63 30.444 30.444 30.444z" fill="#00C8BC" />
-                <path d="M33 66C14.805 66 0 51.197 0 33 0 14.805 14.805 0 33 0c18.197 0 33 14.805 33 33 0 18.197-14.803 33-33 33zm0-60.888C17.622 5.112 5.112 17.622 5.112 33c0 15.378 12.51 27.888 27.888 27.888 15.378 0 27.888-12.513 27.888-27.888 0-15.378-12.51-27.888-27.888-27.888z" fill="#00C8BC" />
-                <path d="M29.013 45.142c-.685 0-1.34-.274-1.823-.764l-9.432-9.586a2.556 2.556 0 1 1 3.645-3.584l7.536 7.659 15.59-17.17a2.557 2.557 0 0 1 3.609-.174 2.558 2.558 0 0 1 .174 3.612l-17.408 19.17a2.556 2.556 0 0 1-1.84.84c-.018-.003-.034-.003-.051-.003z" fill="#fff" />
-            </g>
-            <defs>
-                <clipPath id="o4e049auza">
-                    <path fill="#fff" d="M0 0h66v66H0z" />
-                </clipPath>
-            </defs>
-        </svg>
-
-    )
-}
+const SuccessIcon = () => (
+    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 6.667C21.6 6.667 6.665 21.6 6.665 40s14.933 33.333 33.333 33.333S73.333 58.4 73.333 40 58.399 6.667 39.999 6.667zm-6.667 50L16.666 40l4.7-4.7 11.967 11.933 25.3-25.3 4.7 4.734-30 30z" fill="#47CC85" />
+    </svg>
+)
 
 export const ErrorIcon = () => {
     return (

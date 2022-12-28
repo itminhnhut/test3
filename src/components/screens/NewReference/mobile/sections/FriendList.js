@@ -333,15 +333,15 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
     };
 
     return (
-        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll contentClassname="px-6">
+        <PopupModal isVisible={isVisible} onBackdropCb={onClose} title="Lọc kết quả" useAboveAll contentClassname="px-6" isMobile>
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.referral_date')}</div>
-                    <DatePicker isCalendar date={state.invitedAt} onChange={(e) => onChange('invitedAt', e)} />
+                    <DatePicker isCalendar date={state.invitedAt} onChange={(e) => onChange('invitedAt', e)} wrapperClassname='bg-namiapp-black-2 text-gray-6 rounded-md' isNamiApp/>
                 </div>
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.total_commissions')}</div>
-                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} />
+                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} wrapperClassname='bg-namiapp-black-2 text-gray-6 rounded-md' isNamiApp/>
                 </div>
                 <div className="flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>{t('reference:referral.status')}</div>
@@ -351,6 +351,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                             tabs={arrStatus}
                             type={state.kycStatus}
                             setType={(e) => onChange('kycStatus', e)}
+                            isMobile
                         />
                     </div>
                 </div>
@@ -375,7 +376,7 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
     )
 }
 
-const CheckIcon = ({className}) => <svg width="12" className={className} height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const CheckIcon = ({className}) => <svg width="12" className={className} height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6 1C3.243 1 1 3.243 1 6s2.243 5 5 5 5-2.243 5-5-2.243-5-5-5zM5 8.207 3.144 6.354l.706-.708L5 6.793l2.646-2.647.708.708L5 8.207z" fill="#47CC85" />
 </svg>
 

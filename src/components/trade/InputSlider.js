@@ -57,6 +57,7 @@ const Slider = ({
     customPercentLabel,
     height,
     naoMode,
+    bgColorDot,
     ...props
 }) => {
     const container = useRef(null)
@@ -286,7 +287,7 @@ const Slider = ({
                     percentage={i * size}
                     isDark={currentTheme === THEME_MODE.DARK}
                     onusMode={onusMode}
-                    bgColorDot={onusMode ? colors.onus.bg3 : null}
+                    bgColorDot={bgColorDot ? bgColorDot : onusMode ? colors.onus.bg3 : null}
                 />
             )
             label.push(

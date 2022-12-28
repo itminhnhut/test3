@@ -137,16 +137,18 @@
         "ref_placeholder": "Nhập mã giới thiệu mong muốn",
         "addref": "Tạo mới",
         "addref_title": "Mã giới thiệu (Tùy chọn)",
-        "addref_success": "Mã giới thiệu <span class='text-teal'>{{value}}</span> được tạo thành công",
+        "addref_success": "Mã giới thiệu <span class='text-namiapp-green-1'>{{value}}</span> được tạo thành công",
         "addref_error_1": "Vui lòng nhập đủ 8 ký tự",
         "addref_error_2": "Mã giới thiệu đã tồn tại",
-        "addref_error_3": "Mã giới thiệu <span class='text-teal'>{{value}}</span> đã tồn tại, vui lòng nhập lại!",
+        "addref_error_3": "Mã giới thiệu <span class='text-namiapp-green-1'>{{value}}</span> đã tồn tại, vui lòng nhập lại!",
         "commission_types": {
             "spot": "Giao ngay",
             "futures": "Futures",
             "swap": "Quy đổi",
             "staking": "Staking"
         },
-        "date": "Thời gian"
+        "date": "Thời gian",
+        "error": "Lỗi",
+        "success": "Thành công"
     }
 }

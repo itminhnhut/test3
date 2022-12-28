@@ -12,6 +12,8 @@ import { commisionConfig } from 'config/referral';
 import showNotification from 'utils/notificationService';
 import _ from 'lodash';
 import styled from 'styled-components';
+import { CheckIcon } from '../FriendList';
+import colors from 'styles/colors';
 
 
 const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
@@ -109,58 +111,59 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                         refs.map((data, index) => (
                             <div key={data.code}>
                                 <div className="flex w-full justify-between font-semibold text-sm leading-6 items-center">
-                                    <div className="flex gap-2 items-center text-darkBlue">
+                                    <div className="flex gap-2 items-center text-gray-6">
                                         {data.code}
                                         <CopyIcon data={data.code} size={16} className="cursor-pointer" />
                                     </div>
                                     <div onClick={data.status ? null : () => handleSetDefault(data.code)}>
                                         <div
                                             className={classNames(
-                                                'px-2 py-1 rounded-md font-semibold text-sm leading-6',
-                                                data.status ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]'
+                                                'px-3 py-1 rounded-[100px] font-normal text-xs flex items-center',
+                                                data.status ? 'text-namiapp-green-1 bg-namiapp-green-1 bg-opacity-10' : 'text-gray-7 bg-namiapp-black-4 bg-opacity-50'
                                             )}
                                         >
+                                            {data.status ? <CheckIcon className={'mr-1'} /> : null}
                                             {data.status ? t('reference:referral.default') : t('reference:referral.set_default')}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="mt-3 font-medium leading-5 flex flex-col gap-2">
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-gray-1 text-xs ">{t('reference:referral.you_friends_get')}</div>
-                                        <div className="text-teal text-sm">
+                                        <div className="text-gray-7 text-xs ">{t('reference:referral.you_friends_get')}</div>
+                                        <div className="text-namiapp-green-1 text-sm">
                                             {(100 - data.remunerationRate)}% / {data.remunerationRate}%
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-gray-1 text-xs">{t('reference:referral.link')}</div>
-                                        <div className="text-darkBlue text-sm flex gap-2 justify-end items-center w-fit">
+                                        <div className="text-gray-7 text-xs">{t('reference:referral.link')}</div>
+                                        <div className="text-gray-6 text-sm flex gap-2 justify-end items-center w-fit">
                                             <div className="max-w-[140px] truncate">https://nami.exchange/ref/{data.code}</div>
-                                            <CopyIcon data={`https://nami.exchange/ref/${data.code}`} size={13.5} className="cursor-pointer" />
+                                            <CopyIcon data={`https://nami.exchange/ref/${data.code}`} size={13.5} className="cursor-pointer" color={colors.namiapp.gray[2]} />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-gray-1 text-xs ">{t('reference:referral.friends')}</div>
+                                        <div className="text-gray-7 text-xs ">{t('reference:referral.friends')}</div>
                                         <div
-                                            className="text-darkBlue text-sm flex items-center gap-1"
+                                            className="text-gray-6 text-sm flex items-center gap-1"
                                             onClick={() => {
                                                 setCode(data.code);
                                                 setShowFriendList(true);
                                             }}
                                         >
-                                            {data.invitedCount ?? 0} <FriendListIcon />
+                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.namiapp.gray[2]} />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
-                                        <div className="text-gray-1 text-xs ">{t('reference:referral.note')}</div>
+                                        <div className="text-gray-7 text-xs ">{t('reference:referral.note')}</div>
                                         <div
-                                            className="text-darkBlue text-sm flex items-center gap-1"
+                                            className="text-gray-6 text-sm flex items-center gap-1"
                                             onClick={() => {
                                                 setCode(data.code);
                                                 setCurrentNote(data.note ?? '');
                                                 setShowEditNote(true);
                                             }}
                                         >
-                                            {data.note} <NoteIcon />
+                                            {data.note} <NoteIcon color={colors.namiapp.gray[2]}/>
                                         </div>
                                     </div>
                                 </div>
@@ -189,15 +192,15 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     );
 };
 
-export const FriendListIcon = () => (
+export const FriendListIcon = ({ color = '#718096' }) => (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export const NoteIcon = () => (
+export const NoteIcon = ({ color = '#718096' }) => (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#s8m7dixeoa)" stroke="#718096" strokeLinecap="round" strokeLinejoin="round">
+        <g clipPath="url(#s8m7dixeoa)" stroke={color} strokeLinecap="round" strokeLinejoin="round">
             <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
             <path d="M10 .94a1.06 1.06 0 0 0-.75.31L4.5 6 4 8l2-.5 4.75-4.75A1.06 1.06 0 0 0 10 .94z" />
         </g>
