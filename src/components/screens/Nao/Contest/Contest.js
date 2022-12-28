@@ -134,7 +134,7 @@ export const seasons = [
         rules: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-nami-championship-mua-4',
         total_rewards: '300,000 NAO',
         quoteAsset: 'VNDC',
-        time_to_create: { start: '2022-12-28T17:00:00.000Z', end: '2022-01-08T17:00:00.000Z' },
+        time_to_create: { start: '2022-12-28T17:00:00.000Z', end: '2023-01-08T17:00:00.000Z' },
         active: false,
         top_ranks_per: 20,
         top_ranks_team: 10
