@@ -23,7 +23,7 @@ const Overview = ({ data, commisionConfig }) => {
 
     return (
         <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background_mobile.png')", backgroundSize: 'cover' }}  >
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} />
+            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} isMobile/>
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}

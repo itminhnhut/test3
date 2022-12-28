@@ -3,14 +3,14 @@ import PopupModal from '../../PopupModal'
 import QRCode from 'qrcode.react';
 import { useTranslation } from 'next-i18next';
 
-const InviteModal = ({ isShow, onClose, code }) => {
+const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
     const { t } = useTranslation()
     return (
         <PopupModal
             isVisible={isShow}
             onBackdropCb={onClose}
             useCenter
-            background="url('/images/reference/invite_background.png')"
+            background={isMobile ? "url('/images/reference/invite_background_mobile.png')" : "url('/images/reference/invite_background.png')"}
             contentClassname='!h-[620px] !w-[340px] '
             title={(<img src='/images/logo/nami-logo.png' className='w-auto h-6' />)}
         >
@@ -32,7 +32,7 @@ const InviteModal = ({ isShow, onClose, code }) => {
                             size={190}
                         />
                     </div>
-                    <img className='absolute bottom-[75px] w-[124px] h-[120px]' src='/images/icon/ic_nami_icon.png' />
+                    <img className='absolute bottom-[75px] w-[124px] h-[120px]' src={isMobile ? '/images/icon/ic_green_nami_icon.png' : '/images/icon/ic_nami_icon.png'} />
                 </div>
             </div>
         </PopupModal>
