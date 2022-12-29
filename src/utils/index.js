@@ -117,7 +117,7 @@ export function initFuturesMarketWatchItem(pair, debug = false) {
         label: get(pair, 'lbl', null), // label: source.lbl,
         placeCurrency: get(pair, 'pa', null), // placeCurrency: FuturesCurrency.fromName(source.pa),
         lastChangePercentage: isNumeric(lcp) ? lcp * 100 : 0, // lastChangePercentage: isNumeric(source.lcp) ?
-                                                              // +source.lcp * 100 : 0,
+        // +source.lcp * 100 : 0,
         hideInMarketWatch: get(pair, 'hide_in_market_watch', null), // hideInMarketWatch: source.hide_in_market_watch,
         fundingTime: get(pair, 't', 0),
         fundingRate: get(pair, 'fr', 0)
@@ -205,7 +205,7 @@ export const getSupportArticles = async (tag, language) => {
     return await ghost.posts.browse(options)
 }
 
-export const getLastedArticles = async (tag = '', limit = 10, page = 1,language = 'vi', isHighlighted = false) => {
+export const getLastedArticles = async (tag = '', limit = 10, page = 1, language = 'vi', isHighlighted = false) => {
     const filter = []
     const options = {
         page,
@@ -221,12 +221,19 @@ export const getLastedArticles = async (tag = '', limit = 10, page = 1,language 
     } else {
         filter.push(`tags:${lang}`)
     }
+    const excludedTags = ['ins-product', 'ins-noti', 'ins-event', 'ins-news', 'ins_faq', 'ins-en-product', 'ins-en-noti', 'ins-en-event', 'ins-en-news', 'ins_faq']
+    // excludedTags.map(e => filter.push(`tags:${e}`))
+
+    filter.push(`tags:-[${excludedTags.toString()}]`)
 
     if (isHighlighted) {
         filter.push('featured:true')
     }
 
     options.filter = filter.join('+')
+
+    console.log('filter', options.filter)
+
     return await ghost.posts.browse(options)
 }
 
@@ -245,7 +252,7 @@ export const indexingArticles = async (language) => {
     )
 
     // store { [id]: slug }
-    const indexer = result.reduce((a, v) => ({...a, [v?.id]: v.slug}), {})
+    const indexer = result.reduce((a, v) => ({ ...a, [v?.id]: v.slug }), {})
     localStorage.setItem(articlesIndexKey, JSON.stringify(indexer))
 }
 
