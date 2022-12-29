@@ -232,8 +232,6 @@ export const getLastedArticles = async (tag = '', limit = 10, page = 1, language
 
     options.filter = filter.join('+')
 
-    console.log('filter', options.filter)
-
     return await ghost.posts.browse(options)
 }
 
