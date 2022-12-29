@@ -125,7 +125,7 @@ const LastedActivities = () => {
                             </div>
                         </div>
                         <div>
-                            <RefInfo data={data} language={language} className='mb-6 mt-4' />
+                            <RefInfo data={data} language={language} className='mb-6 mt-4' isMobile/>
                         </div>
                     </div>
                 )
@@ -169,8 +169,8 @@ export const UserIcon = ({ isMobile = false }) => <svg width="28" height="28" vi
     </defs>
 </svg>
 
-export const RefInfo = ({ data, language, className }) => (
-    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 text-gray-7 font-medium', className)}>
+export const RefInfo = ({ data, language, className, isMobile = false }) => (
+    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium', className, { 'text-gray-7': isMobile, 'text-gray-1': !isMobile })}>
         <div className='text-xs mt-[-22px]'>
             {languages.refUser[language]}:
         </div>
@@ -179,7 +179,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     NamiID
                 </div>
-                <div className='text-gray-6'>
+                <div className={isMobile ? 'text-gray-6' : 'text-darkBlue'}>
                     {data.invitedBy?.code}
                 </div>
             </div>
@@ -188,7 +188,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     {languages.level[language]}
                 </div>
-                <div className='text-gray-6'>
+                <div className={isMobile ? 'text-gray-6' : 'text-darkBlue'}>
                     {data.rank < 10 ? 0 : null}{data.rank}
                 </div>
             </div>
@@ -197,7 +197,7 @@ export const RefInfo = ({ data, language, className }) => (
                 <div>
                     {languages.tier[language]}
                 </div>
-                <div className='text-gray-6'>
+                <div className={isMobile ? 'text-gray-6' : 'text-darkBlue'}>
                     {tier[data.rank][language]}
                 </div>
             </div>

@@ -148,23 +148,23 @@ function NewReference() {
         <MobileFont>
             <div className="bg-namiapp h-full overflow-hidden">
                 <div className={classNames('bg-namiapp z-10')}>
-                    <Tabs ref={tabRef} tab={tab}>
-                        <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
+                    <Tabs ref={tabRef} tab={tab} isMobile>
+                        <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)} isMobile>
                             {t('reference:referral.info')}
                         </TabItem>
                         {/* <TabItem value={tabs.LastedActivities} onClick={() => handleClickTab(tabs.LastedActivities)}>
                             {t('reference:referral.recent_activities')}
                         </TabItem> */}
-                        <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
+                        <TabItem value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)} isMobile>
                             {t('reference:referral.statistic')}
                         </TabItem>
-                        <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
+                        <TabItem value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)} isMobile>
                             {t('reference:referral.friend_list')}
                         </TabItem>
-                        <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
+                        <TabItem value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)} isMobile>
                             {t('reference:referral.commission_histories')}
                         </TabItem>
-                        <TabItem value={tabs.FAQandTerm} onClick={() => handleClickTab(tabs.FAQandTerm)}>
+                        <TabItem value={tabs.FAQandTerm} onClick={() => handleClickTab(tabs.FAQandTerm)} isMobile>
                             FAQ
                         </TabItem>
                     </Tabs>

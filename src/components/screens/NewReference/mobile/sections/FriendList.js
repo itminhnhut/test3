@@ -203,7 +203,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                             <div className='font-medium text-xs flex flex-wrap'>
                                                                 {Object.values(commisionConfig[data?.rank ?? 1]?.direct).map((config, index) => {
                                                                     return (
-                                                                        <span className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
+                                                                        <span key={index} className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
                                                                     )
                                                                 })}
                                                             </div>
@@ -215,7 +215,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                             <div className='font-medium text-xs flex flex-wrap'>
                                                                 {Object.values(commisionConfig[data?.rank ?? 1]?.indirect).map((config, index) => {
                                                                     return (
-                                                                        <span className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
+                                                                        <span key={index} className='pr-2 mt-[2px] leading-6 font-medium text-xs'>{commissionType[index]}: {config}%</span>
                                                                     )
                                                                 })}
                                                             </div>

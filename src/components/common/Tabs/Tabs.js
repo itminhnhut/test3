@@ -8,7 +8,7 @@ import reduce from 'lodash/reduce';
 import { sumBy } from 'lodash';
 
 let currentKeyTab = 0;
-const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '' }, ref) => {
+const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMobile = false }, ref) => {
     const TabRef = useRef(null);
     const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
@@ -25,7 +25,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '' }, ref
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', '!text-gray-6');
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', isMobile ? '!text-gray-6' : '!text-darkBlue');
                 }
             });
         }
@@ -78,10 +78,10 @@ const Tab = styled.div.attrs(({ className }) => ({
     }
 `;
 
-export const TabItem = styled.div.attrs(({ value, className = '' }) => ({
+export const TabItem = styled.div.attrs(({ value, className = '', isMobile = false}) => ({
     className: classnames(
-        'text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max text-gray-7 tab-item sm:px-12',
-        className
+        'text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12',
+        className, { 'text-gray-1': !isMobile, 'text-gray-7': isMobile }
     ),
     id: `tab-item-${value}`
 }))``;

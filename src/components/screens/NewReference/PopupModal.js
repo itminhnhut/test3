@@ -100,7 +100,7 @@ const PopupModal = ({
                             >
                                 {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m15 18-6-6 6-6" stroke="#e2e8f0" stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="m15 18-6-6 6-6" stroke="#e2e8f0" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>
                                     : null}
@@ -112,7 +112,7 @@ const PopupModal = ({
                                 >
                                     {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} stroke-linecap="round" stroke-linejoin="round" />
+                                        <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
                                 </div>}
                             </div>
