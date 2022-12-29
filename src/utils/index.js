@@ -221,7 +221,7 @@ export const getLastedArticles = async (tag = '', limit = 10, page = 1, language
     } else {
         filter.push(`tags:${lang}`)
     }
-    const excludedTags = ['ins-product', 'ins-noti', 'ins-event', 'ins-news', 'ins_faq', 'ins-en-product', 'ins-en-noti', 'ins-en-event', 'ins-en-news', 'ins_faq']
+    const excludedTags = ['ins-product', 'ins-noti', 'ins-event', 'ins-news', 'ins_faq', 'ins-en-product', 'ins-en-noti', 'ins-en-event', 'ins-en-news', 'ins_faq', 'ins_faq-en-insurance-wallet', 'ins_faq-en-insurance-margin', 'ins_faq-en-insurance-history', 'ins_faq-en-insurance-commission', 'ins_faq-vi-insurance-wallet', 'ins_faq-vi-insurance-margin', 'ins_faq-vi-insurance-history', 'ins_faq-vi-insurance-commission']
     // excludedTags.map(e => filter.push(`tags:${e}`))
 
     filter.push(`tags:-[${excludedTags.toString()}]`)
