@@ -114,7 +114,7 @@ export const seasons = [
         total_rewards: '500,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2022-11-25T17:00:00.000Z', end: '2022-12-09T17:00:00.000Z' },
-        active: true,
+        active: false,
         top_ranks_per: 20,
         top_ranks_team: 10,
         top_ranks_master: 3
@@ -135,7 +135,7 @@ export const seasons = [
         total_rewards: '300,000 NAO',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2022-12-28T17:00:00.000Z', end: '2023-01-08T17:00:00.000Z' },
-        active: false,
+        active: true,
         top_ranks_per: 20,
         top_ranks_team: 10
     }
