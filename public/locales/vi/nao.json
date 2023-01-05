@@ -241,7 +241,10 @@
         "volume_tooltip": "KLGD ngày bao gồm cả VNDC và USDT Futures và sẽ được tự động cài đặt lại vào 0h sáng mỗi ngày",
         "start": "Bắt đầu",
         "back_to_trading": "Tiếp tục giao dịch",
-        "reward_desc_trading":"KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}."
+        "reward_desc_trading": "KLGD hôm nay chưa đủ để nhận thưởng mốc kế tiếp, vui lòng giao dịch thêm mức khối lượng là {{vol}} để nhận {{value}}.",
+        "reward_desc_trading_over": "Chúc mừng bạn đã nhận đầy đủ các mốc thưởng ngày hôm nay. Chúc bạn giao dịch hiệu quả và thành công!",
+        "updated_vol": "Cập nhật 20 phút/lần",
+        "last_updated_time": "Lần cập nhật gần nhất"
     },
     "year_summary": {
         "title": "Tổng kết dự án NAO Futures {{year}}",
