@@ -137,7 +137,8 @@ export const seasons = [
         time_to_create: { start: '2022-12-28T17:00:00.000Z', end: '2023-01-08T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
-        top_ranks_team: 10
+        top_ranks_team: 10,
+        lastUpdated: true
     }
 ];
 
@@ -198,9 +199,9 @@ const Contest = (props) => {
         }
     };
 
-    // useEffect(() => {
-    //     renderLastUpdated(6);
-    // });
+    useEffect(() => {
+        if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
+    }, [props?.contest_id, props?.lastUpdated]);
 
     const showPnl = ![9, 10].includes(props?.contest_id);
 

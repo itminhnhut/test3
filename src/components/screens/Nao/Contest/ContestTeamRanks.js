@@ -352,7 +352,11 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
                 </Table>
             )}
-            {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            {lastUpdatedTime && (
+                <div className="mt-6 text-sm text-nao-grey font-medium leading-6">
+                    {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}
+                </div>
+            )}
             <div className="w-full flex justify-center mt-6">
                 <RePagination total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
             </div>
