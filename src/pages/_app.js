@@ -4,7 +4,7 @@ import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import NProgress from 'nprogress';
 import 'public/css/font.css';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
 import { getFuturesConfigs, } from 'redux/actions/futures';
@@ -22,7 +22,6 @@ import 'src/styles/app.scss';
 import * as ga from 'src/utils/ga';
 import { indexingArticles } from 'utils';
 import { isMobile } from 'react-device-detect';
-import FacebookPixel from 'components/common/Pixel/FacebookPixel'
 // export function reportWebVitals(metric) {
 //     switch (metric.name) {
 //         case 'FCP':
@@ -208,17 +207,10 @@ const App = ({
         }
     });
     if (!mount && isMobile) return null;
-
-    const isFrame = useMemo(() => {
-        const frame = ['mobile/futures', '/nao', '/contest'];
-        return !!frame.find((rs) => router.pathname.includes(rs));
-    }, [router]);
-
     return (
         <>
-            <Head language={language} />
+            <Head language={language}/>
             <Provider store={store}>
-                {isFrame && <FacebookPixel ID="2971179109853589" />}
                 <Tracking>
                     <Component {...pageProps} />
                 </Tracking>
