@@ -23,7 +23,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const lastUpdatedTime = useRef(0);
+    const lastUpdatedTime = useRef(null);
 
     useEffect(() => {
         getRanks(sort);
@@ -44,7 +44,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
             });
             const data = originalData?.users;
             if (data && status === ApiStatus.SUCCESS) {
-                lastUpdatedTime.current = originalData?.last_time_update;
+                if (originalData?.last_time_update) lastUpdatedTime.current = originalData?.last_time_update;
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
                 const _top3 = data.slice(0, sliceIndex);
@@ -344,7 +344,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                     )}
                 </Table>
             )}
-            {lastUpdated && (
+            {lastUpdated && lastUpdatedTime.current && (
                 <div className="mt-6 text-sm font-medium leading-6 text-nao-grey">
                     {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
