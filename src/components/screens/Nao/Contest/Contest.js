@@ -199,9 +199,9 @@ const Contest = (props) => {
         }
     };
 
-    useEffect(() => {
-        if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
-    }, [props?.contest_id, props?.lastUpdated]);
+    // useEffect(() => {
+    //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
+    // }, [props?.contest_id, props?.lastUpdated]);
 
     const showPnl = ![9, 10].includes(props?.contest_id);
 
@@ -229,16 +229,9 @@ const Contest = (props) => {
             <div className="nao_section">
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
-                <ContestTeamRanks
-                    {...props}
-                    onShowDetail={onShowDetail}
-                    lastUpdatedTime={lastUpdatedTime}
-                    params={params}
-                    sort={params.team}
-                    showPnl={showPnl}
-                />
-                <ContestPerRanks {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} showPnl={showPnl} />
+                {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} sort="pnl" />}
+                <ContestTeamRanks {...props} onShowDetail={onShowDetail} params={params} sort={params.team} showPnl={showPnl} />
+                <ContestPerRanks {...props} params={params} sort={params.individual} showPnl={showPnl} />
             </div>
         </LayoutNaoToken>
     );
