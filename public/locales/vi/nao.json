@@ -214,6 +214,7 @@
         "team_invitations": "Lời mời tham gia đội",
         "date_2": "<div class='font-semibold'>{{hours}}&nbsp;giờ&nbsp;{{minutes}}&nbsp;phút</div>",
         "last_updated_time": "Cập nhật lần cuối vào",
+        "last_updated_time_dashboard": "Cập nhật {{minute}} phút/lần, cập nhật lần cuối vào",
         "tournaments": "Danh sách giải đấu",
         "master_ranking": "Bảng xếp hạng master"
     },
