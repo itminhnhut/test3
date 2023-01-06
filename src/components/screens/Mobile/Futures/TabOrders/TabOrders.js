@@ -37,7 +37,8 @@ const TabOrders = memo(({
     scrollSnap,
     setForceRender,
     forceRender,
-    isFullScreen
+    isFullScreen,
+    decimals
 }) => {
     const { t } = useTranslation();
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
@@ -260,6 +261,7 @@ const TabOrders = memo(({
                     tab={tab} hideOther={hideOther}
                     ordersList={orderListFilter.orderList} pair={pair} pairConfig={pairConfig}
                     onShowDetail={onShowDetail} mode={mode}
+                    decimals={decimals}
                 />
             </TabContent>
             <TabContent active={tab === FUTURES_RECORD_CODE.orderHistory}>

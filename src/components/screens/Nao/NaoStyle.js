@@ -2,7 +2,7 @@ import styled from "styled-components";
 import colors from "styles/colors";
 import classNames from "classnames";
 import CTooltip from "components/common/Tooltip";
-import { useMemo, useState } from "react";
+import { Children, useMemo, useState } from 'react';
 import useWindowSize from "hooks/useWindowSize";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "next-i18next";
@@ -231,7 +231,7 @@ export const Table = ({
         };
     }, [content.current]);
     const isScroll = checkScrollBar(content.current, "vertical");
-    const _children = children.filter(child => child.props?.visible === true || child.props?.visible === undefined);
+    const _children = Children.toArray(children.filter(child => child.props?.visible === true || child.props?.visible === undefined))
     return (
         <CardNao id="nao-table" noBg className={
             classNames("mt-8 !p-6 !justify-start", classWrapper)

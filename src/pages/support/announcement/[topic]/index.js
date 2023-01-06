@@ -8,25 +8,29 @@ import { formatTime } from 'redux/actions/utils';
 import useApp from 'hooks/useApp';
 import { ChevronLeft } from 'react-feather';
 import { useTranslation } from 'next-i18next';
-import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
-import { useCallback, useEffect, useState } from "react";
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useCallback, useEffect, useState } from 'react';
 // import RePagination from 'components/common/ReTable/RePagination';
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
+
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
 const AnnouncementTopics = (props) => {
-    const router = useRouter()
-    const isApp = useApp()
-    const [theme, , setTheme] = useDarkMode()
-    const { t, i18n: { language } } = useTranslation()
-    const [page, setPage] = useState(1)
-    const [data, setData] = useState([])
-    const [total, setTotal] = useState(0)
-    const [search, setSearch] = useState('')
+    const router = useRouter();
+    const isApp = useApp();
+    const [theme, , setTheme] = useDarkMode();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const [page, setPage] = useState(1);
+    const [data, setData] = useState([]);
+    const [total, setTotal] = useState(0);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
+        const themeLocal = localStorage.getItem('theme');
+        if (themeLocal === 'dark') {
             setTheme(THEME_MODE.DARK);
         } else {
             setTheme(THEME_MODE.LIGHT);
@@ -39,11 +43,12 @@ const AnnouncementTopics = (props) => {
             25,
             page,
             language
-        ).then((articles) => {
-            setData(articles)
-            setTotal(articles.meta?.pagination?.total)
-        })
-    }, [page])
+        )
+            .then((articles) => {
+                setData(articles);
+                setTotal(articles.meta?.pagination?.total);
+            });
+    }, [page]);
 
     const renderPagination = useCallback(() => {
         if (!total) return null;
@@ -62,7 +67,7 @@ const AnnouncementTopics = (props) => {
 
     const renderTopics = () => {
         if (!data || !data?.length) {
-            return <div>{t('support-center:no_articles')}</div>
+            return <div>{t('support-center:no_articles')}</div>;
         }
 
         return data?.map((item) => (
@@ -74,60 +79,62 @@ const AnnouncementTopics = (props) => {
                 }
                 key={item.uuid}
             >
-                <a className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'>
+                <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
                     {item?.title}{' '}
-                    <span className='text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark'>
+                    <span className="text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         {formatTime(item.created_at, 'dd-MM-yyyy')}
                     </span>
                 </a>
             </Link>
-        ))
-    }
+        ));
+    };
 
     const renderAppHeader = () => {
-        if (!isApp) return null
+        if (!isApp) return null;
         const topic = props?.data?.tags?.find(
             (o) => o?.displaySlug === router?.query?.topic
-        )?.name
+        )?.name;
         return (
             <div
                 onClick={router?.back}
-                className='active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium'
+                className="active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium"
             >
-                <ChevronLeft size={16} className='mr-2.5' />
+                <ChevronLeft size={16} className="mr-2.5"/>
                 {topic}
                 {topic && ' | '}
                 Nami FAQ
             </div>
-        )
-    }
+        );
+    };
 
     return (
         <>
             {renderAppHeader()}
             <TopicsLayout
                 useTopicTitle={!!data?.length}
-                mode='announcement'
+                mode="announcement"
             >
                 {renderTopics()}
                 {renderPagination()}
             </TopicsLayout>
         </>
-    )
-}
+    );
+};
 
-export async function getServerSideProps({ locale, query }) {
-    console.log('query?.topic.page', query)
+export async function getServerSideProps({
+    locale,
+    query
+}) {
     const articles = await getLastedArticles(
         `noti-${locale}-${query?.topic}`,
         25,
         1,
         locale
-    )
+    );
     return {
         props: {
             data: {
-                articles: articles,
+                articles: [],
             },
             ...(await serverSideTranslations(locale, [
                 'common',
@@ -135,7 +142,7 @@ export async function getServerSideProps({ locale, query }) {
                 'support-center',
             ])),
         },
-    }
+    };
 }
 
-export default AnnouncementTopics
+export default AnnouncementTopics;

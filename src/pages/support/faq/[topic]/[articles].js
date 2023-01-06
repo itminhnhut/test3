@@ -11,7 +11,8 @@ import { useTranslation } from 'next-i18next';
 import SupportCenterHead from 'components/common/SupportCenterHead';
 import { useEffect } from 'react';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
-
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 
 const FaqArticle = (props) => {
     const router = useRouter()
@@ -20,6 +21,7 @@ const FaqArticle = (props) => {
         i18n: { language },
     } = useTranslation()
     const [theme, , setTheme] = useDarkMode();
+    const dispath = useDispatch();
 
     useEffect(() => {
         // document.body.classList.add('hidden-scrollbar');

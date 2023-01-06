@@ -18,6 +18,7 @@ import Modal from 'components/common/ReModal';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux'
 import Tooltip from 'components/common/Tooltip';
+import { AlertContext } from "components/common/layouts/LayoutMobile";
 
 const CONTAINER_ID = 'nami-mobile-tv';
 const CHART_VERSION = '1.0.8';
@@ -31,6 +32,8 @@ import { formatPrice } from 'src/redux/actions/utils';
 import axios from 'axios';
 import debounce from 'lodash/debounce';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useContext } from 'react';
 
 export class MobileTradingView extends React.PureComponent {
     state = {
@@ -661,12 +664,45 @@ export class MobileTradingView extends React.PureComponent {
     }
 }
 
-
 const Funding = ({ symbol }) => {
     const { t } = useTranslation()
     const [showModal, setShowModal] = React.useState(false)
     const timesync = useSelector(state => state.utils.timesync)
     const marketWatch = useSelector((state) => state.futures.marketWatch);
+    const context = useContext(AlertContext);
+
+    useEffect(() => {
+        const localKey = `notShowFundingWarning:${symbol}`
+        const notShowFundingWarning = localStorage.getItem(localKey)
+        if (notShowFundingWarning?.length  ) {
+            if(Number(notShowFundingWarning) >= Date.now()){
+                return
+            }else{
+                localStorage.removeItem(localKey)
+            }
+        }
+        const showWarningRate = Math.abs(marketWatch?.[symbol]?.fundingRate * 100) >= 0.5
+        const showWarningTime = ((marketWatch?.[symbol]?.fundingTime - Date.now()) / 60000) <= 15
+
+        const showWarning = showWarningRate && showWarningTime
+        if (showWarning) {
+            context.alert.show(
+                "warning",
+                t("futures:funding_history_tab:funding_warning"),
+                t("futures:funding_history_tab:funding_warning_content"),
+                null,
+                () => { localStorage.setItem(localKey, (Date.now() + 900000).toString()) },
+                null,
+                {
+                    hideCloseButton: true,
+                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    textClassname: '!text-left !text-white overflow-y-auto !max-h-[300px] yes-scrollbar',
+                    noUseOutside: true
+                });
+        }
+    }, [symbol])
+
+
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
@@ -708,14 +744,14 @@ const ModalFundingRate = ({ onClose, t }) => {
     const router = useRouter()
 
     const onRedirect = () => {
-        window.open(`/${router.locale}/futures/funding-history?theme=dark&source=app`)
+        router.push(`/${router.locale}/futures/funding-history?theme=dark&source=frame`)
     }
 
     const onDetail = () => {
         const url = router.locale === 'en'
-            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=app'
-            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=app'
-        window.open(url)
+            ? '/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures?theme=dark&source=frame'
+            : '/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures?theme=dark&source=frame'
+        router.push(url)
     }
 
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}

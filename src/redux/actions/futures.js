@@ -30,7 +30,7 @@ import {
     SET_FUTURES_USER_SETTINGS
 } from './types';
 import { favoriteAction } from './user';
-import { checkLargeVolume, formatNumber } from 'redux/actions/utils';
+import { checkInFundingTime, checkLargeVolume, formatNumber } from 'redux/actions/utils';
 
 export const setUsingSltp = (payload) => (dispatch) => dispatch({
     type: SET_FUTURES_USE_SLTP,
@@ -167,9 +167,16 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
         });
         const isLargeVolume = checkLargeVolume(+params.quoteQty, (params.symbol).includes('VNDC'))
         if (data?.status === ApiStatus.SUCCESS) {
-            log.i('placeFuturesOrder result: ', data);
+            const inFundingTime = checkInFundingTime();
+            let notice = null;
+            if (inFundingTime) {
+                notice = t('futures:high_funding_note');
+            } else if (isLargeVolume) {
+                notice = t('futures:high_volume_note');
+            }
+
             if (utils?.alert) {
-                utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'), isLargeVolume ? t('futures:high_volume_note'): null);
+                utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'), notice);
             } else {
                 showNotification(
                     {
@@ -188,6 +195,8 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (t(`error:futures${data?.status}`)) {
                 if (data.status === 'MAX_TOTAL_VOLUME') {
                     message = t(`error:futures:MAX_TOTAL_VOLUME`, { value: `${formatNumber(data?.data?.max_notional)} ${params.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}` });
+                } else if (data.status === 'MIN_DIFFERENCE_ACTIVE_PRICE' || data.status === 'MIN_DIFFERENCE_SL_TP_PRICE') {
+                    message = t(`error:futures:${data.status}`, { value: `${formatNumber(data?.data?.differencePercent, 2)}` });
                 } else {
                     message = t(`error:futures:${data?.status || 'UNKNOWN'}`);
                 }

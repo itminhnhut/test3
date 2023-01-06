@@ -255,6 +255,11 @@ export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invit
 export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
 export const API_CONTEST_LAST_TIME_SCAN = API_PREFIX + "event/futures-contest/last-time-scan";
 
+export const API_CONTEST_NAO_YEAR_SUMMARY_STATISTIC = API_PREFIX + 'event/futures-year-end-reward/statistic';
+export const API_CONTEST_NAO_YEAR_SUMMARY_PNL = API_PREFIX + 'event/futures-year-end-reward/rank-pnl';
+export const API_CONTEST_NAO_YEAR_SUMMARY_VOLUME = API_PREFIX + 'event/futures-year-end-reward/rank-volume';
+export const API_CONTEST_NAO_YEAR_SUMMARY_ORDER = API_PREFIX + 'event/futures-year-end-reward/rank-order';
+
 export const API_CONTEST_GET_INVITATIONS =
     API_PREFIX + "event/futures-contest/invites";
 export const API_CONTEST_POST_ACCEPT_INVITATION =

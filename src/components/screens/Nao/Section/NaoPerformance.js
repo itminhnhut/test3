@@ -6,7 +6,7 @@ import { Popover, Transition } from '@headlessui/react';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_REFERENCE_CURRENCY, API_NAO_DASHBOARD_STATISTIC } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatPrice, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatPrice, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import colors from 'styles/colors';
 import { Check } from 'react-feather';
@@ -301,6 +301,10 @@ const NaoPerformance = memo(() => {
                     </div>
                 </CardNao>
             </div>
+            {
+                dataSource?.lastTimeUpdate && <div
+                    className="mt-6 text-sm text-nao-grey font-medium leading-6">{t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}</div>
+            }
         </section>
     );
 });

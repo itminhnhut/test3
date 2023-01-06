@@ -185,7 +185,7 @@
     "place_order_success": "Place order",
     "minimum_price": "Minimum price: ",
     "liquidate_alert_greater": "SL needs > liquidation price: ",
-    "liquidate_alert_less": "SL needs < liquidation price: ",
+    "liquidate_alert_less": "SL needs <br liquidation price: ",
     "maximum_price": "Maximum price: ",
     "fullscreen": "Fullscreen",
     "order_mode": "Order Mode",
@@ -211,6 +211,7 @@
     "cancel": "Cancel",
     "place_order_success_message": "Your request of opening an order is processing",
     "high_volume_note": "Risk Warning: Orders with high volume will need longer time to be executed, please manage your positions carefully to reduce risks",
+    "high_funding_note": "Risk Warning: Marker order request requires longer time to be executed around funding time, please consider carefully before trading.",
     "place_order_failed": "Place order failed",
     "place_order": "Place order",
     "mobile": {
@@ -314,6 +315,7 @@
                 "608": "Insurance",
                 "609": "Promotion",
                 "612": "Reward",
+                "801": "Reward",
                 "1019": "Staking Interest",
                 "open_fee": "Order Opening Fee",
                 "close_fee": "Order Closing Fee",
@@ -466,7 +468,10 @@
         "funding_range": "Funding Interval",
         "perpetual": "Perpetual",
         "information": "Information",
-        "funding_history": "Funding History"
+        "funding_history": "Funding History",
+        "funding_warning": "Risk Warning",
+        "funding_warning_content": "Futures trading around the funding threshold with high funding rates contracts carries a lot of risk from the highly volatile market, you may experience bad experiences such as: </br>- Time difference between funding counter and device time vs server time up to 5 seconds </br>- Processing time for market orders (open, close, add volume...) is longer than other times, can be up to 10 seconds </br>- The minimum price gap for trigger prices (with limit orders, SL-TP settings...) can be up to 2% of the market price at the time of setting. </br>Please consider carefully before trading and manage your position well to avoid affecting the trading efficiency, NAO Futures will not be responsible for any loss that occurs when trading during extreme volatile market times.",
+        "funding_warning_accept": "I have understood and agree"
     },
     "transaction_histories": "Transaction History",
     "order_information": "Infor",
