@@ -386,6 +386,7 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     rawOrders = async () => {
+        if(!(this.props.ordersList  && this.props.ordersList.length)) return
         const _ordersList = this.props.ordersList.filter(order => order?.symbol === this.props.symbol);
         const edited = localStorage.getItem('edited_id');
         if (edited) {
