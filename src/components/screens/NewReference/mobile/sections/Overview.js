@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { renderRefInfo } from '../../PopupModal'
 import RefCard from '../../RefCard'
 import InviteModal from './InviteModal'
+import { getS3Url } from 'redux/actions/utils';
 
 const Overview = ({ data, commisionConfig }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -22,7 +23,7 @@ const Overview = ({ data, commisionConfig }) => {
     const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' +  language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk'
 
     return (
-        <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background_mobile.png')", backgroundSize: 'cover' }}  >
+        <div className="px-4 py-[60px]" style={{ backgroundImage: `url('${getS3Url('/images/reference/background_mobile.png')}')`, backgroundSize: 'cover' }}  >
             <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} isMobile/>
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />

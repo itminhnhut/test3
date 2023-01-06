@@ -18,6 +18,7 @@ import { API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT } from 'redux/actions/ap
 import FriendList from '../../mobile/sections/Info/FriendList'
 import colors from 'styles/colors';
 import { IconLoading } from 'components/common/Icons';
+import { getS3Url } from 'redux/actions/utils';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact',
@@ -39,7 +40,7 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
         '5': t('reference:referral.diamond'),
     }
     return (
-        <div className='p-20 w-full h-auto' style={{ backgroundImage: "url('/images/reference/background_desktop.png')", backgroundSize: 'cover' }} >
+        <div className='p-20 w-full h-auto' style={{ backgroundImage: `url('${getS3Url('/images/reference/background_desktop.png')}')`, backgroundSize: 'cover' }} >
             {showInvite && <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} />}
             {showRef && <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode?.code} />}
             <div className={classNames('font-semibold leading-[80px] text-[60px] text-gray-4')}>
