@@ -116,7 +116,25 @@ const colors = {
             '#D9FFF8',
         ]
 
-    }
+    },
+    newnami: {
+        black: {
+            DEFAULT: '#0c0e14',
+            1: '#141921',
+        },
+        gray: {
+            DEFAULT: '#1c232e',
+            1: '#8694b2',
+            2: '#e2e8f0',
+        },
+        green: {
+            DEFAULT: '#47cc85',
+            1: '#29cc7e'
+        },
+        red: {
+            DEFAULT: '#f93636',
+        },
+    },
 };
 
 export default colors;

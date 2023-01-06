@@ -23,6 +23,7 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 const WAValidator = require('multicoin-address-validator');
 const EthereumAddress = require('ethereum-address');
@@ -104,14 +105,14 @@ export const formatCurrency = (n, digits = 4, vi = false) => {
 export function eToNumber(value) {
     let sign = ''
 
-    ;(value += '').charAt(0) === '-' &&
-    ((value = value?.toString()
-        .substring(1)), (sign = '-'));
+        ; (value += '').charAt(0) === '-' &&
+            ((value = value?.toString()
+                .substring(1)), (sign = '-'));
     let arr = value?.toString()
         .split(/[e]/gi);
     if (arr.length < 2) return sign + value;
     let dot = (0.1).toLocaleString()
-            .substr(1, 1),
+        .substr(1, 1),
         n = arr[0],
         exp = +arr[1],
         w = (n = n.replace(/^0+/, '')).replace(dot, ''),
@@ -331,7 +332,7 @@ export function formatNumber(
     acceptNegative = false
 ) {
     const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
-    }`;
+        }`;
     if (isNil(value)) return defaultValue;
     if (Math.abs(+value) < 1e-9) return defaultValue;
     if (!acceptNegative && +value < 0) return defaultValue;
@@ -369,27 +370,53 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker) {
+export function render24hChange(ticker, isNewNami = false) {
     const change24h = getExchange24hPercentageChange(ticker);
     let text;
     let className = '';
+    let icon = null
     if (change24h != null) {
         let sign;
         if (change24h > 0) {
             sign = '+';
-            className += ' text-teal';
+            icon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#c7vw939r4a)">
+                    <path d="M11.333 9.333 8 6 4.667 9.333h6.666z" fill="#47CC85" />
+                </g>
+                <defs>
+                    <clipPath id="c7vw939r4a">
+                        <path fill="#fff" transform="rotate(-180 8 8)" d="M0 0h16v16H0z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            className += isNewNami ? ' text-newnami-green' : ' text-teal';
         } else if (change24h < 0) {
             sign = '';
-            className += ' text-red';
+            icon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#9w53cqcj6a)">
+                    <path d="M4.667 6.667 8 10l3.333-3.333H4.667z" fill="#F93636" />
+                </g>
+                <defs>
+                    <clipPath id="9w53cqcj6a">
+                        <path fill="#fff" d="M0 0h16v16H0z" />
+                    </clipPath>
+                </defs>
+            </svg>
+            className += isNewNami ? ' text-newnami-red' : ' text-red';
         } else {
             sign = '';
         }
-
+        if (!isNewNami) {
+            icon = null
+        } else {
+            sign = ''
+        }
         text = `${sign}${formatPercentage(change24h, 2, true)}%`;
     } else {
         text = '-';
     }
-    return <span className={`${className}`}>{text}</span>;
+
+    return <span className={`${className} ${isNewNami ? 'flex space-x-[2px] justify-end' : ''} items-center`}>{icon}&nbsp;{text}</span>;
 }
 
 export function getS3Url(url) {
@@ -865,10 +892,10 @@ export function walletLinkBuilder(walletType, action, payload) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
                 return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`;
+                    }&asset=${payload?.asset || 'USDT'}`;
             case EXCHANGE_ACTION.WITHDRAW:
                 return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'
-                }&asset=${payload?.asset || 'USDT'}`;
+                    }&asset=${payload?.asset || 'USDT'}`;
             default:
                 return '';
         }

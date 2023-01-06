@@ -1,6 +1,6 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
-const MarketComponent = dynamic(() => import('components/screens/Market/Market'),
+const MarketComponent = dynamic(() => import('components/screens/MarketV2/Market'),
     { ssr: false })
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 

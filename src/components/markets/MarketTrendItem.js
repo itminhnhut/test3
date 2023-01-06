@@ -52,7 +52,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
             <a style={{...style}}>
-                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-dominant">
+                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-newnami-green !bg-newnami-black-1 text-newnami-gray-1">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {(!pair) ?
@@ -65,29 +65,30 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                                 : <AssetLogo assetCode={_?.baseAsset} size={36}/>
                             }
 
-                            <div className="ml-2">
+                            <div className="ml-2 font-medium text-base">
                                 {(!pair) ?
                                     <Skeletor width={100}/>
                                     : <>
-                                        <span className="font-bold">{_?.baseAsset}</span>/{_?.quoteAsset}
+                                        <span className="text-newnami-gray-2">{_?.baseAsset}</span>/{_?.quoteAsset}
                                     </>}
                             </div>
                         </div>
+                        <div className="text-xs font-normal">
+                            {(!pair) ? <Skeletor width={65}/> : render24hChange(pair, true)}
+                        </div>
+                    </div>
+                    <div className="mt-4 flex items-center justify-between">
+                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-newnami-green'
+                            : 'text-[20px] 2xl:text-[24px] font-medium text-newnami-red'}>
+                            {(!pair) ? <Skeletor width={65}/> : formatPrice(_.lastPrice)}
+                        </div>
+                        
                         <div className="w-[95px] xl:w-[65px]">
                             {(!pair) ?
                                 <Skeletor width={60} height={28}/>
-                                : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}
+                                : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.newnami.green[1] : colors.newnami.red.DEFAULT)}
                                        alt="Nami Exchange"/>
                             }
-                        </div>
-                    </div>
-                    <div className="mt-[12px] flex items-center justify-between">
-                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-dominant'
-                            : 'text-[20px] 2xl:text-[24px] font-medium text-red'}>
-                            {(!pair) ? <Skeletor width={65}/> : formatPrice(_.lastPrice)}
-                        </div>
-                        <div className="text-[16px] font-medium">
-                            {(!pair) ? <Skeletor width={65}/> : render24hChange(pair)}
                         </div>
                     </div>
                     <div className="mt-[12px] flex items-center justify-between">

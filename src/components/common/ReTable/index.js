@@ -63,6 +63,7 @@ const ReTable = memo(({
     tableStyle,
     tableStatus,
     useRowHover,
+    isNewNami,
     ...restProps }) => {
 
     // * Init State
@@ -235,6 +236,7 @@ const ReTable = memo(({
 
     return (
         <ReTableWrapper isDark={currentTheme === THEME_MODE.DARK}
+                        isNewNami={isNewNami}
                         useRowHover={useRowHover}
                         {...tableStyle}>
             {renderTable()}
@@ -283,7 +285,7 @@ const ResizableTitle = ({ onResize, width, ...restProps }) => {
 const ReTableWrapper = styled.div`
 
   .rc-table {
-    color: ${({ isDark }) => isDark ? colors.grey4 : colors.darkBlue};
+    color: ${({ isDark, isNewNami }) => isNewNami ? colors.newnami.gray[2] : isDark ? colors.grey4 : colors.darkBlue};
 
     .re_table__link {
       font-size: 14px;
@@ -299,7 +301,7 @@ const ReTableWrapper = styled.div`
   }
 
   .rc-table-content, .rc-table th, .rc-table td {
-    border-color: ${({ isDark }) => isDark ? colors.darkBlue3 : colors.grey4} !important;
+    border-color: ${({ isDark, isNewNami }) => isNewNami ? colors.newnami.black.DEFAULT : isDark ? colors.darkBlue3 : colors.grey4} !important;
     border-right: none;
     border-left: none;
     border-top-width: 0;
@@ -326,7 +328,7 @@ const ReTableWrapper = styled.div`
 
   .rc-table thead td, .rc-table thead th,
   .rc-table tbody tr td, .rc-table tbody tr th {
-    background: ${({ isDark }) => isDark ? colors.darkBlue2 : colors.white};
+    background: ${({ isDark, isNewNami }) => isNewNami ? colors.newnami.black.DEFAULT : isDark ? colors.darkBlue2 : colors.white};
   }
 
   .rc-table-content {
@@ -399,7 +401,7 @@ const ReTableWrapper = styled.div`
     }
 
     tbody tr:hover td {
-      background: ${({ useRowHover, isDark }) => useRowHover ? isDark ? 'rgba(38, 52, 89, 0.5)' : colors.lightTeal : undefined};
+      background: ${({ useRowHover, isDark, isNewNami }) => useRowHover ? isNewNami ? colors.newnami.black[1] : isDark ? 'rgba(38, 52, 89, 0.5)' : colors.lightTeal : undefined};
       cursor: ${({ useRowHover }) => useRowHover ? 'pointer' : 'normal'} !important;
     }
 
