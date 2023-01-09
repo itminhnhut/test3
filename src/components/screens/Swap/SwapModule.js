@@ -317,7 +317,7 @@ const SwapModule = ({ width, pair }) => {
                         decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
                     />
                 </div>
-                <div className="relative flex items-center justify-center text-[#e2e8f0]">
+                <div className="relative flex items-center justify-center">
                     <div
                         className={`uppercase cursor-pointer font-bold hover:opacity-50 text-[#47cc85]`}
                         onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
@@ -329,8 +329,8 @@ const SwapModule = ({ width, pair }) => {
                         className="flex items-center cursor-pointer select-none"
                         onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
                     >
-                        <AssetLogo assetCode={state.fromAsset} size={20} />
-                        <span className="mx-2 font-bold uppercase">{state.fromAsset}</span>
+                        <AssetLogo assetCode={state.fromAsset} size={24} />
+                        <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.fromAsset}</span>
                         <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
                             <SvgIcon name="chevron_down" size={15} />
                         </span>
@@ -406,24 +406,15 @@ const SwapModule = ({ width, pair }) => {
     }, [state.fromAsset, state.fromAssetList, state.openAssetList, state.search, language]);
 
     const renderToInput = useCallback(() => {
+        console.log('to asset: ', state.toAsset);
         return (
             <div className="flex items-center justify-between">
-                <div
-                    className="mt-1 flex items-center cursor-pointer select-none"
-                    onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}
-                >
-                    <AssetLogo assetCode={state.toAsset} size={20} />
-                    <span className="mx-2 font-bold uppercase">{state.toAsset}</span>
-                    <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
-                        <SvgIcon name="chevron_down" size={15} />
-                    </span>
-                </div>
                 <div className="flex items-center">
                     <NumberFormat
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full pl-[6px] text-[18px] md:text-[20px] text-right font-medium"
+                        className="w-full text-[20px] leading-[1.4] text-left font-medium"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -434,6 +425,16 @@ const SwapModule = ({ width, pair }) => {
                     {/*     onClick={() => onMaximumQty('to', availabelAsset?.toAsset)}>*/}
                     {/*    max*/}
                     {/*</div>*/}
+                </div>
+                <div
+                    className="mt-1 flex items-center cursor-pointer select-none"
+                    onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}
+                >
+                    <AssetLogo assetCode={state.toAsset} size={24} />
+                    <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.toAsset}</span>
+                    <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
+                        <SvgIcon name="chevron_down" size={15} />
+                    </span>
                 </div>
             </div>
         );
@@ -803,16 +804,24 @@ const SwapModule = ({ width, pair }) => {
                             {renderFromAssetList()}
                         </div>
                         <div className="flex justify-center items-center py-4">
-                            {/* shadow-[0_4px_15px_0_rgba(255,255,255,0.15] */}
                             <button
                                 className={`p-1.5 dark:bg-[#1c232e] shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
                                 onClick={onReverse}
                             >
                                 <SwapReverse size={width < 1280 && 24} />
                             </button>
-                            {/* <button className="shadow-lg">hi</button> */}
                         </div>
-                        <div
+                        <div className={`py-6 px-4 rounded-xl relative border border-solid border-[#222940]`}>
+                            <div className="flex items-center justify-between text-[14px] pb-4">
+                                <span>{t('common:to')}</span>
+                                <span>
+                                    {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
+                                </span>
+                            </div>
+                            {renderToInput()}
+                            {renderToAssetList()}
+                        </div>
+                        {/* <div
                             className={
                                 state.inputHighlighted === 'to'
                                     ? 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative border-dominant'
@@ -827,7 +836,7 @@ const SwapModule = ({ width, pair }) => {
                             </div>
                             {renderToInput()}
                             {renderToAssetList()}
-                        </div>
+                        </div> */}
                         {/* <div
                             className={
                                 state.openAssetList?.from
