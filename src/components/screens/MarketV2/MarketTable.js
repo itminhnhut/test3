@@ -56,25 +56,25 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         id: 'MOST_TRADED',
         content: {
             vi: <div className='flex space-x-2'><HotIcon /><div>Giao dịch nhiều</div></div>,
-            en: <div className='flex space-x-2'><HotIcon /><div>All</div></div>
+            en: <div className='flex space-x-2'><HotIcon /><div>Most traded</div></div>
         }
     }, {
         id: 'TOP_GAINER',
         content: {
             vi: 'Tăng giá',
-            en: 'All'
+            en: 'Top gainer'
         }
     }, {
         id: 'NEW_LISTING',
         content: {
             vi: 'Mới niêm yết',
-            en: 'All'
+            en: 'New Listing'
         }
     }, {
         id: 'TOP_LOSER',
         content: {
             vi: 'Giảm giá',
-            en: 'All'
+            en: 'Top loser'
         }
     }]
 
