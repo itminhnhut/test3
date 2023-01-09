@@ -298,6 +298,7 @@ const SwapModule = ({ width, pair }) => {
             </Link>
         );
     }, [state.fromAsset]);
+    console.log('awegawlgaweg', colors.namiapp.green['1']);
 
     const renderFromInput = useCallback(() => {
         return (
@@ -318,7 +319,7 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="relative flex items-center justify-center text-[#e2e8f0]">
                     <div
-                        className="uppercase text-dominant cursor-pointer font-bold hover:opacity-50"
+                        className={`uppercase cursor-pointer font-bold hover:opacity-50 text-[#47cc85]`}
                         onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
                     >
                         max
@@ -795,23 +796,27 @@ const SwapModule = ({ width, pair }) => {
                                     <span>
                                         {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
                                     </span>
-                                    <SvgAddCircle size={13.3} />
+                                    <SvgAddCircle size={13.3} color={'#47cc85'} />
                                 </div>
                             </div>
                             {renderFromInput()}
                             {renderFromAssetList()}
                         </div>
-                        <div
-                            className={`flex justify-center items-center my-[22px] ${state.openAssetList?.from ? 'invisible' : 'cursor-pointer'} `}
-                            onClick={onReverse}
-                        >
-                            <SwapReverse color={currentTheme === THEME_MODE.DARK ? colors.darkBlue3 : undefined} size={width < 1280 && 26} />
+                        <div className="flex justify-center items-center py-4">
+                            {/* shadow-[0_4px_15px_0_rgba(255,255,255,0.15] */}
+                            <button
+                                className={`p-1.5 dark:bg-[#1c232e] shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                onClick={onReverse}
+                            >
+                                <SwapReverse size={width < 1280 && 24} />
+                            </button>
+                            {/* <button className="shadow-lg">hi</button> */}
                         </div>
                         <div
                             className={
                                 state.inputHighlighted === 'to'
-                                    ? 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-dominant'
-                                    : 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative mt-2 border-divider dark:border-divider-dark'
+                                    ? 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative border-dominant'
+                                    : 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative border-divider dark:border-divider-dark'
                             }
                         >
                             <div className="flex items-center justify-between text-[14px]">
