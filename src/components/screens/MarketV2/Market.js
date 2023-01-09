@@ -235,8 +235,6 @@ const Market = () => {
             }
         }
 
-        console.log(watch)
-
         switch (state.type) {
             case 0:
                 break;
