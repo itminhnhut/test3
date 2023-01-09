@@ -370,7 +370,7 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker, isNewNami = false) {
+export function render24hChange(ticker, isNamiV2 = false) {
     const change24h = getExchange24hPercentageChange(ticker);
     let text;
     let className = '';
@@ -389,7 +389,7 @@ export function render24hChange(ticker, isNewNami = false) {
                     </clipPath>
                 </defs>
             </svg>
-            className += isNewNami ? ' text-newnami-green' : ' text-teal';
+            className += isNamiV2 ? ' text-namiv2-green' : ' text-teal';
         } else if (change24h < 0) {
             sign = '';
             icon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -402,11 +402,11 @@ export function render24hChange(ticker, isNewNami = false) {
                     </clipPath>
                 </defs>
             </svg>
-            className += isNewNami ? ' text-newnami-red' : ' text-red';
+            className += isNamiV2 ? ' text-namiv2-red' : ' text-red';
         } else {
             sign = '';
         }
-        if (!isNewNami) {
+        if (!isNamiV2) {
             icon = null
         } else {
             sign = ''
@@ -416,7 +416,7 @@ export function render24hChange(ticker, isNewNami = false) {
         text = '-';
     }
 
-    return <span className={`${className} ${isNewNami ? 'flex space-x-[2px] justify-end' : ''} items-center`}>{icon}&nbsp;{text}</span>;
+    return <span className={`${className} ${isNamiV2 ? 'flex space-x-[2px] justify-end' : ''} items-center`}>{icon}&nbsp;{text}</span>;
 }
 
 export function getS3Url(url) {

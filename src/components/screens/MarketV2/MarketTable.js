@@ -45,6 +45,45 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const [currentTheme] = useDarkMode()
     const { width } = useWindowSize()
 
+    const [type, setType] = useState(0)
+    const types = [{
+        id: 0,
+        content: {
+            vi: 'Tất cả',
+            en: 'All'
+        }
+    }, {
+        id: 'MOST_TRADED',
+        content: {
+            vi: <div className='flex space-x-2'><HotIcon /><div>Giao dịch nhiều</div></div>,
+            en: <div className='flex space-x-2'><HotIcon /><div>All</div></div>
+        }
+    }, {
+        id: 'TOP_GAINER',
+        content: {
+            vi: 'Tăng giá',
+            en: 'All'
+        }
+    }, {
+        id: 'NEW_LISTING',
+        content: {
+            vi: 'Mới niêm yết',
+            en: 'All'
+        }
+    }, {
+        id: 'TOP_LOSER',
+        content: {
+            vi: 'Giảm giá',
+            en: 'All'
+        }
+    }]
+
+    const changeType = (index) => {
+        setType(index)
+        parentState({
+            type: index
+        })
+    }
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
@@ -53,7 +92,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             return (
                 <div key={item.key}
                     onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1 })}
-                    className={classNames("relative mr-6 pb-4 capitalize select-none font-normal text-base text-newnami-gray-1 cursor-pointer flex items-center", { "text-newnami-gray-2 font-semibold": restProps.tabIndex === index })}>
+                    className={classNames("relative mr-6 pb-4 capitalize select-none font-normal text-base text-namiv2-gray-1 cursor-pointer flex items-center", { "text-namiv2-gray-2 font-semibold": restProps.tabIndex === index })}>
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>{item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}</span>
                     {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
                 </div>)
@@ -80,8 +119,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 <div key={item.key}
                     onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
                     className={restProps.subTabIndex === index ?
-                        'text-base font-semibold px-4 py-3 bg-newnami-gray text-newnami-gray-2 cursor-pointer select-none'
-                        : 'text-base font-semibold px-4 py-3 bg-newnami-black text-newnami-gray-1 cursor-pointer select-none'}>
+                        'text-base font-semibold px-4 py-3 bg-namiv2-gray text-namiv2-gray-2 cursor-pointer select-none'
+                        : 'text-base font-semibold px-4 py-3 bg-namiv2-black text-namiv2-gray-1 cursor-pointer select-none'}>
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
                 </div>
             )
@@ -201,16 +240,16 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 loading={loading}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
-                onRow={(record) => ({
-                    onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
-                        record?.sortByValue?.tradingMode,
-                        {
-                            baseAsset: record?.sortByValue?.baseAsset,
-                            quoteAsset: record?.sortByValue?.quoteAsset
-                        }))
-                })}
+                // onRow={(record) => ({
+                //     onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
+                //         record?.sortByValue?.tradingMode,
+                //         {
+                //             baseAsset: record?.sortByValue?.baseAsset,
+                //             quoteAsset: record?.sortByValue?.quoteAsset
+                //         }))
+                // })}
                 tableStyle={{
-                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                    paddingHorizontal: '32px',
                     tableStyle: { minWidth: '888px !important' },
                     headerStyle: {},
                     rowStyle: {},
@@ -226,7 +265,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     pageSize: MARKET_ROW_LIMIT,
                     onChange: (currentPage) => parentState({ currentPage })
                 }}
-                isNewNami
+                isNamiV2
             />
         )
     }, [
@@ -261,6 +300,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         return (
             <div className="my-4 flex items-center justify-center">
                 <RePagination total={total}
+                    isNamiV2
                     current={restProps.currentPage}
                     pageSize={MARKET_ROW_LIMIT}
                     onChange={(currentPage) => parentState({ currentPage })}
@@ -286,20 +326,22 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.favoriteList])
 
     return (
-        <div className='px-4 lg:px-0 text-newnami-gray-1'>
+        <div className='px-4 lg:px-0 text-namiv2-gray-1'>
             <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center mb-8">
-                <div className="text-2xl text-newnami-gray-2 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
+                <div className="text-2xl text-namiv2-gray-2 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
                     {t('common:market')}
                 </div>
                 <div className='flex items-center space-x-4'>
-                    <div className="flex items-center border-newnami-gray-3 border-[1px] rounded-[4px]">
+                    <div className="flex items-center border-namiv2-gray-3 border-[1px] rounded-[4px]">
                         {renderSubTab()}
                     </div>
-                    <div className="h-12 lg:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-newnami-gray cursor-pointer">
-                        <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
-                        <input className="bg-transparent outline-none px-2"
-                            value={restProps.search}
-                            onChange={({ target: { value } }) => parentState({ search: value })} />
+                    <div className="h-12 lg:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">
+                        <div className='flex items-center'>
+                            <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
+                            <input className="bg-transparent outline-none px-2"
+                                value={restProps.search}
+                                onChange={({ target: { value } }) => parentState({ search: value })} />
+                        </div>
                         <X className={restProps.search ? 'visible' : 'invisible'}
                             onClick={() => parentState({ search: '' })}
                             color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
@@ -307,14 +349,16 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                 </div>
             </div>
-            <div className="bg-newnami-black">
+            <div className="bg-namiv2-black">
                 <div id="market_table___list"
-                    className="py-4 h-full rounded-xl border-[1px] border-newnami-gray-3">
-                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-newnami-gray-3">
+                    className="py-4 h-full rounded-xl border-[1px] border-namiv2-gray-3">
+                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-namiv2-gray-3">
                         {renderTab()}
                     </div>
-                    <div className='h-24 border-b-[1px] border-newnami-gray-3'></div>
-                    <div className="px-8">
+                    <div className='h-24 border-b-[1px] border-namiv2-gray-3 flex items-center px-8'>
+                        <TokenTypes type={type} setType={changeType} types={types} lang={language} />
+                    </div>
+                    <div className="">
                         {renderTable()}
                     </div>
                     <div className='px-8'>
@@ -415,11 +459,11 @@ const ROW_LOADING_SKELETON = {
 
 const renderPair = (b, q, lbl, w) => {
     return (
-        <div className="flex items-center">
+        <div className="flex items-center font-semibold text-base">
             {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
             <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
-                <span className="font-bold">{b}</span>
-                <span className="font-normal text-textSecondary dark:text-textSecondary-dark">/{q}</span>
+                <span className="text-namiv2-gray-1">{b}</span>
+                <span className="text-namiv2-gray-2">/{q}</span>
             </div>
             <MarketLabel labelType={lbl} />
         </div>
@@ -496,8 +540,8 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
             onClick={() => {
                 !loading && callback(already ? 'delete' : 'put', list)
             }}>
-            {already ? <IconStarFilled size={16} color={colors.yellow} />
-                : <StarOutlined style={{ color: colors.grey3 }} size={24} />}
+            {already ? <IconStarFilled color="#FFC632" />
+                : <IconStarFilled color="#8694B3" />}
         </div>
     )
 }
@@ -509,18 +553,19 @@ const renderTradeLink = (b, q, lang, mode) => {
         url = getV1Url(`/futures/${b}${q}`)
     } else {
         url = `/trade/${b}-${q}`
-        swapurl = `/swap/${b}-${q}`
+        // swapurl = `/swap/${b}-${q}`
+        swapurl = `/swap`
     }
 
     return (
-        <div className='flex justify-end items-center'>
+        <div className='flex justify-end items-center font-medium text-base'>
             <Link href={url} prefetch={false} className=''>
-                <a className="text-newnami-green re_table__link px-3 border-r-[1px] border-newnami-gray-3 flex items-center justify-center" target="_blank">
+                <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false} className=''>
-                <a className="text-newnami-green re_table__link px-3 flex items-center justify-center" target="_blank">
+                <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center border-l-[1px] border-namiv2-gray-3" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
             </Link> : null}
@@ -528,4 +573,23 @@ const renderTradeLink = (b, q, lang, mode) => {
     )
 }
 
+const TokenTypes = ({ type, setType, types, lang }) => {
+    return <div className='flex space-x-3 h-12 font-normal'>
+        {types.map(e =>
+            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer', {
+                'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': e.id === type
+            })}
+                onClick={() => setType(e.id)}
+            >
+                {e?.content[lang]}
+            </div>
+        )}
+    </div>
+}
+
 export default MarketTable
+
+const HotIcon = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z" fill="#FFC632" />
+    <path d="M15.263 13.583c-.034-2.518-1.03-4.26-1.57-5.022a.318.318 0 0 0-.544.043c-.165.33-.431.747-.793.964 0 0-1.534-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.937.009 5.305-2.445 5.266-5.382z" fill="#CC1F1F" />
+</svg>

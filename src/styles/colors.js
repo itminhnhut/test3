@@ -117,7 +117,7 @@ const colors = {
         ]
 
     },
-    newnami: {
+    namiv2: {
         black: {
             DEFAULT: '#0c0e14',
             1: '#141921',

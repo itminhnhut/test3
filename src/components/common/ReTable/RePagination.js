@@ -14,29 +14,31 @@ import colors from 'styles/colors';
 import 'rc-pagination/assets/index.css';
 import React from 'react';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, ...restProps }) => {
 
-    const [currentTheme, ] = useDarkMode()
+  const [currentTheme,] = useDarkMode()
 
-    useEffect(() => {
-       name && scrollAfterPageChange(name)
-    }, [current, name])
+  useEffect(() => {
+    name && scrollAfterPageChange(name)
+  }, [current, name])
 
-    return (
-        <PaginationWrapper isDark={currentTheme === THEME_MODE.DARK}>
-            <Pagination hideOnSinglePage
-                        total={total}
-                        current={current}
-                        pageSize={pageSize}
-                        onChange={onChange}
-                        {...restProps}/>
-        </PaginationWrapper>
-    )
+  const Wapper = isNamiV2 ? NamiV2PaginationWrapper : PaginationWrapper
+
+  return (
+    <Wapper isDark={currentTheme === THEME_MODE.DARK}>
+      <Pagination hideOnSinglePage
+        total={total}
+        current={current}
+        pageSize={pageSize}
+        onChange={onChange}
+        {...restProps} />
+    </Wapper>
+  )
 }
 
 const scrollAfterPageChange = (id) => {
-    const element = document.getElementById(id)
-    if (element) window.scrollTo({ top: element.offsetTop, behavior:"smooth" })
+  const element = document.getElementById(id)
+  if (element) window.scrollTo({ top: element.offsetTop, behavior: "smooth" })
 }
 
 const PaginationWrapper = styled.div`
@@ -87,6 +89,69 @@ const PaginationWrapper = styled.div`
   .rc-pagination-prev:hover .rc-pagination-item-link, .rc-pagination-next:hover .rc-pagination-item-link {
     color: ${colors.teal};
     border-color: ${colors.teal};
+  }
+`
+
+const NamiV2PaginationWrapper = styled.div`
+  .rc-pagination-item-link, .rc-pagination-item {
+    height: 36px;
+    width: 36px;
+    border-radius: 100px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    margin-right: 16px;
+  }
+
+  .rc-pagination-item a {
+    color: ${colors?.namiv2?.gray[2]};
+  }
+
+  .rc-pagination-item-active {
+    background-color: ${colors?.namiv2?.green?.DEFAULT};
+  }
+
+  .rc-pagination-item-active a {
+    color: white;
+  }
+
+  .rc-pagination {
+    display: flex;
+  }
+
+  .rc-pagination-prev {
+    margin-right: 16px !important;
+    width: 36px;
+  }
+
+  .rc-pagination-next {
+    margin-right: 0px !important;
+    width: 36px;
+  }
+
+  .rc-pagination-options {
+    display: none;
+  }
+
+  .rc-pagination-prev button, .rc-pagination-next button {
+    color: ${colors?.namiv2?.gray[2]};
+    background-color: ${colors?.namiv2?.gray?.DEFAULT};
+  }
+
+  .rc-pagination-prev button:after, .rc-pagination-next button:after {
+    font-size: 24px;
+  }
+
+  .rc-pagination-disabled button:after {
+    color: #454C5C !important;
+  }
+
+  .rc-pagination-jump-next button {
+    align-items: end;
+    color: #454C5C;
   }
 `
 

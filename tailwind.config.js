@@ -71,7 +71,7 @@ const commonColors = {
         tooltip: '#0E1D32',
         nami: '#0E1113',
     },
-    newnami: {
+    namiv2: {
         black: {
             DEFAULT: '#0c0e14',
             1: '#141921',
@@ -314,7 +314,7 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao
             },
-            newnami: commonColors.newnami
+            namiv2: commonColors.namiv2
         },
         extend: {
             screens: {

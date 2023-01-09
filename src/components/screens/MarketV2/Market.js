@@ -3,7 +3,7 @@ import MarketTable, { favSubTab, subTab, tab } from 'components/screens/MarketV2
 import Axios from 'axios';
 import styled from 'styled-components';
 import useWindowFocus from 'hooks/useWindowFocus';
-
+import { getExchange24hPercentageChange } from 'redux/actions/utils';
 import { useCallback, useEffect, useState } from 'react';
 import { API_GET_TRENDING } from 'redux/actions/apis';
 import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market';
@@ -15,26 +15,47 @@ import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
+import { useMemo } from 'react';
 
 const Market = () => {
     // * Initial State
     const [state, set] = useState({
-         currentPage: 1,
-         tabIndex: 1,
-         subTabIndex: 1,
-         search: '',
-         loadingTrend: false,
-         trending: null,
-         loading: false,
-         watch: null,
-         favoriteList: null,
-         exchangeMarket: null,
-         futuresMarket: null,
-         tabLabelCount: null
+        currentPage: 1,
+        tabIndex: 1,
+        subTabIndex: 1,
+        search: '',
+        loadingTrend: false,
+        trending: null,
+        loading: false,
+        watch: null,
+        favoriteList: null,
+        exchangeMarket: null,
+        futuresMarket: null,
+        tabLabelCount: null,
+        type: 0
     })
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
     const { user: auth } = useSelector(state => state.auth) || null
+    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+
+    let categories = useMemo(() => {
+        const data = {
+            MOST_TRADED: [],
+            TOP_GAINER: [],
+            TOP_LOSER: [],
+            NEW_LISTING: []
+        }
+        exchangeConfig?.map(e => {
+            e?.tags?.map(tag => {
+                if (data[tag]?.some(e => e === e?.symbol)) return
+                data[tag]?.push(e.symbol)
+            })
+        })
+        return data
+    }, [exchangeConfig])
+
+
 
     // * Use Hooks
     const focused = useWindowFocus()
@@ -122,28 +143,28 @@ const Market = () => {
     const renderMarketTable = useCallback(() => {
         return (
             <MarketTable data={state.watch}
-                         favoriteList={state.favoriteList}
-                         favoriteRefresher={getFavorite}
-                         loading={state.loading}
-                         parentState={setState}
-                         tabIndex={state.tabIndex}
-                         subTabIndex={state.subTabIndex}
-                         search={state.search}
-                         currentPage={state.currentPage}
-                         tabLabelCount={state.tabLabelCount}
-                         auth={auth}
+                favoriteList={state.favoriteList}
+                favoriteRefresher={getFavorite}
+                loading={state.loading}
+                parentState={setState}
+                tabIndex={state.tabIndex}
+                subTabIndex={state.subTabIndex}
+                search={state.search}
+                currentPage={state.currentPage}
+                tabLabelCount={state.tabLabelCount}
+                auth={auth}
             />
         )
     }, [
-                                              state.loading,
-                                              state.tabIndex,
-                                              state.subTabIndex,
-                                              state.search,
-                                              state.watch,
-                                              state.currentPage,
-                                              state.tabLabelCount,
-                                              auth
-                                          ])
+        state.loading,
+        state.tabIndex,
+        state.subTabIndex,
+        state.search,
+        state.watch,
+        state.currentPage,
+        state.tabLabelCount,
+        auth
+    ])
 
 
     useEffect(() => {
@@ -214,6 +235,22 @@ const Market = () => {
             }
         }
 
+        console.log(watch)
+
+        switch (state.type) {
+            case 0:
+                break;
+            case 'TOP_GAINER':
+                watch = watch.filter(e => getExchange24hPercentageChange(e) > 0)
+                break;
+            case 'TOP_LOSER':
+                watch = watch.filter(e => getExchange24hPercentageChange(e) < 0)
+                break;
+            default:
+                watch = watch.filter(e => categories[state.type]?.includes(e.s))
+                break;
+        }
+
         // Search data handling
         if (state.search) {
             watch = filterer([...watch], state.search.toLowerCase())
@@ -226,12 +263,12 @@ const Market = () => {
             const futures = filterer(state.futuresMarket, state.search.toLowerCase())
 
             setState({
-                         tabLabelCount: {
-                             favorite: favorite?.length,
-                             exchange: exchange?.length,
-                             futures: futures?.length
-                         }
-                     })
+                tabLabelCount: {
+                    favorite: favorite?.length,
+                    exchange: exchange?.length,
+                    futures: futures?.length
+                }
+            })
         } else {
             setState({ tabLabelCount: null })
         }
@@ -239,13 +276,14 @@ const Market = () => {
         // Set watching data
         setState({ watch })
     }, [
-                  state.exchangeMarket,
-                  state.futuresMarket,
-                  state.favoriteList,
-                  state.tabIndex,
-                  state.subTabIndex,
-                  state.search,
-              ])
+        state.exchangeMarket,
+        state.futuresMarket,
+        state.favoriteList,
+        state.tabIndex,
+        state.subTabIndex,
+        state.search,
+        state.type,
+    ])
 
     // useEffect(() => {
     //     log.d('Display Data: ', state.watch)
@@ -260,13 +298,13 @@ const Market = () => {
     // }, [state.exchangeMarket])
     //
     // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching ', tab[state.tabIndex].key,
+    //     console.log('namidev-DEBUG: Watching ', tparentStateab[state.tabIndex].key,
     //                 tab[state.tabIndex].key === 'favorite' ? favSubTab[state.subTabIndex].key : subTab[state.subTabIndex].key)
     // }, [state.tabIndex, state.subTabIndex])
 
     const renderContent = () => {
         return (
-            <div className="w-full h-full bg-newnami-black pb-[120px]">
+            <div className="w-full h-full bg-namiv2-black pb-[120px]">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend} />
                     {renderMarketTable()}
