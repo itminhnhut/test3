@@ -331,7 +331,7 @@ const SwapModule = ({ width, pair }) => {
                         onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
                     >
                         <AssetLogo assetCode={state.fromAsset} size={24} />
-                        <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.fromAsset}</span>
+                        <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.fromAsset}</span>
                         <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
                             {/* <SvgIcon name="chevron_down" size={15} /> */}
                             <SvgDropDown size={16} />
@@ -433,7 +433,7 @@ const SwapModule = ({ width, pair }) => {
                     onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}
                 >
                     <AssetLogo assetCode={state.toAsset} size={24} />
-                    <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.toAsset}</span>
+                    <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
                         {/* <SvgIcon name="chevron_down" size={15} /> */}
                         <SvgDropDown size={16} />
@@ -553,7 +553,7 @@ const SwapModule = ({ width, pair }) => {
             return (
                 <a
                     href={loginUrl}
-                    className="block mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold bg-dominant
+                    className="block h-12 mt-8 py-3 w-full rounded-md text-center text-white text-base leading-6 font-medium bg-[#47cc85]
                                 select-none cursor-pointer hover:opacity-80"
                 >
                     {t('common:sign_in')}
@@ -854,11 +854,12 @@ const SwapModule = ({ width, pair }) => {
                     {/*END:INPUT WRAPPER*/}
 
                     {/*SWAP RATE*/}
-                    <div className="flex items-center justify-center mt-5">
-                        <div className="text-sm flex items-center">
-                            <span className="mr-1 text-txtSecondary dark:text-txtSecondary-dark">{t('common:rate')}:</span> {renderRate()}
-                        </div>
-                        <div
+                    <div className="flex items-center justify-between mt-5 text-base leading-6">
+                        {/* <div className="text-sm flex items-center"></div> */}
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-left">{t('common:rate')}:</span>
+
+                        {renderRate()}
+                        {/* <div
                             className={
                                 state.estRate && state.fromAmount
                                     ? 'ml-2 p-1 rounded-md cursor-pointer ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
@@ -869,7 +870,7 @@ const SwapModule = ({ width, pair }) => {
                             onMouseOut={() => setState({ onHoverEstRateBtn: false })}
                         >
                             <RefreshCw className={state?.onHoverEstRateBtn ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'} size={16} />
-                        </div>
+                        </div> */}
                     </div>
                     {/*END:SWAP RATE*/}
 
@@ -879,7 +880,7 @@ const SwapModule = ({ width, pair }) => {
                     {renderSwapBtn()}
                     {/*END:SWAP BUTTON*/}
 
-                    <div className="mt-5 text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
+                    <div className="mt-4 leading-5  text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
                         <Trans i18nKey="common:term_swap">
                             <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-dominant hover:!underline" />
                         </Trans>
