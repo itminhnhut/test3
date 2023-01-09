@@ -332,7 +332,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     {t('common:market')}
                 </div>
                 <div className='flex items-center space-x-4'>
-                    <div className="flex items-center border-namiv2-gray-3 border-[1px] rounded-[4px]">
+                    <div className="flex items-center border-namiv2-gray-3 border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
                     <div className="h-12 lg:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">

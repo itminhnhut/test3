@@ -238,12 +238,12 @@ const Market = () => {
         switch (state.type) {
             case 0:
                 break;
-            case 'TOP_GAINER':
-                watch = watch.filter(e => getExchange24hPercentageChange(e) > 0)
-                break;
-            case 'TOP_LOSER':
-                watch = watch.filter(e => getExchange24hPercentageChange(e) < 0)
-                break;
+            // case 'TOP_GAINER':
+            //     watch = watch.filter(e => getExchange24hPercentageChange(e) > 0)
+            //     break;
+            // case 'TOP_LOSER':
+            //     watch = watch.filter(e => getExchange24hPercentageChange(e) < 0)
+            //     break;
             default:
                 watch = watch.filter(e => categories[state.type]?.includes(e.s))
                 break;
