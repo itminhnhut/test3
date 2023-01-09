@@ -1,9 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useAsync } from 'react-use';
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis';
-import { useTranslation } from 'next-i18next';
+import { Trans, useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
-import { formatPrice, formatTime } from 'redux/actions/utils';
+import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
@@ -12,64 +12,74 @@ import fetchApi from '../../../utils/fetch-api';
 import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
 import Empty from 'src/components/common/Empty';
+import { useSelector } from 'react-redux';
+import { PATHS } from 'constants/paths';
 
 const SwapHistory = ({ width }) => {
     const [state, set] = useState({
         page: 0,
         pageSize: 5,
         loading: false,
-        histories: null,
-    })
-    const setState = state => set(prevState => ({ ...prevState, ...state }))
-
-    const { t, i18n: { language } } = useTranslation(['convert'])
+        histories: null
+    });
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    let auth = useSelector((state) => state.auth?.user);
+    auth = true;
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['convert', 'common']);
 
     useAsync(async () => {
-        setState({ loading: true, histories: null })
+        if (!auth) return;
+        setState({ loading: true, histories: null });
         try {
-            const { status, data: { orders: histories } } = await fetchApi({
+            const {
+                status,
+                data: { orders: histories }
+            } = await fetchApi({
                 url: API_GET_SWAP_HISTORY,
                 options: { method: 'GET' },
                 params: { page: state.page, pageSize: state.pageSize }
-            })
+            });
 
             if (status === ApiStatus.SUCCESS && histories) {
-                setState({ histories })
+                setState({ histories });
             }
         } catch (e) {
-            console.log(`Can't get swap history `, e)
+            console.log(`Can't get swap history `, e);
         } finally {
-            setState({ loading: false })
+            setState({ loading: false });
         }
-    }, [state.page, state.pageSize])
+    }, [state.page, state.pageSize, auth]);
 
     const renderTable = useCallback(() => {
-        const data = dataHandler(state.histories, state.loading)
-        const modifyColumns = []
-        let tableStatus
+        const data = dataHandler(state.histories, state.loading);
+        const modifyColumns = [];
+        let tableStatus;
 
         const translater = (key) => {
             switch (key) {
                 case 'id':
-                    return language === LANGUAGE_TAG.VI ? 'ID' : 'ID'
+                    return language === LANGUAGE_TAG.VI ? 'ID' : 'ID';
                 case 'swap_pair':
-                    return language === LANGUAGE_TAG.VI ? 'Cặp quy đổi' : 'Swap Pair'
+                    return language === LANGUAGE_TAG.VI ? 'Cặp quy đổi' : 'Swap Pair';
                 case 'from_qty':
-                    return language === LANGUAGE_TAG.VI ? 'Từ' : 'From'
+                    return language === LANGUAGE_TAG.VI ? 'Từ' : 'From';
                 case 'to_qty':
-                    return language === LANGUAGE_TAG.VI ? 'Đến' : 'To'
+                    return language === LANGUAGE_TAG.VI ? 'Đến' : 'To';
                 case 'rate':
-                    return language === LANGUAGE_TAG.VI ? 'Tỉ giá' : 'Rate'
+                    return language === LANGUAGE_TAG.VI ? 'Tỉ giá' : 'Rate';
                 case 'time':
-                    return language === LANGUAGE_TAG.VI ? 'Thời gian' : 'Time'
+                    return language === LANGUAGE_TAG.VI ? 'Thời gian' : 'Time';
                 default:
-                    return ''
+                    return '';
             }
-        }
-        columns.forEach(c => modifyColumns.push({...c, title: translater(c.key)}))
+        };
+        columns.forEach((c) => modifyColumns.push({ ...c, title: translater(c.key) }));
 
         if (!state.histories?.length) {
-            tableStatus = <Empty/>
+            tableStatus = <Empty />;
         }
 
         return (
@@ -79,7 +89,7 @@ const SwapHistory = ({ width }) => {
                 // useRowHover
                 data={data}
                 columns={modifyColumns}
-                rowKey={item => `${KEY}___${item?.key}`}
+                rowKey={(item) => `${KEY}___${item?.key}`}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
                 tableStyle={{
@@ -93,41 +103,65 @@ const SwapHistory = ({ width }) => {
                     }
                 }}
             />
-        )
-    }, [state.histories, state.loading, state.page, language, width])
+        );
+    }, [state.histories, state.loading, state.page, language, width]);
 
     const renderPagination = useCallback(() => {
         return (
             <div className="w-full mt-6 flex items-center justify-center select-none">
-                <div className={state.page !== 0 ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                                                 : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
-                     onClick={() => state.page !== 0 && setState({ page: state.page - 1 })}>
-                    <ChevronLeft size={18} className="mr-2"/> {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
+                <div
+                    className={
+                        state.page !== 0
+                            ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                            : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
+                    }
+                    onClick={() => state.page !== 0 && setState({ page: state.page - 1 })}
+                >
+                    <ChevronLeft size={18} className="mr-2" /> {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
                 </div>
-                <div className={state.histories?.length ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                                : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'}
-                     onClick={() => state.histories?.length && setState({ page: state.page + 1 })}>
-                    {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'} <ChevronRight size={18} className="ml-2"/>
+                <div
+                    className={
+                        state.histories?.length
+                            ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
+                            : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
+                    }
+                    onClick={() => state.histories?.length && setState({ page: state.page + 1 })}
+                >
+                    {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'} <ChevronRight size={18} className="ml-2" />
                 </div>
             </div>
-        )
-    }, [state.page, state.histories])
+        );
+    }, [state.page, state.histories]);
 
     return (
         <div className="mal-container mt-20">
-            <div className="px-4 lg:px-0 text-[18px] md:text-[20px] lg:text-[26px] font-bold">
-                {t('convert:history')}
-            </div>
-            <MCard addClass="mt-8 py-0 px-0 overflow-hidden">
-                {renderTable()}
-            </MCard>
-            {renderPagination()}
+            <div className="text-[20px] text-left leading-7 dark:text-[#e2e8f0] font-medium font-sfPro">{t('convert:history')}</div>
+            {auth ? (
+                <>
+                    <MCard addClass="mt-6 py-0 px-0 overflow-hidden">{renderTable()}</MCard>
+                    {renderPagination()}
+                </>
+            ) : (
+                <div className="flex flex-col justify-center items-center mt-[60px]">
+                    <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[140px] w-[140px]" />
+                    <p className="font-sfPro text-base leading-6 text-[#8694b2] mt-3">
+                        <a href={getLoginUrl('sso', 'login')} className="text-[#47cc85] font-semibold">
+                            {t('common:sign_in')}{' '}
+                        </a>
+                        {t('common:or')}{' '}
+                        <a href={getLoginUrl('sso', 'register')} className="text-[#47cc85] font-semibold">
+                            {t('common:sign_up')}{' '}
+                        </a>
+                        {t('common:swap_history')}
+                    </p>
+                </div>
+            )}
         </div>
-    )
-}
+    );
+};
 
-const LIMIT_ROW = 5
-const KEY = 'swap_history__item_'
+const LIMIT_ROW = 5;
+const KEY = 'swap_history__item_';
 
 const columns = [
     { key: 'id', dataIndex: 'id', title: 'Order#ID', width: 100, fixed: 'left', align: 'left' },
@@ -135,24 +169,23 @@ const columns = [
     { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 100, align: 'right' },
     { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 100, align: 'right' },
     { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 100, align: 'right' },
-    { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' },
-]
+    { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' }
+];
 
 const dataHandler = (data, loading) => {
     if (loading) {
-        const skeleton = []
+        const skeleton = [];
         for (let i = 0; i < LIMIT_ROW; ++i) {
-            skeleton.push({...ROW_LOADING_SKELETON, key: `${KEY}${i}`})
+            skeleton.push({ ...ROW_LOADING_SKELETON, key: `${KEY}${i}` });
         }
-        return skeleton
+        return skeleton;
     }
 
-    if (!Array.isArray(data) || !data || !data.length) return []
+    if (!Array.isArray(data) || !data || !data.length) return [];
 
-    const result = []
-    data.forEach(item => {
-        const { displayingId, displayingPrice, displayingPriceAsset, feeMetadata: fee, fromAsset, toAsset, fromQty,
-                toQty, createdAt  } = item
+    const result = [];
+    data.forEach((item) => {
+        const { displayingId, displayingPrice, displayingPriceAsset, feeMetadata: fee, fromAsset, toAsset, fromQty, toQty, createdAt } = item;
         // createdAt: "2021-11-15T08:18:23.162Z"
         // displayingId: "259"
         // displayingPrice: 644
@@ -172,10 +205,26 @@ const dataHandler = (data, loading) => {
         result.push({
             key: `${KEY}${displayingId}`,
             id: <div className="text-left">{displayingId}</div>,
-            swap_pair: <div className="text-left">{fromAsset} <span className="inline-block mx-1">&#8652;</span> {toAsset}</div>,
-            from_qty: <div className="text-right">{formatPrice(+fromQty)} {fromAsset}</div>,
-            to_qty: <div className="text-right">{formatPrice(+toQty)} {toAsset}</div>,
-            rate: <div className="text-right">1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}</div>,
+            swap_pair: (
+                <div className="text-left">
+                    {fromAsset} <span className="inline-block mx-1">&#8652;</span> {toAsset}
+                </div>
+            ),
+            from_qty: (
+                <div className="text-right">
+                    {formatPrice(+fromQty)} {fromAsset}
+                </div>
+            ),
+            to_qty: (
+                <div className="text-right">
+                    {formatPrice(+toQty)} {toAsset}
+                </div>
+            ),
+            rate: (
+                <div className="text-right">
+                    1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
+                </div>
+            ),
             time: <div className="text-right">{formatTime(createdAt, 'HH:mm dd-MM-yyyy')}</div>,
             [RETABLE_SORTBY]: {
                 id: +displayingId,
@@ -185,11 +234,11 @@ const dataHandler = (data, loading) => {
                 rate: +displayingPrice,
                 time: createdAt
             }
-        })
-    })
+        });
+    });
 
-    return result
-}
+    return result;
+};
 
 const ROW_LOADING_SKELETON = {
     id: <Skeletor width={65} />,
@@ -197,7 +246,7 @@ const ROW_LOADING_SKELETON = {
     from_qty: <Skeletor width={65} />,
     to_qty: <Skeletor width={65} />,
     rate: <Skeletor width={65} />,
-    time: <Skeletor width={65} />,
-}
+    time: <Skeletor width={65} />
+};
 
-export default SwapHistory
+export default SwapHistory;

@@ -74,7 +74,6 @@ const SwapModule = ({ width, pair }) => {
     const wallets = useSelector((state) => state.wallet.SPOT);
     const auth = useSelector((state) => state.auth?.user);
 
-    const [loginUrl, setLoginUrl] = useState('');
     // Refs
     const fromAssetListRef = useRef();
     const toAssetListRef = useRef();
@@ -299,7 +298,6 @@ const SwapModule = ({ width, pair }) => {
             </Link>
         );
     }, [state.fromAsset]);
-    console.log('awegawlgaweg', colors.namiapp.green['1']);
 
     const renderFromInput = useCallback(() => {
         return (
@@ -334,7 +332,7 @@ const SwapModule = ({ width, pair }) => {
                         <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.fromAsset}</span>
                         <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
                             {/* <SvgIcon name="chevron_down" size={15} /> */}
-                            <SvgDropDown size={16} />
+                            <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : undefined} />
                         </span>
                     </div>
                 </div>
@@ -408,7 +406,6 @@ const SwapModule = ({ width, pair }) => {
     }, [state.fromAsset, state.fromAssetList, state.openAssetList, state.search, language]);
 
     const renderToInput = useCallback(() => {
-        console.log('to asset: ', state.toAsset);
         return (
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -436,7 +433,7 @@ const SwapModule = ({ width, pair }) => {
                     <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
                         {/* <SvgIcon name="chevron_down" size={15} /> */}
-                        <SvgDropDown size={16} />
+                        <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : undefined} />
                     </span>
                 </div>
             </div>
@@ -544,15 +541,11 @@ const SwapModule = ({ width, pair }) => {
         state.fromErrors
     );
 
-    useEffect(() => {
-        setLoginUrl(getLoginUrl('sso', 'login'));
-    }, []);
-
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
                 <a
-                    href={loginUrl}
+                    href={getLoginUrl('sso', 'login')}
                     className="block h-12 mt-8 py-3 w-full rounded-md text-center text-white text-base leading-6 font-medium bg-[#47cc85]
                                 select-none cursor-pointer hover:opacity-80"
                 >
@@ -800,7 +793,7 @@ const SwapModule = ({ width, pair }) => {
                                     <span>
                                         {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
                                     </span>
-                                    <SvgAddCircle size={13.3} color={'#47cc85'} />
+                                    <SvgAddCircle size={13.3} color={'#47cc85'} className="cursor-pointer" />
                                 </div>
                             </div>
                             {renderFromInput()}
