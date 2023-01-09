@@ -25,6 +25,7 @@ import { PATHS } from 'constants/paths';
 import { roundToDown } from 'round-to';
 import Button from 'components/common/Button';
 import SvgAddCircle from 'components/svg/SvgAddCircle';
+import SvgDropDown from 'components/svg/SvgDropdown';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -332,7 +333,8 @@ const SwapModule = ({ width, pair }) => {
                         <AssetLogo assetCode={state.fromAsset} size={24} />
                         <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.fromAsset}</span>
                         <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
-                            <SvgIcon name="chevron_down" size={15} />
+                            {/* <SvgIcon name="chevron_down" size={15} /> */}
+                            <SvgDropDown size={16} />
                         </span>
                     </div>
                 </div>
@@ -433,7 +435,8 @@ const SwapModule = ({ width, pair }) => {
                     <AssetLogo assetCode={state.toAsset} size={24} />
                     <span className="mx-2 uppercase leading-6 text-base font-semibold text-[#e2e8f0]">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
-                        <SvgIcon name="chevron_down" size={15} />
+                        {/* <SvgIcon name="chevron_down" size={15} /> */}
+                        <SvgDropDown size={16} />
                     </span>
                 </div>
             </div>
