@@ -23,8 +23,7 @@ const SwapHistory = ({ width }) => {
         histories: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    let auth = useSelector((state) => state.auth?.user);
-    auth = true;
+    const auth = useSelector((state) => state.auth?.user);
     const {
         t,
         i18n: { language }
@@ -132,7 +131,6 @@ const SwapHistory = ({ width }) => {
             </div>
         );
     }, [state.page, state.histories]);
-
     return (
         <div className="mal-container mt-20">
             <div className="text-[20px] text-left leading-7 dark:text-[#e2e8f0] font-medium font-sfPro">{t('convert:history')}</div>

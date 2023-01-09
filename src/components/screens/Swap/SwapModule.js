@@ -574,11 +574,11 @@ const SwapModule = ({ width, pair }) => {
 
         return (
             <div
-                className={
+                className={`block h-12 mt-8 py-3 w-full rounded-md text-center ${
                     shouldDisable
-                        ? 'mt-6 py-3 w-full rounded-xl text-center text-gray-1 dark:text-darkBlue-5 text-sm font-bold bg-gray-3 dark:bg-darkBlue-4 select-none cursor-not-allowed'
-                        : 'mt-6 py-3 w-full rounded-xl text-center text-white text-sm font-bold select-none bg-dominant cursor-pointer hover:opacity-80'
-                }
+                        ? 'text-gray-1 dark:text-darkBlue-5 text-sm font-bold bg-gray-3 dark:bg-darkBlue-4 select-none cursor-not-allowed'
+                        : 'text-white text-sm font-bold select-none bg-dominant cursor-pointer hover:opacity-80'
+                }`}
                 onClick={() => !shouldDisable && !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
             >
                 {error ? error : t('navbar:submenu.swap')}

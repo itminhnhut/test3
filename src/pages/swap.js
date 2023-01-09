@@ -33,7 +33,7 @@ const Swap = () => {
 
     const renderContent = () => {
         return (
-            <div>
+            <div className="dark:bg-[#0c0e14]">
                 {/* <div style={{ width: '100%', maxHeight: '180px', position: 'relative' }}>
                     <Image alt="Swap banner" src="/images/screen/swap/swap-banner.png" layout="fill" objectFit="contain" />
                 </div> */}
