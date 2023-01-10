@@ -139,6 +139,15 @@ const Market = () => {
         await getTrending()
     }
 
+
+    const suggestedSymbols = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'LTC', 'DOT']
+    const suggested = useMemo(() => {
+        const q = subTab[state.subTabIndex].key.toUpperCase()
+        if (q === 'ALL') return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b))
+        return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
+    }, [state?.exchangeMarket, state.subTabIndex])
+
+
     // * Render Handler
     const renderMarketTable = useCallback(() => {
         return (
@@ -154,6 +163,7 @@ const Market = () => {
                 tabLabelCount={state.tabLabelCount}
                 type={state.type}
                 auth={auth}
+                suggestedSymbols={suggested}
             />
         )
     }, [
@@ -173,8 +183,6 @@ const Market = () => {
         getFavorite()
         getMarket()
     }, [])
-
-    console.log('state.type', state.type)
 
     // Re-new api data
     useEffect(() => {
