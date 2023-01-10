@@ -774,7 +774,7 @@ const SwapModule = ({ width, pair }) => {
     return (
         <>
             <div className="font-sfPro flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[280px] w-[320px] md:w-[380px] xl:w-[454px] bg-transparent rounded-xl">
+                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[524px] bg-transparent rounded-xl">
                     <div className="flex flex-col justify-center items-center">
                         <span className="text-4xl font-bold leading-[1.19] mb-9">{t('navbar:submenu.swap')}</span>
                     </div>

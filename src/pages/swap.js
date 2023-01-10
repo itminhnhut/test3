@@ -40,7 +40,7 @@ const Swap = () => {
                 <div>
                     <img src={'/images/screen/swap/swap-banner.png'} alt="" className="mx-auto h-[180px] w-full" />
                 </div>
-                <div className={`dark:bg-[${colors.namiapp.black}] w-full h-full py-[64px] lg:pb-[74px] xl:pb-[94px]`}>
+                <div className={`w-full h-full py-[64px] lg:pb-[74px] xl:pb-[94px]`}>
                     <div className="mal-container flex justify-center pt-[64px] xl:pt-[72px]">
                         {/* {width >= 1024 && <SwapIntroduce />} */}
                         <SwapModule width={width} pair={pair} />

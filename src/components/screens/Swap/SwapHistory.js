@@ -7,7 +7,7 @@ import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
+import ReTable, { RETABLE_SORTBY } from 'src/components/common/TableForSwap';
 import fetchApi from '../../../utils/fetch-api';
 import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
@@ -23,7 +23,8 @@ const SwapHistory = ({ width }) => {
         histories: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const auth = useSelector((state) => state.auth?.user);
+    let auth = useSelector((state) => state.auth?.user);
+    auth = true;
     const {
         t,
         i18n: { language }
@@ -51,6 +52,11 @@ const SwapHistory = ({ width }) => {
             setState({ loading: false });
         }
     }, [state.page, state.pageSize, auth]);
+
+    const dataTemp = Array.from({ length: 5 }, (x, i) => {
+        return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
+    });
+    console.log(dataTemp);
 
     const renderTable = useCallback(() => {
         const data = dataHandler(state.histories, state.loading);
@@ -86,7 +92,7 @@ const SwapHistory = ({ width }) => {
                 // sort
                 // defaultSort={{ key: 'time', direction: 'desc' }}
                 // useRowHover
-                data={data}
+                data={dataTemp}
                 columns={modifyColumns}
                 rowKey={(item) => `${KEY}___${item?.key}`}
                 scroll={{ x: true }}
