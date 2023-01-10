@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_team, showPnl }) => {
+const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdated, sort, top_ranks_team, showPnl }) => {
     const [tab, setTab] = useState(sort);
     const {
         t,
@@ -26,6 +26,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const router = useRouter();
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
+    const lastUpdatedTime = useRef(null);
 
     useEffect(() => {
         setLoading(true);
@@ -51,9 +52,10 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
                 params: { contest_id: contest_id }
             });
-            let data = originalData;
+            let data = originalData?.groups;
             setTotal(data.length);
             if (data && status === ApiStatus.SUCCESS) {
+                if (originalData?.last_time_update) lastUpdatedTime.current = originalData?.last_time_update;
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
                 const _top3 = data.slice(0, sliceIndex);
@@ -352,7 +354,11 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
                 </Table>
             )}
-            {/* <div className='mt-6 text-sm text-nao-grey font-medium leading-6'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            {lastUpdated && lastUpdatedTime.current && (
+                <div className="mt-6 text-sm text-nao-grey font-medium leading-6">
+                    {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                </div>
+            )}
             <div className="w-full flex justify-center mt-6">
                 <RePagination total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
             </div>
