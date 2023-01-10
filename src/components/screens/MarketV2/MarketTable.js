@@ -26,6 +26,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import React from 'react';
+import { ScaleLoader } from 'react-spinners';
 
 const MARKET_ROW_LIMIT = 20
 
@@ -42,6 +43,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const [currentTheme] = useDarkMode()
     const { width } = useWindowSize()
 
+    const [favType, setFavType] = useState(0)
     const [type, setType] = useState(0)
     const types = [{
         id: 0,
@@ -75,12 +77,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         }
     }]
 
-    const changeType = (index) => {
-        parentState({
-            type: index
-        })
-    }
-
     useEffect(() => {
         setType(restProps.type)
     }, [restProps.type])
@@ -89,7 +85,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
-
             return (
                 <div key={item.key}
                     onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })}
@@ -279,7 +274,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             tableStatus = <NeedLogin message={undefined} addClass={undefined} />
         } else {
             if (loading) {
-                // tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+                console.log('loadinignidngindsn____')
+                tableStatus = <ScaleLoader color={colors.namiv2.green.DEFAULT} size={12}/>
             } else if (!dataSource.length) {
                 if (tab[restProps.tabIndex]?.key === 'favorite') {
                     return (
@@ -425,22 +421,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                     <div className={classNames('h-24 border-namiv2-gray-3 flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
-                                {favSubTab.map((item, index) => {
-                                    return (
-                                        <div key={item.key}
-                                            onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-                                            className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer whitespace-nowrap', {
-                                                'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': restProps.subTabIndex === index
-                                            })}>
-                                            {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
-                                        </div>
-                                    )
-                                })}
-                            </div>
-
+                            <TokenTypes type={favType} setType={(index) => { parentState({ favType: index }); setFavType(index)}} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
-                            <TokenTypes type={type} setType={changeType} types={types} lang={language} />}
+                            <TokenTypes type={type} setType={(index) => {
+                                parentState({
+                                    type: index
+                                })
+                            }} types={types} lang={language} />}
 
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
                             <div className='h-12 px-6 flex justify-center items-center bg-namiv2-green rounded-md text-white text-base font-medium cursor-pointer'>
