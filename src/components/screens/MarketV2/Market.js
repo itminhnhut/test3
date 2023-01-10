@@ -246,19 +246,20 @@ const Market = () => {
             }
         }
 
-        switch (state.type) {
-            case 0:
-                break;
-            // case 'TOP_GAINER':
-            //     watch = watch.filter(e => getExchange24hPercentageChange(e) > 0)
-            //     break;
-            // case 'TOP_LOSER':
-            //     watch = watch.filter(e => getExchange24hPercentageChange(e) < 0)
-            //     break;
-            default:
-                watch = watch.filter(e => categories[state.type]?.includes(e.s))
-                break;
-        }
+        if (tab[state.tabIndex].key !== 'favorite')
+            switch (state.type) {
+                case 0:
+                    break;
+                case 'TOP_GAINER':
+                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) < 0 ? 1 : -1).slice(0,10)
+                    break;
+                case 'TOP_LOSER':
+                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) > 0 ? 1 : -1).slice(0,10)
+                    break;
+                default:
+                    watch = watch.filter(e => categories[state.type]?.includes(e.s))
+                    break;
+            }
 
         // Search data handling
         if (state.search) {

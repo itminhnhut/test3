@@ -18,7 +18,7 @@ import { Search, X } from 'react-feather';
 import { useWindowSize } from 'utils/customHooks';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { EMPTY_VALUE } from 'constants/constants';
-import { remove } from 'lodash';
+import _, { remove } from 'lodash';
 import { TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
 import { useSelector } from 'react-redux';
@@ -129,7 +129,10 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.subTabIndex, restProps.tabIndex])
 
     const renderSuggested = useMemo(() => {
-        console.log(restProps?.suggestedSymbols)
+        let tradingMode = TRADING_MODE.EXCHANGE
+        if (favSubTab[restProps.subTabIndex]?.key === 'futures') {
+            tradingMode = TRADING_MODE.FUTURES
+        }
         return <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6'>
             {restProps?.suggestedSymbols?.map(symbol => {
                 return (
@@ -147,7 +150,12 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                                 </div>
                             </div>
                             <div className='cursor-pointer'>
-                                <IconStarFilled size={24} color="#8694B3" />
+                                <FavActionButton b={{ b: symbol.b, i: symbol.bi }}
+                                    q={{ q: symbol.q, i: symbol.qi }}
+                                    list={restProps.favoriteList}
+                                    lang={language}
+                                    mode={tradingMode} favoriteRefresher={restProps.favoriteRefresher}
+                                />
                             </div>
                         </div>
                         <div className='mt-4 flex font-normal text-xs gap-2'>
@@ -277,7 +285,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     return (
                         <div className='px-8'>
                             <div className='font-normal text-base'>
-                                Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.
+                                {{ vi: 'Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.', en: 'You have no favorite pair. We suggested some of these pair to add to your favorite' }[language]}
                             </div>
                             <div className='mt-6 w-full'>
                                 {renderSuggested}
@@ -417,19 +425,20 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                     <div className={classNames('h-24 border-namiv2-gray-3 flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <TokenTypes type={type} setType={changeType} types={[{
-                                id: 1,
-                                content: {
-                                    vi: 'Exchange',
-                                    en: 'Exchange'
-                                }
-                            }, {
-                                id: 2,
-                                content: {
-                                    vi: 'Futures',
-                                    en: 'Futures'
-                                }
-                            }]} lang={language} />
+                            <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
+                                {favSubTab.map((item, index) => {
+                                    return (
+                                        <div key={item.key}
+                                            onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
+                                            className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer whitespace-nowrap', {
+                                                'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': restProps.subTabIndex === index
+                                            })}>
+                                            {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+
                             :
                             <TokenTypes type={type} setType={changeType} types={types} lang={language} />}
 
@@ -567,7 +576,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
     const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`
 
     // Helper
-    const callback = async (method, list) => {
+    const callback = _.debounce(async (method, list) => {
         setLoading(true)
         let message = ''
         let title = ''
@@ -604,7 +613,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                 'top-right'
             )
         }
-    }
+    }, 300)
 
     useEffect(() => {
         if (list) {
