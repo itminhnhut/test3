@@ -73,6 +73,7 @@ const SwapModule = ({ width, pair }) => {
     // Get state from Rdx
     const wallets = useSelector((state) => state.wallet.SPOT);
     const auth = useSelector((state) => state.auth?.user);
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
 
     // Refs
     const fromAssetListRef = useRef();
@@ -340,6 +341,7 @@ const SwapModule = ({ width, pair }) => {
         );
     }, [state.fromAsset, state.fromAmount, state.openAssetList, availabelAsset, config]);
 
+    // Poppup choose from asset list
     const renderFromAssetList = useCallback(() => {
         if (!state.openAssetList?.from || !state.fromAssetList) return null;
 
@@ -347,22 +349,26 @@ const SwapModule = ({ width, pair }) => {
         const data = state.fromAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { fromAsset, available } = data?.[i];
-
+            const { fromAsset, available, displayPriceAsset } = data?.[i];
+            const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
             assetItems.push(
                 <div
                     key={`asset_item___${i}`}
-                    className={
+                    className={`text-txtSecondary dark:text-[#e2e8f0] leading-6 text-left text-base
+                    px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer font-normal rounded-lg
+                    ${
                         state.fromAsset === fromAsset
-                            ? 'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
-                            : 'px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer text-sm font-medium rounded-lg hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'
+                            ? ' text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
+                            : 'hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'
                     }
+                    `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
                 >
                     <div className="flex items-center">
                         <AssetLogo assetCode={fromAsset} size={20} />
-                        <span className="ml-2">{fromAsset}</span>
+                        <span className="mx-2">{fromAsset}</span>
+                        <span className="text-xs leading-4 dark:text-[#8694b2] text-left">{assetName}</span>
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{available ? formatWallet(available) : '0.0000'}</div>
                 </div>
@@ -371,28 +377,28 @@ const SwapModule = ({ width, pair }) => {
 
         return (
             <div
-                className="from_asset__list absolute left-4 top-full py-4 mt-2 w-full z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-bgContainer dark:bg-darkBlue-3 drop-shadow-onlyLight
-                            dark:drop-shadow-none"
+                className="from_asset__list absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl border
+                            border-divider dark:border-[#222940] bg-bgContainer dark:bg-[#141921] drop-shadow-onlyLight
+                            dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)]"
                 ref={fromAssetListRef}
             >
-                <div className="px-2.5">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgContainer-dark w-full py-2 px-3 rounded-xl text-sm">
-                        <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
+                <div className="px-4">
+                    <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
+                        <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
                         <input
-                            className="px-2 w-full"
+                            className="px-2 w-full text-txtSecondary dark:text-[#8694b2]"
                             value={state.search}
                             placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
                             onChange={(e) => setState({ search: e.target?.value })}
                         />
-                        <XCircle
+                        {/* <XCircle
                             size={16}
                             onClick={() => setState({ search: '' })}
                             className="cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant"
-                        />
+                        /> */}
                     </div>
                 </div>
-                <div className="mt-2 px-2.5 max-h-[200px] overflow-y-auto">
+                <div className="mt px-2.5 max-h-[200px] overflow-y-auto">
                     {assetItems?.length ? (
                         assetItems
                     ) : (
@@ -447,7 +453,7 @@ const SwapModule = ({ width, pair }) => {
         const data = state.toAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { toAsset, available } = data?.[i];
+            const { toAsset, available, displayPriceAsset } = data?.[i];
 
             assetItems.push(
                 <div
