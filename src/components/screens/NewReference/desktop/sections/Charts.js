@@ -13,9 +13,9 @@ import classNames from 'classnames';
 
 const Charts = ({ t, id }) => {
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: '1d', format: 'hh' },
-        { title: '1 ' + t('futures:week'), value: '1w', format: 'DD' },
-        { title: '1 ' + t('futures:month'), value: '1M', format: 'W' },
+        { title: '1 ' + t('futures:day'), value: 'd', format: 'hh:mm', interval: '1h' },
+        { title: '1 ' + t('futures:week'), value: 'w', format: 'dd/MM', interval: '1d' },
+        { title: '1 ' + t('futures:month'), value: 'm', format: 'dd/MM', interval: '1d' },
         // { title: t('reference:referral.custom'), value: 'custom' },
     ]
     return (
@@ -52,11 +52,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                 method: 'GET',
             },
             params: {
-                interval: timeTab !== 'custom' ? timeTab : '1d',
+                interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'DD'
+                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {

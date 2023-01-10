@@ -22,9 +22,9 @@ const Chart = () => {
         content: t('reference:referral.total_commissions')
     },]
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: '1d', format: 'hh' },
-        { title: '1 ' + t('futures:week'), value: '1w', format: 'DD' },
-        { title: '1 ' + t('futures:month'), value: '1M', format: 'W' },
+        { title: '1 ' + t('futures:day'), value: 'd', format: 'hh:mm', interval: '1h' },
+        { title: '1 ' + t('futures:week'), value: 'w', format: 'dd/MM', interval: '1d' },
+        { title: '1 ' + t('futures:month'), value: 'm', format: 'dd/MM', interval: '1d' },
         // { title: t('reference:referral.custom'), value: 'custom' },
     ]
     const [tab, setTab] = useState(tags[0].value)
@@ -79,11 +79,11 @@ const Chart = () => {
                 method: 'GET',
             },
             params: {
-                interval: timeTab,
+                interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: timeTabs.find(e => e.value === timeTab).format
+                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {
@@ -206,7 +206,7 @@ const Chart = () => {
             {showCustom && <CustomFilter isShow={showCustom} onClose={() => setShowCustom(false)} t={t} filter={filter} onConfirm={setFilter} />}
             <CollapsibleRefCard title={t('reference:referral.statistic')} isBlack>
                 <div className='w-auto'>
-                    <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' >
+                    <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' isMobile >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
