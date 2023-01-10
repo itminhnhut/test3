@@ -19,6 +19,8 @@ import { API_FUTURES_CAMPAIGN_STATUS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { PromotionStatus } from 'components/screens/Mobile/Futures/onboardingType';
 import AnnouncementPopup from 'components/screens/Mobile/AnnouncementPopup';
+import ContestModal from './ContestModal'
+
 
 const INITIAL_STATE = {
     loading: false,
@@ -238,22 +240,20 @@ const FuturesMobile = () => {
 
     return (
         <>
-            <AnnouncementPopup/>
-            <FuturesPageTitle
-                pair={state.pair}
-                pricePrecision={pairConfig?.pricePrecision}
-                pairConfig={pairConfig}
-            />
+            <AnnouncementPopup />
+            <FuturesPageTitle pair={state.pair} pricePrecision={pairConfig?.pricePrecision} pairConfig={pairConfig} />
             <LayoutMobile>
-                {showOnBoardingModal &&
-                    <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)}/>}
+                <ContestModal />
+                {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)} />}
                 <Container id="futures-mobile" onScroll={onScroll}>
                     <Section className="form-order bg-onus" style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             key={'ChartMobile' + state.pair}
-                            pair={state.pair} pairConfig={pairConfig}
+                            pair={state.pair}
+                            pairConfig={pairConfig}
                             isVndcFutures={isVndcFutures}
-                            setCollapse={setCollapse} collapse={collapse}
+                            setCollapse={setCollapse}
+                            collapse={collapse}
                             forceRender={forceRender}
                             isFullScreen={futuresScreen.isFullScreen}
                             decimals={decimals}
@@ -261,20 +261,30 @@ const FuturesMobile = () => {
                         <PlaceOrderMobile
                             key={'PlaceOrderMobile' + state.pair}
                             setSide={setSide}
-                            decimals={decimals} side={side}
-                            pair={state.pair} isAuth={!!auth} availableAsset={availableAsset}
-                            pairConfig={pairConfig} isVndcFutures={isVndcFutures}
-                            collapse={collapse} onBlurInput={onBlurInput}
+                            decimals={decimals}
+                            side={side}
+                            pair={state.pair}
+                            isAuth={!!auth}
+                            availableAsset={availableAsset}
+                            pairConfig={pairConfig}
+                            isVndcFutures={isVndcFutures}
+                            collapse={collapse}
+                            onBlurInput={onBlurInput}
                             decimalSymbol={asset?.assetDigit ?? 0}
                         />
                     </Section>
                     <Section className="bg-onus" style={{ ...futuresScreen.style }}>
-                        <TabOrders scrollSnap={scrollSnap} isVndcFutures={isVndcFutures}
-                                   key={'TabOrders' + state.pair} pair={state.pair} pairConfig={pairConfig}
-                                   isAuth={!!auth}
-                                   setForceRender={setForceRender} forceRender={forceRender}
-                                   isFullScreen={futuresScreen.isFullScreen}
-                                   decimals={decimals}
+                        <TabOrders
+                            scrollSnap={scrollSnap}
+                            isVndcFutures={isVndcFutures}
+                            key={'TabOrders' + state.pair}
+                            pair={state.pair}
+                            pairConfig={pairConfig}
+                            isAuth={!!auth}
+                            setForceRender={setForceRender}
+                            forceRender={forceRender}
+                            isFullScreen={futuresScreen.isFullScreen}
+                            decimals={decimals}
                         />
                     </Section>
                 </Container>
