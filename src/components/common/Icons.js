@@ -96,10 +96,10 @@ export const IconStar = ({ size = 12, color = false, strokeWidth = "1,5" }) => (
     </svg>
 );
 
-export const IconStarFilled = ({ size = 12, color = 'F1C617' }) => (
-    <svg width={size || 12} height={size || 12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill={color} stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+export const IconStarFilled = ({ size = 24, color = '#F1C617' }) => (
+    <svg width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.947 9.179a1.001 1.001 0 0 0-.869-.676l-5.7-.453-2.467-5.461a.998.998 0 0 0-1.822-.001L8.62 8.05l-5.7.453a1 1 0 0 0-.62 1.713l4.213 4.107-1.49 6.452a1 1 0 0 0 1.53 1.057L12 18.202l5.446 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.83-6.4 4.537-4.082c.296-.268.405-.686.277-1.065z" fill={color || "#FFC632"}/>
+</svg>
 );
 
 export const IconArrowDown = () => (

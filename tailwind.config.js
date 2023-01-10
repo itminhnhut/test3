@@ -76,8 +76,26 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
-        nami: '#0E1113'
-    }
+        nami: '#0E1113',
+    },
+    namiv2: {
+        black: {
+            DEFAULT: '#0c0e14',
+            1: '#141921',
+        },
+        gray: {
+            DEFAULT: '#1c232e',
+            1: '#8694b2',
+            2: '#e2e8f0',
+            3: '#222940',
+        },
+        green: {
+            DEFAULT: '#47cc85',
+        },
+        red: {
+            DEFAULT: '#f93636',
+        },
+    },
 };
 
 module.exports = {
@@ -312,7 +330,8 @@ module.exports = {
             dark: {
                 DEFAULT: commonColors.dark.dark,
                 ...commonColors.dark
-            }
+            },
+            namiv2: commonColors.namiv2
         },
         extend: {
             screens: {

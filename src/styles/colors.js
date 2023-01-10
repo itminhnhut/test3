@@ -118,8 +118,33 @@ const colors = {
         tooltip2: '#071120'
     },
     portfolio: {
-        teal: ['#52EAD1', '#33FFDD', '#80FFEA', '#B3FFF2', '#D9FFF8']
-    }
+        teal: [
+            '#52EAD1',
+            '#33FFDD',
+            '#80FFEA',
+            '#B3FFF2',
+            '#D9FFF8',
+        ]
+
+    },
+    namiv2: {
+        black: {
+            DEFAULT: '#0c0e14',
+            1: '#141921',
+        },
+        gray: {
+            DEFAULT: '#1c232e',
+            1: '#8694b2',
+            2: '#e2e8f0',
+        },
+        green: {
+            DEFAULT: '#47cc85',
+            1: '#29cc7e'
+        },
+        red: {
+            DEFAULT: '#f93636',
+        },
+    },
 };
 
 export default colors;
