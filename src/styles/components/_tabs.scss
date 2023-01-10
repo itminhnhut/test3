@@ -24,3 +24,94 @@
     }
   }
 }
+
+.tabs-nav-list {
+    border-image: linear-gradient(101.26deg, #49E8D5 -5.29%, #093DD1 113.82%);
+    border-bottom-width: 1px;
+    border-image-slice: 1 !important;
+    li:nth-child(1) {
+        border-image: none !important;
+    }
+
+}
+
+.tabMenu li:not(:last-child) {
+        cursor: pointer;
+        float: left;
+        align-items: center;
+        background: rgba(97, 144, 149, 0.15);
+        border-radius: 12px 12px 0px 0px;
+        justify-content: center;
+        padding: 24px 0px 16px;
+        color: #7686B1;
+        font-weight: 600;
+}
+
+.wrapper_star{
+    border-width: 0px 1px;
+    border-radius: 0px 12px;
+}
+
+.tabMenu li:nth-child(3) {
+    transform: translateY(-60%);
+}
+
+.tabMenu li:nth-child(1).active {
+    border-bottom: none;
+    color: #FCFCF9;
+    background-image: url('/images/contest/bg_tab_1.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+
+.tabMenu li:nth-child(2).active {
+    border-bottom: none;
+    color: #FCFCF9;
+    background-image: url('/images/contest/bg_tab_2.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    .wrapper_star {
+        border-right-width: 0;
+        transform: translate(-2%, 6%);
+    }
+}
+
+.tabMenu {
+    position: relative;
+    display: table;
+    padding-left: 0;
+    width: 100%;
+}
+
+.tabMenu li:nth-child(2).active:before{
+    content: "";
+    -o-border-image: -o-linear-gradient(348.74deg, #49E8D5 -5.29%, #093DD1 113.82%);
+    border-image: linear-gradient(101.26deg, #49E8D5 -5.29%, #093DD1 113.82%);
+    border-bottom-width: 2px;
+    border-image-slice: 1 !important;
+    bottom: 0;
+    position: absolute;
+    width: 72%;
+    left: 0;
+    -webkit-transform: translateX(100%);
+    -ms-transform: translateX(100%);
+    transform: translateX(-100%);
+}
+.tabMenu li.active:after {
+    content: "";
+    border-image: linear-gradient(101.26deg, #49E8D5 -5.29%, #093DD1 113.82%);
+    border-bottom-width: 2px;
+    border-image-slice: 1 !important;
+    bottom: 0;
+    position: absolute;
+        right: 0;
+            transform: translateX(100%);
+}
+
+.tabMenu li:nth-child(1).active:after {
+    width: 1000px;
+}
+
+.tabMenu li:nth-child(2).active:after {
+    width: 734px;
+}

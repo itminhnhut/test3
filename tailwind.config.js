@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
-const defaultTheme = require('tailwindcss/defaultTheme');
 
 // Common colors
 const commonColors = {
@@ -18,6 +17,8 @@ const commonColors = {
     gray3: '#CBD5E0',
     gray4: '#F2F4F6',
     gray5: '#EDF1F6',
+    gray6: '#E2E8F0',
+    gray7: '#8694b2',
 
     white: 'white',
     teal: '#00C8BC',
@@ -43,7 +44,7 @@ const commonColors = {
         grey: '#8492A7',
         grey2: '#445571',
         textSecondary: '#8492A7',
-        orange: '#FF9F1A'
+        orange: '#FF9F1A',
     },
     nao: {
         bg: '#619095',
@@ -54,6 +55,7 @@ const commonColors = {
         text2: '#A6BFE6',
         grey: '#7686B1',
         grey2: '#7586AD',
+        grey3: 'rgba(97, 144, 149, 0.15)',
         white: '#F6F6F6',
         blue: '#27CEE0',
         blue2: '#093DD1',
@@ -69,8 +71,8 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
-        nami: '#0E1113'
-    }
+        nami: '#0E1113',
+    },
 };
 
 module.exports = {
@@ -83,7 +85,13 @@ module.exports = {
     darkMode: 'class',
     theme: {
         container: {
-            center: true
+            center: true,
+        },
+        backgroundSize: {
+            auto: 'auto',
+            cover: 'cover',
+            contain: 'contain',
+            '100%': '100%',
         },
         fontWeight: {
             light: 300,
@@ -92,105 +100,106 @@ module.exports = {
             semibold: 600,
             bold: 700,
             extrabold: 800,
-            black: 900
+            black: 900,
         },
         fontFamily: {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
-            inter: ['Inter', 'sans-serif']
+            inter: ['Inter', 'sans-serif'],
+            manrope: ['Manrope', 'sans-serif'],
         },
         fontSize: {
             xxs: [
                 '.625rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1rem'
-                }
+                    lineHeight: '1rem',
+                },
             ], // Outline 10px
             xs: [
                 '.75rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.125rem'
-                }
+                    lineHeight: '1.125rem',
+                },
             ], // Caption 12px
             sm: [
                 '.875rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.3125rem'
-                }
+                    lineHeight: '1.3125rem',
+                },
             ], // Small text 14px
             tiny: [
                 '.875rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.3125rem'
-                }
+                    lineHeight: '1.3125rem',
+                },
             ], // 14px
             base: [
                 '1rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.5rem'
-                }
+                    lineHeight: '1.5rem',
+                },
             ], // 16px
             lg: [
                 '1.125rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.75rem'
-                }
+                    lineHeight: '1.75rem',
+                },
             ], // Body 2 18px
             xl: [
                 '1.3125rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '2rem'
-                }
+                    lineHeight: '2rem',
+                },
             ], // Body 1, Heading 6 21px
             '2xl': [
                 '1.5rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '2.25rem'
-                }
+                    lineHeight: '2.25rem',
+                },
             ], // Heading 5 24px
             '3xl': [
                 '1.75rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '2.5rem'
-                }
+                    lineHeight: '2.5rem',
+                },
             ], // Heading 4 28px
             '4xl': [
                 '2.25rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '3.5rem'
-                }
+                    lineHeight: '3.5rem',
+                },
             ], // Heading 3 36px
             '5xl': [
                 '2.5rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '3.5rem'
-                }
+                    lineHeight: '3.5rem',
+                },
             ], // Heading 2 40px
             '6xl': [
                 '4rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '4.5rem'
-                }
+                    lineHeight: '4.5rem',
+                },
             ], // Heading 1 64px
             '5.5xl': [
                 '3.5rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '4.25rem'
-                }
-            ] // Heading 2 56px
+                    lineHeight: '4.25rem',
+                },
+            ], // Heading 2 56px
         },
         // TODO split text, background
         colors: {
@@ -200,12 +209,12 @@ module.exports = {
 
             listItemSelected: {
                 DEFAULT: commonColors.lightTeal,
-                dark: commonColors.darkBlue3
+                dark: commonColors.darkBlue3,
             },
 
             divider: {
                 DEFAULT: commonColors.gray4,
-                dark: '#202C4C'
+                dark: '#202C4C',
             },
 
             //--------------------------------------------
@@ -220,7 +229,7 @@ module.exports = {
                 500: '#8B8C9B', // 3
                 600: '#3e3b3b', // 2
                 700: '#02083D', // 1,
-                800: '#000000'
+                800: '#000000',
             },
             white: colors.white,
             blue: {
@@ -234,7 +243,7 @@ module.exports = {
                 600: '#646e85',
                 700: '#4e5973',
                 800: '#384562',
-                900: '#223050'
+                900: '#223050',
             },
             darkBlue: {
                 DEFAULT: '#223050',
@@ -243,7 +252,7 @@ module.exports = {
                 3: commonColors.darkBlue3,
                 4: commonColors.darkBlue4,
                 5: commonColors.darkBlue5,
-                '5a': 'rgba(123, 140, 178, 0.8)'
+                '5a': 'rgba(123, 140, 178, 0.8)',
             },
             gray: {
                 DEFAULT: '#8D9091',
@@ -252,7 +261,9 @@ module.exports = {
                 2: commonColors.gray2,
                 3: commonColors.gray3,
                 4: commonColors.gray4,
-                5: commonColors.gray5
+                5: commonColors.gray5,
+                6: commonColors.gray6,
+                7: commonColors.gray7,
             },
             teal: {
                 DEFAULT: '#00C8BC',
@@ -272,16 +283,16 @@ module.exports = {
                 1200: '#D9FFF8',
                 lightTeal: '#E2F6F5',
                 opacity: 'rgba(0, 200, 188, 0.5)',
-                opacitier: 'rgba(0, 200, 188, 0.1)'
+                opacitier: 'rgba(0, 200, 188, 0.1)',
             },
             green: {
                 DEFAULT: '#22B02E',
-                opacity: 'rgba(34, 176, 46, 0.18)'
+                opacity: 'rgba(34, 176, 46, 0.18)',
             },
             yellow: { DEFAULT: '#FFD965' },
             red: {
                 DEFAULT: '#E5544B',
-                lightRed: '#E5544B19'
+                lightRed: '#E5544B19',
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
@@ -290,22 +301,41 @@ module.exports = {
                 DEFAULT: commonColors.onus.bg,
                 1: commonColors.onus.bg2,
                 2: commonColors.onus.bg3,
-                ...commonColors.onus
+                ...commonColors.onus,
             },
             nao: {
                 DEFAULT: commonColors.nao.bg,
-                ...commonColors.nao
-            }
+                ...commonColors.nao,
+            },
         },
         extend: {
             screens: {
+                xs: '319px',
                 nao: '1160px',
                 xsm: '320px',
-                xxs: '360px'
+                xxs: '360px',
+                mb: '820px',
+            },
+            namiapp: {
+                black: {
+                    DEFAULT: '#0c0e14',
+                    1: '#141921',
+                    2: '#1c232e',
+                    3: '#1f2633',
+                    4: '#222940',
+                },
+                green: {
+                    DEFAULT: '#30bf73',
+                    1: '#47cc85',
+                    2: '#7ee5ae',
+                },
+                gray: {
+                    DEFAULT: '#8593a6',
+                },
             },
             spacing: {
                 128: '32rem',
-                144: '36rem'
+                144: '36rem',
             },
             // borderRadius: {
             //     'xl': '0.625rem',
@@ -315,107 +345,113 @@ module.exports = {
             placeholderColor: {
                 txtSecondary: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
-                }
+                    dark: commonColors.darkBlue5,
+                },
             },
             textColor: {
                 txtPrimary: {
                     DEFAULT: commonColors.darkBlue,
-                    dark: commonColors.gray4
+                    dark: commonColors.gray4,
                 },
                 txtSemiPrimary: {
                     DEFAULT: commonColors.gray2,
-                    dark: commonColors.darkBlue4
+                    dark: commonColors.darkBlue4,
                 },
                 txtSecondary: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
 
                 txtBtnPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.white
+                    dark: commonColors.white,
                 },
                 txtBtnSecondary: {
                     DEFAULT: commonColors.teal,
-                    dark: commonColors.teal
+                    dark: commonColors.teal,
                 },
                 txtTabInactive: {
                     DEFAULT: commonColors.gray1,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
                 txtTabActive: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.white
+                    dark: commonColors.white,
                 },
                 onus: {
                     DEFAULT: commonColors.onus.white,
-                    secondary: commonColors.onus.grey
+                    secondary: commonColors.onus.grey,
                 },
                 txtDarkBlue: {
-                    DEFAULT: commonColors.darkBlue5
-                }
+                    DEFAULT: commonColors.darkBlue5,
+                },
             },
             backgroundColor: {
                 bgTabInactive: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue3
+                    dark: commonColors.darkBlue3,
                 },
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgSecondary: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue5
+                    dark: commonColors.darkBlue5,
                 },
                 bgContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgSpotContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.darkBlue1,
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',
-                    dark: 'rgba(0, 0, 0, 0.3)'
+                    dark: 'rgba(0, 0, 0, 0.3)',
                 },
                 homepageBg: {
                     DEFAULT: '#f2f4f66e',
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.darkBlue2,
                 },
                 bgBtnPrimary: {
                     DEFAULT: commonColors.teal,
-                    dark: commonColors.teal
+                    dark: commonColors.teal,
                 },
                 bgBtnSecondary: {
                     DEFAULT: commonColors.gray4,
-                    dark: commonColors.darkBlue
+                    dark: commonColors.darkBlue,
                 },
                 bgInput: {
                     DEFAULT: commonColors.gray5,
-                    dark: commonColors.darkBlue3
+                    dark: commonColors.darkBlue3,
                 },
                 bgHover: {
                     DEFAULT: 'rgba(245, 245, 245, 0.5)',
-                    dark: 'rgba(38, 52, 89, 0.3)'
+                    dark: 'rgba(38, 52, 89, 0.3)',
                 },
                 bgCondition: {
                     DEFAULT: 'rgba(255, 247, 235, 0.2)',
-                    dark: 'rgba(255, 247, 235, 0.2)'
+                    dark: 'rgba(255, 247, 235, 0.2)',
                 },
                 bgButtonDisabled: {
                     DEFAULT: '#ebedf3',
-                    dark: commonColors.darkBlue3
-                }
+                    dark: commonColors.darkBlue3,
+                },
+                bgNaoStart: 'rgba(9, 61, 209, 0.5)',
             },
-            fontWeight: { bold: 600 },
+            backgroundImage: {
+                rank: "url('/images/contest/bg_rank.png')",
+                'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
+                'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
+                dark: commonColors.darkBlue3,
+            },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
-                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)'
+                onlyDark: '0px 7px 23px rgba(245, 245, 245, 0.05)',
             },
             boxShadow: {
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
@@ -423,12 +459,14 @@ module.exports = {
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)'
+                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
+                rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
+                ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
             },
             cursor: {
-                grabbing: 'grabbing'
-            }
-        }
+                grabbing: 'grabbing',
+            },
+        },
     },
     variants: {
         extend: {
@@ -436,13 +474,13 @@ module.exports = {
             borderColor: ['checked'],
             display: ['group-hover'],
             visibility: ['group-hover'],
-            cursor: ['grabbing']
-        }
+            cursor: ['grabbing'],
+        },
     },
     plugins: [
         require('@tailwindcss/forms')({
-            strategy: 'class'
+            strategy: 'class',
         }),
-        require('@tailwindcss/line-clamp')
-    ]
+        require('@tailwindcss/line-clamp'),
+    ],
 };
