@@ -7,7 +7,7 @@ import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/TableForSwap';
+import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
 import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
@@ -23,8 +23,7 @@ const SwapHistory = ({ width }) => {
         histories: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    let auth = useSelector((state) => state.auth?.user);
-    auth = true;
+    const auth = useSelector((state) => state.auth?.user);
     const {
         t,
         i18n: { language }
@@ -53,13 +52,9 @@ const SwapHistory = ({ width }) => {
         }
     }, [state.page, state.pageSize, auth]);
 
-    const dataTemp = Array.from({ length: 5 }, (x, i) => {
-        return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
-    });
-    console.log(dataTemp);
-
     const renderTable = useCallback(() => {
         const data = dataHandler(state.histories, state.loading);
+
         const modifyColumns = [];
         let tableStatus;
 
@@ -92,7 +87,7 @@ const SwapHistory = ({ width }) => {
                 // sort
                 // defaultSort={{ key: 'time', direction: 'desc' }}
                 // useRowHover
-                data={dataTemp}
+                data={data}
                 columns={modifyColumns}
                 rowKey={(item) => `${KEY}___${item?.key}`}
                 scroll={{ x: true }}
@@ -137,6 +132,7 @@ const SwapHistory = ({ width }) => {
             </div>
         );
     }, [state.page, state.histories]);
+
     return (
         <div className="mal-container mt-20">
             <div className="text-[20px] text-left leading-7 dark:text-[#e2e8f0] font-medium font-sfPro">{t('convert:history')}</div>
