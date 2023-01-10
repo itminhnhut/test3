@@ -152,6 +152,7 @@ const Market = () => {
                 search={state.search}
                 currentPage={state.currentPage}
                 tabLabelCount={state.tabLabelCount}
+                type={state.type}
                 auth={auth}
             />
         )
@@ -172,6 +173,8 @@ const Market = () => {
         getFavorite()
         getMarket()
     }, [])
+
+    console.log('state.type', state.type)
 
     // Re-new api data
     useEffect(() => {

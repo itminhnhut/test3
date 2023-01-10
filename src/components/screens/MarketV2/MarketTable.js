@@ -79,11 +79,15 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }]
 
     const changeType = (index) => {
-        setType(index)
         parentState({
             type: index
         })
     }
+
+    useEffect(() => {
+        setType(restProps.type)
+    },[restProps.type])
+
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
@@ -91,7 +95,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
             return (
                 <div key={item.key}
-                    onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1 })}
+                    onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type:  item.key === 'favorite' ? 1 : 0 })}
                     className={classNames("relative mr-6 pb-4 capitalize select-none font-normal text-base text-namiv2-gray-1 cursor-pointer flex items-center", { "text-namiv2-gray-2 font-semibold": restProps.tabIndex === index })}>
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>{item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}</span>
                     {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
@@ -100,19 +104,19 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount])
 
     const renderSubTab = useCallback(() => {
-        if (tab[restProps.tabIndex]?.key === 'favorite') {
-            return favSubTab.map((item, index) => {
-                return (
-                    <div key={item.key}
-                        onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-                        className={restProps.subTabIndex === index ?
-                            'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabActive dark:bg-bgTabActive-dark text-white cursor-pointer select-none'
-                            : 'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabInactive dark:bg-bgTabInactive-dark text-gray-1 dark:text-darkBlue-5 cursor-pointer select-none'}>
-                        {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
-                    </div>
-                )
-            })
-        }
+        // if (tab[restProps.tabIndex]?.key === 'favorite') {
+        //     return favSubTab.map((item, index) => {
+        //         return (
+        //             <div key={item.key}
+        //                 onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
+        //                 className={restProps.subTabIndex === index ?
+        //                     'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabActive dark:bg-bgTabActive-dark text-white cursor-pointer select-none'
+        //                     : 'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabInactive dark:bg-bgTabInactive-dark text-gray-1 dark:text-darkBlue-5 cursor-pointer select-none'}>
+        //                 {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
+        //             </div>
+        //         )
+        //     })
+        // }
 
         return subTab.map((item, index) => {
             return (
@@ -356,7 +360,23 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         {renderTab()}
                     </div>
                     <div className='h-24 border-b-[1px] border-namiv2-gray-3 flex items-center px-8'>
-                        <TokenTypes type={type} setType={changeType} types={types} lang={language} />
+                        {tab[restProps.tabIndex]?.key === 'favorite' ?
+                            <TokenTypes type={type} setType={changeType} types={[{
+                                id: 1,
+                                content: {
+                                    vi: 'Exchange',
+                                    en: 'Exchange'
+                                }
+                            },{
+                                id: 2,
+                                content: {
+                                    vi: 'Futures',
+                                    en: 'Futures'
+                                }
+                            }]} lang={language} />
+
+                            :
+                            <TokenTypes type={type} setType={changeType} types={types} lang={language} />}
                     </div>
                     <div className="">
                         {renderTable()}
