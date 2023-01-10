@@ -12,13 +12,13 @@ const SymbolListItem = (props) => {
     const { symbolString, publicSocket, exchangeConfig, originTicker, currentId, favorite, watchList, pairKey, isFavoriteTab = false, reFetchFavorite } = props;
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
-    const [alreadyInFav, setAlreadyInFav] = useState(false)
+    const [alreadyInFav, setAlreadyInFav] = useState(false);
 
-    const [currentTheme, ] = useDarkMode()
+    const [currentTheme] = useDarkMode();
 
     useEffect(() => {
         if (watchList && watchList.length) {
-            setFavoriteId(watchList.filter(list => list.type === 'FAVORITE')?.[0]?.id);
+            setFavoriteId(watchList.filter((list) => list.type === 'FAVORITE')?.[0]?.id);
         }
         if (originTicker) {
             setSymbolTicker(originTicker);
@@ -26,9 +26,9 @@ const SymbolListItem = (props) => {
     }, []);
 
     const handleSetFavorite = async (pairKey) => {
-        await favoriteAction(isFavoriteTab ? 'delete' : 'put', TRADING_MODE.EXCHANGE, pairKey)
-        await reFetchFavorite()
-    }
+        await favoriteAction(isFavoriteTab ? 'delete' : 'put', TRADING_MODE.EXCHANGE, pairKey);
+        await reFetchFavorite();
+    };
 
     const listenerHandler = debounce((data) => {
         setSymbolTicker(data);
@@ -50,11 +50,11 @@ const SymbolListItem = (props) => {
 
     useEffect(() => {
         if (favorite && favorite.includes(pairKey)) {
-            setAlreadyInFav(true)
+            setAlreadyInFav(true);
         } else {
-            setAlreadyInFav(false)
+            setAlreadyInFav(false);
         }
-    }, [favorite, pairKey])
+    }, [favorite, pairKey]);
 
     const base = symbolTicker?.b;
     const quote = symbolTicker?.q;
@@ -62,33 +62,28 @@ const SymbolListItem = (props) => {
 
     return (
         <div
-            className={`px-2.5 h-5 flex items-center cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${currentId === `${base}-${quote}` ? 'bg-teal-lightTeal dark:bg-darkBlue-3' : ''}`}
+            className={`px-4 h-5 flex items-center cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${
+                currentId === `${base}-${quote}` ? 'bg-teal-lightTeal dark:bg-darkBlue-3' : ''
+            }`}
         >
-            <div className="mr-1.5 cursor-pointer"
-                 onClick={() => handleSetFavorite(pairKey)}>
-                {alreadyInFav ? <IconStarFilled color={colors.yellow} />
-                    : <IconStar color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />}
+            <div className="mr-1.5 cursor-pointer" onClick={() => handleSetFavorite(pairKey)}>
+                {alreadyInFav ? (
+                    <IconStarFilled color={colors.yellow} />
+                ) : (
+                    <IconStarFilled color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                )}
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
-                    <div
-                        className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs font-medium leading-table flex items-center truncate min-w-0 mr-1.5"
-                    >
-                        {base}<span className="text-txtSecondary dark:text-txtSecondary-dark">/{quote}</span>
+                    <div className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs font-medium leading-table flex items-center truncate min-w-0">
+                        {base}/{quote}
                     </div>
-                    <div
-                        className={`flex-1 text-xs font-medium leading-table text-right mr-1.5 ${!up ? 'text-teal' : 'text-red'}`}
-                    >
+                    <div className={`flex-1 text-xs font-medium leading-table text-right mr-4 ${!up ? 'text-teal' : 'text-red'}`}>
                         {formatPrice(+symbolTicker?.p, exchangeConfig, quote)}
                     </div>
-                    <div
-                        className="flex-1 text-teal font-medium text-xs leading-table text-right"
-                    >{render24hChange(symbolTicker)}
-                    </div>
+                    <div className="flex-1 text-teal font-medium text-xs leading-table flex justify-end">{render24hChange(symbolTicker)}</div>
                 </div>
-
             </Link>
-
         </div>
     );
 };

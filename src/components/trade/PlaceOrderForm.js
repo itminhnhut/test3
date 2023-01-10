@@ -762,8 +762,9 @@ const PlaceOrderForm = ({ symbol }) => {
                     <a
                         href={getLoginUrl('sso')}
                         className="btn w-full capitalize button-common block text-center"
+                        dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
                     >
-                        {t('sign_in_to_continue')}
+                        {/* {t('sign_in_to_continue')} */}
                     </a>
                 </div>
             );

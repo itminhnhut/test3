@@ -614,9 +614,7 @@ const Category = ({ symbolList, quoteAsset, renderPriceData, renderPercentageCha
         return (
             <div className="flex flex-col items-center justify-center">
                 <TableNoData />
-                <a href={getLoginUrl('sso')} className="btn button-common block text-center">
-                    {t('common:sign_in_to_continue')}
-                </a>
+                <a href={getLoginUrl('sso')} className="btn button-common block text-center" dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></a>
                 {renderModal()}
             </div>
         );

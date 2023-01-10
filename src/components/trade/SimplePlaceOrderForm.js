@@ -30,6 +30,7 @@ import showNotification from 'utils/notificationService';
 import { GET_SPOT_FEE_CONFIG } from 'redux/actions/apis';
 import { max, min } from 'lodash/math';
 import { isNumber } from 'lodash';
+import TradingInput from 'components/trade/TradingInput';
 
 let initPrice = '';
 
@@ -611,10 +612,10 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             }
         });
         return (
-            <ul className="tabs justify-start mb-2 dragHandleArea">
+            <ul className="tabs justify-start mb-2 dragHandleArea px-4 space-x-2">
                 {tabs.map((tab, index) => {
                     return (
-                        <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
+                        <li className={`tab-item font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
                             <a
                                 className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
                                 onClick={() => handleClickSubTab(tab)}
@@ -628,71 +629,41 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     const _renderOrderPrice = (_orderSide) => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
+        const isMarket=orderType === ExchangeOrderEnum.Type.MARKET
         return (
-            <div className="flex justify-between items-center mb-2">
-
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{t('common:price')}</div>
-                        </div>
-
-                        {
-                            orderType === ExchangeOrderEnum.Type.LIMIT
-                            &&
-                            (
-                                <NumberFormat
-                                    getInputRef={priceRef}
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                                    name="stop_buy_input"
-                                    thousandSeparator
-                                    onFocus={() => {
-                                        setFocus('price');
-                                    }}
-                                    decimalScale={getDecimalScale(+priceFilter?.tickSize)}
-                                    allowNegative={false}
-                                    value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice}
-                                    onValueChange={({ value }) => {
-                                        if (_orderSide === ExchangeOrderEnum.Side.BUY) {
-                                            setBuyPrice(value);
-                                        } else {
-                                            setSellPrice(value);
-                                        }
-                                    }}
-                                />
-                            )
+            <div className="flex justify-between items-center mb-3">
+                <TradingInput
+                    label={t('common:price')}
+                    labelClassName="!text-sm !font-normal"
+                    value={isMarket ? t('spot:market') : _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice}
+                    onValueChange={({ value }) => {
+                        if (_orderSide === ExchangeOrderEnum.Side.BUY) {
+                            setBuyPrice(value);
+                        } else {
+                            setSellPrice(value);
                         }
-                        {
-                            orderType === ExchangeOrderEnum.Type.MARKET
-                            &&
-                            (
-                                <input
-                                    className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
-                                    name="stop_buy_input"
-                                    type="text"
-                                    disabled
-                                    value={t('spot:market')}
-                                />
-                            )
-                        }
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
-                        >
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {quote}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                    }}
+                    name="stop_buy_input"
+                    disabled={isMarket}
+                    allowNegative={false}
+                    decimalScale={getDecimalScale(+priceFilter?.tickSize)}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{quote}</span>}
+                />
             </div>
         );
     };
 
     const _renderQuantitySlider = (_orderSide) => {
         return (
-            <div className="mt-5 mb-3 relative">
+            <div className="mt-4 mb-3 relative">
                 <InputSlider
                     axis="x"
+                    labelSuffix='%'
+                    useLabel
+                    positionLabel='top'
+                    // customDotAndLabel={() => { }}
                     x={_orderSide === ExchangeOrderEnum.Side.BUY ? buyPercentage : sellPercentage}
                     onDragStart={() => {
                         setFocus('percentage');
@@ -790,46 +761,25 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) return null;
         return (
             <div className="flex justify-between items-center mb-3">
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            {/* {
-                                orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                                    ? _renderQuantityMode
-                                    : <div className="text-sm text-black-500 font-medium ">{t('total')}</div>
-                            } */}
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('total')}</div>
-                        </div>
-                        <NumberFormat
-                            getInputRef={quoteQtyRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                            name="quoteQty"
-                            onFocus={() => {
-                                setFocus('quoteQty');
-                            }}
-                            thousandSeparator
-                            decimalScale={2}
-                            allowNegative={false}
-                            value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuoteQty : sellQuoteQty}
-                            onChange={() => setIsUseQuoteQuantity(true)}
-                            onValueChange={({ value }) => {
-                                if (_orderSide === ExchangeOrderEnum.Side.BUY) {
-                                    setBuyQuoteQty(value);
-                                } else {
-                                    setSellQuoteQty(value);
-                                }
-                            }}
-                        />
-
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center"
-                        >
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {quote}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <TradingInput
+                    label={t('total')}
+                    labelClassName="!text-sm !font-normal"
+                    value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuantity : sellQuantity}
+                    onChange={() => setIsUseQuoteQuantity(true)}
+                    onValueChange={({ value }) => {
+                        if (_orderSide === ExchangeOrderEnum.Side.BUY) {
+                            setBuyQuoteQty(value);
+                        } else {
+                            setSellQuoteQty(value);
+                        }
+                    }}
+                    name="quoteQty"
+                    allowNegative={false}
+                    decimalScale={2}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{quote}</span>}
+                />
             </div>
         );
     };
@@ -837,42 +787,24 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const _renderOrderQuantity = (_orderSide) => {
         return (
             <div className="flex justify-between items-center mb-3">
-
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:amount')}</div>
-                        </div>
-                        <NumberFormat
-                            getInputRef={quantityRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                            name="quantity"
-                            onFocus={() => {
-                                setFocus('quantity');
-                            }}
-                            thousandSeparator
-                            decimalScale={getDecimalScale(+quantityFilter?.stepSize)}
-                            allowNegative={false}
-                            value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuantity : sellQuantity}
-                            onChange={() => setIsUseQuoteQuantity(false)}
-                            onValueChange={({ value }) => {
-                                if (_orderSide === ExchangeOrderEnum.Side.BUY) {
-                                    setBuyQuantity(value);
-                                } else {
-                                    setSellQuantity(value);
-                                }
-                            }}
-                        />
-
-                        <div
-                            className="input-group-append px-3 flex-shrink-0 flex justify-end items-center"
-                        >
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {base}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+                <TradingInput
+                    label={t('common:amount')}
+                    labelClassName="!text-sm !font-normal"
+                    value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuantity : sellQuantity}
+                    onValueChange={({ value }) => {
+                        if (_orderSide === ExchangeOrderEnum.Side.BUY) {
+                            setBuyQuantity(value);
+                        } else {
+                            setSellQuantity(value);
+                        }
+                    }}
+                    name="quantity"
+                    allowNegative={false}
+                    decimalScale={getDecimalScale(+quantityFilter?.stepSize)}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{base}</span>}
+                />
             </div>
         );
     };
@@ -880,32 +812,31 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const _renderPlaceOrderButton = (_orderSide) => {
         if (!user) {
             return (
-                <div className="">
-                    <a href={getLoginUrl('sso')} className="btn w-full capitalize button-common block text-center">
-                        {t('sign_in_to_continue')}
-                    </a>
-                </div>
+                <a
+                    href={getLoginUrl('sso')}
+                    className="btn w-full button-common block text-center"
+                    dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
+                ></a>
             );
         }
 
         return (
-            <div className="">
-                <button
-                    onClick={() => confirmModal(_orderSide)}
-                    type="button"
-                    disabled={placing || currentExchangeConfig?.status === 'MAINTAIN'}
-                    className={'btn btn-xs w-full capitalize disabled:bg-black-400 ' + (_orderSide === ExchangeOrderEnum.Side.BUY ? 'btn-green' : 'btn-red')}
-                >{t(_orderSide)} {base}
-                </button>
-            </div>
+            <button
+                onClick={() => confirmModal(_orderSide)}
+                type="button"
+                disabled={placing || currentExchangeConfig?.status === 'MAINTAIN'}
+                className={'btn btn-xs w-full capitalize disabled:bg-black-400 ' + (_orderSide === ExchangeOrderEnum.Side.BUY ? 'btn-green' : 'btn-red')}
+            >
+                {t(_orderSide)} {base}
+            </button>
         );
     };
 
     const _renderUserBalance = (_orderSide) => {
         return (
             <>
-                <div className="mb-2 flex justify-between items-center">
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('spot:available_balance')}</div>
+                <div className="mb-4 flex items-center space-x-2">
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('spot:available_balance')}:</div>
                     <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-medium text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
@@ -981,12 +912,12 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     return (
         <>
-            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full px-2.5 spot-place-orders-container">
+            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark h-full spot-place-orders-container">
                 {/* <h3 className="font-medium text-lg text-black pt-6 pb-4 px-1.5 dragHandleArea">{t('spot:place_order')}</h3> */}
                 {/* {_renderOrderSide} */}
                 {_renderOrderType}
 
-                <div className="grid grid-cols-2 gap-5 mt-4">
+                <div className="grid grid-cols-2 gap-5 mt-4 px-4">
                     <div className="">
                         {_renderUserBalance(ExchangeOrderEnum.Side.BUY)}
                         {_renderOrderPrice((ExchangeOrderEnum.Side.BUY))}

@@ -226,12 +226,13 @@ export const IconStepArrowShort = (props) => (
     )
 );
 
-export const IconSearch = () => (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M14 13.9996L11.1 11.0996" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
+export const IconSearch = ({ size = 16, color = '#8694B3' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M6.667 12c1.23 0 2.362-.423 3.264-1.125l2.93 2.93.944-.942-2.931-2.931A5.3 5.3 0 0 0 12 6.667a5.34 5.34 0 0 0-5.333-5.334 5.34 5.34 0 0 0-5.334 5.334A5.34 5.34 0 0 0 6.667 12zm0-9.333c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"
+            fill={color}
+        />
     </svg>
-
 );
 
 export const IconCheck = () => (
@@ -269,15 +270,15 @@ export const IconSortDown = () => (
 
 export const IconSort = () => (
     <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
-        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#C4C4C4" />
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#47cc85" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#8694b2" />
     </svg>
 
 );
 export const IconNoSort = ({ fill }) => (
     <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
-        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill={fill || '#C4C4C4'} />
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#8694b2" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill={fill || '#8694b2'} />
     </svg>
 
 );

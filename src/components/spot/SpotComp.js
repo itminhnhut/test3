@@ -44,53 +44,53 @@ const layoutSimple = [
         i: 'symbolDetail',
         x: 0,
         y: 0,
-        w: 13,
-        h: 3,
+        w: 12.5,
+        h: 4,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'orderbook',
         x: 0,
-        y: 3,
-        w: 3,
-        h: 34,
+        y: 4,
+        w: 3.5,
+        h: 37,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'chart',
-        x: 3,
-        y: 3,
-        w: 10,
+        x: 3.5,
+        y: 4,
+        w: 9,
         h: 21,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'placeOrderForm',
-        x: 3,
+        x: 3.5,
         y: 6,
-        w: 10,
-        h: 13,
+        w: 9,
+        h: 16,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'symbolList',
-        x: 13,
-        y: 3,
-        w: 3,
-        h: 17,
+        x: 12.5,
+        y: 0,
+        w: 3.5,
+        h: 20,
         isDraggable: false,
         isResizable: false,
     },
     {
         i: 'trades',
-        x: 13,
+        x: 12.5,
         y: 17,
-        w: 3,
-        h: 20,
+        w: 3.5,
+        h: 21,
         minW: 10,
         isDraggable: false,
         isResizable: false,
@@ -351,9 +351,7 @@ const SpotComp = () => {
     };
 
     if (!symbol) return null;
-    console.log(layoutMode === SPOT_LAYOUT_MODE.PRO
-        ? layoutPro
-        : layoutSimple)
+   
     return (
         <MaldivesLayout
             hideFooter
@@ -372,7 +370,7 @@ const SpotComp = () => {
                     className={
                         layoutMode === SPOT_LAYOUT_MODE.PRO
                             ? 'w-full'
-                            : '2xl:container'
+                            : ''
                     }
                 >
                     <ReactGridLayout
@@ -401,7 +399,7 @@ const SpotComp = () => {
                         {!(!state.isShowSymbolList || layoutMode === SPOT_LAYOUT_MODE.PRO || fullScreen) && (
                             <div
                                 key="symbolList"
-                                className="border border-divider dark:border-divider-dark"
+                                className="border-l border-t border-divider dark:border-divider-dark"
                             >
                                 <SymbolList
                                     publicSocket={publicSocket}
@@ -434,7 +432,7 @@ const SpotComp = () => {
 
                         <div
                             key="trades"
-                            className={`border border-divider dark:border-divider-dark ${!state.isShowTrades || fullScreen ? 'hidden' : ''}`}
+                            className={`border-l border-t border-divider dark:border-divider-dark ${!state.isShowTrades || fullScreen ? 'hidden' : ''}`}
                         >
                             <Trades
                                 symbol={symbol}
@@ -460,7 +458,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="orderList"
-                            className={`border border-divider dark:border-divider-dark ${!state.isShowOrderList || fullScreen ? 'hidden' : ''}`}
+                            className={`border-t border-b border-divider dark:border-divider-dark ${!state.isShowOrderList || fullScreen ? 'hidden' : ''}`}
                         >
                             <div ref={orderListWrapperRef} className="h-full">
                                 <SpotOrderList
@@ -472,7 +470,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="orderbook"
-                            className={`border border-divider dark:border-divider-dark ${!state.isShowOrderBook || fullScreen ? 'hidden' : ''}`}
+                            className={`border-r border-b border-t border-divider dark:border-divider-dark ${!state.isShowOrderBook || fullScreen ? 'hidden' : ''}`}
                         >
                             <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout}/>
                         </div>

@@ -266,7 +266,7 @@ body {
 
   &::-webkit-scrollbar-thumb,
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-2 dark:bg-darkBlue-5 rounded-md;
+    @apply bg-gray-2 dark:bg-darkBlue-6 rounded-md;
 
     &:hover {
       @apply bg-dominant;
@@ -275,7 +275,7 @@ body {
 
   &::-webkit-scrollbar-track,
   ::-webkit-scrollbar-track {
-    @apply bg-gray-5 dark:bg-darkBlue-4 dark:opacity-50 rounded-md;
+    @apply bg-gray-5 dark:bg-bgSpotContainer-dark;
   }
 }
 

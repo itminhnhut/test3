@@ -66,7 +66,7 @@
     "filled": "Đã khớp",
     "sign_in": "Đăng nhập",
     "sign_up": "Đăng kí",
-    "sign_in_to_continue": "Đăng nhập ngay",
+    "sign_in_to_continue": "<span class='text-teal'>Đăng nhập</span>&nbsphoặc&nbsp<span class='text-teal'>Đăng ký</span>",
     "sign_up_to_continue": "Đăng ký ngay",
     "status": "Trạng thái",
     "transaction_id": "Mã giao dịch",

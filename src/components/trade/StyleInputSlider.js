@@ -4,7 +4,7 @@ import colors from 'styles/colors';
 export const Track = styled.div`
     position: relative;
     margin-left: 4px;
-    width: calc(100% - 6.5px);
+    width: ${({ onusMode }) => `calc(100% - ${onusMode ? '6.5px' : '8px'})`};
     cursor: pointer;
     display: flex;
     padding-bottom: 8px;
@@ -13,7 +13,7 @@ export const Track = styled.div`
     user-select: none;
     box-sizing: border-box;
     height: 4px;
-`
+`;
 
 export const Active = styled.div`
     position: absolute;
@@ -48,35 +48,36 @@ export const DotContainer = styled.div`
 
 export const Dot = styled.span`
     position: absolute;
-    top: ${({ onusMode, active }) => onusMode ? '-6.5px' : '-4px'};
+    top: ${({ onusMode, active }) => (onusMode ? '-6.5px' : '-4px')};
     //top: 10px;
-    left: ${({ percentage }) => `calc(${percentage}% - 6.5px)`};
-    clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
-    border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
-    width: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '9px'};
-    height: ${({ onusMode, active }) => onusMode ? (active ? '15px' : '9px') : '8px'};
+    left: ${({ percentage, onusMode }) => `calc(${percentage}% - ${onusMode ? '6.5px' : '4px'})`};
+    /* clip-path:${({ onusMode }) => (onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)')}; */
+    border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
+    width: ${({ onusMode, active }) => (onusMode ? (active ? '15px' : '9px') : '8px')};
+    height: ${({ onusMode, active }) => (onusMode ? (active ? '15px' : '9px') : '8px')};
     box-sizing: content-box;
     background-color: ${({ active, isDark, bgColorActive, bgColorDot }) =>
-        active ? bgColorActive ? bgColorActive : colors.teal : bgColorDot ? bgColorDot : isDark ? colors.darkBlue4 : colors.grey5};
+        active ? (bgColorActive ? bgColorActive : colors.teal) : bgColorDot ? bgColorDot : isDark ? colors.darkBlue4 : colors.grey5};
     z-index: 30;
-    border:${({ onusMode, active }) => onusMode && !active ? '3px solid #36445A' : 'none'};
+    border: ${({ onusMode, active }) => (onusMode && !active ? '3px solid #36445A' : 'none')};
     transition: transform 0.2s; /* Animation */
+    /* margin-left:${({ onusMode }) => (onusMode ? 0 : '-4px')} */
 
     &:hover {
-        background-color:${({ bgColorActive }) => bgColorActive ? bgColorActive : colors.teal};
+        background-color: ${({ bgColorActive }) => (bgColorActive ? bgColorActive : colors.teal)};
         transform: scale(1.4);
     }
-`
+`;
 
 export const Thumb = styled.div`
     position: relative;
     display: block;
     content: '';
     top: ${({ onusMode }) => onusMode ? '1px' : '0'};
-    width: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '14px'};
-    height: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '12px'};
-    clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'};
-    border-radius:${({ onusMode }) => onusMode ? '50%' : '0'};
+    width: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '16px'};
+    height: ${({ onusMode, naoMode }) => naoMode ? '32px' : onusMode ? '20px' : '16px'};
+    /* clip-path:${({ onusMode }) => onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)'}; */
+    border-radius:${({ onusMode }) => onusMode ? '50%' : '50%'};
     border:${({ onusMode, naoMode }) => onusMode && !naoMode ? '4px solid #76AEFF' : 'none'};
     background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
         naoMode ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)' :

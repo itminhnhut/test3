@@ -9,21 +9,28 @@ const commonColors = {
     darkBlue: '#223050',
     darkBlue1: '#00091F',
     darkBlue2: '#151D2F',
-    darkBlue3: '#263459',
+    darkBlue3: '#141921',
     darkBlue4: '#445271',
-    darkBlue5: '#7B8CB2',
+    darkBlue5: '#8694b2',
+    darkBlue6: '#2e333d',
+
+    dark: {
+        dark: '#0c0e14',
+        1: '#2e333d',
+        2: '#1c232e'
+    },
 
     gray1: '#718096',
     gray2: '#A0AEC0',
     gray3: '#CBD5E0',
-    gray4: '#F2F4F6',
+    gray4: '#e2e8f0',
     gray5: '#EDF1F6',
 
     white: 'white',
-    teal: '#00C8BC',
+    teal: '#47cc85',
     lightTeal: '#E2F6F5',
 
-    red2: '#E5544B',
+    red2: '#f93636',
 
     onus: {
         bg: '#1B222D',
@@ -143,7 +150,7 @@ module.exports = {
                 }
             ], // Body 2 18px
             xl: [
-                '1.3125rem',
+                '1.25rem',
                 {
                     letterSpacing: '-0.01em',
                     lineHeight: '2rem'
@@ -205,7 +212,12 @@ module.exports = {
 
             divider: {
                 DEFAULT: commonColors.gray4,
-                dark: '#202C4C'
+                dark: '#222940'
+            },
+
+            hover: {
+                DEFAULT: '#262b34',
+                dark: '#262b34'
             },
 
             //--------------------------------------------
@@ -243,6 +255,7 @@ module.exports = {
                 3: commonColors.darkBlue3,
                 4: commonColors.darkBlue4,
                 5: commonColors.darkBlue5,
+                6: commonColors.darkBlue6,
                 '5a': 'rgba(123, 140, 178, 0.8)'
             },
             gray: {
@@ -255,7 +268,7 @@ module.exports = {
                 5: commonColors.gray5
             },
             teal: {
-                DEFAULT: '#00C8BC',
+                DEFAULT: commonColors.teal,
                 5: '#03bdce17',
                 50: '#b3efeb',
                 100: '#99e9e4',
@@ -280,7 +293,7 @@ module.exports = {
             },
             yellow: { DEFAULT: '#FFD965' },
             red: {
-                DEFAULT: '#E5544B',
+                DEFAULT: commonColors.red2,
                 lightRed: '#E5544B19'
             },
             pink: { DEFAULT: '#E5544B' },
@@ -295,6 +308,10 @@ module.exports = {
             nao: {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao
+            },
+            dark: {
+                DEFAULT: commonColors.dark.dark,
+                ...commonColors.dark
             }
         },
         extend: {
@@ -376,7 +393,7 @@ module.exports = {
                 },
                 bgSpotContainer: {
                     DEFAULT: '#fff',
-                    dark: commonColors.darkBlue1
+                    dark: commonColors.dark.dark
                 },
                 headerBg: {
                     DEFAULT: 'rgba(0, 0, 0, 0.3)',
