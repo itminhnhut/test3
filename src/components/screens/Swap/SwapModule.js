@@ -26,6 +26,7 @@ import { roundToDown } from 'round-to';
 import Button from 'components/common/Button';
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import SvgDropDown from 'components/svg/SvgDropdown';
+import router from 'next/router';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -300,6 +301,11 @@ const SwapModule = ({ width, pair }) => {
         );
     }, [state.fromAsset]);
 
+    const handleDepositIconBtn = useCallback(() => {
+        if (!state.fromAsset) return null;
+        router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
+    }, [state.fromAsset]);
+
     const renderFromInput = useCallback(() => {
         return (
             <div className="flex items-center justify-between bg-transparent">
@@ -349,18 +355,15 @@ const SwapModule = ({ width, pair }) => {
         const data = state.fromAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { fromAsset, available, displayPriceAsset } = data?.[i];
+            const { fromAsset, available } = data?.[i];
             const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
             assetItems.push(
                 <div
                     key={`asset_item___${i}`}
                     className={`text-txtSecondary dark:text-[#e2e8f0] leading-6 text-left text-base
-                    px-2.5 py-2 mt-1.5 flex items-center justify-between cursor-pointer font-normal rounded-lg
-                    ${
-                        state.fromAsset === fromAsset
-                            ? ' text-dominant bg-teal-lightTeal dark:bg-darkBlue-5'
-                            : 'hover:bg-teal-lightTeal dark:hover:bg-darkBlue-5'
-                    }
+                    px-4 py-4 flex items-center justify-between cursor-pointer font-normal
+                    ${i !== 0 && 'mt-3'}
+                    ${state.fromAsset === fromAsset ? ' text-dominant bg-teal-lightTeal dark:bg-[#262b34]' : 'hover:bg-teal-lightTeal dark:hover:bg-[#262b34]'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
@@ -386,7 +389,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
                         <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
                         <input
-                            className="px-2 w-full text-txtSecondary dark:text-[#8694b2]"
+                            className="px-2 py-1 w-full text-txtSecondary dark:text-[#8694b2]"
                             value={state.search}
                             placeholder={language === LANGUAGE_TAG.EN ? 'Search Assets...' : 'Tìm tài sản...'}
                             onChange={(e) => setState({ search: e.target?.value })}
@@ -398,12 +401,13 @@ const SwapModule = ({ width, pair }) => {
                         /> */}
                     </div>
                 </div>
-                <div className="mt px-2.5 max-h-[200px] overflow-y-auto">
+                <div className="mt-6 max-h-[332px] overflow-y-auto">
                     {assetItems?.length ? (
                         assetItems
                     ) : (
-                        <div className="h-[50px] flex items-center justify-center text-center text-sm italic text-txtSecondary dark:text-txtSecondary-dark">
-                            {language === LANGUAGE_TAG.EN ? 'Not found asset' : 'Không tìm thấy tài sản'}
+                        <div className="h-[332px] flex flex-col items-center justify-center">
+                            <img src={'/images/screen/swap/no-result.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                            <span className="text-base leading-6  text-txtSecondary dark:text-[#8694b2]"> {t('common:swap_no_search_results')}</span>
                         </div>
                     )}
                 </div>
@@ -577,7 +581,6 @@ const SwapModule = ({ width, pair }) => {
         }
 
         const shouldDisable = error || !state.fromAmount || !state.estRate;
-
         return (
             <div
                 className={`block h-12 mt-8 py-3 w-full rounded-md text-center ${
@@ -781,8 +784,8 @@ const SwapModule = ({ width, pair }) => {
         <>
             <div className="font-sfPro flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
                 <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[524px] bg-transparent rounded-xl">
-                    <div className="flex flex-col justify-center items-center">
-                        <span className="text-4xl font-bold leading-[1.19] mb-9">{t('navbar:submenu.swap')}</span>
+                    <div className="flex flex-col justify-center items-center pb-8">
+                        <span className="text-4xl font-bold leading-[1.19]">{t('navbar:submenu.swap')}</span>
                     </div>
 
                     {/* <div className="flex mb-3 items-center justify-between font-bold">
@@ -799,7 +802,15 @@ const SwapModule = ({ width, pair }) => {
                                     <span>
                                         {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
                                     </span>
-                                    <SvgAddCircle size={13.3} color={'#47cc85'} className="cursor-pointer" />
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            handleDepositIconBtn();
+                                        }}
+                                    >
+                                        <SvgAddCircle size={13.3} color={'#47cc85'} className="cursor-pointer" />
+                                    </button>
                                 </div>
                             </div>
                             {renderFromInput()}
