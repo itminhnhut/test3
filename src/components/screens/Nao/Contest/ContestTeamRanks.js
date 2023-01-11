@@ -352,6 +352,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                         />
                     )}
                     <Column maxWidth={100} minWidth={100} align="right" className="font-medium" title={''} cellRender={renderActions} />
+                    {/* formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY') */}
                 </Table>
             )}
             {lastUpdated && lastUpdatedTime.current && (
