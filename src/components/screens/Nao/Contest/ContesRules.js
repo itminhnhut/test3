@@ -11,7 +11,20 @@ import { useRouter } from 'next/router';
 import { Popover, Transition } from '@headlessui/react';
 import orderBy from 'lodash/orderBy';
 import classNames from 'classnames';
-const ContesRules = ({ inHome = false, previous, season, start, end, seasons, title, title_champion, rules, total_rewards, title_detail }) => {
+const ContesRules = ({
+    inHome = false,
+    seasonConfig = '',
+    previous,
+    season,
+    start,
+    end,
+    seasons,
+    title,
+    title_champion,
+    rules,
+    total_rewards,
+    title_detail
+}) => {
     const {
         t,
         i18n: { language }
@@ -94,42 +107,6 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
         return array_move(dataFilter, active, 0);
     }, [seasons]);
 
-    const teamp1 = () => {
-        return (
-            <section className="contest_rules pt-[3.375rem] flex justify-center md:justify-between flex-wrap relative text-center sm:text-left">
-                <div>
-                    <label className="text-[1.75rem] sm:text-[2.125rem] text-nao-white font-semibold leading-10">{title?.[language]}</label>
-                    <div className="text-nao-text text-sm sm:text-lg pt-3 sm:pt-[6px] leading-6">
-                        {t('nao:contest:description')}
-                        <span className="text-nao-green font-semibold">{total_rewards}</span>
-                    </div>
-                    <div className="gap-4 flex items-center pt-9 sm:pt-6 flex-wrap justify-center sm:justify-start">
-                        {inHome ? (
-                            <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md">
-                                {t('nao:contest:ranking')}
-                            </ButtonNao>
-                        ) : (
-                            <ButtonNao onClick={() => router.push(rules)} className="px-[18px] text-sm font-semibold w-max !rounded-md">
-                                {t('nao:contest:detail_rules')}
-                            </ButtonNao>
-                        )}
-                        <DropdownPreSeason t={t} language={language} seasonsFilter={seasonsFilter} router={router} season={season} />
-                        <CardNao
-                            customHeight={'sm:min-h-[40px] lg:min-h-[40] min-h-[50px]'}
-                            noBg
-                            className="flex !flex-row !justify-center md:!justify-start !py-3 items-center gap-3 sm:!bg-none flex-wrap"
-                        >
-                            {renderCountDown()}
-                        </CardNao>
-                    </div>
-                </div>
-                <div className="relative xl:-top-10 sm:m-auto md:m-auto mt-4">
-                    <img src={getS3Url('/images/nao/contest/ic_contest_info.png')} alt="" width={300} height={292} />
-                </div>
-            </section>
-        );
-    };
-
     return (
         <section className="contest_rules pt-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
@@ -160,13 +137,23 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
                 </div>
             </div>
             <div className="mt-9 mb:mt-0 text-center">
-                <Image
-                    src={getS3Url('/images/contest/bg-contest.png')}
-                    width="568px"
-                    height="369px"
-                    title={title_champion?.[language]}
-                    alt={title_champion?.[language]}
-                />
+                {season === seasonConfig ? (
+                    <Image
+                        src={getS3Url('/images/contest/bg-contest.png')}
+                        width="568px"
+                        height="369px"
+                        title={title_champion?.[language]}
+                        alt={title_champion?.[language]}
+                    />
+                ) : (
+                    <Image
+                        src={getS3Url('/images/nao/contest/ic_contest_info.png')}
+                        width="300px"
+                        height="292px"
+                        title={title_champion?.[language]}
+                        alt={title_champion?.[language]}
+                    />
+                )}
             </div>
         </section>
     );

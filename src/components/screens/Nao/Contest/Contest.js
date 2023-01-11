@@ -362,7 +362,7 @@ const Contest = (props) => {
                 />
             )}
             <div className="nao_section">
-                <ContesRules seasons={seasons} {...props} />
+                <ContesRules seasons={seasons} seasonConfig={SEASON} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
 
                 {props?.season === SEASON ? (
