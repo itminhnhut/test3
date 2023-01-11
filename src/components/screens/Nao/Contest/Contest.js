@@ -151,6 +151,7 @@ export const seasons = [
 ];
 
 const CONTEST_ID = 10;
+const SEASON = 7;
 
 const initState = {
     tab: 'Contest Ranking',
@@ -181,7 +182,6 @@ const Contest = (props) => {
     const [loadingSpecial, setLoadingSpecial] = useState(initState.loadingSpecial);
 
     const handleChangTab = async (value) => {
-        console.log(value);
         setTab(value);
         setLoadingSpecial(!loadingSpecial);
 
@@ -217,6 +217,12 @@ const Contest = (props) => {
             setLoadingSpecial(initState.loadingSpecial);
         }
     };
+
+    useEffect(() => {
+        if (props.season === SEASON && tab === initState.tab2) {
+            setTab(initState.tab);
+        }
+    }, [props.season]);
 
     const onShowDetail = (e, sort) => {
         sortName.current = sort;
@@ -310,9 +316,9 @@ const Contest = (props) => {
         );
     };
 
-    const renderContentTab1 = () => {
+    const renderContestRank = () => {
         return (
-            <section id="content1" className={`${tab === initState?.tab1 ? 'inline' : 'hidden'}`}>
+            <>
                 {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} lastUpdatedTime={lastUpdatedTime} sort="pnl" />}
                 <ContestTeamRanks
                     {...props}
@@ -323,6 +329,13 @@ const Contest = (props) => {
                     showPnl={showPnl}
                 />
                 <ContestPerRanks {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} showPnl={showPnl} />
+            </>
+        );
+    };
+    const renderContentTab1 = () => {
+        return (
+            <section id="content1" className={`${tab === initState?.tab1 ? 'inline' : 'hidden'}`}>
+                {renderContestRank()}
             </section>
         );
     };
@@ -352,11 +365,15 @@ const Contest = (props) => {
                 <ContesRules seasons={seasons} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
 
-                <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
-                    {renderTab()}
-                    {renderContentTab1()}
-                    {renderContentTab2()}
-                </div>
+                {props?.season === SEASON ? (
+                    <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
+                        {renderTab()}
+                        {renderContentTab1()}
+                        {renderContentTab2()}
+                    </div>
+                ) : (
+                    renderContestRank()
+                )}
             </div>
         </LayoutNaoToken>
     );

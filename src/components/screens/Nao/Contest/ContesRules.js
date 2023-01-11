@@ -18,7 +18,6 @@ const ContesRules = ({ inHome = false, previous, season, start, end, seasons, ti
     } = useTranslation();
     const router = useRouter();
     const renderCountDown = (classNameContainer, classNameCountdown) => {
-        console.log(classNameContainer);
         const CONTEST_TIME = {
             START: new Date(start).getTime(),
             END: new Date(end).getTime()
