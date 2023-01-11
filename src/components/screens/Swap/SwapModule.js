@@ -10,7 +10,7 @@ import Link from 'next/link';
 import * as Error from '../../../redux/actions/apiError';
 import Skeletor from 'src/components/common/Skeletor';
 import useOutsideClick from 'hooks/useOutsideClick';
-import Modal from 'src/components/common/ReModal';
+import Modal from 'src/components/common/SwapReModal';
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
@@ -598,39 +598,49 @@ const SwapModule = ({ width, pair }) => {
         );
     }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.fromErrors]);
 
+    // Modal confirmation
     const renderPreOrderModal = useCallback(() => {
         const positiveLabel = swapTimer <= 1 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
-
         return (
-            <Modal isVisible={state.openModal} title={t('convert:confirm')} containerClassName="px-6 py-5 md:min-w-[400px]">
-                <div className="absolute top-5 right-6 cursor-pointer" onClick={onCloseSwapModal}>
-                    <X size={18} className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant" />
+            <Modal
+                isVisible={state.openModal}
+                useCross={true}
+                onClose={onCloseSwapModal}
+                title={t('convert:confirm')}
+                containerClassName={`p-8 md:min-w-[488px] dark:!bg-[#0c0e14] border dark:border-[#222940] ${!state.openModal && 'hidden'}`}
+            >
+                {/* <div className="flex flex-row-reverse cursor-pointer" onClick={onCloseSwapModal}>
+                    <X size={24} className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant" />
+                </div> */}
+                <div className="flex flex-col items-start justify-between gap-2">
+                    <span className="text-sm leading-5 font-sfPro text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-[#1c232e] px-3 py-2 flex justify-between text-base items-center leading-6">
+                        <span className="py-1 dark:text-[#e2e8f0]">{formatPrice(state.preOrder?.fromQty)} </span>
+                        <span className="dark:text-[#8694b2]">{state.preOrder?.fromAsset}</span>
+                    </div>
                 </div>
-                <div className="flex items-end justify-between mt-4 text-sm">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
-                    <span className="font-medium">
-                        {formatPrice(state.preOrder?.fromQty)} {state.preOrder?.fromAsset}
-                    </span>
+
+                <div className="flex flex-col mt-4 items-start justify-between gap-2">
+                    <span className="text-sm leading-5 font-sfPro text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-[#1c232e] px-3 py-2 flex justify-between text-base items-center leading-6">
+                        <span className="py-1 dark:text-[#e2e8f0]">{formatPrice(state.preOrder?.toQty)}</span>
+                        <span className="dark:text-[#8694b2]">{state.preOrder?.toAsset}</span>
+                    </div>
                 </div>
-                <div className="flex items-end justify-between mt-4 text-sm">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
-                    <span className="font-medium">
-                        {formatPrice(state.preOrder?.toQty)} {state.preOrder?.toAsset}
-                    </span>
-                </div>
-                <div className="flex items-end justify-between mt-4 text-sm">
+                <div className="flex items-end justify-between mt-4 text-base leading-6">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:rate')}:</span>
-                    <span className="font-medium">
+                    <span className="font-semibold">
                         1 {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.toAsset : state.preOrder?.fromAsset} ={' '}
                         {formatPrice(state.preOrder?.displayingPrice)} {config?.displayPriceAsset}
                     </span>
                 </div>
-                <div className="mt-6 w-full flex flex-row items-center justify-between">
+                <div className="mt-10 w-full flex flex-row items-center justify-between">
                     <Button
+                        color="#47cc85"
                         title={positiveLabel}
                         type="primary"
                         componentType="button"
-                        className="!py-2"
+                        className="!py-3 text-base"
                         onClick={() =>
                             swapTimer
                                 ? onConfirmOrder(state.preOrder?.preOrderId)
