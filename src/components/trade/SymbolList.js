@@ -306,7 +306,7 @@ const SymbolList = (props) => {
                             onClick={() => setActiveTab('favorite')}
                         >
                             <IconStarFilled
-                                size={12}
+                                size={14}
                                 color={activeTab === 'favorite' ? colors.yellow : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
                             />
                         </div>

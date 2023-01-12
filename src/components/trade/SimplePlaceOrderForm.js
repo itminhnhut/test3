@@ -764,7 +764,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 <TradingInput
                     label={t('total')}
                     labelClassName="!text-sm !font-normal"
-                    value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuantity : sellQuantity}
+                    value={_orderSide === ExchangeOrderEnum.Side.BUY ? buyQuoteQty : sellQuoteQty}
                     onChange={() => setIsUseQuoteQuantity(true)}
                     onValueChange={({ value }) => {
                         if (_orderSide === ExchangeOrderEnum.Side.BUY) {

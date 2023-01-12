@@ -76,26 +76,26 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
-        nami: '#0E1113',
+        nami: '#0E1113'
     },
     namiv2: {
         black: {
             DEFAULT: '#0c0e14',
-            1: '#141921',
+            1: '#141921'
         },
         gray: {
             DEFAULT: '#1c232e',
             1: '#8694b2',
             2: '#e2e8f0',
-            3: '#222940',
+            3: '#222940'
         },
         green: {
-            DEFAULT: '#47cc85',
+            DEFAULT: '#47cc85'
         },
         red: {
-            DEFAULT: '#f93636',
-        },
-    },
+            DEFAULT: '#f93636'
+        }
+    }
 };
 
 module.exports = {
@@ -122,7 +122,8 @@ module.exports = {
         fontFamily: {
             sans: ['Barlow', 'sans-serif'],
             serif: ['serif'],
-            inter: ['Inter', 'sans-serif']
+            inter: ['Inter', 'sans-serif'],
+            'SF-Pro': ['SF-Pro']
         },
         fontSize: {
             xxs: [
@@ -143,7 +144,7 @@ module.exports = {
                 '.875rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.3125rem'
+                    lineHeight: '1.25rem'
                 }
             ], // Small text 14px
             tiny: [
@@ -171,7 +172,7 @@ module.exports = {
                 '1.25rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '2rem'
+                    lineHeight: '1.25rem'
                 }
             ], // Body 1, Heading 6 21px
             '2xl': [
@@ -228,6 +229,7 @@ module.exports = {
                 dark: commonColors.darkBlue3
             },
 
+            shadow: '#0c0e14',
             divider: {
                 DEFAULT: commonColors.gray4,
                 dark: '#222940'
@@ -400,7 +402,7 @@ module.exports = {
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
                     DEFAULT: commonColors.white,
-                    dark: commonColors.darkBlue2
+                    dark: commonColors.dark.dark
                 },
                 bgSecondary: {
                     DEFAULT: commonColors.gray4,
@@ -444,7 +446,7 @@ module.exports = {
                 },
                 bgButtonDisabled: {
                     DEFAULT: '#ebedf3',
-                    dark: commonColors.darkBlue3
+                    dark: commonColors.dark[2]
                 }
             },
             fontWeight: { bold: 600 },

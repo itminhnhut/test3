@@ -1,31 +1,39 @@
-import SvgCross from 'src/components/svg/Cross';
+import Delete from 'src/components/svg/Delete';
 import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Emitter from 'redux/actions/emitter';
-import { tableStyle } from 'src/config/tables';
 import { API_GET_OPEN_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
-import { formatBalance, formatTime } from 'src/redux/actions/utils';
+import { formatBalance, formatTime, TypeTable } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
-import TableNoData from '../common/table.old/TableNoData';
-import TableLoader from '../loader/TableLoader';
 import Link from 'next/link';
+import { formatNumber } from 'redux/actions/utils';
+import TableV2 from '../common/V2/TableV2';
+import AlertModalV2 from '../common/V2/ModalV2/AlertModalV2';
 
 const SpotOrderList = (props) => {
-    const { t } = useTranslation(['common', 'spot']);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['common', 'spot']);
     const { toggle } = props;
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [loading, setLoading] = useState(false);
     const userSocket = useSelector((state) => state.socket.userSocket);
     const user = useSelector((state) => state.auth.user);
-    const [currentPage, setCurrentPage] = useState(1);
     const { currentPair, filterByCurrentPair, darkMode } = props;
+    const [showCloseAll, setShowCloseAll] = useState(false);
+    const [showSuccess, setshowSuccess] = useState(false);
+    const alert = useRef({
+        title: '',
+        message: ''
+    });
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         if (filterByCurrentPair) {
@@ -37,43 +45,94 @@ const SpotOrderList = (props) => {
     }, [orders, currentPair, filterByCurrentPair]);
 
     const closeOrder = async (order) => {
-        const { displayingId, symbol } = order;
-        const res = await fetchAPI({
-            url: '/api/v3/spot/order',
-            options: {
-                method: 'DELETE'
-            },
-            params: {
-                displayingId,
-                symbol
-            }
-        });
-        const { status, data } = res;
-        let message = '';
-        if (status === ApiStatus.SUCCESS) {
-            message = t('spot:close_order_success', {
-                displayingId,
-                side: data?.side,
-                type: data?.type,
-                token: `${data?.baseAsset}/${data?.quoteAsset}`
-            });
-            showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
-        } else {
-            showNotification(
-                {
-                    message: t('spot:close_order_failed', {
-                        displayingId,
-                        side: order?.side,
-                        type: order?.type,
-                        token: `${order?.baseAsset}/${order?.quoteAsset}`
-                    }),
-                    title: 'Failure',
-                    type: 'failure'
+        if (loaded) return;
+        try {
+            setLoaded(true);
+            const { displayingId, symbol } = order;
+            const res = await fetchAPI({
+                url: '/api/v3/spot/order',
+                options: {
+                    method: 'DELETE'
                 },
-                null,
-                'bottom',
-                'bottom-right'
-            );
+                params: {
+                    displayingId,
+                    symbol
+                }
+            });
+            const { status, data } = res;
+            if (status === ApiStatus.SUCCESS) {
+                alert.current = {
+                    title: 'Đóng thành công',
+                    message: t('spot:close_order_success', {
+                        displayingId,
+                        side: data?.side,
+                        type: data?.type,
+                        token: `${data?.baseAsset}/${data?.quoteAsset}`
+                    })
+                };
+                // message = t('spot:close_order_success', {
+                //     displayingId,
+                //     side: data?.side,
+                //     type: data?.type,
+                //     token: `${data?.baseAsset}/${data?.quoteAsset}`
+                // });
+                // showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
+            } else {
+                showNotification(
+                    {
+                        message: t('spot:close_order_failed', {
+                            displayingId,
+                            side: order?.side,
+                            type: order?.type,
+                            token: `${order?.baseAsset}/${order?.quoteAsset}`
+                        }),
+                        title: 'Failure',
+                        type: 'failure'
+                    },
+                    null,
+                    'bottom',
+                    'bottom-right'
+                );
+            }
+        } catch (error) {
+        } finally {
+            setTimeout(() => {
+                setLoaded(false);
+            }, 200);
+        }
+    };
+
+    const onCloseAll = async () => {
+        try {
+            setLoaded(true);
+            const res = await fetchAPI({
+                url: '/api/v3/spot/all_order',
+                options: {
+                    method: 'DELETE'
+                }
+            });
+            const { status, data } = res;
+            if (status === ApiStatus.SUCCESS) {
+                alert.current = {
+                    title: 'Đóng tất cả thành công',
+                    message: 'Bạn đã đặt lệnh đóng cho tất cả các lệnh thành công.'
+                };
+            } else {
+                showNotification(
+                    {
+                        message: t('common:failed'),
+                        title: 'Failure',
+                        type: 'failure'
+                    },
+                    null,
+                    'bottom',
+                    'bottom-right'
+                );
+            }
+        } catch (error) {
+        } finally {
+            setShowCloseAll(false);
+            setLoaded(false);
         }
     };
 
@@ -126,203 +185,93 @@ const SpotOrderList = (props) => {
         };
     }, [userSocket]);
 
-    const customStyles = {
-        ...tableStyle,
-        table: {
-            style: {
-                ...tableStyle.table?.style,
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                minHeight: loading ? 0 : '200px'
-            }
-        },
-        headCells: {
-            style: {
-                ...tableStyle.headCells?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                padding: 0
-            },
-            activeSortStyle: {
-                cursor: 'pointer',
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                }
-            },
-            inactiveSortStyle: {
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B'
-                }
-            }
-        },
-        headRow: {
-            style: {
-                ...tableStyle.headRow?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF'
-            }
-        },
-        rows: {
-            style: {
-                ...tableStyle.rows?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                '&:hover': {
-                    background: darkMode ? '#212537' : '#F6F9FC'
-                }
-            }
-        },
-        cells: {
-            style: {
-                ...tableStyle.cells?.style,
-                color: darkMode ? '#DBE3E6' : '#02083D',
-                padding: 0,
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#02083D'
-                }
-            }
-        },
-        pagination: {
-            style: {
-                ...tableStyle.pagination?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF'
-            },
-            pageButtonsStyle: {
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
-                '&:hover:not(:disabled)': {
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6'
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6'
-                },
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
-                    fill: darkMode ? '#8B8C9B' : '#d1d1d1'
-                }
-            }
-        }
-    };
-
     const columns = useMemo(
         () => [
             {
-                name: t('common:order_id'),
-                selector: 'displayingId',
-                ignoreRowClick: true,
-                omit: false,
-                minWidth: '50px'
+                key: 'displayingId',
+                title: t('common:order_id'),
+                dataIndex: 'displayingId',
+                width: 120
             },
             {
-                name: t('common:time'),
-                selector: 'createdAt',
-                ignoreRowClick: true,
-                omit: false,
-                minWidth: '100px',
-                cell: (row) => formatTime(row.createdAt)
+                key: 'createdAt',
+                title: t('common:time'),
+                dataIndex: 'createdAt',
+                width: 180,
+                render: (v) => <span>{formatTime(v)}</span>
             },
             {
-                name: t('common:pair'),
-                selector: 'symbol',
-                ignoreRowClick: true,
-                minWidth: '100px',
-                cell: (row) =>
+                key: 'symbol',
+                title: t('common:pair'),
+                dataIndex: 'symbol',
+                width: 150,
+                render: (v, row) =>
                     currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ? (
                         <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
-                            <a className="dark:text-white text-darkBlue">{row?.symbol}</a>
+                            <a className="dark:text-white text-darkBlue">{`${row?.baseAsset}/${row?.quoteAsset}`}</a>
                         </Link>
                     ) : (
-                        row?.symbol
+                        `${row?.baseAsset}/${row?.quoteAsset}`
                     )
             },
             {
-                name: t('common:order_type'),
-                selector: 'type',
-                ignoreRowClick: true,
-                minWidth: '50px'
+                key: 'type',
+                title: t('common:order_type'),
+                dataIndex: 'type',
+                width: 150,
+                render: (v, row) => <TypeTable type={'type'} data={row} />
             },
             {
-                name: `${t('common:buy')}/${t('common:sell')}`,
-                selector: 'side',
-                ignoreRowClick: true,
-                minWidth: '50px',
-                conditionalCellStyles: [
-                    {
-                        when: (row) => row.side === 'SELL',
-                        style: {
-                            color: '#E5544B !important'
-                        }
-                    },
-                    {
-                        when: (row) => row.side === 'BUY',
-                        style: {
-                            color: '#00C8BC !important'
-                        }
-                    }
-                ]
+                key: 'side',
+                title: `${t('common:buy')}/${t('common:sell')}`,
+                dataIndex: 'side',
+                width: 100,
+                render: (v, row) => <TypeTable type={'side'} data={row} />
             },
             {
-                name: t('common:order_price'),
-                ignoreRowClick: true,
-                right: true,
-                cell: (row) => formatBalance(row.price, 6),
-                minWidth: '80px'
+                key: 'order_price',
+                title: t('common:order_price'),
+                width: 150,
+                align: 'right',
+                render: (row) => formatBalance(row.price, 6)
             },
             {
-                name: t('common:open_quantity'),
-                ignoreRowClick: true,
-                right: true,
-                minWidth: '80px',
-                cell: (row) => row.quantity
+                key: 'open_quantity',
+                title: t('common:open_quantity'),
+                width: 150,
+                align: 'right',
+                render: (row) => formatNumber(row.quantity)
             },
             {
-                name: t('common:filled'),
-                minWidth: '80px',
-                right: true,
-                cell: (row) => {
+                key: 'filled',
+                title: t('common:filled'),
+                align: 'right',
+                width: 100,
+                render: (row) => {
                     return <span>{formatBalance((row?.executedQty / row?.quantity) * 100, 2)}%</span>;
                 }
             },
             {
-                name: '',
-                ignoreRowClick: true,
-                right: true,
-                minWidth: '40px',
-                // omit: !toggle,
-                cell: (row) => (
-                    <span
-                        className="p-2 cursor-pointer"
+                key: 'actions',
+                title: (
+                    <span onClick={() => setShowCloseAll(true)} className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer">
+                        Đóng tất cả
+                    </span>
+                ),
+                fixed: 'right',
+                align: 'center',
+                width: 150,
+                render: (row) => (
+                    <Delete
+                        className="cursor-pointer flex m-auto w-full"
                         onClick={() => {
                             closeOrder(row);
                         }}
-                    >
-                        <SvgCross />
-                    </span>
+                    />
                 )
             }
         ],
-        [toggle, currentPair]
+        [toggle, currentPair, showCloseAll, loaded]
     );
 
     const getOrderList = async () => {
@@ -344,23 +293,34 @@ const SpotOrderList = (props) => {
     }, [user]);
 
     return (
-        <DataTable
-            data={filteredOrders}
-            columns={columns}
-            className="h-full"
-            customStyles={customStyles}
-            noHeader
-            fixedHeader
-            fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 100}px`}
-            dense
-            pagination
-            paginationPerPage={30}
-            paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
-            noDataComponent={<TableNoData bgColor={darkMode ? 'bg-dark-2' : '#FFFFFF'} />}
-            progressPending={loading}
-            progressComponent={<TableLoader height={props.height} />}
-        />
-       
+        <>
+            <AlertModalV2
+                isVisible={showCloseAll}
+                onClose={() => setShowCloseAll(false)}
+                type="warning"
+                title="Đóng tất cả"
+                message="Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?"
+                textButton={t('common:confirm')}
+                onConfirm={onCloseAll}
+            />
+            <AlertModalV2
+                isVisible={showSuccess}
+                onClose={() => setshowSuccess(false)}
+                type="success"
+                title={alert.current.title}
+                message={alert.current.message}
+            />
+            <TableV2
+                defaultSort={{ key: 'createdAt', direction: 'desc' }}
+                useRowHover
+                data={filteredOrders}
+                columns={columns}
+                rowKey={(item) => `${item?.displayingId}`}
+                loading={loading}
+                limit={10}
+                skip={0}
+            />
+        </>
     );
 };
 

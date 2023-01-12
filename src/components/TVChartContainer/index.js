@@ -36,7 +36,7 @@ export class TVChartContainer extends React.PureComponent {
         // chartCompareLoaded: true,
     };
 
-    tvWidget = null;
+    widget = null;
     drawnOrder = {};
     drawnSl = {};
     drawnTp = {};
@@ -81,9 +81,9 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.tvWidget !== null) {
-            this.tvWidget.remove();
-            this.tvWidget = null;
+        if (this?.widget !== null) {
+            this?.widget.remove();
+            this?.widget = null;
         }
         clearInterval(this.intervalSaveChart);
     }
@@ -560,6 +560,7 @@ export class TVChartContainer extends React.PureComponent {
                                 customChartFullscreen={this.props.customChartFullscreen}
                                 fullScreen={this.props.fullScreen}
                                 isVndcFutures={this.props.isVndcFutures}
+                                reNewComponentKey={this.props.reNewComponentKey}
                             />
                         )}
                     </div>

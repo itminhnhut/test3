@@ -68,9 +68,9 @@ const SymbolListItem = (props) => {
         >
             <div className="mr-1.5 cursor-pointer" onClick={() => handleSetFavorite(pairKey)}>
                 {alreadyInFav ? (
-                    <IconStarFilled color={colors.yellow} />
+                    <IconStarFilled size={14} color={colors.yellow} />
                 ) : (
-                    <IconStarFilled color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                    <IconStarFilled size={14} color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
                 )}
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>

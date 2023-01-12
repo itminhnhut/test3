@@ -1,9 +1,12 @@
 import { Popover, Transition } from '@headlessui/react';
 import ChevronDown from 'src/components/svg/ChevronDown';
+import RevertIcon from 'src/components/svg/Revert';
 import find from 'lodash/find';
 import * as React from 'react';
 import { Component, Fragment } from 'react';
 import { TrendIcon } from 'components/svg/SvgIcon';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Button from 'components/common/V2/ButtonV2/Button';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -81,7 +84,8 @@ export default class TimeFrame extends Component {
         selectedTime: '60',
         activeStudiesMap: new Map(),
         search: '',
-        openPopover: false
+        openPopover: false,
+        showModal: false
     };
 
     constructor(props) {
@@ -272,7 +276,7 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`cursor-pointer w-full px-3 py-1 text-xs text-center rounded-sm ${
+                                                        className={`cursor-pointer w-full px-3 py-1 text-xs text-center rounded-sm bg-dark-2 dark:hover:bg-hover-dark ${
                                                             isActive
                                                                 ? 'border-teal text-teal dark:border-teal dark:text-teal'
                                                                 : 'border-gray-5  text-txtSecondary dark:text-txtSecondary-dark dark:border-darkBlue-5'
@@ -289,7 +293,7 @@ export default class TimeFrame extends Component {
                         </>
                     )}
                 </Popover>
-
+                <RevertIcon onClick={() => this.setState({ showModal: true })} className="cursor-pointer" />
                 <Popover className="relative">
                     {({ open, close }) => (
                         <>
@@ -375,19 +379,39 @@ export default class TimeFrame extends Component {
         );
     }
 
+    onAction = (key) => {
+        switch (key) {
+            case 'remove':
+                this.props.handleRemoveAllStudies();
+                break;
+            case 'reset':
+                this.props.reNewComponentKey();
+                break;
+            default:
+                break;
+        }
+        this.setState({ showModal: false });
+    };
+
     render() {
-        const { chartType, handleChartType, widget, isOnSidebar, customChartFullscreen, fullScreen } = this.props;
-
-        const { selectedTime } = this.state;
-        // const studiesList = widget?.getStudiesList() || [];
-        // const language = 'en';
-        // const indicators = studiesList.map((e) => ({
-        //     id: e,
-        //     label: language === 'vi' ? locale_vi[`${e}_study`] || e : e,
-        // }));
-
         return (
             <div className="flex items-center justify-between w-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
+                <AlertModalV2
+                    isVisible={this.state.showModal}
+                    onClose={() => this.onAction()}
+                    type="warning"
+                    title="Xoá dữ liệu biểu đồ"
+                    message="Bạn có muốn xoá hết dữ liệu Chỉ báo và Phân tích? Nếu bạn gặp lỗi với biểu đồ, nhấn “Đặt lại biểu đồ”."
+                    customButton={
+                        <div className="space-y-6 w-full mt-10 text-center">
+                            <Button onClick={() => this.onAction('remove')}>Xoá chỉ báo và phân tích</Button>
+                            <div onClick={() => this.onAction('reset')} className="font-medium text-teal cursor-pointer">
+                                Đặt lại biểu đồ
+                            </div>
+                        </div>
+                    }
+                />
+
                 {this._renderCommonTimeframes()}
                 {this._renderChartMode()}
             </div>

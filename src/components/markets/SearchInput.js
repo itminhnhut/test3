@@ -31,7 +31,7 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
         <div className="form-group" style={customWrapperStyle}>
             <div
                 className={classNames(
-                    'bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between py-2 rounded-md hover:bg-red',
+                    'bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between py-2 rounded-md',
                     {
                         '!border-teal': focus
                     }

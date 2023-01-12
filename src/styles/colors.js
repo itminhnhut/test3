@@ -49,17 +49,14 @@ const colors = {
 
     dark: {
         dark: '#0c0e14',
-        1: '#2e333d'
-    },
-
-    divider: {
-        dark: '#222940'
+        1: '#2e333d',
+        2: '#1c232e'
     },
 
     grey1: '#718096',
     grey2: '#A0AEC0',
     grey3: '#CBD5E0',
-    grey4: '#F2F4F6',
+    grey4: '#e2e8f0',
     grey5: '#EDF1F6',
 
     green: '#00C8BC',
@@ -68,6 +65,11 @@ const colors = {
     navy: '#191489',
     marina: '#A6D4FF',
     blue: '#2D9CDB',
+
+    divider: {
+        DEFAULT: '#e2e8f0',
+        dark: '#222940'
+    },
 
     overlayLight: 'rgba(0, 0, 0, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.45)',
@@ -118,33 +120,30 @@ const colors = {
         tooltip2: '#071120'
     },
     portfolio: {
-        teal: [
-            '#52EAD1',
-            '#33FFDD',
-            '#80FFEA',
-            '#B3FFF2',
-            '#D9FFF8',
-        ]
-
+        teal: ['#52EAD1', '#33FFDD', '#80FFEA', '#B3FFF2', '#D9FFF8']
     },
     namiv2: {
         black: {
             DEFAULT: '#0c0e14',
-            1: '#141921',
+            1: '#141921'
         },
         gray: {
             DEFAULT: '#1c232e',
             1: '#8694b2',
-            2: '#e2e8f0',
+            2: '#e2e8f0'
         },
         green: {
             DEFAULT: '#47cc85',
             1: '#29cc7e'
         },
         red: {
-            DEFAULT: '#f93636',
-        },
+            DEFAULT: '#f93636'
+        }
     },
+    hover: {
+        DEFAULT: '#262b34',
+        dark: '#262b34'
+    }
 };
 
 export default colors;

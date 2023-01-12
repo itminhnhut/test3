@@ -25,12 +25,12 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { ChevronDown, ChevronUp } from 'react-feather';
 
 const WAValidator = require('multicoin-address-validator');
 const EthereumAddress = require('ethereum-address');
 import ChevronDown from 'src/components/svg/ChevronDown';
 import colors from 'styles/colors';
+import { useTranslation } from 'next-i18next';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -100,14 +100,10 @@ export const formatCurrency = (n, digits = 4, vi = false) => {
 export function eToNumber(value) {
     let sign = '';
 
-        ; (value += '').charAt(0) === '-' &&
-            ((value = value?.toString()
-                .substring(1)), (sign = '-'));
-    let arr = value?.toString()
-        .split(/[e]/gi);
+    (value += '').charAt(0) === '-' && ((value = value?.toString().substring(1)), (sign = '-'));
+    let arr = value?.toString().split(/[e]/gi);
     if (arr.length < 2) return sign + value;
-    let dot = (0.1).toLocaleString()
-        .substr(1, 1),
+    let dot = (0.1).toLocaleString().substr(1, 1),
         n = arr[0],
         exp = +arr[1],
         w = (n = n.replace(/^0+/, '')).replace(dot, ''),
@@ -273,14 +269,8 @@ export function formatNumberToText(value = 0) {
     return numeral(+value).format('0,00a');
 }
 
-export function formatNumber(
-    value,
-    digits = 2,
-    forceDigits = 0,
-    acceptNegative = false
-) {
-    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
-        }`;
+export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
+    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
     if (isNil(value)) return defaultValue;
     if (Math.abs(+value) < 1e-9) return defaultValue;
     if (!acceptNegative && +value < 0) return defaultValue;
@@ -772,11 +762,9 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'
-                    }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             case EXCHANGE_ACTION.WITHDRAW:
-                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'
-                    }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             default:
                 return '';
         }
@@ -1024,4 +1012,21 @@ export const RefCurrency = ({ price, quoteAsset }) => {
     }, []);
 
     return `$${formatPrice(quoteAsset === 'VNDC' ? price / rateCurrency[quoteAsset] : referencePrice[`${quoteAsset}/USD`] * price, 4)}`;
+};
+
+export const TypeTable = ({ type, data }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const str = String(data[type]).toUpperCase();
+    const color = str === 'SELL' ? 'text-red' : 'text-teal';
+    switch (type) {
+        case 'side':
+            return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;
+        case 'type':
+            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : str;
+        default:
+            return null;
+    }
 };

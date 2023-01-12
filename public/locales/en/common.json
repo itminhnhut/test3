@@ -124,6 +124,7 @@
     "order_id": "ID",
     "order_type": "Order type",
     "order_price": "Price",
+    "limit": "Limit",
     "market": "Market",
     "order_quantity": "Quantity",
     "open_quantity": "Quantity",

@@ -126,6 +126,7 @@
     "order_price": "Giá đặt",
     "order_quantity": "Khối lượng khớp",
     "open_quantity": "Khối lượng đặt",
+    "limit": "Giới hạn",
     "market": "Thị trường",
     "change_24h": "Thay đổi 24h",
     "change_volume": "Thay đổi KL",
