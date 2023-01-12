@@ -162,6 +162,7 @@ const SwapModule = ({ width, pair }) => {
                 fromQty
             }
         });
+        console.log('data.swapTime:', data.swapTime);
 
         if (status === ApiStatus.SUCCESS && data) {
             setState({ preOrder: data, shouldRefreshRate: false });
@@ -626,7 +627,7 @@ const SwapModule = ({ width, pair }) => {
 
     // Modal confirmation
     const renderPreOrderModal = useCallback(() => {
-        const positiveLabel = swapTimer <= 1 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
+        const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
             <Modal
                 isVisible={state.openModal}
