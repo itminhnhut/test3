@@ -907,7 +907,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-4 leading-5  text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
                         <Trans i18nKey="common:term_swap">
-                            <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-dominant hover:!underline" />
+                            <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-[#47cc85] font-semibold hover:!underline" />
                         </Trans>
                     </div>
                 </div>
