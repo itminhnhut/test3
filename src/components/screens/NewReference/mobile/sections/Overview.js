@@ -11,6 +11,7 @@ import { getKycData } from 'redux/actions/user'
 import { API_KYC_STATUS } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import fetchAPI from 'utils/fetch-api';
+import { ErrorIcon } from './Info/AddNewRef'
 
 const Overview = ({ data, commisionConfig }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -58,7 +59,7 @@ const Overview = ({ data, commisionConfig }) => {
             </div> */}
 
             <div className='mt-[38px] flex gap-3 w-full'>
-                <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
+                {user?.is_partner ? null : <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
                     <div className='flex gap-2 items-center'>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#jf4gphlj7a)">
@@ -72,8 +73,8 @@ const Overview = ({ data, commisionConfig }) => {
                         </svg>
                         Đăng ký ĐTKD
                     </div>
-                </RefButton>
-                <RefButton className='w-2/5'>
+                </RefButton>}
+                <RefButton className={classNames('w-2/5', { '!w-full': user?.is_partner })}>
                     <div className='flex gap-2'>
                         <a href={policyLink} target='_blank' ><span>{t('reference:referral.referral_policy')}</span></a>
                     </div>
@@ -195,8 +196,10 @@ const RefButton = ({ children, onClick, className }) => {
 
 const ConfirmButtom = ({ text, onClick, isDisable = true, className }) => {
     return (
-        <div className={classNames('w-full h-11 rounded-md flex justify-center items-center font-semibold text-sm leading-[18px] bg-namiapp-green-1 text-white disabled:bg-namiapp-black-2 disabled:text-namiapp-gray-1', className)}
-            onClick={onClick} disabled={isDisable}
+        <div className={classNames('w-full h-11 rounded-md flex justify-center items-center font-semibold text-sm leading-[18px] bg-namiapp-green-1 text-white', className, {
+            '!bg-namiapp-black-2 !text-namiapp-gray-1': isDisable
+        })}
+            onClick={!isDisable ? onClick : undefined}
         >
             {text}
         </div>
@@ -210,7 +213,7 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
         nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
         email: user?.email,
         phoneNumber: '',
-        socialMedia: ''
+        socialMedia: '',
     } : {
         fullName: '',
         nationalId: '',
@@ -227,15 +230,12 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
 
     const validator = (type, text) => {
         switch (type) {
-            case 'fullName':
-                if (text.length < 1) return 'error';
-                break;
-            case 'nationalId':
-                if (text.length < 9) return 'error';
-                break;
             case 'phoneNumber':
                 if (text.length === 0) return 'Xin vui lòng nhập số điện thoại';
                 if (text.length < 6) return 'Số điện thoại không đúng định dạng. Vui lòng nhập lại.';
+                break;
+            case 'socialMedia':
+                if (text.length === 0) return 'Xin vui lòng nhập liên kết mạng xã hội';
                 break;
             default:
                 break;
@@ -243,25 +243,49 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
         return ''
     }
 
-    const handleSubmitRegister = () => {}
+    useEffect(() => {
+        setIsError(Object.entries(state).some((e) => {
+            const check = validator(e[0], e[1])
+            return check.length > 0
+        }))
+    }, [state])
+
+    const handleSubmitRegister = (state) => {
+        console.log(state)
+    }
 
     return <PopupModal
         isVisible={isShow}
         onBackdropCb={onClose}
-        title={'Đăng ký đối tác kinh doanh'}
         useAboveAll
         isMobile
     >
-        <div className={classNames("font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4")}>
-            <RefInput type='phoneNumber' text={state.phoneNumber} setText={(text) => setState({ phoneNumber: text })} placeholder='Nhập số điện thoại' label='Số điện thoại' validator={validator} isStringNumber isFocus/>
-            <RefInput type='fullName' text={state.fullName} setText={(text) => setState({ fullName: text })} placeholder='Nhập tên đầy đủ' label='Tên đầy đủ' validator={validator} disabled />
-            <RefInput type='nationalId' text={state.nationalId} setText={(text) => setState({ nationalId: text })} placeholder='Số chứng minh thư/passport' label='Nhập số chứng minh thư/passport' validator={validator} disabled />
-            <RefInput type='email' text={state.email} setText={(text) => setState({ email: text })} placeholder='Nhập email' label='Email' validator={validator} disabled />
-            <div className='mt-4'>
-                <ConfirmButtom text={t('broker:sign_up')} onClick={() => handleSubmitRegister()} isDisable={true} />
+        {isKyc ?
+            <div className={classNames("font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4 -mt-3")}>
+                <div className='text-gray-6 font-semibold text-[20px] leading-8 mb-4'>Đăng ký đối tác kinh doanh</div>
+                <RefInput type='fullName' text={state.fullName} setText={(text) => setState({ fullName: text })} placeholder='Nhập tên đầy đủ' label='Tên đầy đủ' validator={validator} disabled />
+                <RefInput type='nationalId' text={state.nationalId} setText={(text) => setState({ nationalId: text })} placeholder='Số chứng minh thư/passport' label='Nhập số chứng minh thư/passport' validator={validator} disabled />
+                <RefInput type='email' text={state.email} setText={(text) => setState({ email: text })} placeholder='Nhập email' label='Email' validator={validator} disabled />
+                <RefInput type='phoneNumber' text={state.phoneNumber} setText={(text) => setState({ phoneNumber: text })} placeholder='Nhập số điện thoại' label='Số điện thoại' validator={validator} isStringNumber isFocus />
+                <RefInput type='socialMedia' text={state.socialMedia} setText={(text) => setState({ socialMedia: text })} placeholder='Nhập liên kết Zalo/Facebook/Twiter' label='Mạng xã hội' validator={validator} />
+                <div className='mt-4'>
+                    <ConfirmButtom text={t('broker:sign_up')} onClick={!isError ? () => handleSubmitRegister(state) : undefined} isDisable={isError} />
+                </div>
             </div>
-        </div>
-    </PopupModal>
+            :
+            <div className='w-full flex justify-center items-center flex-col text-center px-2 -mt-3'>
+                <div className='mt-6'><ErrorIcon /></div>
+                <div className='text-gray-6 text-[20px] leading-8 font-semibold mt-6'>
+                    Bạn chưa KYC. Xin hãy KYC trước khi đăng ký đối tác kinh doanh
+                </div>
+                <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
+                    onClick={onClose}
+                >
+                    {t('common:confirm')}
+                </div>
+            </div>
+        }
+    </PopupModal >
 }
 
 const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false }) => {
@@ -271,6 +295,7 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
     const handleInput = (value) => {
         if (isStringNumber && (isNaN(Number(value)) || value.length > 20)) return
         setText(value)
+        setError('')
     }
 
     useEffect(() => {
@@ -285,7 +310,7 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
             <div className={classNames('mt-2 w-full h-11 rounded-md bg-namiapp-black-2 border-[#f93636] px-3 flex justify-between items-center', {
                 'border-[1px]': error.length
             })}>
-                <input ref={ref} value={text} className='text-gray-6 font-normal text-sm leading-[18px] h-full w-full ' placeholder={placeholder} onChange={e => handleInput(e.target.value)} disabled={disabled} onBlur={validator ? () => setError(validator(type, text)) : undefined} />
+                <input ref={ref} value={text} className='text-gray-6 font-normal text-sm leading-[18px] h-full w-full' placeholder={placeholder} onChange={e => handleInput(e.target.value)} disabled={disabled} onBlur={validator ? () => setError(validator(type, text)) : undefined} />
                 {!disabled && text.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                     onClick={() => {
                         handleInput('')
