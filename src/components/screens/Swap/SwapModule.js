@@ -588,10 +588,10 @@ const SwapModule = ({ width, pair }) => {
         const shouldDisable = error || !state.fromAmount || !state.estRate;
         return (
             <div
-                className={`block h-12 mt-8 py-3 w-full rounded-md text-center ${
+                className={`block h-12 mt-8 py-3 px-6 text-base font-medium font-sfPro leading-6 w-full rounded-md text-center ${
                     shouldDisable
                         ? 'text-gray-1 dark:text-darkBlue-5 text-sm font-bold bg-gray-3 dark:bg-darkBlue-4 select-none cursor-not-allowed'
-                        : 'text-white text-sm font-bold select-none bg-dominant cursor-pointer hover:opacity-80'
+                        : 'text-white text-sm font-bold select-none bg-[#47cc85] cursor-pointer hover:opacity-80'
                 }`}
                 onClick={() => !shouldDisable && !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
             >

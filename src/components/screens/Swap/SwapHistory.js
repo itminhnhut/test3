@@ -29,6 +29,8 @@ const SwapHistory = ({ width }) => {
         i18n: { language }
     } = useTranslation(['convert', 'common']);
 
+    const data = dataHandler(state.histories, state.loading);
+
     useAsync(async () => {
         if (!auth) return;
         setState({ loading: true, histories: null });
@@ -53,8 +55,6 @@ const SwapHistory = ({ width }) => {
     }, [state.page, state.pageSize, auth]);
 
     const renderTable = useCallback(() => {
-        const data = dataHandler(state.histories, state.loading);
-
         const modifyColumns = [];
         let tableStatus;
 
@@ -136,11 +136,16 @@ const SwapHistory = ({ width }) => {
     return (
         <div className="mal-container mt-20">
             <div className="text-[20px] text-left leading-7 dark:text-[#e2e8f0] font-medium font-sfPro">{t('convert:history')}</div>
-            {auth ? (
+            {auth && data.length !== 0 ? (
                 <>
                     <MCard addClass="mt-6 py-0 px-0 overflow-hidden">{renderTable()}</MCard>
                     {renderPagination()}
                 </>
+            ) : auth && data.length === 0 ? (
+                <div className="flex flex-col justify-center items-center mt-[60px] mb-[46px] gap-3">
+                    <img src={'/images/screen/swap/empty-history.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                    <span className="text-[#8694b2] text-base leading-6">Bạn hiện không có giao dịch gần đây</span>
+                </div>
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[140px] w-[140px]" />
