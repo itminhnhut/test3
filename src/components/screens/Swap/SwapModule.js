@@ -389,6 +389,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
                         <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
                         <input
+                            autoFocus
                             className="px-2 py-1 w-full text-txtSecondary dark:text-[#8694b2]"
                             value={state.search}
                             placeholder={t('wallet:search_asset')}
@@ -492,6 +493,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
                         <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
                         <input
+                            autoFocus
                             className="px-2 py-1 w-full text-txtSecondary dark:text-[#8694b2]"
                             value={state.search}
                             placeholder={t('wallet:search_asset')}
