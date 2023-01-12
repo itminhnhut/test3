@@ -4,7 +4,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import NumberFormat from 'react-number-format';
 import AssetLogo from 'src/components/wallet/AssetLogo';
 import fetchAPI from 'utils/fetch-api';
-import SvgIcon from 'src/components/svg';
+import SwapWarning from 'components/svg/SwapWarning';
 import colors from 'styles/colors';
 import Link from 'next/link';
 import * as Error from '../../../redux/actions/apiError';
@@ -18,9 +18,8 @@ import { Trans, useTranslation } from 'next-i18next';
 import { find, orderBy, uniqBy } from 'lodash';
 import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
-import { RefreshCw, Search, X, XCircle } from 'react-feather';
+import { Search } from 'react-feather';
 import { ApiStatus } from 'redux/actions/const';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { PATHS } from 'constants/paths';
 import { roundToDown } from 'round-to';
 import Button from 'components/common/Button';
@@ -60,6 +59,7 @@ const SwapModule = ({ width, pair }) => {
         toAmount: null,
         toAssetList: null,
         fromErrors: {},
+        toErrors: {},
         focus: 'from',
         search: '',
         inputHighlighted: null,
@@ -138,7 +138,8 @@ const SwapModule = ({ width, pair }) => {
         } else {
             switch (status) {
                 case 'SWAP_CANNOT_ESTIMATE_PRICE':
-                    setState({ fromErrors: { not_found: t('convert:est_rate_not_found') } });
+                    // setState({ fromErrors: { not_found: t('convert:est_rate_not_found') } });
+                    setState({ toErrors: { not_found: t('convert:est_rate_not_found') } });
                     break;
                 default:
             }
@@ -239,7 +240,7 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const onClickToAsset = (toAsset) => {
-        setState({ toAsset, search: '', openAssetList: {} });
+        setState({ toAsset, search: '', toErrors: {}, openAssetList: {} });
         toAssetBtnRef?.current?.click();
     };
 
@@ -581,7 +582,7 @@ const SwapModule = ({ width, pair }) => {
         if (state.fromErrors.hasOwnProperty('insufficient')) {
             error = t('convert:errors.insufficient').toUpperCase();
         }
-        if (state.fromErrors.hasOwnProperty('not_found')) {
+        if (state.toErrors.hasOwnProperty('not_found')) {
             error = t('convert:errors.est_rate_not_found').toUpperCase();
         }
 
@@ -596,6 +597,29 @@ const SwapModule = ({ width, pair }) => {
                 onClick={() => !shouldDisable && !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
             >
                 {error ? error : t('navbar:submenu.swap')}
+            </div>
+        );
+    }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.fromErrors, state.toErrors]);
+
+    const renderHelperTextFrom = useCallback(() => {
+        let error = '';
+        if (!Object.keys(state.fromErrors).length) error = null;
+
+        if (state.fromErrors.hasOwnProperty('min')) {
+            error = t('convert:errors.min', { amount: formatPrice(state.fromErrors.min) }).toLowerCase() + ` ${state.fromAsset}`;
+        }
+        if (state.fromErrors.hasOwnProperty('max')) {
+            error = t('convert:errors.max', { amount: formatPrice(state.fromErrors.max) }).toLowerCase() + ` ${state.fromAsset}`;
+        }
+        if (state.fromErrors.hasOwnProperty('insufficient')) {
+            error = t('convert:errors.insufficient').toLowerCase();
+        }
+
+        if (!error) return null;
+        return (
+            <div className="flex items-center text-[#f93636] pt-3 text-xs text-left leading-4 font-sfPro gap-1">
+                <SwapWarning size={12} fill={colors.red2} />
+                {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
             </div>
         );
     }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.fromErrors]);
@@ -831,6 +855,8 @@ const SwapModule = ({ width, pair }) => {
                             {renderFromInput()}
                             {renderFromAssetList()}
                         </div>
+                        {renderHelperTextFrom()}
+
                         <div className="flex justify-center items-center py-4">
                             <button
                                 className={`p-1.5 dark:bg-[#1c232e] shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
@@ -839,6 +865,7 @@ const SwapModule = ({ width, pair }) => {
                                 <SwapReverse size={width < 1280 && 24} />
                             </button>
                         </div>
+
                         <div className={`py-6 px-4 rounded-xl relative border border-solid border-[#222940]`}>
                             <div className="flex items-center justify-between text-[14px] pb-4">
                                 <span>{t('common:to')}</span>
