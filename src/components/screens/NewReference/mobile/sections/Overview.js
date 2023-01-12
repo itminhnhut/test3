@@ -1,29 +1,51 @@
 import classNames from 'classnames'
 import useWindowSize from 'hooks/useWindowSize'
 import { useTranslation } from 'next-i18next'
-import React, { useState } from 'react'
-import { renderRefInfo } from '../../PopupModal'
+import React, { useRef, useState } from 'react'
+import PopupModal, { renderRefInfo } from '../../PopupModal'
 import RefCard from '../../RefCard'
 import InviteModal from './InviteModal'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getKycData } from 'redux/actions/user'
+import { API_KYC_STATUS } from 'redux/actions/apis'
+import { ApiStatus } from 'redux/actions/const'
+import fetchAPI from 'utils/fetch-api';
 
 const Overview = ({ data, commisionConfig }) => {
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
     const [showInvite, setShowInvite] = useState(false)
-
+    const [showRegisterPartner, setShowRegisterPartner] = useState(false)
     const rank = data?.rank ?? 1
     // const commisionRate = commisionConfig[rank]?.direct.futures
     const friendsGet = data?.defaultRefCode?.remunerationRate
     const youGet = 100 - friendsGet
+    const user = useSelector(state => state.auth.user) || null;
+    const [kyc, setKyc] = useState(null)
+
+    useEffect(() => {
+        fetchAPI({
+            url: API_KYC_STATUS,
+            options: {
+                method: 'GET',
+            },
+        }).then(({ status, data }) => {
+            if (status === ApiStatus.SUCCESS) {
+                setKyc(data)
+            }
+        });
+    }, [user])
 
     const handleCompactLink = (address, first, last) => {
         return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : ''
     }
-    const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' +  language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk'
+    const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' + (language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk')
 
     return (
         <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background_mobile.png')", backgroundSize: 'cover' }}  >
-            <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} isMobile/>
+            {showInvite ? <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} isMobile /> : null}
+            {showRegisterPartner ? <RegisterPartnerModal t={t} kyc={kyc} user={user} isShow={showRegisterPartner} onClose={() => setShowRegisterPartner(false)} /> : null}
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
@@ -31,8 +53,31 @@ const Overview = ({ data, commisionConfig }) => {
             <div className='font-normal text-base text-gray-6 mt-6'>
                 {t('reference:referral.introduce3')}
             </div>
-            <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
+            {/* <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
                 {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
+            </div> */}
+
+            <div className='mt-[38px] flex gap-3 w-full'>
+                <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
+                    <div className='flex gap-2 items-center'>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#jf4gphlj7a)">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z" fill="#47CC85" />
+                            </g>
+                            <defs>
+                                <clipPath id="jf4gphlj7a">
+                                    <path fill="#fff" d="M0 0h24v24H0z" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        Đăng ký ĐTKD
+                    </div>
+                </RefButton>
+                <RefButton className='w-2/5'>
+                    <div className='flex gap-2'>
+                        <a href={policyLink} target='_blank' ><span>{t('reference:referral.referral_policy')}</span></a>
+                    </div>
+                </RefButton>
             </div>
             <div className='mt-[30px]'>
                 <RefCard>
@@ -136,6 +181,130 @@ export const renderSocials = (size = 32, className = '') => {
                     </div>
                 )
             })}
+        </div>
+    )
+}
+
+const RefButton = ({ children, onClick, className }) => {
+    return (
+        <div className={classNames('border-[1px] border-namiapp-green h-11 bg-transparent text-gray-6 font-semibold text-sm flex items-center justify-center cursor-pointer rounded-md', className)} onClick={onClick}>
+            {children}
+        </div>
+    )
+}
+
+const ConfirmButtom = ({ text, onClick, isDisable = true, className }) => {
+    return (
+        <div className={classNames('w-full h-11 rounded-md flex justify-center items-center font-semibold text-sm leading-[18px] bg-namiapp-green-1 text-white disabled:bg-namiapp-black-2 disabled:text-namiapp-gray-1', className)}
+            onClick={onClick} disabled={isDisable}
+        >
+            {text}
+        </div>
+    )
+}
+
+const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
+    const isKyc = user?.kyc_status === 2
+    const defaultData = isKyc ? {
+        fullName: kyc?.kycInformationData?.metadata?.identityName,
+        nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
+        email: user?.email,
+        phoneNumber: '',
+        socialMedia: ''
+    } : {
+        fullName: '',
+        nationalId: '',
+        email: '',
+        phoneNumber: '',
+        socialMedia: ''
+    }
+
+    const [state, set] = useState(defaultData)
+
+    const [isError, setIsError] = useState(true)
+
+    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
+
+    const validator = (type, text) => {
+        switch (type) {
+            case 'fullName':
+                if (text.length < 1) return 'error';
+                break;
+            case 'nationalId':
+                if (text.length < 9) return 'error';
+                break;
+            case 'phoneNumber':
+                if (text.length === 0) return 'Xin vui lòng nhập số điện thoại';
+                if (text.length < 6) return 'Số điện thoại không đúng định dạng. Vui lòng nhập lại.';
+                break;
+            default:
+                break;
+        }
+        return ''
+    }
+
+    const handleSubmitRegister = () => {}
+
+    return <PopupModal
+        isVisible={isShow}
+        onBackdropCb={onClose}
+        title={'Đăng ký đối tác kinh doanh'}
+        useAboveAll
+        isMobile
+    >
+        <div className={classNames("font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4")}>
+            <RefInput type='phoneNumber' text={state.phoneNumber} setText={(text) => setState({ phoneNumber: text })} placeholder='Nhập số điện thoại' label='Số điện thoại' validator={validator} isStringNumber isFocus/>
+            <RefInput type='fullName' text={state.fullName} setText={(text) => setState({ fullName: text })} placeholder='Nhập tên đầy đủ' label='Tên đầy đủ' validator={validator} disabled />
+            <RefInput type='nationalId' text={state.nationalId} setText={(text) => setState({ nationalId: text })} placeholder='Số chứng minh thư/passport' label='Nhập số chứng minh thư/passport' validator={validator} disabled />
+            <RefInput type='email' text={state.email} setText={(text) => setState({ email: text })} placeholder='Nhập email' label='Email' validator={validator} disabled />
+            <div className='mt-4'>
+                <ConfirmButtom text={t('broker:sign_up')} onClick={() => handleSubmitRegister()} isDisable={true} />
+            </div>
+        </div>
+    </PopupModal>
+}
+
+const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false }) => {
+    const [error, setError] = useState('')
+    const ref = useRef(null)
+
+    const handleInput = (value) => {
+        if (isStringNumber && (isNaN(Number(value)) || value.length > 20)) return
+        setText(value)
+    }
+
+    useEffect(() => {
+        isFocus && ref.current.focus()
+    }, [])
+
+    return (
+        <div className='w-full'>
+            <div>
+                {label}
+            </div>
+            <div className={classNames('mt-2 w-full h-11 rounded-md bg-namiapp-black-2 border-[#f93636] px-3 flex justify-between items-center', {
+                'border-[1px]': error.length
+            })}>
+                <input ref={ref} value={text} className='text-gray-6 font-normal text-sm leading-[18px] h-full w-full ' placeholder={placeholder} onChange={e => handleInput(e.target.value)} disabled={disabled} onBlur={validator ? () => setError(validator(type, text)) : undefined} />
+                {!disabled && text.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => {
+                        handleInput('')
+                        ref.current.focus()
+                    }}
+                >
+                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                </svg> : null}
+
+            </div>
+            {error.length ? <div className='flex gap-1 font-normal text-xs leading-4 mt-2 text-[#f93636]'>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.335 6.667h1.333V10H7.335V6.667zm-.001 4h1.333V12H7.334v-1.333z" fill="#F93636" />
+                    <path d="M9.18 2.8A1.332 1.332 0 0 0 8 2.092c-.494 0-.946.271-1.178.709L1.93 12.043c-.22.417-.207.907.036 1.312.243.404.67.645 1.142.645h9.785c.472 0 .9-.241 1.143-.645s.257-.895.036-1.312L9.179 2.8zm-6.072 9.867L8 3.425l4.896 9.242h-9.79z" fill="#F93636" />
+                </svg>
+                <div className=''>
+                    {error}
+                </div>
+            </div> : null}
         </div>
     )
 }

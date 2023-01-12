@@ -321,6 +321,7 @@ module.exports = {
                 },
                 gray: {
                     DEFAULT: '#8593a6',
+                    1: '#262e40',
                 },
             },
         },
