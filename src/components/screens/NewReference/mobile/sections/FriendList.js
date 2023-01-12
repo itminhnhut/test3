@@ -172,7 +172,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                     </div> : null}
                 </div>
                 <div className="mt-6">
-                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
+                    {loading ? <IconLoading color={colors.namiapp.green.DEFAULT} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_friends')} className='h-[300px]' />
                     ) : (
                         dataFilter.map((data, index) => {
@@ -237,8 +237,8 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                             {status}
                                         </div>
                                     </div>
-                                    <div className="my-3 py-2 rounded-md border-[1px] border-gray-2/[.15] flex text-gray-7">
-                                        <div className="w-full text-center border-r-[1px] text-sm font-medium">
+                                    <div className="my-3 py-2 rounded-md border-[1px] border-namiapp-black-4 flex text-gray-7">
+                                        <div className="w-full text-center border-r-[1px] border-namiapp-black-4 text-sm font-medium">
                                             <div className="leading-5">{t('reference:referral.referred')}</div>
                                             <div className="text-gray-6 leading-6">
                                                 {formatNumber(data.invitedCount)} {t('reference:referral.friends')}
@@ -314,6 +314,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
+                        isNamiApp
                     />
                 </div>
             </CollapsibleRefCard>

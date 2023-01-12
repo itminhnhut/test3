@@ -37,7 +37,7 @@ const Chart = () => {
         }
     });
     const [showCustom, setShowCustom] = useState(false)
-    const colors = ['#19a65b', '#47cc85', '#7ee5ae', '#e6faef']
+    const colors = ['#47cc85', '#4272ee', '#42cfee', '#2937e0']
     const [dataSource, setDataSource] = useState({
         data: [],
         labels: []
@@ -109,7 +109,6 @@ const Chart = () => {
                 borderColor: colors[0],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 1
             }, {
                 type: 'bar',
@@ -119,7 +118,6 @@ const Chart = () => {
                 borderColor: colors[1],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 2
             }, {
                 type: 'bar',
@@ -129,7 +127,6 @@ const Chart = () => {
                 borderColor: colors[2],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 3
             }, {
                 type: 'bar',
@@ -139,7 +136,6 @@ const Chart = () => {
                 borderColor: colors[3],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 4
             }]
         };
