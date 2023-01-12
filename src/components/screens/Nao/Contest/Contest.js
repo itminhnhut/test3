@@ -365,7 +365,6 @@ const Contest = (props) => {
             <div className="nao_section">
                 <ContesRules seasons={seasons} seasonConfig={SEASON} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                {props.top_ranks_master && <ContestMasterRank {...props} onShowDetail={onShowDetail} sort="pnl" />}
                 {props?.season === SEASON ? (
                     <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
                         {renderTab()}

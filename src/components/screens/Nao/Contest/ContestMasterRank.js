@@ -37,7 +37,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                 url: API_CONTEST_GET_MASTER_GROUP_PNL,
                 params: { contest_id: contest_id }
             });
-            let data = originalData;
+            let data = originalData?.groups;
             setTotal(data.length);
             if (data && status === ApiStatus.SUCCESS) {
                 const dataFilter = data?.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
