@@ -139,7 +139,7 @@ const LastedActivities = () => {
         <div className='px-4'>
             <CollapsibleRefCard title={t('reference:referral.recent_activities')} isBlack >
                 <div className='w-auto'>
-                    <Tabs tab={tab} isMobile={true} className='text-sm font-medium flex justify-start gap-7'>
+                    <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' isMobile >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>

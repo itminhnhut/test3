@@ -20,6 +20,7 @@ import { commisionConfig } from 'config/referral';
 import { useCallback } from 'react';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
+import { useSelector } from 'react-redux';
 
 const tabs = {
     Overview: 'overview',
@@ -39,6 +40,7 @@ function NewReference() {
     const tabRef = useRef(null);
     const [swiper, setSwiper] = useState(null);
     const slideTo = (index) => swiper.slideTo(index);
+    const user = useSelector(state => state.auth.user) || null;
 
     useEffect(() => {
         FetchApi({
@@ -113,16 +115,16 @@ function NewReference() {
             >
                 <SwiperSlide id={tabs.Overview} key={0}>
                     <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] w-screen pb-12'>
-                        <Overview data={overviewData} commisionConfig={config} />
+                        <Overview data={overviewData} commisionConfig={config} user={user} />
                         <div className='h-8'></div>
-                        <Info data={overviewData} />
+                        <Info data={overviewData} user={user} />
                         <div className='h-8'></div>
                         <LastedActivities />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide id={tabs.Chart} key={1}>
                     <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
-                        <Chart />
+                        <Chart user={user}/>
                     </div>
                 </SwiperSlide>
                 <SwiperSlide id={tabs.FriendList} key={2}>
