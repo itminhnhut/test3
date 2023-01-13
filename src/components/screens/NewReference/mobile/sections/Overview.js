@@ -1,17 +1,17 @@
 import classNames from 'classnames'
 import useWindowSize from 'hooks/useWindowSize'
 import { useTranslation } from 'next-i18next'
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import PopupModal, { renderRefInfo } from '../../PopupModal'
 import RefCard from '../../RefCard'
 import InviteModal from './InviteModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getKycData } from 'redux/actions/user'
-import { API_KYC_STATUS } from 'redux/actions/apis'
+import { API_KYC_STATUS, API_PARTNER_REGISTER } from 'redux/actions/apis'
 import { ApiStatus } from 'redux/actions/const'
 import fetchAPI from 'utils/fetch-api';
-import { ErrorIcon } from './Info/AddNewRef'
+import { ErrorIcon, SuccessIcon } from './Info/AddNewRef'
 
 const Overview = ({ data, commisionConfig }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -24,6 +24,7 @@ const Overview = ({ data, commisionConfig }) => {
     const youGet = 100 - friendsGet
     const user = useSelector(state => state.auth.user) || null;
     const [kyc, setKyc] = useState(null)
+    const [isPartner, setIsPartner] = useState(false)
 
     useEffect(() => {
         fetchAPI({
@@ -36,6 +37,23 @@ const Overview = ({ data, commisionConfig }) => {
                 setKyc(data)
             }
         });
+
+        // fetchAPI({
+        //     url: API_PARTNER_REGISTER,
+        //     options: {
+        //         method: 'GET',
+        //     },
+
+        // }).then(({ status, data }) => {
+        //     console.log('status, data', status, data)
+        //     if (status === ApiStatus.SUCCESS) {
+        //         if(data?.phone?.length && data?.social_link?.length) {
+        //             setIsPartner(true)
+        //         }
+        //     } else {
+
+        //     }
+        // });
     }, [user])
 
     const handleCompactLink = (address, first, last) => {
@@ -59,7 +77,7 @@ const Overview = ({ data, commisionConfig }) => {
             </div> */}
 
             <div className='mt-[38px] flex gap-3 w-full'>
-                {user?.is_partner ? null : <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
+                {isPartner ? null : <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
                     <div className='flex gap-2 items-center'>
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <g clip-path="url(#jf4gphlj7a)">
@@ -71,10 +89,10 @@ const Overview = ({ data, commisionConfig }) => {
                                 </clipPath>
                             </defs>
                         </svg>
-                        Đăng ký ĐTKD
+                        {t('reference:referral.partner.button')}
                     </div>
                 </RefButton>}
-                <RefButton className={classNames('w-2/5', { '!w-full': user?.is_partner })}>
+                <RefButton className={classNames('w-2/5', { '!w-full': isPartner })}>
                     <div className='flex gap-2'>
                         <a href={policyLink} target='_blank' ><span>{t('reference:referral.referral_policy')}</span></a>
                     </div>
@@ -226,16 +244,29 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
 
     const [isError, setIsError] = useState(true)
 
+    const [result, setResult] = useState({
+        isShow: false,
+        success: true,
+        message: ''
+    })
+
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
+
+    useEffect(() => {
+        setState({
+            fullName: kyc?.kycInformationData?.metadata?.identityName,
+            nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
+        })
+    }, [kyc])
 
     const validator = (type, text) => {
         switch (type) {
             case 'phoneNumber':
-                if (text.length === 0) return 'Xin vui lòng nhập số điện thoại';
-                if (text.length < 6) return 'Số điện thoại không đúng định dạng. Vui lòng nhập lại.';
+                if (text.length === 0) return t('reference:referral.partner.phone_empty')
+                if (text.length < 6) return t('reference:referral.partner.phone_error')
                 break;
             case 'socialMedia':
-                if (text.length === 0) return 'Xin vui lòng nhập liên kết mạng xã hội';
+                if (text.length === 0) return t('reference:referral.partner.social_empty')
                 break;
             default:
                 break;
@@ -251,41 +282,106 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
     }, [state])
 
     const handleSubmitRegister = (state) => {
-        console.log(state)
+        fetchAPI({
+            url: API_PARTNER_REGISTER,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                phone: state.phoneNumber,
+                social_link: state.socialMedia
+            }
+        }).then(({ status, data }) => {
+            console.log('status, data', status, data)
+            if (status === ApiStatus.SUCCESS) {
+                setResult({
+                    isShow: true,
+                    success: true,
+                    message: t('reference:referral.partner.success')
+                })
+            } else {
+                setResult({
+                    isShow: true,
+                    success: false,
+                    message: t('reference:referral.partner.failed')
+                })
+            }
+        });
     }
 
-    return <PopupModal
-        isVisible={isShow}
-        onBackdropCb={onClose}
-        useAboveAll
-        isMobile
-    >
-        {isKyc ?
-            <div className={classNames("font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4 -mt-3")}>
-                <div className='text-gray-6 font-semibold text-[20px] leading-8 mb-4'>Đăng ký đối tác kinh doanh</div>
-                <RefInput type='fullName' text={state.fullName} setText={(text) => setState({ fullName: text })} placeholder='Nhập tên đầy đủ' label='Tên đầy đủ' validator={validator} disabled />
-                <RefInput type='nationalId' text={state.nationalId} setText={(text) => setState({ nationalId: text })} placeholder='Số chứng minh thư/passport' label='Nhập số chứng minh thư/passport' validator={validator} disabled />
-                <RefInput type='email' text={state.email} setText={(text) => setState({ email: text })} placeholder='Nhập email' label='Email' validator={validator} disabled />
-                <RefInput type='phoneNumber' text={state.phoneNumber} setText={(text) => setState({ phoneNumber: text })} placeholder='Nhập số điện thoại' label='Số điện thoại' validator={validator} isStringNumber isFocus />
-                <RefInput type='socialMedia' text={state.socialMedia} setText={(text) => setState({ socialMedia: text })} placeholder='Nhập liên kết Zalo/Facebook/Twiter' label='Mạng xã hội' validator={validator} />
-                <div className='mt-4'>
-                    <ConfirmButtom text={t('broker:sign_up')} onClick={!isError ? () => handleSubmitRegister(state) : undefined} isDisable={isError} />
+    const ResultModal = useMemo(() => {
+        const Icon = result.success ? <SuccessIcon /> : <ErrorIcon />
+        const title = result.success ? t('reference:referral.success') : t('reference:referral.error')
+        return (
+            <PopupModal
+                isVisible={result.isShow}
+                onBackdropCb={() => setResult({
+                    ...result,
+                    isShow: false
+                })}
+                // useAboveAll
+                isMobile
+                bgClassName='!z-[400]'
+                containerClassName='!z-[401]'
+            >
+                <div className='w-full flex justify-center items-center flex-col text-center px-2'>
+                    <div className='mt-6'>{Icon}</div>
+                    <div className='text-gray-6 text-[20px] leading-8 font-semibold mt-6'>
+                        {title}
+                    </div>
+                    <div className='text-sm font-medium mt-3 text-gray-7'>
+                        <div dangerouslySetInnerHTML={{ __html: result.message }} />
+                    </div>
+                    <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
+                        onClick={() => {
+                            setResult({
+                                ...result,
+                                isShow: false
+                            })
+                        }}
+                    >
+                        {t('common:confirm')}
+                    </div>
                 </div>
-            </div>
-            :
-            <div className='w-full flex justify-center items-center flex-col text-center px-2 -mt-3'>
-                <div className='mt-6'><ErrorIcon /></div>
-                <div className='text-gray-6 text-[20px] leading-8 font-semibold mt-6'>
-                    Bạn chưa KYC. Xin hãy KYC trước khi đăng ký đối tác kinh doanh
+            </PopupModal >
+        )
+    }, [result])
+
+    return <>
+        {result.isShow ? ResultModal : null}
+        <PopupModal
+            isVisible={isShow}
+            onBackdropCb={onClose}
+            useAboveAll
+            isMobile
+        >
+            {isKyc ?
+                <div className={classNames("font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4 -mt-3")}>
+                    <div className='text-gray-6 font-semibold text-[20px] leading-8 mb-4'>{t('reference:referral.partner.title')}</div>
+                    <RefInput type='fullName' text={state.fullName} setText={(text) => setState({ fullName: text })} placeholder='Nhập tên đầy đủ' label={t('reference:referral.partner.fullname')} validator={validator} disabled />
+                    <RefInput type='nationalId' text={state.nationalId} setText={(text) => setState({ nationalId: text })} placeholder='Số chứng minh thư/passport' label={t('reference:referral.partner.id')} validator={validator} disabled />
+                    <RefInput type='email' text={state.email} setText={(text) => setState({ email: text })} placeholder='Nhập email' label='Email' validator={validator} disabled />
+                    <RefInput type='phoneNumber' text={state.phoneNumber} setText={(text) => setState({ phoneNumber: text })} placeholder={t('reference:referral.partner.phone_placeholder')} label={t('reference:referral.partner.phone')} validator={validator} isStringNumber isFocus />
+                    <RefInput type='socialMedia' text={state.socialMedia} setText={(text) => setState({ socialMedia: text })} placeholder={t('reference:referral.partner.social_placeholder')} label={t('reference:referral.partner.social')} validator={validator} />
+                    <div className='mt-4'>
+                        <ConfirmButtom className={''} text={t('reference:referral.partner.register')} onClick={!isError ? () => handleSubmitRegister(state) : undefined} isDisable={isError} />
+                    </div>
                 </div>
-                <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
-                    onClick={onClose}
-                >
-                    {t('common:confirm')}
+                :
+                <div className='w-full flex justify-center items-center flex-col text-center px-2 -mt-3'>
+                    <div className='mt-6'><ErrorIcon /></div>
+                    <div className='text-gray-6 text-[20px] leading-8 font-semibold mt-6'>
+                        {t('reference:referral.partner.no_kyc')}
+                    </div>
+                    <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
+                        onClick={onClose}
+                    >
+                        {t('common:confirm')}
+                    </div>
                 </div>
-            </div>
-        }
-    </PopupModal >
+            }
+        </PopupModal>
+    </>
 }
 
 const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false }) => {
