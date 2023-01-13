@@ -19,6 +19,8 @@ import {
 import NeedLogin from 'components/common/NeedLogin';
 import Modal from 'components/common/ReModal';
 import { getS3Url } from 'redux/actions/utils';
+import { getMe } from 'redux/actions/user';
+import { useDispatch } from 'react-redux';
 
 const Overview = ({
     data,
@@ -66,7 +68,6 @@ const Overview = ({
                 status,
                 data
             }) => {
-                console.log('status, data', status, data);
                 if (status === ApiStatus.SUCCESS) {
                     if (data?.phone?.length && data?.social_link?.length) {
                         setIsPartner(true);
@@ -367,6 +368,7 @@ export const RegisterPartnerModal = ({
                 return check.length > 0;
             }));
     }, [state]);
+    const dispatch = useDispatch()
 
     const handleSubmitRegister = (state) => {
         fetchAPI({
@@ -393,6 +395,7 @@ export const RegisterPartnerModal = ({
                         message: t('reference:referral.partner.success')
                     });
                     setIsPartner(true);
+                    dispatch(getMe())
                 } else {
                     setResult({
                         isShow: true,

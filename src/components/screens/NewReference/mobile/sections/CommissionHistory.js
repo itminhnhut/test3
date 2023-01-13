@@ -234,7 +234,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                     </div>
                 </div>
                 <div className={classNames("mt-6", { "!mt-8": loading })}>
-                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
+                    {loading ? <IconLoading color={colors.namiapp.green.DEFAULT} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
@@ -251,7 +251,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
-                                                <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
+                                                <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
                                                 <div className="font-medium text-xs">
                                                     {t('reference:referral.commission_type')}: {asset}
                                                 </div>
