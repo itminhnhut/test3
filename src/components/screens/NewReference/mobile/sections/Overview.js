@@ -301,7 +301,10 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
             },
             params: {
                 phone: state.phoneNumber,
-                social_link: state.socialMedia
+                social_link: state.socialMedia,
+                email: state.email,
+                name: state.fullName,
+                identify: state.nationalId
             }
         }).then(({ status, data }) => {
             console.log('status, data', status, data)
