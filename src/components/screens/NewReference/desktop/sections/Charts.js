@@ -20,7 +20,7 @@ const Charts = ({ t, id }) => {
     ]
     return (
         <div className='flex flex-col gap-8 w-full' id={id}>
-            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
+            <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
             <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
         </div>
     )
@@ -170,7 +170,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                             const level = t('reference:referral.level') + ': ' + data.level
                             const friends = t('reference:referral.number_of_friends') + ': ' + data.count
                             const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC'
-                            if (data.volume) return [level, friends]
+                            if (!data.volume) return [level, friends]
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {

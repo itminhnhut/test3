@@ -118,7 +118,7 @@ const Commission = ({ t, language, id }) => {
                     </div>
                     <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
                         <div>
-                            {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
+                            {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
                         </div>
                         <div>
                             {t('reference:referral.type')}: {data.kind}

@@ -78,7 +78,7 @@ const RefDesktopScreen = () => {
             } else {
             }
         });
-    }, []);
+    }, [user]);
 
 
     useEffect(() => {
