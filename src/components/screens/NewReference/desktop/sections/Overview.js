@@ -116,19 +116,19 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
                             <div className='w-full flex flex-col leading-5'>
                                 <div className='w-full flex justify-between text-[#17e5d4]'>
                                     <div>
-                                        Spot: {formatter.format(data?.volume?.current?.spot)} USDT
+                                        Spot: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT
                                     </div>
                                     {data?.rank !== 5 ? <div>
-                                        Spot: {formatter.format(data?.volume?.target?.spot)} USDT
+                                        Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT
                                     </div> : null}
 
                                 </div>
                                 <div className='w-full flex justify-between text-[#00c8bc]'>
                                     <div>
-                                        Futures: {formatter.format(data?.volume?.current?.futures)} USDT
+                                        Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT
                                     </div>
                                     {data?.rank !== 5 ? <div>
-                                        Futures: {formatter.format(data?.volume?.target?.futures)} USDT
+                                        Futures: {isNaN(data?.volume?.target?.futures) ? '--' :  formatter.format(data?.volume?.target?.futures)} USDT
                                     </div> : null}
                                 </div>
                             </div>
@@ -143,20 +143,20 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
                         <div className='pb-2 w-full text-sm font-medium leading-6'>
                             <div className='flex w-full justify-between text-darkBlue'>
                                 <div> {t('reference:referral.referral_code')}</div>
-                                <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
+                                <div>{t('reference:referral.rate', { value1: isNaN(youGet) ? "--" : youGet, value2: isNaN(friendsGet) ? "--" : friendsGet })}</div>
                             </div>
                             <div className='mt-1'>
-                                {renderRefInfo(data?.defaultRefCode?.code, "font-semibold text-lg leading-8", 16)}
+                                {renderRefInfo(data?.defaultRefCode?.code ? data?.defaultRefCode?.code : '---', "font-semibold text-lg leading-8", 16)}
                             </div>
                             <div className='flex w-full justify-between text-xs font-medium text-darkBlue mt-4'>
                                 <div>{t('reference:referral.ref_link')}</div>
-                                <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
+                                <div>{t('reference:referral.rate', { value1: isNaN(youGet) ? "--" : youGet, value2: isNaN(friendsGet) ? "--" : friendsGet })}</div>
                             </div>
                             <div className='mt-1'>
                                 {renderRefInfo(data?.defaultRefCode?.code ? handleCompactLink('https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12) : '---', "font-semibold text-lg leading-8", 16, 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
                             </div>
                             <div className='mt-6'>
-                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto')}
+                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto', 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
                             </div>
                         </div>
                     </div>

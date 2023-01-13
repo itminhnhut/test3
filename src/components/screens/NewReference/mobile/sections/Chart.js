@@ -11,8 +11,9 @@ import FetchApi from 'utils/fetch-api';
 import PopupModal from 'src/components/screens/NewReference/PopupModal';
 import DatePicker from 'src/components/common/DatePicker/DatePicker';
 import styledComponents from 'styled-components'
+import NeedLogin from 'components/common/NeedLogin';
 
-const Chart = () => {
+const Chart = ({ user }) => {
     const { t } = useTranslation()
     const tags = [{
         value: 'partners',
@@ -171,10 +172,10 @@ const Chart = () => {
                         color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
-                          size: 9 // 'size' now within object 'font {}'
+                            size: 9 // 'size' now within object 'font {}'
                         },
-                        
-                      }
+
+                    }
                 },
                 y: {
                     // combined: true,
@@ -182,10 +183,10 @@ const Chart = () => {
                         color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
-                          size: 9 // 'size' now within object 'font {}'
+                            size: 9 // 'size' now within object 'font {}'
                         },
-                        
-                      }
+
+                    }
                 },
             },
         }
@@ -201,7 +202,7 @@ const Chart = () => {
         <div className='px-4'  >
             {showCustom && <CustomFilter isShow={showCustom} onClose={() => setShowCustom(false)} t={t} filter={filter} onConfirm={setFilter} />}
             <CollapsibleRefCard title={t('reference:referral.statistic')} isBlack>
-                <div className='w-auto'>
+                {user ? <div className='w-auto'>
                     <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' isMobile >
                         {tags.map((e, index) =>
                             <div key={index}>
@@ -226,7 +227,7 @@ const Chart = () => {
                             ))}
                         </div>
                     </div>
-                </div>
+                </div> : <NeedLogin message={t('reference:user.login_to_view')} isNamiapp addClass='mt-8' />}
             </CollapsibleRefCard>
         </div>
     )
