@@ -251,7 +251,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} <AssetCode assetId={data.currency} /></div>
+                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} /></div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
                                                 <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
