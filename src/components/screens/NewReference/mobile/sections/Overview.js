@@ -38,22 +38,22 @@ const Overview = ({ data, commisionConfig }) => {
             }
         });
 
-        // fetchAPI({
-        //     url: API_PARTNER_REGISTER,
-        //     options: {
-        //         method: 'GET',
-        //     },
+        fetchAPI({
+            url: API_PARTNER_REGISTER,
+            options: {
+                method: 'GET',
+            },
 
-        // }).then(({ status, data }) => {
-        //     console.log('status, data', status, data)
-        //     if (status === ApiStatus.SUCCESS) {
-        //         if(data?.phone?.length && data?.social_link?.length) {
-        //             setIsPartner(true)
-        //         }
-        //     } else {
+        }).then(({ status, data }) => {
+            console.log('status, data', status, data)
+            if (status === ApiStatus.SUCCESS) {
+                if(data?.phone?.length && data?.social_link?.length) {
+                    setIsPartner(true)
+                }
+            } else {
 
-        //     }
-        // });
+            }
+        });
     }, [user])
 
     const handleCompactLink = (address, first, last) => {
