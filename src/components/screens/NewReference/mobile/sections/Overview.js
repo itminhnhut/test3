@@ -69,7 +69,7 @@ const Overview = ({ data, commisionConfig, user }) => {
     return (
         <div className="px-4 py-[60px]" style={{ backgroundImage: "url('/images/reference/background_mobile.png')", backgroundSize: 'cover' }}  >
             {showInvite ? <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} isMobile /> : null}
-            {showRegisterPartner ? <RegisterPartnerModal t={t} kyc={kyc} user={user} isShow={showRegisterPartner} onClose={() => setShowRegisterPartner(false)} /> : null}
+            {showRegisterPartner ? <RegisterPartnerModal setIsPartner={setIsPartner} t={t} kyc={kyc} user={user} isShow={showRegisterPartner} onClose={() => setShowRegisterPartner(false)} /> : null}
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
                 {t('reference:referral.introduce1')} <br />
                 {t('reference:referral.introduce2')}
@@ -236,7 +236,7 @@ const ConfirmButtom = ({ text, onClick, isDisable = true, className }) => {
     )
 }
 
-const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
+const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner }) => {
     const isKyc = user?.kyc_status === 2
     const defaultData = isKyc ? {
         fullName: kyc?.kycInformationData?.metadata?.identityName,
@@ -314,6 +314,7 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
                     success: true,
                     message: t('reference:referral.partner.success')
                 })
+                setIsPartner(true)
             } else {
                 setResult({
                     isShow: true,
@@ -353,6 +354,7 @@ const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t }) => {
                                 ...result,
                                 isShow: false
                             })
+                            if (result.success) onClose()
                         }}
                     >
                         {t('common:confirm')}
