@@ -165,7 +165,8 @@
             "no_kyc": "Bạn chưa KYC, hãy KYC trước khi đăng ký đối tác",
             "success": "Chúc mừng bạn đã đăng ký đối tác phát triển cộng đồng thành công.",
             "failed": "Đăng ký đối tác đối tác phát triển cộng đồng không thành công, vui lòng liên hệ bộ phận hỗ trợ.",
-            "register": "Đăng ký"
+            "register": "Đăng ký",
+            "paste": "Dán"
         }
     }
 }

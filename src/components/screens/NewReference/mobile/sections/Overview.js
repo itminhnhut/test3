@@ -540,7 +540,7 @@ export const RegisterPartnerModal = ({
                                     setState({ socialMedia: text });
                                 }}
                             >
-                                Dan
+                                {t('reference:referral.partner.paste')}
                             </div>
                             : null}
                     </div>

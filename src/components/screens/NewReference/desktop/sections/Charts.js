@@ -170,6 +170,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                             const level = t('reference:referral.level') + ': ' + data.level
                             const friends = t('reference:referral.number_of_friends') + ': ' + data.count
                             const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC'
+                            if (data.volume) return [level, friends]
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {

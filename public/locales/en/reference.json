@@ -172,7 +172,8 @@
             "no_kyc": "You have not completed KYC, please verify to continue",
             "success": "Congratulations, you've just registered Community Development Partner registration successfully",
             "failed": "Community Development Partner registration failed, please contact support.",
-            "register": "Register"
+            "register": "Register",
+            "paste": "Paste"
         }
     }
 }
