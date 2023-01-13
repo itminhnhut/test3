@@ -151,7 +151,7 @@ const Overview = ({
                                     <div className="font-semibold text-[26px] leading-[31px] text-darkBlue">
                                         {data?.name ?? t('common:unknown')}
                                     </div>
-                                    <div className="font-medium text-base leading-6 text-gray-1 uppercase text-center">
+                                    <div className="font-medium text-base leading-6 text-gray-1 uppercase">
                                         {t('reference:referral.ranking')}: <span
                                         className="text-teal font-semibold">{rank[data?.rank?.toString() ?? '0']}</span>
                                     </div>
