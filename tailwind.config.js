@@ -1,7 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
-const defaultTheme = require("tailwindcss/defaultTheme");
-
 
 // Common colors
 const commonColors = {
@@ -47,7 +45,6 @@ const commonColors = {
         grey2: '#445571',
         textSecondary: '#8492A7',
         orange: '#FF9F1A',
-
     },
     nao: {
         bg: '#619095',
@@ -58,6 +55,7 @@ const commonColors = {
         text2: '#A6BFE6',
         grey: '#7686B1',
         grey2: '#7586AD',
+        grey3: 'rgba(97, 144, 149, 0.15)',
         white: '#F6F6F6',
         blue: '#27CEE0',
         blue2: '#093DD1',
@@ -73,6 +71,7 @@ const commonColors = {
         bgShadow: '#000921',
         red: '#DC1F4E',
         tooltip: '#0E1D32',
+        nami: '#0E1113',
     },
 };
 
@@ -82,14 +81,17 @@ module.exports = {
     //     purgeLayersByDefault: true,
     // },
     mode: 'jit',
-    purge: [
-        './src/pages/**/**/*.{js,ts,jsx,tsx}',
-        './src/components/**/**/*.{js,ts,jsx,tsx}',
-    ],
+    purge: ['./src/pages/**/**/*.{js,ts,jsx,tsx}', './src/components/**/**/*.{js,ts,jsx,tsx}'],
     darkMode: 'class',
     theme: {
         container: {
             center: true,
+        },
+        backgroundSize: {
+            auto: 'auto',
+            cover: 'cover',
+            contain: 'contain',
+            '100%': '100%',
         },
         fontWeight: {
             light: 300,
@@ -282,7 +284,6 @@ module.exports = {
                 lightTeal: '#E2F6F5',
                 opacity: 'rgba(0, 200, 188, 0.5)',
                 opacitier: 'rgba(0, 200, 188, 0.1)',
-
             },
             green: {
                 DEFAULT: '#22B02E',
@@ -306,6 +307,15 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao,
             },
+        },
+        extend: {
+            screens: {
+                xs: '319px',
+                nao: '1160px',
+                xsm: '320px',
+                xxs: '360px',
+                mb: '820px',
+            },
             namiapp: {
                 black: {
                     DEFAULT: '#0c0e14',
@@ -323,13 +333,6 @@ module.exports = {
                     DEFAULT: '#8593a6',
                     1: '#262e40',
                 },
-            },
-        },
-        extend: {
-            screens: {
-                'nao': '1160px',
-                'xsm': '320px',
-                'xxs': '360px',
             },
             spacing: {
                 128: '32rem',
@@ -438,8 +441,14 @@ module.exports = {
                     DEFAULT: '#ebedf3',
                     dark: commonColors.darkBlue3,
                 },
+                bgNaoStart: 'rgba(9, 61, 209, 0.5)',
             },
-            fontWeight: { bold: 600 },
+            backgroundImage: {
+                rank: "url('/images/contest/bg_rank.png')",
+                'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
+                'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
+                dark: commonColors.darkBlue3,
+            },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
@@ -447,11 +456,12 @@ module.exports = {
             },
             boxShadow: {
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
-                'features': '0px 10px 30px rgba(89, 111, 153, 0.05)',
+                features: '0px 10px 30px rgba(89, 111, 153, 0.05)',
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
+                rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
                 ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
             },
             cursor: {

@@ -6,7 +6,7 @@ const BLOG_API_PREFIX = `${process.env.NEXT_PUBLIC_BLOG_API_URL}/ghost/api/v3/co
 export const getBlogApi = (apiEndpoint, params) => {
     if (!apiEndpoint) return "";
     return `${BLOG_API_PREFIX}/${apiEndpoint}/?key=${process.env.NEXT_PUBLIC_BLOG_API_CONTENT_KEY
-        }${params || ""}`;
+    }${params || ""}`;
 };
 
 export const API_REGISTER = API_PREFIX + "user/register";
@@ -255,13 +255,16 @@ export const API_CONTEST_GET_INVITES = API_PREFIX + "event/futures-contest/invit
 export const API_CONTEST_SEND_INVITE = API_PREFIX + "event/futures-contest/send-invite";
 export const API_CONTEST_LAST_TIME_SCAN = API_PREFIX + "event/futures-contest/last-time-scan";
 
-export const API_CONTEST_GET_INVITATIONS =
-    API_PREFIX + "event/futures-contest/invites";
-export const API_CONTEST_POST_ACCEPT_INVITATION =
-    API_PREFIX + "event/futures-contest/process-invite";
+export const API_CONTEST_NAO_YEAR_SUMMARY_STATISTIC = API_PREFIX + 'event/futures-year-end-reward/statistic';
+export const API_CONTEST_NAO_YEAR_SUMMARY_PNL = API_PREFIX + 'event/futures-year-end-reward/rank-pnl';
+export const API_CONTEST_NAO_YEAR_SUMMARY_VOLUME = API_PREFIX + 'event/futures-year-end-reward/rank-volume';
+export const API_CONTEST_NAO_YEAR_SUMMARY_ORDER = API_PREFIX + 'event/futures-year-end-reward/rank-order';
+export const API_CONTEST_NAO_SPECIAL_RANK = API_PREFIX + 'event/futures-contest/special-rank';
 
-export const API_CONTEST_GET_MASTER_GROUP_PNL =
-API_PREFIX + "event/futures-contest/group-master-pnl";
+export const API_CONTEST_GET_INVITATIONS = API_PREFIX + "event/futures-contest/invites";
+export const API_CONTEST_POST_ACCEPT_INVITATION = API_PREFIX + "event/futures-contest/process-invite";
+
+export const API_CONTEST_GET_MASTER_GROUP_PNL = API_PREFIX + "event/futures-contest/group-master-pnl";
 
 
 //VOTE

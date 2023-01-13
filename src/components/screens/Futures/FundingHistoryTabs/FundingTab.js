@@ -39,14 +39,14 @@ export const CURRENCIES = [
 const sortDescending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => b[key].localeCompare(a[key]));
     return arr.sort(function (a, b) {
-        return b[key] - a[key];
+        return a[key] - b[key];
     });
 
 };
 const sortAscending = (arr, key, isString) => {
     if (isString) return arr.sort((a, b) => a[key].localeCompare(b[key]));
     return arr.sort(function (a, b) {
-        return a[key] - b[key];
+        return b[key] - a[key];
     });
 };
 
@@ -178,17 +178,6 @@ export default function FundingHistory({ currency }) {
         }, []);
         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
         setIsLoading(false);
-        // if(firstLoadRef.current){
-        //     setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        //     setIsLoading(false);
-        //     firstLoadRef.current = false
-        // }else{
-        //     setTimeout(() => {
-        //         setDataTable(selectedFilter.sort(res, selectedFilter.keySort));
-        //         setIsLoading(false);
-        //     }, 700);
-        // }
-        console.log(marketWatch)
     }
 
     useEffect(() => {

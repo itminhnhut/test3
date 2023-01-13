@@ -21,12 +21,14 @@ const category = [
         link: "https://naotoken.gitbook.io/du-an-nao/thong-tin-co-ban/tokenomics",
         options: "_blank",
     },
-    { label: "performance", el: "nao_performance", url: "/nao" },
+    { label: 'announcement', link: 'https://nami.exchange/vi/support/announcement/thong-bao', options: '_blank' },
+    // { label: "performance", el: "nao_performance", url: "/nao" },
     { label: "governance_pool", el: "nao_pool", url: "/nao" },
     // { label: 'buy_token', el: 'nao_token' },
     { label: "Stake NAO", link: "/nao/stake", options: "_self" },
     { label: "voting", el: "nao_proposal", url: "/nao" },
     { label: "contest_futures", link: "/contest", options: "_self" },
+    { label: 'summary_2022', link: '/nao/summary-2022', options: '_self' }
 ];
 
 const NaoHeader = memo(({ onDownload }) => {
@@ -87,7 +89,7 @@ const NaoHeader = memo(({ onDownload }) => {
             />
             <div
                 className={`flex items-center text-nao-text font-medium ${width > 820 ? "space-x-10" : "space-x-4"
-                    }`}
+                }`}
             >
                 {width > 820 && (
                     <>
@@ -287,7 +289,7 @@ const Language = styled.div.attrs({
     className:
         "px-3 text-xs py-[3px] md:py-[1px] md:px-4 md:text-sm rounded-[4px] cursor-pointer text-nao-white  font-semibold nao:leading-[26px]",
 })`
-    background: ${({ active }) => (active ? colors.nao.blue2 : "")};
+  background: ${({ active }) => (active ? colors.nao.blue2 : "")};
 `;
 
 export default NaoHeader;

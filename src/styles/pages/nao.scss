@@ -5,3 +5,43 @@
     background-clip: text;
     text-fill-color: transparent;
 }
+
+.text-nao-gradient-none {
+    -webkit-text-fill-color: inherit;
+}
+
+//https://codepen.io/tippingpointdev/pen/gOxqZqy?editors=1100
+.nao-gradient-border-mask {
+    position: relative;
+    background: linear-gradient(45deg, rgba(9, 61, 209, 0.15) , rgba(73, 232, 213, 0.15));
+    border-radius: 0.75rem;
+}
+
+.nao-gradient-border-mask::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    background: linear-gradient(45deg, rgba(9, 61, 209, 1), rgba(73, 232, 213, 1)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+}
+
+.nao-hashtag-rank1 {
+    font-size: 40px;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 50px;
+
+    background: linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+    text-fill-color: transparent;
+}

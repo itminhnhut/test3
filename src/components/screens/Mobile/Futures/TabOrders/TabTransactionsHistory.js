@@ -31,6 +31,7 @@ const categories = [
     TransactionCategory.PAY_INTEREST_STAKE_TRANSACTION, // 1019
     TransactionCategory.FUTURE_FUNDING_FEE, // 611
     TransactionCategory.CONTEST_REWARD, // 612
+    TransactionCategory.REWARD_CENTER, // 801
 
 ];
 

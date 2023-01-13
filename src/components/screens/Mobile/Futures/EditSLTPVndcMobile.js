@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { countDecimals, formatNumber, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { countDecimals, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { ceil, find } from 'lodash';
@@ -12,8 +12,10 @@ import CheckBox from 'components/common/CheckBox';
 import Slider from 'components/trade/InputSlider';
 import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import colors from 'styles/colors';
-import { DefaultFuturesFee } from 'redux/actions/const';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import { isNumeric } from 'utils';
+import classNames from 'classnames';
+import { createSelector } from 'reselect';
 
 const EditSLTPVndcMobile = ({
     onClose,
@@ -25,7 +27,8 @@ const EditSLTPVndcMobile = ({
     lastPrice = 0,
     isMobile,
     onusMode = false,
-    disabled
+    disabled,
+    isPosition
 }) => {
     const { t } = useTranslation();
     const [data, setData] = useState({
@@ -61,6 +64,7 @@ const EditSLTPVndcMobile = ({
     const decimalSymbol = find(assetConfig, { id: pairConfig?.quoteAssetId })?.assetDigit ?? 0;
     if (!pairConfig) return null;
     const isChangeSlide = useRef(false);
+    const initValue = useRef(null)
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -151,7 +155,12 @@ const EditSLTPVndcMobile = ({
             tp: Number(order?.tp),
             sl: Number(order?.sl),
         });
-        const autoTypeInput = localStorage.getItem('auto_type_tp_sl');
+        if (isPosition) initValue.current = {
+            ...data,
+            tp: Number(order?.tp),
+            sl: Number(order?.sl),
+        }
+        let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
         if (autoTypeInput) {
             autoTypeInput = JSON.parse(autoTypeInput);
             setAutoType(autoTypeInput?.auto);
@@ -167,7 +176,7 @@ const EditSLTPVndcMobile = ({
             return;
         }
         let value = ''
-        if(isNumeric(e.floatValue)){
+        if (isNumeric(e.floatValue)) {
             value = e.floatValue
         }
         profit.current[key] = value ? getProfitSLTP(value) : 0;
@@ -180,6 +189,96 @@ const EditSLTPVndcMobile = ({
             [key]: value
         });
     };
+
+    console.log(' order',  order)
+
+    const [slError, setSlError] = useState({
+        isValid: true,
+        msg: null
+    })
+    const [tpError, setTpError] = useState({
+        isValid: true,
+        msg: null
+    })
+    const validatorSLTPByInput = (mode, { sl = undefined, tp = undefined }) => {
+        let isValid = true;
+        let msg = null;
+        if (isPosition && (sl === initValue.current?.sl || tp === initValue.current?.tp)) return {
+            isValid, msg
+        }
+        switch (mode) {
+            case 'stop_loss':
+            case 'take_profit':
+                // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
+                if ((mode === 'stop_loss' && !sl)
+                    || mode === 'take_profit' && !tp) {
+                    return {
+                        isValid,
+                        msg
+                    };
+                }
+                const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, pairConfig);
+                const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
+                const _maxPrice = priceFilter?.maxPrice;
+                const _minPrice = priceFilter?.minPrice;
+                let _activePrice = order.status === FuturesOrderEnum.Status.PENDING
+                    ? order.price
+                    : _lastPrice
+                // Truong hop dat lenh market
+                const lowerBound = {
+                    min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
+                    max: Math.min(_activePrice, _activePrice * (1 - percentPriceFilter?.minDifferenceRatio)),
+                };
+
+                const upperBound = {
+                    min: Math.max(_activePrice, _activePrice * (1 + percentPriceFilter?.minDifferenceRatio)),
+                    max: Math.min(_maxPrice, _activePrice * percentPriceFilter?.multiplierUp),
+                };
+
+                let bound = lowerBound;
+                if (order.side === FuturesOrderEnum.Side.BUY) {
+                    bound = mode === 'stop_loss' ? lowerBound : upperBound;
+                } else {
+                    bound = mode === 'stop_loss' ? upperBound : lowerBound;
+                }
+
+                if (mode === 'stop_loss') {
+                    bound = order.side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
+                    // Modify bound base on type
+                    if (sl < bound.min) {
+                        isValid = false;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimalSymbol, 0, true)}`;
+                    } else if (sl > bound.max) {
+                        isValid = false;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimalSymbol, 0, true)}`;
+                    }
+                } else if (mode === 'take_profit') {
+                    bound = order.side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
+                    if (tp < bound.min) {
+                        isValid = false;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimalSymbol, 0, true)}`;
+                    } else if (tp > bound.max) {
+                        isValid = false;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimalSymbol, 0, true)}`;
+                    }
+                }
+                return {
+                    isValid,
+                    msg
+                };
+
+            default:
+                return {
+                    isValid,
+                    msg
+                };
+        }
+    }
+
+    useEffect(() => {
+        setSlError(validatorSLTPByInput('stop_loss', { sl: data.sl }))
+        setTpError(validatorSLTPByInput('take_profit', { tp: data.tp }))
+    }, [data])
 
     const getPercentSlTp = (sltp, key) => {
         if (!sltp) return 50;
@@ -420,27 +519,37 @@ const EditSLTPVndcMobile = ({
                     }
                 </div>
                 {show.sl &&
-                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
-                        <TradingInput
-                            onusMode={onusMode}
-                            thousandSeparator
-                            type="text"
-                            placeholder={placeholder('stop_loss')}
-                            labelClassName="hidden"
-                            className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
-                            containerClassName={`w-full !px-3 border-none ${isMobile ? '!bg-onus-bg2' : ''}`}
-                            value={data.sl}
-                            decimalScale={countDecimals(decimalScalePrice?.tickSize)}
-                            onValueChange={(e) => onHandleChange('sl', e)}
-                            renderTail={() => (
-                                <span className={`font-medium pl-2 text-onus-grey`}>
-                                    {tabSl === 2 ? '%' : quoteAsset}
-                                </span>
-                            )}
-                            inputMode="decimal"
-                            allowedDecimalSeparators={[',', '.']}
-                        />
-                    </div>
+                    <>
+                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
+                            <TradingInput
+                                onusMode={onusMode}
+                                thousandSeparator
+                                type="text"
+                                placeholder={placeholder('stop_loss')}
+                                labelClassName="hidden"
+                                className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
+                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-onus-bg2' : ''}`, {
+                                    'border-onus-red': !slError.isValid,
+                                    'border-none': slError.isValid
+                                })}
+                                value={data.sl}
+                                decimalScale={countDecimals(decimalScalePrice?.tickSize)}
+                                onValueChange={(e) => onHandleChange('sl', e)}
+                                renderTail={() => (
+                                    <span className={`font-medium pl-2 text-onus-grey`}>
+                                        {tabSl === 2 ? '%' : quoteAsset}
+                                    </span>
+                                )}
+                                inputMode="decimal"
+                                allowedDecimalSeparators={[',', '.']}
+                                validator={{
+                                    isValid: false,
+                                    msg: ''
+                                }}
+                            />
+                        </div>
+                        {!slError?.isValid && slError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-onus-red'><RedDot className='mr-[5px]' />{slError?.msg}</div>}
+                    </>
                 }
                 <div className={`mt-2 pb-2 ${!show.sl ? 'hidden' : ''}`}>
                     <Slider
@@ -477,27 +586,34 @@ const EditSLTPVndcMobile = ({
                     </div>}
                 </div>
                 {show.tp &&
-                    <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
-                        <TradingInput
-                            onusMode={onusMode}
-                            thousandSeparator
-                            type="text"
-                            placeholder={placeholder('take_profit')}
-                            labelClassName="hidden"
-                            className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
-                            containerClassName={`w-full !px-3 border-none ${isMobile ? '!bg-onus-bg2' : ''}`}
-                            value={data.tp}
-                            decimalScale={countDecimals(decimalScalePrice?.tickSize)}
-                            onValueChange={(e) => onHandleChange('tp', e)}
-                            renderTail={() => (
-                                <span className={`font-medium pl-2 text-onus-grey`}>
-                                    {tabTp === 2 ? '%' : quoteAsset}
-                                </span>
-                            )}
-                            inputMode="decimal"
-                            allowedDecimalSeparators={[',', '.']}
-                        />
-                    </div>
+                    <>
+                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
+                            <TradingInput
+                                onusMode={onusMode}
+                                thousandSeparator
+                                type="text"
+                                placeholder={placeholder('take_profit')}
+                                labelClassName="hidden"
+                                className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full`}
+                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-onus-bg2' : ''}`, {
+                                    'border-onus-red': !tpError.isValid,
+                                    'border-none': tpError.isValid
+                                })}
+                                value={data.tp}
+                                decimalScale={countDecimals(decimalScalePrice?.tickSize)}
+                                onValueChange={(e) => onHandleChange('tp', e)}
+                                renderTail={() => (
+                                    <span className={`font-medium pl-2 text-onus-grey`}>
+                                        {tabTp === 2 ? '%' : quoteAsset}
+                                    </span>
+                                )}
+                                inputMode="decimal"
+                                allowedDecimalSeparators={[',', '.']}
+                            />
+                        </div>
+                        {!tpError?.isValid && tpError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-onus-red'><RedDot className='mr-[5px]' />{tpError?.msg}</div>}
+                    </>
+
                 }
                 <div className={`mt-2 ${!show.tp ? 'hidden' : ''}`}>
                     <Slider
@@ -523,7 +639,7 @@ const EditSLTPVndcMobile = ({
                 type="primary"
                 className={`!h-[3rem] !text-[1rem] !font-semibold`}
                 componentType="button"
-                disabled={disabled}
+                disabled={disabled || (show?.tp && !tpError.isValid) || (show?.sl && !slError.isValid)}
                 onClick={() => {
                     const newData = {
                         ...data,
@@ -538,3 +654,7 @@ const EditSLTPVndcMobile = ({
 };
 
 export default EditSLTPVndcMobile;
+
+const RedDot = ({ className }) => <svg width="12" height="12" viewBox="0 0 12 12" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5.9765 1C3.2325 1 1 3.243 1 6C1 8.757 3.243 11 6 11C8.757 11 11 8.757 11 6C11 3.243 8.7465 1 5.9765 1ZM6.5 8.5H5.5V7.5H6.5V8.5ZM6.5 6.5H5.5V3.5H6.5V6.5Z" fill="#DC1F4E" />
+</svg>

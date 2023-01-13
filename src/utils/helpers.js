@@ -12,9 +12,7 @@ export const truncate = (fullStr, strLen, separator) => {
     const frontChars = Math.ceil(charsToShow / 2);
     const backChars = Math.floor(charsToShow / 2);
 
-    return fullStr.substr(0, frontChars) +
-        separator +
-        fullStr.substr(fullStr.length - backChars);
+    return fullStr.substr(0, frontChars) + separator + fullStr.substr(fullStr.length - backChars);
 };
 
 export const sanitize = (content) => {

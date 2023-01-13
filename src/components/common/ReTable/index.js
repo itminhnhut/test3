@@ -124,7 +124,7 @@ const ReTable = memo(({
         if (Object.keys(sorter).length) {
             const _s = Object.entries(sorter)[0]
             // console.log('namidev-DEBUG: ___ ', _s[0], _s[1])
-            defaultSort = orderBy(data, [`${RETABLE_SORTBY}.${_s[0]}`], [`${_s[1] ? 'desc' : 'asc'}`])
+            defaultSort = orderBy(data, [`${RETABLE_SORTBY}.${_s[0]}`], [`${_s[1] ? 'asc' : 'desc'}`])
             // console.log(`namidev-DEBUG: After sort by ${_s[0]} `, defaultSort)
         }
 

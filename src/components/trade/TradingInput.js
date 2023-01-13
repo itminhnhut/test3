@@ -52,15 +52,22 @@ const TradingInput = ({
 
             {(isError && state?.isFocus) ? (
                 <div className='absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center'>
-                    <div className='px-2 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
-                        {validator?.msg}
-                    </div>
-                    <div
-                        className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
-                        style={{
-                            clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
-                        }}
-                    />
+                    {
+                        validator?.msg
+                        &&
+                        <>
+                            <div className='px-2 py-1.5 rounded-md bg-gray-3 dark:bg-darkBlue-4 text-xs'>
+                                {validator?.msg}
+                            </div>
+                            <div
+                                className='w-[8px] h-[6px] bg-gray-3 dark:bg-darkBlue-4'
+                                style={{
+                                    clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+                                }}
+                            />
+                        </>
+                    }
+
                 </div>
             ) : null}
 

@@ -335,5 +335,6 @@
     "countdown_tooltip": "For reference only, actual funding time will be determined based on server time",
     "users": "{{value}} users",
     "level": "Level {{level}}",
-    "show_more": "Show More"
+    "show_more": "Show More",
+    "join_now": "Join Now"
 }

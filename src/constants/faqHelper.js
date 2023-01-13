@@ -153,22 +153,6 @@ export const SupportCategories = {
                 displaySlug: 'giao-dich-futures',
                 description: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
                 iconUrl: '',
-                subCats: [
-                    {
-                        id: 'vndc_futures',
-                        title: 'VNDC Futures',
-                        slug: 'faq-vi-vndc-futures',
-                        displaySlug: 'vndc-futures',
-                        description: 'Hướng dẫn về giao dịch Futures trên Nami Exchange',
-                    },
-                    {
-                        id: 'usdt_futures',
-                        title: 'USDT Futures',
-                        slug: 'faq-vi-usdt-futures',
-                        displaySlug: 'usdt-futures',
-                        description: 'Hướng dẫn về giao dịch USDT Futures',
-                    },
-                ]
             },
             // {
             //     id: CatsKey.Finance,
@@ -359,20 +343,6 @@ export const SupportCategories = {
                 displaySlug: 'futures-trading',
                 description: 'Guide to Trading Futures on Nami Exchange',
                 iconUrl: '',
-                subCats: [
-                    {
-                        id: 'vndc_futures',
-                        title: 'VNDC Futures',
-                        slug: 'faq-en-vndc-futures',
-                        displaySlug: 'vndc-futures'
-                    },
-                    {
-                        id: 'usdt_futures',
-                        title: 'USDT Futures',
-                        slug: 'faq-en-usdt-futures',
-                        displaySlug: 'usdt-futures'
-                    },
-                ]
             },
             // {
             //     id: CatsKey.Finance,

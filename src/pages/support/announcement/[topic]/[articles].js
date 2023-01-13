@@ -12,7 +12,8 @@ import SupportCenterHead from 'components/common/SupportCenterHead';
 import SEO from "components/common/SEO";
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import { useEffect } from "react";
-
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 
 const AnnouncementArticle = (props) => {
     const article = props?.data.article
@@ -22,6 +23,7 @@ const AnnouncementArticle = (props) => {
         i18n: {language},
     } = useTranslation()
     const [theme, , setTheme] = useDarkMode();
+    const dispath = useDispatch();
 
     useEffect(() => {
         // document.body.classList.add('hidden-scrollbar');

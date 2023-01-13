@@ -871,4 +871,5 @@ export const TransactionCategory = {
     PAY_INTEREST_STAKE_TRANSACTION: 1019,
     FUTURE_FUNDING_FEE: 611,
     CONTEST_REWARD: 612,
+    REWARD_CENTER: 801,
 };

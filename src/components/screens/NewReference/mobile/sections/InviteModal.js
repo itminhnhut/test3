@@ -2,6 +2,7 @@ import React from 'react'
 import PopupModal from '../../PopupModal'
 import QRCode from 'qrcode.react';
 import { useTranslation } from 'next-i18next';
+import { getS3Url } from 'redux/actions/utils';
 
 const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
     const { t } = useTranslation()
@@ -10,7 +11,9 @@ const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
             isVisible={isShow}
             onBackdropCb={onClose}
             useCenter
-            background={isMobile ? "url('/images/reference/invite_background_mobile.png')" : "url('/images/reference/invite_background.png')"}
+            background={isMobile
+                ?`url('${getS3Url('/images/reference/invite_background_mobile.png')}')`
+                :`url('${getS3Url('/images/reference/invite_background.png')}')`}
             contentClassname='!h-[620px] !w-[340px] '
             title={(<img src='/images/logo/nami-logo.png' className='w-auto h-6' />)}
         >
