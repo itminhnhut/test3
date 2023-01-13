@@ -81,7 +81,8 @@ const PopupModal = ({
                                 { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                 {
                                     '!rounded-xl !px-6': useCenter && !isDesktop,
-                                    '!bg-namiapp-black': isMobile
+                                    'bg-namiapp-black': isMobile,
+                                    '!bg-white text-darkBlue': isDesktop
                                 }
                             )}
                             style={{ backgroundImage: background ?? null, backgroundSize: background ? 'contain' : null }}
