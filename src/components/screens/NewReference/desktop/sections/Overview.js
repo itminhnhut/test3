@@ -15,6 +15,8 @@ import _ from 'lodash';
 import { NoData } from '../../mobile';
 import FetchApi from 'utils/fetch-api';
 import fetchAPI from 'utils/fetch-api';
+
+import { useTranslation } from 'next-i18next';
 import {
     API_KYC_STATUS,
     API_NEW_REFERRAL,
@@ -26,6 +28,7 @@ import colors from 'styles/colors';
 import { IconLoading } from 'components/common/Icons';
 import { ApiStatus } from 'redux/actions/const';
 import { getS3Url } from 'redux/actions/utils';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact',
@@ -38,6 +41,7 @@ const Overview = ({
     width,
     user
 }) => {
+    const { i18n: { language } } = useTranslation();
     const [showInvite, setShowInvite] = useState(false);
     const [showRef, setShowRef] = useState(false);
     const friendsGet = data?.defaultRefCode?.remunerationRate;
@@ -117,7 +121,9 @@ const Overview = ({
                 {t('reference:referral.introduce3')}
             </div>
             <div className="font-normal text-[20px] leading-[30px] text-gray-6 mt-6 tracking-wide">
-                {t('reference:referral.readmore')} <a href="#" target={'_blank'}><span
+                {t('reference:referral.readmore')} <a
+                href={language === LANGUAGE_TAG.VI ? 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami' : 'https://nami.exchange/en/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program'}
+                target={'_blank'}><span
                 className="text-teal underline">{t('reference:referral.referral_policy')}</span></a>
             </div>
             <div className="mt-8 flex gap-3">
@@ -450,5 +456,5 @@ const RefDetail = ({
                 </div>
             </div>
         </PopupModal>
-    )
-}
+    );
+};

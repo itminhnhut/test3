@@ -82,7 +82,7 @@ const Overview = ({
     const handleCompactLink = (address, first, last) => {
         return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : '';
     };
-    const policyLink = 'https://docs.google.com/document/d/1gNdyClwwuQxI4ayTTghg7tKRfEvrjNPiXTkuU9qe-0s/edit#heading=' + (language === 'vi' ? 'h.nrn3r2czrw42' : 'h.shyovo8kizzk');
+    const policyLink = language === 'vi' ? 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami' : 'https://nami.exchange/en/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program';
 
     return (
         <div className="px-4 py-[60px]" style={{
