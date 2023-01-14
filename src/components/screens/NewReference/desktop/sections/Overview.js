@@ -44,7 +44,8 @@ const Overview = ({
     const { i18n: { language } } = useTranslation();
     const [showInvite, setShowInvite] = useState(false);
     const [showRef, setShowRef] = useState(false);
-    const friendsGet = data?.defaultRefCode?.remunerationRate;
+    const friendsGet = data?.defaultRefCode?.remunerationRate || 0;
+    const defaultRefCode = user?.code_refer
     const youGet = 100 - friendsGet;
     const handleCompactLink = (address, first, last) => {
         return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : '';
@@ -105,9 +106,9 @@ const Overview = ({
             backgroundSize: 'cover'
         }}>
             {showInvite && <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)}
-                                        code={data?.defaultRefCode?.code}/>}
+                                        code={defaultRefCode}/>}
             {showRef && <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}
-                                   defaultRef={data?.defaultRefCode?.code}/>}
+                                   defaultRef={defaultRefCode}/>}
             {showRegisterPartner ?
                 <RegisterPartnerModal isDesktop setIsPartner={setIsPartner} t={t} kyc={kyc} user={user}
                                       isShow={showRegisterPartner}
@@ -236,7 +237,7 @@ const Overview = ({
                                 })}</div>
                             </div>
                             <div className="mt-1">
-                                {renderRefInfo(data?.defaultRefCode?.code ? data?.defaultRefCode?.code : '---', 'font-semibold text-lg leading-8', 16)}
+                                {renderRefInfo(defaultRefCode ? defaultRefCode : '---', 'font-semibold text-lg leading-8', 16)}
                             </div>
                             <div className="flex w-full justify-between text-xs font-medium text-darkBlue mt-4">
                                 <div>{t('reference:referral.ref_link')}</div>
@@ -246,10 +247,10 @@ const Overview = ({
                                 })}</div>
                             </div>
                             <div className="mt-1">
-                                {renderRefInfo(data?.defaultRefCode?.code ? handleCompactLink('https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12) : '---', 'font-semibold text-lg leading-8', 16, 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
+                                {renderRefInfo(defaultRefCode ? handleCompactLink('https://nami.exchange/referral?ref=' + defaultRefCode, width < 320 ? 10 : 15, 12) : '---', 'font-semibold text-lg leading-8', 16, 'https://nami.exchange/referral?ref=' + defaultRefCode)}
                             </div>
                             <div className="mt-6">
-                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto', 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
+                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto', 'https://nami.exchange/referral?ref=' + defaultRefCode)}
                             </div>
                         </div>
                     </div>
