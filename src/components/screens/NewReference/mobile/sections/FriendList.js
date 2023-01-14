@@ -26,11 +26,11 @@ const FriendList = ({ commisionConfig }) => {
     const limit = 6
 
     const arrStatus = [
-        { title: t('reference:referral.not_kyc'), value: null },
+        { title: t('common:all'), value: null },
         { title: t('reference:referral.not_kyc'), value: 0 },
         { title: t('reference:referral.pending_kyc'), value: 1 },
         { title: t('reference:referral.kyc'), value: 2 },
-        { title: t('reference:referral.not_kyc'), value: 3 },
+        // { title: t('reference:referral.not_kyc'), value: 3 },
     ];
     const [filter, setFilter] = useState({
         kycStatus: arrStatus[0].value,
@@ -137,7 +137,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
 
     const general = useMemo(() => {
         return {
-            kycStatus: arrStatus.find((rs) => rs.value === filter.kycStatus)?.title,
+            kycStatus: arrStatus.find((rs) => rs.value === filter.kycStatus)?.title ?? arrStatus[0].title,
             invitedAt: formatTime(filter.invitedAt, 'dd/MM/yyyy'),
             totalCommission: filter.range.startDate
                 ? formatTime(filter.range.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(filter.range.endDate, 'dd/MM/yyyy')
@@ -156,7 +156,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
             )}
             <CollapsibleRefCard title={title[language]} wrapperClassName={isAll ? '!p-0' : ''} isTitle={!isAll} isBlack>
                 <div className="w-auto">
-                    {dataSource.length ? <div className="flex flex-wrap gap-2">
+                    {true ? <div className="flex flex-wrap gap-2">
                         <FilterContainer onClick={() => setShowFilter(true)}>
                             <FilterIcon /> {t('common:filter')}
                         </FilterContainer>
