@@ -35,8 +35,8 @@ const Overview = ({
     const [showInvite, setShowInvite] = useState(false);
     const [showRegisterPartner, setShowRegisterPartner] = useState(false);
     const rank = data?.rank ?? 1;
-    const defaultRefCode = user?.code_refer
-    const friendsGet = data?.defaultRefCode?.remunerationRate || 0;
+    // const commisionRate = commisionConfig[rank]?.direct.futures
+    const friendsGet = data?.defaultRefCode?.remunerationRate;
     const youGet = 100 - friendsGet;
     const [kyc, setKyc] = useState(null);
     const [isPartner, setIsPartner] = useState(true);
@@ -91,7 +91,7 @@ const Overview = ({
             backgroundSize: 'cover'
         }}>
             {showInvite ?
-                <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={defaultRefCode}
+                <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code}
                              isMobile/> : null}
             {showRegisterPartner ? <RegisterPartnerModal setIsPartner={setIsPartner} t={t} kyc={kyc} user={user}
                                                          isShow={showRegisterPartner}
@@ -144,7 +144,7 @@ const Overview = ({
                             })}</div>
                         </div>
                         <div className="mt-1">
-                            {renderRefInfo(defaultRefCode, null, 16)}
+                            {renderRefInfo(data?.defaultRefCode?.code, null, 16)}
                         </div>
                         <div className="flex w-full justify-between text-xs font-medium mt-4">
                             <div>{t('reference:referral.ref_link')}</div>
@@ -154,10 +154,10 @@ const Overview = ({
                             })}</div>
                         </div>
                         <div className="mt-1">
-                            {renderRefInfo(defaultRefCode ? handleCompactLink('https://nami.exchange/referral?ref=' + defaultRefCode, width < 320 ? 10 : 15, 12) : '---', null, 16, 'https://nami.exchange/referral?ref=' + defaultRefCode)}
+                            {renderRefInfo(data?.defaultRefCode?.code ? handleCompactLink('https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12) : '---', null, 16, 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
                         </div>
                         <div className="mt-6">
-                            {renderSocials(undefined, undefined, 'https://nami.exchange/referral?ref=' + defaultRefCode)}
+                            {renderSocials(undefined, undefined, 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
                         </div>
                     </div>
                 </RefCard>
