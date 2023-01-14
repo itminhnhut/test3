@@ -73,10 +73,10 @@ const ListRankings = ({ isList, type, data, loading }) => {
         );
     };
 
-    const renderPnl = (pnl) => {
+    const renderPnl = (total_order) => {
         return (
             <div className="flex items-center font-medium justify-between pt-1">
-                <span className={`text-right ${getColor(pnl)}`}>{`${pnl > 0 ? '+' : ''}${formatNumber(pnl, 2, 0, true)}%`}</span>
+                <span className={`text-right`}>{formatNumber(total_order, 0, 0, true)}</span>
             </div>
         );
     };
@@ -117,8 +117,8 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                           </div>
                                           <div className="flex flex-row justify-between items-center mt-1">
                                               <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:pnl')}</div>
-                                              <div className={`text-nao-green font-semibold leading-8 ${getColor(item?.pnl)}`}>
-                                                  {`${item?.pnl > 0 ? '+' : ''}${formatNumber(item?.pnl, 2, 0, true)}%`}
+                                              <div className={`text-nao-green font-semibold leading-8`}>
+                                                  {formatNumber(item?.total_order, 2, 0, true)}
                                               </div>
                                           </div>
                                       </div>
