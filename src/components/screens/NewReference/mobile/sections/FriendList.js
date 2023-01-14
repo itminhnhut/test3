@@ -26,7 +26,7 @@ const FriendList = ({ commisionConfig }) => {
     const limit = 6
 
     const arrStatus = [
-        // { title: t('reference:referral.not_kyc'), value: null },
+        { title: t('common:all'), value: null },
         { title: t('reference:referral.not_kyc'), value: 0 },
         { title: t('reference:referral.pending_kyc'), value: 1 },
         { title: t('reference:referral.kyc'), value: 2 },
