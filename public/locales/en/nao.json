@@ -131,7 +131,7 @@
     "minimun": "Minimum: {{value}}",
     "cancel": "Cancel",
     "available": "Available",
-    "holders_wallet": "Holders wallet",
+    "holders_wallet": "Users wallet",
     "liq_pools": "Liquidity pools",
     "contest": {
         "title": "NAO Futures Trading Contest Season {{value}}",
