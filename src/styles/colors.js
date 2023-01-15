@@ -1,7 +1,7 @@
 const colors = {
-    mint: "#03BBCC",
-    mint3: "#0FA4B3",
-    dark7: "#1f1f1f",
+    mint: '#03BBCC',
+    mint3: '#0FA4B3',
+    dark7: '#1f1f1f',
 
     base: '#00C8BC',
     bg: '#eeeeee',
@@ -19,13 +19,13 @@ const colors = {
     priceUp: '#00DCC9',
     priceDown: '#E5544B',
     eco: '#baff6f',
-    teal: '#00C8BC',
+    teal: '#47cc85',
     teal2: '#C2F2EF',
     lightTeal: '#E2F6F5',
     exchange: '#00DCC9',
     ecoShade: {
         darker1: '#AAE865',
-        darker2: '#99D15B',
+        darker2: '#99D15B'
     },
 
     // Components
@@ -33,7 +33,7 @@ const colors = {
     white: '#ffffff',
     iceberg: '#E2F6F5',
     listItemTapColor: '#d8d7dc',
-    red2: '#E5544B',
+    red2: '#f93636',
     red3: '#F9D6D4',
     lightRed2: 'rgba(229, 84, 75, 0.1)',
 
@@ -42,14 +42,21 @@ const colors = {
     darkBlue: '#223050',
     darkBlue1: '#00091F',
     darkBlue2: '#151D2F',
-    darkBlue3: '#263459',
+    darkBlue3: '#141921',
     darkBlue4: '#445271',
-    darkBlue5: '#7B8CB2',
+    darkBlue5: '#8694b2',
+    darkBlue6: '#2e333d',
+
+    dark: {
+        dark: '#0c0e14',
+        1: '#2e333d',
+        2: '#1c232e'
+    },
 
     grey1: '#718096',
     grey2: '#A0AEC0',
     grey3: '#CBD5E0',
-    grey4: '#F2F4F6',
+    grey4: '#e2e8f0',
     grey5: '#EDF1F6',
 
     green: '#00C8BC',
@@ -58,6 +65,11 @@ const colors = {
     navy: '#191489',
     marina: '#A6D4FF',
     blue: '#2D9CDB',
+
+    divider: {
+        DEFAULT: '#e2e8f0',
+        dark: '#222940'
+    },
 
     overlayLight: 'rgba(0, 0, 0, 0.45)',
     overlayDark: 'rgba(0, 0, 0, 0.45)',
@@ -108,32 +120,30 @@ const colors = {
         tooltip2: '#071120'
     },
     portfolio: {
-        teal: [
-            '#52EAD1',
-            '#33FFDD',
-            '#80FFEA',
-            '#B3FFF2',
-            '#D9FFF8',
-        ]
-
+        teal: ['#52EAD1', '#33FFDD', '#80FFEA', '#B3FFF2', '#D9FFF8']
     },
-    namiapp: {
+    namiv2: {
         black: {
             DEFAULT: '#0c0e14',
-            1: '#141921',
-            2: '#1c232e',
-        },
-        green: {
-            DEFAULT: '#30bf73',
-            1: '#47cc85',
-            2: '#7ee5ae',
+            1: '#141921'
         },
         gray: {
-            DEFAULT: '#8694b2',
-            1: '#E2E8F0',
-            2: '#8593a6'
+            DEFAULT: '#1c232e',
+            1: '#8694b2',
+            2: '#e2e8f0'
+        },
+        green: {
+            DEFAULT: '#47cc85',
+            1: '#29cc7e'
+        },
+        red: {
+            DEFAULT: '#f93636'
         }
     },
+    hover: {
+        DEFAULT: '#262b34',
+        dark: '#262b34'
+    }
 };
 
 export default colors;

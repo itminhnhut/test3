@@ -6,6 +6,7 @@ import { ApiStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { ChevronLeft, ChevronRight } from 'react-feather';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
@@ -13,6 +14,9 @@ import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
 import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
+import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
+import TableV2 from 'src/components/common/V2/TableV2';
+
 import { PATHS } from 'constants/paths';
 
 const SwapHistory = ({ width }) => {
@@ -133,28 +137,38 @@ const SwapHistory = ({ width }) => {
         );
     }, [state.page, state.histories]);
 
+    const [currentTheme] = useDarkMode();
+
+    const dataTemp = Array.from({ length: 12 }, (x, i) => {
+        return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
+    });
+
+    console.log('dataTemp: ' + dataTemp);
+
     return (
         <div className="mal-container mt-20">
-            <div className="text-[20px] text-left leading-7 dark:text-[#e2e8f0] font-medium font-sfPro">{t('convert:history')}</div>
-            {auth && data.length !== 0 ? (
-                <>
-                    <MCard addClass="mt-6 py-0 px-0 overflow-hidden">{renderTable()}</MCard>
-                    {renderPagination()}
-                </>
-            ) : auth && data.length === 0 ? (
-                <div className="flex flex-col justify-center items-center mt-[60px] mb-[46px] gap-3">
-                    <img src={'/images/screen/swap/empty-history.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <span className="text-[#8694b2] text-base leading-6">Bạn hiện không có giao dịch gần đây</span>
-                </div>
+            <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
+
+            {auth ? (
+                <TableV2
+                    useRowHover
+                    data={dataTemp}
+                    columns={columns}
+                    rowKey={(item) => `${item?.displayingId}`}
+                    loading={state.loading}
+                    scroll={{ x: true }}
+                    limit={10}
+                    skip={0}
+                />
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
-                    <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[140px] w-[140px]" />
-                    <p className="font-sfPro text-base leading-6 text-[#8694b2] mt-3">
-                        <a href={getLoginUrl('sso', 'login')} className="text-[#47cc85] font-semibold">
+                    <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                    <p className="text-base text-namiv2-gray-1 mt-3">
+                        <a href={getLoginUrl('sso', 'login')} className="text-teal font-semibold leading-6">
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
-                        <a href={getLoginUrl('sso', 'register')} className="text-[#47cc85] font-semibold">
+                        <a href={getLoginUrl('sso', 'register')} className="text-teal font-semibold leading-6">
                             {t('common:sign_up')}{' '}
                         </a>
                         {t('common:swap_history')}

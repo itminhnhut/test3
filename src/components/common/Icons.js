@@ -96,10 +96,10 @@ export const IconStar = ({ size = 12, color = false, strokeWidth = "1,5" }) => (
     </svg>
 );
 
-export const IconStarFilled = ({ size = 12, color = 'F1C617' }) => (
-    <svg width={size || 12} height={size || 12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 1L7.545 4.13L11 4.635L8.5 7.07L9.09 10.51L6 8.885L2.91 10.51L3.5 7.07L1 4.635L4.455 4.13L6 1Z" fill={color} stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
+export const IconStarFilled = ({ size = 24, color = '#F1C617' }) => (
+    <svg width={size || "24"} height={size || "24"} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M21.947 9.179a1.001 1.001 0 0 0-.869-.676l-5.7-.453-2.467-5.461a.998.998 0 0 0-1.822-.001L8.62 8.05l-5.7.453a1 1 0 0 0-.62 1.713l4.213 4.107-1.49 6.452a1 1 0 0 0 1.53 1.057L12 18.202l5.446 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.83-6.4 4.537-4.082c.296-.268.405-.686.277-1.065z" fill={color || "#FFC632"}/>
+</svg>
 );
 
 export const IconArrowDown = () => (
@@ -226,12 +226,13 @@ export const IconStepArrowShort = (props) => (
     )
 );
 
-export const IconSearch = () => (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
-        <path d="M14 13.9996L11.1 11.0996" stroke="#8D9091" strokeLinecap="round" strokeLinejoin="round" />
+export const IconSearch = ({ size = 16, color = '#8694B3' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M6.667 12c1.23 0 2.362-.423 3.264-1.125l2.93 2.93.944-.942-2.931-2.931A5.3 5.3 0 0 0 12 6.667a5.34 5.34 0 0 0-5.333-5.334 5.34 5.34 0 0 0-5.334 5.334A5.34 5.34 0 0 0 6.667 12zm0-9.333c2.206 0 4 1.794 4 4s-1.794 4-4 4-4-1.794-4-4 1.794-4 4-4z"
+            fill={color}
+        />
     </svg>
-
 );
 
 export const IconCheck = () => (
@@ -269,15 +270,15 @@ export const IconSortDown = () => (
 
 export const IconSort = () => (
     <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
-        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#C4C4C4" />
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#47cc85" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill="#8694b2" />
     </svg>
 
 );
 export const IconNoSort = ({ fill }) => (
     <svg width="18" height="18" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#00C8BC" />
-        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill={fill || '#C4C4C4'} />
+        <path d="M8.47949 4L11.0776 7H5.88142L8.47949 4Z" fill="#8694b2" />
+        <path d="M8.47949 12L5.88142 9L11.0776 9L8.47949 12Z" fill={fill || '#8694b2'} />
     </svg>
 
 );

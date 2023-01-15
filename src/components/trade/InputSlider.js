@@ -297,7 +297,7 @@ const Slider = ({
                             onChange && onChange({ x: valueX })
                         }}
                         className={classNames(
-                            'block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
+                            'block absolute text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
                             {
                                 'left-1/2 -translate-x-1/2':
                                     i > 0 && i !== _dots,
@@ -305,7 +305,7 @@ const Slider = ({
                                     i === _dots,
                             },
                             { '!font-normal': onusMode },
-                            { '!text-onus-white': Number(labelX) === Number(x) && onusMode },
+                            { '!text-onus-white font-semibold': Number(labelX) === Number(x) },
                         )}
                     >
                         {labelX}
@@ -330,6 +330,7 @@ const Slider = ({
             )}
             <Track
                 {...props}
+                onusMode={onusMode}
                 ref={container}
                 onTouchStart={handleTrackMouseDown}
                 onMouseDown={handleTrackMouseDown}

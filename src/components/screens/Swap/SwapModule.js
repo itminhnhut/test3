@@ -26,6 +26,8 @@ import Button from 'components/common/Button';
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import SvgDropDown from 'components/svg/SvgDropdown';
 import router from 'next/router';
+import ModalV2 from 'components/common/V2/ModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -316,7 +318,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={fromAssetRef}
-                        className="w-full text-[20px] leading-[1.4] text-left font-medium"
+                        className="w-full text-[20px] leading-[1.4] text-left font-medium text-txtSecondary dark:text-txtSecondary-dark"
                         value={state.fromAmount}
                         onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -327,21 +329,21 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="relative flex items-center justify-center">
                     <div
-                        className={`uppercase cursor-pointer font-bold hover:opacity-50 text-[#47cc85]`}
+                        className={`uppercase cursor-pointer font-bold hover:opacity-50 text-teal`}
                         onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}
                     >
                         max
                     </div>
-                    <div className="ml-3 mr-[11px] w-[1px] bg-[#222940] h-6" />
+                    <div className="ml-3 mr-[11px] w-[1px] bg-divider dark:bg-divider-dark h-6" />
                     <div
                         className="flex items-center cursor-pointer select-none"
                         onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
                     >
                         <AssetLogo assetCode={state.fromAsset} size={24} />
-                        <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.fromAsset}</span>
+                        <span className="mx-2 uppercase leading-6 text-base font-semibold">{state.fromAsset}</span>
                         <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
                             {/* <SvgIcon name="chevron_down" size={15} /> */}
-                            <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : undefined} />
+                            <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#8694B3'} />
                         </span>
                     </div>
                 </div>
@@ -362,10 +364,10 @@ const SwapModule = ({ width, pair }) => {
             assetItems.push(
                 <div
                     key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-[#e2e8f0] leading-6 text-left text-base
+                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     ${i !== 0 && 'mt-3'}
-                    ${state.fromAsset === fromAsset ? ' text-dominant bg-teal-lightTeal dark:bg-[#262b34]' : 'hover:bg-teal-lightTeal dark:hover:bg-[#262b34]'}
+                    ${state.fromAsset === fromAsset ? ' text-dominant bg-teal-lightTeal dark:bg-hover' : 'hover:bg-teal-lightTeal dark:hover:bg-hover'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
@@ -373,7 +375,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="flex items-center">
                         <AssetLogo assetCode={fromAsset} size={20} />
                         <span className="mx-2">{fromAsset}</span>
-                        <span className="text-xs leading-4 dark:text-[#8694b2] text-left">{assetName}</span>
+                        <span className="text-xs leading-4 dark:text-txtSecondary-dark text-left">{assetName}</span>
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{available ? formatWallet(available) : '0.0000'}</div>
                 </div>
@@ -383,16 +385,16 @@ const SwapModule = ({ width, pair }) => {
         return (
             <div
                 className="from_asset__list absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl border
-                            border-divider dark:border-[#222940] bg-bgContainer dark:bg-[#141921] drop-shadow-onlyLight
+                            border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
                             dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)]"
                 ref={fromAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
-                        <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark leading-6">
+                        <Search size={16} />
                         <input
                             autoFocus
-                            className="px-2 py-1 w-full text-txtSecondary dark:text-[#8694b2]"
+                            className="px-2 py-1 w-full"
                             value={state.search}
                             placeholder={t('wallet:search_asset')}
                             onChange={(e) => setState({ search: e.target?.value })}
@@ -410,7 +412,7 @@ const SwapModule = ({ width, pair }) => {
                     ) : (
                         <div className="h-[332px] flex flex-col items-center justify-center">
                             <img src={'/images/screen/swap/no-result.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                            <span className="text-base leading-6  text-txtSecondary dark:text-[#8694b2]"> {t('common:swap_no_search_results')}</span>
+                            <span className="text-base leading-6  text-txtSecondary dark:text-txtSecondary-dark"> {t('common:swap_no_search_results')}</span>
                         </div>
                     )}
                 </div>
@@ -426,7 +428,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full text-[20px] leading-[1.4] text-left font-medium"
+                        className="w-full text-[20px] leading-[1.4] text-left font-medium text-txtSecondary dark:text-txtSecondary-dark"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -443,10 +445,10 @@ const SwapModule = ({ width, pair }) => {
                     onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}
                 >
                     <AssetLogo assetCode={state.toAsset} size={24} />
-                    <span className="mx-2 uppercase leading-6 text-base font-semibold dark:text-[#e2e8f0]">{state.toAsset}</span>
+                    <span className="mx-2 uppercase leading-6 text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
                         {/* <SvgIcon name="chevron_down" size={15} /> */}
-                        <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : undefined} />
+                        <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#8694B3'} />
                     </span>
                 </div>
             </div>
@@ -466,10 +468,10 @@ const SwapModule = ({ width, pair }) => {
             assetItems.push(
                 <div
                     key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-[#e2e8f0] leading-6 text-left text-base
+                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     ${i !== 0 && 'mt-3'}
-                    ${state.toAsset === toAsset ? ' text-dominant bg-teal-lightTeal dark:bg-[#262b34]' : 'hover:bg-teal-lightTeal dark:hover:bg-[#262b34]'}
+                    ${state.toAsset === toAsset ? ' text-dominant bg-teal-lightTeal dark:bg-hover' : 'hover:bg-teal-lightTeal dark:hover:bg-hover'}
                     `}
                     // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickToAsset(toAsset)}
@@ -477,7 +479,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="flex items-center">
                         <AssetLogo assetCode={toAsset} size={20} />
                         <span className="mx-2">{toAsset}</span>
-                        <span className="text-xs leading-4 dark:text-[#8694b2] text-left">{assetName}</span>
+                        <span className="text-xs leading-4 dark:text-txtSecondary-dark text-left">{assetName}</span>
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{available ? formatWallet(available) : '0.0000'}</div>
                 </div>
@@ -487,16 +489,16 @@ const SwapModule = ({ width, pair }) => {
         return (
             <div
                 className="from_asset__list absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl border
-                border-divider dark:border-[#222940] bg-bgContainer dark:bg-[#141921] drop-shadow-onlyLight
+                border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
                 dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)]"
                 ref={toAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-[#1c232e] w-full py-2 px-3 rounded-md justify-start text-base font-sfPro leading-6">
-                        <Search size={16} className="text-txtSecondary dark:text-[#8694b2]" />
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark leading-6">
+                        <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             autoFocus
-                            className="px-2 py-1 w-full text-txtSecondary dark:text-[#8694b2]"
+                            className="px-2 py-1 w-full"
                             value={state.search}
                             placeholder={t('wallet:search_asset')}
                             onChange={(e) => setState({ search: e.target?.value })}
@@ -514,7 +516,7 @@ const SwapModule = ({ width, pair }) => {
                     ) : (
                         <div className="h-[332px] flex flex-col items-center justify-center">
                             <img src={'/images/screen/swap/no-result.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                            <span className="text-base leading-6  text-txtSecondary dark:text-[#8694b2]"> {t('common:swap_no_search_results')}</span>
+                            <span className="text-base leading-6  text-txtSecondary dark:text-txtSecondary-dark"> {t('common:swap_no_search_results')}</span>
                         </div>
                     )}
                 </div>
@@ -563,7 +565,7 @@ const SwapModule = ({ width, pair }) => {
             return (
                 <a
                     href={getLoginUrl('sso', 'login')}
-                    className="block h-12 mt-8 py-3 w-full rounded-md text-center text-white text-base leading-6 font-medium bg-[#47cc85]
+                    className="block h-12 mt-8 py-3 w-full rounded-md text-center text-white text-base leading-6 font-medium bg-teal
                                 select-none cursor-pointer hover:opacity-80"
                 >
                     {t('common:sign_in')}
@@ -590,10 +592,10 @@ const SwapModule = ({ width, pair }) => {
         const shouldDisable = error || !state.fromAmount || !state.estRate;
         return (
             <div
-                className={`block h-12 mt-8 py-3 px-6 text-base font-medium font-sfPro leading-6 w-full rounded-md text-center ${
+                className={`block h-12 mt-8 py-3 px-6 text-base font-medium  leading-6 w-full rounded-md text-center ${
                     shouldDisable
                         ? 'text-gray-1 dark:text-darkBlue-5 text-sm font-bold bg-gray-3 dark:bg-darkBlue-4 select-none cursor-not-allowed'
-                        : 'text-white text-sm font-bold select-none bg-[#47cc85] cursor-pointer hover:opacity-80'
+                        : 'text-white text-sm font-bold select-none bg-teal cursor-pointer hover:opacity-80'
                 }`}
                 onClick={() => !shouldDisable && !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)}
             >
@@ -618,7 +620,7 @@ const SwapModule = ({ width, pair }) => {
 
         if (!error) return null;
         return (
-            <div className="flex items-center text-[#f93636] pt-3 text-xs text-left leading-4 font-sfPro gap-1">
+            <div className="flex items-center text-namiv2-red pt-3 text-xs text-left leading-4  gap-1">
                 <SwapWarning size={12} fill={colors.red2} />
                 {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
             </div>
@@ -627,55 +629,57 @@ const SwapModule = ({ width, pair }) => {
 
     // Modal confirmation
     const renderPreOrderModal = useCallback(() => {
+        console.log('state.preOrder: ', state.preOrder);
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
-            <Modal
-                isVisible={state.openModal}
-                useCross={true}
-                onClose={onCloseSwapModal}
-                title={t('convert:confirm')}
-                containerClassName={`p-8 md:min-w-[488px] dark:!bg-[#0c0e14] border dark:border-[#222940] ${!state.openModal && 'hidden'}`}
-            >
-                {/* <div className="flex flex-row-reverse cursor-pointer" onClick={onCloseSwapModal}>
-                    <X size={24} className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant" />
-                </div> */}
+            <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
+                <div className="my-6 text-left font-medium leading-7 text-[20px] text-namiv2-gray dark:text-namiv2-gray-2 hover:bg-transparent">
+                    {t('convert:confirm')}
+                </div>
                 <div className="flex flex-col items-start justify-between gap-2">
-                    <span className="text-sm leading-5 font-sfPro text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-[#1c232e] px-3 py-2 flex justify-between text-base items-center leading-6">
-                        <span className="py-1 dark:text-[#e2e8f0]">{formatPrice(state.preOrder?.fromQty)} </span>
-                        <span className="dark:text-[#8694b2]">{state.preOrder?.fromAsset}</span>
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-namiv2-gray px-3 py-2 flex justify-between text-base items-center leading-6">
+                        <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.fromQty)} </span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.fromAsset}</span>
                     </div>
                 </div>
 
                 <div className="flex flex-col mt-4 items-start justify-between gap-2">
-                    <span className="text-sm leading-5 font-sfPro text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-[#1c232e] px-3 py-2 flex justify-between text-base items-center leading-6">
-                        <span className="py-1 dark:text-[#e2e8f0]">{formatPrice(state.preOrder?.toQty)}</span>
-                        <span className="dark:text-[#8694b2]">{state.preOrder?.toAsset}</span>
+                    <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-namiv2-gray px-3 py-2 flex justify-between text-base items-center leading-6">
+                        <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.toQty)}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.toAsset}</span>
                     </div>
                 </div>
                 <div className="flex items-end justify-between mt-4 text-base leading-6">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:rate')}:</span>
-                    <span className="font-semibold">
-                        1 {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.toAsset : state.preOrder?.fromAsset} ={' '}
-                        {formatPrice(state.preOrder?.displayingPrice)} {config?.displayPriceAsset}
-                    </span>
+                    {state.preOrder?.fromAsset === config?.displayPriceAsset ? (
+                        <span className="font-semibold">
+                            1 {state.preOrder?.toAsset} = {formatPrice(state.preOrder?.displayingPrice)} {state.preOrder?.fromAsset}
+                        </span>
+                    ) : (
+                        <span className="font-semibold">
+                            1 {state.preOrder?.toAsset} = {formatPrice(state.preOrder?.displayingPrice)} {state.preOrder?.fromAsset}
+                        </span>
+                    )}
+                    {/* <span className="font-semibold">
+                        1 {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.fromAsset : state.preOrder?.toAsset} ={' '}
+                        {formatPrice(state.preOrder?.displayingPrice)}{' '}
+                        {state.preOrder?.fromAsset === config?.displayPriceAsset ? state.preOrder?.toAsset : state.preOrder?.fromAsset}
+                    </span> */}
                 </div>
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
-                    <Button
-                        color="#47cc85"
-                        title={positiveLabel}
-                        type="primary"
-                        componentType="button"
-                        className="!py-3 text-base"
+                    <ButtonV2
                         onClick={() =>
                             swapTimer
                                 ? onConfirmOrder(state.preOrder?.preOrderId)
                                 : !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)
                         }
-                    />
+                    >
+                        {positiveLabel}
+                    </ButtonV2>
                 </div>
-            </Modal>
+            </ModalV2>
         );
     }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, swapTimer, config]);
 
@@ -822,8 +826,8 @@ const SwapModule = ({ width, pair }) => {
 
     return (
         <>
-            <div className="font-sfPro flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[524px] bg-transparent rounded-xl">
+            <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
+                <div className="relative p-4 pb-10 md:p-6 lg:p-8 min-w-[524px] rounded-xl bg-white dark:bg-dark">
                     <div className="flex flex-col justify-center items-center pb-8">
                         <span className="text-4xl font-bold leading-[1.19]">{t('navbar:submenu.swap')}</span>
                     </div>
@@ -834,9 +838,12 @@ const SwapModule = ({ width, pair }) => {
                     </div> */}
 
                     {/*INPUT WRAPPER*/}
-                    <div className="relative text-txtSecondary dark:text-txtSecondary-dark">
-                        <div className={`py-6 px-4 rounded-xl relative border border-solid border-[#222940]`}>
-                            <div className="flex items-center justify-between text-[14px] pb-4">
+                    <div className="relative">
+                        <div
+                            className={`py-6 px-4 rounded-xl relative border border-solid
+                            ${state.inputHighlighted === 'from' ? 'border-dominant' : `border-divider dark:border-divider-dark`} `}
+                        >
+                            <div className="flex items-center justify-between text-[14px] pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                 <span>{t('common:from')}</span>
                                 <div className="flex gap-2 items-center">
                                     <span>
@@ -849,7 +856,7 @@ const SwapModule = ({ width, pair }) => {
                                             handleDepositIconBtn();
                                         }}
                                     >
-                                        <SvgAddCircle size={13.3} color={'#47cc85'} className="cursor-pointer" />
+                                        <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
                                     </button>
                                 </div>
                             </div>
@@ -860,15 +867,18 @@ const SwapModule = ({ width, pair }) => {
 
                         <div className="flex justify-center items-center py-4">
                             <button
-                                className={`p-1.5 dark:bg-[#1c232e] shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                className={`p-1.5 dark:bg-namiapp-black-2 shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
                                 onClick={onReverse}
                             >
                                 <SwapReverse size={width < 1280 && 24} />
                             </button>
                         </div>
 
-                        <div className={`py-6 px-4 rounded-xl relative border border-solid border-[#222940]`}>
-                            <div className="flex items-center justify-between text-[14px] pb-4">
+                        <div
+                            className={`py-6 px-4 rounded-xl relative border border-solid
+                            ${state.inputHighlighted === 'to' ? 'border-dominant' : `border-divider dark:border-divider-dark`} `}
+                        >
+                            <div className="flex items-center justify-between text-[14px] pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                 <span>{t('common:to')}</span>
                                 <span>
                                     {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
@@ -935,7 +945,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-4 leading-5  text-center text-sm text-txtSecondary dark:text-txtSecondary-dark font-bold">
                         <Trans i18nKey="common:term_swap">
-                            <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-[#47cc85] font-semibold hover:!underline" />
+                            <a href={PATHS.TERM_OF_SERVICES.SWAP} className="block cursor-pointer text-teal font-semibold hover:!underline" />
                         </Trans>
                     </div>
                 </div>

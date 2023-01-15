@@ -501,7 +501,8 @@ const ExternalWithdrawal = (props) => {
                 <div className="NoticePopup__Header">{t('modal:notice')}</div>
                 <div className="NoticePopup__Content">
                     <Key size={24} color="#03BBCC"/>
-                    {t('common:sign_in_to_continue')}
+                    <div dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }} />
+                    {/* {t('common:sign_in_to_continue')} */}
                     <a href="#" onClick={() => emitWebViewEvent('login')}>
                         {t('common:sign_in')}
                     </a>

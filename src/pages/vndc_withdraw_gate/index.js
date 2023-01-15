@@ -713,9 +713,10 @@ const ExternalWithdrawal = (props) => {
             />
             <NoticePopup active={modal.isNotice} isDark={isDark}>
                 <div className='NoticePopup__Header'>{t('modal:notice')}</div>
-                <div className='NoticePopup__Content'>
+                <div className='NoticePopup__Content' >
                     <Key size={24} color='#03BBCC' />
-                    {t('common:sign_in_to_continue')}
+                    <div dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }} />
+                    {/* {t('common:sign_in_to_continue')} */}
                     <a href='#' onClick={() => handleLogin(false)}>
                         {t('common:sign_in')}
                     </a>

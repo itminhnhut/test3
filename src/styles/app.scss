@@ -5,11 +5,12 @@
 @import 'theme';
 @import 'theme.tailwind';
 @import 'datepicker';
+@import 'fonts';
 
 html,
 body {
   @apply w-full h-full;
-  scroll-behavior: smooth;
+  // scroll-behavior: smooth;
   /* Disable web page navigation on swipe(back and forward) */
   /* overscroll-behavior-x: none; */
   @apply text-base;
@@ -18,9 +19,9 @@ body {
   @apply lg:text-base;
   @apply md:text-base;
 
-  @apply bg-bgPrimary dark:bg-bgPrimary-dark;
+  @apply bg-bgPrimary dark:bg-bgSpotContainer-dark font-SF-Pro;
 
-  font-family: "Barlow", sans-serif !important;
+  // font-family: "Barlow", sans-serif !important;
 
   -ms-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
@@ -266,7 +267,7 @@ body {
 
   &::-webkit-scrollbar-thumb,
   ::-webkit-scrollbar-thumb {
-    @apply bg-gray-2 dark:bg-darkBlue-5 rounded-md;
+    @apply bg-gray-2 dark:bg-darkBlue-6 rounded-md;
 
     &:hover {
       @apply bg-dominant;
@@ -275,7 +276,7 @@ body {
 
   &::-webkit-scrollbar-track,
   ::-webkit-scrollbar-track {
-    @apply bg-gray-5 dark:bg-darkBlue-4 dark:opacity-50 rounded-md;
+    @apply bg-gray-5 dark:bg-bgSpotContainer-dark;
   }
 }
 
@@ -510,6 +511,7 @@ input[type="number"] {
 }
 
 .rdt_dark {
+  @apply dark:bg-bgSpotContainer-dark;
   .rdt_Pagination {
     button svg:first-child {
       fill: #f2f4f6 !important;
@@ -936,4 +938,13 @@ input[type="number"] {
         /* Firefox bug fix */
         transform: translateX(-100%);
     }
+}
+
+.no-scroll {
+  position: fixed;
+  width: 100%;
+  min-height: 100vh;
+  top: 0;
+  left: 0;
+  overflow-y: scroll !important;
 }
