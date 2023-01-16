@@ -329,5 +329,10 @@
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
     "custom_date": "Tùy chỉnh",
-    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ"
+    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ",
+    "close_order": "Đóng lệnh",
+    "close_all_orders": "Đóng tất cả",
+    "close_all_message": "Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?",
+    "close_all_success": "Đóng lệnh thành công",
+    "close_all_failed": "Đóng lệnh thất bại"
 }

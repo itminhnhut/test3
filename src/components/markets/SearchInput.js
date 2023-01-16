@@ -27,15 +27,17 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
         }
     }, [debouncedValue]);
 
+    const onChange = (value) => {
+        setQueryFilter(value);
+        if (parentState) parentState(value);
+    };
+
     return (
         <div className="form-group" style={customWrapperStyle}>
             <div
-                className={classNames(
-                    'bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between py-2 rounded-md',
-                    {
-                        '!border-teal': focus
-                    }
-                )}
+                className={classNames('bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between py-2 rounded-md', {
+                    '!border-teal': focus
+                })}
             >
                 <div className="flex items-center space-x-2">
                     <span className="text-txtSecondary flex items-center">
@@ -44,10 +46,7 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
                     <input
                         type="text"
                         placeholder={placeholder}
-                        onChange={({ currentTarget }) => {
-                            setQueryFilter(currentTarget.value);
-                            parentState && parentState(currentTarget.value);
-                        }}
+                        onChange={({ currentTarget }) => onChange(currentTarget.value)}
                         value={queryFilter}
                         className="bg-transparent text-txtPrimary dark:text-white p-0 text-sm leading-5 py-[3px]"
                         style={customStyle}
@@ -55,7 +54,7 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
                         onBlur={() => setFocus(false)}
                     />
                 </div>
-                <X size={16} color={colors.darkBlue5} />
+                {queryFilter && <X className="cursor-pointer" size={16} color={colors.darkBlue5} onClick={() => onChange('')} />}
             </div>
         </div>
     );

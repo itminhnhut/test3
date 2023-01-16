@@ -53,7 +53,22 @@ const DEFAULT_PAGINATION = {
 export const RETABLE_SORTBY = 'sortByValue';
 
 const ReTable = memo(
-    ({ data, columns, loading, resizable, sort, pagination, paginationProps, tableStyle, tableStatus, useRowHover, isNamiV2, height, ...restProps }) => {
+    ({
+        data,
+        columns,
+        loading,
+        resizable,
+        sort,
+        pagination,
+        paginationProps,
+        tableStyle,
+        tableStatus,
+        useRowHover,
+        isNamiV2,
+        height,
+        reference,
+        ...restProps
+    }) => {
         // * Init State
         const [ownColumns, setOwnColumns] = useState(columns);
         const [current, setCurrent] = useState(DEFAULT_PAGINATION.current);
@@ -74,12 +89,12 @@ const ReTable = memo(
         const handleResize =
             (index) =>
             (e, { size }) => {
-                console.log(size)
+                console.log(size);
                 setOwnColumns((prevState) => {
                     const nextColumns = [...prevState];
                     nextColumns[index] = {
                         ...nextColumns[index],
-                        width: size.width,
+                        width: size.width
                     };
                     return nextColumns;
                 });
@@ -225,6 +240,7 @@ const ReTable = memo(
 
         return (
             <ReTableWrapperV2
+                ref={reference}
                 loading={loading || data.length <= 0}
                 empty={data.length <= 0}
                 isDark={currentTheme === THEME_MODE.DARK}
@@ -345,9 +361,9 @@ const ReTableWrapperV2 = styled.div`
 
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
-        z-index: 15;
+        z-index: 99;
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
-        /* background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important; */
+        background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
             box-shadow: none !important;
         }
@@ -388,8 +404,13 @@ const ReTableWrapperV2 = styled.div`
         }
 
         tbody tr {
+            &:hover td {
+                background: ${({ useRowHover, isDark, empty }) => !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.grey5) : undefined)} !important;
+                cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
+            }
             .rc-table-cell-fix-right:last-child:not(.rc-table-cell-fix-sticky) {
-                /* background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important; */
+                z-index: 30;
+                background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)};
             }
         }
 
@@ -398,11 +419,6 @@ const ReTableWrapperV2 = styled.div`
                 border-bottom-width: 0;
                 ${({ lastRowStyle }) => (lastRowStyle ? { ...lastRowStyle } : '')};
             }
-        }
-
-        tbody tr:hover td {
-            background: ${({ useRowHover, isDark, empty }) => !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.grey5) : undefined)} !important;
-            cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
         }
 
         thead tr th:first-child,

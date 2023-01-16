@@ -87,7 +87,7 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark-dark`, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark`, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()

@@ -14,6 +14,7 @@ import Link from 'next/link';
 import { formatNumber } from 'redux/actions/utils';
 import TableV2 from '../common/V2/TableV2';
 import AlertModalV2 from '../common/V2/ModalV2/AlertModalV2';
+import { Store } from 'react-notifications-component';
 
 const SpotOrderList = (props) => {
     const {
@@ -30,6 +31,7 @@ const SpotOrderList = (props) => {
     const [showCloseAll, setShowCloseAll] = useState(false);
     const [showSuccess, setshowSuccess] = useState(false);
     const alert = useRef({
+        type: '',
         title: '',
         message: ''
     });
@@ -62,7 +64,8 @@ const SpotOrderList = (props) => {
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 alert.current = {
-                    title: 'Đóng thành công',
+                    type: 'success',
+                    title: t('common:success'),
                     message: t('spot:close_order_success', {
                         displayingId,
                         side: data?.side,
@@ -78,61 +81,73 @@ const SpotOrderList = (props) => {
                 // });
                 // showNotification({ message, title: 'Success', type: 'success' }, null, 'bottom', 'bottom-right');
             } else {
-                showNotification(
-                    {
-                        message: t('spot:close_order_failed', {
-                            displayingId,
-                            side: order?.side,
-                            type: order?.type,
-                            token: `${order?.baseAsset}/${order?.quoteAsset}`
-                        }),
-                        title: 'Failure',
-                        type: 'failure'
-                    },
-                    null,
-                    'bottom',
-                    'bottom-right'
-                );
+                alert.current = {
+                    type: 'error',
+                    title: t('common:close_order'),
+                    message: t('spot:close_order_failed', {
+                        displayingId,
+                        side: order?.side,
+                        type: order?.type,
+                        token: `${order?.baseAsset}/${order?.quoteAsset}`
+                    })
+                };
+                // showNotification(
+                //     {
+                //         message: t('spot:close_order_failed', {
+                //             displayingId,
+                //             side: order?.side,
+                //             type: order?.type,
+                //             token: `${order?.baseAsset}/${order?.quoteAsset}`
+                //         }),
+                //         title: 'Failure',
+                //         type: 'failure'
+                //     },
+                //     null,
+                //     'bottom',
+                //     'bottom-right'
+                // );
             }
         } catch (error) {
         } finally {
-            setTimeout(() => {
-                setLoaded(false);
-            }, 200);
+            setLoaded(false);
+            setshowSuccess(true);
         }
     };
 
     const onCloseAll = async () => {
+        if (loaded) return;
+        const orders = filteredOrders.map((rs) => ({ symbol: rs.symbol, displayingId: rs.displayingId }));
         try {
             setLoaded(true);
             const res = await fetchAPI({
                 url: '/api/v3/spot/all_order',
                 options: {
                     method: 'DELETE'
+                },
+                params: {
+                    orders: orders,
+                    allowNotification: true
                 }
             });
-            const { status, data } = res;
+            const { status } = res;
             if (status === ApiStatus.SUCCESS) {
                 alert.current = {
-                    title: 'Đóng tất cả thành công',
-                    message: 'Bạn đã đặt lệnh đóng cho tất cả các lệnh thành công.'
+                    type: 'success',
+                    title: t('common:success'),
+                    message: t('common:close_all_success')
                 };
             } else {
-                showNotification(
-                    {
-                        message: t('common:failed'),
-                        title: 'Failure',
-                        type: 'failure'
-                    },
-                    null,
-                    'bottom',
-                    'bottom-right'
-                );
+                alert.current = {
+                    type: 'error',
+                    title: t('common:failed'),
+                    message: t('common:close_all_failed')
+                };
             }
         } catch (error) {
         } finally {
             setShowCloseAll(false);
             setLoaded(false);
+            setshowSuccess(true);
         }
     };
 
@@ -254,13 +269,21 @@ const SpotOrderList = (props) => {
             {
                 key: 'actions',
                 title: (
-                    <span onClick={() => setShowCloseAll(true)} className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer">
-                        Đóng tất cả
+                    <span
+                        onClick={() => {
+                            if (filteredOrders.length) {
+                                Store.removeAllNotifications();
+                                setShowCloseAll(true);
+                            }
+                        }}
+                        className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer"
+                    >
+                        {t('common:close_all_orders')}
                     </span>
                 ),
                 fixed: 'right',
                 align: 'center',
-                width: 150,
+                width: 180,
                 render: (row) => (
                     <Delete
                         className="cursor-pointer flex m-auto w-full"
@@ -271,7 +294,7 @@ const SpotOrderList = (props) => {
                 )
             }
         ],
-        [toggle, currentPair, showCloseAll, loaded]
+        [toggle, currentPair, showCloseAll, loaded, filteredOrders]
     );
 
     const getOrderList = async () => {
@@ -298,15 +321,16 @@ const SpotOrderList = (props) => {
                 isVisible={showCloseAll}
                 onClose={() => setShowCloseAll(false)}
                 type="warning"
-                title="Đóng tất cả"
-                message="Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?"
+                title={t('common:close_all_orders')}
+                message={t('common:close_all_message')}
                 textButton={t('common:confirm')}
                 onConfirm={onCloseAll}
+                loading={loaded}
             />
             <AlertModalV2
                 isVisible={showSuccess}
                 onClose={() => setshowSuccess(false)}
-                type="success"
+                type={alert.current.type}
                 title={alert.current.title}
                 message={alert.current.message}
             />

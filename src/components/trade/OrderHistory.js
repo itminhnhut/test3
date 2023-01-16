@@ -80,7 +80,7 @@ const OrderHistory = (props) => {
         const label = arr.find((rs) => rs.value === status)?.label;
 
         return (
-            <PopoverV2 ref={popover} label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>} className="w-max py-4 text-xs !mt-6">
+            <PopoverV2 ref={popover} label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>} className="w-max py-4 text-xs !mt-6 z-20">
                 <div className="flex flex-col">
                     {arr.map((rs) => (
                         <div

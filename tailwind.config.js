@@ -330,8 +330,8 @@ module.exports = {
                 ...commonColors.nao
             },
             dark: {
+                ...commonColors.dark,
                 DEFAULT: commonColors.dark.dark,
-                ...commonColors.dark
             },
             namiv2: commonColors.namiv2
         },

@@ -1,10 +1,12 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import RePagination from 'src/components/common/ReTable/RePagination';
 import NoData from './NoData';
+import sumBy from 'lodash/sumBy';
 
 const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, useRowHover = true, height = 575, rowKey, ...props }) => {
     const [currentPage, setCurrentPage] = useState(1);
+    const ref = useRef();
 
     const _onChangePage = (page) => {
         setCurrentPage(page);
@@ -12,13 +14,14 @@ const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, use
     };
 
     const _columns = useMemo(() => {
-        const checked = columns.find((rs) => rs.fixed);
-        return checked ? columns : columns.concat([{ fixed: 'right', width: 0 }]);
-    }, [columns]);
+        const isAdd = !columns.find((rs) => rs.fixed) && ref.current?.offsetWidth < sumBy(columns, 'width');
+        return !isAdd ? columns : columns.concat([{ fixed: 'right', width: 0 }]);
+    }, [columns, ref.current]);
 
     return (
         <>
             <ReTable
+                reference={ref}
                 useRowHover={useRowHover}
                 data={data}
                 columns={_columns}

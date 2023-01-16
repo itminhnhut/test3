@@ -333,5 +333,10 @@
     "filter": "Filter",
     "custom": "Custom",
     "custom_date": "Custom Date",
-    "countdown_tooltip": "For reference only, actual funding time will be determined based on server time"
+    "countdown_tooltip": "For reference only, actual funding time will be determined based on server time",
+    "close_order": "Close Order",
+    "close_all_orders": "Close all orders",
+    "close_all_message": "Do you want to close all your orders?",
+    "close_all_success": "Close orders successfully",
+    "close_all_failed": "Close Orders failed"
 }
