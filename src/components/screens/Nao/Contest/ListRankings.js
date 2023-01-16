@@ -116,10 +116,8 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                             <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
                                         </div>
                                         <div className="flex flex-row justify-between items-center mt-1">
-                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:pnl')}</div>
-                                            <div className={`text-nao-green font-semibold leading-8 ${getColor(item?.pnl)}`}>
-                                                {`${item?.pnl > 0 ? '+' : ''}${formatNumber(item?.pnl, 2, 0, true)}%`}
-                                            </div>
+                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-nao-green font-semibold leading-8">{formatNumber(item?.total_order, 0)}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -224,7 +222,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                             </div>
                                             <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
                                                 <div className="text-nao-text ">{t('nao:contest:total_trades')}</div>
-                                                <div className="text-right">{item.total_trades}</div>
+                                                <div className="text-right">{formatNumber(item?.total_order, 0)}</div>
                                             </div>
                                         </div>
                                     </div>
