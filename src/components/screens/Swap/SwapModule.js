@@ -28,6 +28,7 @@ import SvgDropDown from 'components/svg/SvgDropdown';
 import router from 'next/router';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -67,7 +68,8 @@ const SwapModule = ({ width, pair }) => {
         inputHighlighted: null,
         changeEstRatePosition: false,
         openAssetList: {},
-        openModal: false
+        openModal: false,
+        resultSwap: null
         //... Add new state here
     });
     const [swapTimer, setSwapTimer] = useState(null);
@@ -164,7 +166,6 @@ const SwapModule = ({ width, pair }) => {
                 fromQty
             }
         });
-        console.log('data.swapTime:', data.swapTime);
 
         if (status === ApiStatus.SUCCESS && data) {
             setState({ preOrder: data, shouldRefreshRate: false });
@@ -173,10 +174,11 @@ const SwapModule = ({ width, pair }) => {
         } else {
             const e = find(Error, { code });
             const msg = e ? t(`error:${e?.message}`) : t('error:COMMON_ERROR');
-            showNotification({
-                message: `(${code}) ${msg}`,
-                title: t('common:failure'),
-                type: 'failure'
+
+            onOpenAlertResultSwap({
+                msg: `(${code}) ${msg}`,
+                type: 'warning',
+                title: t('common:failure')
             });
         }
 
@@ -199,7 +201,12 @@ const SwapModule = ({ width, pair }) => {
             let msg = t('convert:swap_success', { fromQty, fromAsset, toQty, toAsset, displayingPrice });
 
             setState({ openModal: false, preOrder: null, invoiceId: displayingId });
-            showNotification({ message: msg, title: t('common:success'), type: 'success' }, 3200);
+            onOpenAlertResultSwap({
+                msg: msg,
+                type: 'successs',
+                title: t('common:success'),
+                duration: 3200
+            });
         } else {
             const error = find(Error, { code: result?.code });
             if (REJECT_PREORDER.includes(error.message)) {
@@ -207,14 +214,11 @@ const SwapModule = ({ width, pair }) => {
             }
 
             const description = error ? t(`error:${error.message}`) : t('error:COMMON_ERROR');
-            showNotification(
-                {
-                    message: `(${result?.code}) ${description}`,
-                    title: 'Failure',
-                    type: 'failure'
-                },
-                5000
-            );
+            onOpenAlertResultSwap({
+                msg: `(${result?.code}) ${description}`,
+                type: 'warning',
+                title: t('common:failure')
+            });
             setSwapTimer(null);
         }
     };
@@ -293,18 +297,6 @@ const SwapModule = ({ width, pair }) => {
     };
 
     // Render Handler
-    const renderDepositLink = useCallback(() => {
-        if (!state.fromAsset) return null;
-
-        return (
-            <Link href={getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`)}>
-                <a className="font-medium text-dominant text-[14px] hover:!underline">
-                    {t('common:deposit')} <span className="uppercase">{state.fromAsset}</span>
-                </a>
-            </Link>
-        );
-    }, [state.fromAsset]);
-
     const handleDepositIconBtn = useCallback(() => {
         if (!state.fromAsset) return null;
         router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
@@ -629,7 +621,6 @@ const SwapModule = ({ width, pair }) => {
 
     // Modal confirmation
     const renderPreOrderModal = useCallback(() => {
-        console.log('state.preOrder: ', state.preOrder);
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
             <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
@@ -682,6 +673,32 @@ const SwapModule = ({ width, pair }) => {
             </ModalV2>
         );
     }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, swapTimer, config]);
+
+    const onOpenAlertResultSwap = ({ msg, type, title, duration }) => {
+        set((prevState) => ({ ...prevState, resultSwap: { msg, type, title, duration } }));
+    };
+
+    const onCloseAlertResultSwap = () => {
+        if (state.resultSwap) set((prevState) => ({ ...prevState, resultSwap: null }));
+    };
+
+    const renderAlertNotification = useCallback(() => {
+        if (!state?.resultSwap) return null;
+
+        setTimeout(() => {
+            onCloseAlertResultSwap();
+        }, state?.duration || 5000);
+
+        return (
+            <AlertModalV2
+                isVisible={!!state.resultSwap}
+                onClose={onCloseAlertResultSwap}
+                type={state?.resultSwap?.type}
+                title={state?.resultSwap?.title}
+                message={state?.resultSwap?.msg}
+            />
+        );
+    }, [state.resultSwap]);
 
     // Side Effect
     useAsync(async () => {
@@ -951,6 +968,7 @@ const SwapModule = ({ width, pair }) => {
                 </div>
             </div>
             {renderPreOrderModal()}
+            {renderAlertNotification()}
         </>
     );
 };
