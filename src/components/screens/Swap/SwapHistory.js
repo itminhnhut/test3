@@ -15,7 +15,7 @@ import Skeletor from 'src/components/common/Skeletor';
 import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
 import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
-import TableV2 from 'src/components/common/V2/TableV2';
+import TableV2 from 'src/components/common/SwapTableV2';
 
 import { PATHS } from 'constants/paths';
 
@@ -139,11 +139,9 @@ const SwapHistory = ({ width }) => {
 
     const [currentTheme] = useDarkMode();
 
-    const dataTemp = Array.from({ length: 12 }, (x, i) => {
-        return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
-    });
-
-    console.log('dataTemp: ' + dataTemp);
+    // const dataTemp = Array.from({ length: 12 }, (x, i) => {
+    //     return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
+    // });
 
     return (
         <div className="mal-container mt-20">
@@ -152,7 +150,7 @@ const SwapHistory = ({ width }) => {
             {auth ? (
                 <TableV2
                     useRowHover
-                    data={dataTemp}
+                    data={data}
                     columns={columns}
                     rowKey={(item) => `${item?.displayingId}`}
                     loading={state.loading}
