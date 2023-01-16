@@ -573,30 +573,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         }
         return '';
     };
-    const _renderOrderPrice = (_orderSide) => {
-        // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
-        const isMarket = orderType === ExchangeOrderEnum.Type.MARKET;
-        return (
-            <div className="flex justify-between items-center mb-3">
-                <TradingInput
-                    label={t('common:price')}
-                    labelClassName="!text-sm !font-normal"
-                    value={isMarket ? t('spot:market') : _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice}
-                    onValueChange={({ value }) => {
-                        onHandleChange('price', value, _orderSide);
-                    }}
-                    name="stop_buy_input"
-                    disabled={isMarket}
-                    allowNegative={false}
-                    validator={!isMarket && validator('price', _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice)}
-                    decimalScale={decimals.price}
-                    containerClassName="w-full dark:bg-dark-2"
-                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
-                    renderTail={() => <span className="flex items-center">{quote}</span>}
-                />
-            </div>
-        );
-    };
 
     const onHandleChange = (key, value, options) => {
         const isBuy = options?.side === ExchangeOrderEnum.Side.BUY;
@@ -648,6 +624,31 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             default:
                 break;
         }
+    };
+
+    const _renderOrderPrice = (_orderSide) => {
+        // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
+        const isMarket = orderType === ExchangeOrderEnum.Type.MARKET;
+        return (
+            <div className="flex justify-between items-center mb-3">
+                <TradingInput
+                    label={t('common:price')}
+                    labelClassName="!text-sm !font-normal"
+                    value={isMarket ? t('spot:market') : _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice}
+                    onValueChange={({ value }) => {
+                        onHandleChange('price', +value, { side: _orderSide });
+                    }}
+                    name="stop_buy_input"
+                    disabled={isMarket}
+                    allowNegative={false}
+                    validator={!isMarket && validator('price', _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice)}
+                    decimalScale={decimals.price}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{quote}</span>}
+                />
+            </div>
+        );
     };
 
     const _renderQuantitySlider = (_orderSide) => {

@@ -66,7 +66,7 @@
     "filled": "Filled",
     "sign_in": "Sign In",
     "sign_up": "Sign Up",
-    "sign_in_to_continue": "Sign in to continue",
+    "sign_in_to_continue": "<span class='text-teal'>Sign in</span>&nbspor&nbsp<span class='text-teal'>Sign up</span>",
     "sign_up_to_continue": "Sign Up Now",
     "status": "Status",
     "transaction_id": "Transaction ID",
