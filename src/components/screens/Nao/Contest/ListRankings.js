@@ -92,41 +92,43 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const renderListRanks = () => {
         return (
             <>
-                <div className="pt-[148px] lg:pt-[172px] flex flex-row justify-between flex-wrap gap-y-6">
-                    {data?.users?.length > 0
-                        ? data?.users?.map((item, index) => {
-                              return (
-                                  <div key={index} className="sm:w-[48%] w-full lg:w-[346px] rounded-t-xl border-b-0 bg-rank bg-no-repeat bg-100%">
-                                      <div className="sm:bg-cover sm:w-[100%] h-[74px] bg-rank-header relative flex items-center rounded-t-xl">
-                                          <img
-                                              className="rounded-full w-12 h-12 absolute left-4 bottom-0 translate-y-6"
-                                              src={item?.avatar ? item?.avatar : getS3Url('/images/contest/img_name.png')}
-                                          />
-                                          <div className="text-[32px] font-semibold text-nao-green absolute right-4">#{index + 1}</div>
-                                      </div>
-                                      <div className="mt-8 px-4">
-                                          <div className="leading-8">
-                                              <div className="font-semibold">{item.name}</div>
-                                          </div>
-                                          <div className="text-nao-text font-normal text-sm ">{item.onus_user_id}</div>
-                                          <div className="bg-rank-line h-[1px] my-6"></div>
+                {data?.users?.length > 0 ? (
+                    <div className="pt-[148px] lg:pt-[172px] flex flex-row justify-between flex-wrap gap-y-6">
+                        {data?.users?.map((item, index) => {
+                            return (
+                                <div key={index} className="sm:w-[48%] w-full lg:w-[346px] rounded-t-xl border-b-0 bg-rank bg-no-repeat bg-100%">
+                                    <div className="sm:bg-cover sm:w-[100%] h-[74px] bg-rank-header relative flex items-center rounded-t-xl">
+                                        <img
+                                            className="rounded-full w-12 h-12 absolute left-4 bottom-0 translate-y-6"
+                                            src={item?.avatar ? item?.avatar : getS3Url('/images/contest/img_name.png')}
+                                        />
+                                        <div className="text-[32px] font-semibold text-nao-green absolute right-4">#{index + 1}</div>
+                                    </div>
+                                    <div className="mt-8 px-4">
+                                        <div className="leading-8">
+                                            <div className="font-semibold">{item.name}</div>
+                                        </div>
+                                        <div className="text-nao-text font-normal text-sm ">{item.onus_user_id}</div>
+                                        <div className="bg-rank-line h-[1px] my-6"></div>
 
-                                          <div className="flex flex-row justify-between items-center">
-                                              <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
-                                              <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
-                                          </div>
-                                          <div className="flex flex-row justify-between items-center mt-1">
-                                              <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:pnl')}</div>
-                                              <div className={`text-nao-green font-semibold leading-8 ${getColor(item?.pnl)}`}>
-                                                  {`${item?.pnl > 0 ? '+' : ''}${formatNumber(item?.pnl, 2, 0, true)}%`}
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              );
-                          })
-                        : empty()}
-                </div>
+                                        <div className="flex flex-row justify-between items-center">
+                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
+                                            <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
+                                        </div>
+                                        <div className="flex flex-row justify-between items-center mt-1">
+                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:pnl')}</div>
+                                            <div className={`text-nao-green font-semibold leading-8 ${getColor(item?.pnl)}`}>
+                                                {`${item?.pnl > 0 ? '+' : ''}${formatNumber(item?.pnl, 2, 0, true)}%`}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                ) : (
+                    empty()
+                )}
                 <div className="mt-6 text-xs text-nao-grey font-medium">
                     {t('nao:contest:last_updated_time')}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
@@ -173,12 +175,11 @@ const ListRankings = ({ isList, type, data, loading }) => {
                             />
                             <Column
                                 align="right"
-                                title={`${t('nao:contest:per_pnl')}`}
+                                title={`${t('nao:contest:total_trades')}`}
                                 decimal={0}
                                 minWidth={150}
                                 className="font-medium"
-                                fieldName="pnl"
-                                cellRender={renderPnl}
+                                fieldName="total_order"
                             />
                         </Table>
                     ) : (
@@ -222,10 +223,8 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                                 <div className="">{formatNumber(item?.total_volume, 0)} VNDC</div>
                                             </div>
                                             <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-nao-text ">{t('nao:contest:pnl')}</div>
-                                                <div className={`text-right ${getColor(item?.pnl)}`}>
-                                                    {`${item?.pnl > 0 ? '+' : ''}${formatNumber(item?.pnl, 2, 0, true)}%`}
-                                                </div>
+                                                <div className="text-nao-text ">{t('nao:contest:total_trades')}</div>
+                                                <div className="text-right">{item.total_trades}</div>
                                             </div>
                                         </div>
                                     </div>
