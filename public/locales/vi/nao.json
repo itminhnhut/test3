@@ -131,7 +131,7 @@
     "minimun": "Tối thiểu: {{value}}",
     "cancel": "Hủy",
     "available": "Khả dụng",
-    "holders_wallet": "Ví holder",
+    "holders_wallet": "Ví người dùng",
     "liq_pools": "Pool thanh khoản",
     "contest": {
         "title": "Đua TOP giao dịch NAO Futures mùa {{value}}",

@@ -307,15 +307,6 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao,
             },
-        },
-        extend: {
-            screens: {
-                xs: '319px',
-                nao: '1160px',
-                xsm: '320px',
-                xxs: '360px',
-                mb: '820px',
-            },
             namiapp: {
                 black: {
                     DEFAULT: '#0c0e14',
@@ -331,7 +322,17 @@ module.exports = {
                 },
                 gray: {
                     DEFAULT: '#8593a6',
+                    1: '#262e40',
                 },
+            },
+        },
+        extend: {
+            screens: {
+                xs: '319px',
+                nao: '1160px',
+                xsm: '320px',
+                xxs: '360px',
+                mb: '820px',
             },
             spacing: {
                 128: '32rem',

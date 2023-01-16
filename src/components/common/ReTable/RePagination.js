@@ -1,6 +1,6 @@
 // ********* Re-Pagination **********
 // Version: M1
-// Author:
+// Author: Minh
 // Updated: 09/11/2021
 // **********************************
 
@@ -14,7 +14,7 @@ import colors from 'styles/colors';
 import 'rc-pagination/assets/index.css';
 import React from 'react';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiApp = false, ...restProps }) => {
 
     const [currentTheme, ] = useDarkMode()
 
@@ -23,7 +23,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, ...r
     }, [current, name])
 
     return (
-        <PaginationWrapper isDark={currentTheme === THEME_MODE.DARK}>
+        <PaginationWrapper isDark={currentTheme === THEME_MODE.DARK} isNamiApp={isNamiApp}>
             <Pagination hideOnSinglePage
                         total={total}
                         current={current}
@@ -58,13 +58,13 @@ const PaginationWrapper = styled.div`
   }
 
   .rc-pagination-item a, .rc-pagination-prev button, .rc-pagination-next button {
-    color: ${({ isDark }) => isDark ? colors.grey4 : colors.darkBlue};
+    color: ${({ isDark, isNamiApp = false }) => isNamiApp ? colors.namiapp.gray.DEFAULT : isDark ? colors.grey4 : colors.darkBlue};
   }
 
 
 
   .rc-pagination-item-active a, .rc-pagination-item:focus a, .rc-pagination-item:hover a {
-    color: ${colors.teal};
+    color: ${({ isNamiApp = false }) => isNamiApp ? colors.namiapp.green[1] : colors.teal};
   }
 
   .rc-pagination-jump-prev button:after, .rc-pagination-jump-next button:after {

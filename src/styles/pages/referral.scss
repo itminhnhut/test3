@@ -45,3 +45,15 @@
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
 }
+
+.swiper {
+  height: auto !important;
+}
+
+#setdefault123 {
+  accent-color: #47cc85;
+  &:checked {
+    background-color: white !important;
+    color: white !important
+  }
+}

@@ -73,10 +73,10 @@ const ListRankings = ({ isList, type, data, loading }) => {
         );
     };
 
-    const renderPnl = (pnl) => {
+    const renderPnl = (total_order) => {
         return (
             <div className="flex items-center font-medium justify-between pt-1">
-                <span className={`text-right ${getColor(pnl)}`}>{`${pnl > 0 ? '+' : ''}${formatNumber(pnl, 2, 0, true)}%`}</span>
+                <span className={`text-right`}>{formatNumber(total_order, 0, 0, true)}</span>
             </div>
         );
     };

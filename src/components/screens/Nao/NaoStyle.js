@@ -311,7 +311,7 @@ export const useOutsideAlerter = (ref, cb) => {
     useEffect(() => {
         const handleClickOutside = (event, cb) => {
             if (ref.current && !ref.current?.contains(event.target)) {
-                cb();
+              if (cb) cb();
             }
         };
         document.addEventListener('mousedown', (event) => handleClickOutside(event, cb));
