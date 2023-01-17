@@ -1,6 +1,6 @@
 // ********* Re-Pagination **********
 // Version: M1
-// Author:
+// Author: Minh
 // Updated: 09/11/2021
 // **********************************
 
@@ -112,7 +112,7 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item a {
-      color: ${({ isDark }) => (isDark ? colors.grey2 : colors.primary)};
+        color: ${({ isDark }) => (isDark ? colors.grey2 : colors.primary)};
     }
 
     .rc-pagination-item-active {
@@ -120,7 +120,7 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item-active a {
-        color: white
+        color: white;
     }
 
     .rc-pagination {

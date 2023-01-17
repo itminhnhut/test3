@@ -25,6 +25,8 @@ const commonColors = {
     gray3: '#CBD5E0',
     gray4: '#e2e8f0',
     gray5: '#EDF1F6',
+    gray6: '#E2E8F0',
+    gray7: '#8694b2',
 
     white: 'white',
     teal: '#47cc85',
@@ -285,7 +287,9 @@ module.exports = {
                 2: commonColors.gray2,
                 3: commonColors.gray3,
                 4: commonColors.gray4,
-                5: commonColors.gray5
+                5: commonColors.gray5,
+                6: commonColors.gray6,
+                7: commonColors.gray7
             },
             teal: {
                 DEFAULT: commonColors.teal,
@@ -328,6 +332,23 @@ module.exports = {
             nao: {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao
+            },
+            namiapp: {
+                black: {
+                    DEFAULT: '#0c0e14',
+                    1: '#141921',
+                    2: '#1c232e',
+                    3: '#1f2633',
+                    4: '#222940'
+                },
+                green: {
+                    DEFAULT: '#30bf73',
+                    1: '#47cc85',
+                    2: '#7ee5ae'
+                },
+                gray: {
+                    DEFAULT: '#8593a6'
+                }
             },
             dark: {
                 ...commonColors.dark,
@@ -461,7 +482,8 @@ module.exports = {
                 mobile: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)'
+                funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
+                ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)'
             },
             cursor: {
                 grabbing: 'grabbing'

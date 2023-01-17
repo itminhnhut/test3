@@ -143,6 +143,9 @@
     "already_have_account": "Đã có tài khoản?",
     "create_account": "Tạo tài khoản",
     "term_swap": "Bằng việc sử dụng Nami Swap, bạn đã đồng ý với các </br><0>Điều khoản và Chính sách</0>",
+    "or": "hoặc",
+    "swap_history": "để xem lịch sử giao dịch",
+    "swap_no_search_results": "Không tìm thấy kết quả",
     "term_transfer": "Bằng việc sử dụng Nami Transfer, bạn đã đồng ý với các </br><0>Điều khoản và Chính sách</0>",
     "overview": "Tổng quan",
     "transfer": "Chuyển đổi",
@@ -334,5 +337,8 @@
     "close_all_orders": "Đóng tất cả",
     "close_all_message": "Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?",
     "close_all_success": "Đóng lệnh thành công",
-    "close_all_failed": "Đóng lệnh thất bại"
+    "close_all_failed": "Đóng lệnh thất bại",
+    "users": "{{value}} người",
+    "level": "Cấp {{level}}",
+    "show_more": "Xem thêm danh sách"
 }

@@ -148,7 +148,7 @@
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^2.1.1",
     "styled-components": "^5.3.5",
-    "swiper": "6.8.0",
+    "swiper": "^8.4.5",
     "timesync": "^1.0.11",
     "use-react-screenshot": "^3.0.0"
   },
