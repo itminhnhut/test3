@@ -282,7 +282,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                                 • {formatNumber(data?.directCommission?.['22'], 2)} USDT
                                                             </div>
                                                             <div className="flex items-center w-full h-6">
-                                                                • {formatNumber(data?.directCommission?.['447'], 2)} NAO
+                                                                • {formatNumber(data?.directCommission?.['1'], 2)} NAMI
                                                             </div>
                                                         </div>
                                                     </div>
@@ -311,7 +311,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                                 • {formatNumber(data?.indirectCommission?.['22'], 2)} USDT
                                                             </div>
                                                             <div className="flex items-center w-full h-6">
-                                                                • {formatNumber(data?.indirectCommission?.['447'], 2)} NAO
+                                                                • {formatNumber(data?.indirectCommission?.['1'], 2)} NAMI
                                                             </div>
                                                         </div>
                                                     </div>
