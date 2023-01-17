@@ -228,15 +228,15 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
                             <div className="mt-1">
                                 {renderRefInfo(
                                     data?.defaultRefCode?.code
-                                        ? handleCompactLink('https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12)
+                                        ? handleCompactLink('https://nami.exchange/ref/' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12)
                                         : '---',
                                     'font-semibold text-lg leading-8',
                                     16,
-                                    'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code
+                                    'https://nami.exchange/ref/' + data?.defaultRefCode?.code
                                 )}
                             </div>
                             <div className="mt-6">
-                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto', 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
+                                {renderSocials(44, 'px-6 py-2 !h-auto !w-auto', 'https://nami.exchange/ref/' + data?.defaultRefCode?.code)}
                             </div>
                         </div>
                     </div>

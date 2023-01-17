@@ -151,15 +151,15 @@ const Overview = ({ data, commisionConfig, user }) => {
                             <div className="mt-1">
                                 {renderRefInfo(
                                     data?.defaultRefCode?.code
-                                        ? handleCompactLink('https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12)
+                                        ? handleCompactLink('https://nami.exchange/ref/' + data?.defaultRefCode?.code, width < 320 ? 10 : 15, 12)
                                         : '---',
                                     null,
                                     16,
-                                    'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code
+                                    'https://nami.exchange/ref/' + data?.defaultRefCode?.code
                                 )}
                             </div>
                             <div className="mt-6">
-                                {renderSocials(undefined, undefined, 'https://nami.exchange/referral?ref=' + data?.defaultRefCode?.code)}
+                                {renderSocials(undefined, undefined, 'https://nami.exchange/ref/' + data?.defaultRefCode?.code)}
                             </div>
                         </div>
                     </RefCard>

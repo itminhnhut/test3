@@ -30,7 +30,7 @@ const ShareFuturesOrder = ({
     const [downloading, setDownloading] = useState(false)
     const refNodeInfoOrder = useRef(null)
     const codeRefer = useSelector((state) => state.auth?.user?.code_refer)
-    const uriReferral = APP_URL + '/referral?ref=' + codeRefer
+    const uriReferral = APP_URL + '/ref/' + codeRefer
     const { t } = useTranslation()
     const {
         leverage = '',
