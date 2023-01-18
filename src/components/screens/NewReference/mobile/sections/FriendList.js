@@ -305,13 +305,13 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                         </div>
                                                         <div className="flex flex-col gap-2 text-gray-6">
                                                             <div className="flex items-center w-full h-6">
-                                                                • {formatNumber(data?.indirectCommission?.['72'], 2)} VNDC
+                                                                • {formatNumber(data?.undirectCommission?.['72'], 2)} VNDC
                                                             </div>
                                                             <div className="flex items-center w-full h-6">
-                                                                • {formatNumber(data?.indirectCommission?.['22'], 2)} USDT
+                                                                • {formatNumber(data?.undirectCommission?.['22'], 2)} USDT
                                                             </div>
                                                             <div className="flex items-center w-full h-6">
-                                                                • {formatNumber(data?.indirectCommission?.['1'], 2)} NAMI
+                                                                • {formatNumber(data?.undirectCommission?.['1'], 2)} NAMI
                                                             </div>
                                                         </div>
                                                     </div>

@@ -240,13 +240,13 @@ const FriendList = ({ t, commisionConfig, id }) => {
         // preventSort: true,
         render: (data, item) => renderCommissionData(item, 'directCommission')
     }, {
-        key: 'indirectCommission',
+        key: 'undirectCommission',
         dataIndex: 'undirectCommission',
         title: t('reference:referral.total_indirect_commissions'),
         align: 'left',
         width: 250,
         // preventSort: true,
-        render: (data, item) => renderCommissionData(item, 'indirectCommission')
+        render: (data, item) => renderCommissionData(item, 'undirectCommission')
     }], [dataSource]);
 
     return (
@@ -310,5 +310,5 @@ const ROW_SKELETON = {
     referred: <Skeletor width={90} />,
     rank: <Skeletor width={90} />,
     directCommission: <Skeletor width={250} />,
-    indirectCommission: <Skeletor width={250} />,
+    undirectCommission: <Skeletor width={250} />,
 };
