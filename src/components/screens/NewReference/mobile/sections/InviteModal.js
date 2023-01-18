@@ -13,7 +13,7 @@ const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
             useCenter
             background={
                 isMobile
-                    ? `url('${getS3Url('/images/reference/invite_background_mobile.png')}')`
+                    ? `url('${getS3Url('/images/reference/mobile-ref-share-bg.png')}')`
                     : `url('${getS3Url('/images/reference/invite_background.png')}')`
             }
             contentClassname="!h-[620px] !w-[340px] "
@@ -27,10 +27,10 @@ const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
                     <div className="flex w-full h-full items-center justify-center mt-3">
                         <QRCode value={'https://nami.exchange/ref/' + code} size={190} />
                     </div>
-                    <img
+                    {!isMobile && <img
                         className="absolute bottom-[75px] w-[124px] h-[120px]"
-                        src={isMobile ? getS3Url('/images/icon/ic_green_nami_icon.png') : getS3Url('/images/icon/ic_nami_icon.png')}
-                    />
+                        src={getS3Url('/images/icon/ic_nami_icon.png')}
+                    />}
                 </div>
             </div>
         </PopupModal>

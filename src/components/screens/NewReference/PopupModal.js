@@ -85,7 +85,7 @@ const PopupModal = ({
                                     '!bg-white text-darkBlue': isDesktop
                                 }
                             )}
-                            style={{ backgroundImage: background ?? null, backgroundSize: background ? 'contain' : null }}
+                            style={{ backgroundImage: background ?? null, backgroundSize: background ? '100% auto' : null, backgroundRepeat: 'no-repeat' }}
                         >
                             {useFullScreen || useCenter ? null : (
                                 <div
