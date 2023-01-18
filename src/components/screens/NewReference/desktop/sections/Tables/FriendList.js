@@ -272,7 +272,6 @@ const FriendList = ({ t, commisionConfig, id }) => {
                             // paddingHorizontal: '1.75rem',
                             // tableStyle: { minWidth: '1300px !important' },
                             headerStyle: { paddingTop: '8px' },
-                            rowStyle: {},
                             shadowWithFixedCol: false,
                             noDataStyle: {
                                 minHeight: '480px'

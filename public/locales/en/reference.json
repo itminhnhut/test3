@@ -140,7 +140,7 @@
         "asset_type": "Asset Type",
         "exchange_commission": "Exchange Commission",
         "custom": "Custom",
-        "commission_type": "Commission Type",
+        "commission_type": "Type",
         "ref_placeholder": "Enter the desired referral code",
         "addref": "Create",
         "addref_title": "Referral Code (Optional)",
