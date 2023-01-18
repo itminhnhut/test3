@@ -38,14 +38,16 @@ const CommissionHistory = () => {
     const typeTabs = [
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
-        { title: 'Futures', value: 'FUTURES' }
+        { title: 'Futures', value: 'FUTURES' },
+        { title: 'Stake', value: 'STAKING' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
         { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
-        { title: 'ONUS', value: WalletCurrency.ONUS }
+        { title: 'ONUS', value: WalletCurrency.ONUS },
+        { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
     const [dataSource, setDataSource] = useState({
