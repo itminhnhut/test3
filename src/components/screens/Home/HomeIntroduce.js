@@ -40,16 +40,16 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
                         <div className="homepage-introduce___download">
                             <Link href="https://apps.apple.com/app/id1480302334">
-                                <a className="homepage-introduce___download__item" target="_blank">
+                                <a id="download_apple_store" className="homepage-introduce___download__item" target="_blank">
                                     <img src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange"/>
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
-                                <a className="homepage-introduce___download__item" target="_blank">
+                                <a id="download_google_play" className="homepage-introduce___download__item" target="_blank">
                                     <img src={getS3Url("/images/download_play_store.png")} alt="Nami Exchange"/>
                                 </a>
                             </Link>
-                            <div className="homepage-introduce___download__item"
+                            <div id="download_qr_code" className="homepage-introduce___download__item"
                                  onClick={() => parentState({ showQR: true })}>
                                 <img src={getS3Url("/images/icon/ic_qr.png")} alt="Nami Exchange"/>
                             </div>
