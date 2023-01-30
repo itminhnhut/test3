@@ -213,7 +213,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                                     className="!rounded-full"
                                                     width="44px"
                                                     height="44px"
-                                                    src={`${item.avatar ? item.avatar : '/images/contest/ic_avatar_mb.png'}`}
+                                                    src={`${item.avatar ? item.avatar : getS3Url('/images/nao/ic_nao_large.png')}`}
                                                 />
                                             </div>
                                             <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">
