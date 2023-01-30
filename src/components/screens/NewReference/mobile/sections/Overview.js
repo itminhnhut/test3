@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import PopupModal, { renderRefInfo } from '../../PopupModal';
 import RefCard from '../../RefCard';
 import InviteModal from './InviteModal';
@@ -12,7 +12,7 @@ import { ErrorIcon, SuccessIcon } from './Info/AddNewRef';
 import { FacebookShareButton, RedditIcon, RedditShareButton, TelegramShareButton, TwitterShareButton } from 'next-share';
 import NeedLogin from 'components/common/NeedLogin';
 import Modal from 'components/common/ReModal';
-import { getS3Url } from 'redux/actions/utils';
+import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 import { getMe } from 'redux/actions/user';
 import { useDispatch } from 'react-redux';
 
@@ -85,6 +85,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                     user={user}
                     isShow={showRegisterPartner}
                     onClose={() => setShowRegisterPartner(false)}
+                    language={language}
                 />
             ) : null}
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
@@ -315,7 +316,7 @@ const ConfirmButtom = ({ text, onClick, isDisable = true, className, isDesktop =
     );
 };
 
-export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner, isDesktop = false }) => {
+export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner, isDesktop = false, language }) => {
     const isKyc = user?.kyc_status === 2;
     const defaultData = isKyc
         ? {
@@ -332,7 +333,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
             phoneNumber: '',
             socialMedia: ''
         };
-
+console.log(defaultData)
     const [state, set] = useState(defaultData);
 
     const [isError, setIsError] = useState(true);
@@ -345,12 +346,12 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    useEffect(() => {
-        setState({
-            fullName: kyc?.kycInformationData?.metadata?.identityName,
-            nationalId: kyc?.kycInformationData?.metadata?.identityNumber
-        });
-    }, [kyc]);
+    // useEffect(() => {
+    //     setState({
+    //         fullName: kyc?.kycInformationData?.metadata?.identityName,
+    //         nationalId: kyc?.kycInformationData?.metadata?.identityNumber
+    //     });
+    // }, [kyc]);
 
     const validator = (type, text) => {
         switch (type) {
@@ -367,14 +368,14 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
         return '';
     };
 
-    useEffect(() => {
-        setIsError(
-            Object.entries(state).some((e) => {
-                const check = validator(e[0], e[1]);
-                return check.length > 0;
-            })
-        );
-    }, [state]);
+    // useEffect(() => {
+    //     setIsError(
+    //         Object.entries(state).some((e) => {
+    //             const check = validator(e[0], e[1]);
+    //             return check.length > 0;
+    //         })
+    //     );
+    // }, [state]);
     const dispatch = useDispatch();
 
     const handleSubmitRegister = (state) => {
@@ -420,6 +421,11 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     <div className="text-sm font-medium mt-6">
                         <div dangerouslySetInnerHTML={{ __html: result.message }} />
                     </div>
+                    <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                        onClick={() => window.fcWidget.open()}
+                    >
+                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                    </div>
                     <div
                         className="w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6"
                         onClick={() => {
@@ -454,18 +460,18 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     <div className="text-sm font-medium mt-3 text-gray-7">
                         <div dangerouslySetInnerHTML={{ __html: result.message }} />
                     </div>
-                    <div
-                        className="w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8"
-                        onClick={() => {
-                            setResult({
-                                ...result,
-                                isShow: false
-                            });
-                            if (result.success) onClose();
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
+                        <div
+                            className="w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8"
+                            onClick={() => {
+                                setResult({
+                                    ...result,
+                                    isShow: false
+                                });
+                                if (result.success) onClose();
+                            }}
+                        >
+                            {t('common:confirm')}
+                        </div>
                 </div>
             </PopupModal>
         );
@@ -570,8 +576,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                         'mt-6 w-auto h-11 rounded-md px-6 flex justify-between items-center text-darkBlue bg-gray-4 font-medium text-sm cursor-pointer'
                                     )}
                                     onClick={async () => {
-                                        const text = await navigator.clipboard.readText();
-                                        console.log(text);
+                                        const text = await navigator?.clipboard?.readText();
                                         setState({ socialMedia: text });
                                     }}
                                 >
@@ -671,7 +676,7 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
                 ) : null}
                 {canPaste && !isDesktop ?
                     <div className='font-semibold text-namiapp-green-1 text-sm leading-[18px] cursor-pointer ml-2' onClick={handlePaste}>{t('common:paste')}</div>
-                : null}
+                    : null}
             </div>
             {error.length ? (
                 <div className="flex gap-1 font-normal text-xs leading-4 mt-2 text-[#f93636]">

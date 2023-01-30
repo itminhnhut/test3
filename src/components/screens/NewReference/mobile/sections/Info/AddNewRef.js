@@ -180,7 +180,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     {resultData.isSucess ?
                         null
                         :
-                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6'
+                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
                             onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}

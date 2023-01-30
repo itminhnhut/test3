@@ -1,6 +1,6 @@
 import { PORTAL_MODAL_ID } from '../../../constants/constants';
 import { X } from 'react-feather';
-import { useEffect, useRef } from 'react';
+import { Component, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import { useOutside } from 'components/screens/Nao/NaoStyle';
@@ -49,7 +49,7 @@ const PopupModal = ({
         };
     }, [isVisible]);
 
-    const Container = !isDesktop ? MobileFont : ({ children }) => <>{children}</>
+    const Container = !isDesktop ? MobileFont : EmptyComponent
 
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
@@ -216,3 +216,6 @@ export const renderRefInfo = (text, className = '', size = 15, originalText) => 
     );
 };
 export default PopupModal;
+
+
+const EmptyComponent = ({children}) => <>{children}</>
