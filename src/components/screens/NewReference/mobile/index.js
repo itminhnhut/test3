@@ -187,10 +187,10 @@ export const Line = styled.div.attrs(({ className, isMobile = false }) => ({
     background-color: ${({ isMobile }) => isMobile ? 'rgba(34, 41, 64, 0.5)' : 'rgba(160, 174, 192, 0.15)'};
 `;
 
-const MobileFont = styled.div.attrs(({ className }) => ({
+export const MobileFont = styled.div.attrs(({ className }) => ({
     className
 }))`
-    font-family: 'Manrope', sans-serif !important;
+    font-family: 'Manrope', sans-serif;
     background-color: #0c0e14;
 `;
 

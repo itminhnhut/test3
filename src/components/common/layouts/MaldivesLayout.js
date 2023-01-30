@@ -9,7 +9,9 @@ import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import { useStore } from 'src/redux/store';
-import {setTheme } from 'redux/actions/user';
+import { setTheme } from 'redux/actions/user';
+import { ToastContainer } from "react-toastify";
+
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
@@ -65,6 +67,7 @@ const MadivesLayout = ({
                         : {}
                 }
             >
+                <ToastContainer autoClose={false} draggable={false} />
                 <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar

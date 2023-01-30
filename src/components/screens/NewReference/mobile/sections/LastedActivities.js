@@ -170,8 +170,8 @@ export const UserIcon = ({ isMobile = false }) => <svg width="28" height="28" vi
 </svg>
 
 export const RefInfo = ({ data, language, className, isMobile = false }) => (
-    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium', className, { 'text-gray-7 !font-semibold': isMobile, 'text-gray-1': !isMobile })}>
-        <div className='text-xs mt-[-22px]'>
+    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium z-1 overflow-visible', className, { 'text-gray-7 !font-semibold': isMobile, 'text-gray-1': !isMobile })}>
+        <div className='text-xs mt-[-24px] px-1 -ml-1 z-2 relative bg-namiapp-black-1'>
             {languages.refUser[language]}:
         </div>
         <div className='text-sm leading-6'>

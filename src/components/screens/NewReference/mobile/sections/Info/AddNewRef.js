@@ -72,8 +72,6 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
         }
     }
 
-    console.log(resultData)
-
     const handleAddNewRef = useCallback(_.throttle(async () => {
         const { status, data } = await FetchApi({
             url: API_NEW_REFERRAL_ADD_REF,
@@ -180,17 +178,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
                     {resultData.isSucess ?
-                        <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
-                            onClick={() => {
-                                setResultData({
-                                    isSucess: false,
-                                    message: ''
-                                })
-                                resultData.isSucess && doClose()
-                            }}
-                        >
-                            {t('common:confirm')}
-                        </div>
+                        null
                         :
                         <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6'
                             onClick={() => emitWebViewEvent('chat_with_support')}

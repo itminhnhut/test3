@@ -7,7 +7,7 @@ import { useOutside } from 'components/screens/Nao/NaoStyle';
 import { Line } from './mobile';
 import React from 'react';
 import { useState } from 'react';
-import MobileFont from './mobile'
+import { MobileFont } from './mobile'
 
 const PopupModal = ({
     isVisible,
@@ -52,8 +52,8 @@ const PopupModal = ({
     const Container = !isDesktop ? MobileFont : ({ children }) => <>{children}</>
 
     return (
-        <Container>
-            <Portal portalId={PORTAL_MODAL_ID}>
+        <Portal portalId={PORTAL_MODAL_ID}>
+            <Container>
                 <div
                     className={classNames('absolute top-0 left-0 w-full h-full overflow-hidden', { invisible: !isVisible }, { visible: isVisible }, modalClassName)}
                     ref={container}
@@ -81,7 +81,7 @@ const PopupModal = ({
                             <div
                                 ref={wrapperRef}
                                 className={classNames(
-                                    `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[90%] overflow-y-auto`,
+                                    `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-12 max-h-[90%] overflow-y-auto`,
                                     { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                     {
                                         '!rounded-xl !px-6': useCenter && !isDesktop,
@@ -141,8 +141,8 @@ const PopupModal = ({
                         </div>
                     </div>
                 </div>
-            </Portal>
-        </Container>
+            </Container>
+        </Portal>
     );
 };
 

@@ -561,6 +561,8 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                 label={t('reference:referral.partner.social')}
                                 validator={validator}
                                 isDesktop={isDesktop}
+                                canPaste={!isDesktop}
+                                t={t}
                             />
                             {isDesktop ? (
                                 <div
@@ -607,7 +609,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     );
 };
 
-const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false, isDesktop = false }) => {
+const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false, isDesktop = false, canPaste = false, t }) => {
     const [error, setError] = useState('');
     const ref = useRef(null);
 
@@ -616,6 +618,12 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
         setText(value);
         setError('');
     };
+
+    const handlePaste = async () => {
+        ref.current.focus()
+        const text = await navigator.clipboard.readText();
+        handleInput(text)
+    }
 
     useEffect(() => {
         isFocus && ref.current.focus();
@@ -661,6 +669,9 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
                         <path d="m6 6 12 12M6 18 18 6" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 ) : null}
+                {canPaste && !isDesktop ?
+                    <div className='font-semibold text-namiapp-green-1 text-sm leading-[18px] cursor-pointer ml-2' onClick={handlePaste}>{t('common:paste')}</div>
+                : null}
             </div>
             {error.length ? (
                 <div className="flex gap-1 font-normal text-xs leading-4 mt-2 text-[#f93636]">
