@@ -9,10 +9,11 @@ import classNames from 'classnames';
 import Modal from 'components/common/ReModal';
 import { useMemo } from 'react';
 import colors from 'styles/colors';
+import { emitWebViewEvent } from 'redux/actions/utils';
 
 // goodluck for who maintain this code
 const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const totalRate = 100
     const [percent, setPercent] = useState(0)
     const onPercentChange = ({ x }) => {
@@ -34,6 +35,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     const handleInputNote = (e) => {
         const text = e?.target?.value
         if (text.length > 30) return
+        console.log(text)
         setNote(text)
     }
     const handleCheckDefault = (e) => {
@@ -66,9 +68,11 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             case 'MIN_8':
                 return t('reference:referral.addref_error_1')
             default:
-                return 'Error'
+                return language === 'vi' ? 'Đã có lỗi xảy ra, xin hãy liên hệ bộ phận hỗ trợ' : 'An error occurred, please contact support'
         }
     }
+
+    console.log(resultData)
 
     const handleAddNewRef = useCallback(_.throttle(async () => {
         const { status, data } = await FetchApi({
@@ -79,7 +83,8 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             params: {
                 code: refCode,
                 remunerationRate: percent,
-                isDefault
+                isDefault,
+                note: note.length ? note : null
             }
         })
         if (status === 'ok') {
@@ -94,7 +99,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                 isSucess: false
             })
         }
-    }, 1000), [refCode, percent, isDefault])
+    }, 1000), [refCode, percent, isDefault, note])
 
     const checkRef = useCallback(_.debounce((refCode) => {
         FetchApi({
@@ -136,6 +141,12 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     <div className='text-sm font-medium mt-6'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
+
+                    <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                        onClick={() => window.fcWidget.open()}
+                    >
+                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                    </div>
                     <div className='w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6'
                         onClick={() => {
                             setResultData({
@@ -168,17 +179,25 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     <div className='text-sm font-medium mt-3 text-gray-7'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
-                    <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
-                        onClick={() => {
-                            setResultData({
-                                isSucess: false,
-                                message: ''
-                            })
-                            resultData.isSucess && doClose()
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
+                    {resultData.isSucess ?
+                        <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
+                            onClick={() => {
+                                setResultData({
+                                    isSucess: false,
+                                    message: ''
+                                })
+                                resultData.isSucess && doClose()
+                            }}
+                        >
+                            {t('common:confirm')}
+                        </div>
+                        :
+                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6'
+                            onClick={() => emitWebViewEvent('chat_with_support')}
+                        >
+                            {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                        </div>
+                    }
                 </div>
             </PopupModal>
     }, [resultData])
@@ -269,7 +288,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             </PopupModal> : <PopupModal
                 isVisible={isShow}
                 onBackdropCb={onClose}
-                title={t('reference:referral.add_new_referral')}
+                title={isDesktop ? t('reference:referral.add_new_referral') : null}
                 useAboveAll
                 isDesktop={isDesktop}
                 useCenter={isDesktop}
@@ -278,6 +297,9 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             >
                 <div className={classNames('font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4', { 'px-4': isDesktop })}>
                     <div>
+                        {isDesktop ? null : <div className='font-semibold text-[18px] text-gray-6 mb-8'>
+                            {t('reference:referral.add_new_referral')}
+                        </div>}
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
                             <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.namiapp.green[1]} bgColorActive={colors.namiapp.green[1]} BgColorLine={colors.namiapp.black[2]} bgColorDot={colors.namiapp.black[2]} />
@@ -363,7 +385,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     )
 }
 
-export const SuccessIcon = ({color = '#47CC85'}) => (
+export const SuccessIcon = ({ color = '#47CC85' }) => (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 6.667C21.6 6.667 6.665 21.6 6.665 40s14.933 33.333 33.333 33.333S73.333 58.4 73.333 40 58.399 6.667 39.999 6.667zm-6.667 50L16.666 40l4.7-4.7 11.967 11.933 25.3-25.3 4.7 4.734-30 30z" fill={color} />
     </svg>

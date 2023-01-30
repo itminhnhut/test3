@@ -1,15 +1,15 @@
-import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import CollapsibleRefCard from 'src/components/screens/NewReference/CollapsibleRefCard'
+import CollapsibleRefCard from 'components/screens/NewReference/CollapsibleRefCard'
 import { formatNumber } from 'redux/actions/utils';
 import baseColors from 'styles/colors';
-import ChartJS from 'src/components/screens/Portfolio/charts/ChartJS';
+import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import { FilterTabs } from '..';
 import { API_NEW_REFERRAL_STATISTIC } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import PopupModal from 'src/components/screens/NewReference/PopupModal';
-import DatePicker from 'src/components/common/DatePicker/DatePicker';
+import PopupModal from 'components/screens/NewReference/PopupModal';
+import DatePicker from 'components/common/DatePicker/DatePicker';
 import styledComponents from 'styled-components'
 import NeedLogin from 'components/common/NeedLogin';
 

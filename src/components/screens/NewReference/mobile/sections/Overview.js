@@ -92,39 +92,41 @@ const Overview = ({ data, commisionConfig, user }) => {
                 {t('reference:referral.introduce2')}
             </div>
             <div className="font-normal text-base text-gray-6 mt-6">{t('reference:referral.introduce3')}</div>
-            {/* <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
-                {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
-            </div> */}
 
-            <div className="mt-[38px] flex gap-3 w-full">
-                {isPartner || !user ? null : (
-                    <RefButton className="w-3/5" onClick={() => setShowRegisterPartner(true)}>
-                        <div className="flex gap-2 items-center">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#jf4gphlj7a)">
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
-                                        fill="#47CC85"
-                                    />
-                                </g>
-                                <defs>
-                                    <clipPath id="jf4gphlj7a">
-                                        <path fill="#fff" d="M0 0h24v24H0z" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            {t('reference:referral.partner.button')}
+
+            {isPartner ?
+                <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
+                    {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
+                </div> :
+                <div className="mt-[38px] flex gap-3 w-full">
+                    {!user ? null : (
+                        <RefButton className="w-3/5" onClick={() => setShowRegisterPartner(true)}>
+                            <div className="flex gap-2 items-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#jf4gphlj7a)">
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
+                                            fill="#47CC85"
+                                        />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="jf4gphlj7a">
+                                            <path fill="#fff" d="M0 0h24v24H0z" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                {t('reference:referral.partner.button')}
+                            </div>
+                        </RefButton>
+                    )}
+                    <RefButton className={classNames('w-2/5', { '!w-full': isPartner || !user })}>
+                        <div className="flex gap-2">
+                            <a href={policyLink} target="_blank">
+                                <span>{t('reference:referral.referral_policy')}</span>
+                            </a>
                         </div>
                     </RefButton>
-                )}
-                <RefButton className={classNames('w-2/5', { '!w-full': isPartner || !user })}>
-                    <div className="flex gap-2">
-                        <a href={policyLink} target="_blank">
-                            <span>{t('reference:referral.referral_policy')}</span>
-                        </a>
-                    </div>
-                </RefButton>
-            </div>
+                </div>}
             {user ? (
                 <div className="mt-[30px]">
                     <RefCard>
@@ -164,7 +166,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                         </div>
                     </RefCard>
                     <div
-                        className="w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-medium text-white rounded-md"
+                        className="w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-semibold text-white rounded-md"
                         onClick={() => setShowInvite(true)}
                     >
                         {t('reference:referral.invite_friends')}
@@ -317,19 +319,19 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     const isKyc = user?.kyc_status === 2;
     const defaultData = isKyc
         ? {
-              fullName: kyc?.kycInformationData?.metadata?.identityName,
-              nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
-              email: user?.email,
-              phoneNumber: '',
-              socialMedia: ''
-          }
+            fullName: kyc?.kycInformationData?.metadata?.identityName,
+            nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
+            email: user?.email,
+            phoneNumber: '',
+            socialMedia: ''
+        }
         : {
-              fullName: '',
-              nationalId: '',
-              email: '',
-              phoneNumber: '',
-              socialMedia: ''
-          };
+            fullName: '',
+            nationalId: '',
+            email: '',
+            phoneNumber: '',
+            socialMedia: ''
+        };
 
     const [state, set] = useState(defaultData);
 

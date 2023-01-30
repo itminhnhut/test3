@@ -378,7 +378,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                     <div>{t('reference:referral.status')}</div>
                     <div className="flex overflow-auto no-scrollbar">
                         <FilterTabs
-                            className="!px-4 !py-3 !font-medium !text-sm whitespace-nowrap"
+                            className="!text-sm whitespace-nowrap"
                             tabs={arrStatus}
                             type={state.kycStatus}
                             setType={(e) => onChange('kycStatus', e)}

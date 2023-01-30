@@ -74,7 +74,7 @@ const QnA = () => {
                                 {data.q[language]}
                             </div>
                             {doShow ? (
-                                <div className="text-gray-7 font-medium mt-1 text-justify" style={{ whiteSpace: 'pre-line' }}>
+                                <div className="text-gray-7 font-medium mt-1 text-left" style={{ whiteSpace: 'pre-line' }}>
                                     {data.a[language]}
                                 </div>
                             ) : null}
