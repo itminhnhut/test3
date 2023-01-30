@@ -333,7 +333,6 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
             phoneNumber: '',
             socialMedia: ''
         };
-console.log(defaultData)
     const [state, set] = useState(defaultData);
 
     const [isError, setIsError] = useState(true);
@@ -346,12 +345,12 @@ console.log(defaultData)
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    // useEffect(() => {
-    //     setState({
-    //         fullName: kyc?.kycInformationData?.metadata?.identityName,
-    //         nationalId: kyc?.kycInformationData?.metadata?.identityNumber
-    //     });
-    // }, [kyc]);
+    useEffect(() => {
+        setState({
+            fullName: kyc?.kycInformationData?.metadata?.identityName,
+            nationalId: kyc?.kycInformationData?.metadata?.identityNumber
+        });
+    }, [kyc]);
 
     const validator = (type, text) => {
         switch (type) {
@@ -368,14 +367,14 @@ console.log(defaultData)
         return '';
     };
 
-    // useEffect(() => {
-    //     setIsError(
-    //         Object.entries(state).some((e) => {
-    //             const check = validator(e[0], e[1]);
-    //             return check.length > 0;
-    //         })
-    //     );
-    // }, [state]);
+    useEffect(() => {
+        setIsError(
+            Object.entries(state).some((e) => {
+                const check = validator(e[0], e[1]);
+                return check.length > 0;
+            })
+        );
+    }, [state]);
     const dispatch = useDispatch();
 
     const handleSubmitRegister = (state) => {
