@@ -75,6 +75,7 @@ const commonColors = {
         black: {
             DEFAULT: '#0c0e14',
             1: '#141921',
+            2: '#262b34',
         },
         gray: {
             DEFAULT: '#1c232e',

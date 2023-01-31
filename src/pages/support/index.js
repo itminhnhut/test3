@@ -76,47 +76,27 @@ const Support = () => {
     // ? Render input
 
     const renderFaqCategories = () => {
-        // if (loading) {
-        //     return (
-        //         <>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //             <div className="mt-3 lg:mt-5 w-full h-[35px] lg:h-[45px] md:w-1/3 xl:w-1/4 md:pr-1 lg:pr-3">
-        //                 <Skeletor className="!w-full !h-full"/></div>
-        //         </>
-        //     )
-        // }
-
-        return SupportCategories.faq[language].map((faq) => (
-            <SupportSectionItem
-                key={faq.id}
-                href={
-                    PATHS.SUPPORT.FAQ +
-                    `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
-                }
-                title={faq?.title || '--'}
-                titleClassNames='truncate'
-                icon={
-                    <Image
-                        src={getSupportCategoryIcons(faq.id)}
-                        width={sectionIconSize}
-                        height={sectionIconSize}
-                    />
-                }
-            />
-        ))
+        return (
+            <div className='grid w-full gap-4 bg-namiv2-black-1 rounded-xl p-6' style={{
+                gridTemplateColumns: "repeat(auto-fill, 280px)",
+            }}>
+                {SupportCategories.faq[language].map((faq) => (
+                    <a href={
+                        PATHS.SUPPORT.FAQ +
+                        `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
+                    }>
+                        <div className='flex gap-4 p-4 w-[280px] h-[68px] items-center hover:!bg-namiv2-black-2 rounded-xl text-gray-2 font-semibold text-base' key={faq.id}>
+                            <Image
+                                src={getSupportCategoryIcons(faq.id)}
+                                width={36}
+                                height={36}
+                            />
+                            {faq?.title}
+                        </div>
+                    </a>
+                ))}
+            </div>
+        )
     }
 
     const renderAnnouncementCategories = () => {
@@ -128,7 +108,7 @@ const Support = () => {
                         `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
                     }
                 >
-                    <div key={announcement.id} className='w-[286px] h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-namiv2-black-1 truncate text-namiv2-gray-2 font-medium text-[20px] hover:!bg-[#262b34]'>
+                    <div key={announcement.id} className='w-[286px] h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-namiv2-black-1 truncate text-namiv2-gray-2 font-medium text-[20px] hover:!bg-namiv2-black-2'>
                         <Image
                             src={getSupportCategoryIcons(announcement.id)}
                             width={52}
@@ -352,7 +332,7 @@ const Support = () => {
                             <SupportSection
                                 title={t('support-center:faq')}
                                 mode='faq'
-                                containerClassNames='lg:pb-[32px]'
+                                contentContainerClassName='mt-8'
                             >
                                 {renderFaqCategories()}
                             </SupportSection>
