@@ -448,7 +448,7 @@ const SCREEN_TAB_SERIES = [
 const SCREEN_IGNORE_REFRESH_USD_RATE = [WALLET_SCREENS.FARMING, WALLET_SCREENS.STAKING];
 
 const Background = styled.div.attrs({ className: 'w-full h-full' })`
-    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#F8F9FA')};
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
 const CustomContainer = styled.div.attrs({ className: 'mal-container px-4 py-20' })`

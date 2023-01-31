@@ -14,6 +14,9 @@ import AssetName from 'components/wallet/AssetName';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
+import SvgWalletExchange from 'components/svg/SvgWalletExchange';
+import SvgWalletFutures from 'components/svg/SvgWalletFutures';
+import SvgWalletStake from 'components/svg/SvgWalletStake';
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -84,23 +87,17 @@ const OverviewWallet = (props) => {
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
-            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-1 whitespace-nowrap">
-                <span className="font-bold">{formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}</span>{' '}
-                <span className="text-xs font-medium">
-                    BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(exchangeRefPrice?.totalValue, 2)}</span>
-                </span>
-            </div>
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+                {formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
+            </span>
         );
     }, [exchangeEstBtc, exchangeRefPrice]);
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
-            <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-1 whitespace-nowrap">
-                <span className="font-bold">{formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit)}</span>{' '}
-                <span className="text-xs font-medium">
-                    BTC <span className="text-txtSecondary dark:text-txtSecondary-dark ">~ $ {formatWallet(futuresRefPrice?.totalValue, 2)}</span>
-                </span>
-            </div>
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+                {formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
+            </span>
         );
     }, [futuresEstBtc, futuresRefPrice]);
 
@@ -158,7 +155,7 @@ const OverviewWallet = (props) => {
                 </div>
             </div> */}
 
-            <MCard addClass="mt-5 !p-6 xl:!p-8 border border-[#222940] !bg-dark">
+            <MCard addClass="mt-5 !p-6 xl:!p-8 border border-divider dark:border-divider-dark !bg-namiv2-linear bg-cover !bg-dark">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between">
                     <div>
                         <div className="flex items-center font-medium text-base text-txtSecondary dark:text-txtSecondary-dark">
@@ -214,111 +211,62 @@ const OverviewWallet = (props) => {
                 </div>
             </MCard>
 
-            <div className="mt-16 t-common">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-5 !p-0">
+            {/* Số dư tài sản */}
+            <div className="mt-20 t-common">{t('wallet:asset_balance')}</div>
+            <MCard addClass="mt-8 !p-0 dark:!bg-bgTabInactive-dark !bg-namiV2 border border-divider dark:border-none">
                 {/* mark1 */}
                 {/* <Link href="/wallet/exchange"> */}
-                <div onClick={() => console.log('on click wallet')}>
-                    <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-teal-5 hover:bg-teal-5 cursor-pointer">
-                        <div className="md:w-1/3 flex items-center">
-                            <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                                <img src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" alt="" />
-                            </div>
-                            <div className="ml-4 xl:ml-6">
-                                <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
-                                    <span className="mr-4">Exchange</span>
-                                    {/*<span className="inline-flex items-center">*/}
-                                    {/*    <img*/}
-                                    {/*        src={getS3Url(*/}
-                                    {/*            '/images/icon/ic_piechart.png'*/}
-                                    {/*        )}*/}
-                                    {/*        width="16"*/}
-                                    {/*        height="16"*/}
-                                    {/*        alt=""*/}
-                                    {/*    />*/}
-                                    {/*    <a*/}
-                                    {/*        onClick={(e)=> e.stopPropagation()}*/}
-                                    {/*        href={getV1Url( '/account?type=portfolio' )}*/}
-                                    {/*        className="ml-1 text-dominant hover:!underline"*/}
-                                    {/*    >*/}
-                                    {/*        {t('common:portfolio')}*/}
-                                    {/*    </a>*/}
-                                    {/*</span>*/}
-                                </div>
-                                {renderExchangeEstBalance()}
-                            </div>
+                {/* Exchange */}
+                <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover rounded-t-xl hover:bg-teal-5 cursor-pointer group">
+                    <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            {renderExchangeAsset()}
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
+                                <a className="mr-3">
+                                    <div
+                                        className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
+                                         bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtSecondary dark:text-txtSecondary-dark "
+                                    >
+                                        +6
+                                    </div>
+                                </a>
+                            </Link>
                         </div>
-                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
-                            <div className="flex items-center mt-4 lg:mt-0">
-                                {renderExchangeAsset()}
-                                <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
-                                    <a className="mr-3">
-                                        <div className="min-w-[31px] min-h-[31px] w-[31px] h-[31px] flex items-center justify-center text-medium text-xs rounded-full border border-gray-5 dark:border-divider-dark bg-white dark:bg-darkBlue-3">
-                                            +6
-                                        </div>
-                                    </a>
-                                </Link>
-                            </div>
-                            <div className="flex items-center mt-4 lg:mt-0">
-                                <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
-                                    <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                        {t('common:deposit')}
-                                    </a>
-                                </Link>
-                                <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })} prefetch={false}>
-                                    <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
-                                        {t('common:withdraw')}
-                                    </a>
-                                </Link>
-                                <div
-                                    className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant"
-                                    onClick={() =>
-                                        dispatch(
-                                            setTransferModal({
-                                                isVisible: true
-                                            })
-                                        )
-                                    }
-                                >
-                                    {t('common:transfer')}
-                                </div>
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
+                                <a className="cursor-pointer text-xs xl:text-sm font-semibold text-medium text-center text-dominant hover:text-white">
+                                    {t('common:deposit')}
+                                </a>
+                            </Link>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })} prefetch={false}>
+                                <a className="cursor-pointer text-xs xl:text-sm font-semibold text-medium text-center text-dominant hover:text-white">
+                                    {t('common:withdraw')}
+                                </a>
+                            </Link>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <div
+                                className="cursor-pointer text-xs xl:text-sm font-semibold text-medium text-center text-dominant hover:text-white"
+                                onClick={() =>
+                                    dispatch(
+                                        setTransferModal({
+                                            isVisible: true
+                                        })
+                                    )
+                                }
+                            >
+                                {t('common:transfer')}
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Futures */}
                 <Link href="/wallet/futures">
-                    <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-teal-5 hover:bg-teal-5 cursor-pointer">
-                        <div className="md:w-1/3 flex items-center">
-                            <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                                <img src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" alt="" />
-                            </div>
-                            <div className="ml-4 xl:ml-6">
-                                <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
-                                    <span className="mr-4">Futures</span>
-                                    {/*<span className="inline-flex items-center">*/}
-                                    {/*    <img*/}
-                                    {/*        src={getS3Url(*/}
-                                    {/*            '/images/icon/ic_piechart.png'*/}
-                                    {/*        )}*/}
-                                    {/*        width="16"*/}
-                                    {/*        height="16"*/}
-                                    {/*        alt=""*/}
-                                    {/*    />*/}
-                                    {/*    <a*/}
-                                    {/*        onClick={(e)=> e.stopPropagation()}*/}
-                                    {/*        href={getV1Url(*/}
-                                    {/*            '/account?type=futures'*/}
-                                    {/*        )}*/}
-                                    {/*        className="ml-1 text-dominant hover:!underline"*/}
-                                    {/*    >*/}
-                                    {/*        {t('common:portfolio')}*/}
-                                    {/*    </a>*/}
-                                    {/*</span>*/}
-                                </div>
-                                {renderFuturesEstBalance()}
-                            </div>
-                        </div>
-                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
+                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer group">
+                        <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
+                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                             <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
                                 <Trans>{t('wallet:futures_overview')}</Trans>
                             </div>
@@ -333,7 +281,7 @@ const OverviewWallet = (props) => {
                                             })
                                         )
                                     }
-                                    className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant hover:text-white hover:!bg-dominant"
+                                    className="cursor-pointer text-xs xl:text-sm font-semibold text-medium text-center text-dominant hover:text-white"
                                 >
                                     {t('common:transfer')}
                                 </div>
@@ -341,30 +289,16 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                 </Link>
+
+                {/* Staking */}
                 <Link href="/wallet/staking">
-                    <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-teal-5 hover:bg-teal-5 cursor-pointer">
-                        <div className="md:w-1/3 flex items-center">
-                            <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
-                                <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" alt="" />
-                            </div>
-                            <div className="ml-4 xl:ml-6">
-                                <div className="flex flex-wrap items-center font-medium text-xs md:text-sm">
-                                    <span className="mr-4">Staking</span>
-                                    {/*<span className="inline-flex items-center">*/}
-                                    {/*    <Image src="/images/icon/ic_piechart.png" width="16" height="16"/>*/}
-                                    {/*    <a href={`/wallet/exchange?action=${EXCHANGE_ACTION.PORTFOLIO}`} className="ml-1 text-dominant hover:!underline">View Portfolio</a>*/}
-                                    {/*</span>*/}
-                                </div>
-                                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-[16px] xl:text-[18px] mt-0.5 whitespace-nowrap">
-                                    {renderStakingEstBalance()}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l-2 lg:border-divider dark:lg:border-divider-dark">
+                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
+                        <AssetBalance title="Staking" icon={<SvgWalletStake />} renderEstBalance={renderStakingEstBalance} />
+                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                             <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">{t('wallet:staking_overview')}</div>
                             <div className="flex items-center mt-4 lg:mt-0">
                                 <Link href={PATHS.WALLET.STAKING} prefetch={false}>
-                                    <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    <a className="cursor-pointer text-xs xl:text-sm font-semibold text-medium text-center text-dominant hover:text-white">
                                         {t('common:read_more')}
                                     </a>
                                 </Link>
@@ -373,7 +307,7 @@ const OverviewWallet = (props) => {
                     </div>
                 </Link>
 
-                <Link href="/wallet/farming">
+                {/* <Link href="/wallet/farming">
                     <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row dark:hover:bg-teal-5 hover:bg-teal-5 cursor-pointer">
                         <div className="md:w-1/3 flex items-center">
                             <div className="min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]">
@@ -392,15 +326,27 @@ const OverviewWallet = (props) => {
                             <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">{t('wallet:farming_overview')}</div>
                             <div className="flex items-center mt-4 lg:mt-0">
                                 <Link href={PATHS.WALLET.FARMING} prefetch={false}>
-                                    <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant                                                           hover:text-white hover:!bg-dominant">
+                                    <a className="w-[90px] h-[32px] mr-2 flex items-center justify-center cursor-pointer rounded-md bg-bgContainer dark:bg-bgContainer-dark text-xs xl:text-sm text-medium text-center py-1.5 border border-dominant text-dominant hover:text-white hover:!bg-dominant">
                                         {t('common:read_more')}
                                     </a>
                                 </Link>
                             </div>
                         </div>
                     </div>
-                </Link>
+                </Link> */}
             </MCard>
+        </div>
+    );
+};
+
+const AssetBalance = ({ title, icon, renderEstBalance }) => {
+    return (
+        <div className="md:w-1/3 flex items-center">
+            <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-listItemSelected dark:bg-namiv2-gray">{icon}</div>
+            <div className="ml-4 xl:ml-6 flex flex-col justify-between h-full">
+                <span className="mr-4 text-txtSecondary dark:text-txtSecondary-dark text-sm">{title}</span>
+                {renderEstBalance()}
+            </div>
         </div>
     );
 };

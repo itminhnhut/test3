@@ -352,7 +352,7 @@ module.exports = {
             },
             dark: {
                 ...commonColors.dark,
-                DEFAULT: commonColors.dark.dark,
+                DEFAULT: commonColors.dark.dark
             },
             namiv2: commonColors.namiv2
         },
@@ -487,7 +487,10 @@ module.exports = {
             },
             cursor: {
                 grabbing: 'grabbing'
-            }
+            },
+            backgroundImage: (theme) => ({
+                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')"
+            })
         }
     },
     variants: {
