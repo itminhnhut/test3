@@ -89,7 +89,7 @@ const PopupModal = ({
                                         '!bg-white text-darkBlue': isDesktop
                                     }
                                 )}
-                                style={{ backgroundImage: background ?? null, backgroundSize: background ? '100% auto' : null, backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}
+                                style={{ backgroundImage: background ?? null, backgroundSize: background ? 'cover' : null, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', position: 'fixed', maxHeight: 'none' }}
                             >
                                 {useFullScreen || useCenter ? null : (
                                     <div
@@ -218,4 +218,4 @@ export const renderRefInfo = (text, className = '', size = 15, originalText) => 
 export default PopupModal;
 
 
-const EmptyComponent = ({children}) => <>{children}</>
+const EmptyComponent = ({ children }) => <>{children}</>
