@@ -98,6 +98,7 @@ const TradeHistory = (props) => {
     const renderTable = useCallback(() => {
         // if (!isAuth || !wallet.length) return <TableNoData />;
         let data = wallet;
+        console.log(data);
 
         return (
             <TableV2

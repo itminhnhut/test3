@@ -21,6 +21,8 @@ import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import { ChevronDown } from 'react-feather';
+import TableV2 from 'components/common/V2/TableV2';
+
 import 'react-contexify/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
@@ -55,18 +57,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const renderAssetTable = useCallback(() => {
         let tableStatus;
 
-        if (!state.tableData || !state.tableData?.length) {
-            tableStatus = <Empty />;
-        }
-
         const columns = [
             {
                 key: 'asset',
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 align: 'left',
-                width: 120,
-                fixed: width >= 992 ? 'none' : 'left'
+                width: 150,
+                fixed: 'left'
             },
             {
                 key: 'total',
@@ -105,51 +103,82 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 fixed: width >= 992 ? 'right' : 'none'
             }
         ];
-
         return (
-            <ReTable
-                sort
-                defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                useRowHover
-                data={state.tableData || []}
-                columns={columns}
-                rowKey={(item) => item?.key}
-                loading={!state.tableData?.length}
-                scroll={{ x: true }}
-                tableStatus={tableStatus}
-                tableStyle={{
-                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '1300px !important' },
-                    headerStyle: {},
-                    rowStyle: {},
-                    shadowWithFixedCol: width < 1366,
-                    noDataStyle: {
-                        minHeight: '480px'
-                    }
-                }}
-                paginationProps={{
-                    hide: true,
-                    current: state.currentPage,
-                    pageSize: ASSET_ROW_LIMIT,
-                    onChange: (currentPage) => setState({ currentPage })
-                }}
-            />
+            <>
+                <TableV2
+                    sort
+                    defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                    useRowHover
+                    data={state.tableData || []}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    loading={!state.tableData?.length}
+                    scroll={{ x: true }}
+                    limit={10}
+                    skip={0}
+                    tableStatus={tableStatus}
+                    // tableStyle={{
+                    //     paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                    //     tableStyle: { minWidth: '1300px !important' },
+                    //     headerStyle: {},
+                    //     rowStyle: {},
+                    //     shadowWithFixedCol: width < 1366,
+                    //     noDataStyle: {
+                    //         minHeight: '480px'
+                    //     }
+                    // }}
+                    // paginationProps={{
+                    //     hide: true,
+                    //     current: state.currentPage,
+                    //     pageSize: ASSET_ROW_LIMIT,
+                    //     onChange: (currentPage) => setState({ currentPage })
+                    // }}
+                />
+
+                {/* <ReTable
+                    sort
+                    defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                    useRowHover
+                    data={state.tableData || []}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    loading={!state.tableData?.length}
+                    scroll={{ x: true }}
+                    tableStatus={tableStatus}
+                    tableStyle={{
+                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                        tableStyle: { minWidth: '1300px !important' },
+                        headerStyle: {},
+                        rowStyle: {},
+                        shadowWithFixedCol: width < 1366,
+                        noDataStyle: {
+                            minHeight: '480px'
+                        }
+                    }}
+                    paginationProps={{
+                        hide: true,
+                        current: state.currentPage,
+                        pageSize: ASSET_ROW_LIMIT,
+                        onChange: (currentPage) => setState({ currentPage })
+                    }}
+                /> */}
+            </>
         );
     }, [state.tableData, state.currentPage, width]);
 
-    const renderPagination = useCallback(() => {
-        return (
-            <div className="mt-10 mb-20 flex items-center justify-center">
-                <RePagination
-                    total={state.tableData?.length}
-                    current={state.currentPage}
-                    pageSize={ASSET_ROW_LIMIT}
-                    onChange={(currentPage) => setState({ currentPage })}
-                    name="market_table___list"
-                />
-            </div>
-        );
-    }, [state.tableData, state.currentPage]);
+    // const renderPagination = useCallback(() => {
+    //     return (
+    //         <div className="mt-10 mb-20 flex items-center justify-center">
+    //             <RePagination
+    //                 total={state.tableData?.length}
+    //                 current={state.currentPage}
+    //                 pageSize={ASSET_ROW_LIMIT}
+    //                 onChange={(currentPage) => setState({ currentPage })}
+    //                 name="market_table___list"
+    //             />
+    //         </div>
+    //     );
+    // }, [state.tableData, state.currentPage]);
 
     const renderEstWallet = useCallback(() => {
         return (
@@ -249,6 +278,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
+            console.log(allAssets);
             const origin = dataHandler(allAssets, {
                 usdRate,
                 marketWatch,
@@ -354,12 +384,12 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             <div className="mt-16 lg:items-center lg:justify-between">
                 <div className="t-common">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
-                    <div className="bg-namiv2-gray flex items-center justify-between text-white gap-3 rounded-md px-4 py-3">
-                        <img src={getS3Url('/images/logo/nami_maldives.png')} width="24" height="24" className="navbar__logo" alt="" />
-                        <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark">Chuyển số dư nhỏ thành NAMI</span>
-                        <button className="-rotate-90">
-                            <ChevronDown size={24} />
-                        </button>
+                    <div className="bg-namiv2-gray flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
+                        <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
+                        <a href="/" className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                            {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
+                        </a>
+                        <ChevronDown size={24} className="-rotate-90" />
                     </div>
 
                     <div className="mt-2 lg:flex">
@@ -383,12 +413,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 </span>
                                 <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
                             </div>
-                            {/*<div className="flex items-center rounded-[4px] lg:px-4 py-3 lg:bg-teal-lightTeal lg:dark:bg-teal-opacity select-none cursor-pointer hover:opacity-80">*/}
-                            {/*    <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="16" height="16"/>*/}
-                            {/*    <a href="/" className="text-xs ml-3 text-dominant cursor-pointer">*/}
-                            {/*        {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}*/}
-                            {/*    </a>*/}
-                            {/*</div>*/}
                         </div>
                         <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-namiv2-gray">
                             <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
@@ -405,15 +429,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 </div>
             </div>
 
-            <MCard
+            {/* <TableV2 /> */}
+            {/* <MCard
                 getRef={(ref) => (tableRef.current = ref)}
                 style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
                 addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden"
             >
-                {renderAssetTable()}
-            </MCard>
+            </MCard> */}
+            {renderAssetTable()}
 
-            {renderPagination()}
+            {/* {renderPagination()} */}
 
             {renderMarketListContext()}
         </>
@@ -453,13 +478,11 @@ const dataHandler = (data, utils) => {
         result.push({
             key: `exchange_asset___${item?.assetCode}`,
             asset: (
-                <div className="flex items-center">
+                <div className="flex items-center gap-2">
                     <AssetLogo assetCode={item?.assetCode} size={32} />
-                    <div className="ml-2 text-sm">
-                        <div>{item?.assetCode}</div>
-                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                            {item?.assetFullName || item?.assetName || item?.assetCode}
-                        </div>
+                    <div className="flex flex-col space-y-1">
+                        <span className="font-semibold text-sm">{item?.assetCode}</span>
+                        <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
                     </div>
                 </div>
             ),
