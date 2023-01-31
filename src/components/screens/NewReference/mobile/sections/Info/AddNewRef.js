@@ -9,10 +9,11 @@ import classNames from 'classnames';
 import Modal from 'components/common/ReModal';
 import { useMemo } from 'react';
 import colors from 'styles/colors';
+import { emitWebViewEvent } from 'redux/actions/utils';
 
 // goodluck for who maintain this code
 const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }) => {
-    const { t } = useTranslation()
+    const { t, i18n: { language } } = useTranslation()
     const totalRate = 100
     const [percent, setPercent] = useState(0)
     const onPercentChange = ({ x }) => {
@@ -34,6 +35,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     const handleInputNote = (e) => {
         const text = e?.target?.value
         if (text.length > 30) return
+        console.log(text)
         setNote(text)
     }
     const handleCheckDefault = (e) => {
@@ -66,7 +68,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             case 'MIN_8':
                 return t('reference:referral.addref_error_1')
             default:
-                return 'Error'
+                return language === 'vi' ? 'Đã có lỗi xảy ra, xin hãy liên hệ bộ phận hỗ trợ' : 'An error occurred, please contact support'
         }
     }
 
@@ -79,7 +81,8 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             params: {
                 code: refCode,
                 remunerationRate: percent,
-                isDefault
+                isDefault,
+                note: note.length ? note : null
             }
         })
         if (status === 'ok') {
@@ -94,7 +97,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                 isSucess: false
             })
         }
-    }, 1000), [refCode, percent, isDefault])
+    }, 1000), [refCode, percent, isDefault, note])
 
     const checkRef = useCallback(_.debounce((refCode) => {
         FetchApi({
@@ -136,6 +139,12 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     <div className='text-sm font-medium mt-6'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
+
+                    <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                        onClick={() => window.fcWidget.open()}
+                    >
+                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                    </div>
                     <div className='w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6'
                         onClick={() => {
                             setResultData({
@@ -168,17 +177,15 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     <div className='text-sm font-medium mt-3 text-gray-7'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
-                    <div className='w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8'
-                        onClick={() => {
-                            setResultData({
-                                isSucess: false,
-                                message: ''
-                            })
-                            resultData.isSucess && doClose()
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
+                    {resultData.isSucess ?
+                        null
+                        :
+                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                            onClick={() => emitWebViewEvent('chat_with_support')}
+                        >
+                            {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                        </div>
+                    }
                 </div>
             </PopupModal>
     }, [resultData])
@@ -269,7 +276,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             </PopupModal> : <PopupModal
                 isVisible={isShow}
                 onBackdropCb={onClose}
-                title={t('reference:referral.add_new_referral')}
+                title={isDesktop ? t('reference:referral.add_new_referral') : null}
                 useAboveAll
                 isDesktop={isDesktop}
                 useCenter={isDesktop}
@@ -278,6 +285,9 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
             >
                 <div className={classNames('font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4', { 'px-4': isDesktop })}>
                     <div>
+                        {isDesktop ? null : <div className='font-semibold text-[18px] text-gray-6 mb-8'>
+                            {t('reference:referral.add_new_referral')}
+                        </div>}
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
                             <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.namiapp.green[1]} bgColorActive={colors.namiapp.green[1]} BgColorLine={colors.namiapp.black[2]} bgColorDot={colors.namiapp.black[2]} />
@@ -363,7 +373,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     )
 }
 
-export const SuccessIcon = ({color = '#47CC85'}) => (
+export const SuccessIcon = ({ color = '#47CC85' }) => (
     <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 6.667C21.6 6.667 6.665 21.6 6.665 40s14.933 33.333 33.333 33.333S73.333 58.4 73.333 40 58.399 6.667 39.999 6.667zm-6.667 50L16.666 40l4.7-4.7 11.967 11.933 25.3-25.3 4.7 4.734-30 30z" fill={color} />
     </svg>
@@ -371,25 +381,9 @@ export const SuccessIcon = ({color = '#47CC85'}) => (
 
 export const ErrorIcon = () => {
     return (
-        <svg width="66" height="66" viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#rvts3wdada)">
-                <g clip-path="url(#deas3nvn3b)">
-                    <path d="M33 63.459c16.822 0 30.458-13.637 30.458-30.459C63.458 16.18 49.822 2.542 33 2.542S2.54 16.179 2.54 33C2.541 49.822 16.178 63.46 33 63.46z" fill="#E5544B" />
-                    <path d="M33 65.999c-8.455 0-16.91-3.217-23.346-9.652-12.872-12.871-12.872-33.819 0-46.693 12.871-12.869 33.821-12.871 46.692 0 12.872 12.874 12.872 33.819 0 46.693C49.91 62.781 41.453 65.999 33 65.999zM13.27 13.27c-10.877 10.88-10.877 28.582 0 39.46 10.881 10.877 28.584 10.88 39.46 0 10.877-10.878 10.877-28.58 0-39.46-10.881-10.876-28.581-10.876-39.46 0z" fill="#E5544B" />
-                    <path d="M24.12 44.432a2.55 2.55 0 0 1-1.808-.75c-1-1-1-2.616 0-3.615l18.081-18.081c1-1 2.616-1 3.616 0s1 2.616 0 3.616l-18.08 18.08a2.555 2.555 0 0 1-1.808.75z" fill="#fff" />
-                    <path d="M42.199 44.432a2.55 2.55 0 0 1-1.808-.75L22.31 25.603c-1-1-1-2.616 0-3.616s2.616-1 3.616 0l18.08 18.08c1 1 1 2.617 0 3.617a2.55 2.55 0 0 1-1.807.75z" fill="#fff" />
-                </g>
-            </g>
-            <defs>
-                <clipPath id="rvts3wdada">
-                    <path fill="#fff" d="M0 0h66v66H0z" />
-                </clipPath>
-                <clipPath id="deas3nvn3b">
-                    <path fill="#fff" d="M0 0h66v66H0z" />
-                </clipPath>
-            </defs>
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M40 6.667C21.62 6.667 6.667 21.62 6.667 40S21.62 73.333 40 73.333 73.333 58.38 73.333 40 58.38 6.667 40 6.667zM54.023 49.31l-4.713 4.713-9.31-9.31-9.31 9.31-4.713-4.713 9.31-9.31-9.31-9.31 4.713-4.713 9.31 9.31 9.31-9.31 4.713 4.713-9.31 9.31 9.31 9.31z" fill="#F93636" />
         </svg>
-
     )
 }
 

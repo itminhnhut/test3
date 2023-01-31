@@ -84,7 +84,6 @@ const FriendList = ({ t, commisionConfig, id }) => {
                 }
             });
             if (data) {
-                console.log(data)
                 setdataSource(data);
             }
         } catch (e) {
@@ -195,7 +194,7 @@ const FriendList = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 110,
         // preventSort: true,
-        render: (data, item) => <div>{formatTime(data, 'dd/MM/yyyy')}</div>
+        render: (data, item) => <div>{data ? formatTime(data, 'dd/MM/yyyy') : null}</div>
     }, {
         key: 'status',
         dataIndex: 'kycStatus',

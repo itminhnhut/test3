@@ -39,7 +39,7 @@ const Info = ({ data, user }) => {
                         <div className='font-semibold text-base text-gray-6'>
                             {data?.name ?? t('common:unknown')}
                         </div>
-                        <div className='font-medium text-xs text-gray-1 uppercase'>
+                        <div className='font-medium text-xs text-gray-6 uppercase'>
                             {t('reference:referral.ranking')}: <span className='text-namiapp-green font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
                         </div>
                     </div>
@@ -92,7 +92,7 @@ const Info = ({ data, user }) => {
                             </div> : null}
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-medium text-sm text-namiapp-green-1 underline cursor-pointer'
+                    <div className='mt-6 text-center leading-6 font-semibold text-sm text-namiapp-green-1 underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
                         {t('reference:referral.referral_code_management')}

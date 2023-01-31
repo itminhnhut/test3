@@ -17,7 +17,6 @@ import SvgEmpty from 'components/svg/SvgEmpty';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { commisionConfig } from 'config/referral';
-import { useCallback } from 'react';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
 import { useSelector } from 'react-redux';
@@ -124,7 +123,7 @@ function NewReference() {
                 </SwiperSlide>
                 <SwiperSlide id={tabs.Chart} key={1}>
                     <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] pb-12 pt-8'>
-                        <Chart user={user}/>
+                        <Chart user={user} />
                     </div>
                 </SwiperSlide>
                 <SwiperSlide id={tabs.FriendList} key={2}>
@@ -187,7 +186,7 @@ export const Line = styled.div.attrs(({ className, isMobile = false }) => ({
     background-color: ${({ isMobile }) => isMobile ? 'rgba(34, 41, 64, 0.5)' : 'rgba(160, 174, 192, 0.15)'};
 `;
 
-const MobileFont = styled.div.attrs(({ className }) => ({
+export const MobileFont = styled.div.attrs(({ className }) => ({
     className
 }))`
     font-family: 'Manrope', sans-serif;
@@ -206,12 +205,12 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                     <div
                         key={index}
                         className={classNames(
-                            `flex items-center py-1 px-2 justify-center text-xs font-medium leading-5 cursor-pointer`, className, {
-                                'text-gray-1': !isMobile,
-                                'text-gray-7 !px-4 !py-2 !font-normal': isMobile,
-                                'bg-gray-4 rounded-md text-darkBlue': type === tab.value && !isMobile,
-                                'bg-namiapp-black-2 text-namiapp-green-1 rounded-[100px] font-semibold': type === tab.value && isMobile,
-                            }
+                            `flex items-center justify-center text-xs font-medium leading-5 cursor-pointer border-namiapp-green`, className, {
+                            'text-gray-1 py-1 px-2': !isMobile,
+                            'text-gray-7 !px-4 !py-2 font-normal': isMobile,
+                            'bg-gray-4 rounded-md text-darkBlue': type === tab.value && !isMobile,
+                            'bg-namiapp-black-2 text-namiapp-green-1 rounded-[100px] font-semibold border-[1px] !font-semibold': type === tab.value && isMobile,
+                        }
                         )}
                         onClick={_.debounce(() => {
                             setType(tab.value), 200;
@@ -231,9 +230,9 @@ export const RefButton = ({ title, onClick }) => (
     </div>
 );
 
-export const NoData = ({ text, className }) => (
+export const NoData = ({ text, className, width, height }) => (
     <div className={classNames('w-full flex flex-col justify-center items-center text-gray-7 font-medium text-sm gap-2', className)}>
-        <SvgEmpty />
+        <SvgEmpty width={width} height={height} />
         {text}
     </div>
 );

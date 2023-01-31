@@ -1,12 +1,13 @@
 import { PORTAL_MODAL_ID } from '../../../constants/constants';
 import { X } from 'react-feather';
-import { useEffect, useRef } from 'react';
+import { Component, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import Portal from 'components/hoc/Portal';
 import { useOutside } from 'components/screens/Nao/NaoStyle';
 import { Line } from './mobile';
 import React from 'react';
 import { useState } from 'react';
+import { MobileFont } from './mobile'
 
 const PopupModal = ({
     isVisible,
@@ -48,84 +49,99 @@ const PopupModal = ({
         };
     }, [isVisible]);
 
+    const Container = !isDesktop ? MobileFont : EmptyComponent
+
     return (
         <Portal portalId={PORTAL_MODAL_ID}>
-            <div
-                className={classNames('absolute top-0 left-0 w-full h-full overflow-hidden', { invisible: !isVisible }, { visible: isVisible }, modalClassName)}
-                ref={container}
-            >
+            <Container>
                 <div
-                    onClick={() => onBackdropCb && onBackdropCb()}
-                    className={classNames(
-                        'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]', bgClassName,
-                        { 'visible opacity-100': isVisible },
-                        { 'invisible opacity-0': !isVisible },
-                        { '!z-[200]': useAboveAll },
-                        { '!bg-[#000] !bg-opacity-80': isMobile },
-                    )}
-                />
-                <div
-                    className={classNames(
-                        `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-transparent left-0 top-0 w-full h-full p-0 z-[101]`,
-                        containerClassName,
-                        { '!z-[201]': useAboveAll },
-                        // { '!bg-black bg-opacity-80': isMobile },
-                    )}
+                    className={classNames('absolute top-0 left-0 w-full h-full overflow-hidden', { invisible: !isVisible }, { visible: isVisible }, modalClassName)}
+                    ref={container}
                 >
-                    <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}>
-                        {!useCenter && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
-                        <div
-                            ref={wrapperRef}
-                            className={classNames(
-                                `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-[3.25rem] max-h-[90%] overflow-y-auto`,
-                                { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
-                                {
-                                    '!rounded-xl !px-6': useCenter && !isDesktop,
-                                    'bg-namiapp-black': isMobile,
-                                    '!bg-white text-darkBlue': isDesktop
-                                }
-                            )}
-                            style={{ backgroundImage: background ?? null, backgroundSize: background ? '100% auto' : null, backgroundRepeat: 'no-repeat' }}
-                        >
-                            {useFullScreen || useCenter ? null : (
-                                <div
-                                    style={{ transform: 'translate(-50%,0)' }}
-                                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 "
-                                ></div>
-                            )}
-                            <div className={classNames("w-full flex justify-between items-center",
-                                {
-                                    '!justify-start': useFullScreen,
-                                    'px-4': isDesktop
-                                })}
+                    <div
+                        onClick={() => onBackdropCb && onBackdropCb()}
+                        className={classNames(
+                            'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]', bgClassName,
+                            { 'visible opacity-100': isVisible },
+                            { 'invisible opacity-0': !isVisible },
+                            { '!z-[200]': useAboveAll },
+                            { '!bg-[#000] !bg-opacity-80': isMobile },
+                        )}
+                    />
+                    <div
+                        className={classNames(
+                            `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-transparent left-0 top-0 w-full h-full p-0 z-[101]`,
+                            containerClassName,
+                            { '!z-[201]': useAboveAll },
+                            // { '!bg-black bg-opacity-80': isMobile },
+                        )}
+                    >
+                        <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}>
+                            {!useCenter && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
+                            <div
+                                ref={wrapperRef}
+                                className={classNames(
+                                    `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-12 max-h-[90%] overflow-y-auto`,
+                                    { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
+                                    {
+                                        '!rounded-xl !px-6': useCenter && !isDesktop,
+                                        'bg-namiapp-black': isMobile,
+                                        '!bg-white text-darkBlue': isDesktop
+                                    }
+                                )}
+                                style={{ backgroundImage: background ?? null, backgroundSize: background ? 'cover' : null, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', position: 'fixed', maxHeight: 'none' }}
                             >
-                                {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m15 18-6-6 6-6" stroke="#e2e8f0" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                                    : null}
-                                {title ? <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen, '!text-gray-6': isMobile })}>{title}</div> : <div></div>}
-
-                                {useFullScreen ? null : <div
-                                    className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
-                                    onClick={() => onBackdropCb && onBackdropCb()}
+                                {useFullScreen || useCenter ? null : (
+                                    <div
+                                        style={{ transform: 'translate(-50%,0)' }}
+                                        className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-1  absolute top-2 left-1/2 "
+                                    ></div>
+                                )}
+                                <div className={classNames("w-full flex justify-between items-center",
+                                    {
+                                        '!justify-start': useFullScreen,
+                                        'px-4': isDesktop
+                                    })}
                                 >
-                                    {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
+                                    {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="m15 18-6-6 6-6" stroke="#e2e8f0" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                        : null}
+                                    {title ? <div className={classNames('font-bold text-[18px] text-darkBlue', { 'text-[20px] max-h-screen': useFullScreen, '!text-gray-6': isMobile })}>{title}</div> : <div></div>}
+
+                                    {useFullScreen ? null : <div
+                                        className="flex-center hover:bg-gray-3 dark:hover:bg-darkBlue-4 rounded-md cursor-pointer"
+                                        onClick={() => onBackdropCb && onBackdropCb()}
+                                    >
+                                        {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
+                                        {isMobile ?
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#7v918lj1ea)">
+                                                    <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill="#E2E8F0" />
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="7v918lj1ea">
+                                                        <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                            : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>}
+                                    </div>}
+                                </div>
+                                {(isDesktop || isMobile) ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
+                                {isDesktop ? <Line className="w-full mt-3 mb-6" /> : null}
+                                {isDesktop ? children : <div className={classNames('mt-7', { '!mt-0': useCenter })}>
+                                    {children}
                                 </div>}
                             </div>
-                            {(isDesktop || isMobile) ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
-                            {isDesktop ? <Line className="w-full mt-3 mb-6" /> : null}
-                            {isDesktop ? children : <div className={classNames('mt-7', { '!mt-0': useCenter })}>
-                                {children}
-                            </div>}
                         </div>
                     </div>
                 </div>
-            </div>
+            </Container>
         </Portal>
     );
 };
@@ -200,3 +216,6 @@ export const renderRefInfo = (text, className = '', size = 15, originalText) => 
     );
 };
 export default PopupModal;
+
+
+const EmptyComponent = ({ children }) => <>{children}</>

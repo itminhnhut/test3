@@ -7775,6 +7775,13 @@ react-time-picker@^4.4.1:
     react-fit "^1.0.3"
     update-input-width "^1.2.2"
 
+react-toastify@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.1.1.tgz#9280caea4a13dc1739c350d90660a630807bf10b"
+  integrity sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==
+  dependencies:
+    clsx "^1.1.1"
+
 react-tooltip@^4.2.21:
   version "4.2.21"
   resolved "https://registry.npmjs.org/react-tooltip/-/react-tooltip-4.2.21.tgz"

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import useWindowSize from 'hooks/useWindowSize';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import PopupModal, { renderRefInfo } from '../../PopupModal';
 import RefCard from '../../RefCard';
 import InviteModal from './InviteModal';
@@ -12,7 +12,7 @@ import { ErrorIcon, SuccessIcon } from './Info/AddNewRef';
 import { FacebookShareButton, RedditIcon, RedditShareButton, TelegramShareButton, TwitterShareButton } from 'next-share';
 import NeedLogin from 'components/common/NeedLogin';
 import Modal from 'components/common/ReModal';
-import { getS3Url } from 'redux/actions/utils';
+import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 import { getMe } from 'redux/actions/user';
 import { useDispatch } from 'react-redux';
 
@@ -85,6 +85,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                     user={user}
                     isShow={showRegisterPartner}
                     onClose={() => setShowRegisterPartner(false)}
+                    language={language}
                 />
             ) : null}
             <div className={classNames('font-semibold text-3xl text-gray-6', { '!text-2xl': width < 400 })}>
@@ -92,39 +93,41 @@ const Overview = ({ data, commisionConfig, user }) => {
                 {t('reference:referral.introduce2')}
             </div>
             <div className="font-normal text-base text-gray-6 mt-6">{t('reference:referral.introduce3')}</div>
-            {/* <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
-                {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
-            </div> */}
 
-            <div className="mt-[38px] flex gap-3 w-full">
-                {isPartner || !user ? null : (
-                    <RefButton className="w-3/5" onClick={() => setShowRegisterPartner(true)}>
-                        <div className="flex gap-2 items-center">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#jf4gphlj7a)">
-                                    <path
-                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
-                                        fill="#47CC85"
-                                    />
-                                </g>
-                                <defs>
-                                    <clipPath id="jf4gphlj7a">
-                                        <path fill="#fff" d="M0 0h24v24H0z" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                            {t('reference:referral.partner.button')}
+
+            {isPartner ?
+                <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
+                    {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
+                </div> :
+                <div className="mt-[38px] flex gap-3 w-full">
+                    {!user ? null : (
+                        <RefButton className="w-3/5" onClick={() => setShowRegisterPartner(true)}>
+                            <div className="flex gap-2 items-center">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#jf4gphlj7a)">
+                                        <path
+                                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
+                                            fill="#47CC85"
+                                        />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="jf4gphlj7a">
+                                            <path fill="#fff" d="M0 0h24v24H0z" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                {t('reference:referral.partner.button')}
+                            </div>
+                        </RefButton>
+                    )}
+                    <RefButton className={classNames('w-2/5', { '!w-full': isPartner || !user })}>
+                        <div className="flex gap-2">
+                            <a href={policyLink} target="_blank">
+                                <span>{t('reference:referral.referral_policy')}</span>
+                            </a>
                         </div>
                     </RefButton>
-                )}
-                <RefButton className={classNames('w-2/5', { '!w-full': isPartner || !user })}>
-                    <div className="flex gap-2">
-                        <a href={policyLink} target="_blank">
-                            <span>{t('reference:referral.referral_policy')}</span>
-                        </a>
-                    </div>
-                </RefButton>
-            </div>
+                </div>}
             {user ? (
                 <div className="mt-[30px]">
                     <RefCard>
@@ -164,7 +167,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                         </div>
                     </RefCard>
                     <div
-                        className="w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-medium text-white rounded-md"
+                        className="w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-semibold text-white rounded-md"
                         onClick={() => setShowInvite(true)}
                     >
                         {t('reference:referral.invite_friends')}
@@ -313,24 +316,23 @@ const ConfirmButtom = ({ text, onClick, isDisable = true, className, isDesktop =
     );
 };
 
-export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner, isDesktop = false }) => {
+export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner, isDesktop = false, language }) => {
     const isKyc = user?.kyc_status === 2;
     const defaultData = isKyc
         ? {
-              fullName: kyc?.kycInformationData?.metadata?.identityName,
-              nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
-              email: user?.email,
-              phoneNumber: '',
-              socialMedia: ''
-          }
+            fullName: kyc?.kycInformationData?.metadata?.identityName,
+            nationalId: kyc?.kycInformationData?.metadata?.identityNumber,
+            email: user?.email,
+            phoneNumber: '',
+            socialMedia: ''
+        }
         : {
-              fullName: '',
-              nationalId: '',
-              email: '',
-              phoneNumber: '',
-              socialMedia: ''
-          };
-
+            fullName: '',
+            nationalId: '',
+            email: '',
+            phoneNumber: '',
+            socialMedia: ''
+        };
     const [state, set] = useState(defaultData);
 
     const [isError, setIsError] = useState(true);
@@ -408,15 +410,20 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     };
 
     const ResultModal = useMemo(() => {
-        const Icon = result.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
-        const title = result.success ? t('reference:referral.success') : t('reference:referral.error');
+        const Icon = result?.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
+        const title = result?.success ? t('reference:referral.success') : t('reference:referral.error');
 
         return isDesktop ? (
             <Modal center isVisible containerClassName="!px-6 !py-8 top-[50%] max-w-[350px]">
                 <div className="w-full flex justify-center items-center flex-col text-center">
                     {Icon}
                     <div className="text-sm font-medium mt-6">
-                        <div dangerouslySetInnerHTML={{ __html: result.message }} />
+                        <div dangerouslySetInnerHTML={{ __html: result?.message }} />
+                    </div>
+                    <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                        onClick={() => window?.fcWidget?.open()}
+                    >
+                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                     </div>
                     <div
                         className="w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6"
@@ -425,7 +432,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                 ...result,
                                 isShow: false
                             });
-                            if (result.success) onClose();
+                            if (result?.success) onClose();
                         }}
                     >
                         {t('common:confirm')}
@@ -452,18 +459,15 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     <div className="text-sm font-medium mt-3 text-gray-7">
                         <div dangerouslySetInnerHTML={{ __html: result.message }} />
                     </div>
-                    <div
-                        className="w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8"
-                        onClick={() => {
-                            setResult({
-                                ...result,
-                                isShow: false
-                            });
-                            if (result.success) onClose();
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
+                    {result?.isSucess ?
+                        null
+                        :
+                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                            onClick={() => emitWebViewEvent('chat_with_support')}
+                        >
+                            {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
+                        </div>
+                    }
                 </div>
             </PopupModal>
         );
@@ -559,6 +563,8 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                 label={t('reference:referral.partner.social')}
                                 validator={validator}
                                 isDesktop={isDesktop}
+                                canPaste={!isDesktop}
+                                t={t}
                             />
                             {isDesktop ? (
                                 <div
@@ -566,8 +572,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                         'mt-6 w-auto h-11 rounded-md px-6 flex justify-between items-center text-darkBlue bg-gray-4 font-medium text-sm cursor-pointer'
                                     )}
                                     onClick={async () => {
-                                        const text = await navigator.clipboard.readText();
-                                        console.log(text);
+                                        const text = await navigator?.clipboard?.readText();
                                         setState({ socialMedia: text });
                                     }}
                                 >
@@ -605,7 +610,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     );
 };
 
-const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false, isDesktop = false }) => {
+const RefInput = ({ text, setText, placeholder, label, validator, type, disabled = false, isStringNumber = false, isFocus = false, isDesktop = false, canPaste = false, t }) => {
     const [error, setError] = useState('');
     const ref = useRef(null);
 
@@ -614,6 +619,12 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
         setText(value);
         setError('');
     };
+
+    const handlePaste = async () => {
+        ref.current.focus()
+        const text = await navigator.clipboard.readText();
+        handleInput(text)
+    }
 
     useEffect(() => {
         isFocus && ref.current.focus();
@@ -659,6 +670,9 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
                         <path d="m6 6 12 12M6 18 18 6" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 ) : null}
+                {canPaste && !isDesktop ?
+                    <div className='font-semibold text-namiapp-green-1 text-sm leading-[18px] cursor-pointer ml-2' onClick={handlePaste}>{t('common:paste')}</div>
+                    : null}
             </div>
             {error.length ? (
                 <div className="flex gap-1 font-normal text-xs leading-4 mt-2 text-[#f93636]">

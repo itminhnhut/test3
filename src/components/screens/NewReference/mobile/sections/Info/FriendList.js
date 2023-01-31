@@ -82,7 +82,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}
-            </div> : <div className='w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} /></div>}
+            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
         </PopupModal>
         :
         <PopupModal
@@ -123,7 +123,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}
-            </div> : <div className='w-full flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} /></div>}
+            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
         </PopupModal>
 }
 
