@@ -410,18 +410,18 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
     };
 
     const ResultModal = useMemo(() => {
-        const Icon = result.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
-        const title = result.success ? t('reference:referral.success') : t('reference:referral.error');
+        const Icon = result?.success ? <SuccessIcon color={isDesktop ? '#00c8bc' : undefined} /> : <ErrorIcon />;
+        const title = result?.success ? t('reference:referral.success') : t('reference:referral.error');
 
         return isDesktop ? (
             <Modal center isVisible containerClassName="!px-6 !py-8 top-[50%] max-w-[350px]">
                 <div className="w-full flex justify-center items-center flex-col text-center">
                     {Icon}
                     <div className="text-sm font-medium mt-6">
-                        <div dangerouslySetInnerHTML={{ __html: result.message }} />
+                        <div dangerouslySetInnerHTML={{ __html: result?.message }} />
                     </div>
                     <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
-                        onClick={() => window.fcWidget.open()}
+                        onClick={() => window?.fcWidget?.open()}
                     >
                         {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                     </div>
@@ -432,7 +432,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                 ...result,
                                 isShow: false
                             });
-                            if (result.success) onClose();
+                            if (result?.success) onClose();
                         }}
                     >
                         {t('common:confirm')}
@@ -459,7 +459,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     <div className="text-sm font-medium mt-3 text-gray-7">
                         <div dangerouslySetInnerHTML={{ __html: result.message }} />
                     </div>
-                    {resultData.isSucess ?
+                    {result?.isSucess ?
                         null
                         :
                         <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
