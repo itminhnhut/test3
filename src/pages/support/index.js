@@ -12,7 +12,7 @@ import Image from 'next/image';
 import { useAsync } from 'react-use';
 import { getLastedArticles } from 'utils';
 import { useTranslation } from 'next-i18next';
-import { formatTime } from 'redux/actions/utils';
+import { formatTime, getS3Url } from 'redux/actions/utils';
 import classNames from 'classnames';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
@@ -74,9 +74,6 @@ const Support = () => {
     )
 
     // ? Render input
-    const renderInput = useCallback(() => {
-        return <SupportSearchBar simpleMode={width < BREAK_POINTS.lg} />
-    }, [width])
 
     const renderFaqCategories = () => {
         // if (loading) {
@@ -123,24 +120,25 @@ const Support = () => {
     }
 
     const renderAnnouncementCategories = () => {
-        return SupportCategories.announcements[language].map((announcement) => (
-            <SupportSectionItem
-                key={announcement.id}
-                href={
-                    PATHS.SUPPORT.ANNOUNCEMENT +
-                    `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
-                }
-                title={announcement?.title || '--'}
-                titleClassNames='truncate'
-                icon={
-                    <Image
-                        src={getSupportCategoryIcons(announcement.id)}
-                        width={sectionIconSize}
-                        height={sectionIconSize}
-                    />
-                }
-            />
-        ))
+        return (
+            SupportCategories.announcements[language].map((announcement) => (
+                <a
+                    href={
+                        PATHS.SUPPORT.ANNOUNCEMENT +
+                        `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
+                    }
+                >
+                    <div key={announcement.id} className='w-[286px] h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-namiv2-black-1 truncate text-namiv2-gray-2 font-medium text-[20px] hover:!bg-[#262b34]'>
+                        <Image
+                            src={getSupportCategoryIcons(announcement.id)}
+                            width={52}
+                            height={52}
+                        />
+                        {announcement?.title || '--'}
+                    </div>
+                </a>
+            ))
+        )
     }
 
     const renderLastedArticles = useCallback(() => {
@@ -336,34 +334,27 @@ const Support = () => {
 
     return (
         <MaldivesLayout>
-            <div className='bg-[#F8F9FA] dark:bg-darkBlue-1'>
-                <div className='container pt-6 max-w-[1400px]'>
-                    <div className='font-bold px-4 text-[20px] mt-8 lg:mt-[40px] lg:text-[26px]'>
-                        {t('support-center:title')}
-                    </div>
-                    <div className='mt-8 pt-4 pb-[80px] px-4 h-full bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent'>
-                        <div className='text-[16px] font-medium'>
-                            {t('support-center:search_faq')}
+            <div className='bg-namiv2-black'>
+                <SearchSection t={t} width={width} />
+                <div className='container pt-6 max-w-[1440px]'>
+                    <div className='pb-[80px] px-10 lg:px-[112px] h-full rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent'>
+                        <div className='mt-20'>
+                            <SupportSection
+                                title={t('support-center:announcement')}
+                                mode='announcement'
+                                contentContainerClassName='mt-8'
+                            >
+                                {renderAnnouncementCategories()}
+                            </SupportSection>
                         </div>
-                        {renderInput()}
 
-                        <div className='mt-6 lg:mt-8'>
+                        <div className='mt-20'>
                             <SupportSection
                                 title={t('support-center:faq')}
                                 mode='faq'
                                 containerClassNames='lg:pb-[32px]'
                             >
                                 {renderFaqCategories()}
-                            </SupportSection>
-                        </div>
-
-                        <div className='mt-6 lg:mt-8'>
-                            <SupportSection
-                                title={t('support-center:announcement')}
-                                mode='announcement'
-                                containerClassNames='lg:pb-[32px]'
-                            >
-                                {renderAnnouncementCategories()}
                             </SupportSection>
                         </div>
 
@@ -410,3 +401,27 @@ export const getStaticProps = async ({ locale }) => ({
 })
 
 export default Support
+
+export const SearchSection = ({ t, width }) => {
+    const renderInput = useCallback(() => {
+        return <SupportSearchBar simpleMode={width < BREAK_POINTS.lg} />
+    }, [width])
+
+    return (
+        <div className='flex justify-center w-full h-[456px]'
+            style={{
+                backgroundImage: `url('/images/reference/bg_supportcenter.png')`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center'
+            }}
+        >
+            <div className='max-w-[1440px] w-full px-10 lg:px-[112px] flex flex-col justify-center h-full'>
+                <div className='font-bold text-[20px] lg:text-[44px] text-white mb-12'>
+                    {t('support-center:title')}
+                </div>
+                {renderInput()}
+            </div>
+        </div>
+    )
+}
