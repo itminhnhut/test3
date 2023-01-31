@@ -673,10 +673,53 @@ const OrderDetail = ({
                             {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                     </Row>
                 }
+                <Tooltip id="opening-volume" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                         overridePosition={(e) => ({
+                             left: 0,
+                             top: e.top
+                         })}
+                >
+                    <div>
+                        <label
+                            className="text-sm font-semibold">{t('futures:order_table:opening_volume')}</label>
+                        <div className="text-sm mt-3">{t('futures:order_table:opening_volume_tooltips')}</div>
+                    </div>
+                </Tooltip>
+                <Tooltip id="closed-volume" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
+                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                         overridePosition={(e) => ({
+                             left: 0,
+                             top: e.top
+                         })}
+                >
+                    <div>
+                        <label className="text-sm font-semibold">{t('futures:order_table:closed_volume')}</label>
+                        <div className="text-sm mt-3">{t('futures:order_table:closed_volume_tooltips')}</div>
+                    </div>
+                </Tooltip>
                 <Row>
-                    <Label>{t('futures:order_table:volume')}</Label>
-                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                    <Label className="flex">
+                        {t('futures:order_table:opening_volume')}
+                        <div className="px-2" data-tip="" data-for="opening-volume"
+                             id="tooltip-opening-volume">
+                            <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                        </div>
+                    </Label>
+                    <Span>{`${formatNumber(order?.order_value, decimalSymbol)} ${pairConfig?.quoteAsset} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
                 </Row>
+                {
+                    isClosedOrder &&
+                    <Row>
+                        <Label className="flex">{t('futures:order_table:closed_volume')}
+                            <div className="px-2" data-tip="" data-for="closed-volume"
+                                 id="tooltip-closed-volume">
+                                <img src={getS3Url('/images/icon/ic_help.png')} height={20} width={20}/>
+                            </div>
+                        </Label>
+                        <Span>{`${formatNumber(order?.close_order_value || order?.quantity * order?.close_price || 0, decimalSymbol)} ${pairConfig?.quoteAsset} (${formatNumber(order?.quantity, 6)} ${pairConfig?.baseAsset})`}</Span>
+                    </Row>
+                }
                 <Row>
                     <Label>{t('futures:margin')}</Label>
                     <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
