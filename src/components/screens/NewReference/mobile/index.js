@@ -17,7 +17,6 @@ import SvgEmpty from 'components/svg/SvgEmpty';
 import classNames from 'classnames';
 import _ from 'lodash';
 import { commisionConfig } from 'config/referral';
-import { useCallback } from 'react';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
 import { useSelector } from 'react-redux';

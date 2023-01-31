@@ -17,7 +17,7 @@ const InviteModal = ({ isShow, onClose, code, isMobile = false }) => {
                     : `url('${getS3Url('/images/reference/invite_background.png')}')`
             }
             contentClassname="!h-[620px] !w-[340px] "
-            title={<img src={isMobile ? getS3Url('/images/logo/nami-logo.png') : getS3Url('/images/logo/nami-logo.png')} className="w-auto h-6" />}
+            title={<img src={isMobile ? '/images/logo/nami-logo-v2.png' : getS3Url('/images/logo/nami-logo.png')} className="w-auto h-6" />}
         >
             <div className="font-medium text-sm text-white leading-6 flex flex-col gap-4">
                 <div className="">{t('reference:referral.invite_your_friends')}</div>

@@ -459,18 +459,15 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     <div className="text-sm font-medium mt-3 text-gray-7">
                         <div dangerouslySetInnerHTML={{ __html: result.message }} />
                     </div>
-                        <div
-                            className="w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8"
-                            onClick={() => {
-                                setResult({
-                                    ...result,
-                                    isShow: false
-                                });
-                                if (result.success) onClose();
-                            }}
+                    {resultData.isSucess ?
+                        null
+                        :
+                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                            onClick={() => emitWebViewEvent('chat_with_support')}
                         >
-                            {t('common:confirm')}
+                            {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                         </div>
+                    }
                 </div>
             </PopupModal>
         );
