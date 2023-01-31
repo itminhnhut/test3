@@ -1,6 +1,6 @@
-const SvgWalletExchange = () => {
+const SvgWalletExchange = ({ size }) => {
     return (
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={size || 32} height={size || 32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9.59 28.8H3.2V22.41L9.59 28.8zM22.41 3.2h6.39V9.59L22.41 3.2z" fill="#5BD891" />
             <path
                 d="M21.38 11.925a6.9 6.9 0 0 1 2.43 1.634 7.22 7.22 0 0 1-5.306 12.033 7.224 7.224 0 0 1-5.014-1.947 7.062 7.062 0 0 1-1.584-2.46 8.073 8.073 0 0 0 9.19-5.43c.403-1.239.5-2.556.284-3.84v.01z"

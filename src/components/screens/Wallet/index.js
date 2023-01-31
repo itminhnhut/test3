@@ -358,7 +358,7 @@ const Wallet = () => {
                 <CustomContainer>
                     <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left">Ví của tôi</div>
                     {renderScreenTab()}
-                    <div className="mt-8">
+                    <div className="mt-8 text-txtPrimary dark:text-txtPrimary-dark">
                         {state.screen === WALLET_SCREENS.OVERVIEW && (
                             <OverviewWallet
                                 allAssets={state.allAssets}
