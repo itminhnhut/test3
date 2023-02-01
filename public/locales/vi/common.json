@@ -66,7 +66,7 @@
     "filled": "Đã khớp",
     "sign_in": "Đăng nhập",
     "sign_up": "Đăng kí",
-    "sign_in_to_continue": "Đăng nhập ngay",
+    "sign_in_to_continue": "<span class='text-teal'>Đăng nhập</span>&nbsphoặc&nbsp<span class='text-teal'>Đăng ký</span>",
     "sign_up_to_continue": "Đăng ký ngay",
     "status": "Trạng thái",
     "transaction_id": "Mã giao dịch",
@@ -126,6 +126,7 @@
     "order_price": "Giá đặt",
     "order_quantity": "Khối lượng khớp",
     "open_quantity": "Khối lượng đặt",
+    "limit": "Giới hạn",
     "market": "Thị trường",
     "change_24h": "Thay đổi 24h",
     "change_volume": "Thay đổi KL",
@@ -328,5 +329,11 @@
     "filter": "Lọc",
     "custom": "Tùy chỉnh",
     "custom_date": "Tùy chỉnh",
-    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ"
+    "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ",
+    "close_order": "Đóng lệnh",
+    "close_all_orders": "Đóng tất cả",
+    "close_all_message": "Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?",
+    "close_all_success": "Đóng lệnh thành công",
+    "close_all_failed": "Đóng lệnh thất bại",
+    "no_results_found": "Không tìm thấy kết quả"
 }

@@ -6,26 +6,27 @@ import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
 import { useAsync, useDebounce } from 'react-use';
 import { getMarketWatch } from 'redux/actions/market';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
-import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, } from 'src/redux/actions/const';
+import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
-import {
-    formatBalance,
-    formatPrice,
-    formatWallet,
-    getDecimalScale,
-    getFilter,
-    getLoginUrl,
-    getSymbolString,
-} from 'src/redux/actions/utils';
+import { formatBalance, formatPrice, formatWallet, getDecimalScale, getFilter, getLoginUrl, getSymbolString } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
+import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import TradingInput from './TradingInput';
+import AddCircle from 'components/svg/AddCircle';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Link from 'next/link';
+import { roundToDown } from 'round-to';
+import { formatNumber } from 'redux/actions/utils';
+import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 
 let initPrice = '';
 
@@ -41,10 +42,7 @@ const useFocus = () => {
     return [htmlElRef, setFocus];
 };
 
-const allSubTabs = [
-    ExchangeOrderEnum.Type.MARKET,
-    ExchangeOrderEnum.Type.LIMIT,
-];
+const allSubTabs = [ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.Type.LIMIT];
 
 const PlaceOrderForm = ({ symbol }) => {
     const [priceRef, setPriceFocus] = useFocus();
@@ -55,14 +53,13 @@ const PlaceOrderForm = ({ symbol }) => {
     const QuantityMode = [
         {
             id: ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY,
-            name: t('total'),
+            name: t('total')
         },
         {
             id: ExchangeOrderEnum.QuantityMode.QUANTITY,
-            name: t('amount'),
-        },
+            name: t('amount')
+        }
     ];
-
     const user = useSelector((state) => state.auth.user) || null;
     const balanceSpot = useSelector((state) => state.wallet.SPOT);
     const selectedOrder = useSelector((state) => state.spot?.selectedOrder);
@@ -72,8 +69,8 @@ const PlaceOrderForm = ({ symbol }) => {
     const [placing, setPlacing] = useState(false);
     const [orderSide, setOrderSide] = useState(ExchangeOrderEnum.Side.BUY);
     const [orderType, setOrderType] = useState(ExchangeOrderEnum.Type.MARKET);
-    const [quantity, setQuantity] = useState(0);
-    const [quoteQty, setQuoteQty] = useState(0);
+    const [quantity, setQuantity] = useState('');
+    const [quoteQty, setQuoteQty] = useState('');
     const [focus, setFocus] = useState();
     const [price, setPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
@@ -81,13 +78,18 @@ const PlaceOrderForm = ({ symbol }) => {
     const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
     const router = useRouter();
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const alert = useRef({
+        type: '',
+        title: '',
+        message: '',
+        notes: ''
+    });
+    const mount = useRef(false);
 
-    useAsync(async () => {
+    useEffect(async () => {
         if (symbol) {
-            setMultiValue(symbol?.quote === 'VNDC' ? 24000 : 1);
-            const newSymbolTicker = await getMarketWatch(
-                getSymbolString(symbol),
-            );
+            const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
             setSymbolTicker(newSymbolTicker?.[0]);
         }
     }, [symbol]);
@@ -105,60 +107,60 @@ const PlaceOrderForm = ({ symbol }) => {
         if (initPrice !== symbolTicker?.b) {
             initPrice = symbolTicker?.b;
             setPrice(+symbolTicker?.p);
-            setQuantity(0);
-            setQuoteQty(0);
+            setQuantity('');
+            setQuoteQty('');
             setPercentage(0);
         }
     }, [symbolTicker]);
 
     useEffect(() => {
+        mount.current = true;
         if (selectedOrder?.price) setPrice(selectedOrder?.price);
-        if (selectedOrder?.quantity) setQuantity(selectedOrder?.quantity);
+        if (selectedOrder?.quantity) setQuantity(selectedOrder?.quantity || '');
         if (selectedOrder?.quantity && selectedOrder?.price) {
-            setQuoteQty(
-                floor(selectedOrder?.quantity * selectedOrder?.price, 2),
-            );
+            setQuoteQty(floor(selectedOrder?.quantity * selectedOrder?.price, 2) || '');
         }
     }, [selectedOrder]);
 
-    const currentExchangeConfig = exchangeConfig.find(
-        (e) => e.symbol === getSymbolString(symbol),
-    );
-    const priceFilter = getFilter(
-        ExchangeOrderEnum.Filter.PRICE_FILTER,
-        currentExchangeConfig || [],
-    );
-    const quantityFilter = getFilter(
-        ExchangeOrderEnum.Filter.LOT_SIZE,
-        currentExchangeConfig || [],
-    );
-    const minNotionalFilter = getFilter(
-        ExchangeOrderEnum.Filter.MIN_NOTIONAL,
-        currentExchangeConfig || [],
-    );
+    const currentExchangeConfig = exchangeConfig.find((e) => e.symbol === getSymbolString(symbol));
+    const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
+    const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, currentExchangeConfig || []);
+    const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, currentExchangeConfig || []);
+    const quantityMarketFilter = getFilter(ExchangeOrderEnum.Filter.MARKET_LOT_SIZE, currentExchangeConfig || []);
+    const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, currentExchangeConfig || []);
     // const quoteAssetPrecision = currentExchangeConfig?.quoteAssetPrecision || 6;
     // const baseAssetPrecision = currentExchangeConfig?.baseAssetPrecision || 6;
     const baseAssetId = currentExchangeConfig?.baseAssetId || 0;
     const quoteAssetId = currentExchangeConfig?.quoteAssetId || 0;
+    const isMarket = orderType === ExchangeOrderEnum.Type.MARKET;
+    const isBuy = orderSide === ExchangeOrderEnum.Side.BUY;
+    const isFocus = useRef();
 
     const handleClickTab = (side) => {
+        const _isBuy = side === ExchangeOrderEnum.Side.BUY;
+        const _balance = getBalance(side);
+        let _price = price;
+        if (isMarket) {
+            _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+        }
+        const per = ceil(((+quantity * (_isBuy ? _price : 1)) / _balance) * 100, 0);
+        isFocus.current = 'side';
+        setPercentage(per);
         setOrderSide(side);
         if (side === ExchangeOrderEnum.Side.SELL) {
             setQuantityMode(QuantityMode[1]);
         }
-        // setIsUseQuoteQuantity(false);
-        // setOrderType(ExchangeOrderEnum.Type.LIMIT);
-    };
-    const handleClickSubTab = (tab) => {
-        setOrderType(tab);
-        setQuantityMode(QuantityMode[1]);
-        // setIsUseQuoteQuantity(false);
     };
 
-    const subTabs = [
-        ExchangeOrderEnum.Type.MARKET,
-        ExchangeOrderEnum.Type.LIMIT,
-    ];
+    useEffect(() => {
+        isFocus.current = 'qty';
+    }, [orderSide, percentage]);
+
+    const handleClickSubTab = (tab) => {
+        setOrderType(tab);
+    };
+
+    const subTabs = [ExchangeOrderEnum.Type.LIMIT, ExchangeOrderEnum.Type.MARKET];
 
     const closeModal = () => {
         setOpen(false);
@@ -177,7 +179,7 @@ const PlaceOrderForm = ({ symbol }) => {
             type: null,
             quantity: 0,
             quoteOrderQty: 0,
-            useQuoteQty: false,
+            useQuoteQty: false
         });
 
         const config = currentExchangeConfig;
@@ -192,9 +194,7 @@ const PlaceOrderForm = ({ symbol }) => {
                                 return Error.PRICE_FILTER;
                             }
                         }
-                        if (
-                            [ExchangeOrderEnum.Type.STOP_LIMIT].includes(type)
-                        ) {
+                        if ([ExchangeOrderEnum.Type.STOP_LIMIT].includes(type)) {
                             if (stopPrice < minPrice || stopPrice > maxPrice) {
                                 return Error.PRICE_FILTER;
                             }
@@ -227,7 +227,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 quantity: +quantity,
                 quoteOrderQty: +quoteQty,
                 price: +price,
-                useQuoteQty: isUseQuoteQuantity,
+                useQuoteQty: isUseQuoteQuantity
             };
             // console.log(orderType, quantityMode.id, ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY);
 
@@ -237,61 +237,57 @@ const PlaceOrderForm = ({ symbol }) => {
             const filterResult = filterOrderInputApi(params);
             if (filterResult) {
                 const { code, message } = filterResult;
-                showNotification(
-                    {
-                        message: `(${code}) ${t(`error:${message}`)}`,
-                        title: 'Error',
-                        type: 'failure',
-                    },
-                    2500,
-                    'bottom',
-                    'bottom-right',
-                );
+                // showNotification(
+                //     {
+                //         message: `(${code}) ${t(`error:${message}`)}`,
+                //         title: 'Error',
+                //         type: 'failure'
+                //     },
+                //     2500,
+                //     'bottom',
+                //     'bottom-right'
+                // );
+                alert.current = {
+                    type: 'error',
+                    title: t('common:failed'),
+                    message: t(`error:${message}`),
+                    notes: `(${code})`
+                };
                 return;
             }
 
             const res = await fetchAPI({
                 url: '/api/v3/spot/order',
                 options: {
-                    method: 'POST',
+                    method: 'POST'
                 },
-                params,
+                params
             });
             const { status, data, message } = res;
             if (status === ApiStatus.SUCCESS) {
-                const {
-                    baseAsset,
-                    displayingId,
-                    executedQty,
-                    executedQuoteQty,
-                    price: _price,
-                    quantity: _quantity,
-                    quoteAsset,
-                    side,
-                    type,
-                } = data;
+                const { baseAsset, displayingId, executedQty, executedQuoteQty, price: _price, quantity: _quantity, quoteAsset, side, type } = data;
                 let message = '';
                 if (type === ExchangeOrderEnum.Type.MARKET) {
                     message = t('spot:place_success_market', {
                         displayingId,
                         side,
                         type,
-                        token: `${baseAsset}/${quoteAsset}`,
+                        token: `${baseAsset}/${quoteAsset}`
                     });
                 } else {
                     message = t('spot:place_success_limit', {
                         displayingId,
                         side,
                         type,
-                        token: `${baseAsset}/${quoteAsset}`,
+                        token: `${baseAsset}/${quoteAsset}`
                     });
                 }
-                showNotification(
-                    { message, title: t('common:success'), type: 'success' },
-                    2500,
-                    'bottom',
-                    'bottom-right',
-                );
+                alert.current = {
+                    type: 'success',
+                    title: t('common:success'),
+                    message: message
+                };
+                // showNotification({ message, title: t('common:success'), type: 'success' }, 2500, 'bottom', 'bottom-right');
             } else {
                 const error = find(Error, { code: res?.code });
                 const { requestId } = data;
@@ -299,57 +295,53 @@ const PlaceOrderForm = ({ symbol }) => {
                 let content = null;
                 if (typeof requestId === 'string' && requestId?.length > 0) {
                     shortRequestId = requestId.split('-')[0].toUpperCase();
-                    content = error
-                        ? t(`error:${error.message}`) +
-                          ` (Code: ${shortRequestId})`
-                        : t('error:ERROR_COMMON') +
-                          ` (Code: ${shortRequestId})`;
+                    content = error ? t(`error:${error.message}`) : t('error:ERROR_COMMON');
                 } else {
-                    content = error
-                        ? t(`error:${error.message}`)
-                        : t('error:ERROR_COMMON');
+                    content = error ? t(`error:${error.message}`) : t('error:ERROR_COMMON');
                 }
                 switch (message) {
                     case ExchangeOrderEnum.Filter.MIN_NOTIONAL:
                         content = t('error:MIN_NOTIONAL', {
-                            value: `${formatPrice(
-                                minNotionalFilter.minNotional,
-                            )} ${quote}`,
+                            value: `${formatPrice(minNotionalFilter.minNotional)} ${quote}`
                         });
                         break;
                     case ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME:
                         content = t('error:MAX_TOTAL_VOLUME', {
-                            value: `${formatPrice(
-                                data?.notional,
-                            )} ${quote}`,
+                            value: `${formatPrice(data?.notional)} ${quote}`
                         });
                         break;
                     default:
                         break;
                 }
-
-                showNotification(
-                    {
-                        message: content,
-                        title: t('common:failure'),
-                        type: 'warning',
-                    },
-                    2500,
-                    'bottom',
-                    'bottom-right',
-                );
+                alert.current = {
+                    type: 'error',
+                    title: t('common:failed'),
+                    message: content,
+                    notes: `(${shortRequestId})`
+                };
+                // showNotification(
+                //     {
+                //         message: content,
+                //         title: t('common:failure'),
+                //         type: 'warning'
+                //     },
+                //     2500,
+                //     'bottom',
+                //     'bottom-right'
+                // );
             }
         } catch (e) {
             // console.log('createOrder web: ', e);
         } finally {
             setPlacing(false);
+            setShowAlert(true);
             closeModal();
         }
     };
 
     const orderTypeLabels = {
         [ExchangeOrderEnum.Type.LIMIT]: t('spot:limit'),
-        [ExchangeOrderEnum.Type.MARKET]: t('spot:market'),
+        [ExchangeOrderEnum.Type.MARKET]: t('spot:market')
     };
 
     const confirmModal = async () => {
@@ -358,436 +350,342 @@ const PlaceOrderForm = ({ symbol }) => {
     };
 
     const getAvailableText = (assetId) => {
-        return formatBalance(
-            balanceSpot?.[assetId]?.value -
-                balanceSpot?.[assetId]?.locked_value,
-            6,
-        );
+        return formatBalance(balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value, 6);
     };
 
     const getAvailable = (assetId) => {
-        return (
-            balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value
-        );
+        return balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value;
     };
 
-    const getBalance = (assetId) => {
-        return balanceSpot?.[assetId]?.value;
+    const getBalance = (side) => {
+        const token = getAvailable(baseAssetId);
+        const stable = getAvailable(quoteAssetId);
+        const _isBuy = side === ExchangeOrderEnum.Side.BUY;
+        return roundToDown(_isBuy ? stable : token, _isBuy ? 2 : decimals.qty);
     };
 
-    useDebounce(
-        () => {
-            if (focus !== 'percentage') return;
-            if (!(baseAssetId && quoteAssetId)) return;
-            const available = orderSide === ExchangeOrderEnum.Side.BUY
-                    ? getAvailable(quoteAssetId)
-                    : getAvailable(baseAssetId);
-            if (!(available > EPS)) return;
-            const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
-            let _price = +price;
+    const decimals = useMemo(() => {
+        return {
+            price: getDecimalScale(+priceFilter?.tickSize),
+            qty: getDecimalScale(+quantityFilter?.stepSize)
+        };
+    }, [priceFilter, quantityFilter]);
 
+    const balance = useMemo(() => {
+        return getBalance(orderSide);
+    }, [quoteAssetId, balanceSpot, baseAssetId, orderSide]);
 
-            if (orderSide === ExchangeOrderEnum.Side.BUY) {
-                if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                    _price = +symbolTicker?.p ;
-                }
+    useEffect(() => {
+        if (isFocus.current !== 'qty') return;
+        let _price = price;
+        if (isMarket) {
+            _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+        }
+        const per = ceil(((+quantity * (isBuy ? _price : 1)) / balance) * 100, 0);
+        const quoteQty = floor(+quantity * _price, 2);
+        setPercentage(Math.min(per, 100));
+        setQuoteQty(quoteQty);
+    }, [quantity, decimals, notEnough]);
 
-                const nextQuoteQty = floor(
-                    ((available * percentage) / 100),
-                    2,
-                );
-                const nextQuantity = floor(nextQuoteQty / _price, qtyDecimal);
-                setQuantity(nextQuantity);
-                setQuoteQty(nextQuoteQty);
-            } else {
-                const nextQuantity = floor(
-                    (available * percentage) / 100,
-                    qtyDecimal,
-                );
-                const nextQuoteQty = floor(nextQuantity * _price, 2);
-                setQuantity(nextQuantity);
-                setQuoteQty(nextQuoteQty);
-            }
-        },
-        100,
-        [orderSide, orderType, quantityMode, percentage],
-    );
-    useDebounce(
-        () => {
-            if (focus !== 'price') return; // Mac dinh la limit
-            if (!(baseAssetId && quoteAssetId)) return;
-            const available =
-                orderSide === ExchangeOrderEnum.Side.BUY
-                    ? getAvailable(quoteAssetId)
-                    : getAvailable(baseAssetId);
-            if (!(available > EPS)) return;
-            const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
-            const _price = +price;
-            const _quantity = +quantity;
-            const _quoteQty = +quoteQty;
+    const onHandleChange = (key, value, side) => {
+        const _isBuy = side === ExchangeOrderEnum.Side.BUY;
+        let _price = price;
+        if (isMarket) {
+            _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
+        }
+        let qty = 0;
+        switch (key) {
+            case 'price':
+                isFocus.current = key;
+                const quoteQty = floor(+quantity * value, decimals.price);
+                setQuoteQty(quoteQty);
+                setPrice(value);
+                break;
+            case 'percentage':
+                qty = roundToDown(((value / 100) * balance) / (_isBuy ? _price : 1), decimals.qty);
+                setQuantity(qty);
+                setPercentage(value);
+                break;
+            case 'quote':
+                if (isFocus.current !== key) return;
+                qty = floor((value / _price) * 1, decimals.qty);
+                setQuantity(qty);
+                setQuoteQty(value);
+                break;
+            default:
+                break;
+        }
+    };
 
-            const nextQuoteQty = floor(
-                _quantity *
-                    _price,
-                2,
-            );
-            setQuoteQty(nextQuoteQty);
-            if (orderSide === ExchangeOrderEnum.Side.BUY) {
-                const nextPercentage = ceil(nextQuoteQty / available, 0);
-                setPercentage(nextPercentage);
-            }
-
-            // setDebouncedValue(queryFilter);
-        },
-        100,
-        [orderSide, orderType, quantityMode, price],
-    );
-    useDebounce(
-        () => {
-            if (focus !== 'quantity') return;
-            if (!(baseAssetId && quoteAssetId)) return;
-
-            const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
-            let _price = +price;
-            if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                _price = +symbolTicker?.p ;
-            }
-            const _quantity = +quantity;
-            const _quoteQty = +quoteQty;
-
-            const nextQuoteQty = floor(
-                _quantity *
-                    _price,
-                2,
-            );
-            setQuoteQty(nextQuoteQty);
-            const available =
-                orderSide === ExchangeOrderEnum.Side.BUY
-                    ? getAvailable(quoteAssetId)
-                    : getAvailable(baseAssetId);
-
-            if (!(available > EPS)) return;
-            let nextPercentage = 0;
-            if (orderSide === ExchangeOrderEnum.Side.SELL) {
-                nextPercentage = ceil((_quantity / available) * 100, 0);
-            } else {
-                nextPercentage = ceil((nextQuoteQty / available) * 100, 0);
-            }
-            setPercentage(Math.min(nextPercentage, 100));
-        },
-        100,
-        [orderSide, orderType, quantityMode, quantity],
-    );
-    useDebounce(
-        () => {
-
-            if (focus !== 'quoteQty') return;
-            if (!(baseAssetId && quoteAssetId)) return;
-
-            const qtyDecimal = getDecimalScale(+quantityFilter?.stepSize);
-            let _price = +price;
-            const _quantity = +quantity;
-            const _quoteQty = +quoteQty;
-
-
-            if (orderType === ExchangeOrderEnum.Type.MARKET) {
-                _price = +symbolTicker?.p;
-            }
-
-            const nextQuantity = floor(
-                (_quoteQty / _price),
-                qtyDecimal,
-            );
-
-            setQuantity(nextQuantity);
-            let nextPercentage = 0;
-
-            const available =
-                orderSide === ExchangeOrderEnum.Side.BUY
-                    ? getAvailable(quoteAssetId)
-                    : getAvailable(baseAssetId);
-            if (!(available > EPS)) return;
-            if (orderSide === ExchangeOrderEnum.Side.SELL) {
-                nextPercentage = ceil((nextQuantity / available) * 100, 0);
-            } else {
-                nextPercentage = ceil((_quoteQty / available) * 100, 0);
-            }
-            setPercentage(Math.min(nextPercentage, 100));
-
-            // setDebouncedValue(queryFilter);
-        },
-        100,
-        [orderSide, orderType, quantityMode, quoteQty],
-    );
-
-    const _renderOrderSide = useMemo(() => {
+    const _renderOrderSide = () => {
         return (
             <div className="spot-place-orders-tabs mb-4">
-                <div
-                    className={
-                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--left' +
-                        (orderSide === ExchangeOrderEnum.Side.BUY
-                            ? ' active'
-                            : '')
-                    }
+                <ButtonClip
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.BUY)}
+                    mode={ExchangeOrderEnum.Side.BUY}
+                    active={orderSide === ExchangeOrderEnum.Side.BUY}
                 >
                     {t('common:buy')}
-                </div>
-                <svg
-                    className={`spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark arrow  ${
-                        orderSide === ExchangeOrderEnum.Side.SELL
-                            ? 'sell'
-                            : 'buy'
-                    }`}
-                    preserveAspectRatio="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                >
-                    <path fill={orderSide === ExchangeOrderEnum.Side.SELL ? '#E5544B' : '#00C8BC'} d="M32 0L18.1569 0C17.096 0 16.0786 0.421427 15.3284 1.17157L3.32842 13.1716C1.76633 14.7337 1.76633 17.2663 3.32843 18.8284L15.3284 30.8284C16.0786 31.5786 17.096 32 18.1569 32H32V0Z" />
-                </svg>
-                <div
-                    className={
-                        'spot-place-orders-tab bg-bgInput dark:bg-bgInput-dark capitalize text-txtSecondary dark:text-txtSecondary-dark block--right' +
-                        (orderSide === ExchangeOrderEnum.Side.SELL
-                            ? ' active'
-                            : '')
-                    }
+                </ButtonClip>
+                <ButtonClip
                     onClick={() => handleClickTab(ExchangeOrderEnum.Side.SELL)}
+                    mode={ExchangeOrderEnum.Side.SELL}
+                    active={orderSide === ExchangeOrderEnum.Side.SELL}
                 >
                     {t('common:sell')}
-                </div>
+                </ButtonClip>
             </div>
         );
-    }, [orderSide, t]);
+    };
+
+    const validatePrice = useMemo(() => {
+        return {
+            min: Math.max(priceFilter.minPrice, symbolTicker?.p * percentPriceFilter?.multiplierDown),
+            max: Math.max(priceFilter.maxPrice, symbolTicker?.p * percentPriceFilter?.multiplierUp)
+        };
+    }, [priceFilter, percentPriceFilter, symbolTicker]);
+
+    const validateTotal = (price) => {
+        const formatPrice = isMarket ? symbolTicker?.p : price;
+        return {
+            min: +minNotionalFilter?.minNotional,
+            max: balance * (isBuy ? 1 : formatPrice)
+        };
+    };
+
+    const validateAmount = (price) => {
+        if (!price) {
+            return {
+                min: quantityFilter?.minQty,
+                max: quantityFilter?.maxQty
+            };
+        }
+        const validate_limit = {
+            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty)),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? price : 1))), decimals.qty)
+        };
+        const validate_market = {
+            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / symbolTicker?.p).toFixed(decimals.qty), quantityMarketFilter?.minQty),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1))), decimals.qty)
+        };
+        return isMarket ? validate_market : validate_limit;
+    };
+
+    const notEnough = useMemo(() => {
+        const { min, max } = validateAmount(+price);
+        return max < min;
+    }, [price, orderSide, balance]);
+
+    const validator = (key, value, options) => {
+        let rs = { isValid: true, msg: '' };
+        let validate = {};
+        if (notEnough && (key === 'amount' || key === 'quote')) {
+            return {
+                isValid: false,
+                msg: ''
+            };
+        }
+        switch (key) {
+            case 'price':
+                if (value < validatePrice.min || value > validatePrice.max) {
+                    rs = {
+                        isValid: false,
+                        msg: textDescription(key, { min: validatePrice.min, max: validatePrice.max })
+                    };
+                }
+                break;
+            case 'amount':
+                validate = validateAmount(+price);
+                if (value < validate.min || value > validate.max) {
+                    rs = {
+                        isValid: false,
+                        msg: textDescription(key, { min: validate.min, max: validate.max })
+                    };
+                }
+                break;
+            case 'quote':
+                validate = validateTotal(+price);
+                if (value < validate.min || value > validate.max) {
+                    rs = {
+                        isValid: false,
+                        msg: textDescription(key, { min: validate.min, max: validate.max })
+                    };
+                }
+                break;
+            default:
+                break;
+        }
+        return rs;
+    };
+
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'price':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)} ${quote}`,
+                    max: `${t('common:max')}: ${formatNumber(data?.max, decimals.price)} ${quote}`
+                };
+                return `${rs.min} - ${rs.max}`;
+            case 'amount':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.qty)} ${base}`,
+                    max: `${t('common:max')}: ${formatNumber(data?.max, decimals.qty)} ${base}`
+                };
+                return `${rs.min} - ${rs.max}`;
+            case 'quote':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)} ${quote}`,
+                    max: `${t('common:max')}: ${formatNumber(data?.max, decimals.price)} ${quote}`
+                };
+                return `${rs.min} - ${rs.max}`;
+            default:
+                break;
+        }
+        return '';
+    };
 
     const _renderOrderType = useMemo(() => {
         const tabs = [];
-        // subTabs.forEach(tab => {
-        //     if (currentExchangeConfig?.orderTypes
-        //     && currentExchangeConfig?.orderTypes.includes(tab)
-        //     ) {
-        //         tabs.push(tab);
-        //     }
-        // });
-
-        subTabs.forEach(tab => {
+        subTabs.forEach((tab) => {
             tabs.push(tab);
         });
 
         return (
-            <ul className="tabs justify-start mb-4">
+            <div className="tabs justify-start mb-4">
                 {tabs.map((tab, index) => {
                     return (
-                        <li className={`tab-item px-2 font-medium ${orderType === tab ? 'active' : ''}`} key={index}>
-                            <a
-                                className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
-                                onClick={() => handleClickSubTab(tab)}
-                            > {orderTypeLabels[tab]}
-                            </a>
-                        </li>);
+                        <div className="px-2 w-1/2 !m-0">
+                            <div className={`tab-item  ${orderType === tab ? 'active' : ''}`} key={index}>
+                                <a
+                                    className={'tab-link text-txtSecondary dark:text-txtSecondary-dark ' + (orderType === tab ? 'active' : '')}
+                                    onClick={() => handleClickSubTab(tab)}
+                                >
+                                    {orderTypeLabels[tab]}
+                                </a>
+                            </div>
+                        </div>
+                    );
                 })}
-            </ul>
+            </div>
         );
     }, [orderType, t, currentExchangeConfig]);
 
     const _renderOrderPrice = () => {
         // if (orderType !== ExchangeOrderEnum.Type.LIMIT) return null;
         return (
-            <div className="flex justify-between items-center mb-2">
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">
-                                {t('common:price')}
-                            </div>
-                        </div>
-
-                        {orderType === ExchangeOrderEnum.Type.LIMIT && (
-                            <NumberFormat
-                                getInputRef={priceRef}
-                                className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                                name="stop_buy_input"
-                                thousandSeparator
-                                onFocus={() => {
-                                    setFocus('price');
-                                }}
-                                decimalScale={getDecimalScale(
-                                    +priceFilter?.tickSize,
-                                )}
-                                allowNegative={false}
-                                value={price}
-                                onValueChange={({ value }) => {
-                                    setPrice(value);
-                                }}
-                            />
-                        )}
-                        {orderType === ExchangeOrderEnum.Type.MARKET && (
-                            <input
-                                className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium"
-                                name="stop_buy_input"
-                                type="text"
-                                disabled
-                                value={t('spot:market')}
-                            />
-                        )}
-                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {quote}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div className="flex justify-between items-center mb-4">
+                <TradingInput
+                    label={t('common:price')}
+                    labelClassName="!text-sm !font-normal"
+                    value={isMarket ? t('spot:market') : price}
+                    onValueChange={({ value }) => {
+                        onHandleChange('price', value);
+                    }}
+                    name="stop_buy_input"
+                    disabled={isMarket}
+                    allowNegative={false}
+                    decimalScale={decimals.price}
+                    errorTooltip={false}
+                    validator={!isMarket && validator('price', price)}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{quote}</span>}
+                />
             </div>
         );
     };
 
-    const _renderQuantitySlider = useMemo(() => {
+    const _renderQuantitySlider = () => {
         return (
-            <div className="mt-6 mb-4 relative">
+            <div className="my-4 relative">
                 <InputSlider
                     axis="x"
+                    labelSuffix="%"
+                    useLabel
+                    positionLabel="top"
                     x={percentage}
-                    onDragStart={() => {
-                        setFocus('percentage');
-                        quantityRef?.current?.blur();
-                        priceRef?.current?.blur();
-                        quoteQtyRef?.current?.blur();
-                    }}
                     onChange={({ x }) => {
-                        // if (orderSide === ExchangeOrderEnum.Side.BUY) {
-                        //     setIsUseQuoteQuantity(true);
-                        // } else {
-                        //     setIsUseQuoteQuantity(false);
-                        // }
-                        setPercentage(x);
+                        onHandleChange('percentage', x, orderSide);
                     }}
                 />
             </div>
         );
-    }, [percentage, orderSide]);
+    };
 
-    const _renderOrderQuoteQty = useMemo(() => {
-        if (
-            orderType === ExchangeOrderEnum.Type.MARKET &&
-            quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY
-        ) { return null; }
+    const _renderOrderQuoteQty = () => {
+        if (isMarket && quantityMode.id !== ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) {
+            return null;
+        }
         return (
-            <div className="flex justify-between items-center mb-3">
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 w-[80px] flex  items-center">
-                            {/* {
-                                orderType === ExchangeOrderEnum.Type.MARKET && orderSide === ExchangeOrderEnum.Side.BUY
-                                    ? _renderQuantityMode
-                                    : <div className="text-sm text-black-500 font-medium ">{t('total')}</div>
-                            } */}
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">
-                                {t('total')}
-                            </div>
-                        </div>
-                        <NumberFormat
-                            getInputRef={quoteQtyRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                            name="quoteQty"
-                            onFocus={() => {
-                                setFocus('quoteQty');
-                            }}
-                            thousandSeparator
-                            decimalScale={2}
-                            allowNegative={false}
-                            value={quoteQty}
-                            // onChange={() => setIsUseQuoteQuantity(true)}
-                            onValueChange={({ value }) => setQuoteQty(value)}
-                        />
-
-                        <div className="input-group-append px-3 flex-shrink-0 w-[60px] flex justify-end items-center">
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {quote}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div className="flex justify-between items-center mb-4">
+                <TradingInput
+                    label={t('total')}
+                    labelClassName="!text-sm !font-normal"
+                    value={quoteQty}
+                    onFocus={() => (isFocus.current = 'quote')}
+                    onValueChange={({ value }) => onHandleChange('quote', value)}
+                    name="quoteQty"
+                    allowNegative={false}
+                    decimalScale={2}
+                    validator={validator('quote', quoteQty)}
+                    errorTooltip={false}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{quote}</span>}
+                />
             </div>
         );
-    }, [price, orderType, symbol, t, quoteQty, quantityMode]);
+    };
 
-    const _renderOrderQuantity = useMemo(() => {
+    const _renderOrderQuantity = () => {
         return (
-            <div className="flex justify-between items-center mb-3">
-                <div className="form-group w-full">
-                    <div className="input-group">
-                        <div className="input-group-prepend px-3 flex-shrink-0 flex  items-center">
-                            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">
-                                {t('common:amount')}
-                            </div>
-                        </div>
-                        <NumberFormat
-                            getInputRef={quantityRef}
-                            className="form-control form-control-sm !pr-0 !pl-2 text-right font-medium outline-none"
-                            name="quantity"
-                            onFocus={() => {
-                                setFocus('quantity');
-                            }}
-                            thousandSeparator
-                            decimalScale={getDecimalScale(
-                                +quantityFilter?.stepSize,
-                            )}
-                            allowNegative={false}
-                            value={quantity}
-                            // onChange={() => setIsUseQuoteQuantity(false)}
-                            onValueChange={({ value }) => setQuantity(value)}
-                        />
-
-                        <div className="input-group-append px-3 flex-shrink-0 flex justify-end items-center">
-                            <span className="input-group-text text-txtSecondary dark:text-txtSecondary-dark">
-                                {base}
-                            </span>
-                        </div>
-                    </div>
-                </div>
+            <div className="flex justify-between items-center mb-2">
+                <TradingInput
+                    label={t('common:amount')}
+                    labelClassName="!text-sm !font-normal"
+                    value={quantity}
+                    onFocus={() => (isFocus.current = 'qty')}
+                    onValueChange={({ value }) => setQuantity(value)}
+                    name="quantity"
+                    allowNegative={false}
+                    decimalScale={decimals.qty}
+                    validator={validator('amount', quantity)}
+                    errorTooltip={false}
+                    containerClassName="w-full dark:bg-dark-2"
+                    tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
+                    renderTail={() => <span className="flex items-center">{base}</span>}
+                />
             </div>
         );
-    }, [quantity, symbol, quantityMode, orderSide, orderType]);
+    };
 
     const _renderOrderValue = useMemo(() => {
         return <>{formatWallet(price * quantity)}</>;
     }, [price, quantity, symbol]);
 
     const _renderPlaceOrderButton = () => {
-        if (!user) {
-            return (
-                <div className="mt-6">
-                    <a
-                        href={getLoginUrl('sso')}
-                        className="btn w-full capitalize button-common block text-center"
-                    >
-                        {t('sign_in_to_continue')}
-                    </a>
-                </div>
-            );
-        }
-
+        const isError = !validator('amount', quantity)?.isValid || !validator('total', quoteQty)?.isValid || (!isMarket && !validator('price', price))?.isValid;
         return (
-            <div className="mt-6">
-                <button
-                    // onClick={() => (orderType === ExchangeOrderEnum.Type.LIMIT ? openModal() : (needConfirm === 'true' ? openModal() : confirmModal()))}
-                    onClick={confirmModal}
-                    type="button"
-                    disabled={
-                        placing || currentExchangeConfig?.status === 'MAINTAIN'
-                    }
-                    className={
-                        'btn w-full capitalize disabled:bg-black-400 ' +
-                        (orderSide === ExchangeOrderEnum.Side.BUY
-                            ? 'btn-green'
-                            : 'btn-red')
-                    }
-                >
-                    {t(orderSide)} {base}
-                </button>
-            </div>
+            <>
+                <div className="mt-8">
+                    {!user ? (
+                        <a
+                            href={getLoginUrl('sso')}
+                            className="btn w-full capitalize button-common block text-center"
+                            dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
+                        ></a>
+                    ) : (
+                        <ButtonV2
+                            onClick={confirmModal}
+                            disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
+                            className={isBuy ? 'bg-teal' : 'bg-red'}
+                        >
+                            {t(orderSide)} {base}
+                        </ButtonV2>
+                    )}
+                </div>
+            </>
         );
     };
 
@@ -795,25 +693,28 @@ const PlaceOrderForm = ({ symbol }) => {
         return (
             <>
                 <div className="flex justify-between items-center">
-                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark ">
-                        {t('spot:available_balance')}
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark flex items-center space-x-1">
+                        <span>{t('spot:available_balance')}</span>
+                        <Link href={`/wallet/exchange/deposit?type=crypto&asset=${currentExchangeConfig?.baseAsset}`}>
+                            <a target={'_blank'}>
+                                <AddCircle className="cursor-pointer" />
+                            </a>
+                        </Link>
                     </div>
-                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold text-right">
+                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary
-                            orderSide === ExchangeOrderEnum.Side.BUY
-                                ? quoteAssetId
-                                    ? getAvailableText(quoteAssetId)
-                                    : 0
-                                : baseAssetId
-                                    ? getAvailableText(baseAssetId)
-                                    : 0
+                            isBuy ? formatNumber(balance, 2) : formatNumber(balance, decimals.qty)
                         }{' '}
-                        {orderSide === ExchangeOrderEnum.Side.BUY
-                            ? quote
-                            : base}
+                        {isBuy ? quote : base}
                     </div>
                 </div>
+                {notEnough && (
+                    <div className="mt-2 space-x-1 flex items-center text-red text-xs">
+                        <ErrorTriggersIcon />
+                        <span>{t('error:BALANCE_NOT_ENOUGH')}</span>
+                    </div>
+                )}
             </>
         );
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -821,18 +722,24 @@ const PlaceOrderForm = ({ symbol }) => {
 
     return (
         <>
-            <div className="px-2.5 spot-place-orders-container rounded">
-                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark  my-4 dragHandleArea">
-                    {t('spot:place_order')}
-                </h3>
-                {_renderOrderSide}
+            <AlertModalV2
+                isVisible={showAlert}
+                onClose={() => setShowAlert(false)}
+                type={alert.current.type}
+                title={alert.current.title}
+                message={alert.current.message}
+                notes={alert.current.notes}
+            />
+            <div className="py-6 px-4 spot-place-orders-container rounded">
+                <h3 className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark mb-6 dragHandleArea">{t('spot:place_order')}</h3>
+                {_renderOrderSide()}
                 {_renderOrderType}
 
                 <div className="tab-content">
                     {_renderOrderPrice()}
-                    {_renderOrderQuantity}
-                    {_renderQuantitySlider}
-                    {_renderOrderQuoteQty}
+                    {_renderOrderQuantity()}
+                    {_renderQuantitySlider()}
+                    {_renderOrderQuoteQty()}
                     {currentExchangeConfig?.status === 'MAINTAIN' && (
                         <p className="text-sm mb-3 flex">
                             <span className="mr-2">
@@ -841,7 +748,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             <span>
                                 {t('spot:pair_under_maintenance', {
                                     base: symbol?.base,
-                                    quote: symbol?.quote,
+                                    quote: symbol?.quote
                                 })}
                             </span>
                         </p>

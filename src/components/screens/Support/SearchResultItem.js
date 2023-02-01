@@ -7,8 +7,9 @@ import Skeletor from 'components/common/Skeletor';
 import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import Parse from 'html-react-parser';
+import _ from 'lodash';
 
-const SearchResultItem = memo(({ article, loading = false }) => {
+const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const { width } = useWindowSize()
     const { t, i18n: { language } } = useTranslation()
 
@@ -34,7 +35,17 @@ const SearchResultItem = memo(({ article, loading = false }) => {
         )
     }
 
- 
+    const getHighlightedText = (text, highlight) => {
+        // Split on highlight term and include term into parts, ignore case
+        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+        return parts.map((part, i) =>
+            <span key={i} style={part.toLowerCase() === highlight?.toLowerCase() ? { color: '#47cc85' } : {}}>
+                {Parse(part)}
+            </span>)
+
+    }
+
+
 
     const buildArticleUrl = () => {
         const isFaq = !!article?.tags.filter(o => o.slug === 'faq' || o.slug.includes('faq-'))?.length
@@ -54,31 +65,33 @@ const SearchResultItem = memo(({ article, loading = false }) => {
         <div className="mb-6 lg:mb-9">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href={buildArticleUrl()}>
-                    <a target='_blank' className="font-bold text-sm lg:text-[18px] hover:text-dominant hover:!underline cursor-pointer">
+                    <a target='_blank' className="text-gray-4 font-medium text-[20px] leading-7 cursor-pointer">
                         {loading ?
-                            <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full"/>
-                            </div> : article?.title}
+                            <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
+                            </div> : getHighlightedText(article?.title, keyword)}
                     </a>
                 </Link>
                 <div className="font-bold text-[10px] text-txtSecondary dark:text-txtSecondary-dark">
                     {loading ?
-                        <div className="hidden md:block md:!w-[100px]"><Skeletor className="!w-full" height={15}/>
+                        <div className="hidden md:block md:!w-[100px]"><Skeletor className="!w-full" height={15} />
                         </div> : formatTime(article?.raw_data?.created_at, 'dd-MM-yyyy')}
                 </div>
             </div>
             <div
-                className="mt-2.5 overflow-hidden font-medium text-xs lg:text-sm lg:mt-4 md:text-txtSecondary md:dark:text-txtSecondary-dark">
+                className="mt-2 text-darkBlue-5 font-normal text-sm leading-5">
                 {loading ?
                     <>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
-                        <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
+                        <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
                     </>
-                    : Parse(article?.html?.substring(0, 240)?.trim() + '...')}
+                    : getHighlightedText(article?.html?.substring(0, 240)?.trim() + '...', keyword)}
+
+
             </div>
             <div className="mt-2.5 flex items-center text-[10px] lg:text-sm font-medium">
                 {loading ?
-                    <div className="!min-w-[80px] lg:!w-[120px] xl:!w-[200px]"><Skeletor className="!w-full" height={15}/></div>
+                    <div className="!min-w-[80px] lg:!w-[120px] xl:!w-[200px]"><Skeletor className="!w-full" height={15} /></div>
                     : <>
                         {getTopics(article?.raw_data?.primary_tag)}
                         {/* {getCategory(article?.raw_data?.primary_tag, article?.raw_data?.tags)} */}
@@ -90,3 +103,18 @@ const SearchResultItem = memo(({ article, loading = false }) => {
 })
 
 export default SearchResultItem
+
+const Highlighted = ({ text = '', highlight = '' }) => {
+    if (!highlight.trim()) {
+        return <span>{text}</span>
+    }
+    const regex = new RegExp(`(${_.escapeRegExp(highlight)})`, 'gi')
+    const parts = text.split(regex)
+    return (
+        <span>
+            {parts.filter(part => part).map((part, i) => (
+                regex.test(part) ? <mark key={i}>{part}</mark> : <span key={i}>{part}</span>
+            ))}
+        </span>
+    )
+}

@@ -873,3 +873,9 @@ export const TransactionCategory = {
     CONTEST_REWARD: 612,
     REWARD_CENTER: 801,
 };
+
+
+export const rateCurrency={
+    VNDC:23415,
+    USDT:1
+}

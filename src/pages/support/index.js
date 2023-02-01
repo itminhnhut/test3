@@ -305,8 +305,10 @@ export const SearchSection = ({ t, width }) => {
             }}
         >
             <div className='max-w-[1440px] w-full px-10 lg:px-[112px] flex flex-col justify-center h-full'>
-                <div className='font-bold text-[20px] h-6 lg:text-[44px] lg:h-12 text-white mb-12'>
-                    {t('support-center:title')}
+                <div className='font-bold text-[20px] h-6 lg:text-[44px] lg:h-12 text-white mb-12 w-fit'>
+                    <a href='/support'>
+                        {t('support-center:title')}
+                    </a>
                 </div>
                 {renderInput()}
             </div>

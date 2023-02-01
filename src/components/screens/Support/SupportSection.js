@@ -23,7 +23,7 @@ const SupportSection = ({
         <div className={classNames('', containerClassNames)}>
             {title &&
                 <div
-                    className="text-namiv2-gray-2 text-[32px] font-semibold leading-[38px]">
+                    className="text-namiv2-gray-2 text-[32px] font-semibold leading-[38px] cursor-pointer">
                     {href ? <Link href={href}>
                         <a className="">
                             {title}

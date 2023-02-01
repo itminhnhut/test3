@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import qs from 'qs';
 import format from 'date-fns/format';
 import numeral from 'numeral';
@@ -15,18 +15,22 @@ import {
     LoginButtonPosition,
     TokenConfigV1 as TokenConfig,
     TradingViewSupportTimezone,
-    WalletType
+    WalletType,
+    rateCurrency
 } from './const';
 import { SET_BOTTOM_NAVIGATION, SET_TRANSFER_MODAL, UPDATE_DEPOSIT_HISTORY } from 'redux/actions/types';
-
+import { API_GET_REFERENCE_CURRENCY } from 'redux/actions/apis';
+import fetchAPI from 'utils/fetch-api';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { PATHS } from 'constants/paths';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { ChevronDown, ChevronUp } from 'react-feather';
 
 const WAValidator = require('multicoin-address-validator');
 const EthereumAddress = require('ethereum-address');
+import ChevronDown from 'src/components/svg/ChevronDown';
+import colors from 'styles/colors';
+import { useTranslation } from 'next-i18next';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -37,16 +41,10 @@ export function scrollHorizontal(el, parentEl) {
         border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
 
     const rect = el.getBoundingClientRect();
-    const {
-        left,
-        right,
-        bottom,
-        top,
-        width
-    } = parentEl.getBoundingClientRect();
+    const { left, right, bottom, top, width } = parentEl.getBoundingClientRect();
     // const inView = rect.left >= left && rect.right <= right
     // const position = rect.left < left ? 0 : rect.right;
-    const center = (rect.left + parentEl.scrollLeft + margin + padding + border) - (width / 2);
+    const center = rect.left + parentEl.scrollLeft + margin + padding + border - width / 2;
     parentEl.scrollTo({
         left: center,
         behavior: 'smooth'
@@ -69,8 +67,7 @@ export const getDecimalScale = memoize((value = 0.00000001) => {
 export const countDecimals = function (value) {
     if (Math.floor(value) === value) return 0;
 
-    var str = Number(value)
-        ?.toString();
+    var str = Number(value)?.toString();
     if (str?.indexOf('.') !== -1 && str?.indexOf('-') !== -1) {
         return str?.split('-')[1] || 0;
     } else if (str?.indexOf('.') !== -1) {
@@ -82,11 +79,9 @@ export const countDecimals = function (value) {
 export const formatSwapRate = (value, scaleMore = 2) => {
     if (!value) return;
     let x;
-    if (value.toString()
-        .includes('e')) {
+    if (value.toString().includes('e')) {
         const last = getDecimalScale(eToNumber(value)) + scaleMore;
-        x = eToNumber(value)
-            .substring(0, last);
+        x = eToNumber(value).substring(0, last);
     } else {
         x = formatSwapValue(value);
     }
@@ -103,30 +98,19 @@ export const formatCurrency = (n, digits = 4, vi = false) => {
 };
 
 export function eToNumber(value) {
-    let sign = ''
+    let sign = '';
 
-        ; (value += '').charAt(0) === '-' &&
-            ((value = value?.toString()
-                .substring(1)), (sign = '-'));
-    let arr = value?.toString()
-        .split(/[e]/gi);
+    (value += '').charAt(0) === '-' && ((value = value?.toString().substring(1)), (sign = '-'));
+    let arr = value?.toString().split(/[e]/gi);
     if (arr.length < 2) return sign + value;
-    let dot = (0.1).toLocaleString()
-        .substr(1, 1),
+    let dot = (0.1).toLocaleString().substr(1, 1),
         n = arr[0],
         exp = +arr[1],
         w = (n = n.replace(/^0+/, '')).replace(dot, ''),
         pos = n.split(dot)[1] ? n.indexOf(dot) + exp : w.length + exp,
         L = pos - w.length,
         s = '' + BigInt(w);
-    w =
-        exp >= 0
-            ? L >= 0
-                ? s + '0'.repeat(L)
-                : r()
-            : pos <= 0
-                ? '0' + dot + '0'.repeat(Math.abs(pos)) + s
-                : r();
+    w = exp >= 0 ? (L >= 0 ? s + '0'.repeat(L) : r()) : pos <= 0 ? '0' + dot + '0'.repeat(Math.abs(pos)) + s : r();
     L = w.split(dot);
     if ((L[0] === 0 && L[1] === 0) || (+w === 0 && +s === 0)) w = 0; //** added 9/10/2021
     return sign + w;
@@ -138,15 +122,12 @@ export function eToNumber(value) {
 
 export const getDecimalSpotPrice = memoize(
     (symbol = '') => {
-        const configs = store()
-            .getState()?.utils?.exchangeConfig || null;
+        const configs = store().getState()?.utils?.exchangeConfig || null;
         if (isArray(configs)) {
             const config = configs.find((e) => e?.symbol === symbol);
             if (config) {
                 const filter = getFilter('PRICE_FILTER', config);
-                return +filter?.tickSize
-                    ? getDecimalScale(+filter?.tickSize)
-                    : 6;
+                return +filter?.tickSize ? getDecimalScale(+filter?.tickSize) : 6;
             }
         }
         return 6;
@@ -164,35 +145,24 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
             utm_medium: 'direct',
             utm_campaign: 'nami.exchange',
             utm_content: LoginButtonPosition.WEB_HEADER,
-            mobile_web: false,
+            mobile_web: false
         });
 
-        const referral =
-            sessionStorage && sessionStorage.getItem('refCode')
-                ? sessionStorage.getItem('refCode')
-                : _options.referral;
+        const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
         params = {
             ..._options,
-            referral,
+            referral
         };
         params = defaults(params, { redirect: process.env.APP_URL });
 
         switch (mode) {
             case 'sso':
                 if (action === 'register') {
-                    return `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                        '/en',
-                        ''
-                    )
-                        .replace('/vi', '')}/register/nami?${qs.stringify(params)}`;
+                    return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/register/nami?${qs.stringify(params)}`;
                     // return `${___DEV___ ? 'https://auth-test.nami.trade' : 'https://auth.nami.io'}/register?${qs.stringify(params)}`;
                 }
-                return `${process.env.NEXT_PUBLIC_API_URL?.replace(
-                    '/en',
-                    ''
-                )
-                    .replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
+                return `${process.env.NEXT_PUBLIC_API_URL?.replace('/en', '').replace('/vi', '')}/login/nami?${qs.stringify(params)}`;
 
             default:
                 break;
@@ -233,86 +203,61 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
+    return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 0.01) return '< 0.01';
-    return numeral(+value)
-        .format('0,0.[00]', Math.floor);
+    return numeral(+value).format('0,0.[00]', Math.floor);
 }
 
 export function formatPercentage(value, digits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-2) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
+    return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
-export function formatWallet(
-    value,
-    additionDigits = 2,
-    acceptNegative = false
-) {
+export function formatWallet(value, additionDigits = 2, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format(
-            `0,0.00[${'0'.repeat(additionDigits)}]`,
-            Math.floor
-        );
+    return numeral(+value).format(`0,0.00[${'0'.repeat(additionDigits)}]`, Math.floor);
 }
 
 export function formatPrice(price = 0, configs = [], assetCode = '') {
     if (isArray(configs)) {
-        const asset = configs.find(
-            (e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase()
-        );
+        const asset = configs.find((e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase());
         if (asset) {
-            return numeral(+price)
-                .format(
-                    `0,0.[${'0'.repeat(asset.assetDigit)}]`
-                );
+            return numeral(+price).format(`0,0.[${'0'.repeat(asset.assetDigit)}]`);
         }
     }
     if (isNumber(configs)) {
-        return numeral(+price)
-            .format(`0,0.[${'0'.repeat(configs)}]`);
+        return numeral(+price).format(`0,0.[${'0'.repeat(configs)}]`);
     }
 
-    return numeral(+price)
-        .format('0,0.[000000]');
+    return numeral(+price).format('0,0.[000000]');
 }
 
 export function formatSpotPrice(price = 0, symbol = '') {
-    return numeral(+price)
-        .format(
-            `0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`
-        );
+    return numeral(+price).format(`0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`);
 }
 
 export function randomString(length = 15) {
     let result = '';
-    const characters =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
     for (let i = 0; i < length; ++i) {
-        result += characters.charAt(
-            Math.floor(Math.random() * charactersLength)
-        );
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
 }
 
 // Format cho ca gia va so luong
 export function formatSwapValue(price = 0) {
-    return numeral(+price)
-        .format('0,0.[00000000]');
+    return numeral(+price).format('0,0.[00000000]');
 }
 
 export function isInvalidPrecision(value, precision) {
@@ -321,27 +266,15 @@ export function isInvalidPrecision(value, precision) {
 }
 
 export function formatNumberToText(value = 0) {
-    return numeral(+value)
-        .format('0,00a');
+    return numeral(+value).format('0,00a');
 }
 
-export function formatNumber(
-    value,
-    digits = 2,
-    forceDigits = 0,
-    acceptNegative = false
-) {
-    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''
-        }`;
+export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
+    const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
     if (isNil(value)) return defaultValue;
     if (Math.abs(+value) < 1e-9) return defaultValue;
     if (!acceptNegative && +value < 0) return defaultValue;
-    return numeral(+value)
-        .format(
-            `0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''
-            }`,
-            Math.floor
-        );
+    return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
 
 export function scrollFocusInput() {
@@ -353,11 +286,7 @@ export function scrollFocusInput() {
 export function getExchange24hPercentageChange(price) {
     let change24h;
     if (price) {
-        const {
-            p: lastPrice,
-            ld: lastPrice24h,
-            q: quoteAsset
-        } = price;
+        const { p: lastPrice, ld: lastPrice24h, q: quoteAsset } = price;
         if (lastPrice && lastPrice24h) {
             change24h = ((lastPrice - lastPrice24h) / lastPrice24h) * 100;
         } else if (lastPrice && !lastPrice24h) {
@@ -370,53 +299,32 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker, isNamiV2 = false) {
+export function render24hChange(ticker, showPrice = false) {
     const change24h = getExchange24hPercentageChange(ticker);
-    let text;
+    let percent, priceChange;
     let className = '';
-    let icon = null
-    if (change24h != null) {
-        let sign;
+    let negative = false;
+    if (change24h) {
+        priceChange = (change24h * ticker.ld) / 100;
         if (change24h > 0) {
-            sign = '+';
-            icon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#c7vw939r4a)">
-                    <path d="M11.333 9.333 8 6 4.667 9.333h6.666z" fill="#47CC85" />
-                </g>
-                <defs>
-                    <clipPath id="c7vw939r4a">
-                        <path fill="#fff" transform="rotate(-180 8 8)" d="M0 0h16v16H0z" />
-                    </clipPath>
-                </defs>
-            </svg>
-            className += isNamiV2 ? ' text-namiv2-green' : ' text-teal';
+            className += ' text-teal';
         } else if (change24h < 0) {
-            sign = '';
-            icon = <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#9w53cqcj6a)">
-                    <path d="M4.667 6.667 8 10l3.333-3.333H4.667z" fill="#F93636" />
-                </g>
-                <defs>
-                    <clipPath id="9w53cqcj6a">
-                        <path fill="#fff" d="M0 0h16v16H0z" />
-                    </clipPath>
-                </defs>
-            </svg>
-            className += isNamiV2 ? ' text-namiv2-red' : ' text-red';
-        } else {
-            sign = '';
+            negative = true;
+            className += ' text-red';
         }
-        if (!isNamiV2) {
-            icon = null
-        } else {
-            sign = ''
-        }
-        text = `${sign}${formatPercentage(change24h, 2, true)}%`;
-    } else {
-        text = '-';
-    }
 
-    return <span className={`${className} ${isNamiV2 ? 'flex space-x-[2px] justify-end' : ''} items-center`}>{icon}&nbsp;{text}</span>;
+        percent = `${formatPercentage(Math.abs(change24h), 2, true)}%`;
+    } else {
+        percent = '-';
+    }
+    return (
+        <div className={`${className} text-xs space-x-2 flex font-semibold`}>
+            {showPrice && <span>{formatNumber(priceChange, ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
+            <span className="flex items-center">
+                <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> {percent}
+            </span>
+        </div>
+    );
 }
 
 export function getS3Url(url) {
@@ -430,8 +338,7 @@ export function getV1Url(url) {
 function encodeData(data) {
     return Object.keys(data)
         .map((key) => {
-            return [key, data[key]].map(encodeURIComponent)
-                .join('=');
+            return [key, data[key]].map(encodeURIComponent).join('=');
         })
         .join('&');
 }
@@ -440,18 +347,14 @@ export function getSparkLine(symbol, color = '#00C8BC', resolution) {
     const query = {
         symbol,
         broker: 'NAMI_SPOT',
-        color,
+        color
     };
     if (resolution) query.resolution = resolution;
-    return (
-        process.env.NEXT_PUBLIC_PRICE_API_URL +
-        `/api/v1/chart/sparkline?${encodeData(query)}`
-    );
+    return process.env.NEXT_PUBLIC_PRICE_API_URL + `/api/v1/chart/sparkline?${encodeData(query)}`;
 }
 
 export const getAssetCode = (assetId) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig.assetCode;
@@ -460,8 +363,7 @@ export const getAssetCode = (assetId) => {
 };
 
 export const getAssetName = (assetId) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { id: assetId });
     if (assetConfig) {
         return assetConfig.assetName;
@@ -470,8 +372,7 @@ export const getAssetName = (assetId) => {
 };
 
 export const getAssetId = (assetCode) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
     if (assetConfig) {
         return assetConfig.id;
@@ -480,8 +381,7 @@ export const getAssetId = (assetCode) => {
 };
 
 export const getAssetFromCode = (assetCode) => {
-    const configs = store()
-        .getState()?.utils?.assetConfig || null;
+    const configs = store().getState()?.utils?.assetConfig || null;
     const assetConfig = find(configs, { assetCode });
     if (assetConfig) {
         return assetConfig;
@@ -498,13 +398,12 @@ export function renderName(assetCode, configs) {
 }
 
 export function safeToFixed(value, digits = 2) {
-    return numeral(+value)
-        .format(`0.[${'0'.repeat(digits)}]`, Math.trunc);
+    return numeral(+value).format(`0.[${'0'.repeat(digits)}]`, Math.trunc);
 }
 
 export function getTradingViewTimezone() {
     const timezone = find(TradingViewSupportTimezone, {
-        offset: -new Date().getTimezoneOffset(),
+        offset: -new Date().getTimezoneOffset()
     });
     return timezone ? timezone.timezone : 'America/New_York';
 }
@@ -527,13 +426,7 @@ export function getPercentageOf(a, b) {
         sign = '';
         className = 'text-red';
     }
-    return (
-        <span className={className}>{`${sign}${formatPercentage(
-            percentage,
-            2,
-            true
-        )}%`}</span>
-    );
+    return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
 
 export function getChangePercentage(from, to) {
@@ -554,32 +447,21 @@ export function getChangePercentage(from, to) {
         sign = '';
         className = 'text-red';
     }
-    return (
-        <span className={className}>{`${sign}${formatPercentage(
-            percentage,
-            2,
-            true
-        )}%`}</span>
-    );
+    return <span className={className}>{`${sign}${formatPercentage(percentage, 2, true)}%`}</span>;
 }
 
 export function formatWalletWithoutDecimal(value, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value)
-        .format('0,0', Math.floor);
+    return numeral(+value).format('0,0', Math.floor);
 }
 
-export function formatWalletReverseWithoutDecimal(
-    value,
-    acceptNegative = false
-) {
+export function formatWalletReverseWithoutDecimal(value, acceptNegative = false) {
     if (isNil(value)) return '0';
     if (Math.abs(+value) < 1e-8) return '0';
     if (!acceptNegative && +value < 0) return '0';
-    return numeral(+value * -1)
-        .format('0,0', Math.floor);
+    return numeral(+value * -1).format('0,0', Math.floor);
 }
 
 export function roundByWithdraw(val, roundByValue) {
@@ -593,16 +475,10 @@ export function formatAbbreviateNumber(num, fixed) {
 
     // eslint-disable-next-line no-param-reassign
     fixed = !fixed || fixed < 0 ? 0 : fixed; // number of decimal places to show
-    const b = Number(num)
-        .toPrecision(2)
-        .split('e'); // get power
+    const b = Number(num).toPrecision(2).split('e'); // get power
     const k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3); // floor at decimals, ceiling at trillions
     // eslint-disable-next-line no-restricted-properties
-    const c =
-        k < 1
-            ? Number(num)
-                .toFixed(0 + fixed)
-            : (Number(num) / Math.pow(10, k * 3)).toFixed(1 + fixed); // divide by power
+    const c = k < 1 ? Number(num).toFixed(0 + fixed) : (Number(num) / Math.pow(10, k * 3)).toFixed(1 + fixed); // divide by power
     const d = c < 0 ? c : Math.abs(c); // enforce -0 is 0
     const e = (+d).toLocaleString() + ['', 'K', 'M', 'B', 'T'][k]; // append power
     // if (e === 'NaN' || Number.isNaN(e)) {
@@ -659,9 +535,7 @@ export function hashValidator(hash, type) {
 
 export const shortHashAddress = (address, first, last) => {
     if (!address) return;
-    return `${address?.substring(0, first)}...${address.substring(
-        address.length - last
-    )}`;
+    return `${address?.substring(0, first)}...${address.substring(address.length - last)}`;
 };
 
 export function buildExplorerUrl(value, tokenNetwork) {
@@ -719,10 +593,7 @@ export function buildBinanceExplorerUrl(addressOrTxhash) {
         } else {
             return `https://explorer.binance.org/tx/${addressOrTxhash}`;
         }
-    } else if (
-        addressOrTxhash.startsWith('tbnb') ||
-        addressOrTxhash.startsWith('bnb')
-    ) {
+    } else if (addressOrTxhash.startsWith('tbnb') || addressOrTxhash.startsWith('bnb')) {
         // Address
         if (network) {
             return `https://${network}-explorer.binance.org/address/${addressOrTxhash}`;
@@ -883,7 +754,7 @@ export function updateOrInsertDepositHistory(searchCriteria, history) {
     return {
         type: UPDATE_DEPOSIT_HISTORY,
         criteria: searchCriteria,
-        payload: history,
+        payload: history
     };
 }
 
@@ -891,11 +762,9 @@ export function walletLinkBuilder(walletType, action, payload) {
     if (walletType === WalletType.SPOT) {
         switch (action) {
             case EXCHANGE_ACTION.DEPOSIT:
-                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'
-                    }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             case EXCHANGE_ACTION.WITHDRAW:
-                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'
-                    }&asset=${payload?.asset || 'USDT'}`;
+                return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
             default:
                 return '';
         }
@@ -916,7 +785,7 @@ export function setTransferModal(payload) {
 
     return {
         type: SET_TRANSFER_MODAL,
-        payload,
+        payload
     };
 }
 
@@ -955,7 +824,7 @@ export const secondToMinutesAndSeconds = (time) => {
             hours,
             minutes,
             seconds
-        }),
+        })
     };
 };
 
@@ -970,27 +839,12 @@ export const getPriceColor = (value, onusMode = false) => {
 const BASE_ASSET = ['VNDC', 'USDT'];
 
 export const getSymbolObject = (symbol) => {
-    if (
-        !symbol ||
-        [
-            'USDTVNDC',
-            'VNDCUSDT',
-            'VNDC/USDT',
-            'USDT/VNDC',
-            'VNDC/',
-            'USDT/',
-        ].includes(symbol)
-    ) {
+    if (!symbol || ['USDTVNDC', 'VNDCUSDT', 'VNDC/USDT', 'USDT/VNDC', 'VNDC/', 'USDT/'].includes(symbol)) {
         log?.d(`Symbol not support`);
         return;
     }
 
-    if (
-        symbol?.includes('/VNDC') ||
-        symbol?.includes('/USDT') ||
-        symbol?.includes('VNDC') ||
-        symbol?.includes('USDT')
-    ) {
+    if (symbol?.includes('/VNDC') || symbol?.includes('/USDT') || symbol?.includes('VNDC') || symbol?.includes('USDT')) {
         let baseAsset = '',
             quoteAsset = '';
 
@@ -1012,7 +866,7 @@ export const getSymbolObject = (symbol) => {
         return {
             symbol,
             baseAsset,
-            quoteAsset,
+            quoteAsset
         };
     }
 
@@ -1022,7 +876,7 @@ export const getSymbolObject = (symbol) => {
 export const setBottomTab = (tab) => async (dispatch) => {
     dispatch({
         type: SET_BOTTOM_NAVIGATION,
-        payload: tab,
+        payload: tab
     });
 };
 
@@ -1034,16 +888,10 @@ export const emitWebViewEvent = (event) => {
 };
 
 export const getLiquidatePrice = (order = {}, activePrice = 0) => {
-
     let liquidatePrice = 0;
-    const {
-        side,
-        quantity: size,
-        leverage,
-        quoteQty,
-    } = order;
-    const _size = (side === VndcFutureOrderType.Side.SELL ? -size : size);
-    const _sign = (side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+    const { side, quantity: size, leverage, quoteQty } = order;
+    const _size = side === VndcFutureOrderType.Side.SELL ? -size : size;
+    const _sign = side === VndcFutureOrderType.Side.SELL ? -1 : 1;
     const margin = quoteQty / leverage;
     const feeRatio = DefaultFuturesFee.NamiFrameOnus;
     liquidatePrice = (_size * activePrice + quoteQty * feeRatio - margin) / (size * (_sign - feeRatio));
@@ -1052,17 +900,17 @@ export const getLiquidatePrice = (order = {}, activePrice = 0) => {
 
 export const getSuggestSl = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
     if (side == VndcFutureOrderType.Side.BUY) {
-        return (-profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((-profitRatio * activePrice) / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
     } else {
-        return (-profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((-profitRatio * activePrice) / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
     }
 };
 
 export const getSuggestTp = (side, activePrice = 0, leverage = 10, profitRatio = 0.6) => {
     if (side == VndcFutureOrderType.Side.BUY) {
-        return (profitRatio * activePrice / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((profitRatio * activePrice) / leverage + activePrice * (1 + DefaultFuturesFee.NamiFrameOnus)) / (1 - DefaultFuturesFee.NamiFrameOnus);
     } else {
-        return (profitRatio * activePrice / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
+        return ((profitRatio * activePrice) / leverage - activePrice * (1 - DefaultFuturesFee.NamiFrameOnus)) / (-1 - DefaultFuturesFee.NamiFrameOnus);
     }
 };
 
@@ -1071,20 +919,15 @@ export const checkInFundingTime = () => {
     const hour = now.getUTCHours();
     const min = now.getMinutes();
     return (min === 0 && hour % 8 === 0) || (min >= 50 && hour % 8 === 7);
-
 };
 
-export const Countdown = ({
-    date,
-    onEnded,
-    isDays = false
-}) => {
+export const Countdown = memo(({ date, onEnded, isDays = false }) => {
     const timer = useRef(null);
     const [count, setCount] = useState({
         days: 0,
         hours: '00',
         minutes: '00',
-        seconds: '00',
+        seconds: '00'
     });
 
     const formatN = (number) => {
@@ -1133,7 +976,7 @@ export const Countdown = ({
             {isDays ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
         </>
     );
-};
+});
 
 export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';
@@ -1143,6 +986,47 @@ export function checkLargeVolume(notional, isVndc = true) {
     if (isVndc) {
         return notional >= 600e6;
     } else {
-        return notional >= 30e3
+        return notional >= 30e3;
     }
 }
+
+export const RefCurrency = ({ price, quoteAsset }) => {
+    const [referencePrice, setReferencePrice] = useState([]);
+
+    useEffect(() => {
+        fetchAPI({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: { base: 'VNDC,USDT', quote: 'USD' }
+        })
+            .then(({ data = [] }) => {
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price
+                        };
+                    }, {})
+                );
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
+    return `$${formatPrice(quoteAsset === 'VNDC' ? price / rateCurrency[quoteAsset] : referencePrice[`${quoteAsset}/USD`] * price, 4)}`;
+};
+
+export const TypeTable = ({ type, data }) => {
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const str = String(data[type]).toUpperCase();
+    const color = str === 'SELL' ? 'text-red' : 'text-teal';
+    switch (type) {
+        case 'side':
+            return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;
+        case 'type':
+            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : str;
+        default:
+            return null;
+    }
+};

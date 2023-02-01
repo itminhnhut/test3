@@ -1,217 +1,119 @@
 import AssetLogo from 'src/components/wallet/AssetLogo';
-import { tableStyle } from 'config/tables';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
 import AuthSelector from 'redux/selectors/authSelectors';
-import { formatWallet } from 'src/redux/actions/utils';
-import TableNoData from '../common/table.old/TableNoData';
-import TableLoader from '../loader/TableLoader';
+import { formatNumber } from 'src/redux/actions/utils';
+import TableV2 from '../common/V2/TableV2';
 
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
 
-    const assetConfig = useSelector(state => state.utils.assetConfig);
-    const spotWallet = useSelector(state => state?.wallet?.SPOT) || null;
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+    const spotWallet = useSelector((state) => state?.wallet?.SPOT) || null;
     const [wallet, setWallet] = useState([]);
     const [loading, setLoading] = useState(false);
     const isAuth = useSelector(AuthSelector.isAuthSelector);
 
-    const { currentPair, filterByCurrentPair, darkMode } = props;
+    const { currentPair, filterByCurrentPair, isPro } = props;
 
     useEffect(() => {
         if (assetConfig && assetConfig.length && Object.keys(spotWallet).length) {
-            let _newWallet = []
+            let _newWallet = [];
 
-            assetConfig.map(config => {
-                if(config?.id && spotWallet && spotWallet?.[config?.id]?.value > 0.000001){
+            assetConfig.map((config) => {
+                if (config?.id && spotWallet && spotWallet?.[config?.id]?.value > 0.000001) {
                     _newWallet.push({
                         ...config,
                         ...spotWallet?.[config?.id]
-                    })
+                    });
                 }
             });
 
-            setWallet(_newWallet)
+            setWallet(_newWallet);
         }
+    }, [spotWallet, assetConfig]);
 
-    }, [spotWallet, assetConfig])
-
-    const customStyles = {
-        ...tableStyle,
-        table: {
-            style: {
-                ...tableStyle.table?.style,
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                minHeight: loading ? 0 : '200px',
-            },
-        },
-        headCells: {
-            style: {
-                ...tableStyle.headCells?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                padding: 0,
-            },
-            activeSortStyle: {
-                cursor: 'pointer',
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-            },
-            inactiveSortStyle: {
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-            },
-        },
-        headRow: {
-            style: {
-                ...tableStyle.headRow?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-            },
-        },
-        rows: {
-            style: {
-                ...tableStyle.rows?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                '&:hover': {
-                    background: darkMode ? '#212537' : '#F6F9FC',
-                },
-            },
-        },
-        cells: {
-            style: {
-                ...tableStyle.cells?.style,
-                color: darkMode ? '#DBE3E6' : '#02083D',
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#02083D',
-                },
-            },
-        },
-        pagination: {
-            style: {
-                ...tableStyle.pagination?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-            },
-            pageButtonsStyle: {
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
-                '&:hover:not(:disabled)': {
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
-                    fill: darkMode ? '#8B8C9B' : '#d1d1d1',
-                },
-            },
-        },
+    const renderActions = () => {
+        return (
+            <div className={`flex items-center text-teal divide-x divide-divider-dark`}>
+                <span className="cursor-pointer pr-3">Mua</span>
+                <span className="cursor-pointer px-3">Nạp</span>
+                <span className="cursor-pointer px-3">Rút</span>
+                <span className="cursor-pointer pl-3">Chuyển đổi</span>
+            </div>
+        );
     };
 
-    const columns = useMemo(() => [
-        {
-            name: t('common:asset'),
-            selector: 'assetCode',
-            sortable: true,
-            ignoreRowClick: true,
-            cell: (row) => (
-                <div className="flex items-center">
-                    <div className="mr-4">
-                        <AssetLogo assetCode={row?.assetCode} size={16} />
+    const columns = useMemo(
+        () => [
+            {
+                key: 'assetCode',
+                title: t('common:asset'),
+                dataIndex: 'assetCode',
+                width: 150,
+                render: (v, row) => (
+                    <div className="flex items-center space-x-4 py-4">
+                        <AssetLogo assetCode={row?.assetCode} size={32} />
+                        <div className="flex flex-col space-y-1">
+                            <span className="font-semibold text-sm">{row?.assetCode}</span>
+                            <span className="text-xs text-txtSecondary-dark">{row?.assetName}</span>
+                        </div>
                     </div>
-                    <span className="font-semibold">{row?.assetCode}</span>
-                </div>
-            ),
-            width: '190px',
-        },
-        {
-            name: t('common:total_balance'),
-            selector: 'value',
-            sortable: true,
-            ignoreRowClick: true,
-            right: true,
-            minWidth: '150px',
-            cell: (row) => (formatWallet(row.value)),
-        },
-        {
-            name: t('common:available_balance'),
-            ignoreRowClick: true,
-            right: true,
-            sortable: true,
-            minWidth: '150px',
-            cell: (row) => (formatWallet(row.value - Math.max(row.locked_value, 0))),
-        },
-        {
-            name: t('common:in_order'),
-            selector: 'lockedValue',
-            ignoreRowClick: true,
-            right: true,
-            sortable: true,
-            minWidth: '150px',
-            cell: (row) => (formatWallet(Math.max(row.locked_value, 0))),
-        },
-    ], [exchangeConfig]);
-
+                )
+            },
+            {
+                title: t('common:total_balance'),
+                dataIndex: 'value',
+                align: 'right',
+                width: 150,
+                render: (v) => formatNumber(v)
+            },
+            {
+                title: t('common:available_balance'),
+                dataIndex: 'available_balance',
+                align: 'right',
+                width: 150,
+                render: (v, row) => formatNumber(row.value - Math.max(row.locked_value, 0))
+            },
+            {
+                title: t('common:in_order'),
+                dataIndex: 'locked_value',
+                align: 'right',
+                width: 150,
+                render: (v) => formatNumber(Math.max(v, 0))
+            },
+            {
+                title: 'Tác vụ',
+                width: isPro ? 300 : 150,
+                align: 'left',
+                fixed: 'right',
+                render: (v) => renderActions()
+            }
+        ],
+        [exchangeConfig, isPro]
+    );
 
     const renderTable = useCallback(() => {
-        if (!isAuth || !wallet.length) return <TableNoData />
-        let data = wallet
+        // if (!isAuth || !wallet.length) return <TableNoData />;
+        let data = wallet;
 
         return (
-            <DataTable
+            <TableV2
+                useRowHover
                 data={data}
+                rowKey={(item) => `${item?.assetCode}`}
                 columns={columns}
-                customStyles={customStyles}
-                className="h-full"
-                noHeader
-                fixedHeader
-                fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 100}px`}
-                overflowYOffset={100}
-                pagination
-                paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
-                dense
-                noDataComponent={<TableNoData />}
-                progressPending={loading}
-                progressComponent={<TableLoader height={props.height} />}
-                paginationPerPage={50}
-                paginationComponentOptions={{ rowsPerPageText: 'Rows:', rangeSeparatorText: '/', noRowsPerPage: false }}
-                paginationIconFirstPage={null}
-                paginationIconLastPage={null}
+                loading={loading}
+                scroll={{ x: true }}
+                limit={6}
+                skip={0}
             />
-        )
-    }, [ isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
+        );
+    }, [isAuth, columns, loading, filterByCurrentPair, currentPair, wallet]);
 
-
-    return renderTable()
+    return renderTable();
 };
 
 export default TradeHistory;

@@ -19,6 +19,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import RePagination from 'components/common/ReTable/RePagination';
 import { appUrlHandler } from 'constants/faqHelper';
 import { SearchSection } from '.';
+import NoResult from '../../components/screens/Support/NoResult';
 
 const PAGE_SIZE = 15
 
@@ -82,7 +83,7 @@ const SupportSearchResult = () => {
         }
 
         const data = state.searchResult
-        return data?.map(search => <SearchResultItem key={search?.id} article={search} />)
+        return data?.map(search => <SearchResultItem key={search?.id} article={search} keyword={router?.query?.query}/>)
     }, [state.searchResult, state.currentPage, state.loading])
 
     useEffect(() => {
@@ -137,7 +138,7 @@ const SupportSearchResult = () => {
                             {renderTab()}
                         </div>
                         <div className='w-full mt-12'>
-                            {renderSearchResult()}
+                            {state?.searchResult?.length ? renderSearchResult() : <NoResult text={t('common:no_results_found')} />}
                         </div>
                     </div>
                 </div>

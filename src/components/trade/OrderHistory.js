@@ -1,28 +1,27 @@
-import { tableStyle } from 'config/tables';
 import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import DataTable from 'react-data-table-component';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import Emitter from 'redux/actions/emitter';
 import AuthSelector from 'redux/selectors/authSelectors';
 import { API_GET_HISTORY_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
-import { formatSpotPrice, formatTime, formatWallet } from 'src/redux/actions/utils';
+import { formatSpotPrice, formatTime, formatWallet, TypeTable, formatNumber } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
-import TableNoData from '../common/table.old/TableNoData';
-import TableLoader from '../loader/TableLoader';
 import Link from 'next/link';
+import TableV2 from '../common/V2/TableV2';
+import PopoverV2 from '../common/V2/PopoverV2';
 
 const OrderHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [histories, setHistories] = useState([]);
     const [filteredHistories, setFilteredHistories] = useState([]);
     const [loading, setLoading] = useState(false);
-    const userSocket = useSelector(state => state.socket.userSocket);
+    const userSocket = useSelector((state) => state.socket.userSocket);
     const isAuth = useSelector(AuthSelector.isAuthSelector);
-
+    const [status, setStatus] = useState('all');
+    const popover = useRef(null);
     const { currentPair, filterByCurrentPair, darkMode } = props;
 
     // Handle update order
@@ -30,10 +29,7 @@ const OrderHistory = (props) => {
         const event = UserSocketEvent.EXCHANGE_UPDATE_ORDER;
         Emitter.on(event, async (data) => {
             if (!data?.displayingId) return;
-            if ([
-                ExchangeOrderEnum.Status.CANCELED,
-                ExchangeOrderEnum.Status.FILLED,
-            ].includes(data?.status)) {
+            if ([ExchangeOrderEnum.Status.CANCELED, ExchangeOrderEnum.Status.FILLED].includes(data?.status)) {
                 const _orders = histories || [];
                 const index = findIndex(_orders, { displayingId: data?.displayingId });
                 if (index < 0) {
@@ -52,7 +48,7 @@ const OrderHistory = (props) => {
 
     useEffect(() => {
         if (filterByCurrentPair) {
-            const filter = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+            const filter = histories.filter((hist) => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
             setFilteredHistories(filter);
         } else {
             setFilteredHistories(histories);
@@ -73,230 +69,151 @@ const OrderHistory = (props) => {
             }
         };
     }, [userSocket]);
-    const customStyles = {
-        ...tableStyle,
-        table: {
-            style: {
-                ...tableStyle.table?.style,
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                minHeight: loading ? 0 : '200px',
-            },
-        },
-        headCells: {
-            style: {
-                ...tableStyle.headCells?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                padding: 0,
-            },
-            activeSortStyle: {
-                cursor: 'pointer',
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-            },
-            inactiveSortStyle: {
-                '&:focus': {
-                    outline: 'none',
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:focus': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-                '&:hover:active': {
-                    color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                },
-            },
-        },
-        headRow: {
-            style: {
-                ...tableStyle.headRow?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-            },
-        },
-        rows: {
-            style: {
-                ...tableStyle.rows?.style,
-                borderBottom: 'none !important',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-                '&:hover': {
-                    background: darkMode ? '#212537' : '#F6F9FC',
-                },
-            },
-        },
-        cells: {
-            style: {
-                ...tableStyle.cells?.style,
-                color: darkMode ? '#DBE3E6' : '#02083D',
-                padding: 0,
-                '&:hover': {
-                    color: darkMode ? '#DBE3E6' : '#02083D',
-                },
-            },
-        },
-        pagination: {
-            style: {
-                ...tableStyle.pagination?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-            },
-            pageButtonsStyle: {
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
-                '&:hover:not(:disabled)': {
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
-                    fill: darkMode ? '#8B8C9B' : '#d1d1d1',
-                },
-            },
-        },
+
+    const renderStatus = () => {
+        const arr = [
+            { label: t('common:all'), value: 'all' },
+            { label: t('common:filled'), value: ExchangeOrderEnum.Status.FILLED },
+            { label: t('common:canceled'), value: ExchangeOrderEnum.Status.CANCELED }
+        ];
+
+        const label = arr.find((rs) => rs.value === status)?.label;
+
+        return (
+            <PopoverV2 ref={popover} label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>} className="w-max py-4 text-xs !mt-6 z-20">
+                <div className="flex flex-col">
+                    {arr.map((rs) => (
+                        <div
+                            key={rs.value}
+                            onClick={() => {
+                                setStatus(rs.value);
+                                popover.current?.close();
+                            }}
+                            className={`px-4 py-2 dark:hover:bg-hover-dark ${status === rs.value ? 'text-white font-semibold' : ''}`}
+                        >
+                            {rs.label}
+                        </div>
+                    ))}
+                </div>
+            </PopoverV2>
+        );
     };
-    const columns = useMemo(() => [
-        {
-            name: t('common:order_id'),
-            selector: 'displayingId',
-            ignoreRowClick: true,
-            omit: false,
-            width: '80px',
-        },
-        {
-            name: t('common:time'),
-            selector: 'createdAt',
-            ignoreRowClick: true,
-            omit: false,
-            minWidth: '140px',
-            cell: (row) => formatTime(row.createdAt),
-        },
-        {
-            name: t('common:pair'),
-            selector: 'symbol',
-            ignoreRowClick: true,
-            minWidth: '120px',
-            cell: (row) => currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ?
-                <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
-                    <a className='dark:text-white text-darkBlue'>
-                        {row?.symbol}
-                    </a>
-                </Link>
-                : row?.symbol,
-        },
-        {
-            name: t('common:order_type'),
-            selector: 'type',
-            ignoreRowClick: true,
-            minWidth: '100px',
-        },
-        {
-            name: `${t('common:buy')}/${t('common:sell')}`,
-            selector: 'side',
-            ignoreRowClick: true,
-            minWidth: '80px',
-            conditionalCellStyles: [
-                {
-                    when: row => row.side === 'SELL',
-                    style: {
-                        color: '#E5544B !important',
-                    },
-                },
-                {
-                    when: row => row.side === 'BUY',
-                    style: {
-                        color: '#00C8BC !important',
-                    },
-                }],
-        },
-        {
-            name: t('common:avg_price'),
-            ignoreRowClick: true,
-            right: true,
 
-            cell: (row) => {
-                if (row?.executedQuoteQty && row?.executedQty) {
-                    return formatSpotPrice(row?.executedQuoteQty / row?.executedQty, row?.symbol);
-                }
-                return 0;
+    const columns = useMemo(
+        () => [
+            {
+                key: 'displayingId',
+                title: t('common:order_id'),
+                dataIndex: 'displayingId',
+                width: 120
             },
-            minWidth: '120px',
-        },
-        {
-            name: t('common:quantity'),
-            ignoreRowClick: true,
-            right: true,
-            minWidth: '120px',
-            cell: (row) => formatWallet(row.quantity, 4),
-        },
-        {
-            name: t('common:filled'),
-            ignoreRowClick: true,
-            minWidth: '100px',
-            right: true,
-            cell: (row) => <div>{formatWallet((row?.executedQty / row?.quantity) * 100, 0)}%</div>,
-        },
-        {
-            name: t('common:total'),
-            selector: 'total',
-            minWidth: '120px',
-            right: true,
-            cell: (row) => formatWallet(row.executedQuoteQty, 2),
-        },
-        {
-            name: t('common:status'),
-            selector: 'status',
-            minWidth: '120px',
-            right: true,
-            cell: (row) => {
-                switch (row.status) {
-                    case ExchangeOrderEnum.Status.CANCELED:
-                        return (
-                            <span
-                                className="text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark inline-block py-1 px-2 rounded last:mr-0 mr-1"
-                            >
-                                {t('common:canceled')}
-                            </span>
-                        );
-                    case ExchangeOrderEnum.Status.FILLED:
-                        return (
-                            <span
-                                className="text-xs font-medium text-teal inline-block py-1 px-2 rounded last:mr-0 mr-1"
-                            >
-                                {t('common:filled')}
-                            </span>
-                        );
-                    default:
-                        return null;
+            {
+                key: 'createdAt',
+                title: t('common:time'),
+                dataIndex: 'createdAt',
+                width: 180,
+                render: (v) => <span>{formatTime(v)}</span>
+            },
+            {
+                key: 'symbol',
+                title: t('common:pair'),
+                dataIndex: 'symbol',
+                width: 150,
+                cell: (row) =>
+                    currentPair !== `${row?.baseAsset}-${row?.quoteAsset}` ? (
+                        <Link href={`/trade/${row?.baseAsset}-${row?.quoteAsset}`}>
+                            <a className="dark:text-white text-darkBlue">{row?.symbol}</a>
+                        </Link>
+                    ) : (
+                        row?.symbol
+                    )
+            },
+            {
+                key: 'type',
+                title: t('common:order_type'),
+                dataIndex: 'type',
+                width: 120,
+                render: (v, row) => <TypeTable type={'type'} data={row} />
+            },
+            {
+                key: 'side',
+                title: `${t('common:buy')}/${t('common:sell')}`,
+                dataIndex: 'side',
+                width: 100,
+                render: (v, row) => <TypeTable type={'side'} data={row} />
+            },
+            {
+                key: 'avg_price',
+                title: t('common:avg_price'),
+                dataIndex: 'avg_price',
+                align: 'right',
+                width: 150,
+                render: (v, row) => {
+                    if (row?.executedQuoteQty && row?.executedQty) {
+                        return formatSpotPrice(row?.executedQuoteQty / row?.executedQty, row?.symbol);
+                    }
+                    return 0;
                 }
             },
-        },
-
-    ], [exchangeConfig, currentPair]);
+            {
+                key: 'quantity',
+                title: t('common:quantity'),
+                dataIndex: 'quantity',
+                align: 'right',
+                width: 150,
+                render: (v) => formatNumber(v, 4)
+            },
+            {
+                key: 'executedQty',
+                title: t('common:filled'),
+                dataIndex: 'executedQty',
+                align: 'right',
+                width: 150,
+                render: (v, row) => <div>{formatWallet((row?.executedQty / row?.quantity) * 100, 0)}%</div>
+            },
+            {
+                key: 'total',
+                title: t('common:total'),
+                dataIndex: 'executedQuoteQty',
+                align: 'right',
+                width: 150,
+                render: (v) => formatNumber(v, 2)
+            },
+            {
+                title: renderStatus(),
+                key: 'status',
+                dataIndex: 'status',
+                align: 'center',
+                width: 150,
+                fixed:'right',
+                render: (v) => {
+                    switch (v) {
+                        case ExchangeOrderEnum.Status.CANCELED:
+                            return (
+                                <span className="text-sm font-medium text-txtSecondary bg-divider-dark/[0.5] dark:text-txtSecondary-dark inline-block py-1 px-4 rounded-full">
+                                    {t('common:canceled')}
+                                </span>
+                            );
+                        case ExchangeOrderEnum.Status.FILLED:
+                            return (
+                                <span className="text-sm font-medium text-teal bg-teal/[0.1] rounded-full inline-block py-1 px-4">{t('common:filled')}</span>
+                            );
+                        default:
+                            return null;
+                    }
+                }
+            }
+        ],
+        [exchangeConfig, currentPair, status]
+    );
 
     const getOrderList = async () => {
         setLoading(true);
         const { status, data } = await fetchAPI({
             url: API_GET_HISTORY_ORDER,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         });
         if (status === ApiStatus.SUCCESS) {
             setHistories(data);
@@ -309,37 +226,26 @@ const OrderHistory = (props) => {
     }, []);
 
     const renderTable = useCallback(() => {
-        if (!isAuth || !histories.length) return <TableNoData />
-        let data = histories
+        let data = histories;
         if (filterByCurrentPair) {
-            data = histories.filter(hist => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair)
+            data = histories.filter((hist) => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
         }
-
+        if (status !== 'all') {
+            data = data.filter((rs) => rs.status === status);
+        }
         return (
-            <DataTable
+            <TableV2
+                useRowHover
                 data={data}
                 columns={columns}
-                customStyles={customStyles}
-                className="h-full"
-                noHeader
-                fixedHeader
-                fixedHeaderScrollHeight={`${props.orderListWrapperHeight - 100}px`}
-                overflowYOffset={100}
-                pagination
-                paginationRowsPerPageOptions={[10, 20, 30, 40, 50]}
-                dense
-                noDataComponent={<TableNoData />}
-                progressPending={loading}
-                progressComponent={<TableLoader height={props.height} />}
-                paginationPerPage={50}
-                paginationComponentOptions={{ rowsPerPageText: 'Rows:', rangeSeparatorText: '/', noRowsPerPage: false }}
-                paginationIconFirstPage={null}
-                paginationIconLastPage={null}
+                rowKey={(item) => `${item?.displayingId}`}
+                loading={loading}
+                scroll={{ x: true }}
+                limit={10}
+                skip={0}
             />
-        )
-    }, [filteredHistories, isAuth, columns, customStyles, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight])
-
-
+        );
+    }, [filteredHistories, isAuth, columns, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight, status]);
 
     // useEffect(() => {
     //     if (filterByCurrentPair) {
@@ -369,8 +275,7 @@ const OrderHistory = (props) => {
     //     console.log('namidev-DEBUG: ____ ', filteredHistories)
     // }, [filteredHistories])
 
-
-    return renderTable()
+    return renderTable();
 };
 
 export default OrderHistory;

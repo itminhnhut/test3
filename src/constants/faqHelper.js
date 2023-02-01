@@ -483,10 +483,13 @@ export const getSupportCategoryIcons = (id) => {
         case CatsKey.AccountFunctions:
             return '/images/screen/support/v2/ic_user.png'
         case CatsKey.Tutorial:
-        case CatsKey.NamiNews:
-        case CatsKey.Announcement:
-        case CatsKey.Event:
             return '/images/screen/support/v2/ic_book.png'
+        case CatsKey.NamiNews:
+            return '/images/screen/support/v2/ic_news.png'
+        case CatsKey.Announcement:
+            return '/images/screen/support/v2/ic_noti.png'
+        case CatsKey.Event:
+            return '/images/screen/support/v2/ic_event.png'
         case CatsKey.DepWdlCrypto:
             return '/images/screen/support/v2/ic_dollar.png'
         case CatsKey.NamiToken:
