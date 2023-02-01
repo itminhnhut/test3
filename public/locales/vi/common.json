@@ -334,5 +334,6 @@
     "close_all_orders": "Đóng tất cả",
     "close_all_message": "Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?",
     "close_all_success": "Đóng lệnh thành công",
-    "close_all_failed": "Đóng lệnh thất bại"
+    "close_all_failed": "Đóng lệnh thất bại",
+    "no_results_found": "Không tìm thấy kết quả"
 }

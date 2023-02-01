@@ -338,5 +338,6 @@
     "close_all_orders": "Close all orders",
     "close_all_message": "Do you want to close all your orders?",
     "close_all_success": "Close orders successfully",
-    "close_all_failed": "Close Orders failed"
+    "close_all_failed": "Close Orders failed",
+    "no_results_found": "No Results Found"
 }
