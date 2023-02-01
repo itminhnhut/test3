@@ -89,7 +89,6 @@ const ReTable = memo(
         const handleResize =
             (index) =>
             (e, { size }) => {
-                console.log(size);
                 setOwnColumns((prevState) => {
                     const nextColumns = [...prevState];
                     nextColumns[index] = {
@@ -297,7 +296,7 @@ const ReTableWrapperV2 = styled.div`
     }
     .rc-table {
         color: ${colors.namiv2.gray[2]};
-        margin-top: 20px;
+        /* margin-top: 20px; */
         .re_table__link {
             font-size: 14px;
 
@@ -326,9 +325,7 @@ const ReTableWrapperV2 = styled.div`
     .rc-table th {
         color: ${colors.namiv2.gray[1]};
         font-weight: 400;
-        padding-bottom: 14px;
-        padding-right: 16px;
-        padding-left: 16px;
+        padding: 24px 16px;
     }
 
     .rc-table td {

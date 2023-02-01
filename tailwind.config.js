@@ -17,7 +17,8 @@ const commonColors = {
     dark: {
         dark: '#0c0e14',
         1: '#2e333d',
-        2: '#1c232e'
+        2: '#1c232e',
+        3: '#1f2f46'
     },
 
     gray1: '#718096',
@@ -174,7 +175,7 @@ module.exports = {
                 '1.25rem',
                 {
                     letterSpacing: '-0.01em',
-                    lineHeight: '1.25rem'
+                    lineHeight: '1.75rem'
                 }
             ], // Body 1, Heading 6 21px
             '2xl': [
@@ -352,12 +353,13 @@ module.exports = {
             },
             dark: {
                 ...commonColors.dark,
-                DEFAULT: commonColors.dark.dark,
+                DEFAULT: commonColors.dark.dark
             },
             namiv2: commonColors.namiv2
         },
         extend: {
             screens: {
+                v3: '1216px',
                 nao: '1160px',
                 xsm: '320px',
                 xxs: '360px'
@@ -483,7 +485,8 @@ module.exports = {
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
-                ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)'
+                ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
+                popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)'
             },
             cursor: {
                 grabbing: 'grabbing'

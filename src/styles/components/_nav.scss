@@ -227,7 +227,7 @@
 //}
 
 .mal-navbar__wrapper {
-  @apply relative z-30 w-full flex flex-row items-center justify-between;
+  @apply relative z-30 w-full flex flex-row items-center justify-between border-b border-divider-dark;
   @apply bg-headerBg;
 
   height: $MOBILE_NAV_HEIGHT;
