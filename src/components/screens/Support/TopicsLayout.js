@@ -17,7 +17,7 @@ import useHideScrollbar from 'hooks/useHideScrollbar';
 import { handleHideScrollBar } from 'utils/helpers';
 import { useWindowSize } from 'utils/customHooks';
 
-const COL_WIDTH = 304;
+const COL_WIDTH = 308;
 
 const TopicsLayout = ({
     children,
@@ -27,7 +27,7 @@ const TopicsLayout = ({
     faqCurrentGroup
 }) => {
     const [showDropdown, setShowDropdown] = useState({});
-    const {width} = useWindowSize()
+    const { width } = useWindowSize()
     const router = useRouter();
     const [theme] = useDarkMode();
     const {
@@ -65,7 +65,6 @@ const TopicsLayout = ({
                     href={baseHref}
                     containerClassNames="hidden lg:block"
                 /> */}
-
                 <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_announcement.png')`} />
                 <div
                     style={
@@ -78,20 +77,26 @@ const TopicsLayout = ({
                     <div className="flex min-h-[500px]">
                         <div
                             style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
-                            className="hidden lg:block py-5 lg:py-[40px] border-r border-divider dark:border-divider-dark"
+                            className="hidden lg:block py-16 lg:py-20 border-r border-divider dark:border-divider-dark"
                         >
+                            <div className='text-white font-medium text-xl px-6 mb-8'>
+                                {t('navbar:menu_grid.category')}
+                            </div>
                             {topics?.map((item) => (
                                 <div key={item.id}>
                                     <div
                                         className={classNames(
-                                            'flex items-center px-5 lg:py-2.5 2xl:py-4 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                            'h-14 mb-3 flex items-center hover:bg-hover dark:hover:bg-hover-dark',
                                             {
-                                                'bg-teal-lightTeal dark:bg-teal-opacity':
-                                                    !isFaq &&
-                                                    router?.query?.topic === item.displaySlug
+                                                'bg-hover dark:bg-hover-dark': !isFaq && router?.query?.topic === item.displaySlug
                                             }
                                         )}
                                     >
+                                        {!isFaq && router?.query?.topic === item.displaySlug ?
+                                            <div className='h-8 w-1 bg-teal rounded-[10px]'></div>
+                                            :
+                                            null
+                                        }
                                         <Link
                                             href={{
                                                 pathname:
@@ -104,16 +109,18 @@ const TopicsLayout = ({
                                         >
                                             <a
                                                 className={classNames(
-                                                    'flex flex-grow items-center text-[16px] font-medium cursor-pointer'
+                                                    'px-6 flex flex-grow items-center text-gray-4 font-semibold text-base cursor-pointer', {
+                                                        '!px-5': !isFaq && router?.query?.topic === item.displaySlug
+                                                    }
                                                 )}
                                             >
-                                                <div className="w-[32px] h-[32px] mr-4">
+                                                <div className="w-6 h-6 mr-6">
                                                     {
                                                         <Image
                                                             src={getSupportCategoryIcons(item.id)}
                                                             layout="responsive"
-                                                            width={32}
-                                                            height={32}
+                                                            width={24}
+                                                            height={24}
                                                         />
                                                     }
                                                 </div>
@@ -185,7 +192,7 @@ const TopicsLayout = ({
                                 simpleMode
                                 containerClassNames="!mt-4 lg:!mt-0 lg:hidden"
                             />
-                            {useTopicTitle && (
+                            {/* {useTopicTitle && (
                                 <div
                                     className={classNames(
                                         'text-[16px] md:text-[20px] lg:text-[28px] font-bold mt-4 mb-6 lg:mt-0 lg:mb-10',
@@ -196,7 +203,7 @@ const TopicsLayout = ({
                                 >
                                     {!faqCurrentGroup ? mainTopic?.title : subTopics?.title}
                                 </div>
-                            )}
+                            )} */}
                             {children}
                         </div>
 
