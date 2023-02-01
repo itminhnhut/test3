@@ -230,7 +230,7 @@ const Contest = (props) => {
         // ANCHOR VOL2: KLGD: 200,000,000,000 VNDC
         const rsKLGD2 = fetchApi({
             url: API_CONTEST_NAO_SPECIAL_RANK,
-            params: { contest_id: CONTEST_ID, type: 'VOL2' }
+            params: { contest_id: CONTEST_ID_SPECIAL, type: 'VOL2' }
         });
 
         // ANCHOR VOL1: KLGD: 100,000,000,000 VNDC
@@ -401,7 +401,11 @@ const Contest = (props) => {
             )}
             <div className="nao_section">
                 <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
+<<<<<<< HEAD
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies}/>
+=======
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
+>>>>>>> 1d8786e8 (Nao - Contest - v5)
                 {props?.season === SEASON_SPECIAL ? (
                     <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
                         {renderTab()}
