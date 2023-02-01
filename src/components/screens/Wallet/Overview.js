@@ -155,7 +155,7 @@ const OverviewWallet = (props) => {
                 </div>
             </div> */}
 
-            <MCard addClass="mt-5 !p-6 xl:!p-8 border border-divider dark:border-divider-dark !bg-namiv2-linear bg-cover !bg-dark">
+            <MCard addClass="mt-5 !p-6 xl:!p-8 border border-divider dark:border-divider-dark !bg-namiv2-linear bg-cover !dark:bg-dark">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between">
                     <div>
                         <div className="flex items-center font-medium text-base text-txtSecondary dark:text-txtSecondary-dark">

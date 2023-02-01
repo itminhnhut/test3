@@ -304,10 +304,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     return (
         <>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div className="t-common whitespace-nowrap">{t('common:overview')}</div>
-                <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT)}>
+            {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between"> */}
+            {/* <div className="t-common whitespace-nowrap">{t('common:overview')}</div> */}
+            {/* <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto"> */}
+            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT)}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:deposit')}
                         </a>
@@ -317,9 +317,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px]  mr-3.5 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
                             {t('common:withdraw')}
                         </a>
-                    </Link>
-                    {/*<Link href="/wallet/exchange/transfer?from=exchange" prefetch>*/}
-                    <div
+                    </Link> */}
+            {/*<Link href="/wallet/exchange/transfer?from=exchange" prefetch>*/}
+            {/* <div
                         onClick={() =>
                             dispatch(
                                 setTransferModal({
@@ -332,11 +332,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer"
                     >
                         {t('common:transfer')}
-                    </div>
-                    {/*</Link>*/}
-                </div>
-            </div>
-            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !bg-namiV2 rounded-xl">
+                    </div> */}
+            {/*</Link>*/}
+            {/* </div> */}
+            {/* </div> */}
+            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
                         <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
@@ -386,7 +386,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 <div className="flex items-end justify-between pt-8">
                     <div className="bg-namiv2-gray flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
                         <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
-                        <a href="/" className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                        <a href="/" className="text-sm dark:text-txtPrimary-dark">
                             {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
                         </a>
                         <ChevronDown size={24} className="-rotate-90" />
