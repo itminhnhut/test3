@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 
-const Tooltip = ({ children, arrowColor, isV3 = false, ...restProps }) => {
+const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restProps }) => {
     const [currentTheme] = useDarkMode();
     const ref = useRef();
 
@@ -17,10 +17,14 @@ const Tooltip = ({ children, arrowColor, isV3 = false, ...restProps }) => {
         <TooltipWrapper isDark={currentTheme === THEME_MODE.DARK}>
             <ReactTooltip
                 ref={ref}
-                className={classNames('text-sm', {
-                    '!px-6 !py-[11px] !bg-hover-dark !opacity-100 !rounded-lg': isV3,
-                    '!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100': !isV3
-                })}
+                className={classNames(
+                    'text-sm',
+                    {
+                        '!px-6 !py-[11px] !bg-hover-dark !opacity-100 !rounded-lg': isV3,
+                        '!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100': !isV3
+                    },
+                    className
+                )}
                 arrowColor={arrow}
                 place="left"
                 effect="solid"

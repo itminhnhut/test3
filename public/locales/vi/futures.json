@@ -477,7 +477,8 @@
         "funding_warning_accept": "Tôi đã hiểu và đồng ý",
         "to_learn_funding": "Để hiểu rõ hơn về Funding Rates, xem thêm tại",
         "vol_position": "Khối lượng vị thế",
-        "funding_rate2": "Tỷ lệ Funding Rates"
+        "funding_rate2": "Tỷ lệ Funding Rates",
+        "amount_of_asset": "Số lượng tài sản giao dịch"
     },
     "order_information": "Thông tin",
     "trading_rules": "Quy định giao dịch",

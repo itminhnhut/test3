@@ -48,7 +48,7 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
                         placeholder={placeholder}
                         onChange={({ currentTarget }) => onChange(currentTarget.value)}
                         value={queryFilter}
-                        className="bg-transparent text-txtPrimary dark:text-white text-sm leading-5 h-full w-full"
+                        className="bg-transparent text-txtPrimary dark:text-white text-sm sm:text-base h-full w-full"
                         style={customStyle}
                         onFocus={() => setFocus(true)}
                         onBlur={() => setFocus(false)}

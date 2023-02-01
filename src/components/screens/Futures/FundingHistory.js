@@ -62,28 +62,26 @@ export default function FundingHistory(props) {
                                     ? 'https://nami.exchange/en/support/announcement/announcement/apply-funding-rates-on-nami-futures-and-onus-futures'
                                     : 'https://nami.exchange/vi/support/announcement/thong-bao/thong-bao-ra-mat-co-che-funding-rate-tren-nami-futures-va-onus-futures'
                             }
-                            className={'cursor-pointer flex text-sm leading-6 lg:font-semibold font-medium text-txtBtnSecondary dark:text-txtBtnSecondary-dark'}
+                            className={'cursor-pointer flex text-sm sm:text-base font-semibold text-teal'}
                             target="_blank"
                         >
                             {t('futures:funding_history_tab:link_overview')}
                         </a>
                     </div>
                     <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row">
-                        <div className="-mx-4 sm:mx-0 w-full">
-                            <Tab
-                                series={SCREEN_TAB_SERIES}
-                                currentIndex={selectedTab}
-                                onChangeTab={(screenIndex) => {
-                                    setSelectedTab(screenIndex);
-                                }}
-                                className="flex items-center justify-center w-full sm:justify-start"
-                            />
-                        </div>
+                        <Tab
+                            series={SCREEN_TAB_SERIES}
+                            currentIndex={selectedTab}
+                            onChangeTab={(screenIndex) => {
+                                setSelectedTab(screenIndex);
+                            }}
+                            className="flex items-center justify-center w-full sm:w-max sm:justify-start"
+                        />
                         <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
                             {CURRENCIES.map((rs) => (
                                 <div
                                     className={classNames('text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer', {
-                                        '!border-teal !text-teal font-medium bg-teal/[0.1]': selectedCurrency === rs.value
+                                        '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
                                     })}
                                     onClick={() => setSelectedCurrency(rs.value)}
                                 >

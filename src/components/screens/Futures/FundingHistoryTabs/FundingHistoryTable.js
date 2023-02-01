@@ -17,6 +17,8 @@ import TableV2 from 'components/common/V2/TableV2';
 import SearchInput from 'src/components/markets/SearchInput';
 import AssetLogo from 'components/wallet/AssetLogo';
 import PopoverV2 from 'components/common/V2/PopoverV2';
+import sortBy from 'lodash/sortBy';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 ChartJS.register(Title, Tooltip, LineElement, Legend, CategoryScale, LinearScale, PointElement, Filler);
 
@@ -123,7 +125,7 @@ export default function FundingHistoryTable({ currency, active }) {
 
     const pairConfig = useMemo(() => {
         return pairConfigs.find((rs) => rs.symbol === filter.symbol);
-    }, [filter]);
+    }, [filter, pairConfigs]);
 
     const getHistoryData = async () => {
         if (!filter.symbol) return;
@@ -326,15 +328,16 @@ export default function FundingHistoryTable({ currency, active }) {
                 <div className="h-full flex items-center justify-between mb-8">
                     <div className="sm:flex items-center relative cursor-pointer sm:space-x-8">
                         <div
-                            className="relative z-10 flex items-center text-lg leading-6 group"
-                            onMouseOver={() => setActivePairList(true)}
+                            className="relative z-10 flex items-center text-lg leading-6 "
+                            // onMouseOver={() => setActivePairList(true)}
                             onMouseLeave={() => setActivePairList(false)}
+                            onClick={() => setActivePairList(!activePairList)}
                         >
                             <span className="font-semibold sm:font-medium text-sm sm:text-xl">
                                 {pairConfig?.baseAsset ? pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset : '-/-'}
                             </span>
                             <ChevronDown color={colors.darkBlue5} size={16} className={classNames('ml-2', { 'rotate-0': activePairList })} />
-                            <div className="hidden group-hover:block absolute z-30 pt-4 left-0 top-full">
+                            <div className="absolute z-30 pt-8 sm:pt-4 left-0 top-full">
                                 <PairList
                                     activePairList={activePairList}
                                     pairConfigs={pairConfigs}
@@ -373,7 +376,7 @@ export default function FundingHistoryTable({ currency, active }) {
                             ref={chart}
                             options={options}
                             data={dataLine}
-                            className={`max-h-[${isMobile ? '228px' : '420px'}]`}
+                            className={isMobile ? `max-h-[228px]` : `max-h-[420px]`}
                             height={isMobile ? 228 : 420}
                         />
                     )}
@@ -450,9 +453,11 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
 
     const renderPairListItems = useCallback(() => {
         let data = pairConfigs.filter((pair) => pair.quoteAsset === currency);
+        data = sortBy(data, ['pair'], ['asc']);
         if (keyword) {
             data = data?.filter((o) => o?.pair?.toLowerCase().includes(keyword?.toLowerCase()));
         }
+        if (data.length <= 0) return <NoData isSearch />;
         return data?.map((pair, indx) => {
             return (
                 <div

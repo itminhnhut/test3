@@ -214,12 +214,14 @@ export default function FundingHistory({ currency, active }) {
 
     return (
         <div className={classNames('mt-2 sm:mt-12 sm:border border-divider-dark rounded-xl', { hidden: !active })}>
-            <Tooltip id={'funding'} place="top" effect="solid" isV3 />
+            <Tooltip id={'funding'} place="top" effect="solid" isV3 className="max-w-[300px]" />
             <div className={classNames('sm:px-6 py-4 sm:border-b border-divider-dark sm:flex items-center justify-between', { 'space-y-6 pb-2': isMobile })}>
                 <div className={classNames('text-txtSecondary-dark text-xs sm:text-sm space-x-1')}>
                     <span>Funding Rates =</span>
                     <span
-                        data-tip={`${t('futures:funding_history_tab:vol_position')} = ${t('furures:order_table:mark_price')} x Số lượng tài sản giao dịch`}
+                        data-tip={`${t('futures:funding_history_tab:vol_position')} = ${t('futures:order_table:mark_price')} x ${t(
+                            'futures:funding_history_tab:amount_of_asset'
+                        )}`}
                         data-for={'funding'}
                         className="border-b border-darkBlue-5 border-dashed cursor-pointer"
                     >
@@ -278,7 +280,7 @@ const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
                     <ChevronDown size={16} />
                 </div>
             }
-            className="w-max py-2 text-xs !mt-2 z-20"
+            className="w-full py-2 text-xs !mt-2 z-20"
         >
             <div className="flex flex-col">
                 {FILTER_OPTS.map((item) => {

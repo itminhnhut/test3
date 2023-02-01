@@ -6,7 +6,7 @@ import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
 import { getLoginUrl } from 'src/redux/actions/utils';
 
-const NoData = ({ text, loading = false, isSearch = false }) => {
+const NoData = ({ text, loading = false, isSearch = false, className = '' }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
     const user = useSelector((state) => state.auth.user);
@@ -20,7 +20,7 @@ const NoData = ({ text, loading = false, isSearch = false }) => {
         );
 
     return (
-        <div className="flex flex-col space-y-3 items-center justify-center">
+        <div className={`flex flex-col space-y-3 items-center justify-center ${className}`}>
             {!user ? (
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
@@ -31,7 +31,7 @@ const NoData = ({ text, loading = false, isSearch = false }) => {
             ) : (
                 <>
                     {isSearch ? <NotFoundIcon /> : <NoDataIcon isDark={isDark} />}
-                    <span>{text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}</span>
+                    <span className={'text-darkBlue-5 text-sm sm:text-base'}>{text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}</span>
                 </>
             )}
         </div>
