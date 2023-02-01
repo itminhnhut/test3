@@ -300,7 +300,7 @@ const Contest = (props) => {
     //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
     // }, [props?.contest_id, props?.lastUpdated]);
 
-    const showPnl = ![9, 10].includes(props?.contest_id);
+    const showPnl = ![9, 10, 11].includes(props?.contest_id);
 
     const params = useMemo(() => {
         const queryString = window.location.search;
