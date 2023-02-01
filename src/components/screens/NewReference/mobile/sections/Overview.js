@@ -15,7 +15,7 @@ import Modal from 'components/common/ReModal';
 import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 import { getMe } from 'redux/actions/user';
 import { useDispatch } from 'react-redux';
-
+import Link from 'next/link'
 const Overview = ({ data, commisionConfig, user }) => {
     const {
         t,
@@ -122,9 +122,11 @@ const Overview = ({ data, commisionConfig, user }) => {
                     )}
                     <RefButton className={classNames('w-2/5', { '!w-full': isPartner || !user })}>
                         <div className="flex gap-2">
-                            <a href={policyLink} target="_blank">
-                                <span>{t('reference:referral.referral_policy')}</span>
-                            </a>
+                            <Link href={policyLink} >
+                                <a>
+                                    <span>{t('reference:referral.referral_policy')}</span>
+                                </a>
+                            </Link>
                         </div>
                     </RefButton>
                 </div>}

@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import React, { useMemo, useState } from 'react';
 import { Line } from '..';
 import CollapsibleRefCard from '../../CollapsibleRefCard';
+import Link from 'next/link'
 
 const QnAData = [
     {
@@ -97,11 +98,13 @@ const QnA = () => {
                 <div className="w-auto">
                     {renderData()}
                     <div className="text-namiapp-green-1 underline font-medium text-sm text-center mt-6">
-                        <a href={policyLink}>
-                            {language === 'vi'
-                                ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange'
-                                : "Read more: Nami Exchange's policy on business partners"}
-                        </a>
+                        <Link href={policyLink}>
+                            <a>
+                                {language === 'vi'
+                                    ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange'
+                                    : "Read more: Nami Exchange's policy on business partners"}
+                            </a>
+                        </Link>
                     </div>
                 </div>
             </CollapsibleRefCard>
