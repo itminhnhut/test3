@@ -20,6 +20,7 @@ import { commisionConfig } from 'config/referral';
 import { Swiper, SwiperSlide, useSwiper } from 'swiper/react'
 import 'swiper/css'
 import { useSelector } from 'react-redux';
+import { CopyIcon } from '../PopupModal';
 
 const tabs = {
     Overview: 'overview',
