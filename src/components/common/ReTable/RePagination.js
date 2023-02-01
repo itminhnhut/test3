@@ -112,7 +112,7 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item a {
-        color: ${({ isDark }) => (isDark ? colors.grey2 : colors.primary)};
+      color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
     }
 
     .rc-pagination-item-active {

@@ -47,12 +47,12 @@ const initColumns = [
     {
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
-        width: 250
+        width: 300
     },
     {
         title: 'min_limit_order_price',
         tooltip: 'min_limit_order_price_tooltips',
-        width: 200
+        width: 250
     },
     {
         title: 'max_limit_order_price',
@@ -67,7 +67,7 @@ const initColumns = [
     {
         title: 'liq_fee_rate',
         tooltip: 'liq_fee_rate_tooltips',
-        width: 180
+        width: 250
     },
     {
         title: 'min_difference_ratio',
@@ -189,7 +189,7 @@ const TradingRules = () => {
     };
 
     const renderLogo = (item) => (
-        <div className="flex items-center space-x-3 md:space-x-4 whitespace-nowrap font-semibold md:font-medium">
+        <div className="flex items-center space-x-3 md:space-x-4 whitespace-nowrap font-semibold">
             <AssetLogo assetId={item?.baseAssetId} size={isMobile ? 24 : 32} />
             <div>
                 {item?.baseAsset}/{item?.quoteAsset}&nbsp;{t('futures:funding_history_tab:perpetual')}
@@ -241,7 +241,7 @@ const TradingRules = () => {
                                 className={classNames(
                                     'text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer',
                                     {
-                                        '!border-teal !text-teal font-medium bg-teal/[0.1]': currency === rs.value
+                                        '!border-teal !text-teal font-semibold bg-teal/[0.1]': currency === rs.value
                                     }
                                 )}
                                 onClick={() => setCurrency(rs.value)}

@@ -55,7 +55,7 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} isSearch={!!isSearch} />}
+                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="" />}
                 {...props}
             />
             {data.length > 0 && (
