@@ -28,7 +28,8 @@ const statusGroup = {
     ENABLE: 1
 };
 
-const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules, quoteAsset }) => {
+const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, previous, contest_id, rules }) => {
+    const quoteAsset = rowData?.quoteAsset ?? 'VNDC';
     const context = useContext(AlertContext);
     const { t } = useTranslation();
     const { width } = useWindowSize();
@@ -49,7 +50,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 url: API_CONTEST_GET_GROUP_MEMBER,
                 params: {
                     contest_id: contest_id,
-                    displaying_id: id
+                    displaying_id: id,
+                    quoteAsset: quoteAsset
                 }
             });
             if (data && status === ApiStatus.SUCCESS) {
