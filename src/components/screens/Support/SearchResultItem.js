@@ -12,9 +12,9 @@ const SearchResultItem = memo(({ article, loading = false }) => {
     const { width } = useWindowSize()
     const { t, i18n: { language } } = useTranslation()
 
-    // ? Memmoized
-    const iconSize = useMemo(() => width >= BREAK_POINTS.lg ? 20 : 16, [width])
+    console.log('article', article.raw_data)
 
+    // ? Memmoized
     const getTopics = (topic) => {
         if (!topic) return null
         // console.log('namidev ', topic);
@@ -32,35 +32,9 @@ const SearchResultItem = memo(({ article, loading = false }) => {
                 {/* <ChevronRight strokeWidth={1.5} size={iconSize} className="mx-2"/> */}
             </>
         )
-        // switch (topic?.slug) {
-        //     case 'noti':
-
-        //     case 'faq':
-        //         return (
-        //             <>
-        //                 <Link href={PATHS.SUPPORT.FAQ}>
-        //                     <a className="!underline">{t('support-center:faq')}</a>
-        //                 </Link>
-        //                 <ChevronRight strokeWidth={1.5} size={iconSize} className="mx-2"/>
-        //             </>
-        //         )
-        // }
     }
 
-    const getCategory = (topic, tags) => {
-        const isFaq = !!tags.filter(o => o.slug === 'faq')?.length
-        // console.log('namidev ', topic, isFaq);
-        return null
-        const slugCollect = tags?.filter(o => o?.slug !== topic?.slug)
-        return (
-            <Link href={{
-                pathname: `${topic?.slug === 'noti' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ}/[topic]`,
-                query: { topic: slugCollect?.[0]?.slug?.replace(`${topic?.slug}-${language}-`, '') }
-            }}>
-                <a className="!underline">{slugCollect?.[0]?.name}</a>
-            </Link>
-        )
-    }
+ 
 
     const buildArticleUrl = () => {
         const isFaq = !!article?.tags.filter(o => o.slug === 'faq' || o.slug.includes('faq-'))?.length
@@ -100,7 +74,7 @@ const SearchResultItem = memo(({ article, loading = false }) => {
                         <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
                         <div className="w-full"><Skeletor className="!w-full" height={15}/></div>
                     </>
-                    : Parse(article?.html?.substring(0, 220)?.trim() + '...')}
+                    : Parse(article?.html?.substring(0, 240)?.trim() + '...')}
             </div>
             <div className="mt-2.5 flex items-center text-[10px] lg:text-sm font-medium">
                 {loading ?

@@ -152,144 +152,67 @@ const Support = () => {
 
         // console.log('namidev ', lastedArticles)
 
-        return lastedArticles.map((article) => {
-            let mode, topic, ownedTags, _tagsLib, categories
-            const isNoti = !!article?.tags?.find((o) =>
-                o.slug?.includes('noti-')
-            )
-
-            if (isNoti) {
-                mode = 'announcement'
-                categories = SupportCategories.announcements[language]
-                ownedTags = article.tags
-                    .filter((f) => f.slug !== 'noti')
-                    ?.map((o) =>
-                        o?.slug
-                            ?.replace('noti-vi-', '')
-                            ?.replace('noti-en-', '')
+        return (
+            <div className='w-full bg-namiv2-black-1 rounded-xl p-6 flex flex-col gap-8'>
+                {lastedArticles.map((article, index) => {
+                    let mode, topic, ownedTags, _tagsLib, categories
+                    const isNoti = !!article?.tags?.find((o) =>
+                        o.slug?.includes('noti-')
                     )
-            } else {
-                mode = 'faq'
-                categories = SupportCategories.faq[language]
-                ownedTags = article.tags
-                    .filter((f) => f.slug !== 'faq')
-                    ?.map((o) =>
-                        o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
+
+                    if (isNoti) {
+                        mode = 'announcement'
+                        categories = SupportCategories.announcements[language]
+                        ownedTags = article.tags
+                            .filter((f) => f.slug !== 'noti')
+                            ?.map((o) =>
+                                o?.slug
+                                    ?.replace('noti-vi-', '')
+                                    ?.replace('noti-en-', '')
+                            )
+                    } else {
+                        mode = 'faq'
+                        categories = SupportCategories.faq[language]
+                        ownedTags = article.tags
+                            .filter((f) => f.slug !== 'faq')
+                            ?.map((o) =>
+                                o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
+                            )
+                    }
+
+                    _tagsLib = categories.map((o) => o.displaySlug)
+
+                    ownedTags.forEach((e) => {
+                        if (_tagsLib.includes(e)) topic = e
+                    })
+
+                    return (
+
+                        <div className='flex items-center gap-6' key={article.id}>
+                            <div className='rounded-full bg-namiv2-gray-2 h-2 w-2'>
+                            </div>
+                            <a href={
+                                PATHS.SUPPORT.DEFAULT +
+                                `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
+                                }`
+                            }>
+                                <div className='flex flex-col grap-2'>
+                                    <div className='mr-2 text-namiv2-gray-2 text-base font-normal hover:text-namiv2-green active:text-namiv2-green'>
+                                        {article.title}
+                                        {index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-namiv2-gray-3 bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
+                                    </div>
+                                    <div className='font-normal text-xs leading-4 text-namiv2-gray-1 whitespace-nowrap'>
+                                        {formatTime(article.created_at, 'dd-MM-yyyy')}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
                     )
-            }
-
-            _tagsLib = categories.map((o) => o.displaySlug)
-
-            ownedTags.forEach((e) => {
-                if (_tagsLib.includes(e)) topic = e
-            })
-
-            return (
-                <SupportSectionItem
-                    key={article.id}
-                    href={
-                        PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
-                        }`
-                    }
-                    title={
-                        <>
-                            <span className='mr-2'>{article.title}</span>
-                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap'>
-                                {formatTime(article.created_at, 'dd-MM-yyyy')}
-                            </span>
-                        </>
-                    }
-                    containerClassNames='lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0'
-                    classNames='active:!bg-transparent hover:!underline hover:!text-dominant'
-                />
-            )
-        })
+                })
+                }
+            </div >)
     }, [lastedArticles, loading, language])
-
-    const renderHighlightedArticles = useCallback(() => {
-        if (loading) {
-            return (
-                <>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                    <div className='mt-3 lg:mt-5 w-full lg:min-w-[650px] h-[35px] lg:h-[45px]  md:pr-1 lg:pr-3'>
-                        <Skeletor className='!w-full !h-full' />
-                    </div>
-                </>
-            )
-        }
-
-        return highlightedArticles.map((article) => {
-            let mode, topic, ownedTags, _tagsLib, categories
-            const isNoti = !!article?.tags?.find((o) =>
-                o.slug?.includes('noti-')
-            )
-
-            if (isNoti) {
-                mode = 'announcement'
-                categories = SupportCategories.announcements[language]
-                ownedTags = article.tags
-                    .filter((f) => f.slug !== 'noti')
-                    ?.map((o) =>
-                        o?.slug
-                            ?.replace('noti-vi-', '')
-                            ?.replace('noti-en-', '')
-                    )
-            } else {
-                mode = 'faq'
-                categories = SupportCategories.faq[language]
-                ownedTags = article.tags
-                    .filter((f) => f.slug !== 'faq')
-                    ?.map((o) =>
-                        o?.slug?.replace('faq-vi-', '')?.replace('faq-en-', '')
-                    )
-            }
-
-            _tagsLib = categories.map((o) => o.displaySlug)
-
-            ownedTags.forEach((e) => {
-                if (_tagsLib.includes(e)) topic = e
-            })
-
-            return (
-                <SupportSectionItem
-                    key={article.id}
-                    href={
-                        PATHS.SUPPORT.DEFAULT +
-                        `/${mode}/${topic}/${article.slug}${isApp ? '?source=app' : ''
-                        }`
-                    }
-                    title={
-                        <>
-                            <span className='mr-2'>{article.title}</span>
-                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-[10px] lg:text-[12px] whitespace-nowrap'>
-                                {formatTime(article.created_at, 'dd-MM-yyyy')}
-                            </span>
-                        </>
-                    }
-                    containerClassNames='lg:!w-full md:!pr-6 lg:!pr-3 lg:!mb-0'
-                    classNames='active:!bg-transparent hover:!underline hover:!text-dominant'
-                />
-            )
-        })
-    }, [highlightedArticles, loading, language])
 
     useAsync(async () => {
         setLoading(true)
@@ -317,7 +240,7 @@ const Support = () => {
             <div className='bg-namiv2-black'>
                 <SearchSection t={t} width={width} />
                 <div className='container pt-6 max-w-[1440px]'>
-                    <div className='pb-[80px] px-10 lg:px-[112px] h-full rounded-t-[20px] drop-shadow-onlyLight lg:!bg-transparent'>
+                    <div className='pb-[120px] px-10 lg:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>
                         <div className='mt-20'>
                             <SupportSection
                                 title={t('support-center:announcement')}
@@ -338,29 +261,14 @@ const Support = () => {
                             </SupportSection>
                         </div>
 
-                        <div className='mt-6 lg:mt-8'>
-                            <div className='lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl lg:flex lg:mt-4'>
+                        <div className='mt-20'>
+                            <div className=''>
                                 <SupportSection
                                     title={t('support-center:lasted_articles')}
-                                    contentContainerClassName='lg:!py-0 lg:!pb-6 lg:!mt-4'
-                                    containerClassNames={classNames({
-                                        'lg:w-1/2':
-                                            !!highlightedArticles.length,
-                                    })}
+                                    contentContainerClassName='mt-8'
                                 >
                                     {renderLastedArticles()}
                                 </SupportSection>
-                                {highlightedArticles?.length ? (
-                                    <SupportSection
-                                        title={t(
-                                            'support-center:highlight_articles'
-                                        )}
-                                        contentContainerClassName='lg:!py-0 lg:!pb-6 lg:!mt-4'
-                                        containerClassNames='mt-6 lg:mt-0 lg:w-1/2'
-                                    >
-                                        {renderHighlightedArticles()}
-                                    </SupportSection>
-                                ) : null}
                             </div>
                         </div>
                     </div>
@@ -397,7 +305,7 @@ export const SearchSection = ({ t, width }) => {
             }}
         >
             <div className='max-w-[1440px] w-full px-10 lg:px-[112px] flex flex-col justify-center h-full'>
-                <div className='font-bold text-[20px] lg:text-[44px] text-white mb-12'>
+                <div className='font-bold text-[20px] h-6 lg:text-[44px] lg:h-12 text-white mb-12'>
                     {t('support-center:title')}
                 </div>
                 {renderInput()}

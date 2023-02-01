@@ -18,6 +18,7 @@ import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import RePagination from 'components/common/ReTable/RePagination';
 import { appUrlHandler } from 'constants/faqHelper';
+import { SearchSection } from '.';
 
 const PAGE_SIZE = 15
 
@@ -49,16 +50,14 @@ const SupportSearchResult = () => {
 
     // ? render
     const renderTab = useCallback(() => TAB_SERIES.map(item => (
-        <div key={item.key} className="mr-8 cursor-pointer min-h-[33px]"
-            onClick={() => onQuery(item.key, state.query)}>
-            <div className={classNames(
-                'mb-2 truncate text-sm text-center',
-                { 'font-bold': item.key === state.tab },
-                { 'text-txtSecondary dark:text-txtSecondary-dark font-medium': item.key !== state.tab }
-            )}>
-                {item.localizedPath ? t(item.localizedPath) : item.title}
-            </div>
-            {state.tab === item.key && <div className="m-auto w-[32px] h-[4px] bg-dominant" />}
+        <div className={classNames(
+            'flex items-center truncate border-[1px] h-12 px-5 rounded-[800px] text-base cursor-pointer',
+            { 'border-namiv2-green bg-namiv2-green bg-opacity-10 font-medium text-namiv2-green': item.key === state.tab },
+            { 'border-namiv2-gray-3 font-normal text-namiv2-gray-1': item.key !== state.tab })}
+            key={item.key}
+            onClick={() => onQuery(item.key, state.query)}
+        >
+            {item.localizedPath ? t(item.localizedPath) : item.title}
         </div>
     )), [state.tab, state.query])
 
@@ -107,7 +106,6 @@ const SupportSearchResult = () => {
         if (tab) {
             tagFilters.push(tab)
         }
-        console.log('tagFilters', tagFilters)
         const algoSearch = await algoliaIndex.search(state.query, {
             page: state.currentPage - 1,
             hitsPerPage: 15,
@@ -119,51 +117,29 @@ const SupportSearchResult = () => {
 
     return (
         <MaldivesLayout>
-            <SupportBanner
-                href={PATHS.SUPPORT.DEFAULT}
-                resetPage={() => setState({ currentPage: 1 })}
-                title={language === LANGUAGE_TAG.VI ?
-                    <>
-                        Chúng tôi có thể <br className="hidden lg:block" /> giúp gì cho bạn?
-                    </> :
-                    <>
-                        How can we help you?
-                    </>
-                } innerClassNames="container" />
-            <div className="block md:hidden bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:shadow-none">
-                <div
-                    className="container px-4 py-2 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                    <Link href={PATHS.SUPPORT.DEFAULT}>
-                        <a className="hover:!underline">{t('support-center:title')}</a>
-                    </Link>
-                    <ChevronRight strokeWidth={1.5} size={16} className="mx-2" />
-                    <div>{t('support-center:search_result')}</div>
-                </div>
-            </div>
-            <div
-                className="container md:mt-4 md:px-5 md:pt-2 md:pb-[100px] md:bg-bgPrimary md:dark:bg-bgPrimary-dark md:rounded-t-[20px]"
-                style={theme === THEME_MODE.LIGHT && width >= BREAK_POINTS.md ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}>
-                <div className="mt-4 px-4 flex items-center select-none overflow-x-auto no-scrollbar">
-                    {renderTab()}
-                </div>
-                <div id="my-custom-results"
-                    style={theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
-                    className="px-4 py-5 bg-[#FCFCFC] dark:bg-darkBlue-2 rounded-[20px] lg:p-8">
-                    {state.searchResult?.length ?
-                        renderSearchResult()
-                        : <div
-                            className="min-h-[200px] flex-center text-center text-xs md:text-sm xl:text-[16px] font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                            <Slash size={45} color="currentColor" />
-                            <br />
-                            <span className="px-16">{t('support-center:search_no_result')}</span>
-                        </div>}
-                </div>
-                <div className="mt-10 mb-20 flex items-center justify-center">
-                    <RePagination total={state.totalArticle || 0}
-                        current={state.currentPage}
-                        pageSize={PAGE_SIZE}
-                        onChange={(currentPage) => setState({ currentPage })}
-                    />
+            <div className='w-full bg-namiv2-black'>
+                <SearchSection t={t} width={width} />
+                <div className='container pt-6 max-w-[1440px]'>
+                    <div className='pb-[120px] px-10 lg:px-[112px] h-full drop-shadow-onlyLight bg-transparent'>
+                        <div className='w-full flex items-end justify-between text-namiv2-gray-2'>
+                            <div className='font-semibold text-[32px] leading-[38px]'>
+                                {t('support-center:search_result')}: {state?.query}
+                            </div>
+                            <div className='font-normal text-base h-full'>
+                                {t('support-center:search_result_count', {
+                                    key: state?.query,
+                                    count: state?.totalArticle
+                                })}
+                            </div>
+                        </div>
+                        <div className='mt-5 border-t-[1px] border-namiv2-gray-3 w-full'></div>
+                        <div className='mt-10 flex w-full gap-6'>
+                            {renderTab()}
+                        </div>
+                        <div className='w-full mt-12'>
+                            {renderSearchResult()}
+                        </div>
+                    </div>
                 </div>
             </div>
         </MaldivesLayout>
