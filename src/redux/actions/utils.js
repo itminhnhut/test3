@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import qs from 'qs';
 import format from 'date-fns/format';
 import numeral from 'numeral';
@@ -921,7 +921,7 @@ export const checkInFundingTime = () => {
     return (min === 0 && hour % 8 === 0) || (min >= 50 && hour % 8 === 7);
 };
 
-export const Countdown = ({ date, onEnded, isDays = false }) => {
+export const Countdown = memo(({ date, onEnded, isDays = false }) => {
     const timer = useRef(null);
     const [count, setCount] = useState({
         days: 0,
@@ -976,7 +976,7 @@ export const Countdown = ({ date, onEnded, isDays = false }) => {
             {isDays ? count?.days + 'D' : ''} {count?.hours}:{count?.minutes}:{count?.seconds}
         </>
     );
-};
+});
 
 export const formatFundingRate = (value) => {
     return (value ? (value > 0 ? '' : '-') + formatNumber(Math.abs(value), 6, 0, true) : 0) + '%';

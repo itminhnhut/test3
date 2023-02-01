@@ -20,10 +20,10 @@ import RePagination from 'components/common/ReTable/RePagination';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
+import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
 import { ChevronDown } from 'react-feather';
-import TableV2 from 'components/common/V2/TableV2';
-
-import 'react-contexify/dist/ReactContexify.css';
+import PopoverV2 from 'components/common/V2/PopoverV2';
+// import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -33,7 +33,8 @@ const INITIAL_STATE = {
     search: '',
     currentPage: 1,
     action: null, // action = null is wallet overview
-    currentMarketList: null
+    currentMarketList: null,
+    currentRowAction: null
 };
 
 const MENU_CONTEXT = 'market-available';
@@ -63,7 +64,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 align: 'left',
-                width: 150,
+                width: 220,
                 fixed: 'left'
             },
             {
@@ -71,41 +72,79 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'total',
                 title: t('common:total'),
                 align: 'right',
-                width: 95
+                width: 231
             },
             {
                 key: 'available',
                 dataIndex: 'available',
                 title: t('common:available_balance'),
                 align: 'right',
-                width: 95
+                width: 231
             },
             {
                 key: 'in_order',
                 dataIndex: 'in_order',
                 title: t('common:in_order'),
                 align: 'right',
-                width: 95
+                width: 231
             },
             {
                 key: 'btc_value',
                 dataIndex: 'btc_value',
                 title: t('common:btc_value'),
                 align: 'right',
-                width: 80
+                width: 231
             },
             {
                 key: 'operation',
                 dataIndex: 'operation',
                 title: '',
                 align: 'left',
-                width: 380,
-                fixed: width >= 992 ? 'right' : 'none'
+                width: 72
+                // fixed: 'right'
+                // fixed: width >= 992 ? 'right' : 'none'
             }
         ];
+
         return (
             <>
-                <TableV2
+                <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                    <ReTable
+                        sort
+                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                        useRowHover
+                        data={state.tableData || []}
+                        columns={columns}
+                        rowKey={(item) => item?.key}
+                        loading={!state.tableData?.length}
+                        scroll={{ x: true }}
+                        limit={10}
+                        skip={0}
+                        tableStatus={tableStatus}
+                        paginationProps={{
+                            hide: true,
+                            current: state.currentPage,
+                            pageSize: 10,
+                            onChange: (currentPage) => setCurrentPage(currentPage)
+                        }}
+                        isNamiV2
+                        // height={height}
+                        // emptyText={<NoData loading={!state.tableData?.length} />}
+                        // {...props}
+                    />
+                    {state.tableData?.length > 0 && (
+                        <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
+                            <RePagination
+                                total={state.tableData?.length}
+                                current={state.currentPage}
+                                pageSize={ASSET_ROW_LIMIT}
+                                onChange={(currentPage) => setState({ currentPage })}
+                                name="market_table___list"
+                            />
+                        </div>
+                    )}
+                </div>
+                {/* <TableV2
                     sort
                     defaultSort={{ key: 'btc_value', direction: 'desc' }}
                     useRowHover
@@ -133,7 +172,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     //     pageSize: ASSET_ROW_LIMIT,
                     //     onChange: (currentPage) => setState({ currentPage })
                     // }}
-                />
+                /> */}
 
                 {/* <ReTable
                     sort
@@ -275,10 +314,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             r.replace(`?action=${state.action}`);
         }
     }, [state.action]);
+    const [rowData, setRowData] = useState(null);
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            console.log(allAssets);
             const origin = dataHandler(allAssets, {
                 usdRate,
                 marketWatch,
@@ -296,11 +335,115 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             }
             tableData && setState({ tableData });
         }
-    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search]);
+    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, rowData]);
 
     // useEffect(() => {
     //     console.log('namidev-DEBUG: => ', state)
     // }, [state])
+
+    // handle table:
+    const popover = useRef(null);
+
+    const dataHandler = (data, utils) => {
+        if (!data || !data?.length) {
+            const skeleton = [];
+            for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
+                skeleton.push({
+                    ...ROW_LOADING_SKELETON,
+                    key: `asset_loading__skeleton_${i}`
+                });
+            }
+            return skeleton;
+        }
+
+        const result = [];
+
+        data.forEach((item) => {
+            let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit);
+            if (lockedValue === 'NaN') {
+                lockedValue = '0.0000';
+            }
+
+            const marketAvailable = getMarketAvailable(item?.assetCode, utils?.marketWatch);
+
+            const assetUsdRate = utils?.usdRate?.[item?.id] || 0;
+            const btcUsdRate = utils?.usdRate?.['9'] || 0;
+
+            const totalUsd = item?.wallet?.value * assetUsdRate;
+            const totalBtc = totalUsd / btcUsdRate;
+
+            result.push({
+                key: `exchange_asset___${item?.assetCode}`,
+                asset: (
+                    <div className="flex items-center gap-4">
+                        <AssetLogo assetCode={item?.assetCode} size={32} />
+                        <div className="flex flex-col space-y-1">
+                            <span className="font-semibold text-sm">{item?.assetCode}</span>
+                            <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
+                        </div>
+                    </div>
+                ),
+                total: (
+                    <span className="text-sm whitespace-nowrap">
+                        {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
+                ),
+                available: (
+                    <span className="text-sm whitespace-nowrap">
+                        {item?.wallet?.value - item?.wallet?.locked_value
+                            ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
+                            : '0.0000'}
+                    </span>
+                ),
+                in_order: (
+                    <span className="text-sm whitespace-nowrap">
+                        {item?.wallet?.locked_value ? (
+                            <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
+                                <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                            </Link>
+                        ) : (
+                            '0.0000'
+                        )}
+                    </span>
+                ),
+                btc_value: (
+                    <div className="text-sm">
+                        {assetUsdRate ? (
+                            <>
+                                <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                                    ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                </div>
+                            </>
+                        ) : (
+                            '--'
+                        )}
+                    </div>
+                ),
+                operation: (
+                    <RenderOperationLink2
+                        rowData={rowData}
+                        onClick={(e) =>
+                            setRowData((prev) => {
+                                return prev && prev?.id === e?.id ? null : e;
+                            })
+                        }
+                        item={item}
+                        popover={popover}
+                    />
+                ),
+                [RETABLE_SORTBY]: {
+                    asset: item?.assetName,
+                    total: +item?.wallet?.value,
+                    available: +item?.wallet?.value - +item?.wallet?.locked_value,
+                    in_order: item?.wallet?.locked_value,
+                    btc_value: +totalUsd
+                }
+            });
+        });
+
+        return result;
+    };
 
     return (
         <>
@@ -447,97 +590,74 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
 const ASSET_ROW_LIMIT = 10;
 
-const dataHandler = (data, utils) => {
-    if (!data || !data?.length) {
-        const skeleton = [];
-        for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
-            skeleton.push({
-                ...ROW_LOADING_SKELETON,
-                key: `asset_loading__skeleton_${i}`
-            });
-        }
-        return skeleton;
-    }
-
-    const result = [];
-
-    data.forEach((item) => {
-        let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit);
-        if (lockedValue === 'NaN') {
-            lockedValue = '0.0000';
-        }
-
-        const marketAvailable = getMarketAvailable(item?.assetCode, utils?.marketWatch);
-
-        const assetUsdRate = utils?.usdRate?.[item?.id] || 0;
-        const btcUsdRate = utils?.usdRate?.['9'] || 0;
-
-        const totalUsd = item?.wallet?.value * assetUsdRate;
-        const totalBtc = totalUsd / btcUsdRate;
-
-        result.push({
-            key: `exchange_asset___${item?.assetCode}`,
-            asset: (
-                <div className="flex items-center gap-2">
-                    <AssetLogo assetCode={item?.assetCode} size={32} />
-                    <div className="flex flex-col space-y-1">
-                        <span className="font-semibold text-sm">{item?.assetCode}</span>
-                        <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
-                    </div>
+const RenderOperationLink2 = ({ onClick, item, rowData, popover }) => {
+    return (
+        // <div className="relative">
+        //     <PopoverV2
+        //         ref={popover}
+        //         label={
+        //             <div className="w-full">
+        //                 <SvgMoreHoriz />
+        //             </div>
+        //         }
+        //         className="absolute left-0 w-max py-4 text-xs !mt-6 !z-[1000px]"
+        //     >
+        //         <div className="flex flex-col h-[100px] w-[100px] p-2 bg-white">hello</div>
+        //     </PopoverV2>
+        // </div>
+        <div className="relative h-full flex items-center justify-between">
+            <button onClick={() => onClick(item)} className=" w-full flex items-center justify-center px-0 z-30">
+                <SvgMoreHoriz />
+            </button>
+            {/* <div className={`absolute right-0 bottom-1 bg-red h-[100px] w-[100px] ${rowData?.id === item?.id ? 'flex' : 'hidden'}`}>123123123</div> */}
+            <div
+                className={`absolute top-full right-1/3 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+                border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
+                dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${rowData?.id === item?.id ? 'block' : 'hidden'} `}
+                ref={popover}
+            >
+                <div
+                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full
+                    px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
+                   dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
+                    `}
+                    // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
+                >
+                    Rut
                 </div>
-            ),
-            total: (
-                <span className="text-sm whitespace-nowrap">
-                    {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
-                </span>
-            ),
-            available: (
-                <span className="text-sm whitespace-nowrap">
-                    {item?.wallet?.value - item?.wallet?.locked_value
-                        ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
-                        : '0.0000'}
-                </span>
-            ),
-            in_order: (
-                <span className="text-sm whitespace-nowrap">
-                    {item?.wallet?.locked_value ? (
-                        <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
-                            <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                        </Link>
-                    ) : (
-                        '0.0000'
-                    )}
-                </span>
-            ),
-            btc_value: (
-                <div className="text-sm">
-                    {assetUsdRate ? (
-                        <>
-                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
-                            </div>
-                        </>
-                    ) : (
-                        '--'
-                    )}
+                <div
+                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full 
+                    px-4 py-2 flex items-center justify-center cursor-pointer font-normal
+                   dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
+                    `}
+                    // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
+                >
+                    Nhan
                 </div>
-            ),
-            operation: renderOperationLink(item?.assetName, {
-                ...utils,
-                marketAvailable
-            }),
-            [RETABLE_SORTBY]: {
-                asset: item?.assetName,
-                total: +item?.wallet?.value,
-                available: +item?.wallet?.value - +item?.wallet?.locked_value,
-                in_order: item?.wallet?.locked_value,
-                btc_value: +totalUsd
-            }
-        });
-    });
+            </div>
+        </div>
+    );
+};
 
-    return result;
+const ActionButton = ({ assetName, utils }) => {
+    // const fromAssetListRef = useRef();
+    // useOutsideClick(fromAssetListRef, () => isSelected && setIsSelected(false));
+
+    return (
+        <>
+            <div className="relative w-full flex items-center justify-center px-0 z-30">
+                <SvgMoreHoriz />
+            </div>
+            {assetName == 'VNDC' && (
+                <div
+                    className="absolute right-0 top-full py-4 z-50 bg-white text-black w-[300px] h-[100px]"
+                    // ref={fromAssetListRef}
+                >
+                    <div className="px-4">Hello</div>
+                </div>
+            )}
+        </>
+    );
 };
 
 const renderOperationLink = (assetName, utils) => {

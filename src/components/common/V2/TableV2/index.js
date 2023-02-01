@@ -1,12 +1,31 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import RePagination from 'src/components/common/ReTable/RePagination';
 import NoData from './NoData';
 import sumBy from 'lodash/sumBy';
 
-const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, useRowHover = true, height = 575, rowKey, ...props }) => {
+const index = ({
+    data,
+    columns,
+    loading,
+    limit = 10,
+    skip = 0,
+    onChangePage,
+    page,
+    useRowHover = true,
+    height = 575,
+    rowKey,
+    className = '',
+    pagingClassName = '',
+    isSearch,
+    ...props
+}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const ref = useRef();
+
+    useEffect(() => {
+        if (page) setCurrentPage(page);
+    }, [page]);
 
     const _onChangePage = (page) => {
         setCurrentPage(page);
@@ -19,7 +38,7 @@ const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, use
     }, [columns, ref.current]);
 
     return (
-        <>
+        <div className={className}>
             <ReTable
                 reference={ref}
                 useRowHover={useRowHover}
@@ -36,15 +55,15 @@ const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, use
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} />}
+                emptyText={<NoData loading={loading} isSearch={!!isSearch} />}
                 {...props}
             />
             {data.length > 0 && (
-                <div className="pt-8 pb-10 flex items-center justify-center dark:bg-bgSpotContainer-dark border-t dark:border-divider-dark">
+                <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination total={data.length} isNamiV2 current={currentPage} pageSize={limit} onChange={_onChangePage} name="market_table___list" />
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
