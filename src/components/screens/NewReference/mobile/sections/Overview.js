@@ -97,7 +97,7 @@ const Overview = ({ data, commisionConfig, user }) => {
 
             {isPartner ?
                 <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
-                    {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
+                    {t('reference:referral.readmore')} <a href={policyLink}><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
                 </div> :
                 <div className="mt-[38px] flex gap-3 w-full">
                     {!user ? null : (

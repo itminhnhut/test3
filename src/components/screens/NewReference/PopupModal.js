@@ -156,19 +156,36 @@ export const CalendarIcon = () => (
         />
     </svg>
 );
-export const copy = (text, cb) => {
-    if (navigator.clipboard && navigator.permissions) {
-        navigator.clipboard.writeText(text).then(cb);
-    } else if (document.queryCommandSupported('copy')) {
-        const ele = document.createElement('textarea');
-        ele.value = text;
-        document.body.appendChild(ele);
-        ele.select();
+
+function fallbackCopyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    // Avoid scrolling to bottom
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
         document.execCommand('copy');
-        document.body.removeChild(ele);
-        cb?.();
+    } catch (err) {
+        console.error('Could not copy text: ', err)
     }
-};
+    document.body.removeChild(textArea);
+}
+
+function copy(text) {
+    if (!navigator?.clipboard) {
+        fallbackCopyTextToClipboard(text);
+        return;
+    }
+    navigator?.clipboard?.writeText(text).then(function () {
+    }, function (err) {
+        console.error('Async: Could not copy text: ', err);
+    });
+}
+
 export const CopyIcon = ({ size = 12, color = '#718096', className = '', data }) => {
     const [isClicked, setIsClicked] = useState(false);
     const onClick = () => {
