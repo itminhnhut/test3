@@ -50,6 +50,7 @@ const ContestPerRanks = ({
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const lastUpdatedTime = useRef(null);
+    const mount = useRef(false);
 
     useEffect(() => {
         getRanks(sort);
@@ -57,7 +58,7 @@ const ContestPerRanks = ({
     }, [contest_id]);
 
     useEffect(() => {
-        if (dataSource.length) getRanks(tab);
+        if (mount.current) getRanks(tab);
     }, [quoteAsset]);
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
@@ -85,6 +86,7 @@ const ContestPerRanks = ({
         } catch (e) {
             console.log(e);
         } finally {
+            mount.current = true;
             setLoading(false);
         }
     };
