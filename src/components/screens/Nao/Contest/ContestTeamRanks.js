@@ -53,6 +53,7 @@ const ContestTeamRanks = ({
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const lastUpdatedTime = useRef(null);
+    const mount = useRef(false);
 
     useEffect(() => {
         setLoading(true);
@@ -61,7 +62,7 @@ const ContestTeamRanks = ({
     }, [contest_id]);
 
     useEffect(() => {
-        if (dataSource.length) getRanks(tab);
+        if (mount.current) getRanks(tab);
     }, [quoteAsset]);
 
     useEffect(() => {
@@ -96,6 +97,7 @@ const ContestTeamRanks = ({
         } catch (e) {
             console.log(e);
         } finally {
+            mount.current = true;
             setLoading(false);
         }
     };
