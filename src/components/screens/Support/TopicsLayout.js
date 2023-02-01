@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import SupportBanner from 'components/screens/Support/SupportBanner';
 import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import SearchSection from 'components/screens/Support/SearchSection';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import { PATHS } from 'constants/paths';
 import useApp from 'hooks/useApp';
@@ -14,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import useHideScrollbar from 'hooks/useHideScrollbar';
 import { handleHideScrollBar } from 'utils/helpers';
+import { useWindowSize } from 'utils/customHooks';
 
 const COL_WIDTH = 304;
 
@@ -25,7 +27,7 @@ const TopicsLayout = ({
     faqCurrentGroup
 }) => {
     const [showDropdown, setShowDropdown] = useState({});
-
+    const {width} = useWindowSize()
     const router = useRouter();
     const [theme] = useDarkMode();
     const {
@@ -54,7 +56,7 @@ const TopicsLayout = ({
     return (
         <MaldivesLayout>
             <div className="bg-[#F2F4F6] dark:bg-bgPrimary-dark pt-8 lg:pt-0">
-                <SupportBanner
+                {/* <SupportBanner
                     title={
                         mode === 'announcement'
                             ? t('support-center:announcement')
@@ -62,7 +64,9 @@ const TopicsLayout = ({
                     }
                     href={baseHref}
                     containerClassNames="hidden lg:block"
-                />
+                /> */}
+
+                <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_announcement.png')`} />
                 <div
                     style={
                         theme === THEME_MODE.LIGHT

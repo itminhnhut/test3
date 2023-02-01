@@ -130,6 +130,7 @@ const SupportAnnouncement = () => {
     return (
         <MaldivesLayout>
             <SupportBanner title={t('support-center:title')} innerClassNames="container" href={PATHS.SUPPORT.DEFAULT}/>
+
             <div className="">
                 <div style={
                     theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}

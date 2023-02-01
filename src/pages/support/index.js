@@ -2,9 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { BREAK_POINTS } from 'constants/constants';
 import { PATHS } from 'constants/paths';
-
-import SupportSectionItem from 'components/screens/Support/SupportSectionItem';
-import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import SearchSection from 'components/screens/Support/SearchSection';
 import SupportSection from 'components/screens/Support/SupportSection';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useWindowSize from 'hooks/useWindowSize';
@@ -289,29 +287,3 @@ export const getStaticProps = async ({ locale }) => ({
 })
 
 export default Support
-
-export const SearchSection = ({ t, width }) => {
-    const renderInput = useCallback(() => {
-        return <SupportSearchBar simpleMode={width < BREAK_POINTS.lg} />
-    }, [width])
-
-    return (
-        <div className='flex justify-center w-full h-[456px]'
-            style={{
-                backgroundImage: `url('/images/reference/bg_supportcenter.png')`,
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center'
-            }}
-        >
-            <div className='max-w-[1440px] w-full px-10 lg:px-[112px] flex flex-col justify-center h-full'>
-                <div className='font-bold text-[20px] h-6 lg:text-[44px] lg:h-12 text-white mb-12 w-fit'>
-                    <a href='/support'>
-                        {t('support-center:title')}
-                    </a>
-                </div>
-                {renderInput()}
-            </div>
-        </div>
-    )
-}
