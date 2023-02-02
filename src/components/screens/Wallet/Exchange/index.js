@@ -55,6 +55,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const [currentTheme] = useDarkMode();
     const dispatch = useDispatch();
     const { show } = useContextMenu({ id: MENU_CONTEXT });
+    const [isStickyColOperation, setIsStickyColOperation] = useState(false);
+    useEffect(() => {
+        setIsStickyColOperation(width >= 992 && width < 1280);
+    }, [width]);
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
@@ -102,9 +106,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'operation',
                 title: '',
                 align: 'left',
-                width: 72
+                width: 72,
                 // fixed: 'right'
-                // fixed: width >= 992 ? 'right' : 'none'
+                fixed: isStickyColOperation ? 'right' : 'none'
             }
         ];
 
@@ -120,7 +124,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         rowKey={(item) => item?.key}
                         loading={!state.tableData?.length}
                         scroll={{ x: true }}
-                        limit={10}
+                        limit={ASSET_ROW_LIMIT}
                         skip={0}
                         tableStatus={tableStatus}
                         paginationProps={{
@@ -285,7 +289,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
         const result = [];
 
-        data.forEach((item) => {
+        data.forEach((item, idx) => {
             let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit);
             if (lockedValue === 'NaN') {
                 lockedValue = '0.0000';
@@ -351,12 +355,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     <RenderOperationLink2
                         // rowData={curRowSelected}
                         isShow={curRowSelected?.id === item?.id}
+                        idx={idx}
                         onClick={(e) => {
                             setCurRowSelected((prev) => {
                                 console.log('SetCurRowSelected: ', prev, e);
                                 return prev && prev?.id === e?.id ? null : e;
                             });
                         }}
+                        isStickyColOperation={isStickyColOperation}
                         item={item}
                         popover={popover}
                         assetName={item?.assetName}
@@ -524,7 +530,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
 const ASSET_ROW_LIMIT = 10;
 
-const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils }) => {
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation }) => {
     const markets = utils?.marketAvailable;
     const noMarket = !markets?.length;
 
@@ -534,10 +540,18 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
     `;
 
-    const cssPopover = (right, left, top, bottom) => {
-        return `absolute ${top || 'top-full'} ${right || 'right-1/3'} py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+    const cssPopover = () => {
+        if (isStickyColOperation) {
+            return `absolute ${idx < 2 ? 'top-full' : 'bottom-full'} right-full py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+            border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
+            dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+        } else {
+            return `absolute ${
+                ASSET_ROW_LIMIT - idx < 3 ? 'bottom-full' : 'top-full'
+            } right-1/3 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
         border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
         dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+        }
     };
 
     if (Array.isArray(markets) && markets?.length) {
@@ -574,10 +588,12 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     }
 
     return (
-        <div className="relative h-full flex items-center justify-between" id={item.id} ref={popover}>
-            <button onClick={() => onClick(item)} className=" w-full flex items-center justify-center px-0 z-30">
-                <SvgMoreHoriz />
-            </button>
+        <>
+            <div className="relative h-full flex items-center justify-between" id={item.id} ref={popover}>
+                <button onClick={() => onClick(item)} className=" w-full flex items-center justify-center px-0 z-30">
+                    <SvgMoreHoriz />
+                </button>
+            </div>
             {/* Popover */}
             <ul className={cssPopover()}>
                 <li className={cssLi}>
@@ -619,7 +635,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </li>
                 )}
             </ul>
-        </div>
+        </>
     );
 };
 
