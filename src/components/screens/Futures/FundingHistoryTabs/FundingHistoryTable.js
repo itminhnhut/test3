@@ -329,9 +329,8 @@ export default function FundingHistoryTable({ currency, active }) {
                     <div className="sm:flex items-center relative cursor-pointer sm:space-x-8">
                         <div
                             className="relative z-10 flex items-center text-lg leading-6 "
-                            // onMouseOver={() => setActivePairList(true)}
+                            onMouseOver={() => setActivePairList(true)}
                             onMouseLeave={() => setActivePairList(false)}
-                            onClick={() => setActivePairList(!activePairList)}
                         >
                             <span className="font-semibold sm:font-medium text-sm sm:text-xl">
                                 {pairConfig?.baseAsset ? pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset : '-/-'}
