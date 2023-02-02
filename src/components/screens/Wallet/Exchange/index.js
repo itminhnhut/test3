@@ -23,6 +23,8 @@ import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
 import { ChevronDown } from 'react-feather';
 import PopoverV2 from 'components/common/V2/PopoverV2';
+import useOutsideClick from 'hooks/useOutsideClick';
+
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
@@ -144,92 +146,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         </div>
                     )}
                 </div>
-                {/* <TableV2
-                    sort
-                    defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    limit={10}
-                    skip={0}
-                    tableStatus={tableStatus}
-                    // tableStyle={{
-                    //     paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    //     tableStyle: { minWidth: '1300px !important' },
-                    //     headerStyle: {},
-                    //     rowStyle: {},
-                    //     shadowWithFixedCol: width < 1366,
-                    //     noDataStyle: {
-                    //         minHeight: '480px'
-                    //     }
-                    // }}
-                    // paginationProps={{
-                    //     hide: true,
-                    //     current: state.currentPage,
-                    //     pageSize: ASSET_ROW_LIMIT,
-                    //     onChange: (currentPage) => setState({ currentPage })
-                    // }}
-                /> */}
-
-                {/* <ReTable
-                    sort
-                    defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    tableStatus={tableStatus}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '1300px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true,
-                        current: state.currentPage,
-                        pageSize: ASSET_ROW_LIMIT,
-                        onChange: (currentPage) => setState({ currentPage })
-                    }}
-                /> */}
             </>
         );
     }, [state.tableData, state.currentPage, width]);
-
-    // const renderPagination = useCallback(() => {
-    //     return (
-    //         <div className="mt-10 mb-20 flex items-center justify-center">
-    //             <RePagination
-    //                 total={state.tableData?.length}
-    //                 current={state.currentPage}
-    //                 pageSize={ASSET_ROW_LIMIT}
-    //                 onChange={(currentPage) => setState({ currentPage })}
-    //                 name="market_table___list"
-    //             />
-    //         </div>
-    //     );
-    // }, [state.tableData, state.currentPage]);
 
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
                 <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5 min-w-[60px] min-h-[60px] md:min-w-[64px] md:min-h-[64px] flex items-center justify-center">
-                    {/* <img
-                            className="-ml-0.5"
-                            src={getS3Url('/images/icon/ic_wallet_2.png')}
-                            height={width >= 768 ? '25' : '14'}
-                            width={width >= 768 ? '25' : '14'}
-                            alt=""
-                        /> */}
                     <SvgWalletExchange size={32} />
                 </div>
                 <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary">
@@ -245,7 +169,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
         );
     }, [estBtc, estUsd, state.hideAsset, currentTheme]);
 
-    // Kha dung - dang dat lenh
+    // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
         return (
             <div className="flex pt-8 gap-12">
@@ -314,8 +238,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             r.replace(`?action=${state.action}`);
         }
     }, [state.action]);
-    const [rowData, setRowData] = useState(null);
 
+    const [curRowSelected, setCurRowSelected] = useState(null);
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
             const origin = dataHandler(allAssets, {
@@ -335,7 +259,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             }
             tableData && setState({ tableData });
         }
-    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, rowData]);
+    }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, curRowSelected]);
 
     // useEffect(() => {
     //     console.log('namidev-DEBUG: => ', state)
@@ -343,6 +267,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     // handle table:
     const popover = useRef(null);
+    useOutsideClick(popover, () => {
+        return curRowSelected && setCurRowSelected(null);
+    });
 
     const dataHandler = (data, utils) => {
         if (!data || !data?.length) {
@@ -422,14 +349,21 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 ),
                 operation: (
                     <RenderOperationLink2
-                        rowData={rowData}
-                        onClick={(e) =>
-                            setRowData((prev) => {
+                        // rowData={curRowSelected}
+                        isShow={curRowSelected?.id === item?.id}
+                        onClick={(e) => {
+                            setCurRowSelected((prev) => {
+                                console.log('SetCurRowSelected: ', prev, e);
                                 return prev && prev?.id === e?.id ? null : e;
-                            })
-                        }
+                            });
+                        }}
                         item={item}
                         popover={popover}
+                        assetName={item?.assetName}
+                        utils={{
+                            ...utils,
+                            marketAvailable
+                        }}
                     />
                 ),
                 [RETABLE_SORTBY]: {
@@ -529,10 +463,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 <div className="flex items-end justify-between pt-8">
                     <div className="bg-namiv2-gray flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
                         <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
-                        <a href="/" className="text-sm dark:text-txtPrimary-dark">
+                        <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
                             {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
+                            <ChevronDown size={24} className="-rotate-90" />
                         </a>
-                        <ChevronDown size={24} className="-rotate-90" />
                     </div>
 
                     <div className="mt-2 lg:flex">
@@ -590,73 +524,102 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
 const ASSET_ROW_LIMIT = 10;
 
-const RenderOperationLink2 = ({ onClick, item, rowData, popover }) => {
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils }) => {
+    const markets = utils?.marketAvailable;
+    const noMarket = !markets?.length;
+
+    let tradeButton = null;
+    const cssLi = `text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full
+    px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
+    dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
+    `;
+
+    const cssPopover = (right, left, top, bottom) => {
+        return `absolute ${top || 'top-full'} ${right || 'right-1/3'} py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+        border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
+        dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+    };
+
+    if (Array.isArray(markets) && markets?.length) {
+        if (markets?.length === 1) {
+            const pair = initMarketWatchItem(markets?.[0]);
+            // console.log('namidev-DEBUG: => ', pair)
+            tradeButton = (
+                <li>
+                    <Link
+                        href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
+                            pair: `${assetName}-${pair?.quoteAsset}`
+                        })}
+                        prefetch={false}
+                    >
+                        <a className={cssLi}>{utils?.translator('common:trade')}</a>
+                    </Link>
+                </li>
+            );
+        } else {
+            tradeButton = (
+                <li
+                    className={cssLi}
+                    onClick={(e) => {
+                        utils?.setState({
+                            currentMarketList: utils?.marketAvailable
+                        });
+                        setTimeout(() => utils?.show(e), 200);
+                    }}
+                >
+                    {utils?.translator('common:trade')}
+                </li>
+            );
+        }
+    }
+
     return (
-        // <div className="relative">
-        //     <PopoverV2
-        //         ref={popover}
-        //         label={
-        //             <div className="w-full">
-        //                 <SvgMoreHoriz />
-        //             </div>
-        //         }
-        //         className="absolute left-0 w-max py-4 text-xs !mt-6 !z-[1000px]"
-        //     >
-        //         <div className="flex flex-col h-[100px] w-[100px] p-2 bg-white">hello</div>
-        //     </PopoverV2>
-        // </div>
-        <div className="relative h-full flex items-center justify-between">
+        <div className="relative h-full flex items-center justify-between" id={item.id} ref={popover}>
             <button onClick={() => onClick(item)} className=" w-full flex items-center justify-center px-0 z-30">
                 <SvgMoreHoriz />
             </button>
-            {/* <div className={`absolute right-0 bottom-1 bg-red h-[100px] w-[100px] ${rowData?.id === item?.id ? 'flex' : 'hidden'}`}>123123123</div> */}
-            <div
-                className={`absolute top-full right-1/3 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
-                border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-                dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${rowData?.id === item?.id ? 'block' : 'hidden'} `}
-                ref={popover}
-            >
-                <div
-                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full
-                    px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
-                   dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
-                    `}
-                    // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
-                >
-                    Rut
-                </div>
-                <div
-                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full 
-                    px-4 py-2 flex items-center justify-center cursor-pointer font-normal
-                   dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
-                    `}
-                    // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
-                >
-                    Nhan
-                </div>
-            </div>
+            {/* Popover */}
+            <ul className={cssPopover()}>
+                <li className={cssLi}>
+                    <a
+                        href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
+                            fromAsset: 'USDT',
+                            toAsset: assetName
+                        })}
+                    >
+                        {utils?.translator('common:buy')}
+                    </a>
+                </li>
+                {!noMarket && tradeButton}
+                <li className={cssLi}>
+                    <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
+                        {utils?.translator('common:deposit')}
+                    </a>
+                </li>
+                <li className={cssLi}>
+                    <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
+                        {utils?.translator('common:withdraw')}
+                    </a>
+                </li>
+                {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
+                    <li
+                        className={cssLi}
+                        onClick={() =>
+                            utils?.dispatch(
+                                setTransferModal({
+                                    isVisible: true,
+                                    fromWallet: WalletType.SPOT,
+                                    toWallet: WalletType.FUTURES,
+                                    asset: assetName
+                                })
+                            )
+                        }
+                    >
+                        {utils?.translator('common:transfer')}
+                    </li>
+                )}
+            </ul>
         </div>
-    );
-};
-
-const ActionButton = ({ assetName, utils }) => {
-    // const fromAssetListRef = useRef();
-    // useOutsideClick(fromAssetListRef, () => isSelected && setIsSelected(false));
-
-    return (
-        <>
-            <div className="relative w-full flex items-center justify-center px-0 z-30">
-                <SvgMoreHoriz />
-            </div>
-            {assetName == 'VNDC' && (
-                <div
-                    className="absolute right-0 top-full py-4 z-50 bg-white text-black w-[300px] h-[100px]"
-                    // ref={fromAssetListRef}
-                >
-                    <div className="px-4">Hello</div>
-                </div>
-            )}
-        </>
     );
 };
 
