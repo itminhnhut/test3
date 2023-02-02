@@ -165,7 +165,10 @@ export const seasons = [
             en: 'Traders need to meet the Basic Conditions to be ranked. For details',
             isHtml: false
         },
-        rules: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-nami-championship-mua-4',
+        rules: {
+            vi: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-usdt-nami-championship-mua-5',
+            en: 'https://goonus.io/en/onus-x-nami-nao-futures-vndc-usdt-tournament-nami-championship-season-5'
+        },
         total_rewards: '1,000,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2023-02-02T17:00:00.000Z', end: '2023-02-16T17:00:00.000Z' },
