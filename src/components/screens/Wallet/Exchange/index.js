@@ -24,6 +24,7 @@ import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
 import { ChevronDown } from 'react-feather';
 import PopoverV2 from 'components/common/V2/PopoverV2';
 import useOutsideClick from 'hooks/useOutsideClick';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -135,7 +136,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         }}
                         isNamiV2
                         // height={height}
-                        // emptyText={<NoData loading={!state.tableData?.length} />}
+                        emptyText={<NoData isSearch={!!state.search} />}
                         // {...props}
                     />
                     {state.tableData?.length > 0 && (
@@ -502,7 +503,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             <input
                                 className="text-sm w-full px-2.5"
                                 value={state.search}
-                                onChange={(e) => setState({ search: e?.target?.value })}
+                                onChange={(e) => {
+                                    console.log(e);
+                                    setState({ search: e?.target?.value });
+                                }}
                                 onFocus={() => setState({ currentPage: 1 })}
                                 placeholder={t('common:search')}
                             />

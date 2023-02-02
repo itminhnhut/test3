@@ -21,6 +21,7 @@ import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -105,7 +106,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                     }}
                     isNamiV2
                     // height={height}
-                    // emptyText={<NoData loading={!state.tableData?.length} />}
+                    emptyText={<NoData isSearch={!!state.search} />}
                     // {...props}
                 />
                 {state.tableData?.length > 0 && (
@@ -200,9 +201,12 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             if (state.hideSmallAsset) {
                 tableData = origin.filter((item) => item?.sortByValue?.total > 1);
             }
+            if (state.search) {
+                tableData = tableData.filter((item) => item?.sortByValue?.asset.includes(state.search?.toUpperCase()));
+            }
             tableData && setState({ tableData });
         }
-    }, [usdRate, marketWatch, state.allAssets, state.hideSmallAsset]);
+    }, [usdRate, marketWatch, state.allAssets, state.hideSmallAsset, state.search]);
 
     return (
         <div>
