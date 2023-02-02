@@ -68,7 +68,7 @@ export default function FundingHistory(props) {
                             {t('futures:funding_history_tab:link_overview')}
                         </a>
                     </div>
-                    <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row">
+                    <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
                         <Tab
                             series={SCREEN_TAB_SERIES}
                             currentIndex={selectedTab}
