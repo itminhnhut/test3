@@ -12,9 +12,9 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { KYC_STATUS } from 'redux/actions/const';
 import Link from 'next/link';
-import AvatarModal from 'components/screens/Account/AvatarModal_v2';
-import { useState } from 'react';
+import AccountAvatar from 'components/screens/Account/AccountAvatar';
 import { PATHS } from 'constants/paths';
+import { getS3Url } from 'redux/actions/utils';
 
 const KYCPendingTag = ({ t }) => {
     return <div
@@ -46,14 +46,14 @@ export default function AccountLayout({ children }) {
         <div
             className='bg-black-800 h-44'
             style={{
-                backgroundImage: `url(/images/screen/account/banner.png)`,
+                backgroundImage: `url(${getS3Url('/images/screen/account/banner.png')})`,
                 backgroundSize: 'auto 100%',
                 backgroundPosition: 'center'
             }}
         />
         <Container className='mal-container px-4 h-full'>
             <div className='flex items-end justify-between'>
-                <AvatarModal currentAvatar={user?.avatar} />
+                <AccountAvatar currentAvatar={user?.avatar} />
 
                 <div className='ml-4 flex-1'>
                     <div className='flex mb-3'>
@@ -103,8 +103,11 @@ export default function AccountLayout({ children }) {
                         );
                     })}
                 </div>
-                <div
-                    className='text-teal cursor-pointer font-medium hover:underline'>{t('fee-structure:see_fee_structures')}</div>
+                <span
+                    onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
+                    className='text-teal cursor-pointer font-medium hover:underline'>
+                    {t('fee-structure:see_fee_structures')}
+                </span>
             </div>
             <div className='pb-28'>
                 {children}

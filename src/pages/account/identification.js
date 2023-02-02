@@ -14,7 +14,7 @@ const NotKycCard = ({
     className
 }) => {
     return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src='/images/screen/account/kyc_require.png'
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_require.png')}
              className='mx-auto' />
         <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
         <span className='text-txtSecondary'>{t('identification:account.not_verified_content')}</span>
@@ -31,24 +31,24 @@ const KYCStepCard = ({
             <span className='text-txtSecondary'>{t('identification:kyc_step:content')}</span>
             <div className='space-y-3 mt-4'>
                 <div className='flex items-center'>
-                    <img width={32} height={32} src='/images/screen/account/ic_user.png' alt='Nami Exchange' />
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_user.png')} alt='Nami Exchange' />
                     <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_1')}</span>
                 </div>
 
                 <div className='flex items-center'>
-                    <img width={32} height={32} src='/images/screen/account/ic_payment_type.png'
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_payment_type.png')}
                          alt='Nami Exchange' />
                     <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_2')}</span>
                 </div>
 
                 <div className='flex items-center'>
-                    <img width={32} height={32} src='/images/screen/account/ic_identity_card.png'
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_identity_card.png')}
                          alt='Nami Exchange' />
                     <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_3')}</span>
                 </div>
 
                 <div className='flex items-center'>
-                    <img width={32} height={32} src='/images/screen/account/ic_record.png'
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_record.png')}
                          alt='Nami Exchange' />
                     <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_4')}</span>
                 </div>
@@ -61,7 +61,7 @@ const KYCStepCard = ({
             </div>
             <div className='text-center mt-5'>
                 <span className='text-txtSecondary'>{t('identification:kyc_step:scan')}</span>
-                <div className='flex mt-[24px] justify-between max-w-[290px] m-auto'>
+                <div className='flex mt-6 justify-between max-w-[290px] m-auto gap-4'>
                     <Link href='https://apps.apple.com/app/id1480302334'>
                         <a target='_blank'>
                             <img
@@ -89,7 +89,7 @@ const ProcessKycCard = ({
     className
 }) => {
     return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src='/images/screen/account/kyc_wait.png' className='mx-auto' />
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_wait.png')} className='mx-auto' />
         <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.process')}</p>
         <span className='text-txtSecondary'>{t('identification:account.process_content')}</span>
     </div>;
@@ -106,7 +106,7 @@ const CurrentFuturesCard = ({
         </div>
         <div className='grid grid-cols-2 gap-y-9 gap-x-8'>
             <div className='flex items-center'>
-                <img width={48} height={48} src='/images/screen/account/ic_feature_1.png' alt='Nami Exchange' />
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_1.png')} alt='Nami Exchange' />
                 <div className='ml-4'>
                     <p className='font-bold'>{t('identification:current_futures:buy_sell')}</p>
                     <span
@@ -115,7 +115,7 @@ const CurrentFuturesCard = ({
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src='/images/screen/account/ic_feature_2.png' alt='Nami Exchange' />
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_2.png')} alt='Nami Exchange' />
                 <div className='ml-4'>
                     <p className='font-bold'>{t('identification:current_futures:deposit')}</p>
                     <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
@@ -123,7 +123,7 @@ const CurrentFuturesCard = ({
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src='/images/screen/account/ic_feature_3.png' alt='Nami Exchange' />
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_3.png')} alt='Nami Exchange' />
                 <div className='ml-4'>
                     <p className='font-bold'>{t('identification:current_futures:withdrawal')}</p>
                     <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
@@ -131,7 +131,7 @@ const CurrentFuturesCard = ({
             </div>
 
             <div className='flex'>
-                <Image width={48} height={48} src='/images/screen/profile/ic_feature_4.png' />
+                <Image width={48} height={48} src={getS3Url('/images/screen/profile/ic_feature_4.png')} />
                 <div className='ml-4'>
                     <p className='font-bold'>{t('identification:current_futures:other')}</p>
                     <span className='text-txtSecondary'>{t('identification:current_futures:reward')}</span>
@@ -146,7 +146,7 @@ const VerifiedKycCard = ({
     className
 }) => {
     return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src='/images/screen/account/kyc_verified.png' className='mx-auto' />
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_verified.png')} className='mx-auto' />
         <p className='text-teal font-medium text-xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
         <span className='text-teal font-medium text-xl '>{t('identification:account.verified')}</span>
     </div>;
