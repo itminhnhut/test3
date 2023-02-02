@@ -18,7 +18,10 @@ import Image from 'next/image';
 
 import classNames from 'classnames';
 const ListRankings = dynamic(() => import('./ListRankings'));
-
+const currencies = [
+    { label: 'VNDC', value: 'VNDC' },
+    { label: 'USDT', value: 'USDT' }
+];
 export const seasons = [
     {
         season: 1,
@@ -144,15 +147,41 @@ export const seasons = [
         total_rewards: '1,000,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2022-12-28T17:00:00.000Z', end: '2023-01-08T17:00:00.000Z' },
-        active: true,
+        active: false,
         top_ranks_per: 20,
         top_ranks_team: 10,
         lastUpdated: true
+    },
+    {
+        season: 8,
+        start: '2023-02-05T17:00:00.000Z',
+        end: '2023-03-05T17:00:00.000Z',
+        contest_id: 11,
+        title_detail: { vi: 'NAO Futures VNDC & USDT – Nami Championship mùa 5', en: 'NAO Futures VNDC & USDT – Nami Championship Season 5' },
+        title: { vi: 'NAO Futures VNDC & USDT', en: 'NAO Futures VNDC & USDT' },
+        title_champion: { vi: 'Nami Championship mùa 5', en: 'Nami Championship Season 5' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-usdt-nami-championship-mua-5',
+            en: 'https://goonus.io/en/onus-x-nami-nao-futures-vndc-usdt-tournament-nami-championship-season-5'
+        },
+        total_rewards: '1,000,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        time_to_create: { start: '2023-02-02T17:00:00.000Z', end: '2023-02-16T17:00:00.000Z' },
+        active: true,
+        top_ranks_per: 20,
+        top_ranks_team: 10,
+        lastUpdated: true,
+        hasTabCurrency: true
     }
 ];
 
-const CONTEST_ID = 10;
-const SEASON = 7;
+const CONTEST_ID_SPECIAL = 10;
+const SEASON_SPECIAL = 7;
 
 const initState = {
     tab: 'Contest Ranking',
@@ -189,25 +218,25 @@ const Contest = (props) => {
         // ANCHOR VOL1: KLGD: 500,000,000,000 VNDC
         const rsKLGD5 = fetchApi({
             url: API_CONTEST_NAO_SPECIAL_RANK,
-            params: { contest_id: CONTEST_ID, type: 'VOL5' }
+            params: { contest_id: CONTEST_ID_SPECIAL, type: 'VOL5' }
         });
 
         // ANCHOR VOL3: KLGD: 300,000,000,000 VNDC
         const rsKLGD3 = fetchApi({
             url: API_CONTEST_NAO_SPECIAL_RANK,
-            params: { contest_id: CONTEST_ID, type: 'VOL3' }
+            params: { contest_id: CONTEST_ID_SPECIAL, type: 'VOL3' }
         });
 
         // ANCHOR VOL2: KLGD: 200,000,000,000 VNDC
         const rsKLGD2 = fetchApi({
             url: API_CONTEST_NAO_SPECIAL_RANK,
-            params: { contest_id: CONTEST_ID, type: 'VOL2' }
+            params: { contest_id: CONTEST_ID_SPECIAL, type: 'VOL2' }
         });
 
         // ANCHOR VOL1: KLGD: 100,000,000,000 VNDC
         const rsKLGD1 = fetchApi({
             url: API_CONTEST_NAO_SPECIAL_RANK,
-            params: { contest_id: CONTEST_ID, type: 'VOL1' }
+            params: { contest_id: CONTEST_ID_SPECIAL, type: 'VOL1' }
         });
 
         try {
@@ -220,14 +249,14 @@ const Contest = (props) => {
     };
 
     useEffect(() => {
-        if (props.season === SEASON && tab === initState.tab2) {
+        if (props.season === SEASON_SPECIAL && tab === initState.tab2) {
             setTab(initState.tab);
         }
     }, [props.season]);
 
-    const onShowDetail = (e, sort) => {
+    const onShowDetail = (e, sort, quoteAsset) => {
         sortName.current = sort;
-        rowData.current = e;
+        rowData.current = { ...e, quoteAsset };
         showShowDetail(true);
     };
 
@@ -274,7 +303,7 @@ const Contest = (props) => {
     //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
     // }, [props?.contest_id, props?.lastUpdated]);
 
-    const showPnl = ![9, 10].includes(props?.contest_id);
+    const showPnl = ![9, 10, 11].includes(props?.contest_id);
 
     const params = useMemo(() => {
         const queryString = window.location.search;
@@ -328,8 +357,16 @@ const Contest = (props) => {
                     params={params}
                     sort={params.team}
                     showPnl={showPnl}
+                    currencies={currencies}
                 />
-                <ContestPerRanks {...props} lastUpdatedTime={lastUpdatedTime} params={params} sort={params.individual} showPnl={showPnl} />
+                <ContestPerRanks
+                    {...props}
+                    lastUpdatedTime={lastUpdatedTime}
+                    params={params}
+                    sort={params.individual}
+                    showPnl={showPnl}
+                    currencies={currencies}
+                />
             </>
         );
     };
@@ -363,9 +400,9 @@ const Contest = (props) => {
                 />
             )}
             <div className="nao_section">
-                <ContesRules seasons={seasons} seasonConfig={SEASON} {...props} />
+                <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                 <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
-                {props?.season === SEASON ? (
+                {props?.season === SEASON_SPECIAL ? (
                     <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
                         {renderTab()}
                         {renderContentTab1()}

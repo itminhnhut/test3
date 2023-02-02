@@ -1,5 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import {
+    TextLiner,
+    CardNao,
+    ButtonNao,
+    Table,
+    Column,
+    getColor,
+    renderPnl,
+    Tooltip,
+    capitalize,
+    ImageNao,
+    TabsNao,
+    TabItemNao
+} from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -13,8 +26,21 @@ import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
 
-const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdated, sort, top_ranks_team, showPnl }) => {
+const ContestTeamRanks = ({
+    onShowDetail,
+    previous,
+    contest_id,
+    minVolumeTeam,
+    quoteAsset: q,
+    lastUpdated,
+    sort,
+    top_ranks_team,
+    showPnl,
+    currencies,
+    hasTabCurrency
+}) => {
     const [tab, setTab] = useState(sort);
+    const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
         i18n: { language }
@@ -27,12 +53,17 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
     const lastUpdatedTime = useRef(null);
+    const mount = useRef(false);
 
     useEffect(() => {
         setLoading(true);
         getRanks(sort);
         setTab(sort);
     }, [contest_id]);
+
+    useEffect(() => {
+        if (mount.current) getRanks(tab);
+    }, [quoteAsset]);
 
     useEffect(() => {
         const queryString = window.location.search;
@@ -50,7 +81,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
         try {
             const { data: originalData, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_GROUP_PNL : API_CONTEST_GET_RANK_GROUP_VOLUME,
-                params: { contest_id: contest_id }
+                params: { contest_id, quoteAsset }
             });
             let data = originalData?.groups;
             setTotal(data.length);
@@ -66,6 +97,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
         } catch (e) {
             console.log(e);
         } finally {
+            mount.current = true;
             setLoading(false);
         }
     };
@@ -164,10 +196,19 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     )}
                 </div>
             </div>
+            {hasTabCurrency && (
+                <TabsNao>
+                    {currencies.map((rs) => (
+                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                            {rs.label}
+                        </TabItemNao>
+                    ))}
+                </TabsNao>
+            )}
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
-                        <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                        <CardNao onClick={() => onShowDetail(item, tab, quoteAsset)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
@@ -228,7 +269,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                             dataSource?.slice((page - 1) * 10, page * 10).map((item, index) => {
                                 return (
                                     <div
-                                        onClick={() => onShowDetail(item, tab)}
+                                        onClick={() => onShowDetail(item, tab, quoteAsset)}
                                         key={index}
                                         className={`flex gap-4 sm:gap-6 p-3 cursor-pointer ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}
                                     >
@@ -288,7 +329,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                                                 )}
                                             </div>
                                             <div
-                                                onClick={() => onShowDetail(item, tab)}
+                                                onClick={() => onShowDetail(item, tab, quoteAsset)}
                                                 className="underline text-sm font-medium text-nao-grey pt-1 cursor-pointer select-none"
                                             >
                                                 {t('nao:contest:details')}
@@ -310,7 +351,7 @@ const ContestTeamRanks = ({ onShowDetail, previous, contest_id, minVolumeTeam, q
                     loading={loading}
                     noItemsMessage={t('nao:contest:no_rank')}
                     dataSource={dataSource.slice((page - 1) * 10, page * 10)}
-                    onRowClick={(e) => onShowDetail(e, tab)}
+                    onRowClick={(e) => onShowDetail(e, tab, quoteAsset)}
                 >
                     <Column minWidth={50} className="text-nao-grey font-medium" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />

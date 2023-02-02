@@ -1,5 +1,18 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, Tooltip, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import {
+    TextLiner,
+    CardNao,
+    ButtonNao,
+    Table,
+    Column,
+    getColor,
+    renderPnl,
+    Tooltip,
+    capitalize,
+    ImageNao,
+    TabsNao,
+    TabItemNao
+} from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
 import fetchApi from 'utils/fetch-api';
@@ -12,8 +25,21 @@ import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 
-const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdated, sort, params, top_ranks_per, showPnl }) => {
+const ContestPerRanks = ({
+    previous,
+    contest_id,
+    minVolumeInd,
+    quoteAsset: q,
+    lastUpdated,
+    sort,
+    params,
+    top_ranks_per,
+    showPnl,
+    currencies,
+    hasTabCurrency
+}) => {
     const [tab, setTab] = useState(sort);
+    const [quoteAsset, setQuoteAsset] = useState(q);
     const {
         t,
         i18n: { language }
@@ -24,11 +50,16 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const lastUpdatedTime = useRef(null);
+    const mount = useRef(false);
 
     useEffect(() => {
         getRanks(sort);
         setTab(sort);
     }, [contest_id]);
+
+    useEffect(() => {
+        if (mount.current) getRanks(tab);
+    }, [quoteAsset]);
 
     const rank = tab === 'pnl' ? 'individual_rank_pnl' : 'individual_rank_volume';
 
@@ -40,7 +71,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         try {
             const { data: originalData, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
-                params: { contest_id: contest_id }
+                params: { contest_id, quoteAsset }
             });
             const data = originalData?.users;
             if (data && status === ApiStatus.SUCCESS) {
@@ -55,6 +86,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         } catch (e) {
             console.log(e);
         } finally {
+            mount.current = true;
             setLoading(false);
         }
     };
@@ -156,6 +188,15 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                     )}
                 </div>
             </div>
+            {hasTabCurrency && (
+                <TabsNao>
+                    {currencies.map((rs) => (
+                        <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                            {rs.label}
+                        </TabItemNao>
+                    ))}
+                </TabsNao>
+            )}
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-5 sm:gap-[22px] mt-[2.75rem]">
                     {top3.map((item, index) => (
