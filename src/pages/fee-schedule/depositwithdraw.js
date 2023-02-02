@@ -95,14 +95,6 @@ const DepositWithdrawFee = () => {
                 preventSort: true,
             },
             {
-                key: 'min_withdraw',
-                dataIndex: 'min_withdraw',
-                title: t('wallet:min_withdraw'),
-                width: 80,
-                align: 'left',
-                preventSort: true,
-            },
-            {
                 key: 'deposit_fee',
                 dataIndex: 'deposit_fee',
                 title: t('wallet:deposit_fee'),
@@ -111,11 +103,19 @@ const DepositWithdrawFee = () => {
                 preventSort: true,
             },
             {
+                key: 'min_withdraw',
+                dataIndex: 'min_withdraw',
+                title: t('wallet:min_withdraw'),
+                width: 80,
+                align: 'right',
+                preventSort: true,
+            },
+            {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
                 title: t('wallet:withdraw_fee'),
                 width: 80,
-                align: 'left',
+                align: 'right',
                 preventSort: true,
             },
         ]
@@ -317,21 +317,20 @@ const DepositWithdrawFee = () => {
     }, [])
 
     return (
-        <>
-            <div className='flex items-center justify-between'>
-                <div className='t-common'>{t('fee-structure:depwdl_fee')}</div>
-                {width >= BREAK_POINTS.sm && renderSearchBox()}
-            </div>
-            <div className='mt-4 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+        <div className='mt-20'>
+            <div className='text-[2rem] leading-8 font-bold'>{t('fee-structure:depwdl_fee')}</div>
+            <div className='mt-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
                 {renderNotes()}
             </div>
-            {width < BREAK_POINTS.sm && (
-                <div className='mt-8'>{renderSearchBox()}</div>
-            )}
-            <MCard addClass='mt-6 !py-0 !px-0 overflow-hidden'>
+
+            <div className='max-w-[23rem] mt-20'>
+                {renderSearchBox()}
+            </div>
+
+            <div className='mt-8 overflow-hidden border border-namiv2-gray-3 rounded-xl'>
                 {renderTable()}
-            </MCard>
-        </>
+            </div>
+        </div>
     )
 }
 

@@ -25,6 +25,8 @@
     "exchange_trading_fee": "Spot Trading Fee",
     "andor": "and/or",
     "use_asset_deduction": "{{ asset }} {{ value }} off",
+    "see_fee_structures": "See fee structures",
+    "current_fee_level": "Current level",
     "your_fee_level": "Your fee level",
     "upgrade_level_suggest": "How to upgrade level?",
     "fee_rate": "Fee Rate",

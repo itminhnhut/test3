@@ -90,7 +90,7 @@ const MadivesLayout = ({
                                 : 0,
                         ...contentWrapperStyle,
                     }}
-                    className='relative flex-1 bg-white dark:bg-darkBlue-1'
+                    className='relative flex-1 bg-white dark:bg-dark'
                 >
                     {useNavShadow && <NavBarBottomShadow />}
                     {children}

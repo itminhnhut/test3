@@ -21,6 +21,8 @@ export const USER_REVOKE_DEVICE = API_PREFIX + "user/devices/revoke";
 export const SET_USER_AVATAR = API_PREFIX + "user/set_avatar";
 export const USER_AVATAR_PRESET = API_PREFIX + "user/avatar_preset";
 
+export const API_GET_USER_AVATAR_PRESET = API_V3_PREFIX + "users/avatar-preset";
+
 export const API_REFRESH_TOKEN = API_PREFIX + "web/refresh_token";
 
 export const API_GET_FAVORITE = API_PREFIX + "symbols/favorite";
