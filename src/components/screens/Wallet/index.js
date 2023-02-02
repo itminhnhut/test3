@@ -24,6 +24,7 @@ import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
 import NeedLogin from 'components/common/NeedLogin';
 import { MIN_WALLET } from 'constants/constants';
+import PartnersWallet from './Partners';
 
 const INITIAL_STATE = {
     screen: null,
@@ -391,6 +392,14 @@ const Wallet = () => {
                                 marketWatch={state.futuresMarketWatch}
                             />
                         )}
+                        {state.screen === WALLET_SCREENS.PARTNERS && (
+                            <PartnersWallet
+                                estBtc={state.futuresEstBtc}
+                                estUsd={state.futuresRefPrice}
+                                usdRate={state.usdRate}
+                                marketWatch={state.futuresMarketWatch}
+                            />
+                        )}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
                         {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
                         {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />}
@@ -425,17 +434,17 @@ const SCREEN_TAB_SERIES = [
         localized: null
     },
     {
-        key: 3,
+        key: 8,
         code: WALLET_SCREENS.PARTNERS,
-        title: 'Đối tác',
-        localized: null
-    },
-    {
-        key: 4,
-        code: WALLET_SCREENS.STAKING,
-        title: 'Staking',
-        localized: null
+        title: 'Partners',
+        localized: 'common:partners'
     }
+    // {
+    //     key: 4,
+    //     code: WALLET_SCREENS.STAKING,
+    //     title: 'Staking',
+    //     localized: null
+    // }
     // {
     //     key: 4,
     //     code: WALLET_SCREENS.FARMING,
