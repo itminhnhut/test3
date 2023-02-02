@@ -947,3 +947,18 @@ input[type='number'] {
     left: 0;
     overflow-y: scroll !important;
 }
+
+.nami-list-disc > * {
+    position: relative;
+    @apply pl-6;
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        left: .5rem;
+        top: 50%;
+        @apply bg-white rounded-full;
+    }
+}
