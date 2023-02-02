@@ -221,7 +221,7 @@ const Profile = () => {
                     '!block': user?.kyc_status === KYC_STATUS.APPROVED
                 })}
                 style={{
-                    backgroundImage: 'url(/images/screen/account/bg-banner-2.png)',
+                    backgroundImage: `url(${getS3Url('/images/screen/account/bg-banner-2.png')})`,
                     backgroundSize: 'cover'
                 }}
             >
