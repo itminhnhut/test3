@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Check, Eye, EyeOff, Search, X } from 'react-feather';
+import { Check, Search, X } from 'react-feather';
+import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+
 import { SECRET_STRING } from 'utils';
 
 import useWindowSize from 'hooks/useWindowSize';
@@ -219,7 +221,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <EyeOff size={16} className="mr-[4px]" /> : <Eye size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
                             </div>
                         </div>
                         {renderEstWallet()}
