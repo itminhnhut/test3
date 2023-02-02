@@ -471,7 +471,11 @@
         "funding_history": "Funding History",
         "funding_warning": "Risk Warning",
         "funding_warning_content": "Futures trading around the funding threshold with high funding rates contracts carries a lot of risk from the highly volatile market, you may experience bad experiences such as: </br>- Time difference between funding counter and device time vs server time up to 5 seconds </br>- Processing time for market orders (open, close, add volume...) is longer than other times, can be up to 10 seconds </br>- The minimum price gap for trigger prices (with limit orders, SL-TP settings...) can be up to 2% of the market price at the time of setting. </br>Please consider carefully before trading and manage your position well to avoid affecting the trading efficiency, NAO Futures will not be responsible for any loss that occurs when trading during extreme volatile market times.",
-        "funding_warning_accept": "I have understood and agree"
+        "funding_warning_accept": "I have understood and agree",
+        "to_learn_funding": "To learn more about Funding Rates, see more at",
+        "vol_position": "Volume Position",
+        "funding_rate2": "Funding Rates",
+        "amount_of_asset": "Amount Of Asset Exchange"
     },
     "transaction_histories": "Transaction History",
     "order_information": "Infor",

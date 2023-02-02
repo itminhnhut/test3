@@ -27,35 +27,34 @@ const SearchInput = ({ placeholder, customStyle, handleFilterCategoryList, handl
         }
     }, [debouncedValue]);
 
+    const onChange = (value) => {
+        setQueryFilter(value);
+        if (parentState) parentState(value);
+    };
+
     return (
-        <div className="form-group" style={customWrapperStyle}>
+        <div className="w-full" style={customWrapperStyle}>
             <div
-                className={classNames(
-                    'bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between py-2 rounded-md',
-                    {
-                        '!border-teal': focus
-                    }
-                )}
+                className={classNames('bg-bgInput dark:!bg-dark-2 border border-transparent px-3 flex items-center justify-between h-11 sm:h-12 rounded-md', {
+                    '!border-teal': focus
+                })}
             >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 h-full w-full">
                     <span className="text-txtSecondary flex items-center">
                         <IconSearch />
                     </span>
                     <input
                         type="text"
                         placeholder={placeholder}
-                        onChange={({ currentTarget }) => {
-                            setQueryFilter(currentTarget.value);
-                            parentState && parentState(currentTarget.value);
-                        }}
+                        onChange={({ currentTarget }) => onChange(currentTarget.value)}
                         value={queryFilter}
-                        className="bg-transparent text-txtPrimary dark:text-white p-0 text-sm leading-5 py-[3px]"
+                        className="bg-transparent text-txtPrimary dark:text-white text-sm sm:text-base h-full w-full"
                         style={customStyle}
                         onFocus={() => setFocus(true)}
                         onBlur={() => setFocus(false)}
                     />
                 </div>
-                <X size={16} color={colors.darkBlue5} />
+                {queryFilter && <X className="cursor-pointer" size={16} color={colors.darkBlue5} onClick={() => onChange('')} />}
             </div>
         </div>
     );

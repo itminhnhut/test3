@@ -367,7 +367,7 @@ const SpotComp = () => {
                         <div
                             key="chart"
                             className={classNames(`border-t border-b border-r border-divider dark:border-divider-dark`, {
-                                hidden: !state.isShowChart
+                                hidden: !state.isShowChart,
                             })}
                         >
                             <Chart symbol={symbol} initTimeFrame={initTimeFrame} />

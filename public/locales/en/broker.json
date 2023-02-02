@@ -44,5 +44,6 @@
     "broker_require_count": " 01 people",
     "broker_require_join": " into Nami Exchange successfully.",
     "broker_ref_link": "Invite now",
-    "broker": "Broker"
+    "broker": "Broker",
+    "commission_type": "Loại hoa hồng"
 }
