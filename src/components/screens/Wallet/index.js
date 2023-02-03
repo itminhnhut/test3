@@ -462,22 +462,6 @@ const Background = styled.div.attrs({ className: 'w-full h-full' })`
     background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
-const CustomContainer = styled.div.attrs({ className: 'mal-container px-4 py-20' })`
-    @media (min-width: 1024px) {
-        max-width: 1000px !important;
-    }
-
-    @media (min-width: 1280px) {
-        max-width: 1260px !important;
-    }
-
-    @media (min-width: 1440px) {
-        max-width: 1400px !important;
-    }
-
-    @media (min-width: 1920px) {
-        max-width: 1440px !important;
-    }
-`;
+const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 m-auto px-4 py-20' })``;
 
 export default Wallet;
