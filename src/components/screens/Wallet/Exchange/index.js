@@ -58,9 +58,12 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const [currentTheme] = useDarkMode();
     const dispatch = useDispatch();
     const { show } = useContextMenu({ id: MENU_CONTEXT });
+
+    // handle columns operations in table sticky or not?
     const [isStickyColOperation, setIsStickyColOperation] = useState(false);
     useEffect(() => {
-        setIsStickyColOperation(width >= 992 && width < 1280);
+        // setIsStickyColOperation(width >= 992 && width < 1280);
+        setIsStickyColOperation(width < 1280);
     }, [width]);
 
     // Render Handler
@@ -273,10 +276,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     // }, [state])
 
     // handle table:
+    const flag = useRef(false);
     const popover = useRef(null);
-    useOutsideClick(popover, () => {
-        return curRowSelected && setCurRowSelected(null);
-    });
+
+    useOutsideClick(popover, () => !flag.current && curRowSelected && setCurRowSelected(null));
 
     const dataHandler = (data, utils) => {
         if (!data || !data?.length) {
@@ -360,8 +363,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         isShow={curRowSelected?.id === item?.id}
                         idx={idx}
                         onClick={(e) => {
+                            flag.current = true;
                             setCurRowSelected((prev) => {
-                                console.log('SetCurRowSelected: ', prev, e);
                                 return prev && prev?.id === e?.id ? null : e;
                             });
                         }}
@@ -373,6 +376,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             ...utils,
                             marketAvailable
                         }}
+                        onMouseOut={() => (flag.current = false)}
                     />
                 ),
                 [RETABLE_SORTBY]: {
@@ -506,7 +510,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 className="text-sm w-full px-2.5"
                                 value={state.search}
                                 onChange={(e) => {
-                                    console.log(e);
                                     setState({ search: e?.target?.value });
                                 }}
                                 onFocus={() => setState({ currentPage: 1 })}
@@ -536,7 +539,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
 const ASSET_ROW_LIMIT = 10;
 
-const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation }) => {
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, data }) => {
     const markets = utils?.marketAvailable;
     const noMarket = !markets?.length;
 
@@ -545,16 +548,17 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
     dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
     `;
-
     const cssPopover = () => {
         if (isStickyColOperation) {
-            return `absolute ${idx < 2 ? 'top-full' : 'bottom-full'} right-full py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+            return `absolute ${
+                idx >= 0 && idx < ASSET_ROW_LIMIT - 4 ? 'top-full mt-2' : 'bottom-full mb-2'
+            } right-full py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
             border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
             dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
         } else {
             return `absolute ${
-                ASSET_ROW_LIMIT - idx < 3 ? 'bottom-full' : 'top-full'
-            } right-1/3 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
+                ASSET_ROW_LIMIT - idx < 4 ? 'bottom-full' : 'top-full'
+            } right-1/2 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
         border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
         dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
         }
@@ -594,14 +598,12 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     }
 
     return (
-        <>
-            <div className="relative h-full flex items-center justify-between" id={item.id} ref={popover}>
-                <button onClick={() => onClick(item)} className=" w-full flex items-center justify-center px-0 z-30">
-                    <SvgMoreHoriz />
-                </button>
-            </div>
+        <div className=" h-full flex items-center justify-between" id={item.id} onMouseOut={onMouseOut}>
+            <button onClick={() => onClick(item)} className="relative w-full flex items-center justify-center px-0 z-30">
+                <SvgMoreHoriz />
+            </button>
             {/* Popover */}
-            <ul className={cssPopover()}>
+            <ul ref={isShow ? popover : null} className={cssPopover()}>
                 <li className={cssLi}>
                     <a
                         href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
@@ -641,7 +643,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </li>
                 )}
             </ul>
-        </>
+        </div>
     );
 };
 
@@ -699,7 +701,6 @@ const renderOperationLink = (assetName, utils) => {
                 {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
                 {utils?.translator('common:buy')}
             </a>
-            {!noMarket && tradeButton}
             <a
                 className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
                 href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}
@@ -712,6 +713,7 @@ const renderOperationLink = (assetName, utils) => {
             >
                 {utils?.translator('common:withdraw')}
             </a>
+            {!noMarket && tradeButton}
             {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                 <div
                     className="py-1.5 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"

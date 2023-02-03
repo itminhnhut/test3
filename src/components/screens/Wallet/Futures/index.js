@@ -213,7 +213,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     return (
         <div>
             <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
+                <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
                         <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="mr-2">{t('wallet:est_balance')}</div>
@@ -227,8 +227,8 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         {renderEstWallet()}
                     </div>
 
-                    <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto">
+                    <div className="">
+                        <div className="flex items-end justify-end h-full w-full ">
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}

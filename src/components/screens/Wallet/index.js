@@ -14,6 +14,7 @@ import FarmingWallet from 'components/screens/Wallet/Farming';
 import TransactionHistory from 'components/screens/Wallet/Transaction';
 import Axios from 'axios';
 import Tab from 'components/common/Tab';
+import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
 import styled from 'styled-components';
 import { API_FARMING_SUMMARY, API_STAKING_SUMMARY } from 'redux/actions/apis';
@@ -70,6 +71,7 @@ const Wallet = () => {
     const r = useRouter();
     const [currentTheme] = useDarkMode();
     const focused = useWindowFocus();
+    const { t } = useTranslation(['common']);
 
     // Helper
     const walletMapper = (walletType, allWallet, assetConfig) => {
@@ -357,7 +359,7 @@ const Wallet = () => {
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             {auth ? (
                 <CustomContainer>
-                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left">Ví của tôi</div>
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left">{t('common:my_wallet')}</div>
                     {renderScreenTab()}
                     <div className="mt-8 text-txtPrimary dark:text-txtPrimary-dark">
                         {state.screen === WALLET_SCREENS.OVERVIEW && (
