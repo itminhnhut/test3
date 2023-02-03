@@ -54,10 +54,11 @@ const Luckydraw = ({ platform }) => {
     };
 
     const getImage = (isModal) => {
+        const isFrame = platform === 'frame';
         if (!isModal) {
-            return `/images/screen/futures/luckdraw/bg_lucky_${platform}${xs ? '_xs' : ''}.png`;
+            return `/images/screen/futures/luckdraw/${isFrame ? '' : 'n_'}bg_lucky_${platform}${xs ? '_xs' : ''}.png`;
         } else {
-            return `/images/screen/futures/luckdraw/bg_claim_${platform}${xs ? '_xs' : ''}.png`;
+            return `/images/screen/futures/luckdraw/${isFrame ? '' : 'n_'}bg_claim_${platform}${xs ? '_xs' : ''}.png`;
         }
     };
 
