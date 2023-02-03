@@ -9,7 +9,7 @@ import { formatPrice, formatTime, getSymbolString } from 'src/redux/actions/util
 
 let temp = [];
 const Trades = (props) => {
-    const { publicSocket, symbol, layoutConfig } = props;
+    const { publicSocket, symbol, layoutConfig, isPro } = props;
     const router = useRouter();
     const [recentTrade, setRecentTrade] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -70,7 +70,7 @@ const Trades = (props) => {
     }, [publicSocket, MAX_LENGTH, symbol]);
 
     return (
-        <div className="h-full p-4 bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 row-span-1" ref={ref}>
+        <div className={`p-4 ${isPro ? '' : 'pr-6'} bg-bgSpotContainer dark:bg-bgSpotContainer-dark row-span-1 h-[95%] overflow-hidden`} ref={ref}>
             <h3 className="font-semibold text-sm mb-4 text-txtPrimary dark:text-txtPrimary-dark dragHandleArea">{t('trades')}</h3>
             <div className="flex justify-between items-center mb-4">
                 <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xxs font-medium">
@@ -84,7 +84,7 @@ const Trades = (props) => {
             <div className="overflow-y-auto max-h-[calc(100%-12px)]">
                 {loading ? (
                     <div className="flex items-center justify-center w-full h-full">
-                        <IconLoading color="#00C8BC" />
+                        <IconLoading color="#0c0e14" />
                     </div>
                 ) : (
                     recentTrade &&

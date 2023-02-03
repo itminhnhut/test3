@@ -183,7 +183,7 @@ export default function FundingHistory({ currency, active }) {
     const columns = useMemo(() => {
         return [
             {
-                key: 'asset',
+                key: 'symbol',
                 dataIndex: 'asset',
                 title: t('futures:funding_history_tab:contract'),
                 align: 'left',
@@ -243,7 +243,7 @@ export default function FundingHistory({ currency, active }) {
                 <ListFundingMobile dataTable={dataFilter} currency={currency} loading={isLoading} isSearch={strSearch} />
             ) : (
                 <TableV2
-                    defaultSort={{ key: 'asset', direction: 'desc' }}
+                    defaultSort={{ key: 'symbol', direction: 'desc' }}
                     useRowHover
                     sort={!isMobile}
                     data={dataFilter}

@@ -319,7 +319,12 @@ export function render24hChange(ticker, showPrice = false) {
     }
     return (
         <div className={`${className} text-xs space-x-2 flex font-semibold`}>
-            {showPrice && <span>{formatNumber(priceChange, ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
+            {showPrice && (
+                <span>
+                    {priceChange <= 0 ? '' : '+'}
+                    {formatNumber(priceChange, ticker?.q === 'VNDC' ? 0 : 2, 0, true)}
+                </span>
+            )}
             <span className="flex items-center">
                 <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> {percent}
             </span>

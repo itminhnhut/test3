@@ -1,18 +1,12 @@
-const SvgWallet = ({
-    color = '#F6F6F6',
-    size = 16,
-    onClick
-}) => {
+const FullScreenIcon = ({ color = '#8694B3', size = 16, ...props }) => {
     return (
-        <svg width={size} height={size} onClick={onClick} viewBox="0 0 18 18" 
-            xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.668 0.999023H17.0013V6.33162" stroke={color} stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M6.33333 16.9967H1V11.6641" stroke={color} stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M16.9996 0.999023L10.7773 7.22038" stroke={color} stroke-linecap="round" stroke-linejoin="round" />
-            <path d="M1 16.9967L7.22222 10.7754" stroke={color} stroke-linecap="round" stroke-linejoin="round" />
+        <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="m14 10.23-1.414 1.413-2.115-2.114-.942.942 2.114 2.115L10.23 14H14v-3.77zM2 5.77l1.414-1.413L5.529 6.47l.942-.942-2.114-2.115L5.77 2H2v3.77zM14 2h-3.77l1.413 1.414L9.53 5.529l.942.942 2.115-2.114L14 5.77V2zM2 14h3.77l-1.413-1.414 2.114-2.115-.942-.942-2.115 2.114L2 10.23V14z"
+                fill={color}
+            />
         </svg>
     );
 };
 
-export default SvgWallet;
-
+export default FullScreenIcon;

@@ -119,16 +119,15 @@ const ReTable = memo(
         }));
         const renderTable = useCallback(() => {
             let defaultSort =
-                sort && restProps?.defaultSort
-                    ? orderBy(data, [`${RETABLE_SORTBY}.${restProps?.defaultSort?.key}`], [`${restProps?.defaultSort?.direction || 'asc'}`])
-                    : data;
+                sort && restProps?.defaultSort ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`]) : data;
 
             let _ = defaultSort;
 
             if (Object.keys(sorter).length) {
                 const _s = Object.entries(sorter)[0];
                 // console.log('namidev-DEBUG: ___ ', _s[0], _s[1])
-                defaultSort = orderBy(data, [`${RETABLE_SORTBY}.${_s[0]}`], [`${_s[1] ? 'asc' : 'desc'}`]);
+                defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+                // defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
                 // console.log(`namidev-DEBUG: After sort by ${_s[0]} `, defaultSort)
             }
 
@@ -196,7 +195,7 @@ const ReTable = memo(
                 columns.forEach((c) => {
                     let item = c;
                     if (!HIDE_SORTER.includes(c.key)) {
-                        if (c.align === 'left') className.push('justify-start');
+                        if (c.align === 'left') className.push('!justify-start');
                         if (c.align === 'right') className.push('justify-end');
                         if (c.align === 'center') className.push('justify-center');
 
@@ -346,6 +345,12 @@ const ReTableWrapperV2 = styled.div`
     .rc-table-content {
         overflow: auto;
         min-height: ${({ height }) => `${height}px`};
+        table {
+            min-height: ${({ height, empty }) => empty && `${height}px`};
+        }
+        .rc-table-tbody {
+            min-height: ${({ height, empty }) => empty && `${height - 70}px`};
+        }
     }
 
     .rc-table-cell-fix-right {
@@ -362,7 +367,11 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            box-shadow: none !important;
+            border-left: ${() => `1px solid ${colors.divider.dark}`};
+            z-index: 10;
+            width: 1px;
+            visibility: visible;
+            /* box-shadow: none !important; */
         }
     }
 
@@ -404,6 +413,9 @@ const ReTableWrapperV2 = styled.div`
             &:hover td {
                 background: ${({ useRowHover, isDark, empty }) => !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.grey5) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
+                .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
+                    border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};
+                }
             }
             .rc-table-cell-fix-right:last-child:not(.rc-table-cell-fix-sticky) {
                 z-index: 30;

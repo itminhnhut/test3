@@ -25,7 +25,7 @@ import classNames from 'classnames';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, parentState } = props;
+    const { symbol, layoutConfig, parentState, isPro } = props;
     const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
     const { base, quote } = props.symbol;
     const dispatch = useDispatch();
@@ -175,7 +175,7 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className="progress-container my-[1px] cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3"
+                className={`progress-container my-[1px] cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3 ${isPro ? 'pr-4' : 'pr-3'}`}
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
@@ -201,7 +201,7 @@ const OrderBook = (props) => {
         if (side === 'buy' && [ORDER_BOOK_MODE.ASKS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)) {
             inner = loadingAsks ? (
                 <div className="flex items-center justify-center h-full">
-                    <IconLoading color="#00C8BC" />
+                    <IconLoading color="#0c0e14" />
                 </div>
             ) : (
                 <div className="mt-6">
@@ -213,7 +213,7 @@ const OrderBook = (props) => {
         } else if (side === 'sell' && [ORDER_BOOK_MODE.BIDS, ORDER_BOOK_MODE.ALL].includes(orderBookMode)) {
             inner = loadingBids ? (
                 <div className="flex items-center justify-center h-full">
-                    <IconLoading color="#00C8BC" />
+                    <IconLoading color="#0c0e14" />
                 </div>
             ) : (
                 <div className="">
@@ -268,11 +268,7 @@ const OrderBook = (props) => {
                                                                  dark:text-txtSecondary-dark
                                                                 hover:text-teal
                                                                 dark:hover:bg-hover-dark
-                                                                ${
-                                                                    isActive
-                                                                        ? 'bg-opacity-10 dark:bg-opacity-10 text-teal dark:text-white font-semibold'
-                                                                        : ''
-                                                                }
+                                                                ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 text-teal dark:text-white font-semibold' : ''}
                                                                 `}
                                                 >
                                                     {item}
@@ -291,8 +287,8 @@ const OrderBook = (props) => {
 
     return (
         <>
-            <div className="px-2.5 relative h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex flex-col box-border" ref={ref}>
-                <div className="flex items-center justify-between my-6">
+            <div className={`${isPro ? 'pl-4' : 'pl-6'} relative h-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark flex flex-col box-border`} ref={ref}>
+                <div className={`flex items-center justify-between my-6 ${isPro ? 'pr-4' : 'pr-3'}`}>
                     <div className="flex justify-start space-x-3">
                         <OrderBookAll
                             className={`cursor-pointer ${orderBookMode === ORDER_BOOK_MODE.ALL ? '' : 'opacity-50'}`}
@@ -318,7 +314,7 @@ const OrderBook = (props) => {
                             <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs">
                                 {t('quantity')} ({base})
                             </div>
-                            <div className="flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                            <div className={`flex flex-1 justify-end text-txtSecondary dark:text-txtSecondary-dark text-xs ${isPro ? 'pr-4' : 'pr-3'}`}>
                                 {t('total')} ({quote})
                             </div>
                         </div>

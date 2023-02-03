@@ -1,10 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import styled from 'styled-components';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
 import { getLoginUrl } from 'src/redux/actions/utils';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const NoData = ({ text, loading = false, isSearch = false, className = '' }) => {
     const { t } = useTranslation();
@@ -12,12 +11,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
     const user = useSelector((state) => state.auth.user);
 
     const isDark = currentTheme === THEME_MODE.DARK;
-    if (loading)
-        return (
-            <Spiner isDark={isDark}>
-                <div className="spinner"></div>
-            </Spiner>
-        );
+    if (loading) return <Spiner isDark={isDark} />;
 
     return (
         <div className={`flex flex-col space-y-3 items-center justify-center ${className}`}>
@@ -39,44 +33,6 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
 };
 
 export default NoData;
-
-const Spiner = styled.div`
-    .spinner {
-        position: relative;
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-    }
-
-    .spinner::before,
-    .spinner::after {
-        content: '';
-        position: absolute;
-        border-radius: inherit;
-    }
-
-    .spinner::before {
-        width: 100%;
-        height: 100%;
-        background-image: ${() => `linear-gradient(0deg, ${colors.teal} 0%, #212121 50%)`};
-        animation: spin 0.5s infinite linear;
-    }
-
-    .spinner::after {
-        width: 85%;
-        height: 85%;
-        background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
 
 const NoDataIcon = ({ isDark }) => (
     <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">

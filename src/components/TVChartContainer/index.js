@@ -12,6 +12,7 @@ import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { isMobile } from 'react-device-detect';
 import { debounce } from 'lodash';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const CONTAINER_ID = 'nami-tv';
 const CHART_VERSION = '1.0.6';
@@ -32,7 +33,8 @@ export class TVChartContainer extends React.PureComponent {
         chartType: 'price',
         interval: '60',
         studies: [],
-        priceChartType: 1
+        priceChartType: 1,
+        fullscreen: false
         // chartCompareLoaded: true,
     };
 
@@ -81,9 +83,9 @@ export class TVChartContainer extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        if (this?.widget !== null) {
-            this?.widget.remove();
-            this?.widget = null;
+        if (this?.widget) {
+            this.widget.remove();
+            this.widget = null;
         }
         clearInterval(this.intervalSaveChart);
     }
@@ -141,6 +143,14 @@ export class TVChartContainer extends React.PureComponent {
             //
             // this.widget.unsubscribe('study',{})
         }
+    };
+
+    handleFullScreen = (flag) => {
+        const el = document.querySelector('#spot_containter_chart');
+        if (el) {
+            el.classList[flag ? 'add' : 'remove']('!fixed', '!inset-0', '!w-screen', '!h-screen', '!translate-x-0', '!translate-y-0', '!z-[9999999999]');
+        }
+        this.setState({ fullscreen: flag });
     };
 
     getInterval(resolution) {
@@ -453,7 +463,7 @@ export class TVChartContainer extends React.PureComponent {
             charts_storage_api_version: this.props.chartsStorageApiVersion,
             client_id: this.props.clientId,
             user_id: this.props.userId,
-            fullscreen: this.props.fullscreen,
+            // fullscreen: this.state.fullscreen,
             autosize: true,
             loading_screen: { backgroundColor: this.props.theme === 'dark' ? colors.dark : '#fff' },
             studies_overrides: {
@@ -524,6 +534,7 @@ export class TVChartContainer extends React.PureComponent {
 
     render() {
         const { chartType } = this.state;
+        const { isPro } = this.props;
 
         return (
             <>
@@ -533,9 +544,9 @@ export class TVChartContainer extends React.PureComponent {
                             this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''
                         }`}
                     >
-                        <IconLoading color="#00C8BC" />
+                        <Spiner isDark />
                     </div>
-                    <div className="w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea">
+                    <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea ${isPro ? 'pl-6' : ''}`}>
                         {this.state.chartStatus === ChartStatus.LOADED && (
                             <TimeFrame
                                 symbol={this.props.symbol}
@@ -557,10 +568,10 @@ export class TVChartContainer extends React.PureComponent {
                                 extendsIndicators={this.props.extendsIndicators}
                                 priceChartType={this.state.priceChartType}
                                 clearExtendsIndicators={this.props.clearExtendsIndicators}
-                                customChartFullscreen={this.props.customChartFullscreen}
-                                fullScreen={this.props.fullScreen}
                                 isVndcFutures={this.props.isVndcFutures}
                                 reNewComponentKey={this.props.reNewComponentKey}
+                                fullscreen={this.state.fullscreen}
+                                handleFullScreen={this.handleFullScreen}
                             />
                         )}
                     </div>

@@ -37,7 +37,7 @@ const TradeHistory = (props) => {
 
     const renderActions = () => {
         return (
-            <div className={`flex items-center text-teal divide-x divide-divider-dark`}>
+            <div className={`flex items-center text-teal divide-x divide-divider-dark font-semibold`}>
                 <span className="cursor-pointer pr-3">Mua</span>
                 <span className="cursor-pointer px-3">Nạp</span>
                 <span className="cursor-pointer px-3">Rút</span>
@@ -64,6 +64,7 @@ const TradeHistory = (props) => {
                 )
             },
             {
+                key: 'value',
                 title: t('common:total_balance'),
                 dataIndex: 'value',
                 align: 'right',
@@ -71,6 +72,7 @@ const TradeHistory = (props) => {
                 render: (v) => formatNumber(v)
             },
             {
+                key: 'available_balance',
                 title: t('common:available_balance'),
                 dataIndex: 'available_balance',
                 align: 'right',
@@ -78,6 +80,7 @@ const TradeHistory = (props) => {
                 render: (v, row) => formatNumber(row.value - Math.max(row.locked_value, 0))
             },
             {
+                key: 'locked_value',
                 title: t('common:in_order'),
                 dataIndex: 'locked_value',
                 align: 'right',
@@ -89,31 +92,30 @@ const TradeHistory = (props) => {
                 width: isPro ? 300 : 150,
                 align: 'left',
                 fixed: 'right',
+                preventSort: true,
                 render: (v) => renderActions()
             }
         ],
-        [exchangeConfig, isPro]
+        [exchangeConfig, isPro, dataFilter]
     );
 
-    const renderTable = useCallback(() => {
-        // if (!isAuth || !wallet.length) return <TableNoData />;
-        let data = wallet;
+    const dataFilter = useMemo(() => {
+        return filterByCurrentPair ? wallet.filter((hist) => String(currentPair).toLowerCase().indexOf(String(hist?.assetCode).toLowerCase()) !== -1) : wallet;
+    }, [wallet, currentPair, filterByCurrentPair]);
 
-        return (
-            <TableV2
-                useRowHover
-                data={data}
-                rowKey={(item) => `${item?.assetCode}`}
-                columns={columns}
-                loading={loading}
-                scroll={{ x: true }}
-                limit={6}
-                skip={0}
-            />
-        );
-    }, [isAuth, columns, loading, filterByCurrentPair, currentPair, wallet]);
-
-    return renderTable();
+    return (
+        <TableV2
+            sort
+            useRowHover
+            data={dataFilter}
+            rowKey={(item) => `${item?.key}`}
+            columns={columns}
+            loading={loading}
+            scroll={{ x: true }}
+            limit={6}
+            skip={0}
+        />
+    );
 };
 
 export default TradeHistory;
