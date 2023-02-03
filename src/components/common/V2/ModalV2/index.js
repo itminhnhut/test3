@@ -73,7 +73,7 @@ const ModalV2 = ({
                     className={classnames('h-full relative ease-in transition-all flex', {
                         'translate-y-full duration-200': !isVisible || !mount,
                         'translate-y-0 duration-200': isVisible && mount,
-                        'flex-col justify-end': isMobile && width && width < screens.drawer
+                        'flex-col justify-end': isMobile && width && width < 820
                     })}
                 >
                     <div
@@ -82,12 +82,13 @@ const ModalV2 = ({
                             'w-full absolute overflow-auto max-h-[90%] border border-divider-dark',
                             {
                                 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[90%] min-w-[390px]':
-                                    !isMobile || (width && width >= screens.drawer)
+                                    !isMobile || (width && width >= 820),
+                                '!border-none': isMobile
                             },
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark`, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()
@@ -95,7 +96,7 @@ const ModalV2 = ({
                                           <div
                                               className={classnames(
                                                   'flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2',
-                                                  { '-mt-6': !isMobile },
+                                                  { '-mt-6': !isMobile, 'dark:bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}
                                           >

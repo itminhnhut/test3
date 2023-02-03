@@ -11,7 +11,7 @@ import { ExchangeOrderEnum } from 'redux/actions/const';
 import NoData from 'components/common/V2/TableV2/NoData';
 import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-
+import ModalV2 from 'components/common/V2/ModalV2';
 export const CURRENCIES = [
     {
         name: 'VNDC',
@@ -88,6 +88,7 @@ const TradingRules = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [currency, setCurrency] = useState(CURRENCIES[0].value);
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
         if (!publicSocket) return;
@@ -120,12 +121,7 @@ const TradingRules = () => {
                             <div className="text-sm max-w-[300px] text-left">{t(tooltip)}</div>
                         </Tooltip>
                     )}
-                    <div
-                        className="text-sm flex items-center space-x-1 md:space-x-3 border-b border-darkBlue-5 border-dashed"
-                        data-tip=""
-                        data-for={title}
-                        id={tooltip}
-                    >
+                    <div className="text-sm flex items-center space-x-1 md:space-x-3" data-tip="" data-for={title} id={tooltip}>
                         {t(title)}
                     </div>
                 </>
@@ -232,85 +228,117 @@ const TradingRules = () => {
 
     return (
         <MaldivesLayout>
+            {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
             <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20')}>
-                <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold mb-7 sm:mb-20">{t('futures:trading_rules')}</div>
-                <div className="sm:flex items-center justify-between mb-8">
-                    <div className="flex items-center space-x-4 text-sm sm:text-base mb-12 sm:mb-0">
-                        {CURRENCIES.map((rs) => (
-                            <div
-                                className={classNames(
-                                    'text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer',
-                                    {
-                                        '!border-teal !text-teal font-semibold bg-teal/[0.1]': currency === rs.value
-                                    }
-                                )}
-                                onClick={() => setCurrency(rs.value)}
-                            >
-                                {rs.name}
-                            </div>
-                        ))}
+                <div className="max-w-screen-v3 m-auto">
+                    <div className="flex justify-between mb-7 sm:mb-20">
+                        <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
+                        {isMobile && <HelperIcon onClick={() => setShowModal(true)} />}
                     </div>
-                    <SearchInput
-                        placeholder={t('futures:funding_history_tab:find_pair')}
-                        customWrapperStyle={{ maxWidth: 368 }}
-                        handleFilterAssetsList={setStrSearch}
-                    />
-                </div>
-
-                {isMobile ? (
-                    dataSource.length > 0 ? (
-                        <>
-                            <div className="divide-y divide-divider-dark mt-6">
-                                {dataSource.map((item, index) => {
-                                    const hidden = index + 1 > currentPage * limit;
-                                    return (
-                                        <div key={index} className={`space-y-6 flex flex-col ${index !== 0 ? 'py-8' : 'pb-8'} ${hidden ? 'hidden' : ''}`}>
-                                            <div>{renderLogo(item)}</div>
-                                            <div className="text-sm leading-6 space-y-4 flex flex-col ">
-                                                {initColumns.map((c) => (
-                                                    <div className="flex items-center justify-between">
-                                                        <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
-                                                        <div className="text-gray-4">{renderContent(c.title, item)} </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                            {totalPage > currentPage && (
+                    <div className="sm:flex items-center justify-between mb-8">
+                        <div className="flex items-center space-x-4 text-sm sm:text-base mb-12 sm:mb-0">
+                            {CURRENCIES.map((rs) => (
                                 <div
-                                    onClick={() => setCurrentPage(currentPage + 1)}
-                                    className="text-teal text-sm font-semibold text-center cursor-pointer mt-2"
+                                    className={classNames(
+                                        'text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer',
+                                        {
+                                            '!border-teal !text-teal font-semibold bg-teal/[0.1]': currency === rs.value
+                                        }
+                                    )}
+                                    onClick={() => setCurrency(rs.value)}
                                 >
-                                    {t('futures:load_more')}
+                                    {rs.name}
                                 </div>
-                            )}
-                        </>
+                            ))}
+                        </div>
+                        <SearchInput
+                            placeholder={t('futures:funding_history_tab:find_pair')}
+                            customWrapperStyle={{ maxWidth: 368 }}
+                            handleFilterAssetsList={setStrSearch}
+                        />
+                    </div>
+
+                    {isMobile ? (
+                        dataSource.length > 0 ? (
+                            <>
+                                <div className="divide-y divide-divider-dark mt-6">
+                                    {dataSource.map((item, index) => {
+                                        const hidden = index + 1 > currentPage * limit;
+                                        return (
+                                            <div key={index} className={`space-y-6 flex flex-col ${index !== 0 ? 'py-8' : 'pb-8'} ${hidden ? 'hidden' : ''}`}>
+                                                <div>{renderLogo(item)}</div>
+                                                <div className="text-sm leading-6 space-y-4 flex flex-col ">
+                                                    {initColumns.map((c) => (
+                                                        <div className="flex items-center justify-between">
+                                                            <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
+                                                            <div className="text-gray-4">{renderContent(c.title, item)} </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                {totalPage > currentPage && (
+                                    <div
+                                        onClick={() => setCurrentPage(currentPage + 1)}
+                                        className="text-teal text-sm font-semibold text-center cursor-pointer mt-2"
+                                    >
+                                        {t('futures:load_more')}
+                                    </div>
+                                )}
+                            </>
+                        ) : (
+                            <NoData />
+                        )
                     ) : (
-                        <NoData />
-                    )
-                ) : (
-                    <TableV2
-                        defaultSort={{ key: 'asset', direction: 'desc' }}
-                        useRowHover
-                        sort={!isMobile}
-                        data={dataSource}
-                        columns={columns}
-                        rowKey={(item) => `${item?.key}`}
-                        loading={loading}
-                        limit={10}
-                        skip={0}
-                        onChangePage={setCurrentPage}
-                        page={currentPage}
-                        isSearch={strSearch}
-                        className="border border-divider-dark rounded-xl"
-                        pagingClassName="border-none"
-                    />
-                )}
+                        <TableV2
+                            defaultSort={{ key: 'asset', direction: 'desc' }}
+                            useRowHover
+                            sort={!isMobile}
+                            data={dataSource}
+                            columns={columns}
+                            rowKey={(item) => `${item?.key}`}
+                            loading={loading}
+                            limit={10}
+                            skip={0}
+                            onChangePage={setCurrentPage}
+                            page={currentPage}
+                            isSearch={strSearch}
+                            className="border border-divider-dark rounded-xl"
+                            pagingClassName="border-none"
+                        />
+                    )}
+                </div>
             </div>
         </MaldivesLayout>
     );
 };
 
 export default TradingRules;
+
+const HelperIcon = (props) => (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm1 16h-2v-2h2v2zm.976-4.885c-.196.158-.385.309-.535.459-.408.407-.44.777-.441.793v.133h-2v-.167c0-.118.029-1.177 1.026-2.174.195-.195.437-.393.691-.599.734-.595 1.216-1.029 1.216-1.627a1.934 1.934 0 0 0-3.867.001h-2A3.939 3.939 0 0 1 12 6a3.939 3.939 0 0 1 3.934 3.934c0 1.597-1.179 2.55-1.958 3.181z"
+            fill="#47CC85"
+        />
+    </svg>
+);
+
+const GlossaryModal = ({ isVisible, onClose }) => {
+    const { t } = useTranslation();
+    return (
+        <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose} isMobile>
+            <div className="text-xl mb-8">{t('futures:the_glossary')}</div>
+            <div className='divide-y divide-divider-dark'>
+                {initColumns.map((rs) => (
+                    <div className="flex items-center justify-between text-sm space-x-7 w-full py-3">
+                        <lable className="font-semibold min-w-[120px] max-w-[120px]">{t(`futures:${rs.title}`)}</lable>
+                        <span className="text-txtSecondary-dark w-full">{t(`futures:${rs.tooltip}`)}</span>
+                    </div>
+                ))}
+            </div>
+        </ModalV2>
+    );
+};

@@ -84,7 +84,7 @@ const SymbolDetail = (props) => {
                         </span>
                         <ChevronDown size={16} className="ml-1" />
                         <div
-                            className={`${isPro ? 'w-[400px] max-h-[386px]' : 'w-80 h-72'} ${
+                            className={`${isPro ? 'w-[400px] max-h-[386px] border border-divider-dark' : 'w-80 h-72'} ${
                                 showSymbolList ? '' : 'hidden'
                             } rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 absolute left-6 top-full -mt-2`}
                         >
