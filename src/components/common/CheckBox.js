@@ -1,25 +1,17 @@
 import classNames from 'classnames';
 import { Check } from 'react-feather';
 
-const CheckBox = ({
-    active,
-    boxContainerClassName,
-    label,
-    labelClassName,
-    onChange,
-    className,
-    onusMode = false
-}) => {
-    const onCheck = () => onChange && onChange()
+const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChange, className, onusMode = false, isV3 = false }) => {
+    const onCheck = () => onChange && onChange();
     return (
-        <div className={classNames('flex items-center select-none', className)}>
+        <div className={classNames('flex items-center select-none cursor-pointer space-x-3', className)}>
             <div
                 onClick={onCheck}
                 className={classNames(
-                    'w-[16px] h-[16px] flex items-center justify-center rounded-sm border border-divider dark:border-divider-dark cursor-pointer ',
+                    'w-6 h-6 flex items-center justify-center rounded-[3px] border border-divider dark:border-divider-dark cursor-pointer ',
                     {
-                        'hover:!border-dominant': !onusMode,
-                        '!bg-dominant border-dominant': !onusMode && active,
+                        'hover:!border-dominant ': !onusMode,
+                        '!bg-dominant border-dominant': !onusMode && active
                     },
                     {
                         'rounded-[3.2px]': onusMode,
@@ -29,20 +21,15 @@ const CheckBox = ({
                     boxContainerClassName
                 )}
             >
-                {active && <Check size={14} className='text-white' />}
+                {active && <Check size={18} className="text-white" />}
             </div>
             {label && (
-                <div
-                    className={classNames(
-                        'ml-1.5 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark cursor-default',
-                        labelClassName
-                    )}
-                >
+                <div className={classNames('text-sm text-txtSecondary dark:text-txtSecondary-dark', labelClassName)}>
                     {label}
                 </div>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default CheckBox
+export default CheckBox;

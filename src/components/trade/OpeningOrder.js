@@ -27,7 +27,7 @@ const SpotOrderList = (props) => {
     const [loading, setLoading] = useState(false);
     const userSocket = useSelector((state) => state.socket.userSocket);
     const user = useSelector((state) => state.auth.user);
-    const { currentPair, filterByCurrentPair, darkMode } = props;
+    const { currentPair, filterByCurrentPair } = props;
     const [showCloseAll, setShowCloseAll] = useState(false);
     const [showSuccess, setshowSuccess] = useState(false);
     const alert = useRef({
@@ -39,7 +39,7 @@ const SpotOrderList = (props) => {
 
     useEffect(() => {
         if (filterByCurrentPair) {
-            const filter = orders.filter((hist) => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+            const filter = orders.filter((hist) => `${hist?.baseAsset}-${hist?.quoteAsset}` === currentPair);
             setFilteredOrders(filter);
         } else {
             setFilteredOrders(orders);
@@ -276,7 +276,7 @@ const SpotOrderList = (props) => {
                                 setShowCloseAll(true);
                             }
                         }}
-                        className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer"
+                        className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer font-semibold"
                     >
                         {t('common:close_all_orders')}
                     </span>

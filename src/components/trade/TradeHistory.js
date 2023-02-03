@@ -62,21 +62,25 @@ const TradeHistory = (props) => {
                 width: 200,
                 align: 'right',
                 render: (v) => <span className="pl-2">{formatNumber(v, 2)}</span>
-            },
+            }
         ],
         [exchangeConfig]
     );
 
     const getOrderList = async () => {
         setLoading(true);
-        const { status, data } = await fetchAPI({
-            url: API_GET_HISTORY_TRADE,
-            options: {
-                method: 'GET'
+        try {
+            const { status, data } = await fetchAPI({
+                url: API_GET_HISTORY_TRADE,
+                options: {
+                    method: 'GET'
+                }
+            });
+            if (status === ApiStatus.SUCCESS) {
+                setHistories(data);
             }
-        });
-        if (status === ApiStatus.SUCCESS) {
-            setHistories(data);
+        } catch (error) {
+        } finally {
             setLoading(false);
         }
     };
@@ -89,7 +93,7 @@ const TradeHistory = (props) => {
         // if (!isAuth || !histories.length) return <TableNoData />;
         let data = histories;
         if (filterByCurrentPair) {
-            data = histories.filter((hist) => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+            data = histories.filter((hist) => `${hist?.baseAsset}-${hist?.quoteAsset}` === currentPair);
         }
 
         return <TableV2 useRowHover data={data} columns={columns} loading={loading} scroll={{ x: true }} limit={10} skip={0} />;

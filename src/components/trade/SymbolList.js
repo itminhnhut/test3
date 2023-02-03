@@ -18,7 +18,7 @@ import { favoriteAction } from 'redux/actions/user';
 const SymbolList = (props) => {
     const { query } = useRouter();
     const { t } = useTranslation();
-    const { parentCallback, publicSocket, changeSymbolList, watchList } = props;
+    const { parentCallback, publicSocket, changeSymbolList, watchList, isPro } = props;
     const [symbolList, setSymbolList] = useState([]);
     const [sortField, setSortField] = useState();
     const [sortDirection, setSortDirection] = useState('asc');
@@ -176,7 +176,7 @@ const SymbolList = (props) => {
                         )}
                     </div>
                 </div>
-                <div className="overflow-y-auto max-h-[calc(100%-8rem)] pb-4 -mx-4">
+                <div className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'}`}>
                     {/* <div className="overflow-y-scroll"> */}
                     {filteredSymbolList.map((ticker, index) => {
                         return (
@@ -199,12 +199,33 @@ const SymbolList = (props) => {
                 </div>
             </>
         );
-    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme, changeSymbolList]);
+    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme, changeSymbolList, sortField, sortDirection]);
 
     const renderFav = useCallback(() => {
         if (!symbolList) return null;
         const origin = symbolList.filter((o) => favorite.includes(`${o.bi}_${o.qi}`));
         let data = origin;
+
+        if (sortField === 'p' || sortField === 'change24h') {
+            data = orderBy(
+                data,
+                [
+                    (item) => item,
+                    ...(sortField && sortField === 'p' ? [(item) => +item.p] : []),
+                    ...(sortField && sortField === 'change24h' ? [(item) => getExchange24hPercentageChange(item)] : [])
+                ],
+                ['desc', ...(sortField ? [sortDirection] : ['desc'])]
+            );
+        } else {
+            data = orderBy(
+                data,
+                [
+                    (item) => favorite && favorite.length && favorite.includes(item.b),
+                    ...(sortField && sortField === 'b' ? [(item) => item[sortField].toLowerCase().charAt(0)] : [])
+                ],
+                ['desc', ...(sortField ? [sortDirection] : ['desc'])]
+            );
+        }
 
         if (search) {
             // console.log('namidev-DEBUG: __ ', origin)
@@ -263,7 +284,7 @@ const SymbolList = (props) => {
                         )}
                     </div>
                 </div>
-                <div className="overflow-y-auto max-h-[calc(100%-8rem)] pb-4 -mx-4">
+                <div className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'}`}>
                     {/* <div className="overflow-y-scroll"> */}
                     {data.map((ticker, index) => {
                         return (
@@ -287,11 +308,24 @@ const SymbolList = (props) => {
                 </div>
             </>
         );
-    }, [favorite, selectedCategory, query, currentTheme, symbolList, changeSymbolList, exchangeConfig, publicSocket, watchList, search]);
+    }, [
+        favorite,
+        selectedCategory,
+        query,
+        currentTheme,
+        symbolList,
+        changeSymbolList,
+        exchangeConfig,
+        publicSocket,
+        watchList,
+        search,
+        sortField,
+        sortDirection
+    ]);
 
     return (
         <>
-            <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark py-6 mx-4 h-full">
+            <div className={`${isPro ? 'p-4' : 'pr-6 py-6 pl-4'} h-full`}>
                 <div className="mb-7 dragHandleArea">
                     <SearchInput placeholder={t('spot:search')} onChange={(e) => setSearch(e.target.value)} parentState={setSearch} />
                 </div>

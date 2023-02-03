@@ -123,7 +123,7 @@ const layoutPro = [
         x: 0,
         y: 25,
         w: 9,
-        h: 33,
+        h: 34,
         isDraggable: false,
         isResizable: false,
         isDroppable: false
@@ -133,7 +133,7 @@ const layoutPro = [
         x: 0,
         y: 0,
         w: 9,
-        h: 3,
+        h: 4,
         isDraggable: false,
         isResizable: false,
         isDroppable: false
@@ -153,7 +153,7 @@ const layoutPro = [
         x: 9,
         y: 17,
         w: 3.5,
-        h: 33,
+        h: 35,
         minW: 10,
         isDraggable: false,
         isResizable: false,
@@ -231,6 +231,7 @@ const SpotComp = () => {
 
     const user = useSelector((state) => state.auth.user) || null;
     const orderListWrapperRef = useRef(null);
+    const chart = useRef(null);
 
     // console.log('orderListWrapperRef', orderListWrapperRef?.current);
 
@@ -366,17 +367,18 @@ const SpotComp = () => {
 
                         <div
                             key="chart"
+                            id="spot_containter_chart"
                             className={classNames(`border-t border-b border-r border-divider dark:border-divider-dark`, {
-                                hidden: !state.isShowChart,
+                                hidden: !state.isShowChart
                             })}
                         >
-                            <Chart symbol={symbol} initTimeFrame={initTimeFrame} />
+                            <Chart symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
                         </div>
                         <div
                             key="symbolDetail"
                             className={classNames(`border border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
                         >
-                            <SymbolDetail layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
+                            <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
                         </div>
 
                         <div
@@ -386,7 +388,7 @@ const SpotComp = () => {
                                 'border-r': isPro
                             })}
                         >
-                            <Trades symbol={symbol} publicSocket={publicSocket} layoutConfig={tradesLayout} />
+                            <Trades isPro={isPro} symbol={symbol} publicSocket={publicSocket} layoutConfig={tradesLayout} />
                         </div>
                         <div
                             key="placeOrderForm"
@@ -419,7 +421,7 @@ const SpotComp = () => {
                                 'border-l': isPro
                             })}
                         >
-                            <OrderBook symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />
+                            <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />
                         </div>
                     </ReactGridLayout>
                 </div>

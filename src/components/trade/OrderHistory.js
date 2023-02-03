@@ -48,7 +48,7 @@ const OrderHistory = (props) => {
 
     useEffect(() => {
         if (filterByCurrentPair) {
-            const filter = histories.filter((hist) => `${hist?.baseAsset}_${hist?.quoteAsset}` === currentPair);
+            const filter = histories.filter((hist) => `${hist?.baseAsset}-${hist?.quoteAsset}` === currentPair);
             setFilteredHistories(filter);
         } else {
             setFilteredHistories(histories);
@@ -80,7 +80,11 @@ const OrderHistory = (props) => {
         const label = arr.find((rs) => rs.value === status)?.label;
 
         return (
-            <PopoverV2 ref={popover} label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>} className="w-max py-4 text-xs !mt-6 z-20">
+            <PopoverV2
+                ref={popover}
+                label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>}
+                className="w-max py-4 text-xs !mt-6 z-20"
+            >
                 <div className="flex flex-col">
                     {arr.map((rs) => (
                         <div
@@ -185,7 +189,7 @@ const OrderHistory = (props) => {
                 dataIndex: 'status',
                 align: 'center',
                 width: 150,
-                fixed:'right',
+                fixed: 'right',
                 render: (v) => {
                     switch (v) {
                         case ExchangeOrderEnum.Status.CANCELED:
@@ -209,14 +213,18 @@ const OrderHistory = (props) => {
 
     const getOrderList = async () => {
         setLoading(true);
-        const { status, data } = await fetchAPI({
-            url: API_GET_HISTORY_ORDER,
-            options: {
-                method: 'GET'
+        try {
+            const { status, data } = await fetchAPI({
+                url: API_GET_HISTORY_ORDER,
+                options: {
+                    method: 'GET'
+                }
+            });
+            if (status === ApiStatus.SUCCESS) {
+                setHistories(data);
             }
-        });
-        if (status === ApiStatus.SUCCESS) {
-            setHistories(data);
+        } catch (error) {
+        } finally {
             setLoading(false);
         }
     };

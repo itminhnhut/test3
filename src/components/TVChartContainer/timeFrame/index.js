@@ -7,6 +7,7 @@ import { Component, Fragment } from 'react';
 import { TrendIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
+import FullScreen from 'components/svg/FullScreen';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -278,7 +279,7 @@ export default class TimeFrame extends Component {
                                                         key={index}
                                                         className={`cursor-pointer w-full px-3 py-1 text-xs text-center rounded-sm bg-dark-2 dark:hover:bg-hover-dark ${
                                                             isActive
-                                                                ? 'border-teal text-teal dark:border-teal dark:text-teal'
+                                                                ? 'border-teal text-teal dark:border-teal dark:text-teal font-semibold'
                                                                 : 'border-gray-5  text-txtSecondary dark:text-txtSecondary-dark dark:border-darkBlue-5'
                                                         }`}
                                                     >
@@ -323,11 +324,11 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full font-medium text-xs text-center rounded-sm
+                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm
                                                                 text-txtSecondary dark:text-txtSecondary-dark
                                                                 hover:text-teal
                                                                 dark:hover:bg-hover-dark
-                                                                ${isActive ? 'bg-teal text-teal dark:text-white dark:bg-transparent' : ''}
+                                                                ${isActive ? 'bg-teal text-teal dark:text-white dark:bg-transparent font-semibold' : ''}
                                                                 `}
                                                     >
                                                         {icon}
@@ -353,13 +354,13 @@ export default class TimeFrame extends Component {
     }
 
     _renderChartMode() {
-        const { chartType, handleChartType, widget, isOnSidebar, customChartFullscreen, fullScreen } = this.props;
+        const { chartType, handleChartType } = this.props;
         const itemClass = 'cursor-pointer text-xs rounded-md px-2';
-        const activeClass = 'text-teal';
+        const activeClass = 'text-teal font-semibold';
         const inactiveClass = 'text-txtSecondary dark:text-txtSecondary-dark';
 
         return (
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
                 {/* <span className={`${itemClass} ${activeClass}`}>Original</span> */}
                 <span
                     onClick={chartType !== 'price' ? handleChartType : null}
@@ -375,6 +376,7 @@ export default class TimeFrame extends Component {
                         {this.t('common:depth')}
                     </span>
                 )}
+                <FullScreen onClick={() => this.props.handleFullScreen(!this.props.fullscreen)} className="cursor-pointer" />
             </div>
         );
     }
