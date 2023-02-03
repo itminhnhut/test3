@@ -11,6 +11,7 @@ import fetchAPI from 'utils/fetch-api';
 import Link from 'next/link';
 import TableV2 from '../common/V2/TableV2';
 import PopoverV2 from '../common/V2/PopoverV2';
+import ChevronDown from 'src/components/svg/ChevronDown';
 
 const OrderHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -22,8 +23,8 @@ const OrderHistory = (props) => {
     const isAuth = useSelector(AuthSelector.isAuthSelector);
     const [status, setStatus] = useState('all');
     const popover = useRef(null);
-    const { currentPair, filterByCurrentPair, darkMode } = props;
-
+    const { currentPair, filterByCurrentPair } = props;
+    const [isOpen, setIsOpen] = useState(false);
     // Handle update order
     useEffect(() => {
         const event = UserSocketEvent.EXCHANGE_UPDATE_ORDER;
@@ -78,11 +79,16 @@ const OrderHistory = (props) => {
         ];
 
         const label = arr.find((rs) => rs.value === status)?.label;
-
+        console.log(isOpen);
         return (
             <PopoverV2
                 ref={popover}
-                label={<div className="w-full">{status === 'all' ? t('common:status') : label}</div>}
+                label={
+                    <div onClick={() => setIsOpen(!isOpen)} className="w-full space-x-2 flex items-center justify-center">
+                        <span>{status === 'all' ? t('common:status') : label}</span>
+                        <ChevronDown className={isOpen ? '!rotate-0' : ''} />
+                    </div>
+                }
                 className="w-max py-4 text-xs !mt-6 z-20"
             >
                 <div className="flex flex-col">
@@ -208,7 +214,7 @@ const OrderHistory = (props) => {
                 }
             }
         ],
-        [exchangeConfig, currentPair, status]
+        [exchangeConfig, currentPair, status, isOpen]
     );
 
     const getOrderList = async () => {

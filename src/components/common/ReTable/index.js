@@ -371,6 +371,8 @@ const ReTableWrapperV2 = styled.div`
             z-index: 10;
             width: 1px;
             visibility: visible;
+            left: 0 !important;
+            min-height: ${({ height }) => `${height}px`};
             /* box-shadow: none !important; */
         }
     }
