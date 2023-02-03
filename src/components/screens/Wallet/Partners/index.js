@@ -38,7 +38,7 @@ const INITIAL_STATE = {
 const AVAILBLE_KEY = 'futures_available';
 const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
 
-const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
+const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -153,11 +153,11 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5  md:min-w-[64px] md:min-h-[64px] h-full flex items-center justify-center">
+                <div className="rounded-full p-4 bg-teal-lightTeal dark:bg-teal-5 h-full flex items-center justify-center">
                     <SvgWalletFutures size={32} />
                 </div>
                 <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
-                    <div className="font-bold text-[24px] lg:text-[28px] xl:text-4xl ">
+                    <div className="font-bold text-2xl lg:text-[28px] xl:text-[32px]">
                         <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
                         <span>BTC</span>
                     </div>
@@ -228,12 +228,12 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                     </div>
 
                     <div className="">
-                        <div className="flex items-end justify-end h-full w-full ">
+                        <div className="flex items-end justify-end h-full w-full sm:w-auto">
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
                                 // className={isBuy ? 'bg-teal' : 'bg-red'}
-                                className="px-6 py-3"
+                                className="!px-6 !py-3"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
@@ -253,7 +253,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             </MCard>
 
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
-                <div className="t-common">Futures</div>
+                <div className="t-common">{t('common:partners')}</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
                     {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
                         <span
@@ -414,4 +414,4 @@ const renderOperationLink = (assetName, translator, dispatch) => {
     );
 };
 
-export default FuturesWallet;
+export default PartnersWallet;

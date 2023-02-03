@@ -53,6 +53,7 @@ const TradeHistory = (props) => {
                 title: t('common:asset'),
                 dataIndex: 'assetCode',
                 width: 150,
+                fixed: 'left',
                 render: (v, row) => (
                     <div className="flex items-center space-x-4 py-4">
                         <AssetLogo assetCode={row?.assetCode} size={32} />
@@ -88,7 +89,7 @@ const TradeHistory = (props) => {
                 title: 'Tác vụ',
                 width: isPro ? 300 : 150,
                 align: 'left',
-                fixed: 'right',
+                // fixed: 'right',
                 render: (v) => renderActions()
             }
         ],

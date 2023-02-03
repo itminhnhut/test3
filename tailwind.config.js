@@ -490,7 +490,10 @@ module.exports = {
             },
             cursor: {
                 grabbing: 'grabbing'
-            }
+            },
+            backgroundImage: (theme) => ({
+                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')"
+            })
         }
     },
     variants: {
