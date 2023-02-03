@@ -263,149 +263,126 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
         const baseAssetId = summary?.[1]?.currency;
 
         return (
-            <>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="w-full py-6 px-5 rounded-xl border border-divider dark:border-divider-dark bg-bgTabInactive dark:bg-bgTabInactive-dark">
-                        <span className="font-semibold">{t('wallet:earn_dashboard.total_balance', { action: 'Staking' })}</span>
-                        <div className="mt-3 mb-6 border-b-2 rounded-[100px] border-b-teal" />
-                        <div className="text-xl sm:text-2xl font-semibold">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={sourceSummary?.total_balance} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
-                                </>
-                            )}
-                        </div>
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={baseSummary?.total_balance} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
-                                </>
-                            )}
-                        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Span 1 */}
+                <div className="w-full py-6 px-5 rounded-xl border border-divider dark:border-divider-dark bg-bgTabInactive dark:bg-bgTabInactive-dark">
+                    <span className="font-semibold">{t('wallet:earn_dashboard.total_balance', { action: 'Staking' })}</span>
+                    <div className="mt-3 mb-6 border-b-2 rounded-[100px] border-b-teal" />
+                    <div className="text-xl sm:text-2xl font-semibold">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <>
+                                <AssetValue value={sourceSummary?.estimate_value} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
+                            </>
+                        )}
                     </div>
-                    <div>2</div>
-                    <div>2</div>
-                    <div>2</div>
-                </div>
-                <div className="relative z-20 md:max-w-[88%] flex flex-wrap">
-                    <div className="w-full sm:w-1/2 md:w-1/3">
-                        <div className="max-w-[135px] font-medium text-sm 2xl:text-[16px] whitespace-nowrap border-b-2 border-dominant pb-1">
-                            {t('wallet:earn_dashboard.total_balance', { action: 'Staking' })}
-                        </div>
-                        <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={sourceSummary?.total_balance} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
-                                </>
-                            )}
-                        </div>
-                        <div className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={baseSummary?.total_balance} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <div className="mt-4 w-full sm:mt-0 sm:w-1/2 md:w-1/3">
-                        <div className="max-w-[135px] font-medium text-sm 2xl:text-[16px] whitespace-nowrap border-b-2 border-dominant pb-1">
-                            {t('wallet:earn_dashboard.est_value')}
-                        </div>
-                        <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={sourceSummary?.estimate_value} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
-                                </>
-                            )}
-                        </div>
-                        <div className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={baseSummary?.estimate_value} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <div className="mt-4 w-full sm:w-1/2 md:mt-0 md:w-1/3">
-                        <div className="max-w-[135px] font-medium text-sm 2xl:text-[16px] whitespace-nowrap border-b-2 border-dominant pb-1">
-                            {t('wallet:earn_dashboard.total_interest_earn')}
-                        </div>
-                        <div className="mt-2 font-bold text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={sourceSummary?.total_interest_earned} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
-                                </>
-                            )}
-                        </div>
-                        <div className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={baseSummary?.total_interest_earned} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
-                                </>
-                            )}
-                        </div>
-                    </div>
-                    <div className="mt-4 w-full sm:w-1/2 md:mt-6 md:w-1/3">
-                        <div className="max-w-[135px] font-medium text-sm 2xl:text-[16px] whitespace-nowrap border-b-2 border-dominant pb-1">
-                            {t('wallet:earn_dashboard.today_interest_earned')}
-                        </div>
-                        <div className="mt-2 font-bold text-dominant text-[24px] 2xl:mt-4 2xl:text-[32px]">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={sourceSummary?.today_interest_earned} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
-                                </>
-                            )}
-                        </div>
-                        <div className="mt-1.5 text-sm xl:mt-3 xl:text-[16px] 2xl:text-[18px] text-txtSecondary dark:text-txtSecondary-dark">
-                            {loadingSummary ? (
-                                <Skeletor width={65} />
-                            ) : state.hideAsset ? (
-                                SECRET_STRING
-                            ) : (
-                                <>
-                                    <AssetValue value={baseSummary?.today_interest_earned} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
-                                </>
-                            )}
-                        </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <span>
+                                {'('}
+                                <AssetValue value={baseSummary?.total_balance} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
+                                {')'}
+                            </span>
+                        )}
                     </div>
                 </div>
-            </>
+
+                {/* Span 2 */}
+                <div className="w-full py-6 px-5 rounded-xl border border-divider dark:border-divider-dark bg-bgTabInactive dark:bg-bgTabInactive-dark">
+                    <span className="font-semibold">{t('wallet:earn_dashboard.est_value')}</span>
+                    <div className="mt-3 mb-6 border-b-2 rounded-[100px] border-b-teal" />
+                    <div className="text-xl sm:text-2xl font-semibold">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <>
+                                <AssetValue value={sourceSummary?.total_balance} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
+                            </>
+                        )}
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <span>
+                                {'('}
+                                <AssetValue value={baseSummary?.estimate_value} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
+                                {')'}
+                            </span>
+                        )}
+                    </div>
+                </div>
+                {/* Span 3 */}
+                <div className="w-full py-6 px-5 rounded-xl border border-divider dark:border-divider-dark bg-bgTabInactive dark:bg-bgTabInactive-dark">
+                    <span className="font-semibold">{t('wallet:earn_dashboard.total_interest_earn')}</span>
+                    <div className="mt-3 mb-6 border-b-2 rounded-[100px] border-b-teal" />
+                    <div className="text-xl sm:text-2xl font-semibold">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <>
+                                <AssetValue value={sourceSummary?.total_interest_earned} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
+                            </>
+                        )}
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <span>
+                                {'('}
+                                <AssetValue value={baseSummary?.total_interest_earned} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
+                                {')'}
+                            </span>
+                        )}
+                    </div>
+                </div>
+
+                {/* Span 4 */}
+                <div className="w-full py-6 px-5 rounded-xl border border-divider dark:border-divider-dark bg-bgTabInactive dark:bg-bgTabInactive-dark">
+                    <span className="font-semibold">{t('wallet:earn_dashboard.today_interest_earned')}</span>
+                    <div className="mt-3 mb-6 border-b-2 rounded-[100px] border-b-teal" />
+                    <div className="text-xl sm:text-2xl font-semibold text-teal">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <>
+                                <AssetValue value={sourceSummary?.today_interest_earned} assetId={sourceAssetId} /> <AssetName assetId={sourceAssetId} />
+                            </>
+                        )}
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
+                        {loadingSummary ? (
+                            <Skeletor width={65} />
+                        ) : state.hideAsset ? (
+                            SECRET_STRING
+                        ) : (
+                            <span>
+                                {'('}
+                                <AssetValue value={baseSummary?.today_interest_earned} assetId={baseAssetId} /> <AssetName assetId={baseAssetId} />
+                                {')'}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </div>
         );
     }, [state.hideAsset, summary, loadingSummary]);
 
@@ -620,31 +597,9 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
 
     return (
         <div>
-            <div className="flex items-center">
-                <div className="t-common">Staking</div>
-                <div
-                    className="ml-5 pt-1.5 text-xs text-sm flex items-center text-txtSecondary dark:text-txtSecondary-dark cursor-pointer hover:opacity-80 select-none"
-                    onClick={() => setState({ hideAsset: !state.hideAsset })}
-                >
-                    {state.hideAsset ? <EyeOff size={16} className="mr-1.5" /> : <Eye size={16} className="mr-1.5" />}
-                    <span>{t('wallet:hide_asset')}</span>
-                </div>
-            </div>
-            {/* {renderDashboard2()} */}
-
-            <div
-                style={currentTheme === THEME_MODE.DARK ? { backgroundColor: 'rgba(0, 200, 188, 0.2)' } : undefined}
-                className="relative mt-8 px-6 py-4 lg:px-8 lg:py-6 rounded-xl bg-teal-lightTeal"
-            >
-                {renderDashboard()}
-                <img
-                    src={getS3Url('/images/screen/wallet/staking_graphics.png')}
-                    alt="Nami.Staking"
-                    className="absolute -bottom-5 right-[25px] z-10 max-w-[50%] sm:max-w-[24%] xl:max-w-[20%] h-auto"
-                />
-            </div>
-
-            <MCard addClass="mt-16 pt-10 pb-0 px-0 rounded-bl-none rounded-br-none overflow-hidden">
+            {renderDashboard2()}
+            <div className="t-common mt-12">Staking</div>
+            <MCard addClass="mt-8 pt-10 pb-0 px-0 rounded-bl-none rounded-br-none overflow-hidden">
                 {renderTableTab()}
                 <div className="mt-8">
                     {state.tableTab === 0 && renderOrder()}

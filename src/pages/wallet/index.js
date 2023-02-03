@@ -13,7 +13,7 @@ export const WALLET_SCREENS = {
     OVERVIEW: 'overview',
     EXCHANGE: 'exchange',
     FUTURES: 'futures',
-    STAKING: 'staking',
+    // STAKING: 'staking',
     PARTNERS: 'partners',
     // FARMING: 'farming',
     TRANSACTION_HISTORY: 'transaction-history'

@@ -403,8 +403,8 @@ const Wallet = () => {
                             />
                         )}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}
-                        {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
-                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />}
+                        {/* {state.screen === WALLET_SCREENS.FARMING && <FarmingWallet summary={state.farmingSummary} loadingSummary={state.loadingSummary} />}
+                        {state.screen === WALLET_SCREENS.TRANSACTION_HISTORY && <TransactionHistory />} */}
                     </div>
                 </CustomContainer>
             ) : (
@@ -442,7 +442,7 @@ const SCREEN_TAB_SERIES = [
         localized: 'common:partners'
     }
     // {
-    //     key: 4,
+    //     key: 3,
     //     code: WALLET_SCREENS.STAKING,
     //     title: 'Staking',
     //     localized: null
