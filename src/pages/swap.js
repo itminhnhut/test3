@@ -37,12 +37,13 @@ const Swap = () => {
                 <div>
                     <img src={'/images/screen/swap/swap-banner.png'} alt="" className="mx-auto h-[180px] w-full" />
                 </div>
-                <div className={`w-full h-full py-[64px] lg:pb-[74px] xl:pb-[94px]`}>
-                    <div className="max-w-screen-v3 m-auto flex justify-center pt-[64px] xl:pt-[72px]">
+                <div className={`w-full h-full pt-20 pb-[120px]`}>
+                    <div className="max-w-screen-v3 px-4 m-auto flex justify-center">
                         {/* {width >= 1024 && <SwapIntroduce />} */}
                         <SwapModule width={width} pair={pair} />
                     </div>
-                    {width >= 1024 && <SwapHistory width={width} />}
+                    {/* {width >= 1024 && <SwapHistory width={width} />} */}
+                    <SwapHistory width={width} />
                 </div>
             </div>
         );

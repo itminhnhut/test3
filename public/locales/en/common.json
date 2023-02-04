@@ -142,7 +142,7 @@
     "view_all": "View all",
     "already_have_account": "Already have an account?",
     "create_account": "Create Account",
-    "term_swap": "By using Nami Swap, you’re agree to the</br><0>Terms and Conditions</0>",
+    "term_swap": "By using Nami Swap, you’re agree to the <br /><0>Terms and Conditions</0>",
     "or": "or",
     "swap_history": "to see your transition's histories",
     "swap_no_search_results": "No search results",
