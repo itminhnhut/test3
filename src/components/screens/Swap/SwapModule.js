@@ -402,7 +402,11 @@ const SwapModule = ({ width, pair }) => {
                             placeholder={t('wallet:search_asset')}
                             onChange={(e) => setState({ search: e.target?.value })}
                         />
-                        <CloseIcon onClick={() => !!state.search && setState({ search: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
+                        <CloseIcon
+                            onClick={() => !!state.search && setState({ search: '' })}
+                            size={width >= 768 ? 20 : 16}
+                            className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
+                        />{' '}
                     </div>
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
@@ -500,7 +504,11 @@ const SwapModule = ({ width, pair }) => {
                             placeholder={t('wallet:search_asset')}
                             onChange={(e) => setState({ search: e.target?.value })}
                         />
-                        <CloseIcon onClick={() => !!state.search && setState({ search: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
+                        <CloseIcon
+                            onClick={() => !!state.search && setState({ search: '' })}
+                            size={width >= 768 ? 20 : 16}
+                            className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
+                        />{' '}
                     </div>
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
