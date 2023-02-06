@@ -28,6 +28,7 @@ const SwapHistory = ({ width }) => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const auth = useSelector((state) => state.auth?.user);
+    auth = false;
     const {
         t,
         i18n: { language }
@@ -63,7 +64,7 @@ const SwapHistory = ({ width }) => {
     // });
 
     return (
-        <div className="mal-container mt-20">
+        <div className="max-w-screen-v3 m-auto px-4 mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
 
             {auth ? (
@@ -81,7 +82,10 @@ const SwapHistory = ({ width }) => {
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
                     <p className="text-base text-namiv2-gray-1 mt-3">
-                        <a href={getLoginUrl('sso', 'login')} className="text-teal font-semibold leading-6">
+                        <a
+                            href={getLoginUrl('sso', 'login')}
+                            className="text-txtTextBtn dark:text-txtTextBtn-dark active:text-txtTextBtn-pressed dark:active:text-txtTextBtn-dark_pressed font-semibold leading-6"
+                        >
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}

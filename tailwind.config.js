@@ -415,6 +415,14 @@ module.exports = {
                 },
                 txtDarkBlue: {
                     DEFAULT: commonColors.darkBlue5
+                },
+                txtTextBtn: {
+                    DEFAULT: '#30bf73',
+                    pressed: '#19a65b',
+                    disabled: '#b5c0c9',
+                    dark: '#47cc85',
+                    dark_pressed: '#19a65b',
+                    dark_disabled: '#454c5c'
                 }
             },
             backgroundColor: {

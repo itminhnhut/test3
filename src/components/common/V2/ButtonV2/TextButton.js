@@ -5,7 +5,7 @@ const TextButton = ({ className = '', disabled = false, children, variants = 'pr
     return (
         <button
             className={classNames(
-                'flex items-center justify-center font-semibold text-sm h-[2.75rem] sm:h-[3rem] w-full py-6 bg-transparent',
+                'flex justify-center items-center whitespace-nowrap font-semibold text-sm h-[2.75rem] sm:h-[3rem] w-full py-6 bg-transparent',
                 {
                     'text-teal': variants === 'primary',
                     'text-gray-5/[0.1]': disabled
