@@ -42,6 +42,7 @@ const index = ({ data, columns, loading, limit = 10, skip = 0, onChangePage, use
                 height={height}
                 loading={loading}
                 emptyText={<NoData loading={loading} />}
+                tableStyle={{ fontSize: '16px' }}
                 {...props}
             />
             {data.length > 0 && (

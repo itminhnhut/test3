@@ -236,7 +236,6 @@ const ReTable = memo(
         // useEffect(() => {
         //     console.log('namidev-DEBUG: reTable => ', current, data)
         // }, [data, current])
-
         return (
             <ReTableWrapperV2
                 ref={reference}
@@ -319,7 +318,7 @@ const ReTableWrapperV2 = styled.div`
         border-left: none;
         border-top-width: 0;
         text-align: left;
-        font-size: 14px;
+        font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
     }
 
     .rc-table th {
@@ -394,6 +393,9 @@ const ReTableWrapperV2 = styled.div`
         width: 100% !important;
         ${({ tableStyle }) => (tableStyle ? { ...tableStyle } : '')};
 
+        tbody tr td {
+            font-size: !16px;
+        }
         thead tr,
         tbody tr {
             position: relative;
