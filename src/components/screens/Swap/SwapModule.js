@@ -319,7 +319,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={fromAssetRef}
-                        className="w-full text-left  text-[22px] leading-[30px] font-semibold text-txtSecondary dark:text-txtSecondary-dark"
+                        className="w-full text-left  text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                         value={state.fromAmount}
                         onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -423,7 +423,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full text-left text-[22px] leading-[30px] font-semibold text-txtSecondary dark:text-txtSecondary-dark"
+                        className="w-full text-left text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -497,7 +497,7 @@ const SwapModule = ({ width, pair }) => {
                             placeholder={t('wallet:search_asset')}
                             onChange={(e) => setState({ search: e.target?.value })}
                         />
-                        <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} className="cursor-pointer" />
+                        <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />
                     </div>
                 </div>
                 <div className="mt-6 max-h-[332px] overflow-y-auto">

@@ -18,6 +18,7 @@ import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
 import TableV2 from 'src/components/common/SwapTableV2';
 
 import { PATHS } from 'constants/paths';
+import { SwapIcon } from '../../svg/SvgIcon';
 
 const SwapHistory = ({ width }) => {
     const [state, set] = useState({
@@ -28,7 +29,6 @@ const SwapHistory = ({ width }) => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const auth = useSelector((state) => state.auth?.user);
-    auth = false;
     const {
         t,
         i18n: { language }
@@ -58,10 +58,6 @@ const SwapHistory = ({ width }) => {
             setState({ loading: false });
         }
     }, [state.page, state.pageSize, auth]);
-
-    // const dataTemp = Array.from({ length: 12 }, (x, i) => {
-    //     return { id: i, swap_pair: 'BTCVNDC', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
-    // });
 
     return (
         <div className="max-w-screen-v3 m-auto px-4 mt-20">
@@ -104,15 +100,30 @@ const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
-    { key: 'id', dataIndex: 'id', title: 'Order#ID', width: 100, fixed: 'left', align: 'left' },
+    { key: 'id', dataIndex: 'id', title: 'ID', width: 70, fixed: 'left', align: 'left' },
     { key: 'swap_pair', dataIndex: 'swap_pair', title: 'Swap Pair', width: 100, align: 'left' },
-    { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 100, align: 'right' },
-    { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 100, align: 'right' },
-    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 100, align: 'right' },
-    { key: 'time', dataIndex: 'time', title: 'Time', width: 100, align: 'right' }
+    { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 130, align: 'left' },
+    { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 130, align: 'left' },
+    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 150, align: 'left' },
+    { key: 'time', dataIndex: 'time', title: 'Time', width: 80, align: 'left' }
 ];
 
 const dataHandler = (data, loading) => {
+    // loading = false;
+    // data = Array.from({ length: 12 }, (x, i) => {
+    //     return {
+    //         displayingId: 10000 + i,
+    //         displayingPrice: 12455,
+    //         displayingPriceAsset: 235124,
+    //         feeMetadata: 0.2,
+    //         fromAsset: 'BTC',
+    //         toAsset: 'USDT',
+    //         fromQty: 1,
+    //         toQty: 890234789598,
+    //         createdAt: Date.now()
+    //     };
+    //     // return { id: i, fromAsset: 'BTC', toAsset: 'USDT', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
+    // });
     if (loading) {
         const skeleton = [];
         for (let i = 0; i < LIMIT_ROW; ++i) {
@@ -146,26 +157,30 @@ const dataHandler = (data, loading) => {
             key: `${KEY}${displayingId}`,
             id: <div className="text-left">{displayingId}</div>,
             swap_pair: (
-                <div className="text-left">
-                    {fromAsset} <span className="inline-block mx-1">&#8652;</span> {toAsset}
+                <div className="text-left flex items-center">
+                    {fromAsset}
+                    <SwapIcon className="mx-2" />
+                    {toAsset}
+                    {/* {fromAsset} <span className="inline-block mx-1">&#8652;</span> {toAsset} */}
                 </div>
             ),
             from_qty: (
-                <div className="text-right">
+                <span>
                     {formatPrice(+fromQty)} {fromAsset}
-                </div>
+                </span>
             ),
             to_qty: (
-                <div className="text-right">
+                <span>
                     {formatPrice(+toQty)} {toAsset}
-                </div>
+                </span>
             ),
             rate: (
-                <div className="text-right">
+                <div className="">
                     1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
                 </div>
             ),
-            time: <div className="text-right">{formatTime(createdAt, 'HH:mm dd-MM-yyyy')}</div>,
+            time: <span>{formatTime(createdAt, 'dd/MM/yyyy')}</span>,
+            // time: <div className="text-right">{formatTime(createdAt, 'HH:mm dd-MM-yyyy')}</div>,
             [RETABLE_SORTBY]: {
                 id: +displayingId,
                 swap_pair: `${fromAsset}${toAsset}`,

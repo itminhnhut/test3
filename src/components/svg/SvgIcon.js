@@ -51,4 +51,18 @@ const CheckCircleIcon = ({ className = '', color, size }) => (
         />
     </svg>
 );
-export { ArrowDownIcon, TrendIcon, SeeIcon, HideIcon, CheckCircleIcon };
+
+const SwapIcon = ({ className = '', color, size }) => (
+    <svg className={className} width={size || 16} height={size || 16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#8slfkmybya)" fill={color || '#E2E8F0'}>
+            <path d="M14.667 5.334 12 2.667v2H2V6h10v2l2.667-2.666zM1.333 10.667 4 13.333v-2h10V10H4V8l-2.667 2.667z" />
+        </g>
+        <defs>
+            <clipPath id="8slfkmybya">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+export { ArrowDownIcon, TrendIcon, SeeIcon, HideIcon, CheckCircleIcon, SwapIcon };
