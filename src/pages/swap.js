@@ -33,19 +33,21 @@ const Swap = () => {
 
     const renderContent = () => {
         return (
-            <div className="bg-gray-4 dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark">
+            <>
                 <div>
                     <img src={'/images/screen/swap/swap-banner.png'} alt="" className="mx-auto h-[180px] w-full" />
                 </div>
-                <div className={`w-full h-full pt-20 pb-[120px]`}>
-                    <div className="max-w-screen-v3 px-4 m-auto flex justify-center">
-                        {/* {width >= 1024 && <SwapIntroduce />} */}
-                        <SwapModule width={width} pair={pair} />
+                <div className="bg-gray-4 dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark px-4 flex justify-center">
+                    <div className={`max-w-screen-v3 w-full h-full pt-20 pb-[120px]`}>
+                        <div className="m-auto flex justify-center">
+                            {/* {width >= 1024 && <SwapIntroduce />} */}
+                            <SwapModule width={width} pair={pair} />
+                        </div>
+                        {/* {width >= 1024 && <SwapHistory width={width} />} */}
+                        <SwapHistory width={width} />
                     </div>
-                    {/* {width >= 1024 && <SwapHistory width={width} />} */}
-                    <SwapHistory width={width} />
                 </div>
-            </div>
+            </>
         );
     };
 

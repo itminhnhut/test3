@@ -59,7 +59,7 @@ const SwapHistory = ({ width }) => {
         }
     }, [state.page, state.pageSize, auth]);
     return (
-        <div className="max-w-screen-v3 m-auto px-4 mt-20">
+        <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
                 <TableV2
