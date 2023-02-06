@@ -98,12 +98,12 @@ const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
-    { key: 'id', dataIndex: 'id', title: 'ID', width: 70, fixed: 'left', align: 'left' },
-    { key: 'swap_pair', dataIndex: 'swap_pair', title: 'Swap Pair', width: 100, align: 'left' },
-    { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 130, align: 'left' },
-    { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 130, align: 'left' },
-    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 150, align: 'left' },
-    { key: 'time', dataIndex: 'time', title: 'Time', width: 80, align: 'left' }
+    { key: 'id', dataIndex: 'id', title: 'ID', width: 140, fixed: 'left', align: 'left' },
+    { key: 'swap_pair', dataIndex: 'swap_pair', title: 'Swap Pair', width: 180, align: 'left' },
+    { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 220, align: 'left' },
+    { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 244, align: 'left' },
+    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 306, align: 'left' },
+    { key: 'time', dataIndex: 'time', title: 'Time', width: 126, align: 'left' }
 ];
 
 const dataHandler = (data, loading) => {
