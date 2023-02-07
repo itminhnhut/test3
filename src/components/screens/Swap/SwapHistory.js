@@ -103,7 +103,7 @@ const columns = [
     { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 220, align: 'left' },
     { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 244, align: 'left' },
     { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 306, align: 'left' },
-    { key: 'time', dataIndex: 'time', title: 'Time', width: 126, align: 'left' }
+    { key: 'time', dataIndex: 'time', title: 'Time', width: 150, align: 'left' }
 ];
 
 const dataHandler = (data, loading) => {

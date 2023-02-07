@@ -203,7 +203,6 @@ const SwapModule = ({ width, pair }) => {
             params: { preOrderId }
         });
         setState({ processingOrder: false });
-
         if (result?.status === ApiStatus.SUCCESS && result?.data) {
             const { displayingId, fromAsset, toAsset, fromQty, toQty, displayingPrice } = result?.data;
             let msg = t('convert:swap_success', { fromQty, fromAsset, toQty, toAsset, displayingPrice });
@@ -211,7 +210,7 @@ const SwapModule = ({ width, pair }) => {
             setState({ openModal: false, preOrder: null, invoiceId: displayingId });
             onOpenAlertResultSwap({
                 msg: msg,
-                type: 'successs',
+                type: 'success',
                 title: t('common:success'),
                 duration: 3200
             });
@@ -699,6 +698,7 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const onCloseAlertResultSwap = () => {
+        console.log('here');
         if (state.resultSwap) set((prevState) => ({ ...prevState, resultSwap: null }));
     };
 
