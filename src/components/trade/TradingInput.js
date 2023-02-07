@@ -98,6 +98,7 @@ const TradingInput = ({
                         className={classNames('ml-2 flex-grow text-sm font-medium text-right', { 'mr-2': !!renderTail }, inputClassName)}
                         onFocus={_onFocus}
                         onBlur={_onBlur}
+                        autoComplete="off"
                         {...inputProps}
                     />
                 )}

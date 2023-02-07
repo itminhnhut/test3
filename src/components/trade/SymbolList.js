@@ -38,6 +38,7 @@ const SymbolList = (props) => {
 
     const fetchFavorite = async () => {
         const _favorite = await favoriteAction('get', TRADING_MODE.EXCHANGE);
+        console.log(_favorite);
         _favorite && setFavorite(_favorite);
     };
 
@@ -58,7 +59,6 @@ const SymbolList = (props) => {
     useEffect(() => {
         if (symbolList && symbolList.length) {
             let filterSymbols = [];
-            console.log(selectedCategory);
             if (selectedCategory.value === CATEGORY_SPOT_SIGNAL.ALL) {
                 symbolList.forEach((sym) => {
                     const { q: quoteAsset, b: baseAsset } = sym;
@@ -181,9 +181,11 @@ const SymbolList = (props) => {
                     {/* <div className="overflow-y-scroll"> */}
                     {filteredSymbolList.length > 0 ? (
                         filteredSymbolList.map((ticker, index) => {
+                            const isFavoriteTab = favorite.find((rs) => rs === `${ticker?.bi}_${ticker?.qi}`);
                             return (
                                 <Fragment key={`${search}_${activeTab}_${ticker.b}}`}>
                                     <SymbolListItem
+                                        isFavoriteTab={isFavoriteTab}
                                         changeSymbolList={changeSymbolList}
                                         exchangeConfig={exchangeConfig}
                                         favorite={favorite}
@@ -204,7 +206,7 @@ const SymbolList = (props) => {
                 </div>
             </>
         );
-    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme, changeSymbolList, sortField, sortDirection]);
+    }, [filteredSymbolList, selectedCategory, filteredSignals, query, currentTheme, changeSymbolList, sortField, sortDirection, favorite]);
 
     const renderFav = useCallback(() => {
         if (!symbolList) return null;
