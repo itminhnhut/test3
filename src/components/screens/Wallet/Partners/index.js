@@ -1,0 +1,417 @@
+import { useCallback, useEffect, useState } from 'react';
+import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { Check, Search, X } from 'react-feather';
+import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+
+import { SECRET_STRING } from 'utils';
+
+import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import MCard from 'components/common/MCard';
+import AssetLogo from 'components/wallet/AssetLogo';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import RePagination from 'components/common/ReTable/RePagination';
+import { orderBy } from 'lodash';
+import Skeletor from 'components/common/Skeletor';
+import Empty from 'components/common/Empty';
+import { ExchangeOrderEnum, WalletType } from 'redux/actions/const';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
+import SvgWalletFutures from 'components/svg/SvgWalletFutures';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import NoData from 'components/common/V2/TableV2/NoData';
+
+const INITIAL_STATE = {
+    hideAsset: false,
+    hideSmallAsset: false,
+    tableData: null,
+    search: '',
+    currentPage: 1,
+    action: null, // action = null is wallet overview
+    allAssets: null
+};
+
+const AVAILBLE_KEY = 'futures_available';
+const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+
+const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
+    // Init State
+    const [state, set] = useState(INITIAL_STATE);
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+
+    // Rdx
+    const wallets = useSelector((state) => state.wallet.FUTURES);
+    const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
+
+    // Use Hooks
+    const [currentTheme] = useDarkMode();
+    const { width } = useWindowSize();
+    const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    // Helper
+    const walletMapper = (allWallet, assetConfig) => {
+        if (!allWallet || !assetConfig) return;
+        const mapper = [];
+        if (Array.isArray(assetConfig) && assetConfig?.length) {
+            const futures = assetConfig.filter((o) => FUTURES_ASSET.includes(o?.assetCode));
+            futures &&
+                futures.forEach(
+                    (item) =>
+                        allWallet?.[item.id] &&
+                        mapper.push({
+                            ...item,
+                            [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
+                            wallet: allWallet?.[item?.id]
+                        })
+                );
+        }
+        setState({ allAssets: orderBy(mapper, [AVAILBLE_KEY, 'displayWeight'], ['desc']) });
+    };
+
+    // Render Handler
+    const renderAssetTable = useCallback(() => {
+        let tableStatus;
+
+        const columns = [
+            { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 150, fixed: width >= 992 ? 'none' : 'left' },
+            { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 213 },
+            { key: 'available', dataIndex: 'available', title: t('common:available_balance'), align: 'right', width: 213 },
+            { key: 'in_order', dataIndex: 'in_order', title: t('common:in_order'), align: 'right', width: 213 },
+            { key: 'btc_value', dataIndex: 'btc_value', title: t('common:btc_value'), align: 'right', width: 213 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'left', width: 137, fixed: width >= 992 ? 'right' : 'none' }
+        ];
+
+        return (
+            <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <ReTable
+                    sort
+                    defaultSort={{ key: 'total', direction: 'desc' }}
+                    useRowHover
+                    data={state.tableData || []}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    loading={!state.tableData?.length}
+                    scroll={{ x: true }}
+                    limit={ASSET_ROW_LIMIT}
+                    skip={0}
+                    tableStatus={tableStatus}
+                    paginationProps={{
+                        hide: true,
+                        current: state.currentPage,
+                        pageSize: 10,
+                        onChange: (currentPage) => setCurrentPage(currentPage)
+                    }}
+                    isNamiV2
+                    // height={height}
+                    emptyText={<NoData isSearch={!!state.search} />}
+                    // {...props}
+                />
+                {state.tableData?.length > 0 && (
+                    <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
+                        <RePagination
+                            total={state.tableData?.length}
+                            current={state.currentPage}
+                            pageSize={ASSET_ROW_LIMIT}
+                            onChange={(currentPage) => setState({ currentPage })}
+                            name="market_table___list"
+                        />
+                    </div>
+                )}
+                {/* <ReTable
+                    sort
+                    defaultSort={{ key: 'total', direction: 'desc' }}
+                    useRowHover
+                    data={state.tableData || []}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    loading={!state.tableData?.length}
+                    scroll={{ x: true }}
+                    tableStatus={tableStatus}
+                    tableStyle={{
+                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                        tableStyle: { minWidth: '888px !important' },
+                        headerStyle: {},
+                        rowStyle: {},
+                        shadowWithFixedCol: width < 1366,
+                        noDataStyle: {
+                            minHeight: '480px'
+                        }
+                    }}
+                    paginationProps={{
+                        hide: true
+                    }}
+                /> */}
+            </div>
+        );
+    }, [state.tableData, width]);
+
+    const renderEstWallet = useCallback(() => {
+        return (
+            <div className="flex items-center mt-12">
+                <div className="rounded-full p-4 bg-teal-lightTeal dark:bg-teal-5 h-full flex items-center justify-center">
+                    <SvgWalletFutures size={32} />
+                </div>
+                <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
+                    <div className="font-bold text-2xl lg:text-[28px] xl:text-[32px]">
+                        <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
+                        <span>BTC</span>
+                    </div>
+                    <div className="font-normal text-sm lg:text-[16px] xl:text-base mt-1">
+                        {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
+                    </div>
+                </div>
+            </div>
+        );
+    }, [state.hideAsset, currentTheme, estUsd, estBtc]);
+
+    // Kha dung - dang dat lenh2
+    const renderAvailableBalance = useCallback(() => {
+        return (
+            <div className="flex pt-8 gap-12">
+                <div>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>{' '}
+                    <span className="font-semibold">
+                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
+                    </span>
+                </div>
+                <div>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span>{' '}
+                    <span className="font-semibold">
+                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
+                    </span>
+                </div>
+            </div>
+        );
+    }, [estBtc, state.hideAsset, currentTheme]);
+
+    useEffect(() => {
+        walletMapper(wallets, assetConfig);
+    }, [wallets, assetConfig]);
+
+    useEffect(() => {
+        if (state.allAssets && Array.isArray(state.allAssets)) {
+            const origin = dataHandler(state.allAssets, t, dispatch, {
+                usdRate,
+                marketWatch
+            });
+            let tableData = origin;
+            if (state.hideSmallAsset) {
+                tableData = origin.filter((item) => item?.sortByValue?.total > 1);
+            }
+            if (state.search) {
+                tableData = tableData.filter((item) => item?.sortByValue?.asset.includes(state.search?.toUpperCase()));
+            }
+            tableData && setState({ tableData });
+        }
+    }, [usdRate, marketWatch, state.allAssets, state.hideSmallAsset, state.search]);
+
+    return (
+        <div>
+            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+                <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
+                    <div>
+                        <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                            <div
+                                className="flex items-center cursor-pointer hover:opacity-80 select-none"
+                                onClick={() => setState({ hideAsset: !state.hideAsset })}
+                            >
+                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
+                            </div>
+                        </div>
+                        {renderEstWallet()}
+                    </div>
+
+                    <div className="">
+                        <div className="flex items-end justify-end h-full w-full sm:w-auto">
+                            <ButtonV2
+                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                                // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
+                                // className={isBuy ? 'bg-teal' : 'bg-red'}
+                                className="!px-6 !py-3"
+                            >
+                                {t('common:transfer')}
+                            </ButtonV2>
+
+                            {/* <div
+                                className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
+                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-namiv2-gray hover:!text-white
+                                 "
+                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                            >
+                                {t('common:transfer')}
+                            </div> */}
+                        </div>
+                    </div>
+                </div>
+                {renderAvailableBalance()}
+            </MCard>
+
+            <div className="mt-16 sm:flex sm:items-end sm:justify-between">
+                <div className="t-common">{t('common:partners')}</div>
+                <div className="flex items-center justify-between mt-4 sm:mt-0">
+                    {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
+                        <span
+                            className={
+                                state.hideSmallAsset
+                                    ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-dominant bg-dominant'
+                                    : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-gray-3 dark:border-darkBlue-4'
+                            }
+                        >
+                            {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
+                        </span>
+                        <span className="ml-3 text-xs">{t('wallet:hide_small_balance')}</span>
+                    </div> */}
+                    <div className="flex items-center justify-between sm:mr-5">
+                        <div
+                            className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                        >
+                            <span
+                                className={
+                                    state.hideSmallAsset
+                                        ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-dominant bg-dominant'
+                                        : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-divider dark:border-divider-dark'
+                                }
+                            >
+                                {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
+                            </span>
+                            <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
+                        </div>
+                    </div>
+                    <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-namiv2-gray">
+                        <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
+                        <input
+                            className="text-sm w-full px-2.5"
+                            value={state.search}
+                            onChange={(e) => setState({ search: e?.target?.value })}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            placeholder={t('common:search')}
+                        />
+                        {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />}
+                    </div>
+                </div>
+            </div>
+
+            {renderAssetTable()}
+        </div>
+    );
+};
+
+const ASSET_ROW_LIMIT = 8;
+
+const dataHandler = (data, translator, dispatch, utils) => {
+    if (!data || !data?.length) {
+        const skeleton = [];
+        for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
+            skeleton.push({ ...ROW_LOADING_SKELETON, key: `asset_loading__skeleton_${i}` });
+        }
+        return skeleton;
+    }
+
+    const result = [];
+
+    data.forEach((item) => {
+        let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit, 0, true);
+        if (lockedValue === 'NaN') {
+            lockedValue = '0.0000';
+        }
+
+        const assetUsdRate = utils?.usdRate?.[item?.id] || 0;
+        const btcUsdRate = utils?.usdRate?.['9'] || 0;
+
+        const totalUsd = item?.wallet?.value * assetUsdRate;
+        const totalBtc = totalUsd / btcUsdRate;
+
+        result.push({
+            key: `exchange_asset___${item?.assetCode}`,
+            asset: (
+                <div className="flex items-center gap-4">
+                    <AssetLogo assetCode={item?.assetCode} size={32} />
+                    <div className="flex flex-col space-y-1">
+                        <span className="font-semibold text-sm">{item?.assetCode}</span>
+                        <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
+                    </div>
+                </div>
+            ),
+            total: (
+                <span className="text-sm whitespace-nowrap">
+                    {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                </span>
+            ),
+            available: (
+                <span className="text-sm whitespace-nowrap">
+                    {item?.wallet?.value - item?.wallet?.locked_value
+                        ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
+                        : '0.0000'}
+                </span>
+            ),
+            in_order: (
+                <span className="text-sm whitespace-nowrap">
+                    {item?.wallet?.locked_value ? (
+                        <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
+                            <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
+                        </Link>
+                    ) : (
+                        '0.0000'
+                    )}
+                </span>
+            ),
+            btc_value: (
+                <div className="text-sm">
+                    {assetUsdRate ? (
+                        <>
+                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
+                                ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                            </div>
+                        </>
+                    ) : (
+                        '--'
+                    )}
+                </div>
+            ),
+            operation: renderOperationLink(item?.assetName, translator, dispatch),
+            [RETABLE_SORTBY]: {
+                asset: item?.assetName,
+                total: +item?.wallet?.value,
+                available: +item?.wallet?.value - +item?.wallet?.locked_value,
+                in_order: item?.wallet?.locked_value
+            }
+        });
+    });
+
+    return result;
+};
+
+const ROW_LOADING_SKELETON = {
+    asset: <Skeletor width={65} />,
+    total: <Skeletor width={65} />,
+    available: <Skeletor width={65} />,
+    in_order: <Skeletor width={65} />,
+    operation: <Skeletor width={125} />
+};
+
+const renderOperationLink = (assetName, translator, dispatch) => {
+    return (
+        // <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
+        <TextButton
+            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
+        >
+            {translator('common:transfer')}
+        </TextButton>
+
+        // </Link>
+    );
+};
+
+export default PartnersWallet;

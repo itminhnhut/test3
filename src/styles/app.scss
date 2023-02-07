@@ -385,6 +385,10 @@ input[type='number'] {
     box-shadow: 0px 8px 20px rgba(7, 12, 61, 0.06);
 }
 
+.shadow-swapicon {
+  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.15);
+}
+
 .__rdt_custom_sort_icon__ svg {
     font-size: 10px !important;
     height: 10px !important;
@@ -935,6 +939,16 @@ input[type='number'] {
     }
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #1c232e inset !important;
+}
+
+input:-webkit-autofill{
+    -webkit-text-fill-color: #e2e8f0 !important;
+}
 .no-scroll {
     position: fixed;
     width: 100%;
@@ -942,4 +956,19 @@ input[type='number'] {
     top: 0;
     left: 0;
     overflow-y: scroll !important;
+}
+
+.nami-list-disc > * {
+    position: relative;
+    @apply pl-6;
+    &:before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        left: .5rem;
+        top: 50%;
+        @apply bg-white rounded-full;
+    }
 }

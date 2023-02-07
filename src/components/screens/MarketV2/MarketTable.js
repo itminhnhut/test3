@@ -1,35 +1,32 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import MCard from 'src/components/common/MCard';
 import colors from 'styles/colors';
 import Link from 'next/link';
-import AssetLogo from 'src/components/wallet/AssetLogo';
-import MarketLabel from 'src/components/common/MarketLabel';
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
-import RePagination from 'src/components/common/ReTable/RePagination';
+import AssetLogo from 'components/wallet/AssetLogo';
+import MarketLabel from 'components/common/MarketLabel';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import RePagination from 'components/common/ReTable/RePagination';
 import showNotification from 'utils/notificationService';
-import Empty from 'src/components/common/Empty';
-import NeedLogin from 'src/components/common/NeedLogin';
+import Empty from 'components/common/Empty';
+import NeedLogin from 'components/common/NeedLogin';
 import Skeletor from 'components/common/Skeletor';
-
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
-import { StarOutlined } from '@ant-design/icons';
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { initMarketWatchItem, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
-import { IconStarFilled } from 'src/components/common/Icons';
+import { IconStarFilled } from 'components/common/Icons';
 import { Search, X } from 'react-feather';
 import { useWindowSize } from 'utils/customHooks';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { EMPTY_VALUE } from 'constants/constants';
-import { remove } from 'lodash';
+import _, { remove } from 'lodash';
 import { TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
 import { useSelector } from 'react-redux';
-import { PATHS } from 'constants/paths';
-
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import React from 'react';
+import { ScaleLoader } from 'react-spinners';
 
 const MARKET_ROW_LIMIT = 20
 
@@ -37,6 +34,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     // Init State
 
     // Rdx
+    // @ts-ignore
     const auth = useSelector(state => state.auth?.user) || null
 
     // Use Hooks
@@ -45,6 +43,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const [currentTheme] = useDarkMode()
     const { width } = useWindowSize()
 
+    const [favType, setFavType] = useState(0)
     const [type, setType] = useState(0)
     const types = [{
         id: 0,
@@ -78,24 +77,17 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         }
     }]
 
-    const changeType = (index) => {
-        parentState({
-            type: index
-        })
-    }
-
     useEffect(() => {
         setType(restProps.type)
-    },[restProps.type])
+    }, [restProps.type])
 
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
-
             return (
                 <div key={item.key}
-                    onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type:  item.key === 'favorite' ? 1 : 0 })}
+                    onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })}
                     className={classNames("relative mr-6 pb-4 capitalize select-none font-normal text-base text-namiv2-gray-1 cursor-pointer flex items-center", { "text-namiv2-gray-2 font-semibold": restProps.tabIndex === index })}>
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>{item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}</span>
                     {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
@@ -130,6 +122,60 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             )
         })
     }, [restProps.subTabIndex, restProps.tabIndex])
+
+    const renderSuggested = useMemo(() => {
+        let tradingMode = TRADING_MODE.EXCHANGE
+        if (favSubTab[restProps.subTabIndex]?.key === 'futures') {
+            tradingMode = TRADING_MODE.FUTURES
+        }
+        return <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6'>
+            {restProps?.suggestedSymbols?.map(symbol => {
+                return (
+                    <div className='w-full p-3 text-namiv2-gray-1 bg-namiv2-black-1 rounded-md'>
+                        <div className='flex justify-between w-full'>
+                            <div className=''>
+                                <div className='font-medium text-base'>
+                                    <span className="text-namiv2-gray-2">{symbol?.b}</span>/{symbol?.q}
+                                </div>
+                                <div className={classNames('font-normal text-sm justify-start', {
+                                    'text-namiv2-red': !symbol.u,
+                                    'text-namiv2-green': symbol.u
+                                })}>
+                                    {formatPrice(symbol.p)}
+                                </div>
+                            </div>
+                            <div className='cursor-pointer'>
+                                <FavActionButton b={{ b: symbol.b, i: symbol.bi }}
+                                    q={{ q: symbol.q, i: symbol.qi }}
+                                    list={restProps.favoriteList}
+                                    lang={language}
+                                    mode={tradingMode} favoriteRefresher={restProps.favoriteRefresher}
+                                />
+                            </div>
+                        </div>
+                        <div className='mt-4 flex font-normal text-xs gap-2'>
+                            <div className='w-full'>
+                                <div className='w-fit font-medium text-base'>
+                                    {render24hChange(symbol, true)}
+                                </div>
+                                <div className='mt-2 leading-4'>
+                                    {t('futures:24h_high')}: {formatPrice(symbol.h)}
+                                </div>
+                                <div className='leading-4'>
+                                    {t('futures:24h_low')}: {formatPrice(symbol.l)}
+                                </div>
+                            </div>
+                            <div className='h-full lg:w-1/2 w-full flex justify-end'>
+                                <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.namiv2.green[1] : colors.namiv2.red.DEFAULT)}
+                                    alt="Nami Exchange" />
+                            </div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
+    }, [restProps?.suggestedSymbols])
+
 
     const renderTable = useCallback(() => {
         let modifyColumns = []
@@ -225,17 +271,32 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth)
 
         if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
-            tableStatus = <NeedLogin />
+            tableStatus = <NeedLogin message={undefined} addClass={undefined} />
         } else {
             if (loading) {
-                // tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+                console.log('loadinignidngindsn____')
+                tableStatus = <ScaleLoader color={colors.namiv2.green.DEFAULT} size={12}/>
             } else if (!dataSource.length) {
-                tableStatus = <Empty />
+                if (tab[restProps.tabIndex]?.key === 'favorite') {
+                    return (
+                        <div className='px-8'>
+                            <div className='font-normal text-base'>
+                                {{ vi: 'Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.', en: 'You have no favorite pair. We suggested some of these pair to add to your favorite' }[language]}
+                            </div>
+                            <div className='mt-6 w-full'>
+                                {renderSuggested}
+                            </div>
+                        </div>
+                    )
+                }
+                tableStatus = <Empty message={undefined} messageStyle={undefined} addClass={undefined} grpSize={undefined} />
             }
         }
 
         return (
-            <ReTable sort
+            <ReTable
+                // @ts-ignore
+                sort
                 defaultSort={{ key: 'pair', direction: 'asc' }}
                 useRowHover
                 data={dataSource}
@@ -308,8 +369,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     current={restProps.currentPage}
                     pageSize={MARKET_ROW_LIMIT}
                     onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list"
-                />
+                    name="market_table___list" fromZero={undefined} />
             </div>
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex])
@@ -339,7 +399,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     <div className="flex items-center border-namiv2-gray-3 border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <div className="h-12 lg:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">
+                    <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">
                         <div className='flex items-center'>
                             <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
                             <input className="bg-transparent outline-none px-2"
@@ -359,24 +419,23 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-namiv2-gray-3">
                         {renderTab()}
                     </div>
-                    <div className='h-24 border-b-[1px] border-namiv2-gray-3 flex items-center px-8'>
+                    <div className={classNames('h-24 border-namiv2-gray-3 flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <TokenTypes type={type} setType={changeType} types={[{
-                                id: 1,
-                                content: {
-                                    vi: 'Exchange',
-                                    en: 'Exchange'
-                                }
-                            },{
-                                id: 2,
-                                content: {
-                                    vi: 'Futures',
-                                    en: 'Futures'
-                                }
-                            }]} lang={language} />
-
+                            <TokenTypes type={favType} setType={(index) => { parentState({ favType: index }); setFavType(index)}} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
-                            <TokenTypes type={type} setType={changeType} types={types} lang={language} />}
+                            <TokenTypes type={type} setType={(index) => {
+                                parentState({
+                                    type: index
+                                })
+                            }} types={types} lang={language} />}
+
+                        {tab[restProps.tabIndex]?.key === 'favorite' ?
+                            <div className='h-12 px-6 flex justify-center items-center bg-namiv2-green rounded-md text-white text-base font-medium cursor-pointer'>
+                                {{ en: 'Add all', vi: 'Thêm tất cả' }[language]}
+                            </div>
+                            :
+                            null}
+
                     </div>
                     <div className="">
                         {renderTable()}
@@ -504,7 +563,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
     const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`
 
     // Helper
-    const callback = async (method, list) => {
+    const callback = _.debounce(async (method, list) => {
         setLoading(true)
         let message = ''
         let title = ''
@@ -541,7 +600,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                 'top-right'
             )
         }
-    }
+    }, 300)
 
     useEffect(() => {
         if (list) {
@@ -560,8 +619,8 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
             onClick={() => {
                 !loading && callback(already ? 'delete' : 'put', list)
             }}>
-            {already ? <IconStarFilled color="#FFC632" />
-                : <IconStarFilled color="#8694B3" />}
+            {already ? <IconStarFilled size={24} color="#FFC632" />
+                : <IconStarFilled size={24} color="#8694B3" />}
         </div>
     )
 }
@@ -579,12 +638,12 @@ const renderTradeLink = (b, q, lang, mode) => {
 
     return (
         <div className='flex justify-end items-center font-medium text-base'>
-            <Link href={url} prefetch={false} className=''>
+            <Link href={url} prefetch={false}>
                 <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
-            {swapurl ? <Link href={swapurl} prefetch={false} className=''>
+            {swapurl ? <Link href={swapurl} prefetch={false}>
                 <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center border-l-[1px] border-namiv2-gray-3" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
@@ -594,9 +653,9 @@ const renderTradeLink = (b, q, lang, mode) => {
 }
 
 const TokenTypes = ({ type, setType, types, lang }) => {
-    return <div className='flex space-x-3 h-12 font-normal'>
+    return <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
         {types.map(e =>
-            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer', {
+            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer whitespace-nowrap', {
                 'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': e.id === type
             })}
                 onClick={() => setType(e.id)}

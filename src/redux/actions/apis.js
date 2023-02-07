@@ -21,6 +21,8 @@ export const USER_REVOKE_DEVICE = API_PREFIX + "user/devices/revoke";
 export const SET_USER_AVATAR = API_PREFIX + "user/set_avatar";
 export const USER_AVATAR_PRESET = API_PREFIX + "user/avatar_preset";
 
+export const API_GET_USER_AVATAR_PRESET = API_V3_PREFIX + "users/avatar-preset";
+
 export const API_REFRESH_TOKEN = API_PREFIX + "web/refresh_token";
 
 export const API_GET_FAVORITE = API_PREFIX + "symbols/favorite";
@@ -291,4 +293,23 @@ export const API_GET_FUTURES_SETTING = API_PREFIX + "futures/setting";
 export const API_PORTFOLIO_OVERVIEW = API_V3_PREFIX + "portfolio/futures/overview";
 export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + "portfolio/futures/account";
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + "portfolio/futures/summary";
+
+// new referral
+export const API_NEW_REFERRAL_CONFIG = API_V3_PREFIX + "users/referral/commission-config";
+export const API_NEW_REFERRAL = API_V3_PREFIX + "users/referral";
+export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + "users/referral"
+export const API_NEW_REFERRAL_OVERVIEW = API_V3_PREFIX + "users/referral/profile";
+export const API_NEW_REFERRAL_NEW_COMMISSIONS = API_V3_PREFIX + "users/referral/new-commission-history";
+export const API_NEW_REFERRAL_NEW_FRIENDS = API_V3_PREFIX + "users/referral/new-friends";
+export const API_NEW_REFERRAL_FRIENDS_BY_REF = API_V3_PREFIX + "users/referral/:code/friends"; // .replace(':code', realCode)
+export const API_NEW_REFERRAL_SET_DEFAULT = API_V3_PREFIX + "users/referral/:code/set-default"; // .replace(':code', realCode)
+export const API_NEW_REFERRAL_EDIT_NOTE = API_V3_PREFIX + "users/referral/:code/change-note"; // .replace(':code', realCode)
+export const API_NEW_REFERRAL_STATISTIC = API_V3_PREFIX + "users/referral/chart"
+export const API_NEW_REFERRAL_CREATE_INVITE = API_V3_PREFIX + "users/referral/invite";
+export const API_NEW_REFERRAL_CHECK_REF = API_V3_PREFIX + "users/referral/check-duplicate"
+
+
+//referal
+export const API_GET_LIST_FRIENDS = API_V3_PREFIX + "users/referral/friends";
+export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + "users/referral/commission-history";
 

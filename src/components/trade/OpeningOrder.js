@@ -201,8 +201,8 @@ const SpotOrderList = (props) => {
         };
     }, [userSocket]);
 
-    const columns = useMemo(
-        () => [
+    const columns = useMemo(() => {
+        const init = [
             {
                 key: 'displayingId',
                 title: t('common:order_id'),
@@ -266,8 +266,10 @@ const SpotOrderList = (props) => {
                 render: (row) => {
                     return <span>{formatBalance((row?.executedQty / row?.quantity) * 100, 2)}%</span>;
                 }
-            },
-            {
+            }
+        ];
+        if (filteredOrders.length > 0)
+            init.push({
                 key: 'actions',
                 title: (
                     <span
@@ -285,6 +287,7 @@ const SpotOrderList = (props) => {
                 fixed: 'right',
                 align: 'center',
                 width: 180,
+                className: filteredOrders.length > 0 ? '' : 'invisible',
                 render: (row) => (
                     <Delete
                         className="cursor-pointer flex m-auto w-full"
@@ -293,10 +296,9 @@ const SpotOrderList = (props) => {
                         }}
                     />
                 )
-            }
-        ],
-        [toggle, currentPair, showCloseAll, loaded, filteredOrders]
-    );
+            });
+        return init;
+    }, [toggle, currentPair, showCloseAll, loaded, filteredOrders]);
 
     useEffect(
         () => () => {

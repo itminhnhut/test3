@@ -1,159 +1,191 @@
-import React from 'react';
-import withTabLayout from 'components/common/layouts/withTabLayout';
-import { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
-import { useSelector } from 'react-redux';
-import NeedLogin from 'components/common/NeedLogin';
-import { useTranslation } from 'next-i18next'
-import MCard from 'components/common/MCard';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { getS3Url } from 'redux/actions/utils';
-import Link from 'next/link';
-import { KYC_STATUS } from '../../redux/actions/const';
+import AccountLayout from 'components/screens/Account/AccountLayout';
+import Image from 'next/image';
 import QRCode from 'qrcode.react';
+import Link from 'next/link';
+import { getS3Url } from 'redux/actions/utils';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import classnames from 'classnames';
+import { KYC_STATUS } from 'redux/actions/const';
 
-
-const Identification = () => {
-    const user = useSelector(state => state.auth?.user);
-    const { t, i18n: { language } } = useTranslation()
-
-    const renderStatus = () => {
-        if (!user) return null;
-        const status = user?.kyc_status;
-        const src = getS3Url(`/images/screen/identification/${status === KYC_STATUS.APPROVED ? 'verified' : status === KYC_STATUS.PENDING_APPROVAL ? 'process' : 'not_verified'}.png`);
-        const statusName = status === KYC_STATUS.APPROVED ? t('identification:account.congratulations') : status === KYC_STATUS.PENDING_APPROVAL ? t('identification:account.process') : t('identification:account.not_verified');
-        const title = status !== KYC_STATUS.APPROVED ? t('identification:account.not_verified_2') : t('identification:account.verified');
-        return (
-            <>
-                <div className="w-[200px] h-[200px] m-auto">
-                    <img src={src} alt="" /></div>
-                <span className={`pt-8 lg:pt-12 text-base font-bold ${status !== KYC_STATUS.APPROVED ? 'text-red' : ''}`}>{statusName}</span>
-                <span className={`text-sm ${status === KYC_STATUS.APPROVED ? 'text-base font-bold text-teal' : 'text-gray-1 font-medium'}`}>{title}</span>
-            </>
-        )
-    }
-
-    const renderInfo = () => {
-        if (!user) return null;
-        const status = user?.kyc_status;
-        return (
-            status !== KYC_STATUS.APPROVED ?
-                <div className="grid sm:grid-cols-1 lg:grid-cols-2 ">
-                    <div className="grid-span-1 flex flex-col justify-between">
-                        <div className="font-bold leading-[40px] text-[26px] mb-6">
-                            {t('identification:title_2')}
-                        </div>
-                        <div className="flex items-center mb-[18px]">
-                            <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_person.png')} alt="" />
-                            <span className="pl-[16px] font-medium">{t('identification:personal')}</span>
-                        </div>
-                        <div className="flex items-center mb-[18px] mt-[18px]">
-                            <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_info.png')} alt="" />
-                            <span className="pl-[16px] font-medium">{t('identification:government')}</span>
-                        </div>
-                        <div className="flex items-center mb-[18px] mt-[18px]">
-                            <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_facial.png')} alt="" />
-                            <span className="pl-[16px] font-medium">{t('identification:facial')}</span>
-                        </div>
-                        <div className="flex items-center mt-[18px]">
-                            <img className="w-[32px] h-[32px]" src={getS3Url('/images/screen/identification/ic_timer.png')} alt="" />
-                            <span className="pl-[16px] font-medium">{t('identification:timer')}</span>
-                        </div>
-                    </div>
-                    <div className="grid-span-1 text-center mt-5 sm:mt-0">
-                        <div className="mb-[24px] m-auto rounded-[10px] p-[10px] border-teal border-[1px] w-[160px] h-[160px]">
-                            <QRCode
-                                value={'account_verification'}
-                                size={140}
-                            />
-                        </div>
-                        <span className="text-base font-medium">
-                            {t('identification:qr_1')}<br /> {t('identification:qr_2')}</span>
-                        <div className="flex mt-[24px] justify-between max-w-[290px] m-auto">
-                            <Link href="https://apps.apple.com/app/id1480302334">
-                                <a target="_blank">
-                                    <img className="m-auto w-[135px] h-[40px] mr-[20px]" src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="" />
-                                </a>
-                            </Link>
-                            <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
-                                <a target="_blank">
-                                    <img className="m-auto w-[135px] h-[40px]" src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="" />
-                                </a>
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-                :
-                <>
-                    <div className="font-bold leading-[40px] text-[26px] mb-6">
-                        {t('identification:title_3')}
-                    </div>
-                    <div className="grid sm:grid-cols-1 lg:grid-cols-2 ">
-                        <div className="grid-span-1 flex flex-col justify-between">
-                            <div className="px-7 py-7 flex items-center	hover:shadow-features">
-                                <img className="w-[52px] h-[52px] " src={getS3Url('/images/screen/identification/ic_exchange2.png')} alt="" />
-                                <div className="pl-[16px] flex flex-col">
-                                    <label className="font-bold">{t('identification:buy_sell')}</label>
-                                    <span className="text-gray font-medium">{t('identification:price_daily')}</span>
-                                </div>
-                            </div>
-                            <div className="px-7 py-7 flex items-center	hover:shadow-features">
-                                <img className="w-[52px] h-[52px]" src={getS3Url('/images/screen/identification/ic_withdraw.png')} alt="" />
-                                <div className="pl-[16px] flex flex-col">
-                                    <label className="font-bold">{t('identification:withdrawal')}</label>
-                                    <span className="text-gray font-medium">{t('identification:unlimited')}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="grid-span-1 flex flex-col justify-between">
-                            <div className="px-7 py-7 flex items-center	hover:shadow-features">
-                                <img className="w-[52px] h-[52px]" src={getS3Url('/images/screen/identification/ic_wallet_3.png')} alt="" />
-                                <div className="pl-[16px] flex flex-col">
-                                    <label className="font-bold">{t('identification:deposit')}</label>
-                                    <span className="text-gray font-medium">{t('identification:unlimited')}</span>
-                                </div>
-                            </div>
-                            <div className="px-7 py-7 flex items-center	hover:shadow-features">
-                                <img className="w-[52px] h-[52px]" src={getS3Url('/images/screen/identification/ic_reward.png')} alt="" />
-                                <div className="pl-[16px] flex flex-col">
-                                    <label className="font-bold">{t('identification:other')}</label>
-                                    <span className="text-gray font-medium">{t('identification:reward')}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
-        )
-    }
-
-    return (
-        <div>
-            {!user ? <NeedLogin addClass="h-[380px] flex justify-center items-center" />
-                :
-                <div className="pb-20 lg:pb-24 2xl:pb-32">
-                    <div className="font-bold leading-[40px] text-[26px] mb-6">
-                        {t('identification:title')}
-                    </div>
-                    <div className="grid sm:grid-cols-1 md:grid-cols-10 gap-4">
-                        <MCard addClass="text-center flex flex-col sm:col-span-1 md:col-span-3 px-7 py-8 lg:p-10 xl:px-7 xl:py-8 drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
-                            {renderStatus()}
-                        </MCard>
-                        <MCard addClass="sm:col-span-1 md:col-span-7 px-7 py-8 lg:p-10 xl:px-7 xl:py-8 drop-shadow-onlyLight border border-transparent dark:drop-shadow-none dark:border-divider-dark">
-                            {renderInfo()}
-                        </MCard>
-                    </div>
-                </div>
-            }
-        </div>
-    );
+const NotKycCard = ({
+    t,
+    className
+}) => {
+    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_require.png')}
+             className='mx-auto' />
+        <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
+        <span className='text-txtSecondary'>{t('identification:account.not_verified_content')}</span>
+    </div>;
 };
+
+const KYCStepCard = ({
+    t,
+    className
+}) => {
+    return <div className={classnames(className, 'flex gap-4 bg-darkBlue-3 py-14 rounded-xl px-6')}>
+        <div>
+            <p className='text-xl mb-6'>{t('identification:kyc_step:title')}</p>
+            <span className='text-txtSecondary'>{t('identification:kyc_step:content')}</span>
+            <div className='space-y-3 mt-4'>
+                <div className='flex items-center'>
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_user.png')} alt='Nami Exchange' />
+                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_1')}</span>
+                </div>
+
+                <div className='flex items-center'>
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_payment_type.png')}
+                         alt='Nami Exchange' />
+                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_2')}</span>
+                </div>
+
+                <div className='flex items-center'>
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_identity_card.png')}
+                         alt='Nami Exchange' />
+                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_3')}</span>
+                </div>
+
+                <div className='flex items-center'>
+                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_record.png')}
+                         alt='Nami Exchange' />
+                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_4')}</span>
+                </div>
+            </div>
+        </div>
+
+        <div className=''>
+            <div className='p-2 bg-white rounded-lg mx-auto w-fit'>
+                <QRCode value='account_verification' size={132} />
+            </div>
+            <div className='text-center mt-5'>
+                <span className='text-txtSecondary'>{t('identification:kyc_step:scan')}</span>
+                <div className='flex mt-6 justify-between max-w-[290px] m-auto gap-4'>
+                    <Link href='https://apps.apple.com/app/id1480302334'>
+                        <a target='_blank'>
+                            <img
+                                className='m-auto w-[135px] h-[40px] mr-[20px]'
+                                src={getS3Url('/images/screen/homepage/app_store_light.png')}
+                                alt=''
+                            />
+                        </a>
+                    </Link>
+                    <Link href='https://play.google.com/store/apps/details?id=com.namicorp.exchange'>
+                        <a target='_blank'>
+                            <img className='m-auto w-[135px] h-[40px]'
+                                 src={getS3Url('/images/screen/homepage/play_store_light.png')}
+                                 alt='' />
+                        </a>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    </div>;
+};
+
+const ProcessKycCard = ({
+    t,
+    className
+}) => {
+    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_wait.png')} className='mx-auto' />
+        <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.process')}</p>
+        <span className='text-txtSecondary'>{t('identification:account.process_content')}</span>
+    </div>;
+};
+
+const CurrentFuturesCard = ({
+    t,
+    className
+}) => {
+    return <div
+        className={classnames(className, 'flex flex-col justify-center col-span-3 bg-darkBlue-3 rounded-xl px-6 py-auto')}>
+        <div className='mb-8'>
+            <p className='font-medium'>{t('identification:current_futures:title')}</p>
+        </div>
+        <div className='grid grid-cols-2 gap-y-9 gap-x-8'>
+            <div className='flex items-center'>
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_1.png')} alt='Nami Exchange' />
+                <div className='ml-4'>
+                    <p className='font-bold'>{t('identification:current_futures:buy_sell')}</p>
+                    <span
+                        className='text-txtSecondary'>{t('identification:current_futures:price_daily')}</span>
+                </div>
+            </div>
+
+            <div className='flex items-center'>
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_2.png')} alt='Nami Exchange' />
+                <div className='ml-4'>
+                    <p className='font-bold'>{t('identification:current_futures:deposit')}</p>
+                    <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
+                </div>
+            </div>
+
+            <div className='flex items-center'>
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_3.png')} alt='Nami Exchange' />
+                <div className='ml-4'>
+                    <p className='font-bold'>{t('identification:current_futures:withdrawal')}</p>
+                    <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
+                </div>
+            </div>
+
+            <div className='flex'>
+                <Image width={48} height={48} src={getS3Url('/images/screen/profile/ic_feature_4.png')} />
+                <div className='ml-4'>
+                    <p className='font-bold'>{t('identification:current_futures:other')}</p>
+                    <span className='text-txtSecondary'>{t('identification:current_futures:reward')}</span>
+                </div>
+            </div>
+        </div>
+    </div>;
+};
+
+const VerifiedKycCard = ({
+    t,
+    className
+}) => {
+    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_verified.png')} className='mx-auto' />
+        <p className='text-teal font-medium text-xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
+        <span className='text-teal font-medium text-xl '>{t('identification:account.verified')}</span>
+    </div>;
+};
+
+function Identification() {
+    const user = useSelector((state) => state.auth?.user);
+
+    const { t } = useTranslation();
+
+    return <AccountLayout>
+        {
+            user?.kyc_status === KYC_STATUS.NO_KYC &&
+            <div className='grid grid-cols-5 gap-8 my-12'>
+                <NotKycCard t={t} className='col-span-2' />
+                <KYCStepCard t={t} className='col-span-3' />
+            </div>
+        }
+        {
+            user?.kyc_status === KYC_STATUS.PENDING_APPROVAL &&
+            <div className='grid grid-cols-5 gap-8 my-12'>
+                <ProcessKycCard t={t} className='col-span-2' />
+                <CurrentFuturesCard t={t} className='col-span-3' />
+            </div>
+        }
+        {
+            user?.kyc_status === KYC_STATUS.APPROVED &&
+            <div className='grid grid-cols-5 gap-8 my-12'>
+                <VerifiedKycCard t={t} className='col-span-2' />
+                <CurrentFuturesCard t={t} className='col-span-3' />
+            </div>
+        }
+    </AccountLayout>;
+}
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['navbar', 'profile', 'fee-structure', 'identification', 'reward-center'])
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification']))
     }
-})
-export default withTabLayout(
-    {
-        routes: TAB_ROUTES.ACCOUNT
-    }
-)(Identification)
+});
+
+export default Identification;

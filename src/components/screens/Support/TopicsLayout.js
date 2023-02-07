@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import SupportBanner from 'components/screens/Support/SupportBanner';
 import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
+import SearchSection from 'components/screens/Support/SearchSection';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import { PATHS } from 'constants/paths';
 import useApp from 'hooks/useApp';
@@ -14,8 +15,11 @@ import { useEffect, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import useHideScrollbar from 'hooks/useHideScrollbar';
 import { handleHideScrollBar } from 'utils/helpers';
+import { useWindowSize } from 'utils/customHooks';
+import SupportSection from './SupportSection';
+import { LastedArticles } from 'pages/support';
 
-const COL_WIDTH = 304;
+const COL_WIDTH = 308;
 
 const TopicsLayout = ({
     children,
@@ -25,7 +29,7 @@ const TopicsLayout = ({
     faqCurrentGroup
 }) => {
     const [showDropdown, setShowDropdown] = useState({});
-
+    const { width } = useWindowSize()
     const router = useRouter();
     const [theme] = useDarkMode();
     const {
@@ -54,7 +58,7 @@ const TopicsLayout = ({
     return (
         <MaldivesLayout>
             <div className="bg-[#F2F4F6] dark:bg-bgPrimary-dark pt-8 lg:pt-0">
-                <SupportBanner
+                {/* <SupportBanner
                     title={
                         mode === 'announcement'
                             ? t('support-center:announcement')
@@ -62,7 +66,8 @@ const TopicsLayout = ({
                     }
                     href={baseHref}
                     containerClassNames="hidden lg:block"
-                />
+                /> */}
+                <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png')`} />
                 <div
                     style={
                         theme === THEME_MODE.LIGHT
@@ -74,20 +79,26 @@ const TopicsLayout = ({
                     <div className="flex min-h-[500px]">
                         <div
                             style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
-                            className="hidden lg:block py-5 lg:py-[40px] border-r border-divider dark:border-divider-dark"
+                            className="hidden lg:block py-16 lg:py-20 border-r border-divider dark:border-divider-dark"
                         >
+                            <div className='text-white font-medium text-xl px-6 mb-8'>
+                                {t('navbar:menu_grid.category')}
+                            </div>
                             {topics?.map((item) => (
                                 <div key={item.id}>
                                     <div
                                         className={classNames(
-                                            'flex items-center px-5 lg:py-2.5 2xl:py-4 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                            'h-14 mb-3 flex items-center hover:bg-hover dark:hover:bg-hover-dark',
                                             {
-                                                'bg-teal-lightTeal dark:bg-teal-opacity':
-                                                    !isFaq &&
-                                                    router?.query?.topic === item.displaySlug
+                                                'bg-hover dark:bg-hover-dark': router?.query?.topic === item.displaySlug
                                             }
                                         )}
                                     >
+                                        {router?.query?.topic === item.displaySlug ?
+                                            <div className='h-8 w-1 bg-teal rounded-[10px]'></div>
+                                            :
+                                            null
+                                        }
                                         <Link
                                             href={{
                                                 pathname:
@@ -100,16 +111,18 @@ const TopicsLayout = ({
                                         >
                                             <a
                                                 className={classNames(
-                                                    'flex flex-grow items-center text-[16px] font-medium cursor-pointer'
+                                                    'px-6 flex flex-grow items-center text-gray-4 font-semibold text-base cursor-pointer', {
+                                                    '!px-5': !isFaq && router?.query?.topic === item.displaySlug
+                                                }
                                                 )}
                                             >
-                                                <div className="w-[32px] h-[32px] mr-4">
+                                                <div className="w-6 h-6 mr-6">
                                                     {
                                                         <Image
                                                             src={getSupportCategoryIcons(item.id)}
                                                             layout="responsive"
-                                                            width={32}
-                                                            height={32}
+                                                            width={24}
+                                                            height={24}
                                                         />
                                                     }
                                                 </div>
@@ -118,7 +131,7 @@ const TopicsLayout = ({
                                         </Link>
                                         {isFaq && !!item.subCats?.length && (
                                             <span
-                                                className="hover:text-dominant cursor-pointer"
+                                                className="hover:text-dominant cursor-pointer pr-4"
                                                 onClick={() =>
                                                     setShowDropdown((prevState) => ({
                                                         ...prevState,
@@ -128,17 +141,36 @@ const TopicsLayout = ({
                                                 }
                                             >
                                                 {!!showDropdown?.[item.displaySlug] ? (
-                                                    <ChevronUp size={14} strokeWidth={1.2} />
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <g clip-path="url(#kstei7ehqa)">
+                                                            <path d="M4.667 9.333 8 6l3.333 3.333H4.667z" fill="#8694B3" />
+                                                        </g>
+                                                        <defs>
+                                                            <clipPath id="kstei7ehqa">
+                                                                <path fill="#fff" d="M0 0h16v16H0z" />
+                                                            </clipPath>
+                                                        </defs>
+                                                    </svg>
                                                 ) : (
-                                                    <ChevronDown size={14} strokeWidth={1.2} />
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <g clip-path="url(#v5enqzqcna)">
+                                                            <path d="M4.667 6.667 8 10l3.333-3.333H4.667z" fill="#8694B3" />
+                                                        </g>
+                                                        <defs>
+                                                            <clipPath id="v5enqzqcna">
+                                                                <path fill="#fff" d="M0 0h16v16H0z" />
+                                                            </clipPath>
+                                                        </defs>
+                                                    </svg>
+
                                                 )}
                                             </span>
                                         )}
                                     </div>
                                     {isFaq && !!item.subCats?.length && (
                                         <div
-                                            className={classNames('hidden', {
-                                                '!block': !!showDropdown?.[item.displaySlug]
+                                            className={classNames('hidden mb-3', {
+                                                '!flex flex-col gap-4': !!showDropdown?.[item.displaySlug]
                                             })}
                                         >
                                             {item.subCats?.map((subCats, index) => (
@@ -158,9 +190,9 @@ const TopicsLayout = ({
                                                 >
                                                     <a
                                                         className={classNames(
-                                                            'block pl-[68px] text-[16px] cursor-pointer lg:py-2.5 2xl:py-4 font-medium hover:bg-teal-lightTeal dark:hover:bg-teal-opacity',
+                                                            'block pl-[72px] text-base cursor-pointer text-darkBlue-5 font-normal',
                                                             {
-                                                                'bg-teal-lightTeal dark:bg-teal-opacity':
+                                                                '!font-semibold !text-gray-4 leading-6':
                                                                     subCats.displaySlug ===
                                                                     faqCurrentGroup
                                                             }
@@ -176,12 +208,13 @@ const TopicsLayout = ({
                             ))}
                         </div>
 
-                        <div className="flex-grow w-full px-4 pb-8 md:px-6 lg:p-[40px]">
-                            <SupportSearchBar
-                                simpleMode
-                                containerClassNames="!mt-4 lg:!mt-0 lg:hidden"
-                            />
-                            {useTopicTitle && (
+                        <div className='w-full'>
+                            <div className="flex-grow w-full px-[112px] py-20">
+                                <SupportSearchBar
+                                    simpleMode
+                                    containerClassNames="!mt-4 lg:!mt-0 lg:hidden"
+                                />
+                                {/* {useTopicTitle && (
                                 <div
                                     className={classNames(
                                         'text-[16px] md:text-[20px] lg:text-[28px] font-bold mt-4 mb-6 lg:mt-0 lg:mb-10',
@@ -192,67 +225,19 @@ const TopicsLayout = ({
                                 >
                                     {!faqCurrentGroup ? mainTopic?.title : subTopics?.title}
                                 </div>
-                            )}
-                            {children}
-                        </div>
-
-                        {lastedArticles && Array.isArray(lastedArticles) && lastedArticles.length && (
-                            <div
-                                style={{
-                                    width: COL_WIDTH,
-                                    minWidth: COL_WIDTH
-                                }}
-                                className="hidden lg:block py-5 lg:py-[40px] pr-4 lg:pr-6 xl:pr-8 lg:pl-2"
-                            >
-                                <div className="px-3 text-[16px] font-bold mb-2.5">
-                                    {t('support-center:lasted_articles')}
-                                </div>
-                                {lastedArticles.map((article) => {
-                                    let topic;
-                                    const ownedTags = article.tags
-                                        .filter((f) => f.slug !== queryMode)
-                                        ?.map((o) =>
-                                            o?.slug
-                                                ?.replace(`${queryMode}-vi-`, '')
-                                                ?.replace(`${queryMode}-en-`, '')
-                                        );
-                                    const _tagsLib = topics.map((o) => o.displaySlug);
-
-                                    ownedTags.forEach((e) => {
-                                        if (_tagsLib.includes(e)) topic = e;
-                                    });
-
-                                    return (
-                                        <Link
-                                            key={article.id}
-                                            href={{
-                                                pathname: baseHref + '/[topic]/[articles]',
-                                                query: appUrlHandler(
-                                                    {
-                                                        topic,
-                                                        articles: article.slug?.toString()
-                                                    },
-                                                    isApp
-                                                )
-                                            }}
-                                        >
-                                            <a
-                                                className={classNames(
-                                                    'block mb-2.5 font-medium px-3 py-2.5 rounded-[8px]',
-                                                    {
-                                                        'bg-gray-4 dark:bg-darkBlue-4':
-                                                            article.id === router?.query?.articles
-                                                    }
-                                                )}
-                                            >
-                                                {article?.title}
-                                            </a>
-                                        </Link>
-                                    );
-                                })}
+                            )} */}
+                                {children}
                             </div>
-                        )}
+
+                            {lastedArticles && Array.isArray(lastedArticles) && lastedArticles.length && (
+                                <div className='px-[112px] pb-24'>
+                                    <div className='text-gray-4 text-xl font-medium mb-2'>{t('support-center:lasted_articles')}</div>
+                                    <LastedArticles lastedArticles={lastedArticles} language={language} isApp={isApp} t={t} containerClassName="!bg-transparent px-0" />
+                                </div>
+                            )}
+                        </div>
                     </div>
+
                 </div>
             </div>
         </MaldivesLayout>
