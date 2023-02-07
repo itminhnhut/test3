@@ -97,7 +97,7 @@ const Overview = ({ data, commisionConfig, user }) => {
 
             {isPartner ?
                 <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
-                    {t('reference:referral.readmore')}
+                    {t('reference:referral.readmore') + ' '}
                     <Link href={policyLink} >
                         <a>
                             <span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span>
