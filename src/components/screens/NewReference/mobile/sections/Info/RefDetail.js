@@ -15,7 +15,6 @@ import styled from 'styled-components';
 import { CheckIcon } from '../FriendList';
 import colors from 'styles/colors';
 
-
 const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -119,7 +118,9 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                         <div
                                             className={classNames(
                                                 'px-3 py-1 rounded-[100px] font-normal text-xs flex items-center',
-                                                data.status ? 'text-namiapp-green-1 bg-namiapp-green-1 bg-opacity-10' : 'text-gray-7 bg-namiapp-black-4 bg-opacity-50'
+                                                data.status
+                                                    ? 'text-namiapp-green-1 bg-namiapp-green-1 bg-opacity-10'
+                                                    : 'text-gray-7 bg-namiapp-black-4 bg-opacity-50'
                                             )}
                                         >
                                             {data.status ? <CheckIcon className={'mr-1'} /> : null}
@@ -131,14 +132,19 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-gray-7 text-xs ">{t('reference:referral.you_friends_get')}</div>
                                         <div className="text-namiapp-green-1 text-sm">
-                                            {(100 - data.remunerationRate)}% / {data.remunerationRate}%
+                                            {100 - data.remunerationRate}% / {data.remunerationRate}%
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-gray-7 text-xs">{t('reference:referral.link')}</div>
                                         <div className="text-gray-6 text-sm flex gap-2 justify-end items-center w-fit">
                                             <div className="max-w-[140px] truncate">https://nami.exchange/ref/{data.code}</div>
-                                            <CopyIcon data={`https://nami.exchange/ref/${data.code}`} size={13.5} className="cursor-pointer" color={colors.namiapp.gray[2]} />
+                                            <CopyIcon
+                                                data={`https://nami.exchange/ref/${data.code}`}
+                                                size={13.5}
+                                                className="cursor-pointer"
+                                                color={colors.namiapp.gray[2]}
+                                            />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
@@ -163,7 +169,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowEditNote(true);
                                             }}
                                         >
-                                            {data.note} <NoteIcon color={colors.namiapp.gray[2]}/>
+                                            {data.note} <NoteIcon color={colors.namiapp.gray[2]} />
                                         </div>
                                     </div>
                                 </div>

@@ -105,7 +105,7 @@ const LastedActivities = () => {
                             </div>
                             <div className='flex w-full justify-between items-center !text-gray-7 font-medium text-xs leading-[14px]'>
                                 <div>
-                                    {formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}
+                                    {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
                                 </div>
                                 <div>
                                     {t('reference:referral.type')}: {data.kind}
@@ -139,7 +139,7 @@ const LastedActivities = () => {
         <div className='px-4'>
             <CollapsibleRefCard title={t('reference:referral.recent_activities')} isBlack >
                 <div className='w-auto'>
-                    <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' >
+                    <Tabs tab={tab} className='text-sm font-medium flex justify-start gap-7' isMobile >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
@@ -170,8 +170,11 @@ export const UserIcon = ({ isMobile = false }) => <svg width="28" height="28" vi
 </svg>
 
 export const RefInfo = ({ data, language, className, isMobile = false }) => (
-    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium', className, { 'text-gray-7': isMobile, 'text-gray-1': !isMobile })}>
-        <div className='text-xs mt-[-22px]'>
+    <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium z-1 overflow-visible', className, { 'text-gray-7 !font-semibold': isMobile, 'text-gray-1': !isMobile })}>
+        <div className={classNames('text-xs mt-[-24px] px-1 -ml-1 z-2 relative w-fit', {
+            'bg-namiapp-black-1': isMobile,
+            'bg-white': !isMobile
+        })}>
             {languages.refUser[language]}:
         </div>
         <div className='text-sm leading-6'>

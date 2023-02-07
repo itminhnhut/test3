@@ -13,14 +13,14 @@ import classNames from 'classnames';
 
 const Charts = ({ t, id }) => {
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: '1d', format: 'hh' },
-        { title: '1 ' + t('futures:week'), value: '1w', format: 'DD' },
-        { title: '1 ' + t('futures:month'), value: '1M', format: 'W' },
+        { title: '1 ' + t('futures:day'), value: 'd', format: 'hh:mm', interval: '1h' },
+        { title: '1 ' + t('futures:week'), value: 'w', format: 'dd/MM', interval: '1d' },
+        { title: '1 ' + t('futures:month'), value: 'm', format: 'dd/MM', interval: '1d' },
         // { title: t('reference:referral.custom'), value: 'custom' },
     ]
     return (
         <div className='flex flex-col gap-8 w-full' id={id}>
-            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
+            <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
             <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
         </div>
     )
@@ -52,11 +52,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                 method: 'GET',
             },
             params: {
-                interval: timeTab !== 'custom' ? timeTab : '1d',
+                interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'DD'
+                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {
@@ -170,6 +170,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                             const level = t('reference:referral.level') + ': ' + data.level
                             const friends = t('reference:referral.number_of_friends') + ': ' + data.count
                             const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC'
+                            if (!data.volume) return [level, friends]
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {

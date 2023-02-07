@@ -118,7 +118,7 @@ const PCView = () => {
         // console.log('namidev-DEBUG: USER !!!', user)
         const code_refer = (user && user.hasOwnProperty('code_refer') && user.code_refer) || ''
         const referal_id = (user && user.hasOwnProperty('referal_id') && user.referal_id) || ''
-        const link_refer = `https://nami.exchange/referral?ref=${code_refer ? code_refer : ''}`
+        const link_refer = `https://nami.exchange/ref/${code_refer ? code_refer : ''}`
 
         return (
             <BannerContainer>

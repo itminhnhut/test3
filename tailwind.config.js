@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
-const defaultTheme = require('tailwindcss/defaultTheme');
 
 // Common colors
 const commonColors = {
@@ -64,6 +63,7 @@ const commonColors = {
         text2: '#A6BFE6',
         grey: '#7686B1',
         grey2: '#7586AD',
+        grey3: 'rgba(97, 144, 149, 0.15)',
         white: '#F6F6F6',
         blue: '#27CEE0',
         blue2: '#093DD1',
@@ -113,6 +113,12 @@ module.exports = {
     theme: {
         container: {
             center: true,
+        },
+        backgroundSize: {
+            auto: 'auto',
+            cover: 'cover',
+            contain: 'contain',
+            '100%': '100%',
         },
         fontWeight: {
             light: 300,
@@ -350,6 +356,7 @@ module.exports = {
                 },
                 gray: {
                     DEFAULT: '#8593a6',
+                    1: '#262e40',
                 },
             },
             dark: {
@@ -362,8 +369,10 @@ module.exports = {
             screens: {
                 v3: '1216px',
                 nao: '1160px',
-                xsm: '320px',
+                mb: '820px',
                 xxs: '360px',
+                xsm: '320px',
+                xs: '319px',
             },
             spacing: {
                 128: '32rem',
@@ -480,8 +489,14 @@ module.exports = {
                     DEFAULT: '#ebedf3',
                     dark: commonColors.dark[2],
                 },
+                bgNaoStart: 'rgba(9, 61, 209, 0.5)',
             },
-            fontWeight: { bold: 600 },
+            backgroundImage: {
+                rank: "url('/images/contest/bg_rank.png')",
+                'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
+                'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
+                dark: commonColors.darkBlue3,
+            },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
                 onlyLight: '0px 7px 23px rgba(0, 0, 0, 0.05)',
@@ -494,6 +509,7 @@ module.exports = {
                 order_detail: '0px -4px 30px rgba(0, 0, 0, 0.08)',
                 nao: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
+                rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
                 ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
                 popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)',
             },

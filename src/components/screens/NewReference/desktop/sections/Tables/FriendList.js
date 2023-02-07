@@ -84,7 +84,6 @@ const FriendList = ({ t, commisionConfig, id }) => {
                 }
             });
             if (data) {
-                console.log(data)
                 setdataSource(data);
             }
         } catch (e) {
@@ -172,7 +171,7 @@ const FriendList = ({ t, commisionConfig, id }) => {
                         <div className='flex flex-col'>
                             <div className='flex items-center w-full h-6'>• {' '}{formatNumber(data?.[type]?.['72'], 2)} VNDC</div>
                             <div className='flex items-center w-full h-6'>• {' '}{formatNumber(data?.[type]?.['22'], 2)} USDT</div>
-                            <div className='flex items-center w-full h-6'>• {' '}{formatNumber(data?.[type]?.['447'], 2)} NAO</div>
+                            <div className='flex items-center w-full h-6'>• {' '}{formatNumber(data?.[type]?.['1'], 2)} NAMI</div>
                         </div>
                     </div>
                 </Tooltip>
@@ -195,7 +194,7 @@ const FriendList = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 110,
         // preventSort: true,
-        render: (data, item) => <div>{formatTime(data, 'dd/MM/yyyy')}</div>
+        render: (data, item) => <div>{data ? formatTime(data, 'dd/MM/yyyy') : null}</div>
     }, {
         key: 'status',
         dataIndex: 'kycStatus',
@@ -238,15 +237,15 @@ const FriendList = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 250,
         // preventSort: true,
-        render: (data, item) => renderCommissionData(data, 'directCommission')
+        render: (data, item) => renderCommissionData(item, 'directCommission')
     }, {
-        key: 'indirectCommission',
+        key: 'undirectCommission',
         dataIndex: 'undirectCommission',
         title: t('reference:referral.total_indirect_commissions'),
         align: 'left',
         width: 250,
         // preventSort: true,
-        render: (data, item) => renderCommissionData(item, 'indirectCommission')
+        render: (data, item) => renderCommissionData(item, 'undirectCommission')
     }], [dataSource]);
 
     return (
@@ -272,7 +271,6 @@ const FriendList = ({ t, commisionConfig, id }) => {
                             // paddingHorizontal: '1.75rem',
                             // tableStyle: { minWidth: '1300px !important' },
                             headerStyle: { paddingTop: '8px' },
-                            rowStyle: {},
                             shadowWithFixedCol: false,
                             noDataStyle: {
                                 minHeight: '480px'
@@ -311,5 +309,5 @@ const ROW_SKELETON = {
     referred: <Skeletor width={90} />,
     rank: <Skeletor width={90} />,
     directCommission: <Skeletor width={250} />,
-    indirectCommission: <Skeletor width={250} />,
+    undirectCommission: <Skeletor width={250} />,
 };

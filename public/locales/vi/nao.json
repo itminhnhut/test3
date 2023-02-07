@@ -131,7 +131,7 @@
     "minimun": "Tối thiểu: {{value}}",
     "cancel": "Hủy",
     "available": "Khả dụng",
-    "holders_wallet": "Ví holder",
+    "holders_wallet": "Ví người dùng",
     "liq_pools": "Pool thanh khoản",
     "contest": {
         "title": "Đua TOP giao dịch NAO Futures mùa {{value}}",
@@ -150,6 +150,7 @@
         "trades": "Số lệnh",
         "total_pnl": "Tổng lợi nhuận",
         "per_pnl": "Tỷ lệ lợi nhuận",
+        "pnl": "Lợi nhuận",
         "per_pnl_tooltip": " % PnL = (Lợi nhuận / Ký quỹ) x 100%",
         "volume": "Khối lượng",
         "volume_rank": "Thứ hạng khối lượng",
@@ -168,6 +169,7 @@
         "volume_ranking": "Thứ hạng KL",
         "pnl_ranking": "Thứ hạng LN",
         "no": "STT",
+        "total_vndc": "Khối lượng (VNDC)",
         "tooltip_personal": "Khối lượng tối thiểu để được xếp hạng cá nhận là <span class='text-nao-green'>{{value}}</span>",
         "tooltip_team": "Khối lượng tối thiểu để được xếp hạng đội nhóm là <span class='text-nao-green'>{{value}}</span>",
         "last_season": "Lịch sử mùa trước",
@@ -216,7 +218,11 @@
         "last_updated_time": "Cập nhật lần cuối vào",
         "last_updated_time_dashboard": "Cập nhật {{minute}} phút/lần, cập nhật lần cuối vào",
         "tournaments": "Danh sách giải đấu",
-        "master_ranking": "Bảng xếp hạng master"
+        "master_ranking": "Bảng xếp hạng master",
+        "id_onus_futures": "ID",
+        "contest_ranking": "BXH giải đấu",
+        "contest_special": "BXH đặc biệt",
+        "tournament": "Giải đấu"
     },
     "luckydraw": {
         "not_ticket_title": "Bạn chưa có vé may mắn",

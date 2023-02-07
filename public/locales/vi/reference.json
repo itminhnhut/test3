@@ -149,6 +149,24 @@
         },
         "date": "Thời gian",
         "error": "Lỗi",
-        "success": "Thành công"
+        "success": "Thành công",
+        "partner": {
+            "button": "Đăng ký đối tác",
+            "title": "Đăng ký đối tác cộng đồng",
+            "fullname": "Tên đầy đủ",
+            "id": "Số chứng minh thư/passport",
+            "phone": "Số điện thoại",
+            "social": "Mạng xã hội",
+            "social_empty": "Xin vui lòng nhập liên kết mạng xã hội",
+            "phone_placeholder": "Nhập số điện thoại",
+            "phone_error": "Số điện thoại không đúng định dạng. Vui lòng nhập lại.",
+            "phone_empty": "Xin vui lòng nhập số điện thoại",
+            "social_placeholder": "Nhập liên kết Zalo/Facebook/Twiter",
+            "no_kyc": "Bạn chưa KYC, hãy KYC trước khi đăng ký đối tác",
+            "success": "Chúc mừng bạn đã đăng ký đối tác phát triển cộng đồng thành công.",
+            "failed": "Đăng ký đối tác đối tác phát triển cộng đồng không thành công, vui lòng liên hệ bộ phận hỗ trợ.",
+            "register": "Đăng ký",
+            "paste": "Dán"
+        }
     }
 }

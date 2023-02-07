@@ -12,7 +12,7 @@ import { formatTime } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import TickFbIcon from 'components/svg/TickFbIcon';
 
-const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdatedTime, sort, params, top_ranks_per, showPnl }) => {
+const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastUpdated, sort, params, top_ranks_per, showPnl }) => {
     const [tab, setTab] = useState(sort);
     const {
         t,
@@ -23,6 +23,7 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
     const [top3, setTop3] = useState([]);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const lastUpdatedTime = useRef(null);
 
     useEffect(() => {
         getRanks(sort);
@@ -37,11 +38,13 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         //     return
         // }
         try {
-            const { data, status } = await fetchApi({
+            const { data: originalData, status } = await fetchApi({
                 url: tab === 'pnl' ? API_CONTEST_GET_RANK_MEMBERS_PNL : API_CONTEST_GET_RANK_MEMBERS_VOLUME,
                 params: { contest_id: contest_id }
             });
+            const data = originalData?.users;
             if (data && status === ApiStatus.SUCCESS) {
+                if (originalData?.last_time_update) lastUpdatedTime.current = originalData?.last_time_update;
                 const dataFilter = data.filter((rs) => rs?.[_rank] > 0 && rs?.[_rank] < 4);
                 const sliceIndex = dataFilter.length > 3 ? 3 : dataFilter.length;
                 const _top3 = data.slice(0, sliceIndex);
@@ -67,9 +70,9 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         const team = urlParams.get('team') !== 'pnl' ? 'volume' : 'pnl';
-        const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?individual=${
-            tab === 'pnl' ? 'pnl' : 'volume'
-        }&team=${team}`;
+        urlParams.set('individual', tab === 'pnl' ? 'pnl' : 'volume');
+        urlParams.set('team', team);
+        const url = `/${router.locale}/contest${router.query.season ? '/' + router.query.season : ''}?${urlParams.toString()}`;
         window.history.pushState(null, null, url);
     }, [tab, router]);
 
@@ -341,8 +344,11 @@ const ContestPerRanks = ({ previous, contest_id, minVolumeInd, quoteAsset, lastU
                     )}
                 </Table>
             )}
-
-            {/* <div className='mt-6 text-sm font-medium leading-6 text-nao-grey'>{t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime, 'HH:mm:ss DD/MM/YYYY')}</div> */}
+            {lastUpdated && lastUpdatedTime.current && (
+                <div className="mt-6 text-sm font-medium leading-6 text-nao-grey">
+                    {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                </div>
+            )}
         </section>
     );
 };

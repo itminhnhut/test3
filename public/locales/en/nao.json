@@ -131,7 +131,7 @@
     "minimun": "Minimum: {{value}}",
     "cancel": "Cancel",
     "available": "Available",
-    "holders_wallet": "Holders wallet",
+    "holders_wallet": "Users wallet",
     "liq_pools": "Liquidity pools",
     "contest": {
         "title": "NAO Futures Trading Contest Season {{value}}",
@@ -149,6 +149,8 @@
         "personal": "Personal Achievements",
         "trades": "Trades",
         "total_pnl": "Total PnL",
+        "pnl": "Pnl",
+        "total_vndc": "Total (VNDC)",
         "per_pnl": "% PnL",
         "per_pnl_tooltip": "% PnL = (PnL / Margin) x 100%",
         "volume": "Volume",
@@ -216,7 +218,11 @@
         "last_updated_time": "Last updated",
         "last_updated_time_dashboard": "Updated every {{minute}} minutes, last updated",
         "tournaments": "Tournaments",
-        "master_ranking": "Master Ranking"
+        "master_ranking": "Master Ranking",
+        "id_onus_futures": "ID Onus Futures",
+        "contest_ranking": "Contest Ranking",
+        "contest_special": "Special Awards",
+        "tournament": "Tournament"
     },
     "luckydraw": {
         "not_ticket_title": "You don't have any lucky ticket",

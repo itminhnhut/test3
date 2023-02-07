@@ -1,18 +1,19 @@
-import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs'
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs'
 import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState } from 'react'
-import CollapsibleRefCard from 'src/components/screens/NewReference/CollapsibleRefCard'
+import CollapsibleRefCard from 'components/screens/NewReference/CollapsibleRefCard'
 import { formatNumber } from 'redux/actions/utils';
 import baseColors from 'styles/colors';
-import ChartJS from 'src/components/screens/Portfolio/charts/ChartJS';
+import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import { FilterTabs } from '..';
 import { API_NEW_REFERRAL_STATISTIC } from 'redux/actions/apis';
 import FetchApi from 'utils/fetch-api';
-import PopupModal from 'src/components/screens/NewReference/PopupModal';
-import DatePicker from 'src/components/common/DatePicker/DatePicker';
+import PopupModal from 'components/screens/NewReference/PopupModal';
+import DatePicker from 'components/common/DatePicker/DatePicker';
 import styledComponents from 'styled-components'
+import NeedLogin from 'components/common/NeedLogin';
 
-const Chart = () => {
+const Chart = ({ user }) => {
     const { t } = useTranslation()
     const tags = [{
         value: 'partners',
@@ -22,9 +23,9 @@ const Chart = () => {
         content: t('reference:referral.total_commissions')
     },]
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: '1d', format: 'hh' },
-        { title: '1 ' + t('futures:week'), value: '1w', format: 'DD' },
-        { title: '1 ' + t('futures:month'), value: '1M', format: 'W' },
+        { title: '1 ' + t('futures:day'), value: 'd', format: 'hh:mm', interval: '1h' },
+        { title: '1 ' + t('futures:week'), value: 'w', format: 'dd/MM', interval: '1d' },
+        { title: '1 ' + t('futures:month'), value: 'm', format: 'dd/MM', interval: '1d' },
         // { title: t('reference:referral.custom'), value: 'custom' },
     ]
     const [tab, setTab] = useState(tags[0].value)
@@ -37,7 +38,7 @@ const Chart = () => {
         }
     });
     const [showCustom, setShowCustom] = useState(false)
-    const colors = ['#19a65b', '#47cc85', '#7ee5ae', '#e6faef']
+    const colors = ['#47cc85', '#4272ee', '#42cfee', '#2937e0']
     const [dataSource, setDataSource] = useState({
         data: [],
         labels: []
@@ -74,16 +75,16 @@ const Chart = () => {
     useEffect(() => {
         if (!filter.range.startDate) return
         FetchApi({
-            url: API_NEW_REFERRAL_STATISTIC,
+            url: API_NEW_REFERRAL_STATISTIC + (tab === tags[0].value ? '-friend' : ''),
             options: {
                 method: 'GET',
             },
             params: {
-                interval: timeTab,
+                interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: timeTabs.find(e => e.value === timeTab).format
+                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
             }
         }).then(({ data, status }) => {
             if (status === 'ok') {
@@ -109,7 +110,6 @@ const Chart = () => {
                 borderColor: colors[0],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 1
             }, {
                 type: 'bar',
@@ -119,7 +119,6 @@ const Chart = () => {
                 borderColor: colors[1],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 2
             }, {
                 type: 'bar',
@@ -129,7 +128,6 @@ const Chart = () => {
                 borderColor: colors[2],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 3
             }, {
                 type: 'bar',
@@ -139,7 +137,6 @@ const Chart = () => {
                 borderColor: colors[3],
                 maxBarThickness: 8,
                 borderRadius: 2,
-                barPercentage: 0.7,
                 order: 4
             }]
         };
@@ -156,6 +153,7 @@ const Chart = () => {
                             const level = t('reference:referral.level') + ': ' + data.level
                             const friends = t('reference:referral.number_of_friends') + ': ' + data.count
                             const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC'
+                            if (!data.volume) return [level, friends]
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {
@@ -175,10 +173,10 @@ const Chart = () => {
                         color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
-                          size: 9 // 'size' now within object 'font {}'
+                            size: 9 // 'size' now within object 'font {}'
                         },
-                        
-                      }
+
+                    }
                 },
                 y: {
                     // combined: true,
@@ -186,10 +184,10 @@ const Chart = () => {
                         color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
-                          size: 9 // 'size' now within object 'font {}'
+                            size: 9 // 'size' now within object 'font {}'
                         },
-                        
-                      }
+
+                    }
                 },
             },
         }
@@ -205,8 +203,8 @@ const Chart = () => {
         <div className='px-4'  >
             {showCustom && <CustomFilter isShow={showCustom} onClose={() => setShowCustom(false)} t={t} filter={filter} onConfirm={setFilter} />}
             <CollapsibleRefCard title={t('reference:referral.statistic')} isBlack>
-                <div className='w-auto'>
-                    <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' >
+                {user ? <div className='w-auto'>
+                    <Tabs tab={tab} className='text-sm flex justify-start gap-7 text-gray-1' isMobile >
                         {tags.map((e, index) =>
                             <div key={index}>
                                 <TabItem value={e.value} onClick={() => setTab(e.value)} className='w-auto justify-start !px-0'>
@@ -230,7 +228,7 @@ const Chart = () => {
                             ))}
                         </div>
                     </div>
-                </div>
+                </div> : <NeedLogin message={t('reference:user.login_to_view')} isNamiapp addClass='mt-8' />}
             </CollapsibleRefCard>
         </div>
     )

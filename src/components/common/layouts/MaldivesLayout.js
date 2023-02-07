@@ -10,6 +10,7 @@ import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
+
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
@@ -63,7 +64,7 @@ const MadivesLayout = ({
                         : {}
                 }
             >
-                <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full" />
+                <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar
                         name={navName}

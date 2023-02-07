@@ -13,6 +13,8 @@ import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
 import RePagination from 'components/common/ReTable/RePagination';
 import classNames from 'classnames';
+import AssetName from 'components/wallet/AssetName';
+import AssetCode from 'components/wallet/AssetCode';
 const title = {
     vi: 'Lịch sử hoàn phí hoa hồng',
     en: 'Commission history'
@@ -36,14 +38,16 @@ const CommissionHistory = () => {
     const typeTabs = [
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
-        { title: 'Futures', value: 'FUTURES' }
+        { title: 'Futures', value: 'FUTURES' },
+        { title: 'Stake', value: 'STAKING' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
         { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
-        { title: 'ONUS', value: WalletCurrency.ONUS }
+        { title: 'ONUS', value: WalletCurrency.ONUS },
+        { title: 'USDT', value: WalletCurrency.USDT }
     ];
 
     const [dataSource, setDataSource] = useState({
@@ -234,11 +238,12 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                     </div>
                 </div>
                 <div className={classNames("mt-6", { "!mt-8": loading })}>
-                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
+                    {loading ? <IconLoading color={colors.namiapp.green.DEFAULT} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
                             const asset = typeTabs.find((rs) => rs.value === data.kind)?.title;
+                            console.log('__asset', asset);
                             return (
                                 <Fragment key={index}>
                                     <div className="flex items-center space-x-2">
@@ -248,10 +253,10 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} /></div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
-                                                <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
+                                                <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
                                                 <div className="font-medium text-xs">
                                                     {t('reference:referral.commission_type')}: {asset}
                                                 </div>

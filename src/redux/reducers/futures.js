@@ -128,7 +128,7 @@ export default (state = initialState, { payload, type }) => {
         case SET_FUTURES_SETTING:
             const _settings = { ...state.settings };
             if (_settings) {
-                _settings.user_setting = { ..._settings.user_setting, ...payload?.setting }
+                _settings.user_setting = { ..._settings?.user_setting, ...payload?.setting }
             }
             return {
                 ...state,

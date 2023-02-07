@@ -5718,6 +5718,13 @@ next-seo@^4.24.0:
   resolved "https://registry.npmjs.org/next-seo/-/next-seo-4.26.0.tgz"
   integrity sha512-5TqywQ3XAwqdmEU1AyNZjR7WdDKFTkDD8aBtgQelPvzBUEy8i0mTjtiw+09jhiHFNik6FqS8uPKCaYcY6jRgSQ==
 
+next-share@^0.19.0:
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/next-share/-/next-share-0.19.0.tgz#780d81317561be99e976e41f53fdb02ba80dfdd9"
+  integrity sha512-egqNtBkyoP/takhLK7yxcuXIOMnj55hQfBCdpq5iBkruqJM4JXcdtvQ7HvxYvLKrbWQ99ayKEcsv9dXwSdTd8g==
+  dependencies:
+    jsonp "^0.2.1"
+
 next-sitemap@^1.6.116:
   version "1.6.168"
   resolved "https://registry.npmjs.org/next-sitemap/-/next-sitemap-1.6.168.tgz"
@@ -7767,6 +7774,13 @@ react-time-picker@^4.4.1:
     react-clock "^3.0.0"
     react-fit "^1.0.3"
     update-input-width "^1.2.2"
+
+react-toastify@^9.1.1:
+  version "9.1.1"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.1.1.tgz#9280caea4a13dc1739c350d90660a630807bf10b"
+  integrity sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==
+  dependencies:
+    clsx "^1.1.1"
 
 react-tooltip@^4.2.21:
   version "4.2.21"

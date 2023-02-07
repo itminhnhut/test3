@@ -46,18 +46,18 @@ const PocketFooter = ({ active, parentState }) => {
                                 {t('navbar:menu.fee')}
                             </a>
                         </Link>
-
+                        <Link href={language === LANGUAGE_TAG.VI ? 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami' : 'https://nami.exchange/en/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program'}>
+                            <a className="">
+                                {language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}
+                            </a>
+                        </Link>
                         <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                             <a className="invisible">
                                 Whitepaper
                             </a>
                         </Link>
 
-                        <Link href="/">
-                            <a className="invisible">
-                                {language === LANGUAGE_TAG.VI ? 'Đối tác kinh doanh' : 'Partners'}
-                            </a>
-                        </Link>
+
                         <Link href="/">
                             <a className="invisible">
                                 {language === LANGUAGE_TAG.VI ? 'Nền tảng của Nami' : 'Nami Platform'}

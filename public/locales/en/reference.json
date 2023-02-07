@@ -140,7 +140,7 @@
         "asset_type": "Asset Type",
         "exchange_commission": "Exchange Commission",
         "custom": "Custom",
-        "commission_type": "Commission Type",
+        "commission_type": "Type",
         "ref_placeholder": "Enter the desired referral code",
         "addref": "Create",
         "addref_title": "Referral Code (Optional)",
@@ -156,6 +156,24 @@
         },
         "date": "Date",
         "error": "Error",
-        "success": "Success"
+        "success": "Success",
+        "partner": {
+            "button": "Partner registration",
+            "title": "Register a community partner",
+            "fullname": "Full name",
+            "id": "Your national id or passport",
+            "phone": "Phone number",
+            "phone_placeholder": "Enter your phone number",
+            "phone_error": "Invalid phone number. Please try again",
+            "phone_empty": "Please enter your phone number",
+            "social_placeholder": "Enter your Zalo/Facebook/Twiter link",
+            "social": "Social media link",
+            "social_empty": "Please enter your social media link",
+            "no_kyc": "You have not completed KYC, please verify to continue",
+            "success": "Congratulations, you've just registered Community Development Partner registration successfully",
+            "failed": "Community Development Partner registration failed, please contact support.",
+            "register": "Register",
+            "paste": "Paste"
+        }
     }
 }

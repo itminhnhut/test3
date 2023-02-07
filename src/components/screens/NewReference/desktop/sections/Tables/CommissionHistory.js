@@ -26,14 +26,16 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     const typeTabs = [
         { title: t('common:all'), value: null },
         { title: 'Spot', value: 'SPOT' },
-        { title: 'Futures', value: 'FUTURES' }
+        { title: 'Futures', value: 'FUTURES' },
+        { title: 'Stake', value: 'STAKING' }
     ];
     const assetTabs = [
         { title: t('common:all'), value: null },
         { title: 'VNDC', value: WalletCurrency.VNDC },
         { title: 'NAO', value: WalletCurrency.NAO },
         { title: 'NAMI', value: WalletCurrency.NAMI },
-        { title: 'ONUS', value: WalletCurrency.ONUS }
+        { title: 'ONUS', value: WalletCurrency.ONUS },
+        { title: 'USDT', value: WalletCurrency.USDT },
     ];
 
     const filters = {
@@ -160,7 +162,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 200,
         sorter: false,
-        render: (data, item) => <span className='text-teal'>+ {formatNumber(data, 2)} {assetTabs.find(e => e.value === item.currency)?.title}</span>
+        render: (data, item) => <span className='text-teal'>+ {formatNumber(data, 4)} {assetTabs.find(e => e.value === item.currency)?.title}</span>
     }], [dataSource]);
 
     return (
@@ -186,7 +188,6 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                             // paddingHorizontal: '1.75rem',
                             // tableStyle: { minWidth: '1300px !important' },
                             headerStyle: { paddingTop: '8px' },
-                            rowStyle: {},
                             shadowWithFixedCol: false,
                             noDataStyle: {
                                 minHeight: '480px'

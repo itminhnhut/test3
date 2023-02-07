@@ -19,7 +19,7 @@ const Reference = () => {
         const root = document.querySelector(":root");
         root.classList.add("light");
         setTheme(THEME_MODE.LIGHT);
-    }, [])
+    }, [currentTheme])
 
     const { width } = useWindowSize()
 

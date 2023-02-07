@@ -343,6 +343,7 @@
     "users": "{{value}} người",
     "level": "Cấp {{level}}",
     "show_more": "Xem thêm danh sách",
+    "join_now": "Tham gia ngay",
     "no_results_found": "Không tìm thấy kết quả",
     "hide_other_symbols": "Ẩn các cặp khác"
 }

@@ -342,6 +342,7 @@
     "users": "{{value}} users",
     "level": "Level {{level}}",
     "show_more": "Show More",
+    "join_now": "Join Now",
     "close_order": "Close Order",
     "close_all_orders": "Close all orders",
     "close_all_message": "Do you want to close all your orders?",

@@ -4,18 +4,17 @@ import styledComponents from 'styled-components'
 import { Line } from '../..'
 import RefCard from 'src/components/screens/NewReference/RefCard'
 import RefDetail from './RefDetail'
-import { formatNumber } from 'redux/actions/utils';
-import { useSelector } from 'react-redux'
 import ReferralLevelIcon from 'src/components/svg/RefIcons'
 import classNames from 'classnames'
 import colors from 'styles/colors'
+import NeedLogin from 'components/common/NeedLogin'
 
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact',
 })
 
-const Info = ({ data }) => {
+const Info = ({ data, user }) => {
     const { t } = useTranslation()
     const [showRef, setShowRef] = useState(false)
     const rank = {
@@ -25,7 +24,6 @@ const Info = ({ data }) => {
         '4': t('reference:referral.platinum'),
         '5': t('reference:referral.diamond'),
     }
-    const user = useSelector(state => state.auth.user) || null;
     return (
         <div className='w-full px-4'>
             <RefDetail isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode?.code} />
@@ -41,14 +39,14 @@ const Info = ({ data }) => {
                         <div className='font-semibold text-base text-gray-6'>
                             {data?.name ?? t('common:unknown')}
                         </div>
-                        <div className='font-medium text-xs text-gray-1 uppercase'>
+                        <div className='font-medium text-xs text-gray-6 uppercase'>
                             {t('reference:referral.ranking')}: <span className='text-namiapp-green font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
                         </div>
                     </div>
                 </div>
                 <Line className='mt-4 mb-[18px]' />
 
-                <div className='flex flex-col gap-2'>
+                {user ? <div className='flex flex-col gap-2'>
                     <div className='w-full flex h-6 items-center justify-between text-gray-7 font-medium text-xs'>
                         <div>
                             {t('reference:referral.current_volume')}
@@ -80,7 +78,7 @@ const Info = ({ data }) => {
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
-                           {data?.rank !== 5 ? <div>
+                            {data?.rank !== 5 ? <div>
                                 Spot: {formatter.format(data?.volume?.target?.spot)} USDT
                             </div> : null}
 
@@ -94,12 +92,12 @@ const Info = ({ data }) => {
                             </div> : null}
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-medium text-sm text-namiapp-green-1 underline cursor-pointer'
+                    <div className='mt-6 text-center leading-6 font-semibold text-sm text-namiapp-green-1 underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
                         {t('reference:referral.referral_code_management')}
                     </div>
-                </div>
+                </div> : <NeedLogin message={t('reference:user.login_to_view')} isNamiapp addClass='mt-8' />}
             </RefCard>
         </div>
     )
