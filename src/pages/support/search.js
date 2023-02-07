@@ -18,8 +18,8 @@ import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import RePagination from 'components/common/ReTable/RePagination';
 import { appUrlHandler } from 'constants/faqHelper';
-import { SearchSection } from '.';
-import NoResult from '../../components/screens/Support/NoResult';
+import NoResult from 'components/screens/Support/NoResult';
+import SearchSection from 'components/screens/Support/SearchSection';
 
 const PAGE_SIZE = 15
 
@@ -41,7 +41,7 @@ const SupportSearchResult = () => {
     const isApp = useApp()
     const { t, i18n: { language } } = useTranslation()
     const { width } = useWindowSize()
-
+    const isMobile = width < 640
     // ? helper
     const onQuery = (tab, query) => router.push(
         {
@@ -52,7 +52,7 @@ const SupportSearchResult = () => {
     // ? render
     const renderTab = useCallback(() => TAB_SERIES.map(item => (
         <div className={classNames(
-            'flex items-center truncate border-[1px] h-12 px-5 rounded-[800px] text-base cursor-pointer',
+            'flex items-center truncate border-[1px] h-12 px-4 py-2 sm:px-5 rounded-[800px] text-base cursor-pointer',
             { 'border-namiv2-green bg-namiv2-green bg-opacity-10 font-medium text-namiv2-green': item.key === state.tab },
             { 'border-namiv2-gray-3 font-normal text-namiv2-gray-1': item.key !== state.tab })}
             key={item.key}
@@ -83,7 +83,7 @@ const SupportSearchResult = () => {
         }
 
         const data = state.searchResult
-        return data?.map(search => <SearchResultItem key={search?.id} article={search} keyword={router?.query?.query}/>)
+        return data?.map(search => <SearchResultItem key={search?.id} article={search} keyword={router?.query?.query} />)
     }, [state.searchResult, state.currentPage, state.loading])
 
     useEffect(() => {
@@ -120,24 +120,28 @@ const SupportSearchResult = () => {
         <MaldivesLayout>
             <div className='w-full bg-namiv2-black'>
                 <SearchSection t={t} width={width} />
-                <div className='container pt-6 max-w-[1440px]'>
-                    <div className='pb-[120px] px-10 lg:px-[112px] h-full drop-shadow-onlyLight bg-transparent'>
-                        <div className='w-full flex items-end justify-between text-namiv2-gray-2'>
-                            <div className='font-semibold text-[32px] leading-[38px]'>
+                <div className='container mt-7 sm:mt-0 pt-6 max-w-[1440px]'>
+                    <div className='pb-[120px] px-6 lg:px-[112px] h-full drop-shadow-onlyLight bg-transparent'>
+                        <div className='w-full block sm:flex items-end justify-between text-namiv2-gray-2'>
+                            <div className='font-semibold text-base sm:text-[32px] sm:leading-[38px]'>
                                 {t('support-center:search_result')}: {state?.query}
                             </div>
-                            <div className='font-normal text-base h-full'>
-                                {t('support-center:search_result_count', {
-                                    key: state?.query,
-                                    count: state?.totalArticle
-                                })}
+                            <div className='my-2 border-t-[1px] border-namiv2-gray-3 w-full'></div>
+                            <div className='font-normal text-xs text-darkBlue-5 sm:text-base sm:text-gray-4 h-full'>
+                                {isMobile ?
+                                   `'${state?.totalArticle}'` + ' ' + t('futures:result').toLowerCase()
+                                    :
+                                    t('support-center:search_result_count', {
+                                        key: state?.query,
+                                        count: state?.totalArticle
+                                    })}
                             </div>
                         </div>
-                        <div className='mt-5 border-t-[1px] border-namiv2-gray-3 w-full'></div>
-                        <div className='mt-10 flex w-full gap-6'>
+                        {!isMobile ? <div className='mt-5 border-t-[1px] border-namiv2-gray-3 w-full'></div> : null}
+                        <div className='mt-8 sm:mt-10 flex w-full gap-6'>
                             {renderTab()}
                         </div>
-                        <div className='w-full mt-12'>
+                        <div className='w-full mt-8 sm:mt-12' id='search-result'>
                             {state?.searchResult?.length ? renderSearchResult() : <NoResult text={t('common:no_results_found')} />}
                         </div>
                     </div>

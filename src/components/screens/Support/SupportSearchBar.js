@@ -50,8 +50,10 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
             <div
                 className={classNames(
                     'flex space-x-2 items-center bg-namiv2-gray p-3 rounded-md  w-[368px]',
-
-                    containerClassNames
+                    containerClassNames,
+                    {
+                        '!w-full': simpleMode
+                    }
                 )}
                 style={{ letterSpacing: '0.005em;' }}
             >

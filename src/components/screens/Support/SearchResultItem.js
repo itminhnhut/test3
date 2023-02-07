@@ -11,9 +11,8 @@ import _ from 'lodash';
 
 const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const { width } = useWindowSize()
+    const isMobile = width < 640
     const { t, i18n: { language } } = useTranslation()
-
-    console.log('article', article.raw_data)
 
     // ? Memmoized
     const getTopics = (topic) => {
@@ -38,7 +37,7 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const getHighlightedText = (text, highlight) => {
         // Split on highlight term and include term into parts, ignore case
         const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-        return parts.map((part, i) =>
+        return parts.map((part, i) => part &&
             <span key={i} style={part.toLowerCase() === highlight?.toLowerCase() ? { color: '#47cc85' } : {}}>
                 {Parse(part)}
             </span>)
@@ -65,7 +64,7 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
         <div className="mb-6 lg:mb-9">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href={buildArticleUrl()}>
-                    <a target='_blank' className="text-gray-4 font-medium text-[20px] leading-7 cursor-pointer">
+                    <a target='_blank' className="text-gray-4 font-semibold text-base sm:font-medium sm:text-[20px] sm:leading-7 cursor-pointer">
                         {loading ?
                             <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
                             </div> : getHighlightedText(article?.title, keyword)}
@@ -78,14 +77,14 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
                 </div>
             </div>
             <div
-                className="mt-2 text-darkBlue-5 font-normal text-sm leading-5">
+                className="mt-2 text-darkBlue-5 font-normal text-xs sm:text-sm leading-5">
                 {loading ?
                     <>
                         <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
                         <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
                         <div className="w-full"><Skeletor className="!w-full" height={15} /></div>
                     </>
-                    : getHighlightedText(article?.html?.substring(0, 240)?.trim() + '...', keyword)}
+                    : getHighlightedText(article?.html?.substring(0, isMobile ? 70 : 240)?.trim() + '...', keyword)}
 
 
             </div>

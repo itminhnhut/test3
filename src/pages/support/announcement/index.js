@@ -13,13 +13,15 @@ import { formatTime } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import useApp from 'hooks/useApp';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
+import SearchSection from 'components/screens/Support/SearchSection';
+import useWindowSize from 'hooks/useWindowSize';
 
 const SupportAnnouncement = () => {
     const [theme, , setTheme] = useDarkMode()
     const [loading, setLoading] = useState(false)
     const [categories, setCategories] = useState([])
     const [lastedArticles, setLastedArticles] = useState([])
-
+    const { width } = useWindowSize()
     const getData = async (language) => {
         setLoading(true)
         const categories = await getSupportCategories(language)
@@ -49,15 +51,15 @@ const SupportAnnouncement = () => {
         if (loading) {
             return (
                 <>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5"><Skeletor className="!w-full" height={60} /></div>
                 </>
             )
         }
@@ -70,7 +72,7 @@ const SupportAnnouncement = () => {
                 <a className="block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
                     <TopicItem
                         icon={<Image src={getSupportCategoryIcons(cat.id)} layout="responsive" width="24"
-                                     height="24"/>}
+                            height="24" />}
                         title={cat.title}
                         description={cat?.description || '---'}
                     />
@@ -83,15 +85,15 @@ const SupportAnnouncement = () => {
         if (loading) {
             return (
                 <>
-                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
-                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60}/></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
+                    <div className="w-full md:w-[48%] md:mr-4 mb-5 lg:mb-8"><Skeletor className="!w-full" height={60} /></div>
                 </>
             )
         }
@@ -114,9 +116,9 @@ const SupportAnnouncement = () => {
                     <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8">
                         {article.title}
                         {' '}<span
-                        className="text-[10px] lg:text-xs text-txtSecondary text-txtSecondary-dark whitespace-nowrap">
-                        {formatTime(article.created_at, 'dd-MM-yyyy')}
-                    </span>
+                            className="text-[10px] lg:text-xs text-txtSecondary text-txtSecondary-dark whitespace-nowrap">
+                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                        </span>
                     </a>
                 </Link>
             )
@@ -129,12 +131,11 @@ const SupportAnnouncement = () => {
 
     return (
         <MaldivesLayout>
-            <SupportBanner title={t('support-center:title')} innerClassNames="container" href={PATHS.SUPPORT.DEFAULT}/>
-
+            <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_announcement.png')`} />
             <div className="">
                 <div style={
                     theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
-                     className="px-4 py-5 sm:px-6 lg:px-[48px] lg:py-[50px] rounded-t-[20px]">
+                    className="px-4 py-5 sm:px-6 lg:px-[48px] lg:py-[50px] rounded-t-[20px]">
                     <div className="container">
                         <div className="text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-4 md:mb-6 lg:mb-8">
                             {t('support-center:topics')}
@@ -142,18 +143,18 @@ const SupportAnnouncement = () => {
                         <div className="flex flex-wrap justify-between w-full mb-8 md:mb-12 lg:mb-[80px]">
                             {renderTopics()}
                             {!loading && categories?.length % 3 !== 0 &&
-                            <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
-                                <TopicItem
-                                    icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
-                                                 height="24"/>}
-                                    description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
-                                />
-                            </a>}
+                                <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
+                                    <TopicItem
+                                        icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
+                                            height="24" />}
+                                        description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
+                                    />
+                                </a>}
                         </div>
                         <div className="text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-6 md:mb-8">
                             {t('support-center:lasted_articles')}
                         </div>
-                        <div className="flex flex-col md:flex-row md:flex-wrap">
+                        <div className="flex flex-col md:flex-row md:flex-wrap gap-x-4">
                             {renderLastedArticles()}
                         </div>
                     </div>

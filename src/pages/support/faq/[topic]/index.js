@@ -58,7 +58,9 @@ const FaqTopics = (props) => {
                 <div
                     key={item.id}
                     title={item.title}
-                    className='mb-[18px] h-full w-full sm:w-1/2 lg:w-1/3 sm:pr-3'
+                    className={classNames('w-full h-[76px] bg-darkBlue-3 rounded-md flex items-center', {
+                        '!bg-hover': item.displaySlug === router?.query?.group
+                    })}
                 >
                     <Link
                         href={{
@@ -71,7 +73,7 @@ const FaqTopics = (props) => {
                         }}
                         key={item.uuid}
                     >
-                        <a className='truncate block bg-gray-4 dark:bg-darkBlue-4 rounded-sm hover:opacity-80 px-4 py-3 text-sm font-medium lg:text-[16px]'>
+                        <a className='truncate block text-gray-4 font-medium text-xl px-6'>
                             {item?.title}
                         </a>
                     </Link>
@@ -131,17 +133,22 @@ const FaqTopics = (props) => {
             <a
                 href={
                     PATHS.SUPPORT.FAQ +
-                    `/${router?.query?.topic}/${article.slug}${
-                        isApp ? '?source=app' : ''
+                    `/${router?.query?.topic}/${article.slug}${isApp ? '?source=app' : ''
                     }`
                 }
                 key={article.uuid}
                 className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'
             >
-                {article?.title}{' '}
-                <span className='text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(article.created_at, 'dd-MM-yyyy')}
-                </span>
+                <a className='w-full'>
+                    <div>
+                        <div className='text-gray-4 font-normal text-base hover:text-teal'>
+                            {article?.title}{' '}
+                        </div>
+                        <div className='mt-2 text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                        </div>
+                    </div>
+                </a>
             </a>
         ))
     }, [currentGroup, articles, language])
@@ -159,17 +166,20 @@ const FaqTopics = (props) => {
             <Link
                 href={
                     PATHS.SUPPORT.FAQ +
-                    `/${router?.query?.topic}/${article.slug.toString()}${
-                        isApp ? '?source=app' : ''
+                    `/${router?.query?.topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
                     }`
                 }
                 key={article.uuid}
             >
-                <a className='!block !w-full text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'>
-                    {article?.title}{' '}
-                    <span className='text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(article.created_at, 'dd-MM-yyyy')}
-                    </span>
+                <a className='w-full'>
+                    <div>
+                        <div className='text-gray-4 font-normal text-base hover:text-teal'>
+                            {article?.title}{' '}
+                        </div>
+                        <div className='mt-2 text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                        </div>
+                    </div>
                 </a>
             </Link>
         ))
@@ -198,16 +208,27 @@ const FaqTopics = (props) => {
                 mode='faq'
                 faqCurrentGroup={currentGroup}
             >
-                <div
-                    className={classNames('flex flex-wrap', {
+                <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
+                    {SupportCategories.faq[language]?.find(
+                        (o) => o.displaySlug === router?.query?.topic
+                    )?.title}
+                </div>
+                {cats.length ? <div
+                    className={classNames('grid w-full gap-4 mb-20', {
                         'mb-4 md:mb-6': !!cats.length && !!!currentGroup,
                     })}
+                    style={{
+                        gridTemplateColumns: "repeat(auto-fill, 280px)",
+                    }}
                 >
-                    {!currentGroup && renderGroup()}
-                </div>
+                    {renderGroup()}
+                </div> : null}
+                {cats.length ? <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
+                    {t('common:related_posts')}
+                </div> : null}
                 <div className=''>{renderGroupArticles()}</div>
                 {!!cats.length && !!articles?.length && !!!currentGroup && (
-                    <div className='text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-6'>
+                    <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
                         {t('support-center:lasted_articles')}
                     </div>
                 )}
