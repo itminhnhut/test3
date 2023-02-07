@@ -353,6 +353,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
 
+    .rc-table-cell-fix-left,
     .rc-table-cell-fix-right {
         z-index: 15;
         ::after {

@@ -5,7 +5,7 @@ import AuthSelector from 'redux/selectors/authSelectors';
 import { API_GET_HISTORY_TRADE } from 'src/redux/actions/apis';
 import { ApiStatus } from 'src/redux/actions/const';
 import { formatTime, TypeTable, formatNumber } from 'src/redux/actions/utils';
-import fetchAPI from 'utils/fetch-api';
+import fetchAPI, { useCancelToken } from 'utils/fetch-api';
 import TableV2 from '../common/V2/TableV2';
 
 const TradeHistory = (props) => {
@@ -15,6 +15,7 @@ const TradeHistory = (props) => {
     const [filteredHistories, setFilteredHistories] = useState([]);
     const [loading, setLoading] = useState(false);
     const isAuth = useSelector(AuthSelector.isAuthSelector);
+    const cancelToken = useCancelToken();
 
     const { currentPair, filterByCurrentPair, darkMode } = props;
 
@@ -29,7 +30,7 @@ const TradeHistory = (props) => {
                 title: t('common:time'),
                 dataIndex: 'createdAt',
                 width: 180,
-                render: (v) => formatTime(v)
+                render: (v) => <span>{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
             {
                 title: t('common:pair'),
@@ -67,6 +68,13 @@ const TradeHistory = (props) => {
         [exchangeConfig]
     );
 
+    useEffect(
+        () => () => {
+            cancelToken.cancel();
+        },
+        []
+    );
+
     const getOrderList = async () => {
         setLoading(true);
         try {
@@ -74,7 +82,8 @@ const TradeHistory = (props) => {
                 url: API_GET_HISTORY_TRADE,
                 options: {
                     method: 'GET'
-                }
+                },
+                cancelToken: cancelToken.token
             });
             if (status === ApiStatus.SUCCESS) {
                 setHistories(data);

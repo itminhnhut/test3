@@ -14,6 +14,7 @@ import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
 import { favoriteAction } from 'redux/actions/user';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const SymbolList = (props) => {
     const { query } = useRouter();
@@ -57,7 +58,7 @@ const SymbolList = (props) => {
     useEffect(() => {
         if (symbolList && symbolList.length) {
             let filterSymbols = [];
-
+            console.log(selectedCategory);
             if (selectedCategory.value === CATEGORY_SPOT_SIGNAL.ALL) {
                 symbolList.forEach((sym) => {
                     const { q: quoteAsset, b: baseAsset } = sym;
@@ -178,24 +179,28 @@ const SymbolList = (props) => {
                 </div>
                 <div className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'}`}>
                     {/* <div className="overflow-y-scroll"> */}
-                    {filteredSymbolList.map((ticker, index) => {
-                        return (
-                            <Fragment key={`${search}_${activeTab}_${ticker.b}}`}>
-                                <SymbolListItem
-                                    changeSymbolList={changeSymbolList}
-                                    exchangeConfig={exchangeConfig}
-                                    favorite={favorite}
-                                    symbolString={ticker?.s}
-                                    publicSocket={publicSocket}
-                                    currentId={query?.id}
-                                    originTicker={ticker}
-                                    watchList={watchList}
-                                    pairKey={`${ticker?.bi}_${ticker?.qi}`}
-                                    reFetchFavorite={fetchFavorite}
-                                />
-                            </Fragment>
-                        );
-                    })}
+                    {filteredSymbolList.length > 0 ? (
+                        filteredSymbolList.map((ticker, index) => {
+                            return (
+                                <Fragment key={`${search}_${activeTab}_${ticker.b}}`}>
+                                    <SymbolListItem
+                                        changeSymbolList={changeSymbolList}
+                                        exchangeConfig={exchangeConfig}
+                                        favorite={favorite}
+                                        symbolString={ticker?.s}
+                                        publicSocket={publicSocket}
+                                        currentId={query?.id}
+                                        originTicker={ticker}
+                                        watchList={watchList}
+                                        pairKey={`${ticker?.bi}_${ticker?.qi}`}
+                                        reFetchFavorite={fetchFavorite}
+                                    />
+                                </Fragment>
+                            );
+                        })
+                    ) : (
+                        <NoData isSearch={!!search} />
+                    )}
                 </div>
             </>
         );
@@ -286,25 +291,29 @@ const SymbolList = (props) => {
                 </div>
                 <div className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'}`}>
                     {/* <div className="overflow-y-scroll"> */}
-                    {data.map((ticker, index) => {
-                        return (
-                            <Fragment key={`favorite_tab_${ticker.b}}`}>
-                                <SymbolListItem
-                                    isFavoriteTab
-                                    changeSymbolList={changeSymbolList}
-                                    exchangeConfig={exchangeConfig}
-                                    favorite={favorite}
-                                    symbolString={ticker?.s}
-                                    publicSocket={publicSocket}
-                                    currentId={query?.id}
-                                    originTicker={ticker}
-                                    watchList={watchList}
-                                    pairKey={`${ticker?.bi}_${ticker?.qi}`}
-                                    reFetchFavorite={fetchFavorite}
-                                />
-                            </Fragment>
-                        );
-                    })}
+                    {data.length > 0 ? (
+                        data.map((ticker, index) => {
+                            return (
+                                <Fragment key={`favorite_tab_${ticker.b}_${ticker.q}}`}>
+                                    <SymbolListItem
+                                        isFavoriteTab
+                                        changeSymbolList={changeSymbolList}
+                                        exchangeConfig={exchangeConfig}
+                                        favorite={favorite}
+                                        symbolString={ticker?.s}
+                                        publicSocket={publicSocket}
+                                        currentId={query?.id}
+                                        originTicker={ticker}
+                                        watchList={watchList}
+                                        pairKey={`${ticker?.bi}_${ticker?.qi}`}
+                                        reFetchFavorite={fetchFavorite}
+                                    />
+                                </Fragment>
+                            );
+                        })
+                    ) : (
+                        <NoData isSearch={!!search} />
+                    )}
                 </div>
             </>
         );

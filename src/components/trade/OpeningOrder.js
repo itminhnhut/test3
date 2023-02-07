@@ -8,7 +8,7 @@ import Emitter from 'redux/actions/emitter';
 import { API_GET_OPEN_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
 import { formatBalance, formatTime, TypeTable } from 'src/redux/actions/utils';
-import fetchAPI from 'utils/fetch-api';
+import fetchAPI, { useCancelToken } from 'utils/fetch-api';
 import showNotification from 'utils/notificationService';
 import Link from 'next/link';
 import { formatNumber } from 'redux/actions/utils';
@@ -36,6 +36,7 @@ const SpotOrderList = (props) => {
         message: ''
     });
     const [loaded, setLoaded] = useState(false);
+    const cancelToken = useCancelToken();
 
     useEffect(() => {
         if (filterByCurrentPair) {
@@ -213,7 +214,7 @@ const SpotOrderList = (props) => {
                 title: t('common:time'),
                 dataIndex: 'createdAt',
                 width: 180,
-                render: (v) => <span>{formatTime(v)}</span>
+                render: (v) => <span>{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
             {
                 key: 'symbol',
@@ -297,13 +298,21 @@ const SpotOrderList = (props) => {
         [toggle, currentPair, showCloseAll, loaded, filteredOrders]
     );
 
+    useEffect(
+        () => () => {
+            cancelToken.cancel();
+        },
+        []
+    );
+
     const getOrderList = async () => {
         setLoading(true);
         const { status, data } = await fetchAPI({
             url: API_GET_OPEN_ORDER,
             options: {
                 method: 'GET'
-            }
+            },
+            cancelToken: cancelToken.token
         });
         if (status === ApiStatus.SUCCESS) {
             setOrders(data.orders);

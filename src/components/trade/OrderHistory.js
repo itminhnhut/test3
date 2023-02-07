@@ -7,7 +7,7 @@ import AuthSelector from 'redux/selectors/authSelectors';
 import { API_GET_HISTORY_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
 import { formatSpotPrice, formatTime, formatWallet, TypeTable, formatNumber } from 'src/redux/actions/utils';
-import fetchAPI from 'utils/fetch-api';
+import fetchAPI, { useCancelToken } from 'utils/fetch-api';
 import Link from 'next/link';
 import TableV2 from '../common/V2/TableV2';
 import PopoverV2 from '../common/V2/PopoverV2';
@@ -23,6 +23,7 @@ const OrderHistory = (props) => {
     const [status, setStatus] = useState('all');
     const popover = useRef(null);
     const { currentPair, filterByCurrentPair, darkMode } = props;
+    const cancelToken = useCancelToken();
 
     // Handle update order
     useEffect(() => {
@@ -116,7 +117,7 @@ const OrderHistory = (props) => {
                 title: t('common:time'),
                 dataIndex: 'createdAt',
                 width: 180,
-                render: (v) => <span>{formatTime(v)}</span>
+                render: (v) => <span>{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
             {
                 key: 'symbol',
@@ -211,6 +212,13 @@ const OrderHistory = (props) => {
         [exchangeConfig, currentPair, status]
     );
 
+    useEffect(
+        () => () => {
+            cancelToken.cancel();
+        },
+        []
+    );
+
     const getOrderList = async () => {
         setLoading(true);
         try {
@@ -218,7 +226,8 @@ const OrderHistory = (props) => {
                 url: API_GET_HISTORY_ORDER,
                 options: {
                     method: 'GET'
-                }
+                },
+                cancelToken: cancelToken.token
             });
             if (status === ApiStatus.SUCCESS) {
                 setHistories(data);
