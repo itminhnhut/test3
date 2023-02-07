@@ -12,6 +12,8 @@ import { formatNumber, getLoginUrl, scrollFocusInput, emitWebViewEvent } from 'r
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
+import ModalV2 from 'components/common/V2/ModalV2';
+
 
 
 const FuturesLeverageSettings = ({
@@ -110,15 +112,21 @@ const FuturesLeverageSettings = ({
     }`;
 
     return (
-        <Modal
-            onusMode={onusMode}
+        // <Modal
+        //     onusMode={onusMode}
+        //     isVisible={isVisible}
+        //     onBackdropCb={onClose}
+        //     containerClassName={`w-[90%] max-w-[488px] dark:bg-bgPrimary-dark p-6 dark:border-namiv2-gray-3 select-none ${className}`}
+        //     containerStyle={{ ...containerStyle }}
+        // >
+            <ModalV2
             isVisible={isVisible}
+            wrapClassName='!p-6'
             onBackdropCb={onClose}
-            containerClassName={`w-[90%] max-w-[488px] dark:bg-bgPrimary-dark p-6 dark:border-namiv2-gray-3 select-none ${className}`}
-            containerStyle={{ ...containerStyle }}
-        >
+           className={`w-[90%] !max-w-[488px] select-none ${className}`}
+            >
             <div className={`-mt-1  ${onusMode ? 'mb-6 text-lg' : 'mb-6 text-sm'} font-bold`}>
-                {!onusMode && (
+                {/* {!onusMode && (
                     <div className="flex justify-end mb-6">
                         <div
                             className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
@@ -127,7 +135,7 @@ const FuturesLeverageSettings = ({
                             <X size={24} />
                         </div>
                     </div>
-                )}
+                )} */}
 
                 <div className="text-[22px] dark:text-txtPrimary-dark font-semibold">{t('futures:leverage:title')}</div>
             </div>
@@ -230,7 +238,10 @@ const FuturesLeverageSettings = ({
                     </div>
                 </div>
             )}
-        </Modal>
+
+            </ModalV2>
+            
+        // </Modal>
     );
 };
 
