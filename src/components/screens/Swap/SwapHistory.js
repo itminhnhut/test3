@@ -15,7 +15,7 @@ import Skeletor from 'src/components/common/Skeletor';
 import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
 import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
-import TableV2 from 'src/components/common/SwapTableV2';
+import TableV2 from 'components/common/V2/TableV2';
 
 import { PATHS } from 'constants/paths';
 import { SwapIcon } from '../../svg/SvgIcon';
@@ -62,16 +62,34 @@ const SwapHistory = ({ width }) => {
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
-                <TableV2
-                    useRowHover
-                    data={data}
-                    columns={columns}
-                    rowKey={(item) => `${item?.displayingId}`}
-                    loading={state.loading}
-                    scroll={{ x: true }}
-                    limit={10}
-                    skip={0}
-                />
+                // <TableV2
+                //     useRowHover
+                //     data={data}
+                //     columns={columns}
+                //     rowKey={(item) => `${item?.displayingId}`}
+                //     loading={state.loading}
+                //     scroll={{ x: true }}
+                //     limit={LIMIT_ROW}
+                //     skip={0}
+                // />
+                <div className="mt-8 pt-4 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                    <TableV2
+                        // sort
+                        // defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                        useRowHover
+                        data={data || []}
+                        columns={columns}
+                        rowKey={(item) => `${item?.displayingId}`}
+                        scroll={{ x: true }}
+                        limit={LIMIT_ROW}
+                        skip={0}
+                        isSearch={!!state.search}
+                        pagingClassName="border-none"
+                        height={350}
+                        // page={state.currentPage}
+                        // onChangePage={(currentPage) => setState({ currentPage })}
+                    />
+                </div>
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
@@ -98,11 +116,11 @@ const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
-    { key: 'id', dataIndex: 'id', title: 'ID', width: 140, fixed: 'left', align: 'left' },
+    { key: 'id', dataIndex: 'id', title: 'ID', width: 120, fixed: 'left', align: 'left' },
     { key: 'swap_pair', dataIndex: 'swap_pair', title: 'Swap Pair', width: 180, align: 'left' },
     { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 220, align: 'left' },
     { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 244, align: 'left' },
-    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 306, align: 'left' },
+    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 280, align: 'left' },
     { key: 'time', dataIndex: 'time', title: 'Time', width: 150, align: 'left' }
 ];
 

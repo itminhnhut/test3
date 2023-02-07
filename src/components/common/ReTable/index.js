@@ -360,7 +360,8 @@ const ReTableWrapperV2 = styled.div`
             /* box-shadow: ${({ isDark }) => (isDark ? 'inset -10px 0 8px -8px #263459' : 'inset -10px 0 8px -8px #f2f4f6')} !important; */
         }
     }
-
+    .rc-table-cell-fix-left,
+    .rc-table-cell-fix-right,
     .rc-table-cell-fix-right-first,
     .rc-table-cell-fix-right-last {
         z-index: 99;
