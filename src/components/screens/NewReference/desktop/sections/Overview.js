@@ -80,6 +80,12 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
         4: t('reference:referral.platinum'),
         5: t('reference:referral.diamond')
     };
+
+    const policyLink =
+        language === 'vi'
+            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-co-che-gioi-thieu-moi-tren-nami-exchange'
+            : 'https://nami.exchange/support/announcement/nami-news/officially-apply-the-new-referral-mechanism-on-nami-exchange';
+
     return (
         <div
             className="p-20 w-full h-auto"
@@ -111,11 +117,7 @@ const Overview = ({ data, commisionConfig, t, width, user }) => {
             <div className="font-normal text-[20px] leading-[30px] text-gray-6 mt-6 tracking-wide">
                 {t('reference:referral.readmore')}{' '}
                 <a
-                    href={
-                        language === LANGUAGE_TAG.VI
-                            ? 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
-                            : 'https://nami.exchange/en/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program'
-                    }
+                    href={policyLink}
                     target={'_blank'}
                 >
                     <span className="text-teal underline">{t('reference:referral.referral_policy')}</span>
