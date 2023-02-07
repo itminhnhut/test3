@@ -146,8 +146,8 @@ function NewReference() {
 
     return (
         <MobileFont>
-            <div className="bg-namiapp h-full overflow-hidden">
-                <div className={classNames('bg-namiapp z-10')}>
+            <div className="bg-namiv2 h-full overflow-hidden">
+                <div className={classNames('bg-namiv2 z-10')}>
                     <Tabs ref={tabRef} tab={tab} isMobile>
                         <TabItem value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)} isMobile>
                             {t('reference:referral.info')}
@@ -208,7 +208,7 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                                 'text-gray-1': !isMobile,
                                 'text-gray-7 !px-4 !py-2 !font-normal': isMobile,
                                 'bg-gray-4 rounded-md text-darkBlue': type === tab.value && !isMobile,
-                                'bg-namiapp-black-2 text-namiapp-green-1 rounded-[100px] font-semibold': type === tab.value && isMobile,
+                                'bg-namiv2-black-2 text-namiv2-green-1 rounded-[100px] font-semibold': type === tab.value && isMobile,
                             }
                         )}
                         onClick={_.debounce(() => {
@@ -224,7 +224,7 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
 };
 
 export const RefButton = ({ title, onClick }) => (
-    <div className="w-full h-11 rounded-md flex justify-center items-center bg-namiapp-green-1 text-sm font-semibold text-white leading-6" onClick={onClick}>
+    <div className="w-full h-11 rounded-md flex justify-center items-center bg-namiv2-green-1 text-sm font-semibold text-white leading-6" onClick={onClick}>
         {title}
     </div>
 );

@@ -78,7 +78,7 @@ const QnA = () => {
             <CollapsibleRefCard title={t('reference:referral.faq')} isBlack>
                 <div className='w-auto'>
                     {renderData()}
-                    <div className='text-namiapp-green-1 underline font-medium text-sm text-center mt-6'>
+                    <div className='text-namiv2-green-1 underline font-medium text-sm text-center mt-6'>
                         <a href={policyLink} target='_blank'>{language === 'vi' ? 'Xem thêm: Chính sách đối tác kinh doanh Nami Exchange' : "Read more: Nami Exchange's policy on business partners"}</a>
                     </div>
                 </div>

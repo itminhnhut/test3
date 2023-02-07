@@ -78,7 +78,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                         )
                     })}
                 </div>
-                {hasNext.current ? <div className='mt-2 text-namiapp-green-1 underline text-sm font-medium leading-6 text-center cursor-pointer'
+                {hasNext.current ? <div className='mt-2 text-namiv2-green-1 underline text-sm font-medium leading-6 text-center cursor-pointer'
                     onClick={() => setMore(99999999999)}
                 >
                     {t('reference:referral.show_more')}

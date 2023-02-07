@@ -148,7 +148,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.date')}</div>
-                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} isNamiApp/>
+                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} isnamiv2/>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.level')}</div>
@@ -248,7 +248,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                                <div className="text-namiv2-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
                                                 <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
@@ -275,12 +275,12 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
-                        className='!text-namiapp-green-1'
+                        className='!text-namiv2-green-1'
                         style={{
-                            fontColor: colors.namiapp.green[1]
+                            fontColor: colors.namiv2.green[1]
                         }}
                         isDark
-                        isNamiApp
+                        isnamiv2
                     />
                 </div>
             </CollapsibleRefCard>

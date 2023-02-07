@@ -12,7 +12,7 @@ import NeedLogin from 'src/components/common/NeedLogin';
 import Skeletor from 'components/common/Skeletor';
 
 import { useCallback, useEffect, useState } from 'react';
-import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
+import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
 import { StarOutlined } from '@ant-design/icons';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { useTranslation } from 'next-i18next';
@@ -210,7 +210,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
             // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
             // { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'right', width: 168 },
-            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 168 },
+            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 128 },
             { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
             { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
             { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 170 }
@@ -305,6 +305,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 }}
                 isNamiV2
             />
+
+
         );
     }, [
         data,
@@ -433,7 +435,7 @@ export const tab = [
 ];
 
 export const subTab = [
-    { key: 'all', localized: 'common:all' },
+    // { key: 'all', localized: 'common:all' },
     { key: 'usdt', localized: null },
     { key: 'vndc', localized: null }
 ];
@@ -478,16 +480,16 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                 ) : null,
                 pair: renderPair(baseAsset, quoteAsset, label, screenWidth),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-                change_24h: render24hChange(item, true),
+                change_24h: render24hChange(item, false, 'justify-end'),
                 market_cap: renderMarketCap(lastPrice, supply),
                 mini_chart: (
                     <div className="w-full flex justify-center items-center">
                         <img src={sparkLine} alt="--" className="w-[85px]" />
                     </div>
                 ),
-                volume_24h: <span className="whitespace-nowrap">{formatPrice(volume24h)}</span>,
-                '24h_high': <span className="whitespace-nowrap">{formatPrice(high)}</span>,
-                '24h_low': <span className="whitespace-nowrap">{formatPrice(low)}</span>,
+                volume_24h: <span className="whitespace-nowrap">{formatCurrency(volume24h, 0)}</span>,
+                '24h_high': <span className="whitespace-nowrap">{formatPrice(high, high < 1000 ? 2 : 0)}</span>,
+                '24h_low': <span className="whitespace-nowrap">{formatPrice(low, high < 1000 ? 2 : 0)}</span>,
                 operation: renderTradeLink(baseAsset, quoteAsset, lang, mode),
                 [RETABLE_SORTBY]: {
                     pair: `${baseAsset}`,

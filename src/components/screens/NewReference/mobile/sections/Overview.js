@@ -32,11 +32,11 @@ const Overview = ({ data, commisionConfig }) => {
                 {t('reference:referral.introduce3')}
             </div>
             <div className='font-semibold text-sm leading-6 text-gray-6 mt-3'>
-                {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
+                {t('reference:referral.readmore')} <a href={policyLink} target='_blank' ><span className='text-namiv2-green-1 underline'>{t('reference:referral.referral_policy')}</span></a>
             </div>
             <div className='mt-[30px]'>
                 <RefCard>
-                    <div className='pb-2 text-namiapp-gray'>
+                    <div className='pb-2 text-namiv2-gray'>
                         <div className='flex w-full justify-between text-xs font-medium'>
                             <div> {t('reference:referral.referral_code')}</div>
                             <div>{t('reference:referral.rate', { value1: youGet, value2: friendsGet })}</div>
@@ -56,7 +56,7 @@ const Overview = ({ data, commisionConfig }) => {
                         </div>
                     </div>
                 </RefCard>
-                <div className='w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-medium text-white rounded-md'
+                <div className='w-full mt-8 h-11 bg-namiv2-green-1 flex items-center justify-center text-sm font-medium text-white rounded-md'
                     onClick={() => setShowInvite(true)}
                 >
                     {t('reference:referral.invite_friends')}

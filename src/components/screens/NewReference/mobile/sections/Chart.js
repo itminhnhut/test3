@@ -159,11 +159,11 @@ const Chart = () => {
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {
-                            return baseColors.namiapp.gray[1]
+                            return baseColors.namiv2.gray[1]
                         }
                     },
-                    backgroundColor: baseColors.namiapp.black[2],
-                    titleColor: baseColors.namiapp.gray.DEFAULT,
+                    backgroundColor: baseColors.namiv2.black[2],
+                    titleColor: baseColors.namiv2.gray.DEFAULT,
                     displayColors: false,
                 },
             },
@@ -172,7 +172,7 @@ const Chart = () => {
                     stacked: true,
                     // combined: true,
                     ticks: {
-                        color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
+                        color: baseColors.namiv2.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
                           size: 9 // 'size' now within object 'font {}'
@@ -183,7 +183,7 @@ const Chart = () => {
                 y: {
                     // combined: true,
                     ticks: {
-                        color: baseColors.namiapp.gray.DEFAULT,  // not 'fontColor:' anymore
+                        color: baseColors.namiv2.gray.DEFAULT,  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
                           size: 9 // 'size' now within object 'font {}'

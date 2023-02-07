@@ -334,7 +334,7 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao
             },
-            namiapp: {
+            namiv2: {
                 black: {
                     DEFAULT: '#0c0e14',
                     1: '#141921',

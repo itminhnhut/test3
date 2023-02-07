@@ -32,7 +32,7 @@ const Market = () => {
         exchangeMarket: null,
         futuresMarket: null,
         tabLabelCount: null,
-        type: 0
+        type: 1
     })
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
@@ -174,8 +174,6 @@ const Market = () => {
         getMarket()
     }, [])
 
-    console.log('state.type', state.type)
-
     // Re-new api data
     useEffect(() => {
         let interval
@@ -191,6 +189,9 @@ const Market = () => {
         let watch = []
         let convert = []
 
+        const asset = subTab[state.subTabIndex].key === 'usdt' ? 'USDT' : 'VNDC'
+
+
         if (state.exchangeMarket && state.futuresMarket) {
             convert = {
                 exchange: marketWatchToFavorite(state.favoriteList?.exchange, TRADING_MODE.EXCHANGE, state.exchangeMarket),
@@ -202,11 +203,11 @@ const Market = () => {
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.subTabIndex]?.key === 'exchange') {
                 // log.d('Tab Favorite - Exchange')
-                watch = convert?.exchange
+                watch = convert?.exchange?.filter(e => e.q === asset)
             }
             if (favSubTab[state.subTabIndex]?.key === 'futures') {
                 // log.d('Tab Favorite - Futures')
-                watch = convert?.futures
+                watch = convert?.futures?.filter(e => e.q === asset)
             }
         }
 
@@ -238,20 +239,6 @@ const Market = () => {
             }
         }
 
-        switch (state.type) {
-            case 0:
-                break;
-            // case 'TOP_GAINER':
-            //     watch = watch.filter(e => getExchange24hPercentageChange(e) > 0)
-            //     break;
-            // case 'TOP_LOSER':
-            //     watch = watch.filter(e => getExchange24hPercentageChange(e) < 0)
-            //     break;
-            default:
-                watch = watch.filter(e => categories[state.type]?.includes(e.s))
-                break;
-        }
-
         // Search data handling
         if (state.search) {
             watch = filterer([...watch], state.search.toLowerCase())
@@ -259,19 +246,44 @@ const Market = () => {
 
         // Count searched items
         if (state.search && convert && state.exchangeMarket && state.futuresMarket) {
-            const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
-            const exchange = filterer(state.exchangeMarket, state.search.toLowerCase())
-            const futures = filterer(state.futuresMarket, state.search.toLowerCase())
 
+            const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
+            const exchange = filterer(state.exchangeMarket.filter(e => e.q === asset), state.search.toLowerCase())
+            const futures = filterer(state.futuresMarket.filter(e => e.q === asset), state.search.toLowerCase())
+        
             setState({
                 tabLabelCount: {
-                    favorite: favorite?.length,
+                    favorite: favorite?.length - 1,
                     exchange: exchange?.length,
                     futures: futures?.length
                 }
             })
         } else {
             setState({ tabLabelCount: null })
+        }
+
+        if(tab[state.tabIndex].key !== 'favorite') {
+            switch (state.type) {
+                case 0:
+                    break;
+                case 'TOP_GAINER':
+                    watch = watch.sort((a, b) => {
+                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
+                        if(diff === 0) return 0
+                        return diff > 0 ? 1 : -1
+                    })
+                    break;
+                case 'TOP_LOSER':
+                    watch = watch.sort((a, b) => {
+                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
+                        if(diff === 0) return 0
+                        return (diff > 0) ? -1 : 1
+                    })
+                    break;
+                default:
+                    watch = watch?.filter(e => categories[state.type]?.includes(e.s))
+                    break;
+            }
         }
 
         // Set watching data
