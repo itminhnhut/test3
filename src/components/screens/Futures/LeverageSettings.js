@@ -124,19 +124,18 @@ const FuturesLeverageSettings = ({
             wrapClassName='!p-6'
             onBackdropCb={onClose}
            className={`w-[90%] !max-w-[488px] select-none ${className}`}
+           customHeader={() => !onusMode && (
+            <div className="flex justify-end mb-6">
+                <div
+                    className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
+                    onClick={onClose}
+                >
+                    <X size={24} />
+                </div>
+            </div>
+        )}
             >
-            <div className={`-mt-1  ${onusMode ? 'mb-6 text-lg' : 'mb-6 text-sm'} font-bold`}>
-                {/* {!onusMode && (
-                    <div className="flex justify-end mb-6">
-                        <div
-                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={onClose}
-                        >
-                            <X size={24} />
-                        </div>
-                    </div>
-                )} */}
-
+            <div className={` ${onusMode ? 'mb-6 text-lg' : 'mb-6 text-sm'} font-bold`}>
                 <div className="text-[22px] dark:text-txtPrimary-dark font-semibold">{t('futures:leverage:title')}</div>
             </div>
 
