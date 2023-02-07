@@ -102,6 +102,11 @@ const NamiV2PaginationWrapper = styled.div`
         font-size: 24px;
     }
 
+    .rc-pagination-prev button:hover,
+    .rc-pagination-next button:hover {
+        color: ${colors?.namiv2?.gray[2]};
+    }
+
     .rc-pagination-disabled button:after {
         color: #454c5c !important;
     }

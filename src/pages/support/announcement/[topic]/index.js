@@ -80,10 +80,19 @@ const AnnouncementTopics = (props) => {
                 key={item.uuid}
             >
                 <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
-                    {item?.title}{' '}
-                    <span className="text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark">
-                        {formatTime(item.created_at, 'dd-MM-yyyy')}
-                    </span>
+                    <div className='flex w-full gap-6 items-center'>
+                        <img className='rounded-xl h-[130px]' src={item?.feature_image} style={{
+                            aspectRatio: '25/13'
+                        }} />
+                        <div className='h-full gap-6 flex flex-col justify-center'>
+                            <div className='text-gray-4 font-medium text-xl'>
+                                {item?.title}{' '}
+                            </div>
+                            <div className='line-clamp-2 text-darkBlue-5 font-normal text-sm'>
+                                {item?.excerpt}
+                            </div>
+                        </div>
+                    </div>
                 </a>
             </Link>
         ));
@@ -99,7 +108,7 @@ const AnnouncementTopics = (props) => {
                 onClick={router?.back}
                 className="active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium"
             >
-                <ChevronLeft size={16} className="mr-2.5"/>
+                <ChevronLeft size={16} className="mr-2.5" />
                 {topic}
                 {topic && ' | '}
                 Nami FAQ

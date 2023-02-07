@@ -12,7 +12,7 @@ const SupportBanner = ({ title, href = '#', containerClassNames = '', innerClass
         <div className={classNames('support-search-bg', containerClassNames)}>
             <div
                 className={classNames('flex flex-col items-center justify-center py-5 px-14 sm:py-8 md:py-12 lg:flex-row lg:items-center lg:justify-between', innerClassNames)}>
-                < Link href={`${href}${isApp ? '?source=app' : ''}`}>
+                <Link href={`${href}${isApp ? '?source=app' : ''}`}>
                     <a className="font-bold text-center text-[16px] md:text-[24px] mb-4 lg:mb-0 lg:text-[36px] lg:leading-[56px] hover:text-dominant">
                         {title || 'No title'}
                     </a>
