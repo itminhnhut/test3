@@ -198,7 +198,6 @@ const ReTable = memo(
 
                     let item = c;
                     if (!HIDE_SORTER.includes(c.key)) {
-                        console.log(c);
                         if (c.align === 'left') className.push('!justify-start');
                         if (c.align === 'right') className.push('justify-end');
                         if (c.align === 'center') className.push('justify-center');
