@@ -33,6 +33,7 @@ import SwapReverse from 'components/svg/SwapReverse';
 import SwapWarning from 'components/svg/SwapWarning';
 import { CheckCircleIcon, CloseIcon } from 'components/svg/SvgIcon';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -365,21 +366,26 @@ const SwapModule = ({ width, pair }) => {
             assetItems.push(
                 <li
                     key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base
+                    className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 dark:hover:bg-hover
-                    ${!available && 'opacity-50'}
+                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                   
+                    ${state.fromAsset === fromAsset && 'dark:bg-hover'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
                 >
-                    <div className="flex items-center">
-                        <AssetLogo assetCode={fromAsset} size={20} />
-                        <span className="mx-2">{fromAsset}</span>
-                        <span className="text-xs leading-4 dark:text-txtSecondary-dark text-left">{assetName}</span>
+                    <div className={`flex items-center  `}>
+                        <div className={`${!available && 'opacity-20'}`}>
+                            <AssetLogo assetCode={fromAsset} size={20} />
+                        </div>
+                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
+                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
+                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                        </p>
                     </div>
-                    {/* <div className="text-txtSecondary dark:text-txtSecondary-dark">{available ? formatWallet(available) : '0.0000'}</div> */}
-                    {state.fromAsset === fromAsset && <CheckCircleIcon color="white" size={16} />}
+                    <div>{available ? formatWallet(available) : '0.0000'}</div>
+                    {/* {state.fromAsset === fromAsset && <CheckCircleIcon color="white" size={16} />} */}
                 </li>
             );
         }
@@ -412,9 +418,8 @@ const SwapModule = ({ width, pair }) => {
                     {assetItems?.length ? (
                         assetItems
                     ) : (
-                        <div className="h-[332px] flex flex-col items-center justify-center">
-                            <img src={'/images/screen/swap/no-result.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                            <span className="text-base leading-6  text-txtSecondary dark:text-txtSecondary-dark"> {t('common:swap_no_search_results')}</span>
+                        <div className="flex items-center justify-center h-[332px]">
+                            <NoData isSearch={!!state.search} />
                         </div>
                     )}
                 </ul>
@@ -468,20 +473,24 @@ const SwapModule = ({ width, pair }) => {
             assetItems.push(
                 <li
                     key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-gray-4 leading-6 text-left text-base
+                    className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3
-                    ${state.toAsset === toAsset ? ' text-dominant bg-teal-lightTeal dark:bg-hover' : 'hover:bg-teal-lightTeal dark:hover:bg-hover'}
+                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                   
+                    ${state.toAsset === toAsset && 'dark:bg-hover'}
                     `}
-                    // onClick={() => setState({ toAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickToAsset(toAsset)}
                 >
-                    <div className="flex items-center">
-                        <AssetLogo assetCode={toAsset} size={20} />
-                        <span className="mx-2">{toAsset}</span>
-                        <span className="text-xs leading-4 dark:text-txtSecondary-dark text-left">{assetName}</span>
+                    <div className={`flex items-center  `}>
+                        <div className={`${!available && 'opacity-20'}`}>
+                            <AssetLogo assetCode={toAsset} size={20} />
+                        </div>
+                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
+                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
+                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                        </p>
                     </div>
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{available ? formatWallet(available) : '0.0000'}</div>
+                    <div>{available ? formatWallet(available) : '0.0000'}</div>
                 </li>
             );
         }
@@ -514,9 +523,8 @@ const SwapModule = ({ width, pair }) => {
                     {assetItems?.length ? (
                         assetItems
                     ) : (
-                        <div className="h-[332px] flex flex-col items-center justify-center">
-                            <img src={'/images/screen/swap/no-result.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                            <span className="text-base leading-6 text-txtSecondary dark:text-txtSecondary-dark"> {t('common:swap_no_search_results')}</span>
+                        <div className="flex items-center justify-center h-[332px]">
+                            <NoData isSearch={!!state.search} />
                         </div>
                     )}
                 </ul>

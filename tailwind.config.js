@@ -423,6 +423,10 @@ module.exports = {
                     dark: '#47cc85',
                     dark_pressed: '#19a65b',
                     dark_disabled: '#454c5c'
+                },
+                txtDisabled: {
+                    DEFAULT: '#3e4351',
+                    dark: '#3e4351'
                 }
             },
             backgroundColor: {

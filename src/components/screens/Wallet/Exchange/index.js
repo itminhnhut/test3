@@ -27,6 +27,7 @@ import { ChevronDown } from 'react-feather';
 import PopoverV2 from 'components/common/V2/PopoverV2';
 import useOutsideClick from 'hooks/useOutsideClick';
 import NoData from 'components/common/V2/TableV2/NoData';
+import TableV2 from 'components/common/V2/TableV2';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -121,17 +122,22 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
         return (
             <>
                 <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                    <ReTable
+                    <TableV2
                         sort
                         defaultSort={{ key: 'btc_value', direction: 'desc' }}
                         useRowHover
                         data={state.tableData || []}
                         columns={columns}
                         rowKey={(item) => item?.key}
-                        loading={!state.tableData?.length}
                         scroll={{ x: true }}
                         limit={ASSET_ROW_LIMIT}
                         skip={0}
+                        isSearch={!!state.search}
+                        pagingClassName="border-none"
+                        // page={state.currentPage}
+                        // onChangePage={(currentPage) => setState({ currentPage })}
+                    />
+                    {/* <ReTable
                         tableStatus={tableStatus}
                         paginationProps={{
                             hide: true,
@@ -143,8 +149,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         // height={height}
                         emptyText={<NoData isSearch={!!state.search} />}
                         // {...props}
-                    />
-                    {state.tableData?.length > 0 && (
+                    /> */}
+                    {/* {state.tableData?.length > 0 && (
                         <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
                             <RePagination
                                 total={state.tableData?.length}
@@ -154,7 +160,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 name="market_table___list"
                             />
                         </div>
-                    )}
+                    )} */}
                 </div>
             </>
         );
