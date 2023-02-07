@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react'
-import RefCard from 'components/screens/NewReference/RefCard'
+import React, { useEffect, useState } from 'react';
+import RefCard from 'components/screens/NewReference/RefCard';
 import { FilterTabs } from 'components/screens/NewReference/mobile/index';
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_STATISTIC } from 'redux/actions/apis';
@@ -11,29 +11,53 @@ import { formatNumber } from 'redux/actions/utils';
 import DatePicker from 'components/common/DatePicker/DatePicker';
 import classNames from 'classnames';
 
-const Charts = ({ t, id }) => {
+const Charts = ({
+    t,
+    id
+}) => {
     const timeTabs = [
-        { title: '1 ' + t('futures:day'), value: 'd', format: 'hh:mm', interval: '1h' },
-        { title: '1 ' + t('futures:week'), value: 'w', format: 'dd/MM', interval: '1d' },
-        { title: '1 ' + t('futures:month'), value: 'm', format: 'dd/MM', interval: '1d' },
+        {
+            title: '1 ' + t('futures:day'),
+            value: 'd',
+            format: 'hh:mm',
+            interval: '1h'
+        },
+        {
+            title: '1 ' + t('futures:week'),
+            value: 'w',
+            format: 'dd/MM',
+            interval: '1d'
+        },
+        {
+            title: '1 ' + t('futures:month'),
+            value: 'm',
+            format: 'dd/MM',
+            interval: '1d'
+        }
         // { title: t('reference:referral.custom'), value: 'custom' },
-    ]
+    ];
     return (
         <div className='flex flex-col gap-8 w-full' id={id}>
             <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
             <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
         </div>
-    )
-}
+    );
+};
 
-export default Charts
+export default Charts;
 
-const RenderContent = ({ t, timeTabs, title, url, type }) => {
-    const [timeTab, setTimeTab] = useState(timeTabs[0].value)
+const RenderContent = ({
+    t,
+    timeTabs,
+    title,
+    url,
+    type
+}) => {
+    const [timeTab, setTimeTab] = useState(timeTabs[0].value);
     const [dataSource, setDataSource] = useState({
         data: [],
         labels: []
-    })
+    });
     const [filter, setFilter] = useState({
         range: {
             startDate: null,
@@ -42,14 +66,14 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         }
     });
     // const [showCustom, setShowCustom] = useState(false)
-    const colors = ['#C0F9EE', '#b2ede3', '#7de3d2', '#5ed1be']
+    const colors = ['#e8bf56', '#7c99f7', '#a3f5c7', '#4ae17b'];
 
     const fetchChartData = _.debounce(() => {
         FetchApi({
             // @ts-ignore
             url,
             options: {
-                method: 'GET',
+                method: 'GET'
             },
             params: {
                 interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
@@ -58,25 +82,29 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                 to: filter?.range?.endDate,
                 format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
             }
-        }).then(({ data, status }) => {
-            if (status === 'ok') {
-                setDataSource(data)
-            } else {
-                setDataSource({
-                    data: [],
-                    labels: []
-                })
-            }
-        });
-    }, 300)
+        })
+            .then(({
+                data,
+                status
+            }) => {
+                if (status === 'ok') {
+                    setDataSource(data);
+                } else {
+                    setDataSource({
+                        data: [],
+                        labels: []
+                    });
+                }
+            });
+    }, 300);
 
     useEffect(() => {
-        if (!filter.range.startDate) return
-        fetchChartData()
-    }, [filter])
+        if (!filter.range.startDate) return;
+        fetchChartData();
+    }, [filter]);
     useEffect(() => {
         if (timeTab !== 'custom') {
-            const date = new Date()
+            const date = new Date();
             switch (timeTab) {
                 case timeTabs[0].value:
                     date.setDate(date.getDate() - 1);
@@ -88,7 +116,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     date.setDate(date.getDate() - 31);
                     break;
                 default:
-                    break
+                    break;
             }
             date.toLocaleDateString();
             setFilter({
@@ -97,8 +125,8 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     endDate: Date.now(),
                     key: 'selection'
                 }
-            })
-            return
+            });
+            return;
         } else {
             setFilter({
                 range: {
@@ -106,13 +134,13 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     endDate: new Date(filter?.range?.endDate ?? null).getTime(),
                     key: 'selection'
                 }
-            })
+            });
         }
-    }, [timeTab])
+    }, [timeTab]);
 
     const renderChart = () => {
         // const getData = (level) => dataSource.data.map(e => e[level - 1]?.[tab === tags[0].value ? 'count' : 'volume'] ?? [])
-        const getData = (level) => dataSource?.data?.map(e => e[level - 1]?.[type]) ?? []
+        const getData = (level) => dataSource?.data?.map(e => e[level - 1]?.[type]) ?? [];
         const data = {
             labels: dataSource?.labels || [],
             datasets: [{
@@ -164,45 +192,62 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                 tooltip: {
                     callbacks: {
                         label: function (context) {
-                            const index = context.dataIndex
-                            const datasetIndex = context.datasetIndex
-                            const data = dataSource.data[index][datasetIndex]
-                            const level = t('reference:referral.level') + ': ' + data.level
-                            const friends = t('reference:referral.number_of_friends') + ': ' + data.count
-                            const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC'
-                            if (!data.volume) return [level, friends]
-                            return [level, friends, commission]
+                            const index = context.dataIndex;
+                            const datasetIndex = context.datasetIndex;
+                            const data = dataSource.data[index][datasetIndex];
+                            const level = t('reference:referral.level') + ': ' + data.level;
+                            const friends = t('reference:referral.number_of_friends') + ': ' + data.count;
+                            const commission = t('reference:referral.total_commissions') + ': ' + formatNumber(data.volume, 0) + ' VNDC';
+                            if (!data.volume) return [level, friends];
+                            return [level, friends, commission];
                         },
                         labelTextColor: function (context) {
-                            return baseColors.darkBlue
+                            return baseColors.grey4;
                         }
                     },
-                    backgroundColor: baseColors.white,
-                    titleColor: baseColors.grey1,
-                    displayColors: false,
-                },
+                    backgroundColor: baseColors.dark.dark,
+                    titleColor: baseColors.grey4,
+                    displayColors: false
+                }
             },
             scales: {
                 x: {
                     stacked: true,
+                    ticks: {
+                        color: baseColors.darkBlue5
+                    }
                     // combined: true,
                 },
-            },
-        }
+                y: {
+                    ticks: {
+                        color: baseColors.darkBlue5
+                    }
+                }
+            }
+        };
         return (
             <>
                 <ChartJS type='bar' data={data} options={options} height='400px' />
             </>
-        )
-    }
+        );
+    };
     return (
-        <RefCard wrapperClassName='!p-6 w-full h-auto' style={{ height: 'fit-content' }}>
-            <div className='font-semibold text-[20px] leading-6 mb-6 flex justify-between w-full'>
-                <div>
+        <RefCard wrapperClassName='!p-8 w-full h-auto !bg-darkBlue-3' style={{ height: 'fit-content' }}>
+            <div className='mb-6 flex justify-between w-full'>
+                <div className='font-semibold text-[20px] leading-6'>
                     {title}
                 </div>
                 <div className='flex gap-3'>
-                    <FilterTabs tabs={timeTabs} type={timeTab} setType={setTimeTab} className='!font-medium !text-sm !leading-5' />
+                    {timeTabs.map(t => {
+                        return <div
+                            key={t.value}
+                            onClick={() => setTimeTab(t.value)}
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer', {
+                                'text-txtSecondary border-divider-dark': timeTab !== t.value,
+                                'text-teal font-semibold border-teal bg-teal/[.1]': timeTab === t.value,
+                            })}
+                        >{t.title}</div>;
+                    })}
                     <DatePicker
                         date={filter.range}
                         onChange={e => setFilter({
@@ -214,22 +259,29 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                         })}
                         month={2}
                         hasShadow
-                        text={<div className={classNames("flex items-center py-1 px-2 justify-center cursor-pointer text-gray-1 font-medium text-sm leading-5", { 'bg-gray-4 rounded-md text-darkBlue': timeTab === 'custom' })} onClick={() => setTimeTab('custom')}>{t('reference:referral.custom')}</div>}
+                        text={<div
+                            onClick={() => setTimeTab('custom')}
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer', {
+                                'text-txtSecondary border-divider-dark': timeTab !== 'custom',
+                                'text-teal font-semibold border-teal bg-teal/[.1]': timeTab === 'custom',
+                            })}
+                        >{t('reference:referral.custom')}</div>}
                     />
                 </div>
             </div>
-            <div className='max-h-[624px]'>
-                <div className='h-100'>
+            <div>
+                <div className='h-[350px]'>
                     {renderChart()}
                 </div>
                 <div className='px-2 mt-4 flex flex-wrap items-center gap-4'>
                     {colors.map((color, index) => (
-                        <div className='flex items-center gap-2 leading-5 text-xs font-medium text-gray-1 min-w-[70px]' key={index}>
-                            <SmallCircle color={color} />  {t('reference:referral.level')} {index + 1}
+                        <div className='flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]'
+                             key={index}>
+                            <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
                         </div>
                     ))}
                 </div>
             </div>
         </RefCard>
-    )
-}
+    );
+};

@@ -26,9 +26,11 @@ const KYCPendingTag = ({ t }) => {
     </div>;
 };
 
-const KYCVerified = ({ t }) => {
-    return <div style={{ background: 'rgba(71, 204, 133, 0.1)' }}
-                className='flex items-center text-teal leading-7 rounded-full px-4 ml-3'>
+const KYCVerifiedTag = ({ t }) => {
+    return <div
+        style={{ background: 'rgba(71, 204, 133, 0.1)' }}
+        className='flex items-center text-teal leading-7 rounded-full px-4 ml-3'
+    >
         <CheckCircle />
         <span className='ml-2'>{t('profile:kyc_verified')}</span>
     </div>;
@@ -59,7 +61,7 @@ export default function AccountLayout({ children }) {
                         <span className='text-xl leading-7 font-medium'>{user?.name}</span>
                         {{
                             [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                            [KYC_STATUS.APPROVED]: <KYCVerified t={t} />
+                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
                         }[user?.kyc_status] || null}
                     </div>
                     <TextCopyable text={user?.code} className='text-gray-1' />
