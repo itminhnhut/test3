@@ -15,8 +15,7 @@ import FriendList from 'components/screens/NewReference/desktop/sections/Tables/
 import CommissionHistory from 'components/screens/NewReference/desktop/sections/Tables/CommissionHistory';
 
 import dynamic from 'next/dynamic'
-
-const Overview = dynamic(() => import('./sections/Overview'))
+const Overview = dynamic(() => import('./sections/Overview'), {ssr: false})
 
 const tabs = {
     Overview: 'overview',
