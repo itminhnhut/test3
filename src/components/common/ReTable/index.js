@@ -159,12 +159,13 @@ const ReTable = memo(
         useEffect(() => {
             const sortColumn = [];
             const origin = ['flex', 'items-center'];
-            let className = [...origin];
 
             if (typeof sort === 'string' || Array.isArray(sort)) {
                 columns.forEach((c) => {
                     let item = c;
                     if (castArray(sort).includes(c.key)) {
+                        let className = [...origin];
+
                         if (c.align === 'left') className.push('justify-start');
                         if (c.align === 'right') className.push('justify-end');
                         if (c.align === 'center') className.push('justify-center');
@@ -193,8 +194,11 @@ const ReTable = memo(
                 sortColumn && sortColumn.length && setOwnColumns(sortColumn);
             } else if (sort === 'all' || sort === true) {
                 columns.forEach((c) => {
+                    let className = [...origin];
+
                     let item = c;
                     if (!HIDE_SORTER.includes(c.key)) {
+                        console.log(c);
                         if (c.align === 'left') className.push('!justify-start');
                         if (c.align === 'right') className.push('justify-end');
                         if (c.align === 'center') className.push('justify-center');

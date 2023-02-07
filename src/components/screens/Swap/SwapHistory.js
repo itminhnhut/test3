@@ -74,8 +74,8 @@ const SwapHistory = ({ width }) => {
                 // />
                 <div className="mt-8 pt-4 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
                     <TableV2
-                        // sort
-                        // defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                        sort
+                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
                         useRowHover
                         data={data || []}
                         columns={columns}

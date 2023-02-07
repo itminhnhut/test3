@@ -327,7 +327,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </div>
                 ),
                 total: (
-                    <span className="text-sm whitespace-nowrap">
+                    <span className="text-sm whitespace-nowrap flex justify-end">
                         {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 ),
