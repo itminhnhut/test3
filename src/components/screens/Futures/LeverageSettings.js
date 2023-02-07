@@ -14,8 +14,6 @@ import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
 
-
-
 const FuturesLeverageSettings = ({
     pair,
     isVisible,
@@ -54,7 +52,6 @@ const FuturesLeverageSettings = ({
             onClose();
         }
     };
-
 
     const renderNotionalCap = useCallback(() => {
         return (
@@ -119,22 +116,24 @@ const FuturesLeverageSettings = ({
         //     containerClassName={`w-[90%] max-w-[488px] dark:bg-bgPrimary-dark p-6 dark:border-namiv2-gray-3 select-none ${className}`}
         //     containerStyle={{ ...containerStyle }}
         // >
-            <ModalV2
+        <ModalV2
             isVisible={isVisible}
-            wrapClassName='!p-6'
+            wrapClassName="!p-6"
             onBackdropCb={onClose}
-           className={`w-[90%] !max-w-[488px] select-none ${className}`}
-           customHeader={() => !onusMode && (
-            <div className="flex justify-end mb-6">
-                <div
-                    className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                    onClick={onClose}
-                >
-                    <X size={24} />
-                </div>
-            </div>
-        )}
-            >
+            className={`w-[90%] !max-w-[488px] select-none ${className}`}
+            customHeader={() =>
+                !onusMode && (
+                    <div className="flex justify-end mb-6">
+                        <div
+                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
+                            onClick={onClose}
+                        >
+                            <X size={24} />
+                        </div>
+                    </div>
+                )
+            }
+        >
             <div className={` ${onusMode ? 'mb-6 text-lg' : 'mb-6 text-sm'} font-bold`}>
                 <div className="text-[22px] dark:text-txtPrimary-dark font-semibold">{t('futures:leverage:title')}</div>
             </div>
@@ -160,7 +159,9 @@ const FuturesLeverageSettings = ({
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none  ${onusMode ? '!bg-onus-bg2 h-[44px]' : '!bg-transparent h-[48px]'}`}
+                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none  ${
+                        onusMode ? '!bg-onus-bg2 h-[44px]' : '!bg-transparent h-[48px]'
+                    }`}
                     inputClassName="!text-center !text-base"
                     onValueChange={({ value }) => _setLeverage(value)}
                     validator={getValidator}
@@ -216,10 +217,12 @@ const FuturesLeverageSettings = ({
                             {onusMode ? (
                                 <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
                             ) : (
-                                <SvgWarning size={24} fill={colors.darkBlue5}  />
+                                <SvgWarning size={24} fill={colors.darkBlue5} />
                             )}
                         </div>
-                        <div className={`pl-4 font-medium text-sm ${onusMode ? 'text-onus-orange' : 'text-txtSecondary'} `}>{t('futures:leverage:description')}</div>
+                        <div className={`pl-4 font-medium text-sm ${onusMode ? 'text-onus-orange' : 'text-txtSecondary'} `}>
+                            {t('futures:leverage:description')}
+                        </div>
                     </div>
                 </>
             )}
@@ -237,9 +240,8 @@ const FuturesLeverageSettings = ({
                     </div>
                 </div>
             )}
+        </ModalV2>
 
-            </ModalV2>
-            
         // </Modal>
     );
 };
