@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const FuturesLeverageSettings = ({
     pair,
@@ -212,12 +213,12 @@ const FuturesLeverageSettings = ({
             {isAuth && (
                 <>
                     {!isVndcFutures && <span className="block mb-1 font-medium text-xs text-dominant">{t('futures:leverage:position_limit_enlarge')}</span>}
-                    <div className="mt-2.5 flex items-start dark:bg-darkBlue-3 px-6 py-4 rounded-md">
+                    <div className="mt-2.5 flex items-center dark:bg-darkBlue-3 px-6 py-4 rounded-md">
                         <div className="pt-1">
                             {onusMode ? (
                                 <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
                             ) : (
-                                <SvgWarning size={24} fill={colors.darkBlue5} />
+                                <SvgWarning size={24} fill={colors.darkBlue5} fillInside={colors.darkBlue3} />
                             )}
                         </div>
                         <div className={`pl-4 font-medium text-sm ${onusMode ? 'text-onus-orange' : 'text-txtSecondary'} `}>
