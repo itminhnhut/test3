@@ -248,15 +248,13 @@ const TopicsLayout = ({
                                 </div>
                                 : null}
                             <div className={classNames('pt-3 sm:pt-0', {
-                                'absolute w-full h-full bg-dark bg-opacity-80 ': isMobile && toggleMenu,
+                                'absolute w-full h-full bg-dark bg-opacity-80': isMobile && toggleMenu,
                                 'hidden h-0': isMobile && !toggleMenu
                             })}>
                                 <div className='bg-dark'>
                                     {renderTopics}
                                 </div>
-                                <div className='h-full w-full sm:hidden' onClick={() => setToggleMenu(false)}>
-
-                                </div>
+                                <div className='h-[calc(100%-600px)] min-h-[150px] w-full bg-dark bg-opacity-80 sm:hidden' onClick={() => setToggleMenu(false)}></div>
                             </div>
                         </div>
 
