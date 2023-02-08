@@ -228,7 +228,7 @@
 
 .mal-navbar__wrapper {
   @apply relative z-30 w-full flex flex-row items-center justify-between border-b border-divider-dark;
-  @apply bg-headerBg;
+  @apply bg-dark;
 
   height: $MOBILE_NAV_HEIGHT;
   padding: 0 16px;
@@ -237,11 +237,11 @@
 
   @media (min-width: 992px) {
     height: $DESKTOP_NAV_HEIGHT;
-    padding: 0 40px;
+    padding: 0 24px;
   }
 
   .mal-navbar__logo {
-    width: 28px;
+    width: 94px;
     min-width: 28px;
     height: auto;
     padding-top: 4px;
@@ -251,7 +251,7 @@
     @apply flex items-center h-full;
 
     .mal-navbar__hamburger__spacing {
-      margin-left: 28px;
+      margin-left: 16px;
     }
 
     .mal-navbar__right_function___dropdown {
@@ -344,11 +344,12 @@
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-medium text-txtPrimary-dark
+      @apply flex items-center h-full text-sm font-normal text-txtPrimary-dark
       relative;
 
       cursor: pointer;
-      margin-left: 28px;
+      margin-left: 44px;
+      
 
       &:hover {
         @apply text-dominant;
@@ -382,21 +383,21 @@
       min-width: 700px;
       border-top-left-radius: 0 !important;
       border-top-right-radius: 0 !important;
-      padding: 22px 32px !important;
+      padding: 16px !important;
 
       .mal-navbar__link__group___item___childen__lv1___item2:nth-child(odd) {
         padding-right: 24px;
       }
 
       .mal-navbar__link__group___item___childen__lv1___item2 {
-        @apply w-1/2 flex items-start;
+        @apply w-1/2 flex items-center;
 
         white-space: nowrap;
-        padding: 16px;
-        border-radius: 6px;
+        padding: 8px;
+        border-radius: 12px;
 
         &:hover {
-          @apply bg-teal-50 dark:bg-darkBlue-3;
+          @apply bg-teal-50 dark:bg-hover;
         }
 
         .mal-navbar__link__group___item___childen__lv1___item2__icon {
@@ -437,7 +438,7 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-bgPrimary dark:bg-darkBlue-2
+      @apply absolute hidden left-0 z-50 bg-bgPrimary dark:bg-darkBlue-3
       border-l border-r border-b dark:border-divider-dark;
 
       top: 100%;
@@ -544,14 +545,14 @@
       left: 50%;
       transform: translateX(-50%);
       min-width: 130px;
-      padding-top: 25px;
-
+      padding-top: 30px;
+      gap:12px;
       .mal-navbar__dropdown__wrapper {
-        @apply bg-bgContainer dark:bg-darkBlue-2 dark:shadow-none
+        @apply bg-bgContainer dark:bg-darkBlue-3 dark:shadow-none
         border-l border-r border-b dark:border-divider-dark;
 
         border-color: transparent;
-        padding: 16px;
+        padding: 8px 0;
         border-bottom-right-radius: 12px;
         border-bottom-left-radius: 12px;
         box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
@@ -562,10 +563,10 @@
 
           white-space: nowrap;
           min-width: 160px;
-          padding: 6px 16px;
-          border-radius: 6px;
+          padding: 12px 16px;
+          // border-radius: 6px;
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 600;
 
           a,
           span {
@@ -573,11 +574,11 @@
           }
 
           svg {
-            margin-right: 12px;
+            margin-right: 16px;
           }
 
           &:hover {
-            @apply bg-teal-50 dark:bg-darkBlue-3;
+            @apply bg-teal-50 dark:bg-hover;
           }
         }
       }
