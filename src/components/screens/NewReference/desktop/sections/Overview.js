@@ -231,18 +231,19 @@ const Overview = ({
                     </div>
                 </div>
                 <div className='pl-8 space-y-5'>
-                    <div className='flex justify-between py-3'>
+                    <div className='flex items-center justify-between py-3'>
                         <p className='text-sm font-bold'>
                             {t('reference:referral.rate', {
                                 value1: isNaN(youGet) ? '--' : youGet,
                                 value2: isNaN(friendsGet) ? '--' : friendsGet
                             })}
                         </p>
-                        <p
-                            className='text-teal hover:underline transition cursor-pointer'
-                            onClick={() => setShowRef(true)}>
+                        <ButtonV2
+                            className='!w-auto px-6'
+                            onClick={() => setShowRef(true)}
+                        >
                             {t('reference:referral.referral_code_management')}
-                        </p>
+                        </ButtonV2>
                     </div>
                     <div className='flex'>
                         <div className='mr-6'>
