@@ -17,14 +17,7 @@ import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'redux/actions/const';
 import { getFuturesFavoritePairs } from '../../../../redux/actions/futures';
 
-const FuturesPairListItems = ({
-    pairConfig,
-    changePercent24h,
-    isDark,
-    isFavorite,
-    isAuth,
-    onSelectPair = null
-}) => {
+const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite, isAuth, onSelectPair = null }) => {
     const [pairTicker, setPairTicker] = useState(null);
     const dispatch = useDispatch();
     const publicSocket = useSelector((state) => state.futures.publicSocket);
@@ -40,11 +33,7 @@ const FuturesPairListItems = ({
 
     const handleSetFavorite = async () => {
         isClickFavorite.current = true;
-        await favoriteAction(
-            isFavorite ? 'delete' : 'put',
-            TRADING_MODE.FUTURES,
-            pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset
-        );
+        await favoriteAction(isFavorite ? 'delete' : 'put', TRADING_MODE.FUTURES, pairConfig?.baseAsset + '_' + pairConfig?.quoteAsset);
         dispatch(getFuturesFavoritePairs());
         isClickFavorite.current = false;
     };
@@ -73,9 +62,7 @@ const FuturesPairListItems = ({
                     '!text-red': pairTicker?.lastPrice < prevLastPrice
                 })}
             >
-                {pairTicker?.lastPrice
-                    ? formatNumber(pairTicker?.lastPrice, pairConfig?.pricePrecision)
-                    : '--'}
+                {pairTicker?.lastPrice ? formatNumber(pairTicker?.lastPrice, pairConfig?.pricePrecision) : '--'}
             </div>
         );
     }, [pairTicker?.lastPrice, prevLastPrice]);
@@ -91,20 +78,14 @@ const FuturesPairListItems = ({
                     }
                 )}
             >
-                {pairTicker?.priceChangePercent
-                    ? formatNumber(roundTo(pairTicker.priceChangePercent * 100, 2), 2, 2, true) +
-                      '%'
-                    : '--'}
+                {pairTicker?.priceChangePercent ? formatNumber(roundTo(pairTicker.priceChangePercent * 100, 2), 2, 2, true) + '%' : '--'}
             </div>
         );
     }, [pairTicker?.priceChangePercent]);
 
     const renderTotalVolume = useCallback(() => {
         return (
-            <div
-                style={{ flex: '1 1 0%' }}
-                className="justify-end text-right text-darkBlue-5 dark:text-darkBlue-5"
-            >
+            <div style={{ flex: '1 1 0%' }} className="justify-end text-right text-darkBlue-5 dark:text-darkBlue-5">
                 {pairTicker?.priceChangePercent || '--'}
             </div>
         );
@@ -118,17 +99,14 @@ const FuturesPairListItems = ({
 
     useEffect(() => {
         if (pairConfig?.pair) {
-            Emitter.on(
-                PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair,
-                async (data) => {
-                    if (data) {
-                        const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-                        if (_pairTicker?.symbol === pairConfig.pair) {
-                            setPairTicker(_pairTicker);
-                        }
+            Emitter.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair, async (data) => {
+                if (data) {
+                    const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
+                    if (_pairTicker?.symbol === pairConfig.pair) {
+                        setPairTicker(_pairTicker);
                     }
                 }
-            );
+            });
         }
 
         return () => Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair);
@@ -138,7 +116,7 @@ const FuturesPairListItems = ({
     const handleClickItem = () => {
         if (!isClickFavorite.current) {
             if (isFunction(onSelectPair)) {
-                // callback function for modal trading rule 
+                // callback function for modal trading rule
                 onSelectPair(pairConfig?.pair);
             } else {
                 router.push(PATHS.FUTURES_V2.DEFAULT + `/${pairConfig?.pair}`);
