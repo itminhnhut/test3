@@ -364,12 +364,16 @@ const AccountProfile = () => {
                             readOnly={!state.isEditable}
                         />
                     </div>
-                    <div className="flex items-center justify-between text-sm ">
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
                         <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
                             {t('reference:referral:referrer')}
                         </span>
-                        <div className="flex itmes-center space-x-2 pr-3">
-                            <span>{state.user?.referral_username}</span>
+                        <div className="flex items-center pr-3 xl:pr-0">
+                            <input
+                                value={state.user?.referral_username}
+                                readOnly={true}
+                                className={`text-right ${!user?.referal_id ? 'pr-2 xl:ml-4' : 'xl:ml-9'} xl:text-right`}
+                            />
                             {!user?.referal_id && <EditIcon onClick={() => setShowRefModal(true)} className="cursor-pointer" />}
                         </div>
                     </div>
