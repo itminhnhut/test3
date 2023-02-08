@@ -26,11 +26,15 @@ const RefModal = ({ onClose }) => {
     };
 
     useEffect(() => {
-        if (refCode && refCode.length >= 6) {
+        if (refCode) {
             clearTimeout(timer.current);
             setLoading(true);
             timer.current = setTimeout(() => {
-                checkRef(refCode);
+                if (refCode.length >= 6) {
+                    checkRef(refCode);
+                } else {
+                    setError(true);
+                }
             }, 500);
         }
     }, [refCode]);
@@ -106,7 +110,9 @@ const RefModal = ({ onClose }) => {
                         </span>
                     )}
                 </div>
-                {error && <div className="text-red text-xs absolute bottom-0">{t('reference:referral:addref_error_2')}</div>}
+                {error && (
+                    <div className="text-red text-xs absolute bottom-0">{refCode.length < 6 ? t('profile:ref_error_format') : t('profile:ref_error')}</div>
+                )}
             </div>
             <Button
                 disabled={refCode.length < 6 || error || loading}
