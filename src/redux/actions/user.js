@@ -110,13 +110,16 @@ export function refreshToken() {
         }
     };
 }
-export function getMe() {
+export function getMe(resetCache = false) {
     return async (dispatch) => {
         try {
             const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
                     method: 'GET'
+                },
+                params: {
+                    resetCache
                 }
             });
             if (status === 'ok') {
