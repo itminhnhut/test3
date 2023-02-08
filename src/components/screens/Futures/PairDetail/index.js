@@ -473,7 +473,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                             <div className="relative z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">
                                 {t('futures:tp_sl:perpetual')}
                             </div>
-                            <div className="absolute left-0 z-30 block group-hover:block top-full" ref={pairListModalRef}>
+                            <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
                                 <FuturesPairList
                                     mode={pairListMode}
                                     setMode={setPairListMode}

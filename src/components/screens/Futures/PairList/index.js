@@ -91,7 +91,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     return (
         <div
             className={`${
-                !activePairList ? '' : ''
+                !activePairList ? 'hidden' : ''
             } py-4 min-w-[400px] bg-bgTabInactive dark:bg-bgTabInactive-dark dark:border border-divider dark:border-divider-dark drop-shadow-onlyLight rounded-md ${className}`}
         >
             <div className="max-h-[300px] flex flex-col">
