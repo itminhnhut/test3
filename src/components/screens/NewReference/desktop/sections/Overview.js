@@ -116,7 +116,6 @@ const Overview = ({
         5: t('reference:referral.diamond')
     };
 
-<<<<<<< HEAD
     const refLink = data?.defaultRefCode?.code ? 'https://nami.exchange/ref/' + data?.defaultRefCode?.code : '---';
     const policyLink = language === 'vi' ? policyLinkVI : policyLinkEN;
 
@@ -130,46 +129,6 @@ const Overview = ({
                 }}
             >
                 <div className='py-20 container h-full'
-=======
-    const policyLink =
-        language === 'vi'
-            ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-co-che-gioi-thieu-moi-tren-nami-exchange'
-            : 'https://nami.exchange/support/announcement/nami-news/officially-apply-the-new-referral-mechanism-on-nami-exchange';
-
-    return (
-        <div
-            className="p-20 w-full h-auto"
-            style={{
-                backgroundImage: `url('${getS3Url('/images/reference/background_desktop.png')}')`,
-                backgroundSize: 'cover'
-            }}
-        >
-            {showInvite && <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code} />}
-            {showRef && <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1} defaultRef={data?.defaultRefCode?.code} />}
-            {showRegisterPartner ? (
-                <RegisterPartnerModal
-                    isDesktop
-                    setIsPartner={setIsPartner}
-                    t={t}
-                    kyc={kyc}
-                    user={user}
-                    isShow={showRegisterPartner}
-                    onClose={() => setShowRegisterPartner(false)}
-                />
-            ) : null}
-            <div className={classNames('font-semibold leading-[80px] text-[60px] text-gray-4')}>
-                {t('reference:referral.introduce1')} <br />
-                {t('reference:referral.introduce2')}
-            </div>
-            <div className="font-normal text-[20px] leading-[30px] text-gray-6 mt-6 tracking-wide max-w-[800px] mr-[300px]">
-                {t('reference:referral.introduce3')}
-            </div>
-            <div className="font-normal text-[20px] leading-[30px] text-gray-6 mt-6 tracking-wide">
-                {t('reference:referral.readmore')}{' '}
-                <a
-                    href={policyLink}
-                    target={'_blank'}
->>>>>>> 88ade77d (fix ref term)
                 >
                     <ModalShareRefCode t={t} code={data?.defaultRefCode?.code} open={openShareModal}
                                        onClose={() => setOpenShareModal(false)} />
