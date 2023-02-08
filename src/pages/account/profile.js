@@ -739,16 +739,17 @@ const AccountProfile = () => {
     }, [language]);
 
     useEffect(() => {
-        user && setState({
-            user: {
-                name: user?.name || '--',
-                username: user?.username || '--',
-                phone: user?.phone || '--',
-                email: user?.email || '--',
-                namiId: user?.code || '--',
-                referral_username: user?.referral_username ?? '_'
-            }
-        });
+        user &&
+            setState({
+                user: {
+                    name: user?.name || '--',
+                    username: user?.username || '--',
+                    phone: user?.phone || '--',
+                    email: user?.email || '--',
+                    namiId: user?.code || '--',
+                    referral_username: user?.referral_username ?? t('profile:ref_title')
+                }
+            });
     }, [user]);
 
     // useEffect(() => {
