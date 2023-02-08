@@ -51,7 +51,7 @@ const AnnouncementTopics = (props) => {
                 setData(articles);
                 setTotal(articles.meta?.pagination?.total);
             });
-    }, [page]);
+    }, [page, router?.query?.topic, language]);
 
     const renderPagination = useCallback(() => {
         if (!total) return null;

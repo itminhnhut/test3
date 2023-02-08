@@ -84,7 +84,7 @@ const Support = () => {
                         PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
                     }>
-                        <div className='flex gap-4 sm:p-4 w-[280px] h-[48px] sm:h-[68px] items-center hover:!bg-hover-dark rounded-xl text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
+                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover-dark rounded-xl text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
                             <Image
                                 src={getSupportCategoryIcons(faq.id)}
                                 width={isMobile ? 24 : 36}

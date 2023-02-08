@@ -458,6 +458,9 @@ module.exports = {
             cursor: {
                 grabbing: 'grabbing',
             },
+            transitionProperty: {
+                'height': 'height',
+            },
         },
     },
     variants: {

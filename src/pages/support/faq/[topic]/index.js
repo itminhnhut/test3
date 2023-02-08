@@ -15,6 +15,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import dynamic from 'next/dynamic';
 import { useMemo } from 'react';
+import useWindowSize from 'hooks/useWindowSize';
 
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
@@ -25,14 +26,14 @@ const FaqTopics = (props) => {
     const [page, setPage] = useState(1);
     const [articles, setArticles] = useState([]);
     const [total, setTotal] = useState(0);
-    const [search, setSearch] = useState('');
-
     const router = useRouter()
     const isApp = useApp()
     const {
         t,
         i18n: { language },
     } = useTranslation()
+    const { width } = useWindowSize
+    const isMobile = width < 640
     const cats =
         SupportCategories.faq[language]?.find(
             (o) => o.displaySlug === router?.query?.topic
@@ -49,7 +50,8 @@ const FaqTopics = (props) => {
                 setArticles(articles);
                 setTotal(articles.meta?.pagination?.total);
             });
-    }, [page, router]);
+    }, [page, router?.query?.topic, language]);
+
 
     const renderGroup = () => {
         return (
@@ -69,11 +71,11 @@ const FaqTopics = (props) => {
                     <div
                         key={item.id}
                         title={item.title}
-                        className={classNames('w-full h-[76px] bg-darkBlue-3 rounded-md flex items-center cursor-pointer', {
+                        className={classNames('w-full h-[52px] sm:h-[76px] bg-darkBlue-3 rounded-md flex items-center cursor-pointer', {
                             '!bg-hover': item.displaySlug === router?.query?.group
                         })}
                     >
-                        <a className='truncate block text-gray-4 font-medium text-xl px-6'>
+                        <a className='truncate block text-gray-4 font-normal text-sm sm:font-medium sm:text-xl px-6'>
                             {item?.title}
                         </a>
                     </div>
@@ -208,27 +210,31 @@ const FaqTopics = (props) => {
                 mode='faq'
                 faqCurrentGroup={currentGroup}
             >
-                <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
-                    {SupportCategories.faq[language]?.find(
-                        (o) => o.displaySlug === router?.query?.topic
-                    )?.title}
+                <div className='text-gray-4 font-semibold text-base sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-8 cursor-pointer'>
+                    <Link href='/support/faq/account-functions'>
+                        <a>
+                            {SupportCategories.faq[language]?.find(
+                                (o) => o.displaySlug === router?.query?.topic
+                            )?.title}
+                        </a>
+                    </Link>
                 </div>
                 {cats.length ? <div
-                    className={classNames('grid w-full gap-4 mb-20', {
-                        'mb-4 md:mb-6': !!cats.length && !!!currentGroup,
+                    className={classNames('flex flex-col sm:grid w-full gap-4 mb-12 sm:mb-20', {
+                        // '': !!cats.length && !!!currentGroup,
                     })}
                     style={{
-                        gridTemplateColumns: "repeat(auto-fill, 280px)",
+                        gridTemplateColumns: isMobile ? null : "repeat(auto-fill, 280px)",
                     }}
                 >
                     {renderGroup()}
                 </div> : null}
-                {(currentGroup && articles && articles.length) ? <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
+                {(currentGroup && articles && articles.length) ? <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
                     {t('common:related_posts')}
                 </div> : null}
                 <div className=''>{renderGroupArticles}</div>
                 {!!cats.length && !!articles?.length && !!!currentGroup && (
-                    <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-8'>
+                    <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
                         {t('support-center:lasted_articles')}
                     </div>
                 )}
