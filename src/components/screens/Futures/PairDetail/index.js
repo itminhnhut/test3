@@ -19,7 +19,8 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import useDarkMode from 'hooks/useDarkMode';
 import ModalV2 from 'components/common/V2/ModalV2';
-import SvgChevronDown from 'components/svg/ChevronDown';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -91,14 +92,14 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[18px] leading-6 font-semibold text-dominant text-right'
+                ? 'text-[22px] leading-[30px] text-namiv2-green font-semibold text-right'
                 : 'ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide';
             return (
                 <div
                     ref={lastPriceRef}
                     style={{ minWidth: lastPriceMinW }}
                     className={classNames(className, {
-                        '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
+                        '!text-namiv2-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
                 >
                     {formatNumber(
@@ -183,6 +184,40 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     //         // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + symbol);
     //     };
     // }, [currentSelectedPair]);
+
+    const renderFundingFee = useCallback(() => {
+        const { key, code, localized: localizedPath, icon } = PAIR_PRICE_DETAIL_ITEMS[0];
+
+        let minWidth = itemsPriceMinW || 0;
+
+        let localized = t(localizedPath);
+        const titleFundingFee = 'funding-fee-tooltip';
+        const idFundingFee = 'funding-fee-id';
+
+        return (
+            <div style={{ minWidth: minWidth || 0 }}>
+                <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
+                    <span onClick={onClickFunding} className="border-b border-darkBlue-5 border-dashed cursor-pointer">
+                        Funding / {t('futures:countdown')}
+                    </span>
+                </div>
+                <div className="text-base font-semibold mt-2">
+                    1<span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
+                    <Countdown
+                        now={() => (timesync ? timesync.now() : Date.now())}
+                        date={pairPrice?.fundingTime}
+                        renderer={({ hours, minutes, seconds }) => {
+                            return (
+                                <span>
+                                    {hours}:{minutes}:{seconds}
+                                </span>
+                            );
+                        }}
+                    />
+                </div>
+            </div>
+        );
+    }, [pairPrice, itemsPriceMinW, pricePrecision, isVndcFutures]);
 
     const renderPairPriceItems = useCallback(() => {
         return PAIR_PRICE_DETAIL_ITEMS.map((detail) => {
@@ -384,29 +419,24 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         const renderInformation = (data) => {
             return data.map(({ title, tooltip, leftPercent }, index) => (
                 <div key={'title' + title} className="py-[8px] flex  w-full w-100">
-                    <Tooltip
-                        id={title}
-                        place="top"
-                        effect="solid"
-                        className="!bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2"
-                        backgroundColor="bg-darkBlue-4"
-                    >
+                    <Tooltip id={title} place="right" effect="solid" isV3>
                         <div>
                             <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
                             <div className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                         </div>
                     </Tooltip>
-                    <Row>
-                        <div className={`flex items-center text-sm font-medium leading-6 text-left  dark:text-txtDarkBlue `}>
+                    {/* Each row */}
+                    <div className="flex items-center justify-between w-full">
+                        <span
+                            data-tip=""
+                            data-for={title}
+                            id={tooltip}
+                            className="flex items-end text-base text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-darkBlue-5"
+                        >
                             {t('futures:' + title)}
-                            <div className="flex px-2" data-tip="" data-for={title} id={tooltip}>
-                                {/* <img src={getS3Url("/images/nao/ic_info.png")} height={"10"} width={"10"} alt="" className="mx-auto" /> */}
-                                <img src={getS3Url('/images/nao/ic_info.png')} height={14} width={14} />
-                            </div>
-                        </div>
-                        <Span>{renderContent(title)}</Span>
-                    </Row>
-                    {/* <div className="divide-y divide-[#36445A]"></div> */}
+                        </span>
+                        <span className="font-medium text-darkBlue dark:text-white leading-[22px] text-sm text-right ">{renderContent(title)}</span>
+                    </div>
                 </div>
             ));
         };
@@ -422,58 +452,25 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 <div className="mt-6 gap-6 flex">
                     <div className="w-full rounded-md border dark:border-divider-dark p-4 dark:bg-bgInput-dark flex justify-between">
                         <div
-                            className="relative cursor-pointer group max-w-[100px]"
+                            className="relative cursor-pointer group"
                             onMouseOver={() => setIsShowModalPriceList(true)}
                             onMouseLeave={() => setIsShowModalPriceList(false)}
                         >
-                            <div className="relative z-10 flex items-center text-lg font-bold leading-6 ">
-                                {currentExchangeConfig?.config?.baseAsset
-                                    ? currentExchangeConfig?.config?.baseAsset + '/' + currentExchangeConfig?.config?.quoteAsset
-                                    : '-/-'}
-                                <SvgChevronDown
-                                    size={32}
-                                    // className={classNames('mt-1 ml-2 transition-transform duration-75', {
-                                    //     'rotate-180': isShowModalPriceList
-                                    // })}
-                                />
-                            </div>
-                            <div className="relative z-10 text-xs font-medium leading-5 text-txtSecondary dark:text-txtSecondary-dark">
-                                {t('futures:tp_sl:perpetual')}
-                            </div>
-                            <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
-                                <FuturesPairList
-                                    mode={pairListMode}
-                                    setMode={setPairListMode}
-                                    isAuth={isAuth}
-                                    activePairList={isShowModalPriceList}
-                                    onSelectPair={onSelectPair}
-                                />
-                            </div>
-                        </div>{' '}
-                        <div>Hello</div>
-                    </div>
-                    <div className="max-w-[216px] min-w-[216px] rounded-md py-4 px-3 border border-dashed dark:border-divider-dark"></div>
-                </div>
-                <div className={'pb-[16px] pt-[24px] relative flex justify-between'}>
-                    {/* Select */}
-                    <div className="flex-1">
-                        <div
-                            className="relative cursor-pointer group max-w-[100px]"
-                            onMouseOver={() => setIsShowModalPriceList(true)}
-                            onMouseLeave={() => setIsShowModalPriceList(false)}
-                        >
-                            <div className="relative z-10 flex items-center text-lg font-bold leading-6 ">
-                                {currentExchangeConfig?.config?.baseAsset
-                                    ? currentExchangeConfig?.config?.baseAsset + '/' + currentExchangeConfig?.config?.quoteAsset
-                                    : '-/-'}
-                                <ChevronDown
+                            <div className="relative z-10 flex items-center">
+                                <span className="text-[22px] font-semibold leading-[30px]">
+                                    {currentExchangeConfig?.config?.baseAsset
+                                        ? currentExchangeConfig?.config?.baseAsset + '/' + currentExchangeConfig?.config?.quoteAsset
+                                        : '-/-'}
+                                </span>
+                                <ArrowDropDownIcon
+                                    isFilled
                                     size={16}
-                                    className={classNames('mt-1 ml-2 transition-transform duration-75', {
+                                    className={classNames('transition-transform duration-75', {
                                         'rotate-180': isShowModalPriceList
                                     })}
                                 />
                             </div>
-                            <div className="relative z-10 text-xs font-medium leading-5 text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="relative z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">
                                 {t('futures:tp_sl:perpetual')}
                             </div>
                             <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
@@ -486,101 +483,30 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div className="flex flex-col items-end justify-end flex-1">
-                        {renderLastPrice(true)}
-                        <div
-                            className={classNames('text-dominant text-xs ', {
-                                '!text-red': priceFromMarketWatch?.priceChangePercent < 0
-                            })}
-                        >
-                            {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
+                        <div className="flex flex-col items-end justify-end flex-1">
+                            {renderLastPrice(true)}
+                            <div
+                                className={classNames('text-namiv2-green text-sm mt-2', {
+                                    '!text-namiv2-red': priceFromMarketWatch?.priceChangePercent < 0
+                                })}
+                            >
+                                {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
+                            </div>
                         </div>
                     </div>
+                    {/* Funding fee */}
+                    <div className="max-w-[216px] min-w-[216px] rounded-md py-4 px-3 border border-dashed dark:border-divider-dark">{renderFundingFee()}</div>
                 </div>
 
-                <div className="w-full h-[1px] bg-divider dark:bg-divider-dark mb-[16px]"></div>
-
-                <div className={'flex w-full'}>
-                    <div className={'flex flex-1 flex-col pr-4'}>{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
-                    <div className={'flex flex-1 flex-col pl-4'}>{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
+                <div className="mt-8 flex w-full">
+                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
+                    <div className="flex flex-1 flex-col pl-4">{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
                 </div>
-                <div
-                    onClick={onViewAll}
-                    className="text-sm h-11 rounded-md bg-teal text-white w-full mt-6 flex items-center justify-center font-medium cursor-pointer"
-                >
+
+                <ButtonV2 onClick={onViewAll} className="mt-10 ">
                     {t('futures:view_all_trading_rule')}
-                </div>
+                </ButtonV2>
             </ModalV2>
-        );
-
-        return (
-            <Modal isVisible={isShowModalInfo} onBackdropCb={() => setIsShowModalInfo(false)} containerClassName={'w-[650px]'}>
-                <div className={'px-1 flex justify-between w-full'}>
-                    <p className={'leading-6 text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold'}>{t('futures:trading_rules')}</p>
-                    <X onClick={() => handleToggleModalInfo(false)} size={16} strokeWidth={1.2} className="cursor-pointer text-darkBlue dark:text-darkBlue-5" />
-                </div>
-
-                <div className="w-full h-[1px] bg-divider dark:bg-divider-dark"></div>
-
-                <div className={'pb-[16px] pt-[24px] relative flex justify-between'}>
-                    {/* Select */}
-                    <div className="flex-1">
-                        <div
-                            className="relative cursor-pointer group max-w-[100px]"
-                            onMouseOver={() => setIsShowModalPriceList(true)}
-                            onMouseLeave={() => setIsShowModalPriceList(false)}
-                        >
-                            <div className="relative z-10 flex items-center text-lg font-bold leading-6 ">
-                                {currentExchangeConfig?.config?.baseAsset
-                                    ? currentExchangeConfig?.config?.baseAsset + '/' + currentExchangeConfig?.config?.quoteAsset
-                                    : '-/-'}
-                                <ChevronDown
-                                    size={16}
-                                    className={classNames('mt-1 ml-2 transition-transform duration-75', {
-                                        'rotate-180': isShowModalPriceList
-                                    })}
-                                />
-                            </div>
-                            <div className="relative z-10 text-xs font-medium leading-5 text-txtSecondary dark:text-txtSecondary-dark">
-                                {t('futures:tp_sl:perpetual')}
-                            </div>
-                            <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
-                                <FuturesPairList
-                                    mode={pairListMode}
-                                    setMode={setPairListMode}
-                                    isAuth={isAuth}
-                                    activePairList={isShowModalPriceList}
-                                    onSelectPair={onSelectPair}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-end justify-end flex-1">
-                        {renderLastPrice(true)}
-                        <div
-                            className={classNames('text-dominant text-xs ', {
-                                '!text-red': priceFromMarketWatch?.priceChangePercent < 0
-                            })}
-                        >
-                            {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
-                        </div>
-                    </div>
-                </div>
-
-                <div className="w-full h-[1px] bg-divider dark:bg-divider-dark mb-[16px]"></div>
-
-                <div className={'flex w-full'}>
-                    <div className={'flex flex-1 flex-col pr-4'}>{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
-                    <div className={'flex flex-1 flex-col pl-4'}>{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
-                </div>
-                <div
-                    onClick={onViewAll}
-                    className="text-sm h-11 rounded-md bg-teal text-white w-full mt-6 flex items-center justify-center font-medium cursor-pointer"
-                >
-                    {t('futures:view_all_trading_rule')}
-                </div>
-            </Modal>
         );
     };
 
@@ -667,7 +593,8 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
             {/* <div className="cursor-pointer min-w-[10px]" onClick={() => setShowModal(true)}>
                 <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
             </div> */}
-            <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]">
+            <ModalV2 className="!max-w-[342px]" isVisible={visible} onBackdropCb={onClose}>
+                {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
                 <div className="font-semibold">{isFunding ? 'Funding' : t('futures:countdown')}</div>
                 <div className="text-gray4 text-sm pt-4">
                     {' '}
@@ -686,7 +613,7 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
                         {t('futures:funding_history')}
                     </div>
                 )}
-            </Modal>
+            </ModalV2>
         </>
     );
 };
