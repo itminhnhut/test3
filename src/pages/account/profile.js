@@ -374,7 +374,7 @@ const AccountProfile = () => {
                                 readOnly={true}
                                 className={`text-right ${!user?.referal_id ? 'pr-2 xl:ml-4' : 'xl:ml-9'} xl:text-right`}
                             />
-                            {!user?.referal_id && <EditIcon onClick={() => setShowRefModal(true)} className="cursor-pointer" />}
+                            {user?.referal_id && <EditIcon onClick={() => setShowRefModal(true)} className="cursor-pointer" />}
                         </div>
                     </div>
                 </div>

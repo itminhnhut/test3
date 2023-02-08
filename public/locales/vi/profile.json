@@ -84,5 +84,7 @@
     "initializing_avatar": "Thiết lập ảnh đại diện",
     "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này.",
     "ref_placeholder": "Nhập mã giới thiệu",
-    "ref_success": "Chức mừng, bạn đã gắn mã giới thiệu {{value}} thành công"
+    "ref_success": "Chức mừng, bạn đã gắn mã giới thiệu {{value}} thành công",
+    "ref_error": "Mã giới thiệu không đúng",
+    "ref_error_format": "Mã giới thiệu chưa đúng định dạng"
 }

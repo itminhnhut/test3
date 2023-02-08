@@ -85,5 +85,7 @@
     "initializing_avatar": "Initializing avatar",
     "updated_avatar": "Updated avatar, you can close this window now.",
     "ref_placeholder": "Enter referral code",
-    "ref_success": "Congrats, you inserted referral code {{value}} successfully"
+    "ref_success": "Congrats, you inserted referral code {{value}} successfully",
+    "ref_error": "Invalid referral code",
+    "ref_error_format": "The Referral ID is incorrectly formatted"
 }
