@@ -7,6 +7,8 @@ import { reloadData } from 'redux/actions/heath';
 import { useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 
+const term = []
+
 const Terms = () => {
     const { width } = useWindowSize();
     const dispath = useDispatch();

@@ -119,7 +119,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                         <div
                                             className={classNames(
                                                 'px-3 py-1 rounded-[100px] font-normal text-xs flex items-center',
-                                                data.status ? 'text-namiv2-green-1 bg-namiv2-green-1 bg-opacity-10' : 'text-gray-7 bg-namiv2-black-4 bg-opacity-50'
+                                                data.status ? 'text-teal bg-teal bg-opacity-10' : 'text-gray-7 bg-shadow-4 bg-opacity-50'
                                             )}
                                         >
                                             {data.status ? <CheckIcon className={'mr-1'} /> : null}
@@ -130,7 +130,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                 <div className="mt-3 font-medium leading-5 flex flex-col gap-2">
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-gray-7 text-xs ">{t('reference:referral.you_friends_get')}</div>
-                                        <div className="text-namiv2-green-1 text-sm">
+                                        <div className="text-teal text-sm">
                                             {(100 - data.remunerationRate)}% / {data.remunerationRate}%
                                         </div>
                                     </div>
@@ -173,13 +173,13 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                     )}
                 </Container>
                 <div
-                    className="h-[116px] z-20 bg-namiv2-black w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0 border-t-[1px] border-namiv2-black-4"
+                    className="h-[116px] z-20 bg-shadow w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0 border-t-[1px] border-shadow-4"
                     style={{
                         boxShadow: '0 -7px 23px 0 rgba(0, 0, 0, 0.05)'
                     }}
                 >
                     <div
-                        className={classNames('h-11 bg-namiv2-green-1 rounded-md w-full flex items-center justify-center text-white font-semibold text-sm', {
+                        className={classNames('h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm', {
                             '!bg-gray-3': refs.length >= 20
                         })}
                         onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}

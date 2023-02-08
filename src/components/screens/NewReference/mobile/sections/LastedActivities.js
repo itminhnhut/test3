@@ -99,7 +99,7 @@ const LastedActivities = () => {
                                 <div className='text-gray-6'>
                                     {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
-                                <div className='text-namiv2-green-1'>
+                                <div className='text-teal'>
                                     +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>

@@ -42,7 +42,7 @@ const Info = ({ data }) => {
                             {data?.name ?? t('common:unknown')}
                         </div>
                         <div className='font-medium text-xs text-gray-1 uppercase'>
-                            {t('reference:referral.ranking')}: <span className='text-namiv2-green font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
+                            {t('reference:referral.ranking')}: <span className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '1']}</span>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ const Info = ({ data }) => {
                             {data?.rank !== 5 ? t('reference:referral.next_level') : null}
                         </div>
                     </div>
-                    <div className='w-full bg-namiv2-black-2 flex'>
+                    <div className='w-full bg-hover-dark flex'>
                         <Progressbar
                             background={colors.namiv2.green[2]}
                             percent={
@@ -76,7 +76,7 @@ const Info = ({ data }) => {
                         />
                     </div>
                     <div className='w-full flex flex-col'>
-                        <div className='w-full flex justify-between font-medium text-xs text-namiv2-green-2'>
+                        <div className='w-full flex justify-between font-medium text-xs text-green-1'>
                             <div>
                                 Spot: {formatter.format(data?.volume?.current?.spot)} USDT
                             </div>
@@ -85,7 +85,7 @@ const Info = ({ data }) => {
                             </div> : null}
 
                         </div>
-                        <div className='w-full flex justify-between font-medium text-xs text-namiv2-green-1'>
+                        <div className='w-full flex justify-between font-medium text-xs text-teal'>
                             <div>
                                 Futures: {formatter.format(data?.volume?.current?.futures)} USDT
                             </div>
@@ -94,7 +94,7 @@ const Info = ({ data }) => {
                             </div> : null}
                         </div>
                     </div>
-                    <div className='mt-6 text-center leading-6 font-medium text-sm text-namiv2-green-1 underline cursor-pointer'
+                    <div className='mt-6 text-center leading-6 font-medium text-sm text-teal underline cursor-pointer'
                         onClick={() => setShowRef(true)}
                     >
                         {t('reference:referral.referral_code_management')}

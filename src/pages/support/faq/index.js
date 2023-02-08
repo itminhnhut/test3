@@ -16,6 +16,8 @@ import useApp from 'hooks/useApp';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import { useDispatch } from 'react-redux';
 import { reloadData } from 'redux/actions/heath';
+import SearchSection from 'components/screens/Support/SearchSection';
+import useWindowSize from 'hooks/useWindowSize';
 
 const SupportAnnouncement = () => {
     const [theme ,, setTheme] = useDarkMode()
@@ -29,6 +31,8 @@ const SupportAnnouncement = () => {
         i18n: { language }
     } = useTranslation()
     const isApp = useApp()
+
+    const { width } = useWindowSize()
 
     useEffect(() => {
         // document.body.classList.add('hidden-scrollbar');
@@ -125,10 +129,10 @@ const SupportAnnouncement = () => {
                     pathname: PATHS.SUPPORT.FAQ + '/[topic]/[articles]',
                     query: appUrlHandler({ topic, articles: article.slug }, isApp)
                 }}>
-                    <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8">
+                    <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8 pr-2">
                         {article.title}
                         {' '}<span
-                        className="text-[10px] lg:text-xs text-txtSecondary text-txtSecondary-dark whitespace-nowrap">
+                        className="text-[10px] lg:text-xs text-txtSecondary whitespace-nowrap">
                         {formatTime(article.created_at, 'dd-MM-yyyy')}
                     </span>
                     </a>
@@ -156,7 +160,7 @@ const SupportAnnouncement = () => {
 
     return (
         <MaldivesLayout>
-            <SupportBanner title={t('support-center:title')} innerClassNames="container" href={PATHS.SUPPORT.DEFAULT}/>
+            <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_faq.png')`} />
             <div style={
                 theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
                  className="px-4 py-5 sm:px-6 lg:px-[48px] lg:py-[50px] rounded-t-[20px]">

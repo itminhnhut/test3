@@ -12,6 +12,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useCallback, useEffect, useState } from 'react';
 // import RePagination from 'components/common/ReTable/RePagination';
 import dynamic from 'next/dynamic';
+import useWindowSize from 'hooks/useWindowSize';
 
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
@@ -26,7 +27,9 @@ const AnnouncementTopics = (props) => {
     const [page, setPage] = useState(1);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
-    const [search, setSearch] = useState('');
+
+    const { width } = useWindowSize()
+    const isMobile = width < 640
 
     useEffect(() => {
         const themeLocal = localStorage.getItem('theme');
@@ -79,11 +82,20 @@ const AnnouncementTopics = (props) => {
                 }
                 key={item.uuid}
             >
-                <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
-                    {item?.title}{' '}
-                    <span className="text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark">
-                        {formatTime(item.created_at, 'dd-MM-yyyy')}
-                    </span>
+                <a className="block mb-6 hover:text-teal">
+                    <div className='flex w-full gap-6 items-center'>
+                        <img className='rounded-xl h-[70px] sm:h-[130px]' src={item?.feature_image} style={{
+                            aspectRatio: isMobile ? '2/1' : '25/13'
+                        }} />
+                        <div className='h-full gap-6 flex flex-col justify-center'>
+                            <div className='line-clamp-2 sm:line-clamp-4 text-gray-4 font-semibold text-sm sm:font-medium sm:text-xl'>
+                                {item?.title}{' '}
+                            </div>
+                            {isMobile ? null : <div className='line-clamp-2 text-darkBlue-5 font-semibold text-sm sm:font-normal sm:text-sm'>
+                                {item?.excerpt}
+                            </div>}
+                        </div>
+                    </div>
                 </a>
             </Link>
         ));
@@ -99,7 +111,7 @@ const AnnouncementTopics = (props) => {
                 onClick={router?.back}
                 className="active:text-dominant flex items-center px-4 pt-4 pb-2 text-sm font-medium"
             >
-                <ChevronLeft size={16} className="mr-2.5"/>
+                <ChevronLeft size={16} className="mr-2.5" />
                 {topic}
                 {topic && ' | '}
                 Nami FAQ

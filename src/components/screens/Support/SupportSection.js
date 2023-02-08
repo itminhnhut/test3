@@ -4,12 +4,13 @@ import Link from 'next/link';
 import useApp from 'hooks/useApp';
 
 const SupportSection = ({
-                            mode,
-                            title,
-                            children,
-                            containerClassNames = '',
-                            contentContainerClassName = ''
-                        }) => {
+    mode,
+    title,
+    children,
+    containerClassNames = '',
+    contentContainerClassName = '',
+    isMobile = false
+}) => {
 
     let href
     if (mode !== undefined) {
@@ -20,20 +21,26 @@ const SupportSection = ({
     href = isApp ? href + '?source=app' : href
 
     return (
-        <div className={classNames('lg:bg-bgPrimary dark:bg-bgPrimary-dark lg:rounded-xl', containerClassNames)}>
-            {title && <div
-                className="font-bold text-[16px] lg:text-[18px] lg:px-[28px] lg:pb-3 pt-5 lg:border-b lg:border-divider lg:dark:border-divider-dark">
-                {href ? <Link href={href}>
-                        <a className={classNames({ 'hover:text-dominant hover:!underline': !!href })}>
+        <div className={classNames('', containerClassNames)}>
+            {title &&
+                <div
+                    className="text-gray-4 text-base font-semibold sm:text-[32px] sm:leading-[38px] cursor-pointer">
+                    {href ? <Link href={href}>
+                        <a className="">
                             {title}
                         </a>
                     </Link>
-                    : <div className="">
-                        {title}
-                    </div>}
-            </div>}
+                        : <div className="">
+                            {title}
+                        </div>}
+                </div>
+            }
             {children && <div
-                className={'mt-4 lg:mt-0 lg:pt-[10px] lg:px-[28px] md:flex md:start md:flex-wrap lg:-mx-1.5 ' + contentContainerClassName}>
+                className={classNames('flex flex-col sm:grid justify-between gap-4 sm:gap-6', contentContainerClassName)}
+                style={{
+                    gridTemplateColumns: isMobile ? "repeat(auto-fill, 170px)" : "repeat(auto-fill, 286px)",
+                }}
+            >
                 {children}
             </div>}
         </div>

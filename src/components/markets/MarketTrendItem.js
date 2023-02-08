@@ -52,7 +52,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
             <a style={{...style}}>
-                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-namiv2-green !bg-namiv2-black-1 text-namiv2-gray-1">
+                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-teal !bg-darkBlue-3 text-darkBlue-5">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             {(!pair) ?
@@ -69,7 +69,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                                 {(!pair) ?
                                     <Skeletor width={100}/>
                                     : <>
-                                        <span className="text-namiv2-gray-2">{_?.baseAsset}</span>/{_?.quoteAsset}
+                                        <span className="text-gray-4">{_?.baseAsset}</span>/{_?.quoteAsset}
                                     </>}
                             </div>
                         </div>
@@ -78,8 +78,8 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                         </div>
                     </div>
                     <div className="mt-4 flex items-center justify-between">
-                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-namiv2-green'
-                            : 'text-[20px] 2xl:text-[24px] font-medium text-namiv2-red'}>
+                        <div className={_?.up ? 'text-[20px] 2xl:text-[24px] font-medium text-teal'
+                            : 'text-[20px] 2xl:text-[24px] font-medium text-red'}>
                             {(!pair) ? <Skeletor width={65}/> : formatPrice(_.lastPrice)}
                         </div>
                         

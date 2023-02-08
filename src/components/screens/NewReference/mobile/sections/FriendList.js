@@ -188,8 +188,8 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                 </div>
                                                 <Tooltip id={'info' + data.code} place="top" data-offset="{'left': 16}" effect="solid" className={classNames('w-[calc(100vw-32px)] !left-4 !p-0', { '!mt-10': index === 0 })}>
                                                     <div className='w-full pt-6 pb-2 px-3 font-semibold text-base text-gray-6'>
-                                                        <div className='w-full rounded-md border-[1px] border-namiv2-green h-10 flex items-center justify-center'>
-                                                            <div className='absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-namiv2-black-1'>
+                                                        <div className='w-full rounded-md border-[1px] border-teal h-10 flex items-center justify-center'>
+                                                            <div className='absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-darkBlue-3'>
                                                                 Ref Code
                                                             </div>
                                                             <div className='font-semibold text-sm leading-6'>
@@ -197,7 +197,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                             </div>
                                                         </div>
                                                         <div className='mt-4'>
-                                                            <div className='text-namiv2-green-1 leading-6 font-semibold text-sm'>
+                                                            <div className='text-teal leading-6 font-semibold text-sm'>
                                                                 {t('reference:referral.direct_commissions_rate')}
                                                             </div>
                                                             <div className='font-medium text-xs flex flex-wrap'>
@@ -209,7 +209,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                             </div>
                                                         </div>
                                                         <div className='mt-4'>
-                                                            <div className='text-namiv2-green-1 leading-6 font-semibold text-sm'>
+                                                            <div className='text-teal leading-6 font-semibold text-sm'>
                                                                 {t('reference:referral.indirect_commissions_rate')}
                                                             </div>
                                                             <div className='font-medium text-xs flex flex-wrap'>
@@ -230,7 +230,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                         <div
                                             className={classNames(
                                                 'px-3 py-1 rounded-md font-normal text-xxs flex items-center',
-                                                data.kycStatus === 2 ? 'text-namiv2-green-1 bg-teal/[.05]' : 'text-gray-7 bg-gray-1/[.05]'
+                                                data.kycStatus === 2 ? 'text-teal bg-teal/[.05]' : 'text-gray-7 bg-gray-1/[.05]'
                                             )}
                                         >
                                             {data.kycStatus === 2 ? <CheckIcon className='mr-1' /> : null}
@@ -257,7 +257,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div>
                                                 <Tooltip id={'direct' + data.code} place="top" effect="solid" arrowColor='#fff'>
-                                                    <div className='text-xs !bg-namiv2-black-2 min-w-[120px] w-full'>
+                                                    <div className='text-xs !bg-hover-dark min-w-[120px] w-full'>
                                                         <div className='mb-2 font-semibold'>
                                                             {t('reference:referral.total_direct_commissions')}
                                                         </div>
@@ -269,7 +269,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-namiv2-green-1">
+                                            <div className="text-teal">
                                                 ~ {formatNumber(data?.directCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
@@ -292,7 +292,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-namiv2-green-1">
+                                            <div className="text-teal">
                                                 ~ {formatNumber(data?.undirectCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
@@ -337,11 +337,11 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.referral_date')}</div>
-                    <DatePicker isCalendar date={state.invitedAt} onChange={(e) => onChange('invitedAt', e)} wrapperClassname='bg-namiv2-black-2 text-gray-6 rounded-md' isnamiv2/>
+                    <DatePicker isCalendar date={state.invitedAt} onChange={(e) => onChange('invitedAt', e)} wrapperClassname='bg-hover-dark text-gray-6 rounded-md' isnamiv2/>
                 </div>
                 <div className="flex flex-col gap-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.total_commissions')}</div>
-                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} wrapperClassname='bg-namiv2-black-2 text-gray-6 rounded-md' isnamiv2/>
+                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} wrapperClassname='bg-hover-dark text-gray-6 rounded-md' isnamiv2/>
                 </div>
                 <div className="flex flex-col gap-3 font-medium text-sm leading-6 text-gray-1 mb-4">
                     <div>{t('reference:referral.status')}</div>
@@ -366,7 +366,7 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
     return (
         <ReactTooltip
             ref={ref}
-            className={classNames('!bg-namiv2-black-2 !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
+            className={classNames('!bg-hover-dark !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
             place={place}
             effect='solid'
             {...restProps}

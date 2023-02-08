@@ -481,31 +481,35 @@ export const SupportCategories = {
 export const getSupportCategoryIcons = (id) => {
     switch (id) {
         case CatsKey.AccountFunctions:
-            return '/images/screen/support/ic_user.png'
+            return '/images/screen/support/v2/ic_user.png'
         case CatsKey.Tutorial:
+            return '/images/screen/support/v2/ic_book.png'
         case CatsKey.NamiNews:
+            return '/images/screen/support/v2/ic_news.png'
         case CatsKey.Announcement:
+            return '/images/screen/support/v2/ic_noti.png'
         case CatsKey.Event:
-            return '/images/screen/support/ic_book.png'
+            return '/images/screen/support/v2/ic_event.png'
         case CatsKey.DepWdlCrypto:
-            return '/images/screen/support/ic_dollar.png'
+            return '/images/screen/support/v2/ic_dollar.png'
         case CatsKey.NamiToken:
-            return '/images/screen/support/ic_nami_token.png'
+            return '/images/screen/support/v2/ic_nami_token.png'
         case CatsKey.SpotTrading:
+            return '/images/screen/support/v2/ic_analytic.png'
         case CatsKey.TokenPrediction:
-            return '/images/screen/support/ic_analytic.png'
+            return '/images/screen/support/v2/ic_uptrend.png'
         case CatsKey.FuturesTrading:
-            return '/images/screen/support/ic_trend.png'
+            return '/images/screen/support/v2/ic_trend.png'
         case CatsKey.Swap:
         case CatsKey.NewTokenListing:
-            return '/images/screen/support/ic_duo_dollar.png'
+            return '/images/screen/support/v2/ic_dou_dollar.png'
         case CatsKey.Finance:
         case CatsKey.DailyStaking:
-            return '/images/screen/support/ic_wallet.png'
+            return '/images/screen/support/v2/ic_wallet.png'
         case CatsKey.Others:
-            return '/images/screen/support/ic_other.png'
+            return '/images/screen/support/v2/ic_other.png'
         case CatsKey.BusinessPartner:
-            return '/images/icon/ic_globe.png'
+            return '/images/screen/support/v2/ic_other.png'
     }
 }
 

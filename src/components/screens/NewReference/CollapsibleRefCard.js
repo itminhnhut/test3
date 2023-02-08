@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 const CollapsibleRefCard = ({ wrapperClassName = '', children, title, isTitle = true, isBlack = false }) => {
     return (
-        <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName, {'!bg-namiv2-black-1': isBlack, })}>
+        <div className={classNames('bg-white px-4 py-6 rounded-xl', wrapperClassName, {'!bg-darkBlue-3': isBlack, })}>
             {isTitle && (
                 <div className="text-base font-semibold leading-5 flex w-full justify-between items-center text-gray-6">
                     <div>{title}</div>

@@ -80,7 +80,7 @@ const SwapHistory = ({ width }) => {
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <p className="text-base text-namiv2-gray-1 mt-3">
+                    <p className="text-base text-darkBlue-5 mt-3">
                         <a href={getLoginUrl('sso', 'login')} className="text-teal font-semibold leading-6">
                             {t('common:sign_in')}{' '}
                         </a>

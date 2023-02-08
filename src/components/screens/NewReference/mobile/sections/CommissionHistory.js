@@ -248,7 +248,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-namiv2-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
+                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 0)} VNDC</div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
                                                 <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd hh:mm:ss')}</div>
@@ -275,7 +275,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
-                        className='!text-namiv2-green-1'
+                        className='!text-teal'
                         style={{
                             fontColor: colors.namiv2.green[1]
                         }}

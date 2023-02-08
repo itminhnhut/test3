@@ -32,7 +32,8 @@ const Market = () => {
         exchangeMarket: null,
         futuresMarket: null,
         tabLabelCount: null,
-        type: 1
+        favType: 0,
+        type: 0
     })
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
 
@@ -139,6 +140,15 @@ const Market = () => {
         await getTrending()
     }
 
+
+    const suggestedSymbols = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'LTC', 'DOT']
+    const suggested = useMemo(() => {
+        const q = subTab[state.subTabIndex].key.toUpperCase()
+        if (q === 'ALL') return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b))
+        return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
+    }, [state?.exchangeMarket, state.subTabIndex])
+
+
     // * Render Handler
     const renderMarketTable = useCallback(() => {
         return (
@@ -154,6 +164,8 @@ const Market = () => {
                 tabLabelCount={state.tabLabelCount}
                 type={state.type}
                 auth={auth}
+                suggestedSymbols={suggested}
+                favType={state.favType}
             />
         )
     }, [
@@ -177,38 +189,40 @@ const Market = () => {
     // Re-new api data
     useEffect(() => {
         let interval
-
         if (focused) {
             interval = setInterval(() => reNewHelper(state.tabIndex, state.subTabIndex), 2800)
         }
-
         return () => interval && clearInterval(interval)
     }, [state.tabIndex, state.subTabIndex, focused])
 
     useEffect(() => {
         let watch = []
         let convert = []
-
-        const asset = subTab[state.subTabIndex].key === 'usdt' ? 'USDT' : 'VNDC'
-
-
         if (state.exchangeMarket && state.futuresMarket) {
+            setState({ loading: true })
             convert = {
                 exchange: marketWatchToFavorite(state.favoriteList?.exchange, TRADING_MODE.EXCHANGE, state.exchangeMarket),
                 futures: marketWatchToFavorite(state.favoriteList?.futures, TRADING_MODE.FUTURES, state.futuresMarket, true)
             }
         }
-
         // Favorite data handling
         if (tab[state.tabIndex].key === 'favorite') {
-            if (favSubTab[state.subTabIndex]?.key === 'exchange') {
+            if (favSubTab[state.favType]?.key === 'exchange') {
                 // log.d('Tab Favorite - Exchange')
                 watch = convert?.exchange?.filter(e => e.q === asset)
             }
-            if (favSubTab[state.subTabIndex]?.key === 'futures') {
+            if (favSubTab[state.favType]?.key === 'futures') {
                 // log.d('Tab Favorite - Futures')
                 watch = convert?.futures?.filter(e => e.q === asset)
             }
+
+            if (subTab[state.subTabIndex].key === 'vndc') {
+                // log.d('Tab Exchange - VNDC')
+                watch = watch.filter(e => e.q === 'VNDC')
+            } else if (subTab[state.subTabIndex].key === 'usdt') {
+                // log.d('Tab Exchange - USDT')
+                watch = watch.filter(e => e.q === 'USDT')
+            } 
         }
 
         // Exchange data handling
@@ -238,6 +252,21 @@ const Market = () => {
                 watch = state?.futuresMarket
             }
         }
+
+        if (tab[state.tabIndex].key !== 'favorite')
+            switch (state.type) {
+                case 0:
+                    break;
+                case 'TOP_GAINER':
+                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) < 0 ? 1 : -1).slice(0,10)
+                    break;
+                case 'TOP_LOSER':
+                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) > 0 ? 1 : -1).slice(0,10)
+                    break;
+                default:
+                    watch = watch.filter(e => categories[state.type]?.includes(e.s))
+                    break;
+            }
 
         // Search data handling
         if (state.search) {
@@ -287,7 +316,7 @@ const Market = () => {
         }
 
         // Set watching data
-        setState({ watch })
+        setState({ watch, loading: false })
     }, [
         state.exchangeMarket,
         state.futuresMarket,
@@ -296,6 +325,7 @@ const Market = () => {
         state.subTabIndex,
         state.search,
         state.type,
+        state.favType
     ])
 
     // useEffect(() => {
@@ -317,7 +347,7 @@ const Market = () => {
 
     const renderContent = () => {
         return (
-            <div className="w-full h-full bg-namiv2-black pb-[120px]">
+            <div className="w-full h-full bg-shadow pb-[120px]">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend} />
                     {renderMarketTable()}

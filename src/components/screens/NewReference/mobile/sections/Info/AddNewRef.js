@@ -143,7 +143,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                 <div className='text-sm font-medium mt-3 text-gray-7'>
                     <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                 </div>
-                <div className='w-full h-11 flex justify-center items-center bg-namiv2-green-1 text-white font-semibold text-sm rounded-md mt-8'
+                <div className='w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-8'
                     onClick={() => {
                         setResultData({
                             isSucess: false,
@@ -188,7 +188,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.addref_title')}
-                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiv2-black-2 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
+                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
@@ -219,7 +219,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.note')}
-                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiv2-black-2 font-medium text-sm leading-6 gap-4'>
+                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='text-gray-6 font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -240,14 +240,14 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>
                     </div>
                     <div className='flex items-center gap-2 text-xs font-medium'>
-                        <input type="checkbox" id="setdefault123" className='bg-namiv2-green-1 rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
+                        <input type="checkbox" id="setdefault123" className='bg-teal rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
                             style={{
                                 outline: 'none'
                             }}
                         />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-namiv2-green-1 rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-namiv2-black-2 !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
+                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-hover-dark !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
                         onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}

@@ -64,7 +64,7 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                         `relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white w-auto`,
                         {
                             '!border-teal': showPicker,
-                            'bg-namiv2-black-2 border-none !rounded-md text-gray-6': isnamiv2
+                            'bg-hover-dark border-none !rounded-md text-gray-6': isnamiv2
                         },
                     )}
                 >

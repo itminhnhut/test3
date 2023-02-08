@@ -1,35 +1,32 @@
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import MCard from 'src/components/common/MCard';
 import colors from 'styles/colors';
 import Link from 'next/link';
-import AssetLogo from 'src/components/wallet/AssetLogo';
-import MarketLabel from 'src/components/common/MarketLabel';
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
-import RePagination from 'src/components/common/ReTable/RePagination';
+import AssetLogo from 'components/wallet/AssetLogo';
+import MarketLabel from 'components/common/MarketLabel';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import RePagination from 'components/common/ReTable/RePagination';
 import showNotification from 'utils/notificationService';
-import Empty from 'src/components/common/Empty';
-import NeedLogin from 'src/components/common/NeedLogin';
+import Empty from 'components/common/Empty';
+import NeedLogin from 'components/common/NeedLogin';
 import Skeletor from 'components/common/Skeletor';
-
-import { useCallback, useEffect, useState } from 'react';
-import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
-import { StarOutlined } from '@ant-design/icons';
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
+import { initMarketWatchItem, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
-import { IconStarFilled } from 'src/components/common/Icons';
+import { IconStarFilled } from 'components/common/Icons';
 import { Search, X } from 'react-feather';
 import { useWindowSize } from 'utils/customHooks';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { EMPTY_VALUE } from 'constants/constants';
-import { remove } from 'lodash';
+import _, { remove } from 'lodash';
 import { TRADING_MODE } from 'redux/actions/const';
 import { favoriteAction } from 'redux/actions/user';
 import { useSelector } from 'react-redux';
-import { PATHS } from 'constants/paths';
-
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
+import React from 'react';
+import { ScaleLoader } from 'react-spinners';
 
 const MARKET_ROW_LIMIT = 20;
 
@@ -119,8 +116,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-namiv2-gray-1 cursor-pointer flex items-center',
-                        { 'text-namiv2-gray-2 font-semibold': restProps.tabIndex === index }
+                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        { 'text-gray-4 font-semibold': restProps.tabIndex === index }
                     )}
                 >
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>
@@ -154,8 +151,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
                     className={
                         restProps.subTabIndex === index
-                            ? 'text-base font-semibold px-4 py-3 bg-namiv2-gray text-namiv2-gray-2 cursor-pointer select-none'
-                            : 'text-base font-semibold px-4 py-3 bg-namiv2-black text-namiv2-gray-1 cursor-pointer select-none'
+                            ? 'text-base font-semibold px-4 py-3 bg-dark-2 text-gray-4 cursor-pointer select-none'
+                            : 'text-base font-semibold px-4 py-3 bg-shadow text-darkBlue-5 cursor-pointer select-none'
                     }
                 >
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
@@ -163,6 +160,60 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             );
         });
     }, [restProps.subTabIndex, restProps.tabIndex]);
+
+    const renderSuggested = useMemo(() => {
+        let tradingMode = TRADING_MODE.EXCHANGE
+        if (favSubTab[restProps.subTabIndex]?.key === 'futures') {
+            tradingMode = TRADING_MODE.FUTURES
+        }
+        return <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6'>
+            {restProps?.suggestedSymbols?.map(symbol => {
+                return (
+                    <div className='w-full p-3 text-darkBlue-5 bg-darkBlue-3 rounded-md'>
+                        <div className='flex justify-between w-full'>
+                            <div className=''>
+                                <div className='font-medium text-base'>
+                                    <span className="text-gray-4">{symbol?.b}</span>/{symbol?.q}
+                                </div>
+                                <div className={classNames('font-normal text-sm justify-start', {
+                                    'text-red': !symbol.u,
+                                    'text-teal': symbol.u
+                                })}>
+                                    {formatPrice(symbol.p)}
+                                </div>
+                            </div>
+                            <div className='cursor-pointer'>
+                                <FavActionButton b={{ b: symbol.b, i: symbol.bi }}
+                                    q={{ q: symbol.q, i: symbol.qi }}
+                                    list={restProps.favoriteList}
+                                    lang={language}
+                                    mode={tradingMode} favoriteRefresher={restProps.favoriteRefresher}
+                                />
+                            </div>
+                        </div>
+                        <div className='mt-4 flex font-normal text-xs gap-2'>
+                            <div className='w-full'>
+                                <div className='w-fit font-medium text-base'>
+                                    {render24hChange(symbol, true)}
+                                </div>
+                                <div className='mt-2 leading-4'>
+                                    {t('futures:24h_high')}: {formatPrice(symbol.h)}
+                                </div>
+                                <div className='leading-4'>
+                                    {t('futures:24h_low')}: {formatPrice(symbol.l)}
+                                </div>
+                            </div>
+                            <div className='h-full lg:w-1/2 w-full flex justify-end'>
+                                <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.namiv2.green[1] : colors.namiv2.red.DEFAULT)}
+                                    alt="Nami Exchange" />
+                            </div>
+                        </div>
+                    </div>
+                )
+            })}
+        </div>
+    }, [restProps?.suggestedSymbols])
+
 
     const renderTable = useCallback(() => {
         let modifyColumns = [];
@@ -258,10 +309,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth);
 
         if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
-            tableStatus = <NeedLogin />;
+            tableStatus = <NeedLogin message={undefined} addClass={undefined} />
         } else {
             if (loading) {
-                // tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+                console.log('loadinignidngindsn____')
+                tableStatus = <ScaleLoader color={colors.namiv2.green.DEFAULT} size={12}/>
             } else if (!dataSource.length) {
                 tableStatus = <Empty />;
             }
@@ -269,6 +321,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
         return (
             <ReTable
+                // @ts-ignore
                 sort
                 defaultSort={{ key: 'pair', direction: 'asc' }}
                 useRowHover
@@ -345,8 +398,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     current={restProps.currentPage}
                     pageSize={MARKET_ROW_LIMIT}
                     onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list"
-                />
+                    name="market_table___list" fromZero={undefined} />
             </div>
         );
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex]);
@@ -366,13 +418,17 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.favoriteList]);
 
     return (
-        <div className="px-4 lg:px-0 text-namiv2-gray-1">
+        <div className="px-4 lg:px-0 text-darkBlue-5">
             <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center mb-8">
-                <div className="text-2xl text-namiv2-gray-2 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">{t('common:market')}</div>
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center border-namiv2-gray-3 border-[1px] overflow-hidden rounded-md">{renderSubTab()}</div>
-                    <div className="h-12 lg:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">
-                        <div className="flex items-center">
+                <div className="text-2xl text-gray-4 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
+                    {t('common:market')}
+                </div>
+                <div className='flex items-center space-x-4'>
+                    <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
+                        {renderSubTab()}
+                    </div>
+                    <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
+                        <div className='flex items-center'>
                             <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
                             <input
                                 className="bg-transparent outline-none px-2"
@@ -389,35 +445,35 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                 </div>
             </div>
-            <div className="bg-namiv2-black">
-                <div id="market_table___list" className="py-4 h-full rounded-xl border-[1px] border-namiv2-gray-3">
-                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-namiv2-gray-3">{renderTab()}</div>
-                    <div className="h-24 border-b-[1px] border-namiv2-gray-3 flex items-center px-8">
-                        {tab[restProps.tabIndex]?.key === 'favorite' ? (
-                            <TokenTypes
-                                type={type}
-                                setType={changeType}
-                                types={[
-                                    {
-                                        id: 1,
-                                        content: {
-                                            vi: 'Exchange',
-                                            en: 'Exchange'
-                                        }
-                                    },
-                                    {
-                                        id: 2,
-                                        content: {
-                                            vi: 'Futures',
-                                            en: 'Futures'
-                                        }
-                                    }
-                                ]}
-                                lang={language}
-                            />
-                        ) : (
-                            <TokenTypes type={type} setType={changeType} types={types} lang={language} />
-                        )}
+            <div className="bg-shadow">
+                <div id="market_table___list"
+                    className="py-4 h-full rounded-xl border-[1px] border-divider-dark">
+                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-divider-dark">
+                        {renderTab()}
+                    </div>
+                    <div className={classNames('h-24 border-divider-dark flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
+                        {tab[restProps.tabIndex]?.key === 'favorite' ?
+                            <TokenTypes type={favType} setType={(index) => { parentState({ favType: index }); setFavType(index)}} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
+                            :
+                            <TokenTypes type={type} setType={(index) => {
+                                parentState({
+                                    type: index
+                                })
+                            }} types={types} lang={language} />}
+
+                        {tab[restProps.tabIndex]?.key === 'favorite' ?
+                            <div className='h-12 px-6 flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'>
+                                {{ en: 'Add all', vi: 'Thêm tất cả' }[language]}
+                            </div>
+                            :
+                            null}
+
+                    </div>
+                    <div className="">
+                        {renderTable()}
+                    </div>
+                    <div className='px-8'>
+                        {renderPagination()}
                     </div>
                     <div className="">{renderTable()}</div>
                     <div className="px-8">{renderPagination()}</div>
@@ -527,8 +583,8 @@ const renderPair = (b, q, lbl, w) => {
         <div className="flex items-center font-semibold text-base">
             {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
             <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
-                <span className="text-namiv2-gray-1">{b}</span>
-                <span className="text-namiv2-gray-2">/{q}</span>
+                <span className="text-darkBlue-5">{b}</span>
+                <span className="text-gray-4">/{q}</span>
             </div>
             <MarketLabel labelType={lbl} />
         </div>
@@ -549,10 +605,10 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
     const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`;
 
     // Helper
-    const callback = async (method, list) => {
-        setLoading(true);
-        let message = '';
-        let title = '';
+    const callback = _.debounce(async (method, list) => {
+        setLoading(true)
+        let message = ''
+        let title = ''
 
         try {
             await favoriteAction(method, mode, pairKey);
@@ -576,7 +632,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
             }
             showNotification({ message, title, type: 'success' }, 2500, 'top', 'top-right');
         }
-    };
+    }, 300)
 
     useEffect(() => {
         if (list) {
@@ -594,10 +650,10 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
         <div
             className="pr-2 py-2 flex items-center"
             onClick={() => {
-                !loading && callback(already ? 'delete' : 'put', list);
-            }}
-        >
-            {already ? <IconStarFilled color="#FFC632" /> : <IconStarFilled color="#8694B3" />}
+                !loading && callback(already ? 'delete' : 'put', list)
+            }}>
+            {already ? <IconStarFilled size={24} color="#FFC632" />
+                : <IconStarFilled size={24} color="#8694B3" />}
         </div>
     );
 };
@@ -614,52 +670,38 @@ const renderTradeLink = (b, q, lang, mode) => {
     }
 
     return (
-        <div className="flex justify-end items-center font-medium text-base">
-            <Link href={url} prefetch={false} className="">
-                <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center" target="_blank">
+        <div className='flex justify-end items-center font-medium text-base'>
+            <Link href={url} prefetch={false}>
+                <a className="text-teal re_table__link px-3 flex items-center justify-center" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
-            {swapurl ? (
-                <Link href={swapurl} prefetch={false} className="">
-                    <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center border-l-[1px] border-namiv2-gray-3" target="_blank">
-                        {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
-                    </a>
-                </Link>
-            ) : null}
+            {swapurl ? <Link href={swapurl} prefetch={false}>
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark" target="_blank">
+                    {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
+                </a>
+            </Link> : null}
         </div>
     );
 };
 
 const TokenTypes = ({ type, setType, types, lang }) => {
-    return (
-        <div className="flex space-x-3 h-12 font-normal">
-            {types.map((e) => (
-                <div
-                    key={e.id}
-                    className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer', {
-                        'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': e.id === type
-                    })}
-                    onClick={() => setType(e.id)}
-                >
-                    {e?.content[lang]}
-                </div>
-            ))}
-        </div>
-    );
-};
+    return <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
+        {types.map(e =>
+            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
+                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
+            })}
+                onClick={() => setType(e.id)}
+            >
+                {e?.content[lang]}
+            </div>
+        )}
+    </div>
+}
 
-export default MarketTable;
+export default MarketTable
 
-const HotIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z"
-            fill="#FFC632"
-        />
-        <path
-            d="M15.263 13.583c-.034-2.518-1.03-4.26-1.57-5.022a.318.318 0 0 0-.544.043c-.165.33-.431.747-.793.964 0 0-1.534-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.937.009 5.305-2.445 5.266-5.382z"
-            fill="#CC1F1F"
-        />
-    </svg>
-);
+const HotIcon = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z" fill="#FFC632" />
+    <path d="M15.263 13.583c-.034-2.518-1.03-4.26-1.57-5.022a.318.318 0 0 0-.544.043c-.165.33-.431.747-.793.964 0 0-1.534-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.937.009 5.305-2.445 5.266-5.382z" fill="#CC1F1F" />
+</svg>
