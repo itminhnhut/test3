@@ -26,6 +26,7 @@ const RefModal = ({ onClose }) => {
     };
 
     useEffect(() => {
+        userInfo.current = null;
         if (refCode) {
             clearTimeout(timer.current);
             setLoading(true);
@@ -70,7 +71,16 @@ const RefModal = ({ onClose }) => {
             });
             if (status === ApiStatus.SUCCESS) await dispatch(getMe());
             const message = status === ApiStatus.SUCCESS ? t('profile:ref_success', { value: '#' + userInfo.current?.username }) : t('common:failed');
-            showNotification({ message, title: t('common:success'), type: status === ApiStatus.SUCCESS ? 'success' : 'error' }, 2500, 'bottom', 'bottom-right');
+            showNotification(
+                {
+                    message,
+                    title: status === ApiStatus.SUCCESS ? t('common:success') : t('common:failed'),
+                    type: status === ApiStatus.SUCCESS ? 'success' : 'error'
+                },
+                2500,
+                'bottom',
+                'bottom-right'
+            );
         } catch (error) {
         } finally {
             setLoading(false);
@@ -91,7 +101,7 @@ const RefModal = ({ onClose }) => {
                 <div
                     className={classNames(
                         'px-3 py-2 bg-gray-5 dark:bg-darkBlue-3 rounded-md hover:ring-teal hover:ring-1 flex items-center space-x-3',
-                        'text-txtSecondary dark:text-txtSecondary-dark',
+                        'text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap',
                         {
                             '!ring-red ring-1': error
                         }
@@ -104,7 +114,9 @@ const RefModal = ({ onClose }) => {
                         placeholder={t('profile:ref_placeholder')}
                         className="w-full text-gray-1 dark:text-gray-4"
                     />
-                    {userInfo.current?.username ?? (
+                    {refCode.length > 0 && userInfo.current?.username ? (
+                        userInfo.current?.username
+                    ) : (
                         <span onClick={onPaste} className="text-teal font-semibold cursor-pointer select-none">
                             {t('reference:referral:partner:paste')}
                         </span>
