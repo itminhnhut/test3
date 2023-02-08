@@ -82,5 +82,7 @@
     "set_custom_avatar": "Tải ảnh mới",
     "using_avatar_preset": "Phong cách ẩn danh",
     "initializing_avatar": "Thiết lập ảnh đại diện",
-    "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này."
+    "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này.",
+    "ref_placeholder": "Nhập mã giới thiệu",
+    "ref_success": "Chức mừng, bạn đã gắn mã giới thiệu {{value}} thành công"
 }

@@ -6,7 +6,7 @@ import { formatNumber, formatTime } from 'redux/actions/utils';
 import { API_GET_VIP, API_SET_ASSET_AS_FEE, USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis';
 import { BREAK_POINTS, EMPTY_VALUE, FEE_TABLE, ROOT_TOKEN, USER_DEVICE_STATUS } from 'constants/constants';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { ChevronRight, Edit, MoreVertical } from 'react-feather';
+import { ChevronRight, Edit, MoreVertical, X } from 'react-feather';
 import { Menu, useContextMenu } from 'react-contexify';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
@@ -36,6 +36,7 @@ import { SupportCategories } from 'constants/faqHelper';
 import useApp from 'hooks/useApp';
 
 import 'react-contexify/dist/ReactContexify.css';
+import RefModal from 'components/screens/Account/RefModal'
 
 const DEFAULT_USER = {
     name: '',
@@ -94,6 +95,7 @@ const AccountProfile = () => {
     } = useTranslation();
     const [currentTheme,] = useDarkMode();
     const { width } = useWindowSize();
+    const [showRefModal, setShowRefModal] = useState(false);
 
     const customAvatarTips = useMemo(() => {
         let text;
@@ -288,88 +290,93 @@ const AccountProfile = () => {
                              ${state.isEditable ? 'py-1 bg-gray-4 dark:bg-darkBlue-4' : ''} 
                              ${state.savingInfo ? 'opacity-30 pointer-event-none' : ''}`;
 
-        const {
-            name,
-            username,
-            phone
-        } = state.user;
+        const { name, username, phone } = state.user;
 
         return (
-            <div style={width >= BREAK_POINTS.xl ?
-                { width: `calc(80% / 3)` } : undefined}
-                 className="w-full lg:w-3/5 mt-6 lg:mt-0">
-                <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
-                        {t('profile:username')}
-                    </span>
-                    <input className={inputClass}
-                           value={username}
-                           ref={firstInputRef}
-                           onChange={e => setState({
-                               user: {
-                                   ...state.user,
-                                   username: e?.target?.value
-                               }
-                           })}
-                           readOnly={!state.isEditable}/>
-                </div>
-                <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
-                        {t('profile:name')}
-                    </span>
-                    <input className={inputClass}
-                           value={name}
-                           onChange={e => setState({
-                               user: {
-                                   ...state.user,
-                                   name: e?.target?.value
-                               }
-                           })}
-                           readOnly={!state.isEditable}/>
-                </div>
-                <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">Nami ID</span>
-                    <input className={inputClass + (state.isEditable ? 'opacity-80 cursor-not-allowed' : '')}
-                           value={state.user?.namiId}
-                           readOnly={true}/>
-                </div>
-                <div className="flex items-center justify-between xl:justify-start text-sm mb-2">
-                    <span
-                        className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">Email</span>
-                    <div className="flex items-center pr-3 xl:pr-0">
+            <>
+                {showRefModal && <RefModal onClose={() => setShowRefModal(false)} />}
+                <div style={width >= BREAK_POINTS.xl ? { width: `calc(80% / 3)` } : undefined} className="w-full lg:w-3/5 mt-6 lg:mt-0 space-y-2">
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">{t('profile:username')}</span>
                         <input
-                            className={state.isEditable ? 'font-medium text-txtPrimary w-auto dark:text-txtPrimary-dark text-right py-1 pr-2 xl:text-right xl:ml-4'
-                                : 'font-medium text-txtPrimary w-auto dark:text-txtPrimary-dark text-right pr-2 xl:text-right xl:ml-4'}
-                            value={state.user?.email}
-                            readOnly={true}/>
-                        <SvgCheckSuccess/>
+                            className={inputClass}
+                            value={username}
+                            ref={firstInputRef}
+                            onChange={(e) =>
+                                setState({
+                                    user: {
+                                        ...state.user,
+                                        username: e?.target?.value
+                                    }
+                                })
+                            }
+                            readOnly={!state.isEditable}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">{t('profile:name')}</span>
+                        <input
+                            className={inputClass}
+                            value={name}
+                            onChange={(e) =>
+                                setState({
+                                    user: {
+                                        ...state.user,
+                                        name: e?.target?.value
+                                    }
+                                })
+                            }
+                            readOnly={!state.isEditable}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">Nami ID</span>
+                        <input className={inputClass + (state.isEditable ? 'opacity-80 cursor-not-allowed' : '')} value={state.user?.namiId} readOnly={true} />
+                    </div>
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">Email</span>
+                        <div className="flex items-center pr-3 xl:pr-0">
+                            <input
+                                className={
+                                    state.isEditable
+                                        ? 'font-medium text-txtPrimary w-auto dark:text-txtPrimary-dark text-right py-1 pr-2 xl:text-right xl:ml-4'
+                                        : 'font-medium text-txtPrimary w-auto dark:text-txtPrimary-dark text-right pr-2 xl:text-right xl:ml-4'
+                                }
+                                value={state.user?.email}
+                                readOnly={true}
+                            />
+                            <SvgCheckSuccess />
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-between xl:justify-start text-sm">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">{t('profile:phone_number')}</span>
+                        <input
+                            className={inputClass}
+                            value={phone}
+                            onChange={(e) =>
+                                setState({
+                                    user: {
+                                        ...state.user,
+                                        phone: e?.target?.value
+                                    }
+                                })
+                            }
+                            readOnly={!state.isEditable}
+                        />
+                    </div>
+                    <div className="flex items-center justify-between text-sm ">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
+                            {t('reference:referral:referrer')}
+                        </span>
+                        <div className="flex itmes-center space-x-2 pr-3">
+                            <span>{state.user?.referral_username}</span>
+                            {!user?.referal_id && <EditIcon onClick={() => setShowRefModal(true)} className="cursor-pointer" />}
+                        </div>
                     </div>
                 </div>
-                <div className="flex items-center justify-between xl:justify-start text-sm">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark xl:inline-block xl:min-w-[120px]">
-                        {t('profile:phone_number')}
-                    </span>
-                    <input className={inputClass}
-                           value={phone}
-                           onChange={e => setState({
-                               user: {
-                                   ...state.user,
-                                   phone: e?.target?.value
-                               }
-                           })}
-                           readOnly={!state.isEditable}/>
-                </div>
-                {/*<div className="w-full lg:flex lg:justify-end lg:pr-3 xl:justify-start">*/}
-                {/*    <div className="mt-11 bg-dominant rounded-md py-2.5 cursor-pointer font-medium text-sm text-center text-white hover:opacity-80*/}
-                {/*                    lg:min-w-[130px] lg:w-[130px]"*/}
-                {/*         onClick={() => state.isEditable ? !state.savingInfo && onSave({ name, username, phone }) : onEdit()}>*/}
-                {/*        {state.savingInfo ? <PulseLoader size={3} color="#FFFF"/>*/}
-                {/*            : state.isEditable ? t('common:save') : t('common:edit')}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-            </div>
+            </>
         );
-    }, [state.isEditable, state.savingInfo, state.user, width]);
+    }, [state.isEditable, state.savingInfo, state.user, width, showRefModal]);
 
     const renderFee = useCallback(() => {
         let seeFeeStructure,
@@ -734,7 +741,8 @@ const AccountProfile = () => {
                 username: user?.username || '--',
                 phone: user?.phone || '--',
                 email: user?.email || '--',
-                namiId: user?.code || '--'
+                namiId: user?.code || '--',
+                referral_username: user?.referral_username ?? '_'
             }
         });
     }, [user]);
@@ -802,7 +810,7 @@ const AccountProfile = () => {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification','reference'])
     }
 });
 
@@ -811,3 +819,20 @@ export default withTabLayout(
         routes: TAB_ROUTES.ACCOUNT
     }
 )(AccountProfile);
+
+
+const EditIcon = (props) => (
+    <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#b6972f97ia)">
+            <path
+                d="M4.498 14h-2.5v-2.5l7.374-7.373 2.5 2.5L4.498 14zm6.807-11.807c.26-.26.68-.26.94 0l1.56 1.56c.26.26.26.68 0 .94l-1.22 1.22-2.5-2.5 1.22-1.22z"
+                fill="#8694B3"
+            />
+        </g>
+        <defs>
+            <clipPath id="b6972f97ia">
+                <path fill="#fff" transform="matrix(0 -1 -1 0 16 16)" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);

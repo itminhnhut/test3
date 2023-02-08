@@ -83,5 +83,7 @@
     "using_avatar_preset": "Using our preset",
     "custom_avatar_uploaded": "Uploaded avatar",
     "initializing_avatar": "Initializing avatar",
-    "updated_avatar": "Updated avatar, you can close this window now."
+    "updated_avatar": "Updated avatar, you can close this window now.",
+    "ref_placeholder": "Enter referral code",
+    "ref_success": "Congrats, you inserted referral code {{value}} successfully"
 }
