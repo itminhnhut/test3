@@ -456,7 +456,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                             onMouseOver={() => setIsShowModalPriceList(true)}
                             onMouseLeave={() => setIsShowModalPriceList(false)}
                         >
-                            <div className="relative z-10 flex items-center">
+                            <div className="relative z-10 flex items-center gap-1">
                                 <span className="text-[22px] font-semibold leading-[30px]">
                                     {currentExchangeConfig?.config?.baseAsset
                                         ? currentExchangeConfig?.config?.baseAsset + '/' + currentExchangeConfig?.config?.quoteAsset
@@ -465,7 +465,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 <ArrowDropDownIcon
                                     isFilled
                                     size={16}
-                                    className={classNames('transition-transform duration-75', {
+                                    className={classNames(' transition-transform duration-75', {
                                         'rotate-180': isShowModalPriceList
                                     })}
                                 />
