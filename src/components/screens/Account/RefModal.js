@@ -69,7 +69,11 @@ const RefModal = ({ onClose }) => {
                 },
                 params: { code: refCode }
             });
-            if (status === ApiStatus.SUCCESS) await dispatch(getMe());
+            if (status === ApiStatus.SUCCESS) {
+                setTimeout(async () => {
+                    await dispatch(getMe(true));
+                }, 500);
+            }
             const message = status === ApiStatus.SUCCESS ? t('profile:ref_success', { value: '#' + userInfo.current?.username }) : t('common:failed');
             showNotification(
                 {
