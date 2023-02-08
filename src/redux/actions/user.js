@@ -111,25 +111,28 @@ export function refreshToken() {
         }
     };
 }
-export function getMe() {
-    return async dispatch => {
+export function getMe(resetCache = false) {
+    return async (dispatch) => {
         try {
             const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
-                    method: 'GET',
+                    method: 'GET'
                 },
+                params: {
+                    resetCache
+                }
             });
             if (status === 'ok') {
                 dispatch({
                     type: SET_USER,
-                    payload: data,
+                    payload: data
                 });
             }
         } catch (e) {
             dispatch({
                 type: SET_USER,
-                payload: null,
+                payload: null
             });
         }
     };
