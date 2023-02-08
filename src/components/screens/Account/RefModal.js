@@ -90,14 +90,11 @@ const RefModal = ({ onClose }) => {
 
     return (
         <Modal containerClassName="w-[448px] !p-8" isVisible={true} onBackdropCb={onClose}>
-            <div className="flex justify-end">
+            <div className="flex items-center justify-between mb-6">
+                <label className="text-xl">{t('profile:ref_title')}</label>
                 <X onClick={onClose} className="cursor-pointer" />
             </div>
-            <div className="text-xl my-6">{t('reference:referral:referrer')}</div>
             <div className="space-y-2 flex flex-col relative pb-6">
-                <label className="text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('reference:referral:referrer')} ({String(t('common:optional')).toLowerCase()})
-                </label>
                 <div
                     className={classNames(
                         'px-3 py-2 bg-gray-5 dark:bg-darkBlue-3 rounded-md hover:ring-teal hover:ring-1 flex items-center space-x-3',
