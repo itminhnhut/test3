@@ -79,7 +79,7 @@ const SpotSetting = (props) => {
         <Popover className="relative">
             {({ open }) => (
                 <>
-                    <Popover.Button className={`h-full flex items-center ml-2 ${open ? '' : 'text-opacity-90'} text-white group px-2`}>
+                    <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-white group px-2`}>
                         <Setting size={20} color={currentTheme === 'dark' ? colors.white : colors.darkBlue} />
                     </Popover.Button>
                     <Transition

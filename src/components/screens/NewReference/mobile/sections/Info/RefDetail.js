@@ -204,17 +204,12 @@ export const FriendListIcon = ({ size= 12, color = '#718096' }) => (
     </svg>
 );
 
-export const NoteIcon = ({ size= 12, color = '#718096' }) => (
-    <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#s8m7dixeoa)" stroke={color} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
-            <path d="M10 .94a1.06 1.06 0 0 0-.75.31L4.5 6 4 8l2-.5 4.75-4.75A1.06 1.06 0 0 0 10 .94z" />
-        </g>
-        <defs>
-            <clipPath id="s8m7dixeoa">
-                <path fill="#fff" d="M0 0h12v12H0z" />
-            </clipPath>
-        </defs>
+export const NoteIcon = ({ size= 12, color = '#8694B3' }) => (
+    <svg width={size} height={size} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M13.196 4.934c.252-.252.39-.587.39-.943s-.138-.69-.39-.942L12.139 1.99a1.324 1.324 0 0 0-.943-.39c-.356 0-.69.138-.942.39L3.166 9.057V12h2.942l7.088-7.066zm-2-2 1.058 1.057-1.06 1.056-1.057-1.057 1.059-1.056zm-6.697 7.733V9.61L9.193 4.93 10.25 5.99l-4.693 4.678H4.5zm-1.333 2.666h10.667v1.334H3.166v-1.334z"
+            fill={color}
+        />
     </svg>
 );
 

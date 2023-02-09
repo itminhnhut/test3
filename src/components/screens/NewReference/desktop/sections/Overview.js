@@ -41,6 +41,7 @@ import ReactDOM from 'react-dom';
 import domtoimage from 'dom-to-image-more';
 import { throttle } from 'lodash';
 import { getS3Url } from 'redux/actions/utils';
+import TagV2 from 'components/common/V2/TagV2';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -129,7 +130,8 @@ const Overview = ({
             >
                 <div className='py-20 container h-full'
                 >
-                    <ModalShareRefCode t={t} code={data?.defaultRefCode?.code} open={openShareModal} onClose={() => setOpenShareModal(false)} />
+                    <ModalShareRefCode t={t} code={data?.defaultRefCode?.code} open={openShareModal}
+                                       onClose={() => setOpenShareModal(false)} />
                     {showRef &&
                         <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}
                                    defaultRef={data?.defaultRefCode?.code} />}
@@ -264,7 +266,8 @@ const Overview = ({
                         </div>
                     </div>
                     <div className='grid grid-cols-5 gap-6'>
-                        <div className='flex justify-center bg-dark-2 rounded-md py-[10px] cursor-pointer' onClick={() => setOpenShareModal(true)} >
+                        <div className='flex justify-center bg-dark-2 rounded-md py-[10px] cursor-pointer'
+                             onClick={() => setOpenShareModal(true)}>
                             <QRCodeScanFilled />
                         </div>
                         {[
@@ -389,9 +392,8 @@ const RefDetail = ({
         <ModalV2
             isVisible={isShow}
             onBackdropCb={onClose}
-            title={t('reference:referral.referral_code_management')}
-            className='max-w-[884px]'
-            wrapClassName='px-6'
+            className='max-w-[884px] h-[90%]'
+            wrapClassName='px-6 flex flex-col'
         >
             <div className='text-center border-b border-divider-dark -mx-6 pb-5 pt-6 text-[22px] font-semibold'>
                 {t('reference:referral.referral_code_management')}
@@ -419,7 +421,7 @@ const RefDetail = ({
                     isDesktop
                 />
             )}
-            <div className='overflow-y-auto h-[28rem] my-8 -mr-4 pr-4'>
+            <div className='overflow-y-auto min-h-0 flex-1 my-8 -mr-4 pr-4'>
                 {loading ? (
                     <IconLoading color={colors.teal} />
                 ) : !refs.length ? (
@@ -429,26 +431,25 @@ const RefDetail = ({
                         {refs.map((data, index) => (
                             <div
                                 key={data.code}
-                                className='p-4 bg-darkBlue-3 rounded-md'
+                                className='p-4 bg-darkBlue-3 rounded-xl'
                             >
                                 <div
                                     className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
                                     <div className='flex gap-2 items-center font-semibold'>
                                         {data.code}
-                                        <CopyIcon data={data.code} size={16} className='cursor-pointer' />
+                                        <CopyIcon data={data.code} size={24} className='cursor-pointer' />
                                     </div>
                                     <div onClick={data.status ? null : () => handleSetDefault(data.code)}>
-                                        <div
-                                            className={classNames(
-                                                'px-2 py-1 rounded-md font-semibold text-sm leading-6 cursor-pointer',
-                                                data.status ? 'text-teal bg-teal/[.05]' : 'text-gray-1 bg-gray-1/[.05]'
-                                            )}
-                                        >
-                                            {data.status ? t('reference:referral.default') : t('reference:referral.set_default')}
-                                        </div>
+                                        {
+                                            data.status ?
+                                                <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
+                                                : <div className='bg-dark-2 rounded-lg px-4 py-2 text-txtSecondary'>
+                                                    {t('reference:referral.set_default')}
+                                                </div>
+                                        }
                                     </div>
                                 </div>
-                                <div className='mt-6 font-medium leading-5 flex flex-col gap-4'>
+                                <div className='mt-6 leading-6 space-y-3'>
                                     <div className='w-full flex justify-between items-center'>
                                         <div
                                             className='text-gray-1 text-sm'>{t('reference:referral.you_friends_get')}</div>
@@ -505,7 +506,7 @@ const RefDetail = ({
                     </div>
                 )}
             </div>
-            <div className='z-20 w-full flex justify-center pb-7'>
+            <div className='z-20 w-full flex justify-center'>
                 <div
                     className={classNames(
                         'bg-teal rounded-md w-full py-3 text-center text-white font-semibold cursor-pointer select-none',

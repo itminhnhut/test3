@@ -104,7 +104,7 @@ const FriendList = ({
         },
         status: {
             type: 'popover',
-            value: 0,
+            value: null,
             values: statuses,
             title: t('reference:referral.status')
         },

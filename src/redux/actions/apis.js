@@ -304,6 +304,7 @@ export const API_NEW_REFERRAL_SET_DEFAULT = API_V3_PREFIX + "users/referral/:cod
 export const API_NEW_REFERRAL_EDIT_NOTE = API_V3_PREFIX + "users/referral/:code/change-note"; // .replace(':code', realCode)
 export const API_NEW_REFERRAL_STATISTIC = API_V3_PREFIX + "users/referral/chart"
 export const API_NEW_REFERRAL_CREATE_INVITE = API_V3_PREFIX + "users/referral/invite";
+export const API_CHECK_REFERRAL = API_V3_PREFIX + "users/referral/is-exist";
 export const API_NEW_REFERRAL_CHECK_REF = API_V3_PREFIX + "users/referral/check-duplicate"
 export const API_PARTNER_REGISTER = API_V3_PREFIX + "users/partner";
 
