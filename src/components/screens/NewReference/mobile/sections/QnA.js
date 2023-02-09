@@ -97,7 +97,7 @@ const QnA = () => {
             <CollapsibleRefCard title={t('reference:referral.faq')} isBlack>
                 <div className="w-auto">
                     {renderData()}
-                    <div className="text-namiv2-green-1 underline font-medium text-sm text-center mt-6">
+                    <div className="text-teal underline font-medium text-sm text-center mt-6">
                         <Link href={policyLink}>
                             <a>
                                 {language === 'vi'

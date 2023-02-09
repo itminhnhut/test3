@@ -369,7 +369,7 @@ const SwapModule = ({ width, pair }) => {
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
-                   
+
                     ${state.fromAsset === fromAsset && 'dark:bg-hover'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
@@ -476,7 +476,7 @@ const SwapModule = ({ width, pair }) => {
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
-                   
+
                     ${state.toAsset === toAsset && 'dark:bg-hover'}
                     `}
                     onClick={() => onClickToAsset(toAsset)}
@@ -622,7 +622,7 @@ const SwapModule = ({ width, pair }) => {
 
         if (!error) return null;
         return (
-            <div className="flex items-center text-namiv2-red pt-3 text-xs text-left leading-4  gap-1">
+            <div className="flex items-center text-red pt-3 text-xs text-left leading-4  gap-1">
                 <SwapWarning size={12} fill={colors.red2} />
                 {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
             </div>
@@ -639,7 +639,7 @@ const SwapModule = ({ width, pair }) => {
 
         if (!error) return null;
         return (
-            <div className="flex items-center text-namiv2-red pt-3 text-xs text-left leading-4  gap-1">
+            <div className="flex items-center text-red pt-3 text-xs text-left leading-4  gap-1">
                 <SwapWarning size={12} fill={colors.red2} />
                 {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
             </div>
@@ -651,12 +651,12 @@ const SwapModule = ({ width, pair }) => {
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
             <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
-                <div className="my-6 text-left font-medium leading-7 text-[20px] text-namiv2-gray dark:text-namiv2-gray-2 hover:bg-transparent">
+                <div className="my-6 text-left font-medium leading-7 text-[20px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
                     {t('convert:confirm')}
                 </div>
                 <div className="flex flex-col items-start justify-between gap-2">
                     <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-namiv2-gray px-3 py-2 flex justify-between text-base items-center leading-6">
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
                         <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.fromQty)} </span>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.fromAsset}</span>
                     </div>
@@ -664,7 +664,7 @@ const SwapModule = ({ width, pair }) => {
 
                 <div className="flex flex-col mt-4 items-start justify-between gap-2">
                     <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-namiv2-gray px-3 py-2 flex justify-between text-base items-center leading-6">
+                    <div className="w-full rounded-md bg-gray-4 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
                         <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.toQty)}</span>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.toAsset}</span>
                     </div>
@@ -912,7 +912,7 @@ const SwapModule = ({ width, pair }) => {
 
                         <div className="flex justify-center items-center py-4">
                             <button
-                                className={`p-1.5 dark:bg-namiv2-black-2 shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                className={`p-1.5 dark:bg-hover-dark shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
                                 onClick={onReverse}
                             >
                                 <SwapReverse size={width < 1280 && 24} />

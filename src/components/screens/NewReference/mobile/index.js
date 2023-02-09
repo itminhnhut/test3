@@ -206,11 +206,11 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
                     <div
                         key={index}
                         className={classNames(
-                            `flex items-center justify-center text-xs font-medium leading-5 cursor-pointer border-namiv2-green`, className, {
+                            `flex items-center justify-center text-xs font-medium leading-5 cursor-pointer border-txtTextBtn`, className, {
                             'text-gray-1 py-1 px-2': !isMobile,
                             'text-gray-7 !px-4 !py-2 font-normal': isMobile,
                             'bg-gray-4 rounded-md text-darkBlue': type === tab.value && !isMobile,
-                            'bg-namiv2-black-2 text-namiv2-green-1 rounded-[100px] font-semibold border-[1px] !font-semibold': type === tab.value && isMobile,
+                            'bg-dark-2 text-teal rounded-[100px] font-semibold border-[1px] !font-semibold': type === tab.value && isMobile,
                         }
                         )}
                         onClick={_.debounce(() => {
@@ -226,7 +226,7 @@ export const FilterTabs = ({ tabs, type, setType, reversed = false, className = 
 };
 
 export const RefButton = ({ title, onClick }) => (
-    <div className="w-full h-11 rounded-md flex justify-center items-center bg-namiv2-green-1 text-sm font-semibold text-white leading-6" onClick={onClick}>
+    <div className="w-full h-11 rounded-md flex justify-center items-center bg-teal text-sm font-semibold text-white leading-6" onClick={onClick}>
         {title}
     </div>
 );

@@ -61,10 +61,10 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
             {allwaysOpen ? null :
                 text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
                     className={classNames(
-                        `relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white w-auto`,
+                        `relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-dark-2 rounded-md w-auto`,
                         {
                             '!border-teal': showPicker,
-                            'bg-namiv2-black-2 border-none !rounded-md text-gray-6': isnamiv2
+                            'bg-hover-dark border-none !rounded-md text-gray-6': isnamiv2
                         },
                     )}
                 >
@@ -114,7 +114,7 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                         staticRanges={[]}
                         inputRanges={[]}
                         weekStartsOn={0}
-                        rangeColors={[isnamiv2 ? colors.namiv2.green[1] : colors.teal]}
+                        rangeColors={[isnamiv2 ? colors.teal : colors.teal]}
                         editableDateInputs={true}
                         retainEndDateOnFirstSelection
                         navigatorRenderer={navigatorRenderer}

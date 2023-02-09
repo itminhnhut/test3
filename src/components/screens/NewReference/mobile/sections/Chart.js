@@ -157,11 +157,11 @@ const Chart = ({ user }) => {
                             return [level, friends, commission]
                         },
                         labelTextColor: function (context) {
-                            return baseColors.namiv2.gray[1]
+                            return baseColors.darkBlue5
                         }
                     },
-                    backgroundColor: baseColors.namiv2.black[2],
-                    titleColor: baseColors.namiv2.gray.DEFAULT,
+                    backgroundColor: baseColors.hover.DEFAULT,
+                    titleColor: baseColors.dark[2],
                     displayColors: false,
                 },
             },
@@ -170,7 +170,7 @@ const Chart = ({ user }) => {
                     stacked: true,
                     // combined: true,
                     ticks: {
-                        color: baseColors.namiv2.gray.DEFAULT,  // not 'fontColor:' anymore
+                        color: baseColors.dark[2],  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
                             size: 9 // 'size' now within object 'font {}'
@@ -181,7 +181,7 @@ const Chart = ({ user }) => {
                 y: {
                     // combined: true,
                     ticks: {
-                        color: baseColors.namiv2.gray.DEFAULT,  // not 'fontColor:' anymore
+                        color: baseColors.dark[2],  // not 'fontColor:' anymore
                         //fontSize: 14,
                         font: {
                             size: 9 // 'size' now within object 'font {}'
@@ -228,15 +228,15 @@ const Chart = ({ user }) => {
                             ))}
                         </div>
                     </div>
-                </div> : <NeedLogin message={t('reference:user.login_to_view')} isnamiv2 addClass='mt-8' />}
+                </div> : <NeedLogin message={t('reference:user.login_to_view')} isNamiapp addClass='mt-8' />}
             </CollapsibleRefCard>
         </div>
     )
 }
 
 export const SmallCircle = styledComponents.div.attrs(({ color }) => ({}))`
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     flex-grow: 0;
     background-color: ${({ color }) => color};
     border-radius: 100%;

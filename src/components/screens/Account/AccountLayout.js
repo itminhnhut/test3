@@ -1,12 +1,12 @@
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useApp from 'hooks/useApp';
 import styled from 'styled-components';
-import Edit from 'components/svg/Edit';
 import { useSelector } from 'react-redux';
 import WarningTriangle from 'components/svg/WarningTriangle';
 import CheckCircle from 'components/svg/CheckCircle';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import Button from 'components/common/V2/ButtonV2/Button';
+import TagV2 from 'components/common/V2/TagV2';
 import classnames from 'classnames';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -16,23 +16,9 @@ import AccountAvatar from 'components/screens/Account/AccountAvatar';
 import { PATHS } from 'constants/paths';
 import { getS3Url } from 'redux/actions/utils';
 
-const KYCPendingTag = ({ t }) => {
-    return <div
-        style={{ background: 'rgba(255, 198, 50, 0.15)' }}
-        className='flex items-center text-[#ffc632] leading-7 rounded-full px-4 ml-3'
-    >
-        <WarningTriangle />
-        <span className='ml-2'>{t('profile:kyc_wait')}</span>
-    </div>;
-};
+const KYCPendingTag = ({ t }) => <TagV2 className='ml-3' type='warning'>{t('profile:kyc_wait')}</TagV2>;
 
-const KYCVerified = ({ t }) => {
-    return <div style={{ background: 'rgba(71, 204, 133, 0.1)' }}
-                className='flex items-center text-teal leading-7 rounded-full px-4 ml-3'>
-        <CheckCircle />
-        <span className='ml-2'>{t('profile:kyc_verified')}</span>
-    </div>;
-};
+const KYCVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='success'>{t('profile:kyc_verified')}</TagV2>;
 
 export default function AccountLayout({ children }) {
     const router = useRouter();
@@ -46,7 +32,7 @@ export default function AccountLayout({ children }) {
         <div
             className='bg-black-800 h-44'
             style={{
-                backgroundImage: `url(${getS3Url('/images/screen/account/banner.png')})`,
+                backgroundImage: `url(${getS3Url('/images/screen/account/banner_2.png')})`,
                 backgroundSize: 'auto 100%',
                 backgroundPosition: 'center'
             }}
@@ -54,13 +40,12 @@ export default function AccountLayout({ children }) {
         <Container className='mal-container px-4 h-full'>
             <div className='flex items-end justify-between'>
                 <AccountAvatar currentAvatar={user?.avatar} />
-
                 <div className='ml-4 flex-1'>
                     <div className='flex mb-3'>
                         <span className='text-xl leading-7 font-medium'>{user?.name}</span>
                         {{
                             [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                            [KYC_STATUS.APPROVED]: <KYCVerified t={t} />
+                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
                         }[user?.kyc_status] || null}
                     </div>
                     <TextCopyable text={user?.code} className='text-gray-1' />
@@ -76,7 +61,7 @@ export default function AccountLayout({ children }) {
                 }
             </div>
 
-            <div className='flex justify-between items-center border-b border-namiv2-gray-3 mt-12'>
+            <div className='flex justify-between items-center border-b border-divider-dark mt-12'>
                 <div className='flex space-x-6'>
                     {[{
                         label: t('navbar:menu.user.profile'),

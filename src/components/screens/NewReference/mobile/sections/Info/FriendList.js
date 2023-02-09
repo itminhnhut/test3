@@ -9,6 +9,7 @@ import { API_NEW_REFERRAL_FRIENDS_BY_REF } from 'redux/actions/apis';
 import { useRef } from 'react';
 import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
+import ModalV2 from 'components/common/V2/ModalV2';
 
 const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation()
@@ -45,17 +46,14 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
     }, [more, code])
 
     return isDesktop ?
-        <PopupModal
+        <ModalV2
             isVisible={isShow}
             onBackdropCb={doClose}
-            title={t('reference:referral.friend_list')}
-            useAboveAll
-            isDesktop={isDesktop}
-            useCenter={isDesktop}
-            contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+            className='w-[30rem]'
         >
-            {loading ? <IconLoading color={colors.teal} /> : friendList.length ? <div className={isDesktop ? 'px-4' : null}>
-                <div className='flex w-full justify-between text-gray-1 font-normal text-xs mb-3'>
+            <p className='text-[22px] py-6 font-semibold'>{t('reference:referral.friend_list')}</p>
+            {loading ? <IconLoading color={colors.teal} /> : friendList.length ? <div>
+                <div className='flex w-full justify-between text-txtSecondary text-sm mb-6'>
                     <div>
                         NamiID
                     </div>
@@ -63,10 +61,10 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                         {t('reference:referral.referral_date')}
                     </div>
                 </div>
-                <div className='flex flex-col gap-2 max-h-[400px] h-full overflow-auto no-scrollbar'>
+                <div className='flex flex-col gap-4 max-h-[400px] h-full overflow-auto no-scrollbar'>
                     {friendList.map((data, index) => {
                         return (
-                            <div className='w-full flex items-center justify-between text-sm font-medium leading-6' key={index}>
+                            <div className='w-full flex items-center justify-between' key={index}>
                                 <div>
                                     {data.code}
                                 </div>
@@ -83,7 +81,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                     {t('reference:referral.show_more')}
                 </div> : null}
             </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
-        </PopupModal>
+        </ModalV2>
         :
         <PopupModal
             isVisible={isShow}
@@ -118,7 +116,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                         )
                     })}
                 </div>
-                {hasNext.current ? <div className='mt-2 text-namiv2-green-1 underline text-sm font-medium leading-6 text-center cursor-pointer'
+                {hasNext.current ? <div className='mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer'
                     onClick={() => setMore(99999999999)}
                 >
                     {t('reference:referral.show_more')}

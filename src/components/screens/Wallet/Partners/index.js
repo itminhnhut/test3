@@ -240,7 +240,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
                             {/* <div
                                 className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-namiv2-gray hover:!text-white
+                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
                                  "
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
@@ -288,7 +288,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                             <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
                         </div>
                     </div>
-                    <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-namiv2-gray">
+                    <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5"

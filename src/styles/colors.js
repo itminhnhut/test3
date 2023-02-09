@@ -62,9 +62,11 @@ const colors = {
     green: '#00C8BC',
     red: '#E5544B',
     yellow: '#FFD965',
+    yellow1: '#FFC632',
     navy: '#191489',
     marina: '#A6D4FF',
     blue: '#2D9CDB',
+    blue1: '#1e77eb',
 
     divider: {
         DEFAULT: '#e2e8f0',

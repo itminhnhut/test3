@@ -159,12 +159,13 @@ const ReTable = memo(
         useEffect(() => {
             const sortColumn = [];
             const origin = ['flex', 'items-center'];
-            let className = [...origin];
 
             if (typeof sort === 'string' || Array.isArray(sort)) {
                 columns.forEach((c) => {
                     let item = c;
                     if (castArray(sort).includes(c.key)) {
+                        let className = [...origin];
+
                         if (c.align === 'left') className.push('justify-start');
                         if (c.align === 'right') className.push('justify-end');
                         if (c.align === 'center') className.push('justify-center');
@@ -193,6 +194,8 @@ const ReTable = memo(
                 sortColumn && sortColumn.length && setOwnColumns(sortColumn);
             } else if (sort === 'all' || sort === true) {
                 columns.forEach((c) => {
+                    let className = [...origin];
+
                     let item = c;
                     if (!HIDE_SORTER.includes(c.key)) {
                         if (c.align === 'left') className.push('!justify-start');
@@ -293,7 +296,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
     .rc-table {
-        color: ${colors.namiv2.gray[2]};
+        color: ${colors.gray4};
         /* margin-top: 20px; */
         .re_table__link {
             font-size: 14px;
@@ -321,7 +324,7 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table th {
-        color: ${colors.namiv2.gray[1]};
+        color: ${colors.darkBlue5};
         font-weight: 400;
         padding: 24px 16px;
     }

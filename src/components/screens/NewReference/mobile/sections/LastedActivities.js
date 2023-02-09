@@ -99,7 +99,7 @@ const LastedActivities = () => {
                                 <div className='text-gray-6'>
                                     {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                                 </div>
-                                <div className='text-namiv2-green-1'>
+                                <div className='text-teal'>
                                     +{formatNumber(data.value, 2)} VNDC
                                 </div>
                             </div>
@@ -172,7 +172,7 @@ export const UserIcon = ({ isMobile = false }) => <svg width="28" height="28" vi
 export const RefInfo = ({ data, language, className, isMobile = false }) => (
     <div className={classNames(' border-[1px] border-gray-2 border-opacity-[0.15] rounded-md p-3 font-medium z-1 overflow-visible', className, { 'text-gray-7 !font-semibold': isMobile, 'text-gray-1': !isMobile })}>
         <div className={classNames('text-xs mt-[-24px] px-1 -ml-1 z-2 relative w-fit', {
-            'bg-namiv2-black-1': isMobile,
+            'bg-darkBlue3': isMobile,
             'bg-white': !isMobile
         })}>
             {languages.refUser[language]}:

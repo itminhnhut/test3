@@ -300,10 +300,10 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker, showPrice = false) {
+export function render24hChange(ticker, showPrice = false, className = '') {
     const change24h = getExchange24hPercentageChange(ticker);
     let percent, priceChange;
-    let className = '';
+    // let className = '';
     let negative = false;
     if (change24h) {
         priceChange = (change24h * ticker.ld) / 100;

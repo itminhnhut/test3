@@ -76,7 +76,7 @@ const Support = () => {
 
     const renderFaqCategories = () => {
         return (
-            <div className='grid justify-between w-full gap-4 sm:bg-namiv2-black-1 rounded-xl sm:p-6' style={{
+            <div className='grid justify-between w-full gap-4 sm:bg-darkBlue-3 rounded-xl sm:p-6' style={{
                 gridTemplateColumns: "repeat(auto-fill, 280px)",
             }}>
                 {SupportCategories.faq[language].map((faq) => (
@@ -84,7 +84,7 @@ const Support = () => {
                         PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
                     }>
-                        <div className='flex gap-4 sm:p-4 w-[280px] h-[48px] sm:h-[68px] items-center hover:!bg-namiv2-black-2 rounded-xl text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
+                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover-dark rounded-xl text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
                             <Image
                                 src={getSupportCategoryIcons(faq.id)}
                                 width={isMobile ? 24 : 36}
@@ -108,7 +108,7 @@ const Support = () => {
                     }
                     className={classNames({ 'w-full': isMobile })}
                 >
-                    <div key={announcement.id} className={classNames('w-[170px] h-[140px] sm:w-[286px] sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-namiv2-black-1 truncate text-namiv2-gray-2 font-semibold sm:font-medium  text-sm sm:text-[20px] hover:!bg-namiv2-black-2', {
+                    <div key={announcement.id} className={classNames('w-[170px] h-[140px] sm:w-[286px] sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-darkBlue-3 truncate text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] hover:!bg-hover-dark', {
                         '!w-full': isMobile
                     })}>
                         <Image
@@ -155,7 +155,7 @@ const Support = () => {
     //     // console.log('namidev ', lastedArticles)
 
     //     return (
-    //         <div className='w-full bg-namiv2-black-1 rounded-xl p-6 flex flex-col gap-8'>
+    //         <div className='w-full bg-darkBlue-3 rounded-xl p-6 flex flex-col gap-8'>
     //             {lastedArticles.map((article, index) => {
     //                 let mode, topic, ownedTags, _tagsLib, categories
     //                 const isNoti = !!article?.tags?.find((o) =>
@@ -191,7 +191,7 @@ const Support = () => {
     //                 return (
 
     //                     <div className='flex items-center gap-6' key={article.id}>
-    //                         <div className='rounded-full bg-namiv2-gray-2 h-2 w-2'>
+    //                         <div className='rounded-full bg-gray-4 h-2 w-2'>
     //                         </div>
     //                         <a href={
     //                             PATHS.SUPPORT.DEFAULT +
@@ -199,11 +199,11 @@ const Support = () => {
     //                             }`
     //                         }>
     //                             <div className='flex flex-col grap-2'>
-    //                                 <div className='mr-2 text-namiv2-gray-2 text-base font-normal hover:text-namiv2-green active:text-namiv2-green'>
+    //                                 <div className='mr-2 text-gray-4 text-base font-normal hover:text-teal active:text-teal'>
     //                                     {article.title}
-    //                                     {index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-namiv2-gray-3 bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
+    //                                     {index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-divider-dark bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
     //                                 </div>
-    //                                 <div className='font-normal text-xs leading-4 text-namiv2-gray-1 whitespace-nowrap'>
+    //                                 <div className='font-normal text-xs leading-4 text-darkBlue-5 whitespace-nowrap'>
     //                                     {formatTime(article.created_at, 'dd-MM-yyyy')}
     //                                 </div>
     //                             </div>
@@ -239,7 +239,7 @@ const Support = () => {
 
     return (
         <MaldivesLayout>
-            <div className='bg-namiv2-black'>
+            <div className='bg-shadow'>
                 <SearchSection t={t} width={width} />
                 <div className='container pt-6 max-w-[1440px]'>
                     <div className='pb-[120px] px-4 sm:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>
@@ -325,7 +325,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
     }
 
     return (
-        <div className={classNames('w-full sm:bg-namiv2-black-1 rounded-xl sm:p-6 flex flex-col gap-8', containerClassName)}>
+        <div className={classNames('w-full sm:bg-darkBlue-3 rounded-xl sm:p-6 flex flex-col gap-8', containerClassName)}>
             {lastedArticles.map((article, index) => {
                 let mode, topic, ownedTags, _tagsLib, categories
                 const isNoti = !!article?.tags?.find((o) =>
@@ -360,9 +360,9 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
 
                 return (
                     <div>
-                        {isMobile && index === 0 ? <div className='ml-4 mb-3 w-fit text-gray-1 font-normal text-xs leading-4 bg-namiv2-gray-3 bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</div> : null}
+                        {isMobile && index === 0 ? <div className='ml-4 mb-3 w-fit text-gray-1 font-normal text-xs leading-4 bg-divider-dark bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</div> : null}
                         <div className={'flex items-center gap-3 sm:gap-6 w-full'} key={article.id}>
-                            <span className='rounded-full bg-namiv2-gray-2 h-2 w-2'>
+                            <span className='rounded-full bg-gray-4 h-2 w-2'>
                             </span>
                             <div>
                                 <a href={
@@ -371,11 +371,11 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                                     }`
                                 }>
                                     <div className='flex flex-col grap-2'>
-                                        <div className='mr-2 text-namiv2-gray-2 text-sm sm:text-base font-normal hover:text-namiv2-green active:text-namiv2-green'>
+                                        <div className='mr-2 text-gray-4 text-sm sm:text-base font-normal hover:text-teal active:text-teal'>
                                             {article.title}
-                                            {!isMobile && index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-namiv2-gray-3 bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
+                                            {!isMobile && index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-divider-dark bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
                                         </div>
-                                        <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-namiv2-gray-1 whitespace-nowrap'>
+                                        <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-darkBlue-5 whitespace-nowrap'>
                                             {formatTime(article.created_at, 'dd-MM-yyyy')}
                                         </div>
                                     </div>
