@@ -8,6 +8,7 @@ import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
+import { ToastContainer } from 'react-toastify'
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
 
@@ -64,6 +65,14 @@ const MadivesLayout = ({
                         : {}
                 }
             >
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar
+                    closeButton={false}
+                    theme={light ? 'light' : 'dark'}
+                    className='nami-toast'
+                />
                 <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar

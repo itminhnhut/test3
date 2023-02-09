@@ -21,6 +21,7 @@ import Edit from 'components/svg/Edit';
 import Spinner from 'components/svg/Spinner';
 import axios from 'axios';
 import WarningCircle from 'components/svg/WarningCircle';
+import toast from 'utils/toast';
 
 const UPLOAD_TIMEOUT = 4000;
 
@@ -87,6 +88,19 @@ const AccountAvatar = ({
             timeoutId = setTimeout(() => {
                 setUploadStatus(IDLE);
             }, UPLOAD_TIMEOUT);
+
+            const toastObj = {
+                [DONE]: {
+                    text: 'Đổi ảnh đại diện thành công.',
+                    type: 'success'
+                },
+                [FAILURE]: {
+                    text: 'Lỗi tải ảnh.',
+                    type: 'error'
+                }
+            }[uploadStatus];
+
+            toast(toastObj);
         }
 
         return () => {
@@ -184,6 +198,8 @@ const AccountAvatar = ({
         setOpenModal(false);
     };
 
+    let refObserver = useRef(null);
+
     const scrollToCategory = (event, id) => {
         setCurrentCategoryId(id);
 
@@ -225,7 +241,8 @@ const AccountAvatar = ({
                         className='flex items-center justify-center bg-darkBlue-3 rounded-full w-[8.75rem] h-[8.75rem]'>
                         <Spinner />
                     </div> :
-                    <img src={currentAvatar} className='rounded-full w-[8.75rem] h-[8.75rem]' alt='Nami.Exchange' />
+                    <img src={currentAvatar} className='rounded-full bg-darkBlue-3 w-[8.75rem] h-[8.75rem]'
+                         alt='Nami.Exchange' />
             }
             <div
                 onClick={() => setOpenModal(true)}
@@ -283,8 +300,7 @@ const AccountAvatar = ({
                                 className={classnames(
                                     'px-5 py-3 border rounded-full whitespace-nowrap cursor-pointer',
                                     'transition duration-100', {
-                                        'border-teal bg-teal/[.1]': currentCategoryId === category.id,
-                                        'border-namiv2-gray-3': currentCategoryId !== category.id
+                                        'border-teal bg-teal/[.1]': currentCategoryId === category.id, 'border-namiv2-gray-3': currentCategoryId !== category.id
                                     })
                                 }
                             >{category.name[language]}</div>;
@@ -294,8 +310,8 @@ const AccountAvatar = ({
                         {avatarSets.map(avatarSet => {
                             return <div
                                 id={`category_${avatarSet.category.id}`}
+                                data-id={avatarSet.category.id}
                                 key={avatarSet.category.id}
-                                className='py-3'
                             >
                                 <div className='bg-darkBlue-3 p-4 rounded-xl'>
                                     <p className='text-darkBlue-5 mb-4'>{avatarSet.category.name[language]}</p>

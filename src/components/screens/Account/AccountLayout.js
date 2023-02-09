@@ -1,7 +1,6 @@
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useApp from 'hooks/useApp';
 import styled from 'styled-components';
-import Edit from 'components/svg/Edit';
 import { useSelector } from 'react-redux';
 import WarningTriangle from 'components/svg/WarningTriangle';
 import CheckCircle from 'components/svg/CheckCircle';
@@ -15,6 +14,7 @@ import Link from 'next/link';
 import AccountAvatar from 'components/screens/Account/AccountAvatar';
 import { PATHS } from 'constants/paths';
 import { getS3Url } from 'redux/actions/utils';
+import toast from 'utils/toast';
 
 const KYCPendingTag = ({ t }) => {
     return <div
@@ -54,7 +54,6 @@ export default function AccountLayout({ children }) {
         <Container className='mal-container px-4 h-full'>
             <div className='flex items-end justify-between'>
                 <AccountAvatar currentAvatar={user?.avatar} />
-
                 <div className='ml-4 flex-1'>
                     <div className='flex mb-3'>
                         <span className='text-xl leading-7 font-medium'>{user?.name}</span>
