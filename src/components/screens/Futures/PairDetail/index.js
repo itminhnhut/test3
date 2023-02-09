@@ -92,14 +92,14 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-namiv2-green font-semibold text-right'
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
                 : 'ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide';
             return (
                 <div
                     ref={lastPriceRef}
                     style={{ minWidth: lastPriceMinW }}
                     className={classNames(className, {
-                        '!text-namiv2-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
+                        '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
                 >
                     {formatNumber(
@@ -486,8 +486,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
                             <div
-                                className={classNames('text-namiv2-green text-sm mt-2', {
-                                    '!text-namiv2-red': priceFromMarketWatch?.priceChangePercent < 0
+                                className={classNames('text-teal text-sm mt-2', {
+                                    '!text-red': priceFromMarketWatch?.priceChangePercent < 0
                                 })}
                             >
                                 {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%

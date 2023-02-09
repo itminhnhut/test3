@@ -152,7 +152,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, levelTabs, type
             <div className="flex flex-col space-y-4">
                 <div className="flex flex-col space-y-1 font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.date')}</div>
-                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} isNamiApp/>
+                    <DatePicker date={state.range} onChange={(e) => onChange('range', e.selection)} isnamiv2/>
                 </div>
                 <div className="flex flex-col space-y-3  font-medium text-sm leading-6 text-gray-1">
                     <div>{t('reference:referral.level')}</div>
@@ -238,7 +238,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                     </div>
                 </div>
                 <div className={classNames("mt-6", { "!mt-8": loading })}>
-                    {loading ? <IconLoading color={colors.namiv2.green.DEFAULT} /> : dataSource.length <= 0 ? (
+                    {loading ? <IconLoading color={colors.teal} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
@@ -253,7 +253,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                                                 <div className="font-semibold text-sm leading-6 text-gray-6">
                                                     {t('broker:your_commission')} ({t('common:level', { level: data?.level })})
                                                 </div>
-                                                <div className="text-namiapp-green-1 font-semibold text-sm leading-6">+{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} /></div>
+                                                <div className="text-teal font-semibold text-sm leading-6">+{formatNumber(data.value, 4)} <AssetCode assetId={data.currency} /></div>
                                             </div>
                                             <div className="flex items-center justify-between text-gray-7">
                                                 <div className="font-medium text-xs">{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
@@ -280,12 +280,12 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         pageSize={limit}
                         current={page}
                         onChange={(page) => setPage(page)}
-                        className='!text-namiapp-green-1'
+                        className='!text-teal'
                         style={{
-                            fontColor: colors.namiv2.green[1]
+                            fontColor: colors.teal
                         }}
                         isDark
-                        isNamiApp
+                        isnamiv2
                     />
                 </div>
             </CollapsibleRefCard>

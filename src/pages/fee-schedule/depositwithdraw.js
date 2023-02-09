@@ -327,7 +327,7 @@ const DepositWithdrawFee = () => {
                 {renderSearchBox()}
             </div>
 
-            <div className='mt-8 overflow-hidden border border-namiv2-gray-3 rounded-xl'>
+            <div className='mt-8 overflow-hidden border border-divider-dark rounded-xl'>
                 {renderTable()}
             </div>
         </div>

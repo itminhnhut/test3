@@ -84,8 +84,8 @@ const PopupModal = ({
                                     { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                     {
                                         '!rounded-xl !px-6': useCenter && !isDesktop,
-                                        'bg-namiapp-black': isMobile,
-                                        'bg-namiv2-black border border-divider-dark': isDesktop
+                                        'bg-dark': isMobile,
+                                        '!bg-white text-darkBlue': isDesktop
                                     }
                                 )}
                                 style={{ backgroundImage: background ?? null, backgroundSize: background ? 'cover' : null, backgroundRepeat: 'no-repeat', backgroundPosition: 'center', position: 'fixed', maxHeight: 'none' }}
@@ -221,8 +221,8 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
 
 export const renderRefInfo = (text, className = '', size = 15, originalText) => {
     return (
-        <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center', className)}>
-            <div className="font-medium text-sm text-namiapp-black-3 w-3/4">{text}</div>
+        <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]', className)}>
+            <div className="font-medium text-sm text-shadow-3 w-3/4">{text}</div>
             <div>
                 <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />
             </div>
