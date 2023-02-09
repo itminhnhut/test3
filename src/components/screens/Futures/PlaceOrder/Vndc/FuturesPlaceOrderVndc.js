@@ -42,7 +42,7 @@ const FuturesPlaceOrderVndc = ({ pairConfig, userSettings, pairPrice, isAuth, is
 
     return (
         <div className="p-6 pl-4 h-full overflow-x-hidden overflow-y-auto">
-            <OrderSide side={side} setSide={setSide} leverage={leverage} />
+            <OrderSide side={side} setSide={setSide} leverage={leverage} setLeverage={setLeverage} pair={pair} pairConfig={pairConfig} isAuth={isAuth} />
             <FuturesOrderTypes currentType={currentType} orderTypes={pairConfig?.orderTypes} isVndcFutures={true} />
 
             <FuturesOrderModule
