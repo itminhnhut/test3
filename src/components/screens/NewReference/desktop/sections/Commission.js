@@ -3,11 +3,13 @@ import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_NEW_COMMISSIONS, API_NEW_REFERRAL_NEW_FRIENDS } from 'redux/actions/apis';
 import { Line, NoData } from 'components/screens/NewReference/mobile';
 import { formatNumber, formatTime } from 'redux/actions/utils';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs'
-import { useTranslation } from 'next-i18next'
 import React, { useEffect, useState, useMemo } from 'react'
-import { RefInfo, UserIcon } from 'components/screens/NewReference/mobile/sections/LastedActivities';
 import RefCard from '../../RefCard';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { pick } from 'lodash';
+import { UserIcon } from 'components/screens/NewReference/mobile/sections/LastedActivities';
+import User from 'components/svg/User';
+import UserCircle from 'components/svg/UserCircle';
 
 const tier = {
     1: {
@@ -53,14 +55,7 @@ const languages = {
 const Commission = ({ t, language, id }) => {
     const [lastedCommissions, setLastedCommissions] = useState([])
     const [lastedFriends, setLastedFriends] = useState([])
-    const tags = [{
-        value: 'receivedCommision',
-        content: t('futures:mobile.commission')
-    }, {
-        value: 'lastedUser',
-        content: t('reference:referral.new_friends')
-    },]
-    const [tab, setTab] = useState(tags[0].value)
+    const [theme] = useDarkMode()
     useEffect(() => {
         FetchApi({
             url: API_NEW_REFERRAL_NEW_COMMISSIONS,
@@ -90,15 +85,26 @@ const Commission = ({ t, language, id }) => {
 
     const renderNewFriends = useMemo(() => {
         return !lastedFriends.length ? <><NoData className='my-20' text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
-            <div key={data.userId}>
-                <div className='flex gap-2'>
-                    <UserIcon />
-                    <div className='font-semibold text-sm leading-6 text-darkBlue'>
+            <div key={data.userId} className='p-4 bg-dark-2 rounded-xl'>
+                <div className='flex gap-2 mb-6'>
+                    <UserCircle/>
+                    <p className='font-bold'>
                         {t('reference:referral.new_friend')}: {data.code}
-                    </div>
+                    </p>
                 </div>
-                <div>
-                    <RefInfo data={data} language={language} className='mb-6 mt-4' />
+                <div className='space-y-3'>
+                    <div>
+                        <span className='text-txtSecondary'>Nami ID</span>
+                        <span className='float-right text-teal font-bold'>{data.code}</span>
+                    </div>
+                    <div>
+                        <span className='text-txtSecondary'>{t('reference:referral:level')}</span>
+                        <span className='float-right text-gray-4'>{data.level}</span>
+                    </div>
+                    <div>
+                        <span className='text-txtSecondary'>{t('reference:referral:rank')}</span>
+                        <span className='float-right text-gray-4'>{tier[data.rank][language]}</span>
+                    </div>
                 </div>
             </div>
         )
@@ -108,15 +114,15 @@ const Commission = ({ t, language, id }) => {
         return !lastedCommissions.length ? <><NoData className='my-20' text={t('reference:referral.no_commission')} /></> : lastedCommissions.map((data, index) =>
             <div key={index}>
                 <div className='flex flex-col gap-1'>
-                    <div className='flex w-full justify-between items-center font-semibold text-sm leading-6'>
-                        <div className='text-darkBlue'>
+                    <div className='flex w-full justify-between items-center font-semibold leading-6'>
+                        <div>
                             {data.formUserCode} ({t('reference:referral.level')} {data.level < 10 ? 0 : null}{data.level})
                         </div>
                         <div className='text-teal'>
                             +{formatNumber(data.value, 2)} VNDC
                         </div>
                     </div>
-                    <div className='flex w-full justify-between items-center !text-gray-1 font-medium text-xs leading-[14px]'>
+                    <div className='flex w-full justify-between items-center text-txtSecondary text-sm'>
                         <div>
                             {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
                         </div>
@@ -125,27 +131,26 @@ const Commission = ({ t, language, id }) => {
                         </div>
                     </div>
                 </div>
-                {lastedCommissions.length === index + 1 ? null : <Line className='my-4' />}
             </div>
         )
     }, [lastedCommissions])
 
     return (
         <div className='flex gap-8 w-full' id={id}>
-            <RefCard wrapperClassName='!p-6 w-full max-h-[624px]'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
-                    {t('reference:referral.new_friends')}
-                </div>
-                <div className='max-h-[calc(624px-96px)] overflow-y-auto pr-4'>
-                    {renderNewFriends}
-                </div>
-            </RefCard>
-            <RefCard wrapperClassName='!p-6 w-full  max-h-[624px]'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
+            <RefCard wrapperClassName='!py-6 px-8 w-full max-h-[624px]' isBlack={theme === THEME_MODE.DARK}>
+                <div className='font-semibold text-[22px] leading-7 py-3 mb-6'>
                     {t('futures:mobile.commission')}
                 </div>
-                <div className='max-h-[calc(624px-96px)] overflow-y-auto pr-4'>
+                <div className='max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-8'>
                     {renderLastedCommissions}
+                </div>
+            </RefCard>
+            <RefCard wrapperClassName='!py-6 px-8 w-full max-h-[624px]' isBlack={theme === THEME_MODE.DARK}>
+                <div className='font-semibold text-[22px] leading-7 py-3 mb-6'>
+                    {t('reference:referral.new_friends')}
+                </div>
+                <div className='max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-8'>
+                    {renderNewFriends}
                 </div>
             </RefCard>
         </div>

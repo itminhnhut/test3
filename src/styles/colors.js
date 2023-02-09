@@ -65,6 +65,7 @@ const colors = {
     navy: '#191489',
     marina: '#A6D4FF',
     blue: '#2D9CDB',
+    blue1: '#1e77eb',
 
     divider: {
         DEFAULT: '#e2e8f0',

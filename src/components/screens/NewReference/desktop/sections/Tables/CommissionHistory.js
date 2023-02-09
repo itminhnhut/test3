@@ -159,7 +159,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         key: 'value',
         dataIndex: 'value',
         title: t('reference:referral.total_commissions'),
-        align: 'left',
+        align: 'right',
         width: 200,
         sorter: false,
         render: (data, item) => <span className='text-teal'>+ {formatNumber(data, 4)} {assetTabs.find(e => e.value === item.currency)?.title}</span>
@@ -167,14 +167,14 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 
     return (
         <div className='flex w-full' id={id}>
-            <RefCard wrapperClassName='!p-6 w-full'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
+            <div className='w-full border border-divider-dark rounded-xl py-8'>
+                <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
                     {t('reference:referral.commission_histories')}
                 </div>
-                <div className='flex gap-4 flex-wrap'>
+                <div className='flex gap-6 flex-wrap mx-6 mb-6'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
-                <div className='mt-6'>
+                <div className='border-t border-divider-dark'>
                     <ReTable
                         // defaultSort={{ key: 'namiId', direction: 'desc' }}
                         className="friendlist-table"
@@ -212,7 +212,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                         onChange={page => setPage(page)}
                     />
                 </div>
-            </RefCard>
+            </div>
         </div>
     )
 }

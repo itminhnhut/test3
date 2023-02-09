@@ -175,7 +175,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                 </div>
                 <div className="mt-6">
                     {loading ? (
-                        <IconLoading color={colors.namiapp.green.DEFAULT} />
+                        <IconLoading color={colors.namiv2.green.DEFAULT} />
                     ) : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_friends')} className="h-[300px]" />
                     ) : (
@@ -391,7 +391,7 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
     return (
         <ReactTooltip
             ref={ref}
-            className={classNames('!bg-namiapp-black-2 !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
+            className={classNames('!bg-namiapp-black-2 !rounded-lg !opacity-100 !text-gray-6 !shadow-ref px-3', className)}
             place={place}
             effect="solid"
             {...restProps}

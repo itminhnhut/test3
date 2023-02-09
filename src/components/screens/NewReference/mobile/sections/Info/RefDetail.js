@@ -143,7 +143,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 data={`https://nami.exchange/ref/${data.code}`}
                                                 size={13.5}
                                                 className="cursor-pointer"
-                                                color={colors.namiapp.gray[2]}
+                                                color={colors.namiv2.gray[2]}
                                             />
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowFriendList(true);
                                             }}
                                         >
-                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.namiapp.gray[2]} />
+                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.namiv2.gray[2]} />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
@@ -169,7 +169,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowEditNote(true);
                                             }}
                                         >
-                                            {data.note} <NoteIcon color={colors.namiapp.gray[2]} />
+                                            {data.note} <NoteIcon color={colors.namiv2.gray[2]} />
                                         </div>
                                     </div>
                                 </div>
@@ -198,14 +198,14 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     );
 };
 
-export const FriendListIcon = ({ color = '#718096' }) => (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const FriendListIcon = ({ size= 12, color = '#718096' }) => (
+    <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export const NoteIcon = ({ color = '#718096' }) => (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const NoteIcon = ({ size= 12, color = '#718096' }) => (
+    <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#s8m7dixeoa)" stroke={color} strokeLinecap="round" strokeLinejoin="round">
             <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
             <path d="M10 .94a1.06 1.06 0 0 0-.75.31L4.5 6 4 8l2-.5 4.75-4.75A1.06 1.06 0 0 0 10 .94z" />
