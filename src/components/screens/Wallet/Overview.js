@@ -125,60 +125,38 @@ const OverviewWallet = (props) => {
         );
     }, [partnersEstBtc, partnersRefPrice]);
 
-    const renderFarmingEstBalance = useCallback(() => {
-        return (
-            <>
-                <span className="font-bold"> {formatWallet(farmingEstBtc?.totalValue, farmingEstBtc?.assetDigit, farmingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
-                <span className="text-xs font-medium">
-                    {' '}
-                    <AssetName assetCode="BTC" />{' '}
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                        ~ ${formatWallet(farmingRefPrice?.totalValue, farmingRefPrice?.assetDigit, farmingRefPrice?.assetDigit ? 0 : 2)}
-                    </span>
-                </span>
-            </>
-        );
-    }, [farmingEstBtc, farmingRefPrice]);
+    // const renderFarmingEstBalance = useCallback(() => {
+    //     return (
+    //         <>
+    //             <span className="font-bold"> {formatWallet(farmingEstBtc?.totalValue, farmingEstBtc?.assetDigit, farmingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
+    //             <span className="text-xs font-medium">
+    //                 {' '}
+    //                 <AssetName assetCode="BTC" />{' '}
+    //                 <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+    //                     ~ ${formatWallet(farmingRefPrice?.totalValue, farmingRefPrice?.assetDigit, farmingRefPrice?.assetDigit ? 0 : 2)}
+    //                 </span>
+    //             </span>
+    //         </>
+    //     );
+    // }, [farmingEstBtc, farmingRefPrice]);
 
-    const renderStakingEstBalance = useCallback(() => {
-        return (
-            <>
-                <span className="font-bold"> {formatWallet(stakingEstBtc?.totalValue, stakingEstBtc?.assetDigit, stakingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
-                <span className="text-xs font-medium">
-                    {' '}
-                    <AssetName assetCode="BTC" />{' '}
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark ">
-                        ~ ${formatWallet(stakingRefPrice?.totalValue, stakingRefPrice?.assetDigit, stakingRefPrice?.assetDigit ? 0 : 2)}
-                    </span>
-                </span>
-            </>
-        );
-    }, [stakingEstBtc, stakingRefPrice]);
+    // const renderStakingEstBalance = useCallback(() => {
+    //     return (
+    //         <>
+    //             <span className="font-bold"> {formatWallet(stakingEstBtc?.totalValue, stakingEstBtc?.assetDigit, stakingEstBtc?.totalValue ? 0 : 8)} </span>{' '}
+    //             <span className="text-xs font-medium">
+    //                 {' '}
+    //                 <AssetName assetCode="BTC" />{' '}
+    //                 <span className="text-txtSecondary dark:text-txtSecondary-dark ">
+    //                     ~ ${formatWallet(stakingRefPrice?.totalValue, stakingRefPrice?.assetDigit, stakingRefPrice?.assetDigit ? 0 : 2)}
+    //                 </span>
+    //             </span>
+    //         </>
+    //     );
+    // }, [stakingEstBtc, stakingRefPrice]);
 
     return (
         <div className="pb-32">
-            {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div className="t-common whitespace-nowrap">{t('common:overview')}</div>
-                <div className="flex items-center w-full mt-3 sm:mt-0 sm:w-auto">
-                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                            {t('common:deposit')}
-                        </a>
-                    </Link>
-                    <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                        <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
-                            {t('common:withdraw')}
-                        </a>
-                    </Link>
-                    <div
-                        className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer"
-                        onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                    >
-                        {t('common:transfer')}
-                    </div>
-                </div>
-            </div> */}
-
             <MCard addClass="mt-5 !p-6 xl:!p-8 border border-divider dark:border-divider-dark !bg-namiv2-linear bg-cover !dark:bg-dark">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between">
                     <div>
@@ -193,13 +171,6 @@ const OverviewWallet = (props) => {
                         </div>
                         <div className="mt-12 flex items-center">
                             <div className="rounded-full bg-listItemSelected dark:bg-listItemSelected-dark w-[64px] h-[64px] flex items-center justify-center">
-                                {/* <img
-                                    className="-ml-0.5"
-                                    src={getS3Url('/images/icon/ic_wallet_2.png')}
-                                    height={width >= 768 ? '48' : '28'}
-                                    width={width >= 768 ? '48' : '28'}
-                                    alt=""
-                                /> */}
                                 <SvgWalletOverview />
                             </div>
                             <div className="ml-6">{renderOverviewEstBalance()}</div>
@@ -219,14 +190,13 @@ const OverviewWallet = (props) => {
                             </HrefButton>
                             <ButtonV2
                                 className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
-                                    text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2
+                                    text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2 !font-semibold
                                  "
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
-                        {/* <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt="" /> */}
                     </div>
                 </div>
             </MCard>
@@ -264,7 +234,7 @@ const OverviewWallet = (props) => {
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
 
                             <TextButton
-                                className="text-sm font-semibold"
+                                className="text-sm !font-semibold"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                             >
                                 {t('common:transfer')}
@@ -283,7 +253,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div className="flex">
                                 <TextButton
-                                    className="text-sm font-semibold"
+                                    className="text-sm !font-semibold"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
@@ -303,7 +273,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div className="flex">
                                 <TextButton
-                                    className="text-sm font-semibold"
+                                    className="text-sm !font-semibold"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
