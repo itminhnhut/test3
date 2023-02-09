@@ -3,7 +3,7 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import { Minus, Plus, X } from 'react-feather';
 import { ScaleLoader } from 'react-spinners';
 import SvgWarning from 'components/svg/SvgWarning';
-import Button from 'components/common/Button';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import axios from 'axios';
@@ -82,17 +82,15 @@ const FuturesLeverageSettings = ({
 
     const renderConfirmButton = useCallback(
         () => (
-            <Button
-                title={loading ? <ScaleLoader color={colors.white} width={2} height={12} /> : t('futures:leverage:confirm')}
-                onusMode={onusMode}
-                componentType="button"
+            <ButtonV2
                 className={`${onusMode ? '!text-[16px] !font-semibold !h-[48px]' : '!h-[48px]'} ${
                     !onusMode && getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''
                 }`}
-                type="primary"
                 disabled={loading || getValidator?.isError}
                 onClick={() => !loading && onSetLeverage(pair, _leverage)}
-            />
+            >
+                {loading ? <ScaleLoader color={colors.white} width={2} height={12} /> : t('futures:leverage:confirm')}
+            </ButtonV2>
         ),
         [_leverage, pair, loading, onusMode]
     );
