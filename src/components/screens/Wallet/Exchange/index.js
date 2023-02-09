@@ -80,7 +80,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 align: 'left',
-                width: 220,
+                width: 200,
                 fixed: 'left'
             },
             {
@@ -88,14 +88,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'total',
                 title: t('common:total'),
                 align: 'right',
-                width: 231
+                width: 210
             },
             {
                 key: 'available',
                 dataIndex: 'available',
                 title: t('common:available_balance'),
                 align: 'right',
-                width: 231
+                width: 210
             },
             {
                 key: 'in_order',
@@ -355,7 +355,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     <div className="text-sm">
                         {assetUsdRate ? (
                             <>
-                                <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
+                                <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
                                 <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
                                     ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                 </div>
