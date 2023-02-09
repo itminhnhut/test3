@@ -8,6 +8,7 @@ import { Line } from './mobile';
 import React from 'react';
 import { useState } from 'react';
 import { MobileFont } from './mobile'
+import Copy from 'components/svg/Copy';
 
 const PopupModal = ({
     isVisible,
@@ -198,25 +199,26 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
                 fillRule="evenodd"
                 clipRule="evenodd"
                 d="M14.0598 2.85758C14.2766 3.02869 14.3136 3.3431 14.1424 3.55984L6.64244 13.0598C6.55397 13.1719 6.4218 13.2408 6.27926 13.2492C6.13672 13.2575 5.99741 13.2045 5.89645 13.1036L1.89645 9.10357C1.70118 8.90831 1.70118 8.59173 1.89645 8.39647C2.09171 8.2012 2.40829 8.2012 2.60355 8.39647L6.20597 11.9989L13.3576 2.9402C13.5287 2.72346 13.8431 2.68647 14.0598 2.85758Z"
-                fill="#00C8BC"
+                fill="#47cc85"
             />
         </svg>
-    ) : (
-        <svg onClick={() => onClick()} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
-                d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z"
-                stroke={color}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-            <path
-                d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889"
-                stroke={color}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
+    ) : <Copy onClick={onClick} className={className} size={size}/>
+    // (
+    //     <svg onClick={() => onClick()} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    //         <path
+    //             d="M15.222 5.444h-8c-.982 0-1.778.796-1.778 1.778v8c0 .982.796 1.778 1.778 1.778h8c.982 0 1.778-.796 1.778-1.778v-8c0-.982-.796-1.778-1.778-1.778z"
+    //             stroke={color}
+    //             strokeLinecap="round"
+    //             strokeLinejoin="round"
+    //         />
+    //         <path
+    //             d="M3.667 12.556h-.89A1.778 1.778 0 0 1 1 10.778v-8A1.778 1.778 0 0 1 2.778 1h8a1.778 1.778 0 0 1 1.778 1.778v.889"
+    //             stroke={color}
+    //             strokeLinecap="round"
+    //             strokeLinejoin="round"
+    //         />
+    //     </svg>
+    // );
 };
 
 export const renderRefInfo = (text, className = '', size = 15, originalText) => {
