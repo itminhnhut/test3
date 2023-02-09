@@ -28,6 +28,9 @@ import PopoverV2 from 'components/common/V2/PopoverV2';
 import useOutsideClick from 'hooks/useOutsideClick';
 import NoData from 'components/common/V2/TableV2/NoData';
 import TableV2 from 'components/common/V2/TableV2';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -173,11 +176,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     <SvgWalletExchange size={32} />
                 </div>
                 <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary">
-                    <div className="font-bold text-[24px] lg:text-[28px] xl:text-4xl ">
-                        <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
-                        <span>BTC</span>
+                    <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                        {state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC
                     </div>
-                    <div className="font-normal text-sm lg:text-[16px] xl:text-base mt-1 md:mt-3 xl:mt-5 ">
+                    <div className="font-normal text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
@@ -447,8 +449,25 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         {renderEstWallet()}
                     </div>
                     <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto">
-                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                        <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
+                            <HrefButton className="min-w-[120px] py-3" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                                {t('common:deposit')}
+                            </HrefButton>
+                            <HrefButton
+                                className="min-w-[120px] py-3"
+                                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}
+                                variants="secondary"
+                            >
+                                {t('common:withdraw')}
+                            </HrefButton>
+                            <ButtonV2
+                                className="min-w-[120px] py-3 text-txtSecondary dark:text-txtSecondary-dark dark:bg-namiv2-gray"
+                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                            >
+                                {t('common:transfer')}
+                            </ButtonV2>
+
+                            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
                                 <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer bg-bgBtnPrimary">
                                     {t('common:deposit')}
                                 </a>
@@ -469,7 +488,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
-                            </div>
+                            </div> */}
                         </div>
                         {/* <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt="" /> */}
                     </div>

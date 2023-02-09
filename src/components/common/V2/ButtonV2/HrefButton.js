@@ -12,7 +12,7 @@ const HrefButton = ({ className = '', disabled = false, href = '/', children, va
                         {
                             'bg-teal text-white': variants === 'primary',
                             'bg-namiv2-gray text-txtSecondary dark:text-txtSecondary-dark': variants === 'secondary',
-                            'text-teal !text-sm focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed': variants === 'blank',
+                            'text-teal !text-sm !font-semibold focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed': variants === 'blank',
                             'bg-gray-2 dark:bg-dark-2 text-gray-5/[0.1]': disabled
                         },
                         className
