@@ -644,7 +644,7 @@ const OrderDetail = ({
         const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity);
         const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
         const swap = row?.swap || 0;
-        const liqPrice = (size * row?.open_price + (row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami));
+        const liqPrice = (size * row?.open_price + (row?.fee_data?.place_order?.['22'] || 0) +(row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami));
         return liqPrice > 0 ? formatNumber(liqPrice, 0, decimalPrice, false) : '-';
     };
 
