@@ -26,6 +26,7 @@ import Announcement from 'components/screens/Account/Announcement';
 import Edit from 'components/svg/Edit';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import InputV2 from 'components/common/V2/InputV2';
 import fetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
@@ -105,50 +106,6 @@ const SwitchUseNamiFee = ({
     </div>;
 };
 
-const Input = ({
-    label,
-    value,
-    onChange,
-    placeholder,
-    canPaste
-}) => {
-    const { t } = useTranslation();
-
-    const inputRef = useRef(null);
-
-    const onInputChange = (e) => {
-        if (onChange) onChange(e.target.value);
-    };
-
-    const paste = () => {
-        navigator.clipboard.readText()
-            .then(text => {
-                if (onChange) {
-                    onChange(text);
-                }
-            });
-    };
-
-    return <div>
-        {label && <p className='text-txtSecondary pb-2'>{label}</p>}
-        <div className='bg-dark-2 rounded-md flex p-3'>
-            <input
-                ref={inputRef}
-                className='flex-1 !placeholder-darkBlue-5'
-                type='text'
-                placeholder={placeholder}
-                value={value}
-                onChange={onInputChange}
-            />
-            {canPaste}
-            <span
-                onClick={paste}
-                className='text-teal font-semibold cursor-pointer select-none'
-            >{t('common:paste')}</span>
-        </div>
-    </div>;
-};
-
 const ModalChangeReferee = ({
     t,
     open,
@@ -196,7 +153,7 @@ const ModalChangeReferee = ({
 
     return <ModalV2 isVisible={open} onBackdropCb={onClose} className='w-[30rem]'>
         <p className='text-xl font-medium py-6'>{t('profile:referrer')}</p>
-        <Input
+        <InputV2
             value={refCode}
             onChange={setRefCode}
             label={t('profile:ref_code_optional')}
