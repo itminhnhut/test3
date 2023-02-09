@@ -461,7 +461,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 {t('common:withdraw')}
                             </HrefButton>
                             <ButtonV2
-                                className="min-w-[120px] py-3 text-txtSecondary dark:text-txtSecondary-dark dark:bg-namiv2-gray"
+                                className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
+                                text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
