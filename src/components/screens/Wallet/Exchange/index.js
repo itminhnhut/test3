@@ -456,7 +456,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 <a
                                     className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                   text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-namiv2-gray hover:!text-white
+                                   text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
                                 "
                                 >
                                     {t('common:withdraw')}
@@ -464,7 +464,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             </Link>
                             <div
                                 className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-namiv2-gray hover:!text-white
+                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
                                  "
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
@@ -480,7 +480,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             <div className="mt-16 lg:items-center lg:justify-between">
                 <div className="t-common">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
-                    <div className="bg-namiv2-gray flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
+                    <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
                         <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
                         <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
                             {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
@@ -510,7 +510,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
                             </div>
                         </div>
-                        <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-namiv2-gray">
+                        <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                             <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
                                 className="text-sm w-full px-2.5"

@@ -55,7 +55,7 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item-active {
-        background-color: ${colors?.namiv2?.green?.DEFAULT};
+        background-color: ${colors?.teal};
     }
 
     .rc-pagination-item-active a {
@@ -83,8 +83,8 @@ const NamiV2PaginationWrapper = styled.div`
 
     .rc-pagination-prev button,
     .rc-pagination-next button {
-        color: ${colors?.namiv2?.gray[2]};
-        background-color: ${({ isDark }) => (isDark ? colors?.namiv2?.gray?.DEFAULT : colors.grey3)};
+        color: ${colors?.gray4};
+        background-color: ${({ isDark }) => (isDark ? colors?.dark?.[2] : colors.grey3)};
     }
 
     .rc-pagination-next button:after {
@@ -104,7 +104,7 @@ const NamiV2PaginationWrapper = styled.div`
 
     .rc-pagination-prev button:hover,
     .rc-pagination-next button:hover {
-        color: ${colors?.namiv2?.gray[2]};
+        color: ${colors?.gray4};
     }
 
     .rc-pagination-disabled button:after {

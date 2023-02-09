@@ -13,7 +13,7 @@ import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 
-const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, hasShadow, wrapperClassname, text, isNamiApp = false }) => {
+const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, hasShadow, wrapperClassname, text, isnamiv2 = false }) => {
     const {
         t,
         i18n: { language }
@@ -64,13 +64,13 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                         `relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white w-auto`,
                         {
                             '!border-teal': showPicker,
-                            'bg-namiapp-black-2 border-none !rounded-md text-gray-6': isNamiApp
+                            'bg-hover-dark border-none !rounded-md text-gray-6': isnamiv2
                         },
                     )}
                 >
                     <div className="flex items-center w-auto" onClick={() => setShowPicker(!showPicker)}>
                         <CalendarIcon />
-                        <div className={classNames("text-darkBlue leading-6 px-2", { 'text-gray-6': isNamiApp })}>
+                        <div className={classNames("text-darkBlue leading-6 px-2", { 'text-gray-6': isnamiv2 })}>
                             {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
 
                             {!isCalendar &&
@@ -96,7 +96,7 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                 leaveTo="opacity-0 translate-y-1"
             >
                 <div
-                    className={classNames("relative date-range-picker flex justify-center mt-2 w-full", isNamiApp ? 'black-background' : 'nami-exchange',
+                    className={classNames("relative date-range-picker flex justify-center mt-2 w-full", isnamiv2 ? 'black-background' : 'nami-exchange',
                         {
                             'white-background': allwaysOpen,
                             '!left-0 !absolute z-20 !w-auto !bg-white': month && !text,
@@ -104,7 +104,7 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                         })}
                 >
                     <Component
-                        className={classNames(`relative h-full ${isCalendar ? 'single-select' : ''} w-full`, { 'datepicker-shadow': hasShadow, 'black-background': isNamiApp })}
+                        className={classNames(`relative h-full ${isCalendar ? 'single-select' : ''} w-full`, { 'datepicker-shadow': hasShadow, 'black-background': isnamiv2 })}
                         date={date}
                         ranges={!isCalendar ? [date] : []}
                         months={month ?? 1}
@@ -114,12 +114,12 @@ const DatePicker = ({ date, isCalendar, onChange, allwaysOpen = false, month, ha
                         staticRanges={[]}
                         inputRanges={[]}
                         weekStartsOn={0}
-                        rangeColors={[isNamiApp ? colors.namiapp.green[1] : colors.teal]}
+                        rangeColors={[isnamiv2 ? colors.teal : colors.teal]}
                         editableDateInputs={true}
                         retainEndDateOnFirstSelection
                         navigatorRenderer={navigatorRenderer}
                         locale={language === 'vi' ? vi : en}
-                        isNamiApp={isNamiApp}
+                        isnamiv2={isnamiv2}
                     />
                 </div>
             </Transition>

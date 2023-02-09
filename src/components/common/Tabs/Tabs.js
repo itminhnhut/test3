@@ -71,7 +71,7 @@ const Tab = styled.div.attrs(({ className }) => ({
         position: absolute;
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
-        background-color: ${() => colors.namiapp.green[1]};
+        background-color: ${() => colors.teal};
         width: ${({ offset }) => offset?.w_after};
         left: ${({ offset }) => offset?.l_after};
         transition: all 0.2s;

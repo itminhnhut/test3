@@ -75,7 +75,7 @@ export default function AccountLayout({ children }) {
                 }
             </div>
 
-            <div className='flex justify-between items-center border-b border-namiv2-gray-3 mt-12'>
+            <div className='flex justify-between items-center border-b border-divider-dark mt-12'>
                 <div className='flex space-x-6'>
                     {[{
                         label: t('navbar:menu.user.profile'),

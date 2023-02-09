@@ -180,7 +180,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     {resultData.isSucess ?
                         null
                         :
-                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                        <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
                             onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
@@ -290,7 +290,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>}
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
-                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.namiapp.green[1]} bgColorActive={colors.namiapp.green[1]} BgColorLine={colors.namiapp.black[2]} bgColorDot={colors.namiapp.black[2]} />
+                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.teal} bgColorActive={colors.teal} BgColorLine={colors.hover.DEFAULT} bgColorDot={colors.hover.DEFAULT} />
                         </div>
                         <div className='flex justify-between items-center font-medium text-xs leading-5'>
                             <div>
@@ -303,7 +303,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.addref_title')}
-                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
+                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
@@ -334,7 +334,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.note')}
-                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4'>
+                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='text-gray-6 font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -355,14 +355,14 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>
                     </div>
                     <div className='flex items-center gap-2 text-xs font-medium'>
-                        <input type="checkbox" id="setdefault123" className='bg-namiapp-green-1 rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
+                        <input type="checkbox" id="setdefault123" className='bg-teal rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
                             style={{
                                 outline: 'none'
                             }}
                         />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-namiapp-green-1 rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-namiapp-black-2 !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
+                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-hover-dark !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
                         onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}

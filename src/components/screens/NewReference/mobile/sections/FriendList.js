@@ -175,7 +175,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                 </div>
                 <div className="mt-6">
                     {loading ? (
-                        <IconLoading color={colors.namiapp.green.DEFAULT} />
+                        <IconLoading color={colors.teal} />
                     ) : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_friends')} className="h-[300px]" />
                     ) : (
@@ -196,14 +196,14 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     className={classNames('w-[calc(100vw-32px)] !left-4 !p-0', { '!mt-10': index === 0 })}
                                                 >
                                                     <div className="w-full pt-6 pb-2 px-3 font-semibold text-base text-gray-6">
-                                                        <div className="w-full rounded-md border-[1px] border-namiapp-green h-10 flex items-center justify-center">
-                                                            <div className="absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-namiapp-black-2">
+                                                        <div className="w-full rounded-md border-[1px] border-txtTextBtn h-10 flex items-center justify-center">
+                                                            <div className="absolute top-[10px] p-1 text-xs font-medium text-gray-1 bg-dark-2">
                                                                 Ref Code
                                                             </div>
                                                             <div className="font-semibold text-sm leading-6">{data.byRefCode}</div>
                                                         </div>
                                                         <div className="mt-4">
-                                                            <div className="text-namiapp-green-1 leading-6 font-semibold text-sm">
+                                                            <div className="text-teal leading-6 font-semibold text-sm">
                                                                 {t('reference:referral.direct_commissions_rate')}
                                                             </div>
                                                             <div className="font-medium text-xs flex flex-wrap">
@@ -217,7 +217,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                             </div>
                                                         </div>
                                                         <div className="mt-4">
-                                                            <div className="text-namiapp-green-1 leading-6 font-semibold text-sm">
+                                                            <div className="text-teal leading-6 font-semibold text-sm">
                                                                 {t('reference:referral.indirect_commissions_rate')}
                                                             </div>
                                                             <div className="font-medium text-xs flex flex-wrap">
@@ -240,15 +240,15 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                         <div
                                             className={classNames(
                                                 'px-3 py-1 rounded-md font-normal text-xxs flex items-center',
-                                                data.kycStatus === 2 ? 'text-namiapp-green-1 bg-teal/[.05]' : 'text-gray-7 bg-gray-1/[.05]'
+                                                data.kycStatus === 2 ? 'text-teal bg-teal/[.05]' : 'text-gray-7 bg-gray-1/[.05]'
                                             )}
                                         >
                                             {data.kycStatus === 2 ? <CheckIcon className="mr-1" /> : null}
                                             {status}
                                         </div>
                                     </div>
-                                    <div className="my-3 py-2 rounded-md border-[1px] border-namiapp-black-4 flex text-gray-7">
-                                        <div className="w-full text-center border-r-[1px] border-namiapp-black-4 text-sm font-medium">
+                                    <div className="my-3 py-2 rounded-md border-[1px] border-dark-4 flex text-gray-7">
+                                        <div className="w-full text-center border-r-[1px] border-dark-4 text-sm font-medium">
                                             <div className="leading-5">{t('reference:referral.referred')}</div>
                                             <div className="text-gray-6 leading-6 font-semibold">
                                                 {formatNumber(data.invitedCount)} {t('reference:referral.friends')}
@@ -267,7 +267,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     <img src={getS3Url('/images/nao/ic_info.png')} height={12} width={12} />
                                                 </div> */}
                                                 <Tooltip id={'direct' + data.code} place="top" effect="solid" arrowColor="#fff">
-                                                    <div className="px-6 py-3 text-tiny !bg-namiapp-black-2 min-w-[120px] w-full">
+                                                    <div className="px-6 py-3 text-tiny !bg-dark-2 min-w-[120px] w-full">
                                                         <div className="mb-2 text-gray-7 font-semibold">
                                                             {t('reference:referral.total_direct_commissions')}:
                                                         </div>
@@ -285,7 +285,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-namiapp-green-1 font-semibold">
+                                            <div className="text-teal font-semibold">
                                                 ~ {formatNumber(data?.directCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
@@ -293,7 +293,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                             <div className="flex items-center space-x-2">
                                                 <span data-tip="" data-for={'indirect' + data.code} className="border-b border-dashed border-gray-7">{t('reference:referral.total_indirect_commissions')}</span>
                                                 <Tooltip id={'indirect' + data.code} place="top" effect="solid" arrowColor="#fff">
-                                                    <div className="px-6 py-3 text-tiny !bg-namiapp-black-2 min-w-[120px] w-full">
+                                                    <div className="px-6 py-3 text-tiny !bg-dark-2 min-w-[120px] w-full">
                                                         <div className="mb-2 text-gray-7 font-semibold ">
                                                             {t('reference:referral.total_indirect_commissions')}
                                                         </div>
@@ -311,7 +311,7 @@ const ListData = ({ total, dataSource, arrStatus, filter, setFilter, showFilter,
                                                     </div>
                                                 </Tooltip>
                                             </div>
-                                            <div className="text-namiapp-green-1 font-semibold">
+                                            <div className="text-teal font-semibold">
                                                 ~ {formatNumber(data?.undirectCommission?.total)} {data.symbol} VNDC
                                             </div>
                                         </div>
@@ -355,7 +355,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                         isCalendar
                         date={state.invitedAt}
                         onChange={(e) => onChange('invitedAt', e)}
-                        wrapperClassname="bg-namiapp-black-2 text-gray-6 rounded-md"
+                        wrapperClassname="bg-dark-2 text-gray-6 rounded-md"
                         isNamiApp
                     />
                 </div>
@@ -364,7 +364,7 @@ const FilterModal = ({ isVisible, onClose, onConfirm, t, filter, arrStatus }) =>
                     <DatePicker
                         date={state.range}
                         onChange={(e) => onChange('range', e.selection)}
-                        wrapperClassname="bg-namiapp-black-2 text-gray-6 rounded-md"
+                        wrapperClassname="bg-dark-2 text-gray-6 rounded-md"
                         isNamiApp
                     />
                 </div>
@@ -391,7 +391,7 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
     return (
         <ReactTooltip
             ref={ref}
-            className={classNames('!bg-namiapp-black-2 !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
+            className={classNames('!bg-hover-dark !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
             place={place}
             effect="solid"
             {...restProps}

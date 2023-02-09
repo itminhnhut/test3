@@ -114,7 +114,7 @@ const FuturesLeverageSettings = ({
         //     onusMode={onusMode}
         //     isVisible={isVisible}
         //     onBackdropCb={onClose}
-        //     containerClassName={`w-[90%] max-w-[488px] dark:bg-bgPrimary-dark p-6 dark:border-namiv2-gray-3 select-none ${className}`}
+        //     containerClassName={`w-[90%] max-w-[488px] dark:bg-bgPrimary-dark p-6 dark:border-divider-dark select-none ${className}`}
         //     containerStyle={{ ...containerStyle }}
         // >
         <ModalV2
@@ -144,7 +144,7 @@ const FuturesLeverageSettings = ({
             </div>
             <div
                 className={`px-2 flex items-center ${
-                    onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px]' : 'bg-gray-4 dark:bg-namiv2-gray mb-4 h-[48px]'
+                    onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px]' : 'bg-gray-4 dark:bg-dark-2 mb-4 h-[48px]'
                 } rounded-[4px]`}
             >
                 <div className={changeClass}>

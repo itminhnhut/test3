@@ -34,62 +34,95 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     // Init State
 
     // Rdx
-    // @ts-ignore
-    const auth = useSelector(state => state.auth?.user) || null
+    const auth = useSelector((state) => state.auth?.user) || null;
 
     // Use Hooks
-    const router = useRouter()
-    const { t, i18n: { language } } = useTranslation(['common', 'table'])
-    const [currentTheme] = useDarkMode()
-    const { width } = useWindowSize()
+    const router = useRouter();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['common', 'table']);
+    const [currentTheme] = useDarkMode();
+    const { width } = useWindowSize();
 
-    const [favType, setFavType] = useState(0)
-    const [type, setType] = useState(0)
-    const types = [{
-        id: 0,
-        content: {
-            vi: 'Tất cả',
-            en: 'All'
+    const [type, setType] = useState(0);
+    const types = [
+        {
+            id: 0,
+            content: {
+                vi: 'Tất cả',
+                en: 'All'
+            }
+        },
+        {
+            id: 'MOST_TRADED',
+            content: {
+                vi: (
+                    <div className="flex space-x-2">
+                        <HotIcon />
+                        <div>Giao dịch nhiều</div>
+                    </div>
+                ),
+                en: (
+                    <div className="flex space-x-2">
+                        <HotIcon />
+                        <div>Most traded</div>
+                    </div>
+                )
+            }
+        },
+        {
+            id: 'TOP_GAINER',
+            content: {
+                vi: 'Tăng giá',
+                en: 'Top gainer'
+            }
+        },
+        {
+            id: 'NEW_LISTING',
+            content: {
+                vi: 'Mới niêm yết',
+                en: 'New Listing'
+            }
+        },
+        {
+            id: 'TOP_LOSER',
+            content: {
+                vi: 'Giảm giá',
+                en: 'Top loser'
+            }
         }
-    }, {
-        id: 'MOST_TRADED',
-        content: {
-            vi: <div className='flex space-x-2'><HotIcon /><div>Giao dịch nhiều</div></div>,
-            en: <div className='flex space-x-2'><HotIcon /><div>Most traded</div></div>
-        }
-    }, {
-        id: 'TOP_GAINER',
-        content: {
-            vi: 'Tăng giá',
-            en: 'Top gainer'
-        }
-    }, {
-        id: 'NEW_LISTING',
-        content: {
-            vi: 'Mới niêm yết',
-            en: 'New Listing'
-        }
-    }, {
-        id: 'TOP_LOSER',
-        content: {
-            vi: 'Giảm giá',
-            en: 'Top loser'
-        }
-    }]
+    ]
+
+    const changeType = (index) => {
+        parentState({
+            type: index
+        });
+    };
 
     useEffect(() => {
-        setType(restProps.type)
-    }, [restProps.type])
+        setType(restProps.type);
+    }, [restProps.type]);
 
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
-            const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
+            const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null;
+
             return (
-                <div key={item.key}
-                    onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })}
-                    className={classNames("relative mr-6 pb-4 capitalize select-none font-normal text-base text-namiv2-gray-1 cursor-pointer flex items-center", { "text-namiv2-gray-2 font-semibold": restProps.tabIndex === index })}>
-                    <span className={item.key === 'favorite' ? 'ml-2' : ''}>{item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}</span>
+                <div
+                    key={item.key}
+                    onClick={() =>
+                        parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
+                    }
+                    className={classNames(
+                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        { 'text-gray-4 font-semibold': restProps.tabIndex === index }
+                    )}
+                >
+                    <span className={item.key === 'favorite' ? 'ml-2' : ''}>
+                        {item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}
+                    </span>
                     {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
                 </div>)
         })
@@ -114,9 +147,12 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             return (
                 <div key={item.key}
                     onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-                    className={restProps.subTabIndex === index ?
-                        'text-base font-semibold px-4 py-3 bg-namiv2-gray text-namiv2-gray-2 cursor-pointer select-none'
-                        : 'text-base font-semibold px-4 py-3 bg-namiv2-black text-namiv2-gray-1 cursor-pointer select-none'}>
+                    className={
+                        restProps.subTabIndex === index
+                            ? 'text-base font-semibold px-4 py-3 bg-dark-2 text-gray-4 cursor-pointer select-none'
+                            : 'text-base font-semibold px-4 py-3 bg-shadow text-darkBlue-5 cursor-pointer select-none'
+                    }
+                >
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
                 </div>
             )
@@ -131,15 +167,15 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         return <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6'>
             {restProps?.suggestedSymbols?.map(symbol => {
                 return (
-                    <div className='w-full p-3 text-namiv2-gray-1 bg-namiv2-black-1 rounded-md'>
+                    <div className='w-full p-3 text-darkBlue-5 bg-darkBlue-3 rounded-md'>
                         <div className='flex justify-between w-full'>
                             <div className=''>
                                 <div className='font-medium text-base'>
-                                    <span className="text-namiv2-gray-2">{symbol?.b}</span>/{symbol?.q}
+                                    <span className="text-gray-4">{symbol?.b}</span>/{symbol?.q}
                                 </div>
                                 <div className={classNames('font-normal text-sm justify-start', {
-                                    'text-namiv2-red': !symbol.u,
-                                    'text-namiv2-green': symbol.u
+                                    'text-red': !symbol.u,
+                                    'text-teal': symbol.u
                                 })}>
                                     {formatPrice(symbol.p)}
                                 </div>
@@ -166,7 +202,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                                 </div>
                             </div>
                             <div className='h-full lg:w-1/2 w-full flex justify-end'>
-                                <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.namiv2.green[1] : colors.namiv2.red.DEFAULT)}
+                                <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.teal : colors.red.DEFAULT)}
                                     alt="Nami Exchange" />
                             </div>
                         </div>
@@ -224,7 +260,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
             // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
             // { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'right', width: 168 },
-            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 168 },
+            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 128 },
             { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
             { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
             { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 170 }
@@ -275,21 +311,9 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         } else {
             if (loading) {
                 console.log('loadinignidngindsn____')
-                tableStatus = <ScaleLoader color={colors.namiv2.green.DEFAULT} size={12}/>
+                tableStatus = <ScaleLoader color={colors.teal} size={12}/>
             } else if (!dataSource.length) {
-                if (tab[restProps.tabIndex]?.key === 'favorite') {
-                    return (
-                        <div className='px-8'>
-                            <div className='font-normal text-base'>
-                                {{ vi: 'Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.', en: 'You have no favorite pair. We suggested some of these pair to add to your favorite' }[language]}
-                            </div>
-                            <div className='mt-6 w-full'>
-                                {renderSuggested}
-                            </div>
-                        </div>
-                    )
-                }
-                tableStatus = <Empty message={undefined} messageStyle={undefined} addClass={undefined} grpSize={undefined} />
+                tableStatus = <Empty />;
             }
         }
 
@@ -332,7 +356,9 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 }}
                 isNamiV2
             />
-        )
+
+
+        );
     }, [
         data,
         width,
@@ -390,16 +416,16 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.favoriteList])
 
     return (
-        <div className='px-4 lg:px-0 text-namiv2-gray-1'>
+        <div className="px-4 lg:px-0 text-darkBlue-5">
             <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center mb-8">
-                <div className="text-2xl text-namiv2-gray-2 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
+                <div className="text-2xl text-gray-4 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
                     {t('common:market')}
                 </div>
                 <div className='flex items-center space-x-4'>
-                    <div className="flex items-center border-namiv2-gray-3 border-[1px] overflow-hidden rounded-md">
+                    <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-namiv2-gray cursor-pointer justify-between">
+                    <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
                         <div className='flex items-center'>
                             <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
                             <input className="bg-transparent outline-none px-2"
@@ -413,13 +439,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                 </div>
             </div>
-            <div className="bg-namiv2-black">
+            <div className="bg-shadow">
                 <div id="market_table___list"
-                    className="py-4 h-full rounded-xl border-[1px] border-namiv2-gray-3">
-                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-namiv2-gray-3">
+                    className="py-4 h-full rounded-xl border-[1px] border-divider-dark">
+                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-divider-dark">
                         {renderTab()}
                     </div>
-                    <div className={classNames('h-24 border-namiv2-gray-3 flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
+                    <div className={classNames('h-24 border-divider-dark flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
                             <TokenTypes type={favType} setType={(index) => { parentState({ favType: index }); setFavType(index)}} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
@@ -430,7 +456,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                             }} types={types} lang={language} />}
 
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <div className='h-12 px-6 flex justify-center items-center bg-namiv2-green rounded-md text-white text-base font-medium cursor-pointer'>
+                            <div className='h-12 px-6 flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'>
                                 {{ en: 'Add all', vi: 'Thêm tất cả' }[language]}
                             </div>
                             :
@@ -457,7 +483,7 @@ export const tab = [
 ]
 
 export const subTab = [
-    { key: 'all', localized: 'common:all' },
+    // { key: 'all', localized: 'common:all' },
     { key: 'usdt', localized: null },
     { key: 'vndc', localized: null }
 ]
@@ -502,14 +528,16 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                 /> : null,
                 pair: renderPair(baseAsset, quoteAsset, label, screenWidth),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-                change_24h: render24hChange(item, true),
+                change_24h: render24hChange(item, false, 'justify-end'),
                 market_cap: renderMarketCap(lastPrice, supply),
-                mini_chart: <div className="w-full flex justify-center items-center">
-                    <img src={sparkLine} alt="--" className="w-[85px]" />
-                </div>,
-                volume_24h: <span className="whitespace-nowrap">{formatPrice(volume24h)}</span>,
-                '24h_high': <span className="whitespace-nowrap">{formatPrice(high)}</span>,
-                '24h_low': <span className="whitespace-nowrap">{formatPrice(low)}</span>,
+                mini_chart: (
+                    <div className="w-full flex justify-center items-center">
+                        <img src={sparkLine} alt="--" className="w-[85px]" />
+                    </div>
+                ),
+                volume_24h: <span className="whitespace-nowrap">{formatCurrency(volume24h, 0)}</span>,
+                '24h_high': <span className="whitespace-nowrap">{formatPrice(high, high < 1000 ? 2 : 0)}</span>,
+                '24h_low': <span className="whitespace-nowrap">{formatPrice(low, high < 1000 ? 2 : 0)}</span>,
                 operation: renderTradeLink(baseAsset, quoteAsset, lang, mode),
                 [RETABLE_SORTBY]: {
                     pair: `${baseAsset}`, last_price: lastPrice,
@@ -541,8 +569,8 @@ const renderPair = (b, q, lbl, w) => {
         <div className="flex items-center font-semibold text-base">
             {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
             <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
-                <span className="text-namiv2-gray-1">{b}</span>
-                <span className="text-namiv2-gray-2">/{q}</span>
+                <span className="text-darkBlue-5">{b}</span>
+                <span className="text-gray-4">/{q}</span>
             </div>
             <MarketLabel labelType={lbl} />
         </div>
@@ -639,12 +667,12 @@ const renderTradeLink = (b, q, lang, mode) => {
     return (
         <div className='flex justify-end items-center font-medium text-base'>
             <Link href={url} prefetch={false}>
-                <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center" target="_blank">
+                <a className="text-teal re_table__link px-3 flex items-center justify-center" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-namiv2-green re_table__link px-3 flex items-center justify-center border-l-[1px] border-namiv2-gray-3" target="_blank">
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
             </Link> : null}
@@ -655,8 +683,8 @@ const renderTradeLink = (b, q, lang, mode) => {
 const TokenTypes = ({ type, setType, types, lang }) => {
     return <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
         {types.map(e =>
-            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-namiv2-gray-3 cursor-pointer whitespace-nowrap', {
-                'border-namiv2-green bg-namiv2-green bg-opacity-10 text-namiv2-green font-semibold': e.id === type
+            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
+                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
             })}
                 onClick={() => setType(e.id)}
             >

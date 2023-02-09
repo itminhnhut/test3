@@ -300,7 +300,7 @@ const AccountAvatar = ({
                                 className={classnames(
                                     'px-5 py-3 border rounded-full whitespace-nowrap cursor-pointer',
                                     'transition duration-100', {
-                                        'border-teal bg-teal/[.1]': currentCategoryId === category.id, 'border-namiv2-gray-3': currentCategoryId !== category.id
+                                        'border-teal bg-teal/[.1]': currentCategoryId === category.id, 'border-divider-dark': currentCategoryId !== category.id
                                     })
                                 }
                             >{category.name[language]}</div>;

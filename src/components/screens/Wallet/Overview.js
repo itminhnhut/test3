@@ -197,7 +197,7 @@ const OverviewWallet = (props) => {
                             </HrefButton>
                             <div
                                 className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
-                                    text-txtSecondary dark:text-txtSecondary-dark dark:bg-namiv2-gray
+                                    text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2
                                  "
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
@@ -321,7 +321,7 @@ const OverviewWallet = (props) => {
 const AssetBalance = ({ title, icon, renderEstBalance }) => {
     return (
         <div className="min-w-[422px] max-w-[422px] flex items-center">
-            <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-listItemSelected dark:bg-namiv2-gray">{icon}</div>
+            <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-listItemSelected dark:bg-dark-2">{icon}</div>
             <div className="ml-4 xl:ml-6 flex flex-col justify-between h-full">
                 <span className="mr-4 text-txtSecondary dark:text-txtSecondary-dark text-sm">{title}</span>
                 {renderEstBalance()}

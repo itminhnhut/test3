@@ -294,7 +294,7 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className='w-[1px] bg-namiv2-gray-3 mx-10' />
+                <div className='w-[1px] bg-divider-dark mx-10' />
                 <div className='flex-1 flex flex-col justify-between'>
                     <div className='space-y-3'>
                             <span
@@ -344,7 +344,7 @@ const Profile = () => {
         </div>
 
         <div
-            className={classnames('border border-namiv2-gray-3 rounded-xl p-6 mt-12 hidden', {
+            className={classnames('border border-divider-dark rounded-xl p-6 mt-12 hidden', {
                 '!block': user?.kyc_status === KYC_STATUS.APPROVED
             })}
             style={{
