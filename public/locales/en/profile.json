@@ -105,5 +105,14 @@
     "support_image_type": "Support JPG, PNG",
     "confirm_new_avatar": "Click “Confirm” to change the new avatar",
     "updated_avatar": "Updated avatar, you can close this window now.",
-    "last_logged_in": "Last logged in {{duration}} ago"
+    "last_logged_in": "Last logged in {{duration}} ago",
+    "referrer": "Referrer",
+    "ref_code_optional": "Referral code (optional)",
+    "enter_ref_code": "Enter referral code",
+    "add_ref_code_success": "You have successfully added the #{{referralName}} referral code.",
+    "error": {
+        "SELF_INVITE": "SELF_INVITE",
+        "REFERRAL_CODE_NOT_FOUND": "Add referral code failed.",
+        "failed": "Add referral code failed."
+    }
 }

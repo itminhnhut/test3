@@ -940,8 +940,8 @@ input[type='number'] {
 }
 
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px #1c232e inset !important;
 }
@@ -971,4 +971,12 @@ input:-webkit-autofill{
         top: 50%;
         @apply bg-white rounded-full;
     }
+}
+
+
+.nami-underline-dotted {
+    @apply underline cursor-pointer;
+    text-decoration-style: dotted;
+    text-decoration-color: #8694b2;
+    text-underline-offset: .25rem;
 }

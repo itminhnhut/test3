@@ -16,13 +16,11 @@ const types = {
 }
 
 const NamiToast = ({ render, text, type }) => {
-    const content = render ? render(text) : (
-        <div className='font-normal text-sm leading-[18px]'>{text}</div>
-    )
+    const content = render ? render(text) : text
 
     return (
-        <div className='flex space-x-3 min-h-12 min-w-[358px] p-3 rounded-md bg-namiapp-black-1'>
-            {types[type] ? types[type] : null}
+        <div className='flex space-x-3 whitespace-nowrap'>
+            <span className='mr-3'>{types[type] ? types[type] : null}</span>
             {content}
         </div>
     )

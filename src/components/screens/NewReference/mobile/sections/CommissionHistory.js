@@ -238,7 +238,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                     </div>
                 </div>
                 <div className={classNames("mt-6", { "!mt-8": loading })}>
-                    {loading ? <IconLoading color={colors.namiapp.green.DEFAULT} /> : dataSource.length <= 0 ? (
+                    {loading ? <IconLoading color={colors.namiv2.green.DEFAULT} /> : dataSource.length <= 0 ? (
                         <NoData text={t('reference:referral.no_commission')} className='my-20' />
                     ) : (
                         dataFilter?.map((data, index) => {
@@ -282,7 +282,7 @@ const ListData = ({ page, setPage, total, dataSource, typeTabs, levelTabs, asset
                         onChange={(page) => setPage(page)}
                         className='!text-namiapp-green-1'
                         style={{
-                            fontColor: colors.namiapp.green[1]
+                            fontColor: colors.namiv2.green[1]
                         }}
                         isDark
                         isNamiApp

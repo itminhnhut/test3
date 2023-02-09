@@ -57,7 +57,7 @@ const Info = ({ data, user }) => {
                     </div>
                     <div className='w-full bg-namiapp-black-2 flex'>
                         <Progressbar
-                            background={colors.namiapp.green[2]}
+                            background={colors.namiv2.green[2]}
                             percent={
                                 (data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100
                             }
@@ -65,7 +65,7 @@ const Info = ({ data, user }) => {
                             className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
                         />
                         <Progressbar
-                            background={colors.namiapp.green.DEFAULT}
+                            background={colors.namiv2.green.DEFAULT}
                             percent={
                                 (data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100
                             }

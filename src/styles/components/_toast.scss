@@ -1,0 +1,20 @@
+@import "react-toastify/dist/ReactToastify.css";
+
+.nami-toast {
+    width: auto;
+
+    .Toastify__toast {
+        min-height: auto;
+        @apply p-3;
+    }
+
+    // TODO: Implement style for theme light
+    .Toastify__toast-theme--dark {
+        @apply bg-dark-2 text-txtPrimary-dark;
+    }
+
+    .Toastify__toast-body {
+        margin: 0;
+        padding: 0;
+    }
+}

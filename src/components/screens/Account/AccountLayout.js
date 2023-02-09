@@ -1,7 +1,6 @@
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useApp from 'hooks/useApp';
 import styled from 'styled-components';
-import Edit from 'components/svg/Edit';
 import { useSelector } from 'react-redux';
 import WarningTriangle from 'components/svg/WarningTriangle';
 import CheckCircle from 'components/svg/CheckCircle';
@@ -15,6 +14,7 @@ import Link from 'next/link';
 import AccountAvatar from 'components/screens/Account/AccountAvatar';
 import { PATHS } from 'constants/paths';
 import { getS3Url } from 'redux/actions/utils';
+import toast from 'utils/toast';
 
 const KYCPendingTag = ({ t }) => {
     return <div
@@ -26,9 +26,11 @@ const KYCPendingTag = ({ t }) => {
     </div>;
 };
 
-const KYCVerified = ({ t }) => {
-    return <div style={{ background: 'rgba(71, 204, 133, 0.1)' }}
-                className='flex items-center text-teal leading-7 rounded-full px-4 ml-3'>
+const KYCVerifiedTag = ({ t }) => {
+    return <div
+        style={{ background: 'rgba(71, 204, 133, 0.1)' }}
+        className='flex items-center text-teal leading-7 rounded-full px-4 ml-3'
+    >
         <CheckCircle />
         <span className='ml-2'>{t('profile:kyc_verified')}</span>
     </div>;
@@ -54,13 +56,12 @@ export default function AccountLayout({ children }) {
         <Container className='mal-container px-4 h-full'>
             <div className='flex items-end justify-between'>
                 <AccountAvatar currentAvatar={user?.avatar} />
-
                 <div className='ml-4 flex-1'>
                     <div className='flex mb-3'>
                         <span className='text-xl leading-7 font-medium'>{user?.name}</span>
                         {{
                             [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                            [KYC_STATUS.APPROVED]: <KYCVerified t={t} />
+                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
                         }[user?.kyc_status] || null}
                     </div>
                     <TextCopyable text={user?.code} className='text-gray-1' />
