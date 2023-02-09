@@ -35,6 +35,11 @@ const FuturesLeverageSettings = ({
     const [_leverage, _setLeverage] = useState(leverage);
     const [_leverageBracket, _setLeverageBracket] = useState(pairConfig?.leverageBracket?.[0]);
 
+    // reset leverage on modal toggle
+    useEffect(() => {
+        _setLeverage(leverage);
+    }, [isVisible, leverage]);
+
     const onSetLeverage = async (symbol, leverage) => {
         setLoading(true);
         try {

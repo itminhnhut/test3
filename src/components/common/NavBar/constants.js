@@ -40,14 +40,6 @@ export const NAV_DATA = [
                 child_lv2: [],
             },
             {
-                key: 7,
-                title: 'Swap',
-                localized: 'swap',
-                isNew: false,
-                url: '/swap',
-                child_lv2: [],
-            },
-            {
                 key: 1,
                 title: 'Futures',
                 localized: 'futures',
@@ -56,6 +48,15 @@ export const NAV_DATA = [
                 child_lv1: [],
             },
             {
+                key: 7,
+                title: 'Swap',
+                localized: 'swap',
+                isNew: false,
+                url: '/swap',
+                child_lv2: [],
+            },
+            
+            {
                 key: 2,
                 title: 'Launchpad',
                 localized: 'launchpad',
@@ -63,14 +64,14 @@ export const NAV_DATA = [
                 url: 'https://launchpad.nami.exchange/',
                 child_lv1: [],
             },
-            {
-                key: 3,
-                title: 'Copy Trade',
-                localized: 'copytrade',
-                isNew: false,
-                url: '/',
-                child_lv2: [],
-            },
+            // {
+            //     key: 3,
+            //     title: 'Copy Trade',
+            //     localized: 'copytrade',
+            //     isNew: false,
+            //     url: '/',
+            //     child_lv2: [],
+            // },
             {
                 key: 6,
                 title: 'Referral',
@@ -430,13 +431,15 @@ export const USER_CP = [
         url: getV1Url('/settings/api-management'),
         child_lv1: [],
     },
-    {
-        key: 7,
-        title: 'LogOut',
-        localized: 'logout',
-        // hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: [],
-    },
+    // {
+    //     key: 7,
+    //     title: 'LogOut',
+    //     localized: 'logout',
+    //     // hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: [],
+    // },
 ]
+
+

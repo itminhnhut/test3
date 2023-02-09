@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { CopyToClipboard } from 'react-copy-to-clipboard/lib/Component';
 import Copy from 'components/svg/Copy';
 import SwitchV2 from 'components/common/V2/SwitchV2';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import HelpCircle from 'components/svg/HelpCircle';
 import Button from 'components/common/V2/ButtonV2/Button';
@@ -17,7 +17,12 @@ import { useTranslation } from 'next-i18next';
 import { PATHS } from 'constants/paths';
 import { FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
 import axios from 'axios';
-import { API_GET_VIP, API_NEW_REFERRAL_CREATE_INVITE, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
+import {
+    API_CHECK_REFERRAL,
+    API_GET_VIP,
+    API_NEW_REFERRAL_CREATE_INVITE,
+    API_SET_ASSET_AS_FEE
+} from 'redux/actions/apis';
 import { ApiStatus, KYC_STATUS } from 'redux/actions/const';
 import debounce from 'lodash/debounce';
 import Axios from 'axios';
@@ -31,6 +36,7 @@ import fetchApi from 'utils/fetch-api';
 import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
+import Spinner from 'components/svg/Spinner';
 
 const TextCopyable = ({
     text = '',
@@ -112,7 +118,24 @@ const ModalChangeReferee = ({
     onClose
 }) => {
     const [refCode, setRefCode] = useState('');
+    const [referrer, setReferrer] = useState(null);
+    const [checking, setChecking] = useState(false);
     const dispatch = useDispatch();
+
+    const checkRef = useCallback(debounce((code) => {
+        setChecking(true);
+        fetchApi({
+            url: API_CHECK_REFERRAL,
+            params: { code }
+        })
+            .then((res) => {
+                setReferrer(res.data);
+            })
+            .catch(err => console.log(err))
+            .finally(() => {
+                setChecking(false);
+            });
+    }, 300), []);
 
     const setInvite = () => {
         fetchApi({
@@ -125,25 +148,25 @@ const ModalChangeReferee = ({
             .then(async (res) => {
                 if (res.status === ApiStatus.SUCCESS) {
                     await dispatch(getMe());
-                    const  referrer = res.data.referrer || {}
-                    const referralName = referrer.name || referrer.username || referrer.code || '--'
+                    const referrer = res.data.referrer || {};
+                    const referralName = referrer.name || referrer.username || referrer.code || '--';
 
                     toast({
-                        text: t('profile:add_ref_code_success', {referralName}),
+                        text: t('profile:add_ref_code_success', { referralName }),
                         type: 'success'
-                    })
+                    });
                 } else {
                     toast({
                         text: t(`profile:error:${res.status}`),
                         type: 'warning'
-                    })
+                    });
                 }
             })
             .catch(err => {
                 toast({
                     text: t('profile:error:failed'),
                     type: 'warning'
-                })
+                });
             })
             .finally(() => {
                 setRefCode('');
@@ -151,18 +174,33 @@ const ModalChangeReferee = ({
             });
     };
 
+    const handleRefCodeChange = (code = '') => {
+        code = code.trim().toUpperCase();
+        setRefCode(code);
+        if (code) checkRef(code);
+    };
+
+    const suffixInput = useMemo(() => {
+        if (checking) return <Spinner size={20}/>
+        if (!referrer) return <span className='text-txtSecondary'>{referrer?.username}</span>
+        return null
+    }, [referrer, checking])
+
     return <ModalV2 isVisible={open} onBackdropCb={onClose} className='w-[30rem]'>
         <p className='text-xl font-medium py-6'>{t('profile:referrer')}</p>
         <InputV2
             value={refCode}
-            onChange={setRefCode}
+            onChange={handleRefCodeChange}
             label={t('profile:ref_code_optional')}
             placeholder={t('profile:enter_ref_code')}
+            canPaste={!referrer && !checking}
+            suffix={suffixInput}
+            error={(!referrer && !!refCode) ? t('profile:error.REFERRAL_CODE_NOT_FOUND') : null}
         />
         <ButtonV2
             onClick={setInvite}
-            disabled={!refCode}
-            className='mt-10'>{t('common:confirm')
+            disabled={!refCode || !referrer}
+            className='mt-4'>{t('common:confirm')
         }</ButtonV2>
     </ModalV2>;
 };

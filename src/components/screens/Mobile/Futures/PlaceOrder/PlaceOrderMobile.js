@@ -496,14 +496,14 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
                         <div className="flex flex-row justify-between">
                             <OrderTypeMobile type={type} setType={setType} orderTypes={pairConfig?.orderTypes} isVndcFutures={isVndcFutures} />
 
-                            {/* <OrderLeverage
+                            <OrderLeverage
                                 leverage={leverage} setLeverage={setLeverage}
                                 isAuth={isAuth} pair={pair}
                                 pairConfig={pairConfig}
                                 inputValidator={inputValidator}
                                 context={context}
                                 getLeverage={getLeverage}
-                            /> */}
+                            />
                         </div>
                     </OrderInput>
                     {!collapse && (

@@ -193,7 +193,7 @@ const OverviewWallet = (props) => {
                             >
                                 {t('common:withdraw')}
                             </HrefButton>
-                            <div
+                            <ButtonV2
                                 className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
                                     text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2
                                  "
