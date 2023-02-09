@@ -16,35 +16,11 @@ import WarningTriangle from 'components/svg/WarningTriangle';
 import CheckCircle from 'components/svg/CheckCircle';
 import { KYC_STATUS } from 'redux/actions/const';
 import { map, omit } from 'lodash';
+import TagV2 from 'components/common/V2/TagV2';
 
-const NoKYCTag = ({ t }) => {
-    return <div
-        style={{ background: 'rgba(34, 41, 64, 0.5)' }}
-        className='whitespace-nowrap leading-5 rounded-full px-4 py-1 w-fit'
-    >
-        {t('reference:referral.not_kyc')}
-    </div>;
-};
-
-const KYCPendingTag = ({ t }) => {
-    return <div
-        style={{ background: 'rgba(255, 198, 50, 0.15)' }}
-        className='flex items-center text-[#ffc632] leading-5 rounded-full px-4 py-1 w-fit'
-    >
-        <WarningTriangle />
-        <span className='ml-2 whitespace-nowrap'>{t('reference:referral.pending_kyc')}</span>
-    </div>;
-};
-
-const KYCApprovedTag = ({ t }) => {
-    return <div
-        style={{ background: 'rgba(71, 204, 133, 0.1)' }}
-        className='flex items-center text-teal leading-5 rounded-full px-4 py-1 w-fit'
-    >
-        <CheckCircle />
-        <span className='ml-2 whitespace-nowrap'>{t('reference:referral.kyc')}</span>
-    </div>;
-};
+const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
+const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap' type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
+const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap' type='success'>{t('reference:referral.kyc')}</TagV2>;
 
 const ModalCommissionFriend = ({t, commissionConfig, friend = {}, onClose}) => {
     const commissionType = {

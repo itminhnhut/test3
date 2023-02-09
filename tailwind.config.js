@@ -324,7 +324,10 @@ module.exports = {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)'
             },
-            yellow: { DEFAULT: '#FFD965' },
+            yellow: {
+                DEFAULT: '#FFD965',
+                100: '#FFC632',
+            },
             red: {
                 DEFAULT: commonColors.red2,
                 lightRed: '#E5544B19'
