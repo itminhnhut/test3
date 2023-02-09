@@ -270,12 +270,9 @@
   .mal-navbar__user___avatar {
     @apply block relative cursor-pointer;
 
-    max-width: 25px;
-    max-height: 25px;
-    min-width: 25px;
-    min-height: 25px;
+    
     border-radius: 50%;
-    height: 100%;
+    // height: 100%;
 
     .mal-navbar__dropdown {
       // left: unset !important;
@@ -286,14 +283,14 @@
       .mal-navbar__dropdown__user__info {
         @apply flex items-center;
 
-        padding-left: 16px;
+        // padding-left: 16px;
         margin-bottom: 24px;
 
         .mal-navbar__dropdown__user__info__avt {
-          min-width: 34px;
-          min-height: 34px;
-          width: 34px;
-          height: 34px;
+          min-width: 48px;
+          min-height: 48px;
+          width: 48px;
+          height: 48px;
 
           img {
             @apply block;
@@ -323,7 +320,7 @@
       }
 
       .mal-navbar__dropdown___item:last-child {
-        @apply text-red #{!important};
+        // @apply text-red #{!important};
       }
     }
 
@@ -334,8 +331,9 @@
     }
 
     &:hover {
-      > div.user__svg svg path {
-        stroke: #00c8bc;
+      > div.user__svg svg {
+       fill:#47cc85;
+        
       }
     }
   }
@@ -379,7 +377,7 @@
 
     .mal-navbar__link__group___item___childen__lv1__w__icon {
       @apply flex-wrap #{!important};
-
+      
       width: auto;
       min-width: 700px;
       border-top-left-radius: 0 !important;
@@ -443,7 +441,7 @@
       border-l border-r border-b dark:border-divider-dark;
 
       top: 100%;
-      //margin-top: 1px;
+      margin-top: 1px;
       border-bottom-right-radius: 12px;
       border-bottom-left-radius: 12px;
       overflow: hidden;
@@ -513,7 +511,7 @@
       }
 
       svg path {
-        stroke: #00c8bc;
+        stroke: #47cc85;
       }
     }
   }
@@ -540,14 +538,14 @@
 
     // DROP DOWN
     .mal-navbar__dropdown {
-      @apply absolute hidden;
+      @apply absolute hidden border-divider-dark;
 
       top: 100%;
       right:0;
       // left: 50%;
       // transform: translateX(-50%);
       min-width: 130px;
-      padding-top: 30px;
+      padding-top: 29px;
       gap:12px;
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer dark:bg-darkBlue-3 dark:shadow-none

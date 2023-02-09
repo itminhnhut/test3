@@ -3,12 +3,11 @@ import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/const
 import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
 import NotificationList from 'src/components/notification/NotificationList';
 import SvgIcon from 'src/components/svg';
-import SvgCheckSuccess from 'src/components/svg/CheckSuccess';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
-import SvgGlobe from 'src/components/svg/Globe';
 import SvgDocument from 'src/components/svg/SvgDocument';
+
 import SvgExit from 'src/components/svg/SvgExit';
 import SvgIdentifyCard from 'src/components/svg/SvgIdentifyCard';
 import SvgLayout from 'src/components/svg/SvgLayout';
@@ -16,7 +15,6 @@ import SvgLock from 'src/components/svg/SvgLock';
 import SvgReward from 'src/components/svg/SvgReward';
 import SvgUser from 'src/components/svg/SvgUser';
 import SvgUserPlus from 'src/components/svg/SvgUserPlus';
-import SvgWallet from 'src/components/svg/Wallet';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
@@ -43,7 +41,11 @@ import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS } from 'redux/actions/const';
 import Copy from 'components/svg/Copy';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { ArrowDownIcon, CheckCircleIcon } from '../../svg/SvgIcon';
+import TagV2 from '../V2/TagV2';
+import { ChevronRight } from 'react-feather';
+import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
+import NavbarIcons from './Icons';
+console.log('NavbarIcons:', NavbarIcons['spot']);
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -219,6 +221,7 @@ const NavBar = ({
                 child_lv1.map((child) => {
                     const shouldReload = child?.localized === 'advance';
 
+                    const Icon = NavbarIcons[child?.localized];
                     if (shouldReload) {
                         itemsLevel1withIcon.push(
                             <div
@@ -231,12 +234,16 @@ const NavBar = ({
                                 onClick={() => window?.open(child.url, '_self')}
                             >
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                    <img
-                                        src={getS3Url(getIcon(child.localized))}
-                                        width={width >= 2560 ? '38' : '32'}
-                                        height={width >= 2560 ? '38' : '32'}
-                                        alt=""
-                                    />
+                                    {Icon ? (
+                                        <Icon size={24} />
+                                    ) : (
+                                        <img
+                                            src={getS3Url(getIcon(child.localized))}
+                                            width={width >= 2560 ? '38' : '32'}
+                                            height={width >= 2560 ? '38' : '32'}
+                                            alt=""
+                                        />
+                                    )}
                                 </div>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
@@ -267,12 +274,16 @@ const NavBar = ({
                                     }
                                 >
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                        <img
-                                            src={getS3Url(getIcon(child.localized))}
-                                            width={width >= 2560 ? '38' : '32'}
-                                            height={width >= 2560 ? '38' : '32'}
-                                            alt=""
-                                        />
+                                        {Icon ? (
+                                            <Icon size={24} />
+                                        ) : (
+                                            <img
+                                                src={getS3Url(getIcon(child.localized))}
+                                                width={width >= 2560 ? '38' : '32'}
+                                                height={width >= 2560 ? '38' : '32'}
+                                                alt=""
+                                            />
+                                        )}
                                     </div>
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                         <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
@@ -349,7 +360,7 @@ const NavBar = ({
 
     const renderUserControl = useCallback(() => {
         const { avatar, username, code, email, kyc_status } = auth;
-
+        const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
 
         let color;
@@ -376,7 +387,7 @@ const NavBar = ({
                 case 'task_center':
                     return <SvgDocument color={color} />;
                 case 'logout':
-                    return <SvgExit color={colors.red2} />;
+                    return <SvgExit color={color} />;
                 case 'api_mng':
                     return <SvgLayout color={color} />;
                 case 'security':
@@ -390,15 +401,18 @@ const NavBar = ({
             if (item.hide) return null;
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
-                    <a className="mal-navbar__dropdown___item rounded-xl">
-                        {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
+                    <a className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
+                        <div className="flex items-center">
+                            {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
+                        </div>
+                        <ChevronRight className="!mr-0" size={16} />
                     </a>
                 </Link>
             );
         });
 
         return (
-            <div className="mal-navbar__dropdown !pt-[26px]">
+            <div className="mal-navbar__dropdown !pt-[31px]">
                 <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
@@ -406,37 +420,47 @@ const NavBar = ({
                                 <img src={avatar} alt="" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
-                                <div className="mal-navbar__dropdown__user__info__username">
-                                    {kyc_status < KYC_STATUS.APPROVED ? 'GUEST' : username || 'GUEST'}
-                                </div>
+                                <div className="mal-navbar__dropdown__user__info__username">{!isVerified ? 'GUEST' : username || 'GUEST'}</div>
                                 <div className="text-txtSecondary items-center flex">
-                                    <p className="pr-1">{code}</p>
+                                    <span className="pr-1">{code}</span>
                                     <CopyToClipboard text={code}>
                                         <Copy />
                                     </CopyToClipboard>
                                 </div>
                             </div>
                         </div>
-                        <div className="py-2 px-3 gap-2 bg-teal-opacitier flex items-center rounded-full bg-dom">
-                            <CheckCircleIcon color={colors.teal} size={14} />
-                            <div className="text-sm text-dominant">{t('navbar:verified')}</div>
-                        </div>
+                        <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                            <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'} `}>
+                                {isVerified ? t('navbar:verified') : t('navbar:not_verified')}
+                            </div>
+                        </TagV2>
                     </div>
 
                     <hr className="border-divider-dark mb-6" />
 
                     <div className=" flex items-center justify-center mb-6">
-                        <div className="text-dominant font-semibold">
+                    <SuccessfulTransactionIcon size={24} />
+                        <div className="text-dominant font-semibold ml-2">
                             {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
                         </div>
-                        <div className="ml-[30px] ">
+                        {/* <div className="ml-[30px] ">
                             Sử dụng <span className="text-dominant uppercase">NAMI</span> - nhận thêm ưu đãi
-                          
-                        </div>
+                        </div> */}
                     </div>
 
                     <hr className="border-divider-dark mb-6" />
-                    {items}
+                    <div className="mb-6">{items}</div>
+
+                    <hr className="border-divider-dark mb-6" />
+
+                    <Link href={buildLogoutUrl()}>
+                        <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
+                            <div className="flex items-center text-txtPrimary-dark">
+                                {getUserControlSvg('logout')} {t('navbar:menu.user.logout')}
+                            </div>
+                            <ChevronRight className="!mr-0" size={16} />
+                        </a>
+                    </Link>
                 </div>
             </div>
         );
@@ -448,19 +472,23 @@ const NavBar = ({
                 <div className="mal-navbar__dropdown__wrapper">
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                            <img src={getS3Url('/images/icon/ic_overview.png')} width="28" height="28" alt="" className="mr-3 my-0.5" />
+                            <FuturePortfolioIcon size={24} />
+                            {/* <img src={getS3Url('/images/icon/ic_overview.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
-                            <img src={getS3Url('/images/icon/ic_exchange.png')} width="28" height="28" alt="" className="mr-3 my-0.5" />
+                            <FutureExchangeIcon size={24} />
+                            {/* <img src={getS3Url('/images/icon/ic_exchange.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Exchange</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.FUTURES}>
                         <a className="mal-navbar__dropdown___item">
-                            <img src={getS3Url('/images/icon/ic_futures.png')} width="28" height="28" alt="" className="mr-3 my-0.5" />
+                            <FutureIcon size={24} />
+
+                            {/* <img src={getS3Url('/images/icon/ic_futures.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Futures</span>
                         </a>
                     </Link>
@@ -608,17 +636,24 @@ const NavBar = ({
                             <>
                                 {width >= 992 && (
                                     <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
-                                        <SvgWallet size={20} color={navTheme.color} />
-                                        {/* <span className="ml-4" style={{ color: navTheme.color }} onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
-                                            {t('navbar:menu.wallet')}
-                                        </span> */}
-                                        <SvgIcon name="chevron_down" size={15} color={navTheme.color} className="chevron__down" style={{ marginLeft: 4 }} />
+                                        <FutureWalletIcon size={24} />
+
+                                        <SvgIcon
+                                            name="chevron_down"
+                                            size={15}
+                                            color={navTheme.color}
+                                            className="chevron__down ml-2"
+                                            style={{ marginLeft: 7 }}
+                                        />
                                         {renderWallet()}
                                     </div>
                                 )}
                                 <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                     {width >= 992 && (
-                                        <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />
+                                        <div className="text-gray-7 hover:text-dominant">
+                                            <BxsUserIcon className="user__svg" size={20} />
+                                        </div>
+                                        // <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />
                                     )}
                                     {width >= 992 && renderUserControl()}
                                 </div>

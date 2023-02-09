@@ -11,6 +11,7 @@ import { IconBell, Notification } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway, useToggle } from 'react-use';
 import Bell from 'components/svg/Bell';
+import { BxsBellIcon } from '../svg/SvgIcon';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
@@ -140,29 +141,33 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     }
     return (
         <>
-            <div className="mal-navbar__hamburger__spacing relative">
+            <div className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
-                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
+                    className={`!h-full btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
                     aria-expanded="false"
                     onClick={() => {
                         // eslint-disable-next-line no-unused-expressions
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
                     }}
                 >
-                    <IconBell color={isPopover ? colors.teal : navTheme ? navTheme.color : colors.grey4} />
-                    {unreadCount > 0 && (
+                    <div className={`${isPopover ? 'text-dominant ' : 'text-gray-7 '} relative`}>
+                        <BxsBellIcon size={20} />
+                        {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
+                    </div>
+
+                    {/* {unreadCount > 0 && (
                         <div className="absolute w-2.5 h-2.5 rounded-full flex items-center justify-center bg-red text-white text-[8px] top-2 right-2	">
                             {unreadCount}
                         </div>
-                    )}
+                    )} */}
                 </button>
 
                 <div
                     ref={ref}
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
-                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl dark:border-divider-dark top-full !mt-[22px] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
+                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
                     }
                 >
                     <div className="py-6">
