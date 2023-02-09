@@ -123,7 +123,7 @@ const Overview = ({
             <div
                 className='w-full h-[27.5rem] bg-[#0C0C0C]'
                 style={{
-                    backgroundImage: `url('${getS3Url('/images/reference/background_desktop.png')}')`,
+                    backgroundImage: `url('${getS3Url('/images/reference/background_desktop_2.png')}')`,
                     backgroundSize: 'cover'
                 }}
             >

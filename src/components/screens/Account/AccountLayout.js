@@ -32,7 +32,7 @@ export default function AccountLayout({ children }) {
         <div
             className='bg-black-800 h-44'
             style={{
-                backgroundImage: `url(${getS3Url('/images/screen/account/banner.png')})`,
+                backgroundImage: `url(${getS3Url('/images/screen/account/banner_2.png')})`,
                 backgroundSize: 'auto 100%',
                 backgroundPosition: 'center'
             }}
