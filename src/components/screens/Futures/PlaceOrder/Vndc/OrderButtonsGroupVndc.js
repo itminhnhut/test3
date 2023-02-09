@@ -1,10 +1,15 @@
-import { useCallback, useState } from 'react';
-import { placeFuturesOrder } from 'redux/actions/futures';
+import { useCallback, useState, useRef, useEffect, useMemo } from 'react';
+import { placeFuturesOrder, fetchFuturesSetting } from 'redux/actions/futures';
 import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { getLoginUrl, formatNumber } from 'src/redux/actions/utils';
+import { getLoginUrl, formatNumber, TypeTable } from 'src/redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import ModalV2 from 'components/common/V2/ModalV2';
+import CheckBox from 'components/common/CheckBox';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { FuturesSettings } from 'redux/reducers/futures';
+import { useDispatch, useSelector } from 'react-redux';
 
 export const getType = (type) => {
     switch (type) {
@@ -26,10 +31,34 @@ export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     return Number(price);
 };
 
-const FuturesOrderButtonsGroupVndc = ({ pairConfig, type, quoteQty, price, lastPrice, leverage, orderSlTp, isError, ask, bid, isAuth, decimals, side }) => {
+const FuturesOrderButtonsGroupVndc = ({
+    pairConfig,
+    type,
+    quoteQty,
+    price,
+    lastPrice,
+    leverage,
+    orderSlTp,
+    isError,
+    ask,
+    bid,
+    isAuth,
+    decimals,
+    side,
+    isMarket
+}) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+    const settings = useSelector((state) => state.futures.settings);
     const [loading, setLoading] = useState(false);
     const _price = getPrice(getType(type), side, price, ask, bid);
+    const [showModal, setShowModal] = useState('');
+    const [hidden, setHidden] = useState(false);
+    const messages = useRef(null);
+
+    const isShowConfirm = useMemo(() => {
+        return settings?.user_setting?.show_place_order_confirm_modal;
+    }, [settings]);
 
     const handleParams = useCallback(
         (side) => {
@@ -51,12 +80,7 @@ const FuturesOrderButtonsGroupVndc = ({ pairConfig, type, quoteQty, price, lastP
         [pairConfig?.symbol, type, price, orderSlTp, ask, bid]
     );
 
-    const onHandleClick = (side) => {
-        if (!isAuth) {
-            window.open(getLoginUrl('sso', 'login'), '_self');
-            return;
-        }
-        if (isError) return;
+    const onSave = () => {
         setLoading(true);
         placeFuturesOrder(
             handleParams(side),
@@ -66,10 +90,37 @@ const FuturesOrderButtonsGroupVndc = ({ pairConfig, type, quoteQty, price, lastP
                 isMarket: [FuturesOrderTypes.Market, FuturesOrderTypes.StopMarket].includes(type)
             },
             t,
-            () => {
+            (data) => {
+                messages.current = data;
                 setLoading(false);
+                setShowModal('alert');
+                setHidden(isShowConfirm);
             }
         );
+    };
+
+    const onHandleClick = () => {
+        if (!isAuth) {
+            window.open(getLoginUrl('sso', 'login'), '_self');
+            return;
+        }
+        if (isError) return;
+        if (isShowConfirm) {
+            setShowModal('confirm');
+            setHidden(false);
+        } else {
+            onSave();
+        }
+    };
+
+    const onHandleHidden = () => {
+        const params = {
+            setting: {
+                [FuturesSettings.order_confirm]: hidden
+            }
+        };
+        dispatch(fetchFuturesSetting(params));
+        setHidden(!hidden);
     };
 
     const title =
@@ -82,17 +133,85 @@ const FuturesOrderButtonsGroupVndc = ({ pairConfig, type, quoteQty, price, lastP
             : '';
 
     const isBuy = VndcFutureOrderType.Side.BUY === side;
+    const margin = quoteQty / leverage;
+
     return (
-        <div className="flex items-center justify-between font-bold text-sm text-white select-none mt-8">
-            <ButtonV2
-                onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
-                disabled={loading || (isAuth && isError)}
-                className="flex flex-col !h-[60px]"
-            >
-                <span>{isAuth ? (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title : t('futures:order_table:login_to_continue')}</span>
-                <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
-            </ButtonV2>
-        </div>
+        <>
+            <AlertModalV2
+                isVisible={showModal === 'alert'}
+                onClose={() => setShowModal('')}
+                type={messages.current?.status}
+                title={messages.current?.title}
+                message={messages.current?.message}
+                notes={messages.current?.notes}
+                className="max-w-[448px]"
+            />
+            <ModalV2 className="max-w-[448px]" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
+                <div className="text-2xl mb-6">{t('futures:preferences:order_confirm')}</div>
+                <div className="p-4 mb-6 rounded-md border border-divider-dark divide-y divide-divider-dark space-y-3">
+                    <div className="flex items-center justify-between">
+                        <span className="text-txtSecondary-dark">{t('futures:mobile:leverage_v2')}</span>
+                        <div className="font-semibold space-x-1">
+                            <span>
+                                {VndcFutureOrderType.Side.BUY === side ? 'Long' : 'Short'} {pairConfig?.baseAsset}/{pairConfig?.quoteAsset}
+                            </span>
+                            <span className="text-teal">{leverage}x</span>
+                        </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-3">
+                        <span className="text-txtSecondary-dark">{t('common:type')}</span>
+                        <span className="font-semibold">
+                            <TypeTable type="type" data={{ type: type }} />
+                        </span>
+                    </div>
+                    {!isMarket && (
+                        <div className="flex items-center justify-between pt-3">
+                            <span className="text-txtSecondary-dark">{t('common:price')}</span>
+                            <span className="font-semibold">{formatNumber(price, decimals.price)}</span>
+                        </div>
+                    )}
+                    <div className="flex items-center justify-between pt-3">
+                        <span className="text-txtSecondary-dark">{t('futures:margin')}</span>
+                        <span className="font-semibold">
+                            {formatNumber(margin, decimals.symbol)} {pairConfig?.quoteAsset}
+                        </span>
+                    </div>
+                    {orderSlTp.sl && (
+                        <div className="flex items-center justify-between pt-3">
+                            <span className="text-txtSecondary-dark">{t('futures:stop_loss')}</span>
+                            <span className="font-semibold text-red">{formatNumber(orderSlTp.sl, decimals.price)}</span>
+                        </div>
+                    )}
+                    {orderSlTp.tp && (
+                        <div className="flex items-center justify-between pt-3">
+                            <span className="text-txtSecondary-dark">{t('futures:take_profit')}</span>
+                            <span className="font-semibold text-teal">{formatNumber(orderSlTp.tp, decimals.price)}</span>
+                        </div>
+                    )}
+                </div>
+                <CheckBox
+                    onChange={onHandleHidden}
+                    isV3
+                    active={hidden}
+                    className="h-full"
+                    labelClassName="!text-base"
+                    label={t('futures:mobile:not_show_this_message')}
+                />
+                <ButtonV2 disabled={loading} onClick={onSave} className="mt-10">
+                    {t('common:confirm')}
+                </ButtonV2>
+            </ModalV2>
+            <div className="flex items-center justify-between font-bold text-sm text-white select-none !mt-8">
+                <ButtonV2
+                    onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
+                    disabled={isAuth && isError}
+                    className="flex flex-col !h-[60px]"
+                >
+                    <span>{isAuth ? (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title : t('futures:order_table:login_to_continue')}</span>
+                    <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
+                </ButtonV2>
+            </div>
+        </>
     );
 };
 

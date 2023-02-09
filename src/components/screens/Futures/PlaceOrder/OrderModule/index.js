@@ -9,35 +9,43 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import TradingInput from 'components/trade/TradingInput';
 import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import { AddCircleColorIcon } from 'components/svg/SvgIcon';
+import usePrevious from 'hooks/usePrevious';
 
-const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice }) => {
+const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
     const { t } = useTranslation();
     const ask = pairPrice?.ask ?? 0;
     const bid = pairPrice?.bid ?? 0;
     const lastPrice = pairPrice?.lastPrice ?? 0;
-    const mount = useRef(true);
+    const oldPair = usePrevious(pair);
+    const mount = useRef(false);
     const [price, setPrice] = useState(lastPrice);
     const [quoteQty, setQuoteQty] = useState(0);
     const [orderSlTp, setOrderSlTp] = useState({
         sl: '',
         tp: ''
     });
+    const sideChanged = useRef(false);
 
     useEffect(() => {
-        if (mount.current && lastPrice) {
-            mount.current = false;
+        mount.current = false;
+    }, [pair]);
+
+    useEffect(() => {
+        if (!mount.current && lastPrice) {
+            mount.current = true;
         }
     }, [mount.current, lastPrice]);
 
     useEffect(() => {
-        if (mount.current) return;
+        if (!mount.current) return;
         setPrice(lastPrice);
     }, [mount.current, type, decimals]);
 
     useEffect(() => {
-        if (mount.current) return;
+        if (!mount.current) return;
         onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? lastPrice : price);
     }, [side, type, decimals, leverage, price]);
+
 
     const onChangeSlTp = (leverage, _lastPrice) => {
         const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
@@ -56,6 +64,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         let isValid = true,
             msg = null;
         const { sl, tp } = orderSlTp;
+        if (oldPair !== pair) return { isValid, msg };
         switch (type) {
             // input check
             case 'quoteQty':
@@ -352,6 +361,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 isAuth={isAuth}
                 decimals={decimals}
                 side={side}
+                isMarket={isMarket}
             />
         </div>
     );

@@ -20,8 +20,8 @@ const AlertModalV2 = ({ isVisible, onClose, type = 'success', title = '', messag
         <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
             <div className="mt-6 flex flex-col items-center">
                 {getIcon()}
-                <div className="mt-6 mb-4 font-medium text-xl">{title}</div>
-                {message && <span className="text-txtSecondary-dark text-center">{message}</span>}
+                <div className="mt-6 mb-4 font-semibold text-xl">{title}</div>
+                {message && <span className="text-txtSecondary-dark text-center text-base">{message}</span>}
                 {children}
                 {notes && <span className="mt-2 text-gray-1 text-center text-xs">{notes}</span>}
                 {!customButton && textButton && (

@@ -4,9 +4,8 @@ import { Check } from 'react-feather';
 const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChange, className, onusMode = false, isV3 = false }) => {
     const onCheck = () => onChange && onChange();
     return (
-        <div className={classNames('flex items-center select-none cursor-pointer space-x-3', className)}>
+        <div onClick={onCheck} className={classNames('flex items-center select-none cursor-pointer space-x-3', className)}>
             <div
-                onClick={onCheck}
                 className={classNames(
                     'w-6 h-6 flex items-center justify-center rounded-[3px] border border-divider dark:border-divider-dark cursor-pointer ',
                     {
@@ -23,11 +22,7 @@ const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChan
             >
                 {active && <Check size={18} className="text-white" />}
             </div>
-            {label && (
-                <div className={classNames('text-sm text-txtSecondary dark:text-txtSecondary-dark', labelClassName)}>
-                    {label}
-                </div>
-            )}
+            {label && <div className={classNames('text-sm text-txtSecondary dark:text-txtSecondary-dark', labelClassName)}>{label}</div>}
         </div>
     );
 };

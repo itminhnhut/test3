@@ -161,6 +161,12 @@ export const getMarginModeLabel = (mode) => {
 };
 
 export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
+    let obj = {
+        status: '',
+        title: '',
+        message: '',
+        notes: ''
+    };
     try {
         const { data } = await Axios.post(API_GET_FUTURES_ORDER, {
             ...params,
@@ -178,16 +184,23 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (utils?.alert) {
                 utils.alert.show('success', t('futures:place_order_success'), t('futures:place_order_success_message'), notice);
             } else {
-                showNotification(
-                    {
-                        message: t('futures:place_order_success'),
-                        title: t('common:success'),
-                        type: 'success',
-                    },
-                    1800,
-                    'bottom',
-                    'bottom-right',
-                );
+                obj = {
+                    status: 'success',
+                    title: t('futures:place_order_success'),
+                    message: t('futures:place_order_success_message'),
+                    notes: notice
+                };
+               
+                // showNotification(
+                //     {
+                //         message: t('futures:place_order_success'),
+                //         title: t('common:success'),
+                //         type: 'success',
+                //     },
+                //     1800,
+                //     'bottom',
+                //     'bottom-right',
+                // );
             }
         } else {
             // handle multi language
@@ -205,16 +218,22 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
             if (utils?.alert) {
                 utils.alert.show('error', t('futures:place_order'), message, data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`);
             } else {
-                showNotification(
-                    {
-                        message,
-                        title: t('common:failed'),
-                        type: 'failure',
-                    },
-                    1800,
-                    'bottom',
-                    'bottom-right',
-                );
+                obj = {
+                    status: 'error',
+                    title: t('futures:place_order'),
+                    message: message,
+                    notes: data?.data?.requestId && `(${data?.data?.requestId.substring(0, 8)})`
+                };
+                // showNotification(
+                //     {
+                //         message,
+                //         title: t('common:failed'),
+                //         type: 'failure',
+                //     },
+                //     1800,
+                //     'bottom',
+                //     'bottom-right',
+                // );
             }
         }
     } catch (e) {
@@ -226,19 +245,24 @@ export const placeFuturesOrder = async (params = {}, utils = {}, t, cb) => {
                 utils.alert.show('error', t('common:failed'), e?.message);
             }
         } else {
-            showNotification(
-                {
-                    message: `${e?.message}`,
-                    title: t('common:failed'),
-                    type: 'failure',
-                },
-                1800,
-                'bottom',
-                'bottom-right',
-            );
+            obj = {
+                status: 'error',
+                title: t('common:failed'),
+                message: e.message === 'Network Error' || !navigator?.onLine ? t('error:futures:NETWORK_ERROR') : e?.message
+            };
+            // showNotification(
+            //     {
+            //         message: `${e?.message}`,
+            //         title: t('common:failed'),
+            //         type: 'failure',
+            //     },
+            //     1800,
+            //     'bottom',
+            //     'bottom-right',
+            // );
         }
     } finally {
-        if (cb) cb();
+        if (cb) cb(obj);
     }
 };
 
