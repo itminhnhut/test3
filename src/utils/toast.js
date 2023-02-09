@@ -21,7 +21,7 @@ const NamiToast = ({ render, text, type }) => {
     )
 
     return (
-        <div className='flex space-x-3 min-h-12 min-w-[358px] p-3 rounded-md bg-namiapp-black-1'>
+        <div className='flex space-x-3 min-h-12 min-w-[358px] p-3 rounded-md bg-namiv2-black-1'>
             {types[type] ? types[type] : null}
             {content}
         </div>

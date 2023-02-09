@@ -107,7 +107,7 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
             <div className={classNames("font-medium text-sm text-gray-7 leading-6 flex flex-col gap-4", { 'px-4': isDesktop })}>
                 <div>
                     {t('reference:referral.note')}
-                    <div className="mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4">
+                    <div className="mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiv2-black-2 font-medium text-sm leading-6 gap-4">
                         <div className="flex justify-between items-center w-full">
                             <input
                                 onFocus={onFocus}
@@ -131,7 +131,7 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                     </div>
                 </div>
                 <div
-                    className="w-full h-11 mt-4 bg-namiapp-green-1 rounded-md font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer text-white"
+                    className="w-full h-11 mt-4 bg-namiv2-green-1 rounded-md font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer text-white"
                     onClick={() => handleSubmitEditNote()}
                 >
                     {t('common:confirm')}

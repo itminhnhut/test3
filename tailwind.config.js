@@ -341,24 +341,6 @@ module.exports = {
                 DEFAULT: commonColors.nao.bg,
                 ...commonColors.nao
             },
-            namiapp: {
-                black: {
-                    DEFAULT: '#0c0e14',
-                    1: '#141921',
-                    2: '#1c232e',
-                    3: '#1f2633',
-                    4: '#222940'
-                },
-                green: {
-                    DEFAULT: '#30bf73',
-                    1: '#47cc85',
-                    2: '#7ee5ae'
-                },
-                gray: {
-                    DEFAULT: '#8593a6',
-                    1: '#262e40'
-                }
-            },
             dark: {
                 ...commonColors.dark,
                 DEFAULT: commonColors.dark.dark

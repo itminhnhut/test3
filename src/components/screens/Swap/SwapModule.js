@@ -912,7 +912,7 @@ const SwapModule = ({ width, pair }) => {
 
                         <div className="flex justify-center items-center py-4">
                             <button
-                                className={`p-1.5 dark:bg-namiapp-black-2 shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                className={`p-1.5 dark:bg-namiv2-black-2 shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
                                 onClick={onReverse}
                             >
                                 <SwapReverse size={width < 1280 && 24} />

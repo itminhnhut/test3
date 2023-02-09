@@ -144,10 +144,10 @@
         "ref_placeholder": "Enter the desired referral code",
         "addref": "Create",
         "addref_title": "Referral Code (Optional)",
-        "addref_success": "Referral code <span class='text-namiapp-green-1'>{{value}}</span> successfully generated",
+        "addref_success": "Referral code <span class='text-namiv2-green-1'>{{value}}</span> successfully generated",
         "addref_error_1": "Please type in all 8 characters",
         "addref_error_2": "Referral code already exists",
-        "addref_error_3": "Referral code <span class='text-namiapp-green-1'>{{value}}</span> already exists, please try again!",
+        "addref_error_3": "Referral code <span class='text-namiv2-green-1'>{{value}}</span> already exists, please try again!",
         "commission_types": {
             "spot": "Spot",
             "futures": "Futures",

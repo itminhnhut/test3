@@ -429,7 +429,7 @@ export default {
     layoutsVndc: {
         md: [
             {
-                w: 9,
+                w: 8,
                 h: 2,
                 x: 0,
                 y: 0,
@@ -440,7 +440,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 9,
+                w: 8,
                 h: 3,
                 x: 0,
                 y: 0,
@@ -451,7 +451,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 9,
+                w: 8,
                 h: 29,
                 x: 0,
                 y: 5,
@@ -462,7 +462,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 9,
+                w: 8,
                 h: 15,
                 x: 0,
                 y: 5,
@@ -473,7 +473,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 3,
+                w: 4,
                 h: 36,
                 x: 9,
                 y: 0,
@@ -485,7 +485,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 3,
+                w: 4,
                 h: 13,
                 x: 9,
                 y: 32,
@@ -635,7 +635,7 @@ export default {
         ],
         '2xl': [
             {
-                w: 15,
+                w: 14,
                 h: 2,
                 x: 0,
                 y: 0,
@@ -646,7 +646,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 15,
+                w: 14,
                 h: 3,
                 x: 0,
                 y: 0,
@@ -657,7 +657,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 15,
+                w: 14,
                 h: 30,
                 x: 0,
                 y: 5,
@@ -668,7 +668,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 15,
+                w: 14,
                 h: 12,
                 x: 0,
                 y: 5,
@@ -679,7 +679,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 3,
+                w: 4,
                 h: 35,
                 x: 15,
                 y: 0,
@@ -690,7 +690,7 @@ export default {
                 isResizable: true,
             },
             {
-                w: 3,
+                w: 4,
                 h: 12,
                 x: 34,
                 y: 29,
