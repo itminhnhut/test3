@@ -12,7 +12,7 @@ const PocketFooter = ({ active, parentState }) => {
         <div className="mal-footer___pocket">
             <div className="mal-footer___pocket___company">
                 <div className="mal-footer___pocket__logo">
-                    <img src={getS3Url('/images/logo/nami-logo.png')} alt="Nami Exchange" />
+                    <img src={getS3Url('/images/logo/nami-logo-v2.png')} alt="Nami Exchange" />
                 </div>
                 <div className="mal-footer___pocket__slogan">
                     Change mindset, make giant steps
