@@ -1278,7 +1278,7 @@ const Terms = () => {
                             <Title1>II. Các quy định chung</Title1>
                             <Title2>1. Giới thiệu về các Điều khoản này</Title2>
                             <Title3>a. Quan hệ hợp đồng</Title3>
-
+                            <p>Các Điều khoản này tạo thành một thỏa thuận pháp lý và tạo ra một hợp đồng ràng buộc giữa bạn và Nami.Exchange Operator.</p>
                             <Title3>b. Điều khoản bổ sung</Title3>
                             <p>
                                 Do sự phát triển nhanh cháng của Tiền tệ kỹ thuật số và Nami.Exchange, các Điều khoản này giữa bạn và Nhà điều hành
