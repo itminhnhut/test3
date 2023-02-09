@@ -140,12 +140,11 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     }
     return (
         <>
-            <div className="">
+            <div className="mal-navbar__hamburger__spacing relative">
                 <button
                     type="button"
-                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 ${btnClass}`}
+                    className={`btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
                     aria-expanded="false"
-                    // ref={btnDropdownRef}
                     onClick={() => {
                         // eslint-disable-next-line no-unused-expressions
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
@@ -163,7 +162,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     ref={ref}
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
-                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl dark:border-divider-dark right-8 top-full bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
+                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl dark:border-divider-dark top-full !mt-[22px] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
                     }
                 >
                     <div className="py-6">

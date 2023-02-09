@@ -278,16 +278,16 @@
     height: 100%;
 
     .mal-navbar__dropdown {
-      left: unset !important;
-      right: 0 !important;
-      transform: translateX(25%) !important;
+      // left: unset !important;
+      // right: 0 !important;
+      // transform: translateX(25%) !important;
 
       // FOR USER CP
       .mal-navbar__dropdown__user__info {
         @apply flex items-center;
 
         padding-left: 16px;
-        margin-bottom: 12px;
+        margin-bottom: 24px;
 
         .mal-navbar__dropdown__user__info__avt {
           min-width: 34px;
@@ -306,11 +306,11 @@
           margin-left: 12px;
           white-space: nowrap;
           font-weight: 500;
-          font-size: 14px;
+          font-size: 16px;
 
           .mal-navbar__dropdown__user__info__username {
             @apply w-full flex items-center;
-
+            font-weight: 600;
             svg {
               margin-left: 4px;
             }
@@ -363,10 +363,11 @@
         }
 
         .chevron__down {
-          transform: rotate(180deg);
+          transform: rotate(-180deg);
+          
 
           path {
-            stroke: #00c8bc !important;
+            // stroke: #00c8bc !important;
           }
         }
       }
@@ -542,8 +543,9 @@
       @apply absolute hidden;
 
       top: 100%;
-      left: 50%;
-      transform: translateX(-50%);
+      right:0;
+      // left: 50%;
+      // transform: translateX(-50%);
       min-width: 130px;
       padding-top: 30px;
       gap:12px;

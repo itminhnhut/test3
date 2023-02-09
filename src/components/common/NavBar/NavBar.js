@@ -40,6 +40,10 @@ import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import HrefButton from 'src/components/common/V2/ButtonV2/HrefButton';
 import TextButton from '../V2/ButtonV2/TextButton';
 import LanguageSetting from './LanguageSetting';
+import { KYC_STATUS } from 'redux/actions/const';
+import Copy from 'components/svg/Copy';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { ArrowDownIcon, CheckCircleIcon } from '../../svg/SvgIcon';
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -79,7 +83,7 @@ const NavBar = ({
     const isHomePage = useMemo(() => router.pathname === '/', [router]);
     const { user: auth } = useSelector((state) => state.auth) || null;
     const { width } = useWindowSize();
-    const { t } = useTranslation(['navbar', 'common']);
+    const { t } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
 
     // * Memmoized Variable
@@ -105,8 +109,8 @@ const NavBar = ({
                 result.text = 'text-txtPrimary';
                 result.color = colors.darkBlue;
                 break;
-            default:
-                result.wrapper = 'mal-navbar__wrapper__no__blur';
+            default: //'mal-navbar__wrapper__no__blur';
+                result.wrapper = '';
                 result.text = 'text-txtPrimary dark:text-txtPrimary-dark';
                 result.color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
                 break;
@@ -344,7 +348,8 @@ const NavBar = ({
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const { avatar, username, email } = auth;
+        const { avatar, username, code, email, kyc_status } = auth;
+
         const items = [];
 
         let color;
@@ -385,7 +390,7 @@ const NavBar = ({
             if (item.hide) return null;
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
-                    <a className="mal-navbar__dropdown___item">
+                    <a className="mal-navbar__dropdown___item rounded-xl">
                         {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
                     </a>
                 </Link>
@@ -393,21 +398,44 @@ const NavBar = ({
         });
 
         return (
-            <div className="mal-navbar__dropdown">
-                <div className="mal-navbar__dropdown__wrapper">
-                    <div className="mal-navbar__dropdown__user__info">
-                        <div className="mal-navbar__dropdown__user__info__avt">
-                            <img src={avatar} alt="" />
+            <div className="mal-navbar__dropdown !pt-[26px]">
+                <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
+                    <div className="mal-navbar__dropdown__user__info justify-between items-center ">
+                        <div className="flex items-center">
+                            <div className="mal-navbar__dropdown__user__info__avt">
+                                <img src={avatar} alt="" />
+                            </div>
+                            <div className="mal-navbar__dropdown__user__info__summary">
+                                <div className="mal-navbar__dropdown__user__info__username">
+                                    {kyc_status < KYC_STATUS.APPROVED ? 'GUEST' : username || 'GUEST'}
+                                </div>
+                                <div className="text-txtSecondary items-center flex">
+                                    <p className="pr-1">{code}</p>
+                                    <CopyToClipboard text={code}>
+                                        <Copy />
+                                    </CopyToClipboard>
+                                </div>
+                            </div>
                         </div>
-                        <div className="mal-navbar__dropdown__user__info__summary">
-                            <div className="mal-navbar__dropdown__user__info__username">
-                                {username || 'Guest'} <SvgCheckSuccess />
-                            </div>
-                            <div className="mal-navbar__dropdown__user__info__level">
-                                {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
-                            </div>
+                        <div className="py-2 px-3 gap-2 bg-teal-opacitier flex items-center rounded-full bg-dom">
+                            <CheckCircleIcon color={colors.teal} size={14} />
+                            <div className="text-sm text-dominant">{t('navbar:verified')}</div>
                         </div>
                     </div>
+
+                    <hr className="border-divider-dark mb-6" />
+
+                    <div className=" flex items-center justify-center mb-6">
+                        <div className="text-dominant font-semibold">
+                            {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
+                        </div>
+                        <div className="ml-[30px] ">
+                            Sử dụng <span className="text-dominant uppercase">NAMI</span> - nhận thêm ưu đãi
+                          
+                        </div>
+                    </div>
+
+                    <hr className="border-divider-dark mb-6" />
                     {items}
                 </div>
             </div>
@@ -580,7 +608,7 @@ const NavBar = ({
                             <>
                                 {width >= 992 && (
                                     <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
-                                        <SvgWallet color={navTheme.color} />
+                                        <SvgWallet size={20} color={navTheme.color} />
                                         {/* <span className="ml-4" style={{ color: navTheme.color }} onClick={() => router.push(PATHS.WALLET.DEFAULT)}>
                                             {t('navbar:menu.wallet')}
                                         </span> */}
@@ -596,7 +624,7 @@ const NavBar = ({
                                 </div>
                             </>
                         )}
-                        {auth && <NotificationList btnClass="!mr-0 ml-8" navTheme={navTheme} />}
+                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} />}
                         {width >= 1366 && (
                             <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
                                 {/* <a
