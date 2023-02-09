@@ -153,7 +153,7 @@ function Activity({ t }) {
                                     {statusInner}
                                 </div>
                                 <div onClick={() => setRevokeDevice(item)}
-                                     className='w-10 h-10 bg-namiv2-gray rounded-full relative cursor-pointer'>
+                                     className='w-10 h-10 bg-dark-2 rounded-full relative cursor-pointer'>
                                     <Delete className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
                                 </div>
                             </div>

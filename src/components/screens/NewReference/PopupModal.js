@@ -61,7 +61,7 @@ const PopupModal = ({
                     <div
                         onClick={() => onBackdropCb && onBackdropCb()}
                         className={classNames(
-                            'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-darkBlue/[0.7]', bgClassName,
+                            'absolute top-0 left-0 w-full h-full transition-opacity duration-200 z-[100] bg-shadow/[0.6]', bgClassName,
                             { 'visible opacity-100': isVisible },
                             { 'invisible opacity-0': !isVisible },
                             { '!z-[200]': useAboveAll },
@@ -73,7 +73,6 @@ const PopupModal = ({
                             `fixed min-w-[280px] min-h-[100px] rounded-lg dark:drop-shadow-dark bg-transparent left-0 top-0 w-full h-full p-0 z-[101]`,
                             containerClassName,
                             { '!z-[201]': useAboveAll },
-                            // { '!bg-black bg-opacity-80': isMobile },
                         )}
                     >
                         <div className={classNames(`justify-end h-full flex flex-col relative`, { '!justify-center !items-center !mx-[25px]': useCenter })}>
@@ -81,11 +80,11 @@ const PopupModal = ({
                             <div
                                 ref={wrapperRef}
                                 className={classNames(
-                                    `${contentClassname} rounded-t-xl h-max w-full relative bg-white px-4 pt-9 pb-12 max-h-[90%] overflow-y-auto`,
+                                    `${contentClassname} rounded-t-xl h-max w-full relative px-4 pt-9 pb-12 max-h-[90%] overflow-y-auto`,
                                     { 'h-full max-h-screen !rounded-none !fixed': useFullScreen },
                                     {
                                         '!rounded-xl !px-6': useCenter && !isDesktop,
-                                        'bg-namiapp-black': isMobile,
+                                        'bg-dark': isMobile,
                                         '!bg-white text-darkBlue': isDesktop
                                     }
                                 )}
@@ -100,7 +99,6 @@ const PopupModal = ({
                                 <div className={classNames("w-full flex justify-between items-center",
                                     {
                                         '!justify-start': useFullScreen,
-                                        'px-4': isDesktop
                                     })}
                                 >
                                     {useFullScreen ? <div className='mr-3' onClick={() => onBackdropCb && onBackdropCb()}>
@@ -118,7 +116,7 @@ const PopupModal = ({
                                         {/* <X size={18} color={useCenter ? '#fff' : '#718096'} /> */}
                                         {isMobile ?
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#7v918lj1ea)">
+                                                <g clipPath="url(#7v918lj1ea)">
                                                     <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill="#E2E8F0" />
                                                 </g>
                                                 <defs>
@@ -128,15 +126,14 @@ const PopupModal = ({
                                                 </defs>
                                             </svg>
                                             : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="m6 6 12 12M6 18 18 6" stroke={isMobile ? '#e2e8f0' : useCenter && !isDesktop ? '#fff' : '#718096'} strokeLinecap="round" strokeLinejoin="round" />
+                                                <path d="m6 6 12 12M6 18 18 6" stroke={useCenter ? '#fff' : '#e2e8f0'} strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>}
                                     </div>}
                                 </div>
                                 {(isDesktop || isMobile) ? null : useFullScreen || useCenter ? <div className="h-6"></div> : <Line className="mt-2 absolute mb-6 ml-[-16px] !w-screen" />}
-                                {isDesktop ? <Line className="w-full mt-3 mb-6" /> : null}
-                                {isDesktop ? children : <div className={classNames('mt-7', { '!mt-0': useCenter })}>
+                                <div className={classNames('mt-7')}>
                                     {children}
-                                </div>}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -225,7 +222,7 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
 export const renderRefInfo = (text, className = '', size = 15, originalText) => {
     return (
         <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]', className)}>
-            <div className="font-medium text-sm text-namiapp-black-3 w-3/4">{text}</div>
+            <div className="font-medium text-sm text-shadow-3 w-3/4">{text}</div>
             <div>
                 <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />
             </div>

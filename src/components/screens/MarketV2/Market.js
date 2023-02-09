@@ -209,11 +209,11 @@ const Market = () => {
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.favType]?.key === 'exchange') {
                 // log.d('Tab Favorite - Exchange')
-                watch = convert?.exchange
+                watch = convert?.exchange?.filter(e => e.q === asset)
             }
             if (favSubTab[state.favType]?.key === 'futures') {
                 // log.d('Tab Favorite - Futures')
-                watch = convert?.futures
+                watch = convert?.futures?.filter(e => e.q === asset)
             }
 
             if (subTab[state.subTabIndex].key === 'vndc') {
@@ -275,19 +275,44 @@ const Market = () => {
 
         // Count searched items
         if (state.search && convert && state.exchangeMarket && state.futuresMarket) {
-            const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
-            const exchange = filterer(state.exchangeMarket, state.search.toLowerCase())
-            const futures = filterer(state.futuresMarket, state.search.toLowerCase())
 
+            const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
+            const exchange = filterer(state.exchangeMarket.filter(e => e.q === asset), state.search.toLowerCase())
+            const futures = filterer(state.futuresMarket.filter(e => e.q === asset), state.search.toLowerCase())
+        
             setState({
                 tabLabelCount: {
-                    favorite: favorite?.length,
+                    favorite: favorite?.length - 1,
                     exchange: exchange?.length,
                     futures: futures?.length
                 }
             })
         } else {
             setState({ tabLabelCount: null })
+        }
+
+        if(tab[state.tabIndex].key !== 'favorite') {
+            switch (state.type) {
+                case 0:
+                    break;
+                case 'TOP_GAINER':
+                    watch = watch.sort((a, b) => {
+                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
+                        if(diff === 0) return 0
+                        return diff > 0 ? 1 : -1
+                    })
+                    break;
+                case 'TOP_LOSER':
+                    watch = watch.sort((a, b) => {
+                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
+                        if(diff === 0) return 0
+                        return (diff > 0) ? -1 : 1
+                    })
+                    break;
+                default:
+                    watch = watch?.filter(e => categories[state.type]?.includes(e.s))
+                    break;
+            }
         }
 
         // Set watching data
@@ -322,7 +347,7 @@ const Market = () => {
 
     const renderContent = () => {
         return (
-            <div className="w-full h-full bg-namiv2-black pb-[120px]">
+            <div className="w-full h-full bg-shadow pb-[120px]">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend} />
                     {renderMarketTable()}

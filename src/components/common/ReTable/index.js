@@ -296,7 +296,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
     .rc-table {
-        color: ${colors.namiv2.gray[2]};
+        color: ${colors.gray4};
         /* margin-top: 20px; */
         .re_table__link {
             font-size: 14px;
@@ -324,7 +324,7 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table th {
-        color: ${colors.namiv2.gray[1]};
+        color: ${colors.darkBlue5};
         font-weight: 400;
         padding: 24px 16px;
     }

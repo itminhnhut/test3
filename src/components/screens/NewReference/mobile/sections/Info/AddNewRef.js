@@ -10,6 +10,8 @@ import Modal from 'components/common/ReModal';
 import { useMemo } from 'react';
 import colors from 'styles/colors';
 import { emitWebViewEvent } from 'redux/actions/utils';
+import ModalV2 from 'components/common/V2/ModalV2';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // goodluck for who maintain this code
 const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }) => {
@@ -31,6 +33,9 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     const [resultData, setResultData] = useState({
         isSucess: false,
         message: ''
+
+        // message: t('reference:referral.addref_success', { value: 'ACM' }),
+        // isSucess: true
     })
     const handleInputNote = (e) => {
         const text = e?.target?.value
@@ -127,37 +132,31 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     const renderResult = useMemo(() => {
         if (!resultData.message.length) return null
         const Icon = resultData.isSucess ? <SuccessIcon /> : <ErrorIcon />
-        const title = resultData.isSucess ? t('reference:referral.success') : t('reference:referral.error')
-        return isDesktop ?
-            <Modal
-                center
-                isVisible
-                containerClassName='!px-6 !py-8 top-[50%]'
-            >
-                <div className='w-full flex justify-center items-center flex-col text-center'>
-                    {Icon}
-                    <div className='text-sm font-medium mt-6'>
-                        <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
-                    </div>
+        const title = resultData.isSucess ? t('reference:referral.addref_success_title') : t('reference:referral.addref_error_title')
 
-                    <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
-                        onClick={() => window.fcWidget.open()}
-                    >
-                        {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
-                    </div>
-                    <div className='w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-6'
-                        onClick={() => {
-                            setResultData({
-                                isSucess: false,
-                                message: ''
-                            })
-                            resultData.isSucess && doClose()
-                        }}
-                    >
-                        {t('common:confirm')}
-                    </div>
+        return isDesktop ?
+            <AlertModalV2
+                isVisible
+                onClose={onClose}
+                title={title}
+                type={resultData.isSucess ? 'success': 'error'}
+                textButton={resultData.isSucess ? t('common:confirm') : null}
+                onConfirm={() => {
+                    setResultData({
+                        isSucess: false,
+                        message: ''
+                    })
+                    resultData.isSucess && doClose()
+                }}
+                // containerClassName='!px-6 !py-8 top-[50%]'
+            >
+                <div className='text-txtSecondary' dangerouslySetInnerHTML={{__html: resultData.message}}/>
+                <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                    onClick={() => window.fcWidget.open()}
+                >
+                    {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                 </div>
-            </Modal >
+            </AlertModalV2 >
             :
             <PopupModal
                 isVisible={true}
@@ -180,7 +179,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     {resultData.isSucess ?
                         null
                         :
-                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                        <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
                             onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
@@ -193,35 +192,34 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
     return (
         <>
             {renderResult}
-            {isDesktop ? <PopupModal
+            {isDesktop ? <ModalV2
                 isVisible={isShow}
                 onBackdropCb={onClose}
-                title={t('reference:referral.add_new_referral')}
-                useAboveAll
-                isDesktop={isDesktop}
-                useCenter={isDesktop}
-                contentClassname={isDesktop ? "!rounded !w-[390px] !px-0" : undefined}
+                className='w-[30rem]'
             >
-                <div className={classNames('font-medium text-sm text-gray-1 leading-6 flex flex-col gap-4', { 'px-4': isDesktop })}>
+                <div className={classNames('flex flex-col gap-4')}>
                     <div>
-                        {t('reference:referral.commission_rate')}
+                        <p className='text-[22px] font-semibold mb-6 mt-4'>
+                            {t('reference:referral.add_new_referral')}
+                        </p>
                         <div className='mt-4 mb-2'>
+                            <p className='text-sm text-txtSecondary mb-3'>{t('reference:referral.commission_rate')}</p>
                             <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} />
                         </div>
-                        <div className='flex justify-between items-center font-medium text-xs leading-5'>
-                            <div>
-                                {t('reference:referral.you_get')} {totalRate - percent}%
-                            </div>
-                            <div>
-                                {t('reference:referral.friends_get')} {percent}%
-                            </div>
+                        <div className='flex justify-between items-center text-sm text-txtSecondary'>
+                            <span>
+                                {t('reference:referral.you_get')}: {totalRate - percent}%
+                            </span>
+                            <span>
+                                {t('reference:referral.friends_get')}: {percent}%
+                            </span>
                         </div>
                     </div>
                     <div>
-                        {t('reference:referral.addref_title')}
-                        <div className={classNames('mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
-                            <div className='flex w-full justify-between items-center '>
-                                <input id='refCode' className='text-darkBlue font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
+                        <p className='text-txtSecondary text-sm mb-2'>{t('reference:referral.addref_title')}</p>
+                        <div className={classNames('rounded px-3 h-12 flex justify-between items-center gap-4 bg-dark-2', { 'border-red border-[1px]': error.length })}>
+                            <div className='flex w-full justify-between items-center'>
+                                <input id='refCode' className='w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
                                     onInput={(e) => {
                                         handleInput(e, 8)
@@ -233,10 +231,10 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                                         document.getElementById("refCode").focus();
                                     }}
                                 >
-                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' strokeLinecap="round" strokeLinejoin="round" />
                                 </svg> : null}
                             </div>
-                            <div className='w-10'>
+                            <div className='w-10 text-txtSecondary'>
                                 {refCode.length}/8
                             </div>
                         </div>
@@ -245,20 +243,20 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div> : null}
                     </div>
                     <div>
-                        {t('reference:referral.note')}
-                        <div className='mt-1 rounded-[4px] px-3 h-11 flex justify-between items-center bg-gray-4 font-medium text-sm leading-6 gap-4'>
+                        <p className='text-txtSecondary text-sm mb-2'>{t('reference:referral.note')}</p>
+                        <div className='rounded px-3 h-12 flex justify-between items-center gap-4 bg-dark-2'>
                             <div className='w-full justify-between items-center flex'>
-                                <input id='note' className='text-darkBlue font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+                                <input id='note' className='w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                                     onClick={() => {
                                         setNote('')
                                         document.getElementById("note").focus();
                                     }}
                                 >
-                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' strokeLinecap="round" strokeLinejoin="round" />
                                 </svg> : null}
                             </div>
-                            <div className='w-10'>
+                            <div className='w-10 text-txtSecondary'>
                                 {note.length}/30
                             </div>
                         </div>
@@ -267,13 +265,13 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         <input type="checkbox" id="vehicle1" className='rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault} />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length || (refCode.length && refCode.length !== 8) })}
+                    <div className={classNames('w-full h-12 mt-8 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length || (refCode.length && refCode.length !== 8) })}
                         onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}
                     </div>
                 </div>
-            </PopupModal> : <PopupModal
+            </ModalV2> : <PopupModal
                 isVisible={isShow}
                 onBackdropCb={onClose}
                 title={isDesktop ? t('reference:referral.add_new_referral') : null}
@@ -290,7 +288,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>}
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
-                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.namiapp.green[1]} bgColorActive={colors.namiapp.green[1]} BgColorLine={colors.namiapp.black[2]} bgColorDot={colors.namiapp.black[2]} />
+                            <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange} bgColorSlide={colors.teal} bgColorActive={colors.teal} BgColorLine={colors.hover.DEFAULT} bgColorDot={colors.hover.DEFAULT} />
                         </div>
                         <div className='flex justify-between items-center font-medium text-xs leading-5'>
                             <div>
@@ -303,7 +301,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.addref_title')}
-                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
+                        <div className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8} placeholder={t('reference:referral.ref_placeholder')} onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
@@ -321,7 +319,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                                         document.getElementById("refCode").focus();
                                     }}
                                 >
-                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="m6 6 12 12M6 18 18 6" stroke='#718096' strokeLinecap="round" strokeLinejoin="round" />
                                 </svg> : null}
                             </div>
                             <div className='w-10'>
@@ -334,7 +332,7 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                     </div>
                     <div>
                         {t('reference:referral.note')}
-                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-namiapp-black-2 font-medium text-sm leading-6 gap-4'>
+                        <div className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='text-gray-6 font-medium w-full' value={note} maxLength={30} onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -355,14 +353,14 @@ const AddNewRef = ({ isShow = false, onClose, doRefresh, defaultRef, isDesktop }
                         </div>
                     </div>
                     <div className='flex items-center gap-2 text-xs font-medium'>
-                        <input type="checkbox" id="setdefault123" className='bg-namiapp-green-1 rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
+                        <input type="checkbox" id="setdefault123" className='bg-teal rounded-sm h-4 w-4 text-darkBlue font-medium' name="isDefault" onChange={handleCheckDefault} checked={isDefault}
                             style={{
                                 outline: 'none'
                             }}
                         />
                         {t('reference:referral.set_default')}
                     </div>
-                    <div className={classNames('w-full h-11 mt-4 bg-namiapp-green-1 rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-namiapp-black-2 !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
+                    <div className={classNames('w-full h-11 mt-4 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-hover-dark !text-[#3e4351]': error.length || (refCode.length && refCode.length !== 8) })}
                         onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
                     >
                         {t('reference:referral.addref')}

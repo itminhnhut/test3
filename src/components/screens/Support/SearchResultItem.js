@@ -61,7 +61,7 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     }
 
     return (
-        <div className="mb-6 lg:mb-9">
+        <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href={buildArticleUrl()}>
                     <a target='_blank' className="text-gray-4 font-semibold text-base sm:font-medium sm:text-[20px] sm:leading-7 cursor-pointer">

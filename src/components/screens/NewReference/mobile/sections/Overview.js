@@ -16,6 +16,8 @@ import { emitWebViewEvent, getS3Url } from 'redux/actions/utils';
 import { getMe } from 'redux/actions/user';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link'
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import ModalV2 from 'components/common/V2/ModalV2';
 const Overview = ({ data, commisionConfig, user }) => {
     const {
         t,
@@ -100,7 +102,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                     {t('reference:referral.readmore') + ' '}
                     <Link href={policyLink} >
                         <a>
-                            <span className='text-namiapp-green-1 underline'>{t('reference:referral.referral_policy')}</span>
+                            <span className='text-teal underline'>{t('reference:referral.referral_policy')}</span>
                         </a>
                     </Link>
                 </div> :
@@ -138,7 +140,7 @@ const Overview = ({ data, commisionConfig, user }) => {
             {user ? (
                 <div className="mt-[30px]">
                     <RefCard>
-                        <div className="pb-2 text-namiapp-gray">
+                        <div className="pb-2 text-gray-9">
                             <div className="flex w-full justify-between text-xs font-medium">
                                 <div> {t('reference:referral.referral_code')}</div>
                                 <div>
@@ -174,7 +176,7 @@ const Overview = ({ data, commisionConfig, user }) => {
                         </div>
                     </RefCard>
                     <div
-                        className="w-full mt-8 h-11 bg-namiapp-green-1 flex items-center justify-center text-sm font-semibold text-white rounded-md"
+                        className="w-full mt-8 h-11 bg-teal flex items-center justify-center text-sm font-semibold text-white rounded-md"
                         onClick={() => setShowInvite(true)}
                     >
                         {t('reference:referral.invite_friends')}
@@ -294,7 +296,7 @@ const RefButton = ({ children, onClick, className }) => {
     return (
         <div
             className={classNames(
-                'border-[1px] border-namiapp-green h-11 bg-transparent text-gray-6 font-semibold text-sm flex items-center justify-center cursor-pointer rounded-md',
+                'border-[1px] border-txtTextBtn h-11 bg-transparent text-gray-6 font-semibold text-sm flex items-center justify-center cursor-pointer rounded-md',
                 className
             )}
             onClick={onClick}
@@ -308,10 +310,10 @@ const ConfirmButtom = ({ text, onClick, isDisable = true, className, isDesktop =
     return (
         <div
             className={classNames(
-                'w-full h-11 rounded-md flex justify-center items-center font-semibold text-sm leading-[18px] bg-namiapp-green-1 text-white',
+                'w-full h-11 rounded-md flex justify-center items-center font-semibold text-sm leading-[18px] bg-teal text-white',
                 className,
                 {
-                    '!bg-namiapp-black-2 !text-namiapp-gray-1': isDisable && !isDesktop,
+                    '!bg-dark-2 !text-gray-8': isDisable && !isDesktop,
                     '!bg-teal !text-white': isDesktop && !isDisable,
                     '!bg-gray-2': isDesktop && isDisable
                 }
@@ -324,7 +326,7 @@ const ConfirmButtom = ({ text, onClick, isDisable = true, className, isDesktop =
 };
 
 export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartner, isDesktop = false, language }) => {
-    const isKyc = user?.kyc_status === 2;
+    const isKyc = user?.kyc_status === 2 || true;
     const defaultData = isKyc
         ? {
             fullName: kyc?.kycInformationData?.metadata?.identityName,
@@ -469,7 +471,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                     {result?.isSucess ?
                         null
                         :
-                        <div className='w-full flex justify-center text-namiapp-green font-semibold mt-6 cursor-pointer'
+                        <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
                             onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
@@ -482,17 +484,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
 
     if (isDesktop && !isKyc) {
         return (
-            <Modal center isVisible containerClassName="!px-6 !py-8 top-[50%] max-w-[350px]">
-                <div className="w-full flex justify-center items-center flex-col text-center">
-                    <div className="mt-6">
-                        <ErrorIcon />
-                    </div>
-                    <div className="text-darkBlue text-[20px] leading-8 font-semibold mt-6">{t('reference:referral.partner.no_kyc')}</div>
-                    <div className="w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-8" onClick={onClose}>
-                        {t('common:confirm')}
-                    </div>
-                </div>
-            </Modal>
+            <AlertModalV2 isVisible type='error' title={t('reference:referral.partner.no_kyc_title')} message={t('reference:referral.partner.no_kyc')}/>
         );
     }
 
@@ -506,20 +498,13 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                 isMobile={!isDesktop}
                 isDesktop={isDesktop}
                 useCenter={isDesktop}
-                contentClassname={isDesktop ? '!rounded !w-[390px] !px-0 !py-6' : undefined}
-                title={isDesktop ? t('reference:referral.partner.title') : undefined}
+                contentClassname={isDesktop ? '!w-[30rem] !p-8' : undefined}
             >
                 {isKyc ? (
                     <div
-                        className={classNames('font-normal text-xs leading-4 text-gray-7 flex flex-col gap-4 -mt-3', {
-                            'px-3': isDesktop
-                        })}
+                        className={classNames('font-normal leading-4 text-gray-7 flex flex-col gap-4')}
                     >
-                        {isDesktop ? (
-                            <div className=""></div>
-                        ) : (
-                            <div className="text-gray-6 font-semibold text-[20px] leading-8 mb-4">{t('reference:referral.partner.title')}</div>
-                        )}
+                        <div className="text-gray-6 font-semibold text-[22px] leading-8 mb-2">{t('reference:referral.partner.title')}</div>
                         <RefInput
                             type="fullName"
                             text={state.fullName}
@@ -570,22 +555,9 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                                 label={t('reference:referral.partner.social')}
                                 validator={validator}
                                 isDesktop={isDesktop}
-                                canPaste={!isDesktop}
+                                canPaste={true}
                                 t={t}
                             />
-                            {isDesktop ? (
-                                <div
-                                    className={classNames(
-                                        'mt-6 w-auto h-11 rounded-md px-6 flex justify-between items-center text-darkBlue bg-gray-4 font-medium text-sm cursor-pointer'
-                                    )}
-                                    onClick={async () => {
-                                        const text = await navigator?.clipboard?.readText();
-                                        setState({ socialMedia: text });
-                                    }}
-                                >
-                                    {t('reference:referral.partner.paste')}
-                                </div>
-                            ) : null}
                         </div>
 
                         <div className="mt-4">
@@ -605,7 +577,7 @@ export const RegisterPartnerModal = ({ isShow, onClose, user, kyc, t, setIsPartn
                         </div>
                         <div className="text-gray-6 text-[20px] leading-8 font-semibold mt-6">{t('reference:referral.partner.no_kyc')}</div>
                         <div
-                            className="w-full h-11 flex justify-center items-center bg-namiapp-green-1 text-white font-semibold text-sm rounded-md mt-8"
+                            className="w-full h-11 flex justify-center items-center bg-teal text-white font-semibold text-sm rounded-md mt-8"
                             onClick={onClose}
                         >
                             {t('common:confirm')}
@@ -644,9 +616,9 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
 
     return (
         <div className="w-full">
-            <div>{label}</div>
+            <div className='text-sm'>{label}</div>
             <div
-                className={classNames('mt-2 w-full h-11 rounded-md bg-namiapp-black-2 border-[#f93636] px-3 flex justify-between items-center', {
+                className={classNames('mt-2 w-full h-11 rounded-md bg-dark-2 border-[#f93636] px-3 flex justify-between items-center', {
                     'border-[1px]': error.length,
                     '!text-gray-1 !bg-gray-4 !font-medium !text-sm': isDesktop
                 })}
@@ -654,9 +626,7 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
                 <input
                     ref={ref}
                     value={text}
-                    className={classNames('text-gray-6 font-normal text-sm leading-[18px] h-full w-full', {
-                        '!text-darkBlue disabled:!text-gray-1': isDesktop
-                    })}
+                    className={classNames('text-gray-4 font-normal h-full w-full')}
                     placeholder={placeholder}
                     onChange={(e) => handleInput(e.target.value)}
                     disabled={disabled}
@@ -674,11 +644,11 @@ const RefInput = ({ text, setText, placeholder, label, validator, type, disabled
                             ref.current.focus();
                         }}
                     >
-                        <path d="m6 6 12 12M6 18 18 6" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="m6 6 12 12M6 18 18 6" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 ) : null}
                 {canPaste && !isDesktop ?
-                    <div className='font-semibold text-namiapp-green-1 text-sm leading-[18px] cursor-pointer ml-2' onClick={handlePaste}>{t('common:paste')}</div>
+                    <div className='font-semibold text-teal text-sm leading-[18px] cursor-pointer ml-2' onClick={handlePaste}>{t('common:paste')}</div>
                     : null}
             </div>
             {error.length ? (

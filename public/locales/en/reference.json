@@ -117,9 +117,12 @@
         "confirm": "Confirm",
         "add_new_referral": "Add A New Referral",
         "commission_rate": "Commission Rate",
+        "direct": "Direct",
+        "indirect": "Indirect",
         "you_get": "You get",
         "friends_get": "Friends get",
         "new_friends": "New Friends",
+        "rank": "Rank",
         "level": "Level",
         "type": "Type",
         "new_friend": "New Friend",
@@ -144,10 +147,12 @@
         "ref_placeholder": "Enter the desired referral code",
         "addref": "Create",
         "addref_title": "Referral Code (Optional)",
-        "addref_success": "Referral code <span class='text-namiapp-green-1'>{{value}}</span> successfully generated",
+        "addref_success": "Referral code <span class='text-teal'>{{value}}</span> successfully generated",
+        "addref_success_title": "Add code success",
+        "addref_error_title": "Add code failed",
         "addref_error_1": "Please type in all 8 characters",
         "addref_error_2": "Referral code already exists",
-        "addref_error_3": "Referral code <span class='text-namiapp-green-1'>{{value}}</span> already exists, please try again!",
+        "addref_error_3": "Referral code <span class='text-teal'>{{value}}</span> already exists, please try again!",
         "commission_types": {
             "spot": "Spot",
             "futures": "Futures",
@@ -169,11 +174,20 @@
             "social_placeholder": "Enter your Zalo/Facebook/Twiter link",
             "social": "Social media link",
             "social_empty": "Please enter your social media link",
+            "no_kyc_title": "Not KYC",
             "no_kyc": "You have not completed KYC, please verify to continue",
             "success": "Congratulations, you've just registered Community Development Partner registration successfully",
             "failed": "Community Development Partner registration failed, please contact support.",
             "register": "Register",
             "paste": "Paste"
+        },
+        "share": {
+            "title": "Share referral code",
+            "title_2": "Join Nami Exchange",
+            "content": "Make easy money together<br/>with commission rates up to",
+            "scan_and_join": "Scan the code and join now",
+            "id_referral": "Referral ID",
+            "download": "Download"
         }
     }
 }
