@@ -197,7 +197,8 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
             const origin = dataHandler(state.allAssets, t, dispatch, {
                 usdRate,
-                marketWatch
+                marketWatch,
+                btcAssetDigit: estBtc?.assetDigit
             });
             let tableData = origin;
             if (state.hideSmallAsset) {
@@ -370,7 +371,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 <div className="text-sm">
                     {assetUsdRate ? (
                         <>
-                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
+                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, utils?.btcAssetDigit || 8) : '0.0000'}</div>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
                                 ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                             </div>

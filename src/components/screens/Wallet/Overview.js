@@ -28,8 +28,19 @@ const INITIAL_STATE = {
 };
 
 const OverviewWallet = (props) => {
-    const { allAssets, exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, stakingEstBtc, stakingRefPrice, farmingEstBtc, farmingRefPrice } =
-        props;
+    const {
+        allAssets,
+        exchangeEstBtc,
+        exchangeRefPrice,
+        futuresEstBtc,
+        futuresRefPrice,
+        partnersEstBtc,
+        partnersRefPrice,
+        stakingEstBtc,
+        stakingRefPrice,
+        farmingEstBtc,
+        farmingRefPrice
+    } = props;
 
     // Init State
     const [state, set] = useState(INITIAL_STATE);
@@ -76,10 +87,15 @@ const OverviewWallet = (props) => {
         return (
             <>
                 <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                    {state.hideAsset ? SECRET_STRING : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue, exchangeEstBtc?.assetDigit)} BTC
+                    {state.hideAsset
+                        ? SECRET_STRING
+                        : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
+                    BTC
                 </div>
                 <div className="font-normal text-base mt-1">
-                    {state.hideAsset ? SECRET_STRING : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue, 2)}`}
+                    {state.hideAsset
+                        ? SECRET_STRING
+                        : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + partnersRefPrice?.totalValue, 2)}`}
                 </div>
             </>
         );
@@ -100,6 +116,14 @@ const OverviewWallet = (props) => {
             </span>
         );
     }, [futuresEstBtc, futuresRefPrice]);
+
+    const renderPartnersEstBalance = useCallback(() => {
+        return (
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+                {formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
+            </span>
+        );
+    }, [partnersEstBtc, partnersRefPrice]);
 
     const renderFarmingEstBalance = useCallback(() => {
         return (
@@ -269,8 +293,28 @@ const OverviewWallet = (props) => {
                     </div>
                 </Link>
 
+                {/* Partners */}
+                <Link href="/wallet/partners">
+                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
+                        <AssetBalance title="Partners" icon={<SvgWalletFutures />} renderEstBalance={renderPartnersEstBalance} />
+                        <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
+                            <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                                <Trans>{t('wallet:partners_overview')}</Trans>
+                            </div>
+                            <div className="flex">
+                                <TextButton
+                                    className="text-sm font-semibold"
+                                    onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT }))}
+                                >
+                                    {t('common:transfer')}
+                                </TextButton>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+
                 {/* Staking */}
-                <Link href="/wallet/staking">
+                {/* <Link href="/wallet/staking">
                     <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
                         <AssetBalance title="Staking" icon={<SvgWalletStake />} renderEstBalance={renderStakingEstBalance} />
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
@@ -282,7 +326,7 @@ const OverviewWallet = (props) => {
                             </div>
                         </div>
                     </div>
-                </Link>
+                </Link> */}
 
                 {/* <Link href="/wallet/farming">
                     <div className="px-6 py-6 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row dark:hover:bg-teal-5 hover:bg-teal-5 cursor-pointer">
