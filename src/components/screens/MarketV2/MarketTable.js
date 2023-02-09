@@ -10,7 +10,7 @@ import Empty from 'components/common/Empty';
 import NeedLogin from 'components/common/NeedLogin';
 import Skeletor from 'components/common/Skeletor';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
+import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
 import { initMarketWatchItem, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
 import { IconStarFilled } from 'components/common/Icons';

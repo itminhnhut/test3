@@ -973,3 +973,10 @@ input:-webkit-autofill{
     }
 }
 
+
+.nami-underline-dotted {
+    @apply underline cursor-pointer;
+    text-decoration-style: dotted;
+    text-decoration-color: #8694b2;
+    text-underline-offset: .25rem;
+}

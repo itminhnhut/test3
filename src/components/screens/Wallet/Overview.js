@@ -17,8 +17,9 @@ import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import SvgWalletStake from 'components/svg/SvgWalletStake';
-import HrefButton from '../../common/V2/ButtonV2/HrefButton';
-import TextButton from '../../common/V2/ButtonV2/TextButton';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -74,13 +75,10 @@ const OverviewWallet = (props) => {
     const renderOverviewEstBalance = useCallback(() => {
         return (
             <>
-                <div className="font-bold text-[24px] lg:text-[28px] xl:text-[36px] dark:text-txtPrimary-dark text-txtPrimary">
-                    <span className="mr-1.5">
-                        {state.hideAsset ? SECRET_STRING : formatWallet(exchangeEstBtc?.totalValue + exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}
-                    </span>
-                    <span>BTC</span>
+                <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                    {state.hideAsset ? SECRET_STRING : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue, exchangeEstBtc?.assetDigit)} BTC
                 </div>
-                <div className="font-medium text-sm lg:text-[16px] xl:text-[18px] mt-1 md:mt-3 xl:mt-5">
+                <div className="font-normal text-base mt-1">
                     {state.hideAsset ? SECRET_STRING : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue, 2)}`}
                 </div>
             </>
@@ -170,7 +168,7 @@ const OverviewWallet = (props) => {
                             </div>
                         </div>
                         <div className="mt-12 flex items-center">
-                            <div className="rounded-full bg-listItemSelected dark:bg-listItemSelected-dark min-w-[55px] min-h-[55px] md:min-w-[64px] md:min-h-[64px] flex items-center justify-center">
+                            <div className="rounded-full bg-listItemSelected dark:bg-listItemSelected-dark w-[64px] h-[64px] flex items-center justify-center">
                                 {/* <img
                                     className="-ml-0.5"
                                     src={getS3Url('/images/icon/ic_wallet_2.png')}
@@ -180,7 +178,7 @@ const OverviewWallet = (props) => {
                                 /> */}
                                 <SvgWalletOverview />
                             </div>
-                            <div className="ml-3 md:ml-6">{renderOverviewEstBalance()}</div>
+                            <div className="ml-6">{renderOverviewEstBalance()}</div>
                         </div>
                     </div>
                     <div className="hidden md:block">
@@ -202,7 +200,7 @@ const OverviewWallet = (props) => {
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
-                            </div>
+                            </ButtonV2>
                         </div>
                         {/* <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt="" /> */}
                     </div>

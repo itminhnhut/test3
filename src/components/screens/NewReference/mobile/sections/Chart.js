@@ -235,8 +235,8 @@ const Chart = ({ user }) => {
 }
 
 export const SmallCircle = styledComponents.div.attrs(({ color }) => ({}))`
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     flex-grow: 0;
     background-color: ${({ color }) => color};
     border-radius: 100%;

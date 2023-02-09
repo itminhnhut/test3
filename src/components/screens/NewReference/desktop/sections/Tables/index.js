@@ -29,7 +29,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
         switch (object.type) {
             case 'daterange':
                 return (
-                    <div className="date-range-picker flex justify-center !bg-white w-full">
+                    <div className="date-range-picker flex justify-center w-full">
                         <DatePicker
                             date={filter[key].value}
                             onChange={e => onChange(e.selection)}
@@ -45,7 +45,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                         <div className='h-full w-full'>
                             <Popover.Button className='w-full'>
                                 <div
-                                    className="relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-gray-4 rounded-[4px] border-[0.5px] border-white h-full w-full leading-6">
+                                    className="relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-dark-2 rounded-md h-full w-full leading-6">
                                     {object.values.find(e => e.value === filter[key].value).title}
                                     <ChevronDown size={16} className="ml-1" />
                                 </div>
@@ -58,7 +58,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1"
                             >
-                                <Popover.Panel className="absolute z-10 bg-white w-full">
+                                <Popover.Panel className="absolute z-10 bg-dark-2 w-full">
                                     <div
                                         className="h-full py-1 shadow-onlyLight font-medium text-xs flex flex-col">
                                         {object.values.map((e, index) => (
@@ -78,7 +78,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                     )}
                 </Popover>
             case 'date':
-                return <div className="date-range-picker flex justify-center !bg-white w-full">
+                return <div className="date-range-picker flex justify-center w-full">
                     <DatePicker
                         date={filter[key].value}
                         onChange={e => onChange(e)}
@@ -94,7 +94,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
     }
     const filterArray = Object.keys(filters)
     return filterArray.map((key) => <div className='min-w-[240px]' key={key}>
-        <div className='font-medium text-sm leading-5 text-gray-1 mb-1'>
+        <div className='text-txtSecondary mb-3'>
             {filters[key].title}
         </div>
         <div className='w-full'>

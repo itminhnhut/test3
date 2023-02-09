@@ -110,9 +110,12 @@
         "confirm": "Xác nhận",
         "add_new_referral": "Thêm giới thiệu mới",
         "commission_rate": "Tỷ lệ hoa hồng",
+        "direct": "Trực tiếp",
+        "indirect": "Gián tiếp",
         "you_get": "Bạn nhận",
         "friends_get": "Bạn bè nhận",
         "new_friends": "Bạn bè mới",
+        "rank": "Cấp",
         "level": "Cấp bậc",
         "type": "Loại",
         "new_friend": "Bạn bè mới",
@@ -138,6 +141,8 @@
         "addref": "Tạo mới",
         "addref_title": "Mã giới thiệu (Tùy chọn)",
         "addref_success": "Mã giới thiệu <span class='text-teal'>{{value}}</span> được tạo thành công",
+        "addref_success_title": "Tạo mã thành công",
+        "addref_error_title": "Tạo mã thất bại",
         "addref_error_1": "Vui lòng nhập đủ 8 ký tự",
         "addref_error_2": "Mã giới thiệu đã tồn tại",
         "addref_error_3": "Mã giới thiệu <span class='text-teal'>{{value}}</span> đã tồn tại, vui lòng nhập lại!",
@@ -162,11 +167,20 @@
             "phone_error": "Số điện thoại không đúng định dạng. Vui lòng nhập lại.",
             "phone_empty": "Xin vui lòng nhập số điện thoại",
             "social_placeholder": "Nhập liên kết Zalo/Facebook/Twiter",
+            "no_kyc_title": "Chưa KYC",
             "no_kyc": "Bạn chưa KYC, hãy KYC trước khi đăng ký đối tác",
             "success": "Chúc mừng bạn đã đăng ký đối tác phát triển cộng đồng thành công.",
             "failed": "Đăng ký đối tác đối tác phát triển cộng đồng không thành công, vui lòng liên hệ bộ phận hỗ trợ.",
             "register": "Đăng ký",
             "paste": "Dán"
+        },
+        "share": {
+            "title": "Chia sẻ mã giới thiệu",
+            "title_2": "Tham gia Nami Exchange",
+            "content": "Cùng nhau kiếm tiền dễ dàng<br/>với tỷ lệ hoa hồng lên đến",
+            "scan_and_join": "Quét mã và tham gia ngay",
+            "id_referral": "ID giới thiệu",
+            "download": "Tải xuống"
         }
     }
 }

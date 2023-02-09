@@ -352,7 +352,9 @@ const AccountAvatar = ({
                                 getRootProps,
                                 getInputProps
                             }) => (
-                                <div {...getRootProps({ className: 'dropzone w-full h-full flex flex-col items-center justify-center cursor-pointer text-center' })}>
+                                <div {...getRootProps({
+                                    className: 'dropzone w-full h-full flex flex-col items-center justify-center cursor-pointer text-center px-2'
+                                })}>
                                     <input {...getInputProps()} />
                                     <Upload size={32} />
                                     <p className='mt-2 font-medium mb-1'>{t('profile:drag_image')}</p>

@@ -262,6 +262,7 @@ module.exports = {
                 700: '#4e5973',
                 800: '#384562',
                 900: '#223050',
+                crayola: '#1e77eb',
             },
             darkBlue: {
                 DEFAULT: '#223050',
@@ -311,7 +312,10 @@ module.exports = {
                 opacity: 'rgba(34, 176, 46, 0.18)',
                 1: commonColors.green1,
             },
-            yellow: { DEFAULT: '#FFD965' },
+            yellow: {
+                DEFAULT: '#FFD965',
+                100: '#FFC632',
+            },
             red: {
                 DEFAULT: commonColors.red2,
                 lightRed: '#E5544B19',
