@@ -156,12 +156,12 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 <div className="rounded-full p-4 bg-teal-lightTeal dark:bg-teal-5 h-full flex items-center justify-center">
                     <SvgWalletFutures size={32} />
                 </div>
-                <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
-                    <div className="font-bold text-2xl lg:text-[28px] xl:text-[32px]">
+                <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
+                    <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
                         <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
                         <span>BTC</span>
                     </div>
-                    <div className="font-normal text-sm lg:text-[16px] xl:text-base mt-1">
+                    <div className="font-normal text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
@@ -254,7 +254,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             </MCard>
 
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
-                <div className="t-common">{t('common:partners')}</div>
+                <div className="t-common-v2">{t('common:partners')}</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
                     {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
                         <span

@@ -20,6 +20,7 @@ import SvgWalletStake from 'components/svg/SvgWalletStake';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { HideIcon, SeeIcon } from '../../svg/SvgIcon';
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -103,7 +104,7 @@ const OverviewWallet = (props) => {
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
                 {formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
             </span>
         );
@@ -111,7 +112,7 @@ const OverviewWallet = (props) => {
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
                 {formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
             </span>
         );
@@ -119,7 +120,7 @@ const OverviewWallet = (props) => {
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-sm md:text-base xl:text-lg 2xl:text-xl mt-1 whitespace-nowrap font-medium leading-7">
+            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
                 {formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
             </span>
         );
@@ -166,7 +167,7 @@ const OverviewWallet = (props) => {
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <EyeOff size={16} className="mr-[4px]" /> : <Eye size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
                             </div>
                         </div>
                         <div className="mt-12 flex items-center">
@@ -202,7 +203,7 @@ const OverviewWallet = (props) => {
             </MCard>
 
             {/* Số dư tài sản */}
-            <div className="mt-20 t-common">{t('wallet:asset_balance')}</div>
+            <div className="mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
             <MCard addClass="mt-8 !p-0 dark:!bg-bgTabInactive-dark !bg-namiV2 border border-divider dark:border-none">
                 {/* mark1 */}
                 {/* <Link href="/wallet/exchange"> */}
@@ -248,7 +249,7 @@ const OverviewWallet = (props) => {
                     <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer group">
                         <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
-                            <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                            <div className="flex items-center mt-4 pr-4 lg:mt-0">
                                 <Trans>{t('wallet:futures_overview')}</Trans>
                             </div>
                             <div className="flex">
@@ -268,7 +269,7 @@ const OverviewWallet = (props) => {
                     <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
                         <AssetBalance title="Partners" icon={<SvgWalletFutures />} renderEstBalance={renderPartnersEstBalance} />
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
-                            <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">
+                            <div className="flex items-center mt-4 pr-4 lg:mt-0">
                                 <Trans>{t('wallet:partners_overview')}</Trans>
                             </div>
                             <div className="flex">

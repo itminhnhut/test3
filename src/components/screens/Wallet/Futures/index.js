@@ -153,15 +153,15 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5  md:min-w-[64px] md:min-h-[64px] h-full flex items-center justify-center">
+                <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5  min-w-[64px] min-h-[64px] h-full flex items-center justify-center">
                     <SvgWalletFutures size={32} />
                 </div>
-                <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
-                    <div className="font-bold text-[24px] lg:text-[28px] xl:text-4xl ">
+                <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
+                    <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
                         <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
                         <span>BTC</span>
                     </div>
-                    <div className="font-normal text-sm lg:text-[16px] xl:text-base mt-1">
+                    <div className="font-normal text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
@@ -254,7 +254,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             </MCard>
 
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
-                <div className="t-common">Futures</div>
+                <div className="t-common-v2">Futures</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
                     {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
                         <span
