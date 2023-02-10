@@ -401,7 +401,7 @@ const Contest = (props) => {
             )}
             <div className="nao_section">
                 <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
-                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} />
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies}/>
                 {props?.season === SEASON_SPECIAL ? (
                     <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
                         {renderTab()}

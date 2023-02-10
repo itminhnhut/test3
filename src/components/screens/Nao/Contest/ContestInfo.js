@@ -1,5 +1,13 @@
 import React, { useEffect, useState, useImperativeHandle, forwardRef, useMemo } from 'react';
-import { CardNao, TextLiner, ButtonNao, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
+import {
+    CardNao,
+    TextLiner,
+    ButtonNao,
+    Tooltip,
+    capitalize,
+    TabsNao,
+    TabItemNao
+} from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
@@ -9,14 +17,14 @@ import { API_CONTEST_GET_USER_DETAIL, API_CONTEST_GET_INVITES } from 'redux/acti
 import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamModal';
 import { ApiStatus } from 'redux/actions/const';
 
-const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, quoteAsset, time_to_create }, ref) => {
+const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, time_to_create, currencies, quoteAsset: q, hasTabCurrency }, ref) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
     const [userData, setUserData] = useState(null);
     const [showCreateTeamModal, setShowCreateTeamModal] = useState(false);
     const [showGroupDetail, setShowGroupDetail] = useState(false);
     const [invitations, setInvitations] = useState(null);
-
+    const [quoteAsset, setQuoteAsset] = useState(q);
     useImperativeHandle(ref, () => ({
         onGetInfo: getData
     }));
@@ -26,14 +34,14 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
         if (user) {
             getData();
         }
-    }, [user, contest_id]);
+    }, [user, contest_id, quoteAsset]);
 
     const getData = async (day) => {
         try {
             const { data, status } = await fetchApi({
                 url: API_CONTEST_GET_USER_DETAIL,
                 options: { method: 'GET' },
-                params: { contest_id: contest_id },
+                params: { contest_id: contest_id, quoteAsset },
             });
             if (status === ApiStatus.SUCCESS) {
                 setUserData(data);
@@ -109,6 +117,15 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                     <TextLiner>{t('nao:contest:personal')}</TextLiner>
                     {!userData?.group_name && isValidCreate && <ButtonNao className="hidden sm:flex" onClick={() => onShowCreate()} >{t('nao:contest:create_team')}</ButtonNao>}
                 </div>
+                {hasTabCurrency && (
+                    <TabsNao>
+                        {currencies.map((rs) => (
+                            <TabItemNao onClick={() => setQuoteAsset(rs.value)} active={quoteAsset === rs.value}>
+                                {rs.label}
+                            </TabItemNao>
+                        ))}
+                    </TabsNao>
+                )}
                 <div className="flex flex-col lg:flex-row flex-wrap gap-5 mt-9 sm:mt-6">
                     <CardNao className={`!min-h-[136px] !p-6 lg:!max-w-[375px] ${previous ? '' : '!justify-center space-y-3'}`}>
                         <label className="text-2xl text-nao-green font-semibold leading-8 capitalize">{capitalize(userData?.name)}</label>
