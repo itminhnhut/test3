@@ -19,6 +19,7 @@ const index = ({
     pagingClassName = '',
     isSearch,
     total,
+    pagingPrevNext,
     ...props
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -59,11 +60,20 @@ const index = ({
                 emptyText={<NoData loading={loading} isSearch={!!isSearch} className="" />}
                 {...props}
             />
-            {total > 0 || data.length > 0 && (
-                <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
-                    <RePagination total={total ?? data.length} isNamiV2 current={currentPage} pageSize={limit} onChange={_onChangePage} name="market_table___list" />
-                </div>
-            )}
+            {total > 0 ||
+                (data.length > 0 && (
+                    <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
+                        <RePagination
+                            total={total ?? data.length}
+                            isNamiV2
+                            current={currentPage}
+                            pageSize={limit}
+                            onChange={_onChangePage}
+                            name="market_table___list"
+                            pagingPrevNext={pagingPrevNext}
+                        />
+                    </div>
+                ))}
         </div>
     );
 };
