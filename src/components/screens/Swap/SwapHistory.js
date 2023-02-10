@@ -107,7 +107,7 @@ const SwapHistory = ({ width }) => {
     );
 };
 
-const LIMIT_ROW = 10;
+const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
