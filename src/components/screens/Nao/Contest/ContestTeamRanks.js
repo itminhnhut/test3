@@ -398,7 +398,7 @@ const ContestTeamRanks = ({
             )}
             {lastUpdated && lastUpdatedTime.current && (
                 <div className="mt-6 text-sm text-nao-grey font-medium leading-6">
-                    {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}
             <div className="w-full flex justify-center mt-6">
