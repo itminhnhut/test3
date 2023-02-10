@@ -16,6 +16,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import 'rc-pagination/assets/index.css';
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, ...restProps }) => {
     const [currentTheme] = useDarkMode();
@@ -30,27 +31,15 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
 
         return (
             <Wapper isDark={currentTheme === THEME_MODE.DARK}>
-                <div className="w-full mt-6 flex items-center justify-center select-none">
-                    <div
-                        className={
-                            page !== 0
-                                ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                                : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
-                        }
-                        onClick={() => page !== 0 && onChangeNextPrev(-1)}
-                    >
-                        <ChevronLeft size={18} className="mr-2" /> Prev
-                    </div>
-                    <div
-                        className={
-                            histories?.length
-                                ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
-                                : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
-                        }
-                        onClick={() => histories?.length && onChangeNextPrev(+1)}
-                    >
-                        Next <ChevronRight size={18} className="ml-2" />
-                    </div>
+                <div className="w-full flex items-center justify-center select-none gap-8">
+                    <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
+                        <ChevronLeft size={16} />
+                        {language === LANGUAGE_TAG.VI ? 'Trước' : 'Prev'}
+                    </TextButton>
+                    <TextButton disabled={!histories?.length} className={`!text-base gap-2`} onClick={() => histories?.length && onChangeNextPrev(+1)}>
+                        {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
+                        <ChevronRight size={16} />
+                    </TextButton>
                 </div>
             </Wapper>
         );
