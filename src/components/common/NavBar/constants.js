@@ -114,30 +114,30 @@ export const NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-            {
-                key: 1,
-                title: 'Transfer',
-                localized: 'transfer',
-                isNew: false,
-                url: '/',
-                child_lv2: []
-            }
-            // {
-            //     key: 7,
-            //     title: 'Classic',
-            //     localized: 'classic',
-            //     isNew: false,
-            //     url: '/trade',
-            //     child_lv2: []
-            // },
             // {
             //     key: 1,
-            //     title: 'Advance',
-            //     localized: 'advance',
+            //     title: 'Transfer',
+            //     localized: 'transfer',
             //     isNew: false,
-            //     url: '/trade/BTC-USDT?layout=pro',
-            //     child_lv1: []
+            //     url: '/',
+            //     child_lv2: []
             // }
+            {
+                key: 7,
+                title: 'Classic',
+                localized: 'classic',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Advance',
+                localized: 'advance',
+                isNew: false,
+                url: '/trade/BTC-USDT?layout=pro',
+                child_lv1: []
+            }
         ]
     },
     {
@@ -273,13 +273,21 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
+             {
+                key: 7,
+                title: 'Classic',
+                localized: 'classic',
+                isNew: false,
+                url: '/trade',
+                child_lv2: []
+            },
             {
                 key: 1,
-                title: 'Transfer',
-                localized: 'transfer',
+                title: 'Advance',
+                localized: 'advance',
                 isNew: false,
-                url: '/',
-                child_lv2: []
+                url: '/trade/BTC-USDT?layout=pro',
+                child_lv1: []
             }
         ]
     },

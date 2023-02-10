@@ -23,7 +23,6 @@
     "team": "Đội ngũ",
     "fee_schedule": "Biểu phí",
     "api": "API",
-    
 
     "nami_about": "About Nami",
     "about": "About Us",
@@ -46,5 +45,6 @@
     "rights": "All rights reserved.",
     "en": "English",
     "vi": "Vietnamese",
-    "copy_rights": "Copyright © 2021 Nami. All rights reserved."
+    "copy_rights": "Copyright © 2021 Nami. All rights reserved.",
+    "scan_qr": "Scan the QR code to download Nami Exchange"
 }
