@@ -27,6 +27,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { ScaleLoader } from 'react-spinners';
 import NoData from 'components/common/V2/TableV2/NoData';
+import InputV2 from 'components/common/V2/InputV2';
 
 const MARKET_ROW_LIMIT = 20
 
@@ -423,7 +424,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
+                    {/* <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
                         <div className='flex items-center'>
                             <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
                             <input className="bg-transparent outline-none px-2 text-base font-normal text-gray-4"
@@ -436,7 +437,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                             onClick={() => parentState({ search: '' })}
                             color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
                             size={20} />
-                    </div>
+                    </div> */}
+                    <InputV2 value={restProps.search}
+                        onChange={(value) => parentState({ search: value })}
+                        placeholder={t('common:search')}
+                        prefix={(<Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />)}
+                        className='pb-0 w-[100px] sm:w-[368px] '
+                    />
                 </div>
             </div>
             <div className="bg-shadow">
