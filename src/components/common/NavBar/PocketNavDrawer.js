@@ -252,7 +252,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     <AppleIcon />
 
                                     <div className="ml-4">
-                                        <div className="text-xs mb-1">Giao dịch trên</div>
+                                        <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
                                         <div className="text-sm font-semibold ">App Store</div>
                                     </div>
                                     {/* <img
@@ -270,7 +270,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     <GooglePlayIcon />
 
                                     <div className="ml-4">
-                                        <div className="text-xs mb-1">Giao dịch trên</div>
+                                        <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
                                         <div className="text-sm font-semibold ">CH Play</div>
                                     </div>
                                     {/* <img
@@ -285,10 +285,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </Link>
                         </div>
                         {auth && (
-                            
                             <div className="mal-pocket-navbar__drawer__navlink__group___item mt-8">
-                                <HrefButton variants="secondary"  href={buildLogoutUrl()}>
-                                {t('navbar:menu.user.logout')}
+                                <HrefButton variants="secondary" href={buildLogoutUrl()}>
+                                    {t('navbar:menu.user.logout')}
                                 </HrefButton>
                                 {/* <a
                                     href={buildLogoutUrl()}

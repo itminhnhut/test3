@@ -56,8 +56,8 @@
         "farming_description": "Farming NAMI and get many potential tokens",
         "referral": "Referral Report",
         "referral_description": "Receive up to 20% commission from friends' trades",
-        "transfer":"Transfer",
-        "transfer_description":"",
+        "transfer": "Transfer",
+        "transfer_description": "",
         "spot_wallet": "Exchange Wallet",
         "futures_wallet": "Futures Wallet",
         "staking_wallet": "Staking Wallet",
@@ -114,5 +114,6 @@
     "verified": "Verified",
     "verify_account": "Verify account",
     "use": "Use",
-    "get_discount": "to get discount"
+    "get_discount": "to get discount",
+    "trade_on": "Download on the"
 }
