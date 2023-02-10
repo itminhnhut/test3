@@ -58,6 +58,11 @@ const SwapHistory = ({ width }) => {
             setState({ loading: false });
         }
     }, [state.page, state.pageSize, auth]);
+
+    const onChangePagination = (delta) => {
+        // console.log('Here: ', delta);
+        setState({ page: state.page + delta });
+    };
     return (
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
@@ -84,6 +89,7 @@ const SwapHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
+                        pagingPrevNext={{ page: state.page, histories: state.histories, onChangeNextPrev: onChangePagination }}
                         // page={state.currentPage}
                         // onChangePage={(currentPage) => setState({ currentPage })}
                     />
