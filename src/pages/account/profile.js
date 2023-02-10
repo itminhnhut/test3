@@ -37,6 +37,7 @@ import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
+import TagV2 from 'components/common/V2/TagV2';
 
 const TextCopyable = ({
     text = '',
