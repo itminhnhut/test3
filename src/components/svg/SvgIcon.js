@@ -272,6 +272,24 @@ const FuturePortfolioIcon = ({ size = 36, ...props }) => (
     </svg>
 );
 
+const FutureSimpleIcon = ({ size, ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+        <rect x="2.5" y="2.5" width="19" height="3.16667" fill="#9FF2C5" />
+        <rect x="2.5" y="7.25" width="14.25" height="14.25" fill="#5BD891" />
+        <rect x="18.332" y="7.25" width="3.16667" height="14.25" fill="#0D994E" />
+    </svg>
+);
+
+const FutureAdvanceIcon = ({ size, ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
+        <path d="M21.5 2.5H2.5V5.66667H21.5V2.5Z" fill="#9FF2C5" />
+        <path d="M21.5013 7.25H12.793V21.5H21.5013V7.25Z" fill="#9FF2C5" />
+        <path d="M19.124 13.9007L15.6406 16.6715V11.209L19.124 13.9007Z" fill="#5BD891" />
+        <path d="M11.2083 7.25H2.5V21.5H11.2083V7.25Z" fill="#5BD891" />
+        <path d="M8.27917 11.1289V16.5914L4.875 13.8997L8.27917 11.1289Z" fill="#0D994E" />
+    </svg>
+);
+
 const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
         <path
@@ -340,6 +358,8 @@ export {
     FutureIcon,
     FutureLaunchpadIcon,
     FuturePortfolioIcon,
+    FutureSimpleIcon,
+    FutureAdvanceIcon,
     SuccessfulTransactionIcon,
     AppleIcon,
     GooglePlayIcon

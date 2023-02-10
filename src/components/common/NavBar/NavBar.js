@@ -189,7 +189,7 @@ const NavBar = ({
                                         paddingTop: 4,
                                         marginLeft: 8
                                     }}
-                                    color="#F2F4F6"
+                                    color={colors.gray7}
                                 />
                                 <div className="mal-navbar__link__group___item___childen__lv1">{itemsLevel1}</div>
                             </div>
@@ -314,7 +314,7 @@ const NavBar = ({
 
                                 {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest" />}
                             </div>
-                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={navTheme.color} style={{ marginLeft: 4 }} />
+                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={colors.gray7} style={{ marginLeft: 4 }} />
                             <div
                                 className={`mal-navbar__link__group___item___childen__lv1
                                            ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
@@ -661,7 +661,7 @@ const NavBar = ({
                                         <SvgIcon
                                             name="chevron_down"
                                             size={15}
-                                            color={navTheme.color}
+                                            color={colors.gray7}
                                             className="chevron__down ml-2"
                                             style={{ marginLeft: 7 }}
                                         />

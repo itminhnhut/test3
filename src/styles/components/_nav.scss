@@ -21,7 +21,11 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
+    
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
@@ -83,6 +87,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -157,6 +164,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -261,7 +271,11 @@
   .mal-navbar__user___wallet {
     @apply flex items-center cursor-pointer;
     font-size: 14px;
-
+    :hover {
+      svg {
+        transform:rotate(360deg) ;
+      }
+    }
     span {
       @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
@@ -344,7 +358,7 @@
     .mal-navbar__link__group___item {
       @apply flex items-center h-full text-sm font-normal text-txtPrimary-dark
       relative;
-
+      letter-spacing: normal;
       cursor: pointer;
       margin-left: 44px;
       
@@ -359,9 +373,11 @@
         .mal-navbar__link__group___item___childen__lv1__w__icon {
           @apply flex #{!important};
         }
+        
 
         .chevron__down {
-          transform: rotate(-180deg);
+          transform: rotate(360deg);
+          
           
 
           path {
@@ -522,7 +538,8 @@
 
     &:hover {
       .chevron__down {
-        transform: rotate(180deg);
+        transform: rotate(360deg);
+       
 
         path {
           stroke: #00c8bc;
