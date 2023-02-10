@@ -271,7 +271,11 @@
   .mal-navbar__user___wallet {
     @apply flex items-center cursor-pointer;
     font-size: 14px;
-
+    :hover {
+      svg {
+        transform:rotate(360deg) ;
+      }
+    }
     span {
       @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
@@ -534,7 +538,8 @@
 
     &:hover {
       .chevron__down {
-        transform: rotate(180deg);
+        transform: rotate(360deg);
+       
 
         path {
           stroke: #00c8bc;
