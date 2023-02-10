@@ -320,7 +320,7 @@ const Luckydraw = ({ platform }) => {
                             >
                                 <div>{t('nao:luckydraw:updated_vol')}</div>
                                 <div>
-                                    {t('nao:luckydraw:last_updated_time')}:{' '}
+                                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}:{' '}
                                     {last_updated_at.current ? formatTime(last_updated_at.current, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                 </div>
                             </div>

@@ -387,7 +387,7 @@ const ContestPerRanks = ({
             )}
             {lastUpdated && lastUpdatedTime.current && (
                 <div className="mt-6 text-sm font-medium leading-6 text-nao-grey">
-                    {t('nao:contest:last_updated_time')}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}
         </section>
