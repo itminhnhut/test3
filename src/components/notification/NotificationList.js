@@ -12,6 +12,7 @@ import colors from 'styles/colors';
 import { useClickAway, useToggle } from 'react-use';
 import Bell from 'components/svg/Bell';
 import { BxsBellIcon } from '../svg/SvgIcon';
+import TextButton from 'src/components/common/V2/ButtonV2/TextButton';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
@@ -173,11 +174,13 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     <div className="py-6">
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
-                            {unreadCount > 0 && (
+
+                            <TextButton className="w-[fit-content] text-sm font-semibold">Xoá tất cả</TextButton>
+                            {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                         <div className="max-h-[488px]  min-h-[400px] overflow-y-auto mb-8">{content}</div>
 

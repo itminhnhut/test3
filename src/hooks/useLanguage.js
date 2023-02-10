@@ -10,8 +10,7 @@ const useLanguage = () => {
     const { locale: currentLocale } = router;
     // Language toggle
     const onChangeLang = (nextLanguage) => {
-        const nextLang = nextLanguage || (currentLocale === LANGUAGE_TAG.VI ? LANGUAGE_TAG.EN : LANGUAGE_TAG.VI);
-        console.log('nextLang:', nextLang);
+        const nextLang = typeof nextLanguage === 'string' ? nextLanguage : currentLocale === LANGUAGE_TAG.VI ? LANGUAGE_TAG.EN : LANGUAGE_TAG.VI;
 
         const isSupportScreen = router.pathname.includes('support');
         localStorage.setItem('local_lang', nextLang);
