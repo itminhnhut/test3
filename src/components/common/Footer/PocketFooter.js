@@ -21,7 +21,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <div className="mal-footer___pocket__logo mb-6">
                                     <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="188" alt="Nami Exchange" />
                                 </div>
-                                <SocialsLink />
+                                <SocialsLink language={language}   />
                             </>
                         )
                     ) : (
@@ -235,7 +235,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <div className="mal-footer___pocket__links___group__item__expander mb-3">
                                     {language === LANGUAGE_TAG.VI ? 'Cộng đồng' : 'Community'}
                                 </div>
-                                <SocialsLink />
+                                <SocialsLink language={language} />
                             </div>
                         )}
                     </div>
