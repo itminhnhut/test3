@@ -7,7 +7,6 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
 import showNotification from 'utils/notificationService';
 import Empty from 'components/common/Empty';
-import NeedLogin from 'components/common/NeedLogin';
 import Skeletor from 'components/common/Skeletor';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
@@ -27,6 +26,7 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import React from 'react';
 import { ScaleLoader } from 'react-spinners';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const MARKET_ROW_LIMIT = 20
 
@@ -116,7 +116,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        'relative mr-6 pb-4 capitalize select-none font-semibold text-base text-darkBlue-5 cursor-pointer flex items-center',
                         { 'text-gray-4 font-semibold': restProps.tabIndex === index }
                     )}
                 >
@@ -239,17 +239,15 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         }
 
 
-        let pairColumnsWidth = 100
-        let starColumnWidth = 45
+        let pairColumnsWidth = 130
+        let starColumnWidth = 64
 
         if (width >= 768) {
-            pairColumnsWidth = 138
-            starColumnWidth = 65
+            pairColumnsWidth = 158
         }
 
         if (width >= 1024) {
-            pairColumnsWidth = 158
-            starColumnWidth = 80
+            pairColumnsWidth = 178
         }
 
         const starColumn = { key: 'star', dataIndex: 'star', title: '', fixed: 'left', align: 'left', width: starColumnWidth }
@@ -260,10 +258,10 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
             // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
             // { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'right', width: 168 },
-            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 128 },
+            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 138 },
             { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
-            { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 128 },
-            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 170 }
+            { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 132 },
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 180 }
         ]
 
         // Translate
@@ -307,11 +305,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth)
 
         if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
-            tableStatus = <NeedLogin message={undefined} addClass={undefined} />
+            tableStatus = <NoData />
         } else {
             if (loading) {
                 console.log('loadinignidngindsn____')
-                tableStatus = <ScaleLoader color={colors.teal} size={12}/>
+                tableStatus = <ScaleLoader color={colors.teal} size={12} />
             } else if (!dataSource.length) {
                 tableStatus = <Empty />;
             }
@@ -329,6 +327,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 loading={loading}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
+                noBorder
                 // onRow={(record) => ({
                 //     onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
                 //         record?.sortByValue?.tradingMode,
@@ -338,7 +337,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 //         }))
                 // })}
                 tableStyle={{
-                    paddingHorizontal: '32px',
                     tableStyle: { minWidth: '888px !important' },
                     headerStyle: {},
                     rowStyle: {},
@@ -428,9 +426,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
                         <div className='flex items-center'>
                             <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
-                            <input className="bg-transparent outline-none px-2"
+                            <input className="bg-transparent outline-none px-2 text-base font-normal text-gray-4"
                                 value={restProps.search}
-                                onChange={({ target: { value } }) => parentState({ search: value })} />
+                                onChange={({ target: { value } }) => parentState({ search: value })}
+                                placeholder={t('common:search')}
+                            />
                         </div>
                         <X className={restProps.search ? 'visible' : 'invisible'}
                             onClick={() => parentState({ search: '' })}
@@ -447,7 +447,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                     <div className={classNames('h-24 border-divider-dark flex items-center px-8 justify-between', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <TokenTypes type={favType} setType={(index) => { parentState({ favType: index }); setFavType(index)}} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
+                            <TokenTypes type={restProps.favType} setType={(index) => { parentState({ favType: index }) }} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
                             <TokenTypes type={type} setType={(index) => {
                                 parentState({
@@ -506,7 +506,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
     if (!Array.isArray(arr) || !arr || !arr.length) return []
 
     const result = []
-
+    console.log('mode', mode)
 
     arr.forEach(item => {
         const {
@@ -526,7 +526,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                     lang={lang}
                     mode={mode} favoriteRefresher={favoriteRefresher}
                 /> : null,
-                pair: renderPair(baseAsset, quoteAsset, label, screenWidth),
+                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode === 1 ? TRADING_MODE.EXCHANGE : TRADING_MODE.FUTURES, lang),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
                 change_24h: render24hChange(item, false, 'justify-end'),
                 market_cap: renderMarketCap(lastPrice, supply),
@@ -564,16 +564,30 @@ const ROW_LOADING_SKELETON = {
     operation: <Skeletor width={65} />
 }
 
-const renderPair = (b, q, lbl, w) => {
+const renderPair = (b, q, lbl, w, mode, lang = 'vi') => {
+    let url = lang === 'vi' ? '/vi' : ''
+    switch (mode) {
+        case TRADING_MODE.FUTURES:
+            url = url + '/futures/' + b + q
+            break
+        case TRADING_MODE.EXCHANGE:
+            url = '/trade/' + b + '-' + q
+            break
+        default:
+            break
+    }
+
     return (
-        <div className="flex items-center font-semibold text-base">
-            {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
-            <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
-                <span className="text-darkBlue-5">{b}</span>
-                <span className="text-gray-4">/{q}</span>
+        <a href={url} target='_blank' className='hover:underline'>
+            <div className="flex items-center font-semibold text-base">
+                {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
+                <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap'}>
+                    <span className="text-gray-4">{b}</span>
+                    <span className="text-darkBlue-5">/{q}</span>
+                </div>
+                <MarketLabel labelType={lbl} />
             </div>
-            <MarketLabel labelType={lbl} />
-        </div>
+        </a>
     )
 }
 
@@ -643,7 +657,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
     }, [list, pairKey])
 
     return (
-        <div className="pr-2 py-2 flex items-center"
+        <div className="flex items-center"
             onClick={() => {
                 !loading && callback(already ? 'delete' : 'put', list)
             }}>
@@ -681,7 +695,7 @@ const renderTradeLink = (b, q, lang, mode) => {
 }
 
 const TokenTypes = ({ type, setType, types, lang }) => {
-    return <div className='flex space-x-3 h-12 font-normal overflow-auto no-scrollbar'>
+    return <div className='flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'>
         {types.map(e =>
             <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
                 'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type

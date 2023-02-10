@@ -198,6 +198,9 @@ const Market = () => {
     useEffect(() => {
         let watch = []
         let convert = []
+
+        const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
+
         if (state.exchangeMarket && state.futuresMarket) {
             setState({ loading: true })
             convert = {
@@ -282,7 +285,7 @@ const Market = () => {
         
             setState({
                 tabLabelCount: {
-                    favorite: favorite?.length - 1,
+                    favorite: favorite?.length,
                     exchange: exchange?.length,
                     futures: futures?.length
                 }

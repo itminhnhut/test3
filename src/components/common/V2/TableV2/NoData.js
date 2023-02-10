@@ -18,9 +18,20 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
             {!user ? (
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
-                    <a href={getLoginUrl('sso')}>
-                        <span dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
-                    </a>
+                    <div className='flex space-x-1'>
+                        <a href={getLoginUrl('sso', 'login')}>
+                            <span className='text-teal hover:underline cursor-pointer' dangerouslySetInnerHTML={{ __html: t('common:sign_in') }} />
+                        </a>
+                        <div>
+                            {t('common:or')}
+                        </div>
+                        <a href={getLoginUrl('sso', 'register')}>
+                            <span className='text-teal hover:underline cursor-pointer' dangerouslySetInnerHTML={{ __html: t('common:sign_up') }} />
+                        </a>
+                        <div>
+                            {t('common:to_experience')}
+                        </div>
+                    </div>
                 </>
             ) : (
                 <>
