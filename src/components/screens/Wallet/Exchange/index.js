@@ -403,7 +403,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     return (
         <>
             {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between"> */}
-            {/* <div className="t-common whitespace-nowrap">{t('common:overview')}</div> */}
+            {/* <div className="t-common-v2 whitespace-nowrap">{t('common:overview')}</div> */}
             {/* <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto"> */}
             {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT)}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
@@ -498,7 +498,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             </MCard>
 
             <div className="mt-16 lg:items-center lg:justify-between">
-                <div className="t-common">Exchange</div>
+                <div className="t-common-v2">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
                     <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
                         <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
