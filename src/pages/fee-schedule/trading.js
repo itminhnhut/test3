@@ -447,7 +447,7 @@ const TradingFee = () => {
             <div className='relative mt-12 px-4 py-6 lg:px-7 px-4 py-6 lg:py-8 text-sm bg-dark rounded-xl'>
                 <div className='relative z-10 w-full grid grid-cols-3 gap-10'>
 
-                    <div className='border-r border-namiv2-gray-3 pr-10'>
+                    <div className='border-r border-divider-dark pr-10'>
                         <div className='mb-5 font-bold'>
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
@@ -481,7 +481,7 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div className='border-r border-namiv2-gray-3 pr-10'>
+                    <div className='border-r border-divider-dark pr-10'>
                         <div className='mb-5 font-bold'>
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
@@ -548,10 +548,10 @@ const TradingFee = () => {
                 {t('fee-structure:fee_rate')}
             </div>
 
-            <div className='flex items-center border border-b-0 border-namiv2-gray-3 rounded-t-lg px-8 pt-8'>
+            <div className='flex items-center border border-b-0 border-divider-dark rounded-t-lg px-8 pt-8'>
                 {renderFeeTab()}
             </div>
-            <div className='border border-namiv2-gray-3 rounded-b-lg pb-8'>
+            <div className='border border-divider-dark rounded-b-lg pb-8'>
                 {state.tabIndex === 0 && renderExchangeTableFee()}
                 {state.tabIndex !== 0 && renderFuturesTableFee()}
             </div>

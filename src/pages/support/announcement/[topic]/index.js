@@ -12,6 +12,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useCallback, useEffect, useState } from 'react';
 // import RePagination from 'components/common/ReTable/RePagination';
 import dynamic from 'next/dynamic';
+import useWindowSize from 'hooks/useWindowSize';
 
 const RePagination = dynamic(() => import('components/common/ReTable/RePagination'), { ssr: false });
 
@@ -26,7 +27,9 @@ const AnnouncementTopics = (props) => {
     const [page, setPage] = useState(1);
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
-    const [search, setSearch] = useState('');
+
+    const { width } = useWindowSize()
+    const isMobile = width < 640
 
     useEffect(() => {
         const themeLocal = localStorage.getItem('theme');
@@ -48,7 +51,7 @@ const AnnouncementTopics = (props) => {
                 setData(articles);
                 setTotal(articles.meta?.pagination?.total);
             });
-    }, [page]);
+    }, [page, router?.query?.topic, language]);
 
     const renderPagination = useCallback(() => {
         if (!total) return null;
@@ -79,18 +82,18 @@ const AnnouncementTopics = (props) => {
                 }
                 key={item.uuid}
             >
-                <a className="block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant">
+                <a className="block mb-6 hover:text-teal">
                     <div className='flex w-full gap-6 items-center'>
-                        <img className='rounded-xl h-[130px]' src={item?.feature_image} style={{
-                            aspectRatio: '25/13'
+                        <img className='rounded-xl h-[70px] sm:h-[130px]' src={item?.feature_image} style={{
+                            aspectRatio: isMobile ? '2/1' : '25/13'
                         }} />
                         <div className='h-full gap-6 flex flex-col justify-center'>
-                            <div className='text-gray-4 font-medium text-xl'>
+                            <div className='line-clamp-2 sm:line-clamp-4 text-gray-4 font-semibold text-sm sm:font-medium sm:text-xl'>
                                 {item?.title}{' '}
                             </div>
-                            <div className='line-clamp-2 text-darkBlue-5 font-normal text-sm'>
+                            {isMobile ? null : <div className='line-clamp-2 text-darkBlue-5 font-semibold text-sm sm:font-normal sm:text-sm'>
                                 {item?.excerpt}
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 </a>

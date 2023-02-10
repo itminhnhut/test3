@@ -360,7 +360,7 @@ const SpotComp = () => {
                         )}
                     >
                         {!(!state.isShowSymbolList || isPro || fullScreen) && (
-                            <div key="symbolList" className="border-l border-t border-divider dark:border-divider-dark">
+                            <div key="symbolList" className="border-l border-divider dark:border-divider-dark">
                                 <SymbolList publicSocket={publicSocket} symbol={symbol} />
                             </div>
                         )}
@@ -376,7 +376,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="symbolDetail"
-                            className={classNames(`border border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
                         >
                             <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
                         </div>

@@ -25,7 +25,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', isMobile ? '!text-gray-6' : '!text-darkBlue');
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', '!text-gray-6');
                 }
             });
         }
@@ -71,18 +71,18 @@ const Tab = styled.div.attrs(({ className }) => ({
         position: absolute;
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
-        background-color: ${() => colors.namiapp.green[1]};
+        background-color: ${() => colors.teal};
         width: ${({ offset }) => offset?.w_after};
         left: ${({ offset }) => offset?.l_after};
         transition: all 0.2s;
     }
 `;
 
-export const TabItem = styled.div.attrs(({ value, className = '', isMobile = false}) => ({
-    className: classnames(
-        'text-sm font-medium px-4 py-3 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12',
-        className, { 'text-gray-1': !isMobile, 'text-gray-7': isMobile }
-    ),
+export const TabItem = styled.div.attrs(({ value, className = '', isMobile = false }) => ({
+    className: classnames('text-sm font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
+        'text-gray-1': !isMobile,
+        'text-darkBlue-5': isMobile
+    }),
     id: `tab-item-${value}`
 }))``;
 

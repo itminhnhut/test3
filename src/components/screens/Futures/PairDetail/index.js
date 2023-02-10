@@ -92,14 +92,14 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-namiv2-green font-semibold text-right'
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
                 : 'ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide';
             return (
                 <div
                     ref={lastPriceRef}
                     style={{ minWidth: lastPriceMinW }}
                     className={classNames(className, {
-                        '!text-namiv2-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
+                        '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
                 >
                     {formatNumber(
@@ -187,12 +187,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
     const renderFundingFee = useCallback(() => {
         const { key, code, localized: localizedPath, icon } = PAIR_PRICE_DETAIL_ITEMS[0];
-
         let minWidth = itemsPriceMinW || 0;
-
-        let localized = t(localizedPath);
-        const titleFundingFee = 'funding-fee-tooltip';
-        const idFundingFee = 'funding-fee-id';
 
         return (
             <div style={{ minWidth: minWidth || 0 }}>
@@ -324,20 +319,10 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
     const renderFunding = () => {
         return (
-            <div className="flex items-center space-x-1">
-                <div className="flex items-center" onClick={() => onClickFunding(true)}>
-                    <span>Funding</span>
-                    <div className="flex px-2">
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
-                    </div>
-                </div>
-                <span className="text-onus-grey ">/</span>
-                <div className="flex items-center" onClick={() => onClickFunding(false)}>
-                    <span>{t('futures:countdown')}</span>
-                    <div className="flex px-2">
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
-                    </div>
-                </div>
+            <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
+                <span onClick={onClickFunding} className="border-b border-darkBlue-5 border-dashed cursor-pointer">
+                    Funding / {t('futures:countdown')}
+                </span>
             </div>
         );
     };
@@ -486,8 +471,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
                             <div
-                                className={classNames('text-namiv2-green text-sm mt-2', {
-                                    '!text-namiv2-red': priceFromMarketWatch?.priceChangePercent < 0
+                                className={classNames('text-teal text-sm mt-2', {
+                                    '!text-red': priceFromMarketWatch?.priceChangePercent < 0
                                 })}
                             >
                                 {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%

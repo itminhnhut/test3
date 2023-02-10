@@ -1,13 +1,13 @@
 import Axios from 'axios';
-import { NAV_DATA, SPOTLIGHT, USER_CP, } from 'src/components/common/NavBar/constants';
+import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
 import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
 import NotificationList from 'src/components/notification/NotificationList';
 import SvgIcon from 'src/components/svg';
-import SvgCheckSuccess from 'src/components/svg/CheckSuccess';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import SvgDocument from 'src/components/svg/SvgDocument';
+
 import SvgExit from 'src/components/svg/SvgExit';
 import SvgIdentifyCard from 'src/components/svg/SvgIdentifyCard';
 import SvgLayout from 'src/components/svg/SvgLayout';
@@ -15,10 +15,9 @@ import SvgLock from 'src/components/svg/SvgLock';
 import SvgReward from 'src/components/svg/SvgReward';
 import SvgUser from 'src/components/svg/SvgUser';
 import SvgUserPlus from 'src/components/svg/SvgUserPlus';
-import SvgWallet from 'src/components/svg/Wallet';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage from 'hooks/useLanguage';
+import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -35,12 +34,23 @@ import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
-import FuturesSetting from '../../screens/Futures/FuturesSetting';
+import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
+import HrefButton from 'src/components/common/V2/ButtonV2/HrefButton';
+import TextButton from '../V2/ButtonV2/TextButton';
+import LanguageSetting from './LanguageSetting';
+import { KYC_STATUS } from 'redux/actions/const';
+import Copy from 'components/svg/Copy';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import TagV2 from '../V2/TagV2';
+import { ChevronRight } from 'react-feather';
+import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
+import NavbarIcons from './Icons';
+console.log('NavbarIcons:', NavbarIcons['spot']);
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
     LIGHT: THEME_MODE.LIGHT,
-    DARK: THEME_MODE.DARK,
+    DARK: THEME_MODE.DARK
 };
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
@@ -56,7 +66,7 @@ const NavBar = ({
 
     spotState,
     resetDefault,
-    onChangeSpotState,
+    onChangeSpotState
 }) => {
     // * Initial State
     const [state, set] = useState({
@@ -64,10 +74,9 @@ const NavBar = ({
         hideOnScroll: true,
         pairsLength: '--',
         loadingVipLevel: false,
-        vipLevel: null,
+        vipLevel: null
     });
-    const setState = (_state) =>
-        set((prevState) => ({ ...prevState, ..._state }));
+    const setState = (_state) => set((prevState) => ({ ...prevState, ..._state }));
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode();
@@ -76,7 +85,7 @@ const NavBar = ({
     const isHomePage = useMemo(() => router.pathname === '/', [router]);
     const { user: auth } = useSelector((state) => state.auth) || null;
     const { width } = useWindowSize();
-    const { t } = useTranslation(['navbar', 'common']);
+    const { t } = useTranslation(['navbar', 'common', 'profile']);
     const [isFromFrame, setIsFromFrame] = useState(false);
 
     // * Memmoized Variable
@@ -84,7 +93,7 @@ const NavBar = ({
         const result = {
             wrapper: '',
             text: '',
-            color: '',
+            color: ''
         };
         switch (useOnly) {
             case NAVBAR_USE_TYPE.FLUENT:
@@ -102,13 +111,10 @@ const NavBar = ({
                 result.text = 'text-txtPrimary';
                 result.color = colors.darkBlue;
                 break;
-            default:
-                result.wrapper = 'mal-navbar__wrapper__no__blur';
+            default: //'mal-navbar__wrapper__no__blur';
+                result.wrapper = '';
                 result.text = 'text-txtPrimary dark:text-txtPrimary-dark';
-                result.color =
-                    currentTheme === THEME_MODE.DARK
-                        ? colors.grey4
-                        : colors.darkBlue;
+                result.color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
                 break;
         }
 
@@ -140,14 +146,7 @@ const NavBar = ({
         const feeNavObj = NAV_DATA.find((o) => o.localized === 'fee');
 
         return NAV_DATA.map((item) => {
-            const {
-                key,
-                title,
-                localized,
-                isNew,
-                url,
-                child_lv1
-            } = item;
+            const { key, title, localized, isNew, url, child_lv1 } = item;
 
             if (item.hide) return null;
 
@@ -158,7 +157,7 @@ const NavBar = ({
                 const child_clone = [...child_lv1];
                 child_clone.push({
                     ...feeNavObj,
-                    key: 'fee_clone',
+                    key: 'fee_clone'
                 });
 
                 if (child_clone && child_clone.length) {
@@ -167,44 +166,33 @@ const NavBar = ({
 
                     child_clone.map((child) => {
                         itemsLevel1.push(
-                            <Link
-                                href={child.url}
-                                key={`${child.title}_${child.key}`}
-                            >
+                            <Link href={child.url} key={`${child.title}_${child.key}`}>
                                 <a className="mal-navbar__link__group___item___childen__lv1___item">
                                     {t(`navbar:menu.${child.localized}`)}
-                                    {child.isNew && (
-                                        <div className="mal-dot__newest"/>
-                                    )}
+                                    {child.isNew && <div className="mal-dot__newest" />}
                                 </a>
                             </Link>
                         );
                     });
 
                     return (
-                        <div
-                            className="h-full flex items-center"
-                            key={`${title}_${key}__withchild`}
-                        >
+                        <div className="h-full flex items-center" key={`${title}_${key}__withchild`}>
                             <div className="mal-navbar__link__group___item">
                                 <div className="flex items-center">
                                     {t(`navbar:menu.${localized}`)}
-                                    {shouldDot !== -1 && shouldDot >= 0 && (
-                                        <div className="mal-dot__newest"/>
-                                    )}
+
+                                    {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest" />}
                                 </div>
                                 <SvgIcon
                                     name="chevron_down"
                                     size={15}
                                     style={{
                                         paddingTop: 4,
-                                        marginLeft: 8,
+                                        marginLeft: 8
                                     }}
                                     color="#F2F4F6"
                                 />
-                                <div className="mal-navbar__link__group___item___childen__lv1">
-                                    {itemsLevel1}
-                                </div>
+                                <div className="mal-navbar__link__group___item___childen__lv1">{itemsLevel1}</div>
                             </div>
                         </div>
                     );
@@ -214,23 +202,16 @@ const NavBar = ({
             if (child_lv1 && child_lv1.length) {
                 const itemsLevel1 = [];
                 const itemsLevel1withIcon = [];
-                const useDropdownWithIcon =
-                    localized === 'product' || localized === 'trade';
+                const useDropdownWithIcon = localized === 'product' || localized === 'trade';
                 const useOneCol = localized === 'trade';
 
                 const shouldDot = child_lv1.findIndex((o) => o.isNew);
 
                 child_lv1.map((child) => {
                     itemsLevel1.push(
-                        <Link
-                            href={child.url}
-                            key={`${child.title}_${child.key}`}
-                        >
+                        <Link href={child.url} key={`${child.title}_${child.key}`}>
                             <a className="mal-navbar__link__group___item___childen__lv1___item">
-                                {t(`navbar:submenu.${child.localized}`)}{' '}
-                                {child.isNew && (
-                                    <div className="mal-dot__newest"/>
-                                )}
+                                {t(`navbar:submenu.${child.localized}`)} {child.isNew && <div className="mal-dot__newest" />}
                             </a>
                         </Link>
                     );
@@ -240,6 +221,7 @@ const NavBar = ({
                 child_lv1.map((child) => {
                     const shouldReload = child?.localized === 'advance';
 
+                    const Icon = NavbarIcons[child?.localized];
                     if (shouldReload) {
                         itemsLevel1withIcon.push(
                             <div
@@ -252,27 +234,29 @@ const NavBar = ({
                                 onClick={() => window?.open(child.url, '_self')}
                             >
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                    <img
-                                        src={getS3Url(getIcon(child.localized))}
-                                        width={width >= 2560 ? '38' : '32'}
-                                        height={width >= 2560 ? '38' : '32'}
-                                        alt=""
-                                    />
+                                    {Icon ? (
+                                        <Icon size={24} />
+                                    ) : (
+                                        <img
+                                            src={getS3Url(getIcon(child.localized))}
+                                            width={width >= 2560 ? '38' : '32'}
+                                            height={width >= 2560 ? '38' : '32'}
+                                            alt=""
+                                        />
+                                    )}
                                 </div>
                                 <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
                                         {t(`navbar:submenu.${child.localized}`)}
                                         {/* {child.isNew && <div className="mal-dot__newest"/> */}
                                     </div>
-                                    <div
-                                        className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                                    <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
                                         {t(
                                             `navbar:submenu.${child.localized}_description`,
                                             child.localized === 'spot'
                                                 ? {
-                                                    pairsLength:
-                                                    state.pairsLength,
-                                                }
+                                                      pairsLength: state.pairsLength
+                                                  }
                                                 : undefined
                                         )}
                                     </div>
@@ -281,10 +265,7 @@ const NavBar = ({
                         );
                     } else {
                         itemsLevel1withIcon.push(
-                            <Link
-                                href={child.url}
-                                key={`${child.title}_${child.key}`}
-                            >
+                            <Link href={child.url} key={`${child.title}_${child.key}`}>
                                 <a
                                     className={
                                         useOneCol
@@ -293,32 +274,29 @@ const NavBar = ({
                                     }
                                 >
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2__icon">
-                                        <img
-                                            src={getS3Url(
-                                                getIcon(child.localized)
-                                            )}
-                                            width={width >= 2560 ? '38' : '32'}
-                                            height={width >= 2560 ? '38' : '32'}
-                                            alt=""
-                                        />
+                                        {Icon ? (
+                                            <Icon size={24} />
+                                        ) : (
+                                            <img
+                                                src={getS3Url(getIcon(child.localized))}
+                                                width={width >= 2560 ? '38' : '32'}
+                                                height={width >= 2560 ? '38' : '32'}
+                                                alt=""
+                                            />
+                                        )}
                                     </div>
                                     <div className="mal-navbar__link__group___item___childen__lv1___item2___c">
-                                        <div
-                                            className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
-                                            {t(
-                                                `navbar:submenu.${child.localized}`
-                                            )}
+                                        <div className="mal-navbar__link__group___item___childen__lv1___item2___c__title">
+                                            {t(`navbar:submenu.${child.localized}`)}
                                             {/* {child.isNew && <div className="mal-dot__newest"/> */}
                                         </div>
-                                        <div
-                                            className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
+                                        <div className="mal-navbar__link__group___item___childen__lv1___item2___c__description">
                                             {t(
                                                 `navbar:submenu.${child.localized}_description`,
                                                 child.localized === 'spot'
                                                     ? {
-                                                        pairsLength:
-                                                        state.pairsLength,
-                                                    }
+                                                          pairsLength: state.pairsLength
+                                                      }
                                                     : undefined
                                             )}
                                         </div>
@@ -330,38 +308,24 @@ const NavBar = ({
                 });
 
                 return (
-                    <div
-                        className="h-full flex items-center"
-                        key={`${title}_${key}__withchild`}
-                    >
+                    <div className="h-full flex items-center" key={`${title}_${key}__withchild`}>
                         <div className="mal-navbar__link__group___item">
                             <div className="flex items-center">
                                 {t(`navbar:menu.${localized}`)}
-                                {shouldDot !== -1 && shouldDot >= 0 && (
-                                    <div className="mal-dot__newest"/>
-                                )}
+
+                                {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest" />}
                             </div>
-                            <SvgIcon
-                                name="chevron_down"
-                                size={15}
-                                className="chevron__down"
-                                color={navTheme.color}
-                                style={{ marginLeft: 4 }}
-                            />
+                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={navTheme.color} style={{ marginLeft: 4 }} />
                             <div
                                 className={`mal-navbar__link__group___item___childen__lv1
-                                           ${useDropdownWithIcon
-                                    ? 'mal-navbar__link__group___item___childen__lv1__w__icon'
-                                    : ''
-                                }
-                                           ${useOneCol && useDropdownWithIcon
-                                    ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0'
-                                    : ''
-                                }`}
+                                           ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
+                                           ${
+                                               useOneCol && useDropdownWithIcon
+                                                   ? 'mal-navbar__link__group___item___childen__lv1__w__icon flex-col !min-w-0'
+                                                   : ''
+                                           }`}
                             >
-                                {useDropdownWithIcon
-                                    ? itemsLevel1withIcon
-                                    : itemsLevel1}
+                                {useDropdownWithIcon ? itemsLevel1withIcon : itemsLevel1}
                             </div>
                         </div>
                     </div>
@@ -371,8 +335,7 @@ const NavBar = ({
             return (
                 <Link key={`${title}_${key}`} href={url}>
                     <a className="mal-navbar__link__group___item">
-                        {t(`navbar:menu.${localized}`)}{' '}
-                        {isNew ? <div className="mal-dot__newest"/> : null}
+                        {t(`navbar:menu.${localized}`)} {isNew ? <div className="mal-dot__newest" /> : null}
                     </a>
                 </Link>
             );
@@ -382,63 +345,53 @@ const NavBar = ({
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
         return (
-            <a
-                href="#"
-                className="mal-navbar__hamburger__spacing mal-navbar__svg_dominant"
-                onClick={onThemeSwitch}
-            >
+            <a href="#" className="mal-navbar__svg_dominant" onClick={onThemeSwitch}>
                 {currentTheme !== THEME_MODE.LIGHT ? (
-                    <SvgMoon size={20} color={'#f2f4f6'}/>
+                    <SvgMoon
+                        size={20}
+                        //  color={'#f2f4f6'}
+                    />
                 ) : (
-                    <SvgSun size={20} color={isHomePage ? '#f2f4f6' : '#223050'}/>
+                    <SvgSun size={20} color={isHomePage ? '#718096' : '#223050'} />
                 )}
             </a>
         );
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const {
-            avatar,
-            username,
-            email
-        } = auth;
+        const { avatar, username, code, email, kyc_status } = auth;
+        const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
 
         let color;
         if (useOnly === NAVBAR_USE_TYPE.FLUENT) {
-            color =
-                currentTheme === THEME_MODE.DARK
-                    ? colors.grey4
-                    : colors.darkBlue;
+            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
         } else if (useOnly === NAVBAR_USE_TYPE.DARK) {
             color = colors.grey4;
         } else if (useOnly === NAVBAR_USE_TYPE.LIGHT) {
             color = colors.darkBlue;
         } else {
-            color =
-                currentTheme === THEME_MODE.DARK
-                    ? colors.grey4
-                    : colors.darkBlue;
+            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
         }
 
         const getUserControlSvg = (localized) => {
             switch (localized) {
                 case 'profile':
-                    return <SvgUser type={2} color={color}/>;
+                    return <SvgUser type={2} color={color} />;
                 case 'identify':
-                    return <SvgIdentifyCard color={color}/>;
+                    return <SvgIdentifyCard color={color} />;
                 case 'referral':
-                    return <SvgUserPlus color={color}/>;
+                    return <SvgUserPlus color={color} />;
                 case 'reward_center':
-                    return <SvgReward color={color}/>;
+                    return <SvgReward color={color} />;
                 case 'task_center':
-                    return <SvgDocument color={color}/>;
+                    return <SvgDocument color={color} />;
                 case 'logout':
-                    return <SvgExit color={colors.red2}/>;
+                    return <SvgExit color={color} />;
                 case 'api_mng':
-                    return <SvgLayout color={color}/>;
+                    return <SvgLayout color={color} />;
                 case 'security':
-                    return <SvgLock color={color}/>;
+                    return <SvgLock color={color} />;
                 default:
                     return null;
             }
@@ -447,43 +400,67 @@ const NavBar = ({
         USER_CP.map((item) => {
             if (item.hide) return null;
             items.push(
-                <Link
-                    key={`user_cp__${item.localized}`}
-                    href={
-                        item.localized === 'logout'
-                            ? buildLogoutUrl()
-                            : item.url
-                    }
-                >
-                    <a className="mal-navbar__dropdown___item">
-                        {getUserControlSvg(item.localized)}{' '}
-                        {t(`navbar:menu.user.${item.localized}`)}
+                <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
+                    <a className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
+                        <div className="flex items-center">
+                            {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
+                        </div>
+                        <ChevronRight className="!mr-0" size={16} />
                     </a>
                 </Link>
             );
         });
 
         return (
-            <div className="mal-navbar__dropdown">
-                <div className="mal-navbar__dropdown__wrapper">
-                    <div className="mal-navbar__dropdown__user__info">
-                        <div className="mal-navbar__dropdown__user__info__avt">
-                            <img src={avatar} alt=""/>
-                        </div>
-                        <div className="mal-navbar__dropdown__user__info__summary">
-                            <div className="mal-navbar__dropdown__user__info__username">
-                                {username || 'Guest'} <SvgCheckSuccess/>
+            <div className="mal-navbar__dropdown !pt-[31px]">
+                <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
+                    <div className="mal-navbar__dropdown__user__info justify-between items-center ">
+                        <div className="flex items-center">
+                            <div className="mal-navbar__dropdown__user__info__avt">
+                                <img src={avatar} alt="" />
                             </div>
-                            <div className="mal-navbar__dropdown__user__info__level">
-                                {state.loadingVipLevel ? (
-                                    <PulseLoader size={3} color={colors.teal}/>
-                                ) : (
-                                    `VIP ${state.vipLevel || '0'}`
-                                )}
+                            <div className="mal-navbar__dropdown__user__info__summary">
+                                <div className="mal-navbar__dropdown__user__info__username">{!isVerified ? 'GUEST' : username || 'GUEST'}</div>
+                                <div className="text-txtSecondary items-center flex">
+                                    <span className="pr-1">{code}</span>
+                                    <CopyToClipboard text={code}>
+                                        <Copy />
+                                    </CopyToClipboard>
+                                </div>
                             </div>
                         </div>
+                        <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                            <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'} `}>
+                                {isVerified ? t('navbar:verified') : t('navbar:not_verified')}
+                            </div>
+                        </TagV2>
                     </div>
-                    {items}
+
+                    <hr className="border-divider-dark mb-6" />
+
+                    <div className=" flex items-center justify-center mb-6">
+                    <SuccessfulTransactionIcon size={24} />
+                        <div className="text-dominant font-semibold ml-2">
+                            {state.loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${state.vipLevel || '0'}`}
+                        </div>
+                        {/* <div className="ml-[30px] ">
+                            Sử dụng <span className="text-dominant uppercase">NAMI</span> - nhận thêm ưu đãi
+                        </div> */}
+                    </div>
+
+                    <hr className="border-divider-dark mb-6" />
+                    <div className="mb-6">{items}</div>
+
+                    <hr className="border-divider-dark mb-6" />
+
+                    <Link href={buildLogoutUrl()}>
+                        <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
+                            <div className="flex items-center text-txtPrimary-dark">
+                                {getUserControlSvg('logout')} {t('navbar:menu.user.logout')}
+                            </div>
+                            <ChevronRight className="!mr-0" size={16} />
+                        </a>
+                    </Link>
                 </div>
             </div>
         );
@@ -494,51 +471,25 @@ const NavBar = ({
             <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper">
                     <Link href={PATHS.WALLET.DEFAULT}>
-                        <a
-                            style={{ minWidth: 180 }}
-                            className="mal-navbar__dropdown___item"
-                        >
-                            <img
-                                src={getS3Url('/images/icon/ic_overview.png')}
-                                width="28"
-                                height="28"
-                                alt=""
-                                className="mr-3 my-0.5"
-                            />
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                                {t('common:overview')}
-                            </span>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                            <FuturePortfolioIcon size={24} />
+                            {/* <img src={getS3Url('/images/icon/ic_overview.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
-                        <a
-                            style={{ minWidth: 180 }}
-                            className="mal-navbar__dropdown___item"
-                        >
-                            <img
-                                src={getS3Url('/images/icon/ic_exchange.png')}
-                                width="28"
-                                height="28"
-                                alt=""
-                                className="mr-3 my-0.5"
-                            />
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                                {t('navbar:menu.wallet')} Exchange
-                            </span>
+                        <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
+                            <FutureExchangeIcon size={24} />
+                            {/* <img src={getS3Url('/images/icon/ic_exchange.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Exchange</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.FUTURES}>
                         <a className="mal-navbar__dropdown___item">
-                            <img
-                                src={getS3Url('/images/icon/ic_futures.png')}
-                                width="28"
-                                height="28"
-                                alt=""
-                                className="mr-3 my-0.5"
-                            />
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">
-                                {t('navbar:menu.wallet')} Futures
-                            </span>
+                            <FutureIcon size={24} />
+
+                            {/* <img src={getS3Url('/images/icon/ic_futures.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Futures</span>
                         </a>
                     </Link>
                     {/* <Link href={PATHS.WALLET.STAKING}>
@@ -602,71 +553,45 @@ const NavBar = ({
                 onChangeSpotState={onChangeSpotState}
             />
 
-            {
-                isFromFrame &&
+            {isFromFrame && (
                 <div
                     style={style || {}}
                     className={`mal-navbar__wrapper
-                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT
-                        ? 'mal-navbar__visible__blur'
-                        : ''
-                    }
-                            // ${state.hideOnScroll
-                        ? `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT
-                            ? 'mal-navbar__visible__blur'
-                            : ''
-                        }`
-                        : 'mal-navbar__hidden'
-                    }
+                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 'mal-navbar__visible__blur' : ''}
+                            // ${
+                                state.hideOnScroll
+                                    ? `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 'mal-navbar__visible__blur' : ''}`
+                                    : 'mal-navbar__hidden'
+                            }
                             ${navTheme.wrapper}
                  `}
                 >
                     <a className="block mal-navbar__logo" onClick={() => router.back()}>
-                        <img
-                            src={getS3Url('/images/ic_back.png')}
-                            width="28"
-                            height="28"
-                            className="navbar__logo"
-                            alt=""
-                        />
+                        <img src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
                     </a>
                 </div>
-
-            }
-            {
-                !isFromFrame && <div
+            )}
+            {!isFromFrame && (
+                <div
                     style={style || {}}
                     className={`mal-navbar__wrapper
-                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT
-                        ? 'mal-navbar__visible__blur'
-                        : ''
-                    }
-                            // ${state.hideOnScroll
-                        ? `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT
-                            ? 'mal-navbar__visible__blur'
-                            : ''
-                        }`
-                        : 'mal-navbar__hidden'
-                    }
+                            // ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 'mal-navbar__visible__blur' : ''}
+                            // ${
+                                state.hideOnScroll
+                                    ? `mal-navbar__visible ${useOnly === NAVBAR_USE_TYPE.FLUENT ? 'mal-navbar__visible__blur' : ''}`
+                                    : 'mal-navbar__hidden'
+                            }
                             ${navTheme.wrapper}
                  `}
                 >
-
                     <Link href="/">
                         <a className="block mal-navbar__logo">
-                            <img
-                                src={getS3Url('/images/logo/nami_maldives.png')}
-                                width="28"
-                                height="25"
-                                className="navbar__logo"
-                                alt=""
-                            />
+                            <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="94" height="30" className="navbar__logo" alt="" />
                         </a>
                     </Link>
 
-
                     {width >= 992 && (
-                        <div className="mal-navbar__link__group pl-8">
+                        <div className="mal-navbar__link__group">
                             {/* <SvgIcon name="hexagon" size={18} */}
                             {/*         className="ml-16" */}
                             {/*         onClick={() => console.log('namidev-DEBUG: should open product board')}/> */}
@@ -676,89 +601,74 @@ const NavBar = ({
                             {/* Link Spotlight */}
                             {width >= 1200 && Object.keys(SPOTLIGHT).length ? (
                                 <Link href="/">
-                                    <a className="mal-navbar__link__spotlight">
-                                        {t(`navbar:menu.${SPOTLIGHT?.localized}`)}
-                                    </a>
+                                    <a className="mal-navbar__link__spotlight">{t(`navbar:menu.${SPOTLIGHT?.localized}`)}</a>
                                 </Link>
                             ) : null}
                         </div>
                     )}
                     <div className="mal-navbar__hamburger">
                         {!auth && (
-                            <div className="flex flex-row items-center mr-8">
+                            <div className="flex flex-row items-center">
                                 {width >= 1366 && (
-                                    <a
-                                        href={getLoginUrl('sso', 'login')}
-                                        className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
+                                    <TextButton
+                                        className="px-0 w-auto hover:opacity-80"
+                                        onClick={() => {
+                                            window.open(getLoginUrl('sso', 'login'), '_self');
+                                        }}
                                     >
-                                        <span>{t('common:sign_in')}</span>
-                                    </a>
+                                        {t('common:sign_in')}
+                                    </TextButton>
+                                    // <a
+                                    //     href={getLoginUrl('sso', 'login')}
+                                    //     className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
+                                    // >
+                                    //     <span>{t('common:sign_in')}</span>
+                                    // </a>
                                 )}
                                 {width >= 1090 && (
-                                    <a
-                                        href={getLoginUrl('sso', 'register')}
-                                        className="text-sm font-medium text-dominant whitespace-nowrap ml-8 hover:underline"
-                                    >
-                                        <span>{t('common:sign_up')}</span>
-                                    </a>
+                                    <HrefButton href={getLoginUrl('sso', 'register')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
+                                        {t('common:sign_up')}
+                                    </HrefButton>
                                 )}
                             </div>
                         )}
                         {auth && (
                             <>
                                 {width >= 992 && (
-                                    <div
-                                        className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
-                                        <SvgWallet color={navTheme.color}/>
-                                        <span
-                                            className="ml-4"
-                                            style={{ color: navTheme.color }}
-                                            onClick={() =>
-                                                router.push(PATHS.WALLET.DEFAULT)
-                                            }
-                                        >
-                                        {t('navbar:menu.wallet')}
-                                    </span>
+                                    <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                                        <FutureWalletIcon size={24} />
+
                                         <SvgIcon
                                             name="chevron_down"
                                             size={15}
                                             color={navTheme.color}
-                                            className="chevron__down"
-                                            style={{ marginLeft: 4 }}
+                                            className="chevron__down ml-2"
+                                            style={{ marginLeft: 7 }}
                                         />
                                         {renderWallet()}
                                     </div>
                                 )}
-                                <div
-                                    className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
+                                <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                     {width >= 992 && (
-                                        <SvgUser
-                                            type={2}
-                                            size={30}
-                                            className="cursor-pointer user__svg"
-                                            style={{ marginTop: -3 }}
-                                            color={navTheme.color}
-                                        />
+                                        <div className="text-gray-7 hover:text-dominant">
+                                            <BxsUserIcon className="user__svg" size={20} />
+                                        </div>
+                                        // <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />
                                     )}
                                     {width >= 992 && renderUserControl()}
                                 </div>
                             </>
                         )}
-                        {auth && (
-                            <NotificationList
-                                btnClass="!mr-0 ml-8"
-                                navTheme={navTheme}
-                            />
-                        )}
+                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} />}
                         {width >= 1366 && (
-                            <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
-                                <a
+                            <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
+                                {/* <a
                                     className={`text-sm font-medium uppercase cursor-pointer flex items-center
                                        ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
                                     onClick={onChangeLang}
                                 >
                                     {currentLocale}
-                                </a>
+                                </a> */}
                                 {page === 'spot' ? (
                                     <SpotSetting
                                         changeLayoutCb={changeLayoutCb}
@@ -766,20 +676,22 @@ const NavBar = ({
                                         resetDefault={resetDefault}
                                         onChangeSpotState={onChangeSpotState}
                                     />
-                                ) : page === 'futures' ?
+                                ) : page === 'futures' ? (
                                     <FuturesSetting
                                         changeLayoutCb={changeLayoutCb}
                                         spotState={spotState}
                                         resetDefault={resetDefault}
                                         onChangeSpotState={onChangeSpotState}
                                     />
-                                    : (
-                                        renderThemeButton()
-                                    )}
+                                ) : (
+                                    renderThemeButton()
+                                )}
+
+                                <LanguageSetting />
                             </div>
                         )}
 
-                        {useGridSettings && <GridLayoutSettings/>}
+                        {useGridSettings && <GridLayoutSettings />}
 
                         {width < 1366 && (
                             <div
@@ -788,35 +700,23 @@ const NavBar = ({
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu
-                                    size={25}
-                                    className={`${width >= 768
-                                        ? 'mal-navbar__hamburger__spacing'
-                                        : 'ml-3'
-                                    } cursor-pointer`}
-                                />
+                                <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
                             </div>
                         )}
                     </div>
                 </div>
-            }
+            )}
         </>
     );
 };
 
-export const NavBarBottomShadow = ({
-    style = {},
-    className = ''
-}) => {
+export const NavBarBottomShadow = ({ style = {}, className = '' }) => {
     return (
         <div
-            className={classNames(
-                'z-[99] -translate-y-full h-[20px]',
-                className
-            )}
+            className={classNames('z-[99] -translate-y-full h-[20px]', className)}
             style={{
                 boxShadow: ' 0px 15px 20px rgba(0, 0, 0, 0.03)',
-                ...style,
+                ...style
             }}
         />
     );

@@ -31,6 +31,7 @@ const EthereumAddress = require('ethereum-address');
 import ChevronDown from 'src/components/svg/ChevronDown';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
+import { createSelector } from 'reselect';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -299,10 +300,10 @@ export function getExchange24hPercentageChange(price) {
     return change24h;
 }
 
-export function render24hChange(ticker, showPrice = false) {
+export function render24hChange(ticker, showPrice = false, className = '') {
     const change24h = getExchange24hPercentageChange(ticker);
     let percent, priceChange;
-    let className = '';
+    // let className = '';
     let negative = false;
     if (change24h) {
         priceChange = (change24h * ticker.ld) / 100;
@@ -1035,3 +1036,17 @@ export const TypeTable = ({ type, data }) => {
             return null;
     }
 };
+
+export const getDecimalPrice = (config) => {
+    const decimalScalePrice = config?.filters?.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+    return +countDecimals(decimalScalePrice?.tickSize);
+};
+
+export const getDecimalQty = (config) => {
+    const decimal = config?.filters?.find((rs) => rs.filterType === 'LOT_SIZE') ?? 1;
+    return +countDecimals(decimal?.stepSize);
+};
+
+export const getUnit = createSelector([(state) => state.utils.assetConfig, (unitConfig, assetCode) => assetCode], (unitConfig, assetCode) =>
+    unitConfig.find((rs) => rs?.assetCode === assetCode)
+);

@@ -49,7 +49,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
         <div className='flex space-x-4'>
             <div
                 className={classNames(
-                    'flex space-x-2 items-center bg-namiv2-gray p-3 rounded-md  w-[368px]',
+                    'flex space-x-2 items-center bg-dark-2 p-3 rounded-md  w-[368px]',
                     containerClassNames,
                     {
                         '!w-full': simpleMode
@@ -63,7 +63,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
                 />
                 <input
                     id="my-custom-input"
-                    className="flex-grow text-namiv2-gray-2"
+                    className="flex-grow text-gray-4"
                     placeholder={t('support-center:search_articles')}
                     style={{ outline: 'none' }}
                     value={searchKey}
@@ -79,7 +79,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
             {!simpleMode && (
                 <button
                     onClick={() => onSearch(type, searchKey)}
-                    className="px-6 py-3 bg-namiv2-green font-medium text-base rounded-md text-white"
+                    className="px-6 py-3 bg-teal font-medium text-base rounded-md text-white"
                 >
                     {t('common:search')}
                 </button>

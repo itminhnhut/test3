@@ -84,7 +84,6 @@ const ShareFuturesOrder = ({
             allowTaint: true,
         }).then((canvas) => {
             const uri = canvas.toDataURL('png', 1.0)
-            console.log(uri, '000000')
             window.open(uri)
             setDownloading(false)
             return

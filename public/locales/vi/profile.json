@@ -104,5 +104,14 @@
     "support_image_type": "Hỗ trợ định dạng JPG, PNG",
     "confirm_new_avatar": "Bấm “Xác nhận” để đổi hình đại diện mới",
     "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này.",
-    "last_logged_in": "Đăng nhập lần cuối {{duration}} trước"
+    "last_logged_in": "Đăng nhập lần cuối {{duration}} trước",
+    "referrer": "Người giới thiệu",
+    "ref_code_optional": "Mã giới thiệu (tuỳ chọn)",
+    "enter_ref_code": "Nhập mã giới thiệu",
+    "add_ref_code_success": "Bạn đã thêm mã giới thiệu #{{referrerName}} thành công.",
+    "error": {
+        "SELF_INVITE": "SELF_INVITE",
+        "REFERRAL_CODE_NOT_FOUND": "Mã giới thiệu không tồn tại.",
+        "failed": "Thêm mã giới thiệu thất bại."
+    }
 }

@@ -38,7 +38,6 @@ const SymbolList = (props) => {
 
     const fetchFavorite = async () => {
         const _favorite = await favoriteAction('get', TRADING_MODE.EXCHANGE);
-        console.log(_favorite);
         _favorite && setFavorite(_favorite);
     };
 

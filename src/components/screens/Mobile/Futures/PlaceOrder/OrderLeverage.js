@@ -11,34 +11,34 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
     const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
-        pairConfig?.pair && isAuth && fetchLeverage(pairConfig?.pair)
-    }, [pairConfig?.pair, isAuth])
+        pairConfig?.pair && isAuth && fetchLeverage(pairConfig?.pair);
+    }, [pairConfig?.pair, isAuth]);
 
     const fetchLeverage = async (symbol) => {
         const { data } = await axios.get(API_FUTURES_LEVERAGE, {
             params: {
-                symbol,
-            },
-        })
+                symbol
+            }
+        });
         if (data?.status === ApiStatus.SUCCESS) {
-            if (getLeverage) getLeverage(data?.data?.[pairConfig?.pair])
-            setLeverage(data?.data?.[pairConfig?.pair])
+            if (getLeverage) getLeverage(data?.data?.[pairConfig?.pair]);
+            setLeverage(data?.data?.[pairConfig?.pair]);
         }
-    }
+    };
 
     useEffect(() => {
-        document.addEventListener('click', _onClose)
+        document.addEventListener('click', _onClose);
         return () => {
-            document.removeEventListener('click', _onClose)
-        }
-    }, [])
+            document.removeEventListener('click', _onClose);
+        };
+    }, []);
 
     const _onClose = (e) => {
         const container = document.querySelector('.leverage-mobile');
         if (container && !container.contains(e.target.parentElement)) {
             setOpenModal(false);
         }
-    }
+    };
 
     return (
         <>
@@ -46,13 +46,13 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
                 className={classnames(
-                    "flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium",
+                    'flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium',
                     { '!border-onus-red': !inputValidator('leverage').isValid }
-                    
-                )}>
+                )}
+            >
                 {leverage}x
             </div>
-            {openModal &&
+            {openModal && (
                 <FuturesLeverageSettings
                     onusMode={true}
                     pair={pair}
@@ -67,7 +67,7 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                     className="max-w-full overflow-hidden"
                     // containerStyle={{ transform: 'unset' }}
                 />
-            }
+            )}
         </>
     );
 };

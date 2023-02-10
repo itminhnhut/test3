@@ -90,8 +90,8 @@ const FuturesSetting = (props) => {
             {({ open }) => (
                 <>
                     <Popover.Button
-                        className={`h-full flex items-center ml-2 ${open ? '' : 'text-opacity-90'
-                            } text-white group px-2 ${className}`}
+                        className={`h-full flex items-center ${open ? '' : 'text-opacity-90'
+                            } text-white group ${className}`}
                     >
                         <Setting
                             size={20}

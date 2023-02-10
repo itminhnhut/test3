@@ -96,7 +96,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         >
             <div className="max-h-[300px] flex flex-col">
                 <div className="px-4 mb-7">
-                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-namiv2-gray">
+                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5"

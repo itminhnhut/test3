@@ -119,8 +119,8 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                             className={classNames(
                                                 'px-3 py-1 rounded-[100px] font-normal text-xs flex items-center',
                                                 data.status
-                                                    ? 'text-namiapp-green-1 bg-namiapp-green-1 bg-opacity-10'
-                                                    : 'text-gray-7 bg-namiapp-black-4 bg-opacity-50'
+                                                    ? 'text-teal bg-teal bg-opacity-10'
+                                                    : 'text-gray-7 bg-dark-4 bg-opacity-50'
                                             )}
                                         >
                                             {data.status ? <CheckIcon className={'mr-1'} /> : null}
@@ -131,7 +131,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                 <div className="mt-3 font-medium leading-5 flex flex-col gap-2">
                                     <div className="w-full flex justify-between items-center">
                                         <div className="text-gray-7 text-xs ">{t('reference:referral.you_friends_get')}</div>
-                                        <div className="text-namiapp-green-1 text-sm">
+                                        <div className="text-teal text-sm">
                                             {100 - data.remunerationRate}% / {data.remunerationRate}%
                                         </div>
                                     </div>
@@ -143,7 +143,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 data={`https://nami.exchange/ref/${data.code}`}
                                                 size={13.5}
                                                 className="cursor-pointer"
-                                                color={colors.namiapp.gray[2]}
+                                                color={colors.gray4}
                                             />
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowFriendList(true);
                                             }}
                                         >
-                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.namiapp.gray[2]} />
+                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.gray4} />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
@@ -169,7 +169,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowEditNote(true);
                                             }}
                                         >
-                                            {data.note} <NoteIcon color={colors.namiapp.gray[2]} />
+                                            {data.note} <NoteIcon color={colors.gray4} />
                                         </div>
                                     </div>
                                 </div>
@@ -179,13 +179,13 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                     )}
                 </Container>
                 <div
-                    className="h-[116px] z-20 bg-namiapp-black w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0 border-t-[1px] border-namiapp-black-4"
+                    className="h-[116px] z-20 bg-shadow w-full flex justify-center pt-6 pb-12 px-4 absolute bottom-0 left-0 border-t-[1px] border-shadow-4"
                     style={{
                         boxShadow: '0 -7px 23px 0 rgba(0, 0, 0, 0.05)'
                     }}
                 >
                     <div
-                        className={classNames('h-11 bg-namiapp-green-1 rounded-md w-full flex items-center justify-center text-white font-semibold text-sm', {
+                        className={classNames('h-11 bg-teal rounded-md w-full flex items-center justify-center text-white font-semibold text-sm', {
                             '!bg-gray-3': refs.length >= 20
                         })}
                         onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}
@@ -198,23 +198,18 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
     );
 };
 
-export const FriendListIcon = ({ color = '#718096' }) => (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+export const FriendListIcon = ({ size= 12, color = '#718096' }) => (
+    <svg width={size} height={size} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 3h6.5M4 6h6.5M4 9h6.5M1.5 3h.005M1.5 6h.005M1.5 9h.005" stroke={color} strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export const NoteIcon = ({ color = '#718096' }) => (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#s8m7dixeoa)" stroke={color} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5.5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V6.5" />
-            <path d="M10 .94a1.06 1.06 0 0 0-.75.31L4.5 6 4 8l2-.5 4.75-4.75A1.06 1.06 0 0 0 10 .94z" />
-        </g>
-        <defs>
-            <clipPath id="s8m7dixeoa">
-                <path fill="#fff" d="M0 0h12v12H0z" />
-            </clipPath>
-        </defs>
+export const NoteIcon = ({ size= 12, color = '#8694B3' }) => (
+    <svg width={size} height={size} viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M13.196 4.934c.252-.252.39-.587.39-.943s-.138-.69-.39-.942L12.139 1.99a1.324 1.324 0 0 0-.943-.39c-.356 0-.69.138-.942.39L3.166 9.057V12h2.942l7.088-7.066zm-2-2 1.058 1.057-1.06 1.056-1.057-1.057 1.059-1.056zm-6.697 7.733V9.61L9.193 4.93 10.25 5.99l-4.693 4.678H4.5zm-1.333 2.666h10.667v1.334H3.166v-1.334z"
+            fill={color}
+        />
     </svg>
 );
 
