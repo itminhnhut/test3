@@ -2,6 +2,8 @@ import React from 'react';
 import { SOCIALS_HREF } from './constants';
 import Link from 'next/link';
 import { getS3Url } from 'redux/actions/utils';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
+
 
 
 const getSocialImage = (socialType) => {
@@ -32,13 +34,13 @@ const getSocialImage = (socialType) => {
     return imageURI;
 };
 
-const SocialsLink = () => {
+const SocialsLink = ({language}) => {
     return (
         <div className="flex flex-wrap gap-4 socials_link">
             {SOCIALS_HREF.map((social) => {
                 const imageURI = getSocialImage(social.name);
                 return (
-                    <Link key={social.key} href={social.href}>
+                    <Link key={social.key} href={social.name !== 'coingecko' ? social.href : `${social.href}/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
                         <a target="_blank" className="!flex items-center w-[32px] h-[32px]">
                             <div className="border p-2 rounded-full border-divider">
                                 <img src={getS3Url(imageURI)} alt="" width="16" height="16" />

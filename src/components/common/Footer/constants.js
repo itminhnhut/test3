@@ -38,4 +38,4 @@ export const SOCIALS_HREF = [
     
 ];
 
-// ${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token
+

@@ -51,7 +51,7 @@ const Footer = memo(() => {
                     <div className="">
                         <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="251" alt="Nami Exchange" />
                     </div>
-                    <SocialsLink />
+                    <SocialsLink language={language} />
                     <LanguageSelect t={t} language={language} />
                 </div>
                 <hr className="border-divider-dark mb-6" />
