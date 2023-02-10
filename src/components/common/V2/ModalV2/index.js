@@ -60,7 +60,6 @@ const ModalV2 = ({
             <div
                 className={classnames(
                     'fixed top-0 left-0 z-[99] w-full h-full overflow-hidden bg-shadow/[0.6]',
-                    'z-30',
                     {
                         invisible: !isVisible && !mount,
                         visible: isVisible
@@ -88,7 +87,7 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()
@@ -96,7 +95,7 @@ const ModalV2 = ({
                                           <div
                                               className={classnames(
                                                   'flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2',
-                                                  { '-mt-6': !isMobile, 'dark:bg-dark': isMobile },
+                                                  { '-mt-6': !isMobile, 'bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}
                                           >
