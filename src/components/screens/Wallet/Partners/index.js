@@ -35,8 +35,8 @@ const INITIAL_STATE = {
     allAssets: null
 };
 
-const AVAILBLE_KEY = 'futures_available';
-const FUTURES_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
+const AVAILBLE_KEY = 'partners_available';
+const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
 
 const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     // Init State
@@ -44,7 +44,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Rdx
-    const wallets = useSelector((state) => state.wallet.FUTURES);
+    const wallets = useSelector((state) => state.wallet.PARTNERS);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     // Use Hooks
@@ -58,9 +58,9 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         if (!allWallet || !assetConfig) return;
         const mapper = [];
         if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const futures = assetConfig.filter((o) => FUTURES_ASSET.includes(o?.assetCode));
-            futures &&
-                futures.forEach(
+            const partners = assetConfig.filter((o) => PARTNERS_ASSET.includes(o?.assetCode));
+            partners &&
+                partners.forEach(
                     (item) =>
                         allWallet?.[item.id] &&
                         mapper.push({
@@ -197,7 +197,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
             const origin = dataHandler(state.allAssets, t, dispatch, {
                 usdRate,
-                marketWatch
+                marketWatch,
+                btcAssetDigit: estBtc?.assetDigit
             });
             let tableData = origin;
             if (state.hideSmallAsset) {
@@ -358,7 +359,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
             in_order: (
                 <span className="text-sm whitespace-nowrap">
                     {item?.wallet?.locked_value ? (
-                        <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
+                        <Link href={PATHS.PARTNERS.TRADE.DEFAULT}>
                             <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
                         </Link>
                     ) : (
@@ -370,7 +371,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 <div className="text-sm">
                     {assetUsdRate ? (
                         <>
-                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, item?.assetDigit) : '0.0000'}</div>
+                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, utils?.btcAssetDigit || 8) : '0.0000'}</div>
                             <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
                                 ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                             </div>
@@ -405,7 +406,7 @@ const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         // <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
         <TextButton
-            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
+            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
         >
             {translator('common:transfer')}
         </TextButton>

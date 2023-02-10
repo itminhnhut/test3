@@ -154,6 +154,7 @@
         "apy": "Annual Interest Rate (APY)"
     },
     "futures_overview": "Trading Futures with leverage up to X125. <br/>Transfer funds to your Futures Wallet to start trading.",
+    "partners_overview": "Trading Partners with leverage up to X125. <br/>Transfer funds to your Partners Wallet to start trading.",
     "staking_overview": "Staking NAMI to receive bonus interest up to 50%/year.",
     "farming_overview": "Farming NAMI and get many potential tokens.",
     "push_order": "Push Order",
@@ -169,7 +170,7 @@
     "convert_small_mobile": "Convert to {{ asset }}",
     "asset": "Asset",
     "value": "Value",
-    "mobile":{
+    "mobile": {
         "spot": "Nami Spot",
         "futures": "Nami Futures",
         "input_amount_placeholder": "Enter amount",

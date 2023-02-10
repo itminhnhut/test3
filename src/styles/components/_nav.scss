@@ -594,7 +594,7 @@
   height: 100%;
   transition: all 0.1s ease;
   transform: translateX(100%);
-  padding-top: 13px;
+  padding-top: 20px;
   padding-bottom: 76px;
   overflow-y: scroll;
   user-select: none;
@@ -604,7 +604,7 @@
     .user__button {
       padding-left: 16px;
       padding-right: 16px;
-      margin-top: 20px;
+      margin-top: 16px;
 
       div {
         width: calc(97% / 2);
@@ -617,11 +617,15 @@
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item {
-    @apply flex flex-row flex-wrap items-center justify-between text-sm;
+    @apply flex flex-row flex-wrap items-center justify-between text-sm mb-2;
 
     font-weight: 600;
-    padding: 16px;
+    padding: 12px 16px;
+   
     cursor: pointer;
+    &:last-child {
+    margin-bottom:0;
+    }
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item__lv1 {
@@ -645,7 +649,7 @@
 
   .mal-pocket-nabar__item___hover {
     &:hover {
-      @apply bg-listItemSelected dark:bg-listItemSelected-dark;
+      @apply bg-listItemSelected dark:bg-hover;
 
       span {
         @apply text-dominant;
