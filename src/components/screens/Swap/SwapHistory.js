@@ -1,29 +1,20 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAsync } from 'react-use';
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
+import { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
-import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
-import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
-import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
 import TableV2 from 'components/common/V2/TableV2';
-
-import { PATHS } from 'constants/paths';
-import { SwapIcon } from '../../svg/SvgIcon';
+import { SwapIcon } from 'components/svg/SvgIcon';
 
 const SwapHistory = ({ width }) => {
     const [state, set] = useState({
         page: 0,
-        pageSize: 5,
+        pageSize: LIMIT_ROW,
         loading: false,
         histories: null
     });
@@ -77,7 +68,7 @@ const SwapHistory = ({ width }) => {
                 //     limit={LIMIT_ROW}
                 //     skip={0}
                 // />
-                <div className="mt-8 pt-4 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <div className="mt-8 pt-4 border border-divider-dark dark:border-divider-dark rounded-xl">
                     <TableV2
                         useRowHover
                         data={data || []}
@@ -89,7 +80,7 @@ const SwapHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
-                        pagingPrevNext={{ page: state.page, histories: state.histories, onChangeNextPrev: onChangePagination }}
+                        pagingPrevNext={{ page: state.page, histories: state.histories, onChangeNextPrev: onChangePagination, language }}
                         // page={state.currentPage}
                         // onChangePage={(currentPage) => setState({ currentPage })}
                     />
@@ -116,7 +107,7 @@ const SwapHistory = ({ width }) => {
     );
 };
 
-const LIMIT_ROW = 5;
+const LIMIT_ROW = 10;
 const KEY = 'swap_history__item_';
 
 const columns = [
