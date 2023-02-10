@@ -16,20 +16,14 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
-import Empty from 'components/common/Empty';
 import Skeletor from 'components/common/Skeletor';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
 import { ChevronDown } from 'react-feather';
-import PopoverV2 from 'components/common/V2/PopoverV2';
 import useOutsideClick from 'hooks/useOutsideClick';
-import NoData from 'components/common/V2/TableV2/NoData';
 import TableV2 from 'components/common/V2/TableV2';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
@@ -450,48 +444,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <HrefButton className="min-w-[120px] py-3" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                {t('common:deposit')}
-                            </HrefButton>
-                            <HrefButton
-                                className="min-w-[120px] py-3"
-                                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}
-                                variants="secondary"
-                            >
+                            <ButtonV2 href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>{t('common:deposit')}</ButtonV2>
+                            <ButtonV2 variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </HrefButton>
-                            <ButtonV2
-                                className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
-                                text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2"
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            </ButtonV2>
+                            <ButtonV2 variants="secondary" onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
                                 {t('common:transfer')}
                             </ButtonV2>
-
-                            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer bg-bgBtnPrimary">
-                                    {t('common:deposit')}
-                                </a>
-                            </Link>
-                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                                <a
-                                    className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                   text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                "
-                                >
-                                    {t('common:withdraw')}
-                                </a>
-                            </Link>
-                            <div
-                                className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                 "
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
-                                {t('common:transfer')}
-                            </div> */}
                         </div>
-                        {/* <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt="" /> */}
                     </div>
                 </div>
                 {renderAvailableBalance()}

@@ -470,7 +470,15 @@ module.exports = {
                     DEFAULT: '#ebedf3',
                     dark: commonColors.dark[2]
                 },
-                bgNaoStart: 'rgba(9, 61, 209, 0.5)'
+                bgNaoStart: 'rgba(9, 61, 209, 0.5)',
+                bgBtnV2: {
+                    DEFAULT: '#30bf73',
+                    pressed: '#19a65b',
+                    disabled: '#b5c0c9',
+                    dark: '#47cc85',
+                    dark_pressed: '#19a65b',
+                    dark_disabled: '#454c5c'
+                }
             },
             backgroundImage: {
                 rank: "url('/images/contest/bg_rank.png')",

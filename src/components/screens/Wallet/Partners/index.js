@@ -21,8 +21,6 @@ import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {
@@ -405,11 +403,12 @@ const ROW_LOADING_SKELETON = {
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         // <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
-        <TextButton
+        <ButtonV2
+            variants="blank"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
         >
             {translator('common:transfer')}
-        </TextButton>
+        </ButtonV2>
 
         // </Link>
     );
