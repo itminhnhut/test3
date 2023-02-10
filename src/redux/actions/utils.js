@@ -316,18 +316,17 @@ export function render24hChange(ticker, showPrice = false, className = '') {
 
         percent = `${formatPercentage(Math.abs(change24h), 2, true)}%`;
     } else {
-        percent = '-';
+        percent = null;
     }
     return (
         <div className={`${className} text-xs space-x-2 flex font-semibold`}>
             {showPrice && (
                 <span>
-                    {priceChange <= 0 ? '' : '+'}
-                    {formatNumber(priceChange, ticker?.q === 'VNDC' ? 0 : 2, 0, true)}
+                    {formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}
                 </span>
             )}
-            <span className="flex items-center">
-                <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> {percent}
+            <span className={"flex items-center " + (percent ? '' : 'text-teal')}>
+                {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> : null} {percent ?? '-'}
             </span>
         </div>
     );
