@@ -1181,7 +1181,7 @@ const ExchangeWithdraw = () => {
     useEffect(() => {
         console.log('AUTH_WITHDRAW: ', auth);
         setIsOpenModalKyc(auth?.kyc_status !== 2);
-    }, []);
+    }, [auth]);
 
     const renderKycRequiredModal = useCallback(() => {
         // isOpenModalKyc = auth?.kyc_status !== 2;
