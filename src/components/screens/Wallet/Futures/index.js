@@ -22,6 +22,7 @@ import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
+import HideSmallBalance from 'components/common/HideSmallBalance';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -199,27 +200,15 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
                 <div className="t-common-v2">Futures</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
-                    <div className="flex items-center justify-between sm:mr-5">
-                        <div
-                            className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
-                            onClick={() =>
-                                setState({
-                                    hideSmallAsset: !state.hideSmallAsset
-                                })
-                            }
-                        >
-                            <span
-                                className={
-                                    state.hideSmallAsset
-                                        ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-dominant bg-dominant'
-                                        : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-divider dark:border-divider-dark'
-                                }
-                            >
-                                {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                            </span>
-                            <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
-                        </div>
-                    </div>
+                    <HideSmallBalance
+                        onClick={() =>
+                            setState({
+                                hideSmallAsset: !state.hideSmallAsset
+                            })
+                        }
+                        isHide={state.hideSmallAsset}
+                        className="mr-8"
+                    />
                     <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input

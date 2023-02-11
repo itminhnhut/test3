@@ -25,7 +25,7 @@ import { ChevronDown } from 'react-feather';
 import useOutsideClick from 'hooks/useOutsideClick';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-
+import HideSmallBalance from 'components/common/HideSmallBalance';
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
@@ -444,27 +444,15 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </div>
 
                     <div className="mt-2 lg:flex">
-                        <div className="flex items-center justify-between lg:mr-5">
-                            <div
-                                className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
-                                onClick={() =>
-                                    setState({
-                                        hideSmallAsset: !state.hideSmallAsset
-                                    })
-                                }
-                            >
-                                <span
-                                    className={
-                                        state.hideSmallAsset
-                                            ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-dominant bg-dominant'
-                                            : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-divider dark:border-divider-dark'
-                                    }
-                                >
-                                    {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                                </span>
-                                <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
-                            </div>
-                        </div>
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="mr-8"
+                        />
                         <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                             <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
