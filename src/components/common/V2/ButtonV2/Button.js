@@ -2,13 +2,15 @@ import React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
 
-const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, href = '' }) => {
+const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, href = '', target }) => {
+    console.log('props', target);
     if (href) {
         return (
             <Link href={href} prefetch={false}>
                 <a
+                    target={target}
                     className={classNames(
-                        'flex items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
+                        'flex whitespace-nowrap items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
                         {
                             'dark:bg-bgBtnV2 dark:hover:bg-bgBtnV2-dark_pressed dark:active:bg-bgBtnV2-pressed dark:disabled:bg-bgBtnV2-dark_disabled':
                                 variants === 'primary',
@@ -28,7 +30,7 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
         return (
             <button
                 className={classNames(
-                    'flex items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
+                    'flex whitespace-nowrap items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
                     {
                         'dark:bg-bgBtnV2 dark:hover:bg-bgBtnV2-dark_pressed dark:active:bg-bgBtnV2-pressed dark:disabled:bg-bgBtnV2-dark_disabled':
                             variants === 'primary',

@@ -102,26 +102,32 @@ const OverviewWallet = (props) => {
     const renderExchangeEstBalance = useCallback(() => {
         return (
             <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
-                {formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
+                {state.hideAsset
+                    ? SECRET_STRING
+                    : formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [exchangeEstBtc, exchangeRefPrice]);
+    }, [exchangeEstBtc, exchangeRefPrice, state.hideAsset]);
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
             <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
-                {formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
+                {state.hideAsset
+                    ? SECRET_STRING
+                    : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [futuresEstBtc, futuresRefPrice]);
+    }, [futuresEstBtc, futuresRefPrice, state.hideAsset]);
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
             <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
-                {formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
+                {state.hideAsset
+                    ? SECRET_STRING
+                    : formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [partnersEstBtc, partnersRefPrice]);
+    }, [partnersEstBtc, partnersRefPrice, state.hideAsset]);
 
     // const renderFarmingEstBalance = useCallback(() => {
     //     return (

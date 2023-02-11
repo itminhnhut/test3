@@ -66,8 +66,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             {
                 key: 'asset',
