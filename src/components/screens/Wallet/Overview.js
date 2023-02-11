@@ -276,9 +276,9 @@ const OverviewWallet = (props) => {
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                             <div className="flex items-center mt-4 pr-4 font-medium lg:mt-0 text-xs lg:text-sm">{t('wallet:staking_overview')}</div>
                             <div className="flex items-center mt-4 lg:mt-0">
-                                <HrefButton variants="blank" href={PATHS.WALLET.STAKING} className="text-sm font-semibold">
+                                <ButtonV2 variants="blank" href={PATHS.WALLET.STAKING} className="text-sm font-semibold">
                                     {t('common:read_more')}
-                                </HrefButton>
+                                </ButtonV2>
                             </div>
                         </div>
                     </div>
@@ -318,7 +318,7 @@ const OverviewWallet = (props) => {
 
 const AssetBalance = ({ title, icon, renderEstBalance }) => {
     return (
-        <div className="min-w-[422px] max-w-[422px] flex items-center">
+        <div className="min-w-[530px] max-w-[530px] flex items-center">
             <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-listItemSelected dark:bg-dark-2">{icon}</div>
             <div className="ml-4 xl:ml-6 flex flex-col justify-between h-full">
                 <span className="mr-4 text-txtSecondary dark:text-txtSecondary-dark text-sm">{title}</span>

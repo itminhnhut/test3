@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import NoData from 'components/common/V2/TableV2/NoData';
+import TableV2 from 'components/common/V2/TableV2';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -73,8 +73,6 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 150, fixed: width >= 992 ? 'none' : 'left' },
             { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 213 },
@@ -85,65 +83,22 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         ];
 
         return (
-            <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                <ReTable
+            <div className="mt-8 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <TableV2
                     sort
                     defaultSort={{ key: 'total', direction: 'desc' }}
                     useRowHover
                     data={state.tableData || []}
                     columns={columns}
                     rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
                     scroll={{ x: true }}
                     limit={ASSET_ROW_LIMIT}
                     skip={0}
-                    tableStatus={tableStatus}
-                    paginationProps={{
-                        hide: true,
-                        current: state.currentPage,
-                        pageSize: 10,
-                        onChange: (currentPage) => setCurrentPage(currentPage)
-                    }}
-                    isNamiV2
-                    // height={height}
-                    emptyText={<NoData isSearch={!!state.search} />}
-                    // {...props}
+                    noBorder
+                    isSearch={!!state.search}
+                    pagingClassName="border-none"
+                    tableStyle={{ fontSize: '16px', padding: '16px' }}
                 />
-                {state.tableData?.length > 0 && (
-                    <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
-                        <RePagination
-                            total={state.tableData?.length}
-                            current={state.currentPage}
-                            pageSize={ASSET_ROW_LIMIT}
-                            onChange={(currentPage) => setState({ currentPage })}
-                            name="market_table___list"
-                        />
-                    </div>
-                )}
-                {/* <ReTable
-                    sort
-                    defaultSort={{ key: 'total', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    tableStatus={tableStatus}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '888px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true
-                    }}
-                /> */}
             </div>
         );
     }, [state.tableData, width]);
@@ -231,20 +186,10 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                                // className={isBuy ? 'bg-teal' : 'bg-red'}
                                 className="px-6 py-3"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
-
-                            {/* <div
-                                className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                 "
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
-                                {t('common:transfer')}
-                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -254,18 +199,6 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
                 <div className="t-common-v2">Futures</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
-                    {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
-                        <span
-                            className={
-                                state.hideSmallAsset
-                                    ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-dominant bg-dominant'
-                                    : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-gray-3 dark:border-darkBlue-4'
-                            }
-                        >
-                            {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                        </span>
-                        <span className="ml-3 text-xs">{t('wallet:hide_small_balance')}</span>
-                    </div> */}
                     <div className="flex items-center justify-between sm:mr-5">
                         <div
                             className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
@@ -402,7 +335,10 @@ const ROW_LOADING_SKELETON = {
 
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
-        <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}>
+        <ButtonV2
+            variants="blank"
+            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
+        >
             {translator('common:transfer')}
         </ButtonV2>
     );

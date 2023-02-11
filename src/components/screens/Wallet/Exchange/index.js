@@ -118,7 +118,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
         return (
             <>
-                <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <div className="mt-8 pt-4 border border-divider-dark dark:border-divider-dark rounded-xl">
                     <TableV2
                         sort
                         defaultSort={{ key: 'btc_value', direction: 'desc' }}
@@ -131,33 +131,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         skip={0}
                         isSearch={!!state.search}
                         pagingClassName="border-none"
-                        // page={state.currentPage}
-                        // onChangePage={(currentPage) => setState({ currentPage })}
+                        tableStyle={{ fontSize: '16px', padding: '16px' }}
                     />
-                    {/* <ReTable
-                        tableStatus={tableStatus}
-                        paginationProps={{
-                            hide: true,
-                            current: state.currentPage,
-                            pageSize: 10,
-                            onChange: (currentPage) => setCurrentPage(currentPage)
-                        }}
-                        isNamiV2
-                        // height={height}
-                        emptyText={<NoData isSearch={!!state.search} />}
-                        // {...props}
-                    /> */}
-                    {/* {state.tableData?.length > 0 && (
-                        <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
-                            <RePagination
-                                total={state.tableData?.length}
-                                current={state.currentPage}
-                                pageSize={ASSET_ROW_LIMIT}
-                                onChange={(currentPage) => setState({ currentPage })}
-                                name="market_table___list"
-                            />
-                        </div>
-                    )} */}
                 </div>
             </>
         );
@@ -507,7 +482,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 </div>
             </div>
 
-            {/* <TableV2 /> */}
             {/* <MCard
                 getRef={(ref) => (tableRef.current = ref)}
                 style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}

@@ -11,7 +11,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
 import { orderBy } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import NoData from 'components/common/V2/TableV2/NoData';
+import TableV2 from 'components/common/V2/TableV2';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -73,8 +73,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 150, fixed: width >= 992 ? 'none' : 'left' },
             { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 213 },
@@ -85,65 +83,22 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         ];
 
         return (
-            <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                <ReTable
+            <div className="mt-8 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <TableV2
                     sort
                     defaultSort={{ key: 'total', direction: 'desc' }}
                     useRowHover
                     data={state.tableData || []}
                     columns={columns}
                     rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
                     scroll={{ x: true }}
                     limit={ASSET_ROW_LIMIT}
                     skip={0}
-                    tableStatus={tableStatus}
-                    paginationProps={{
-                        hide: true,
-                        current: state.currentPage,
-                        pageSize: 10,
-                        onChange: (currentPage) => setCurrentPage(currentPage)
-                    }}
-                    isNamiV2
-                    // height={height}
-                    emptyText={<NoData isSearch={!!state.search} />}
-                    // {...props}
+                    noBorder
+                    isSearch={!!state.search}
+                    pagingClassName="border-none"
+                    tableStyle={{ fontSize: '16px', padding: '16px' }}
                 />
-                {state.tableData?.length > 0 && (
-                    <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
-                        <RePagination
-                            total={state.tableData?.length}
-                            current={state.currentPage}
-                            pageSize={ASSET_ROW_LIMIT}
-                            onChange={(currentPage) => setState({ currentPage })}
-                            name="market_table___list"
-                        />
-                    </div>
-                )}
-                {/* <ReTable
-                    sort
-                    defaultSort={{ key: 'total', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    tableStatus={tableStatus}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '888px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true
-                    }}
-                /> */}
             </div>
         );
     }, [state.tableData, width]);
