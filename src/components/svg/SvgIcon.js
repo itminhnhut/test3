@@ -306,9 +306,9 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
         <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
         <defs>
             <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#BDFEE7" />
-                <stop offset="0.891338" stop-color="#60F1A6" stop-opacity="0.93" />
-                <stop offset="1" stop-color="#47ED95" />
+                <stop stopColor="#BDFEE7" />
+                <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
+                <stop offset="1" stopColor="#47ED95" />
             </linearGradient>
         </defs>
     </svg>

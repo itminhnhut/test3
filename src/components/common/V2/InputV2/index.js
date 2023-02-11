@@ -20,15 +20,22 @@ const InputV2 = ({
     canPaste = false,
     prefix,
     suffix,
-    error
+    error,
+    onHitEnterButton
 }) => {
     const { t } = useTranslation();
 
     const inputRef = useRef(null);
 
     const onInputChange = (e) => {
-        if (onChange) onChange(e.target.value);
+        if (onChange) onChange(e?.target?.value);
     };
+
+    const handleHitEnterButton = (e) => {
+        if (e?.nativeEvent?.code === 'Enter')
+            if (onHitEnterButton) onHitEnterButton(e?.target?.value)
+    }
+
     const paste = () => {
         navigator.clipboard.readText()
             .then(text => {
@@ -52,6 +59,8 @@ const InputV2 = ({
                 placeholder={placeholder}
                 value={value}
                 onChange={onInputChange}
+                onhi
+                onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
             />
             {
                 canPaste ?

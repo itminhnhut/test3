@@ -70,22 +70,22 @@ const NoDataIcon = ({ isDark }) => (
         <path d="M96.7546 27.626H83.111V28.1926H96.7546V27.626Z" fill="white" />
         <defs>
             <linearGradient id="paint0_linear_1016_120213" x1="60.4859" y1="90.397" x2="75.0164" y2="21.5574" gradientUnits="userSpaceOnUse">
-                <stop offset="0.01" stop-color="#9FA4AB" />
-                <stop offset="0.26" stop-color="#9FA4AB" />
-                <stop offset="0.35" stop-color="#A2A7AE" stop-opacity="0.96" />
-                <stop offset="0.46" stop-color="#ABAFB6" stop-opacity="0.86" />
-                <stop offset="0.6" stop-color="#BABDC2" stop-opacity="0.7" />
-                <stop offset="0.74" stop-color="#CFD1D4" stop-opacity="0.47" />
-                <stop offset="0.89" stop-color="#E9EAEB" stop-opacity="0.18" />
-                <stop offset="0.98" stop-color="#F9F9F9" stop-opacity="0" />
+                <stop offset="0.01" stopColor="#9FA4AB" />
+                <stop offset="0.26" stopColor="#9FA4AB" />
+                <stop offset="0.35" stopColor="#A2A7AE" stopOpacity="0.96" />
+                <stop offset="0.46" stopColor="#ABAFB6" stopOpacity="0.86" />
+                <stop offset="0.6" stopColor="#BABDC2" stopOpacity="0.7" />
+                <stop offset="0.74" stopColor="#CFD1D4" stopOpacity="0.47" />
+                <stop offset="0.89" stopColor="#E9EAEB" stopOpacity="0.18" />
+                <stop offset="0.98" stopColor="#F9F9F9" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="paint1_linear_1016_120213" x1="70.104" y1="37.6388" x2="108.052" y2="37.6388" gradientUnits="userSpaceOnUse">
-                <stop offset="0.01" stop-color="#9FA4AB" />
-                <stop offset="0.19" stop-color="#9FA4AB" />
-                <stop offset="0.33" stop-color="#A5AAB0" />
-                <stop offset="0.52" stop-color="#B6BABF" />
-                <stop offset="0.74" stop-color="#D2D4D7" />
-                <stop offset="0.98" stop-color="#F9F9F9" />
+                <stop offset="0.01" stopColor="#9FA4AB" />
+                <stop offset="0.19" stopColor="#9FA4AB" />
+                <stop offset="0.33" stopColor="#A5AAB0" />
+                <stop offset="0.52" stopColor="#B6BABF" />
+                <stop offset="0.74" stopColor="#D2D4D7" />
+                <stop offset="0.98" stopColor="#F9F9F9" />
             </linearGradient>
         </defs>
     </svg>

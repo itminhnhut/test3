@@ -1,4 +1,4 @@
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useDarkMode from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -6,7 +6,6 @@ import MarketLabel from 'components/common/MarketLabel';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
 import showNotification from 'utils/notificationService';
-import Empty from 'components/common/Empty';
 import Skeletor from 'components/common/Skeletor';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
@@ -126,20 +125,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount])
 
     const renderSubTab = useCallback(() => {
-        // if (tab[restProps.tabIndex]?.key === 'favorite') {
-        //     return favSubTab.map((item, index) => {
-        //         return (
-        //             <div key={item.key}
-        //                 onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-        //                 className={restProps.subTabIndex === index ?
-        //                     'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabActive dark:bg-bgTabActive-dark text-white cursor-pointer select-none'
-        //                     : 'text-[14px] font-medium px-3 py-1 mr-3 rounded-md bg-bgTabInactive dark:bg-bgTabInactive-dark text-gray-1 dark:text-darkBlue-5 cursor-pointer select-none'}>
-        //                 {item.localized ? t(item.localized) : <span className="capitalize">{item.key}</span>}
-        //             </div>
-        //         )
-        //     })
-        // }
-
         return subTab.map((item, index) => {
             return (
                 <div key={item.key}
@@ -157,10 +142,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.subTabIndex, restProps.tabIndex])
 
     const renderSuggested = useMemo(() => {
-        // let tradingMode = TRADING_MODE.EXCHANGE
-        // if (favSubTab[restProps?.favType]?.key === 'futures') {
-        //     tradingMode = TRADING_MODE.FUTURES
-        // }
         const tradingMode = restProps?.favType + 1
 
         return <div className='px-8 pb-4'>
@@ -253,9 +234,9 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         let pairColumnsWidth = 220
         let starColumnWidth = 64
 
-        if(width < 768) pairColumnsWidth = 174
+        if (width < 768) pairColumnsWidth = 174
 
-        if(!data?.length) pairColumnsWidth = 128
+        if (!data?.length) pairColumnsWidth = 128
 
         const starColumn = { key: 'star', dataIndex: 'star', title: '', fixed: 'left', align: 'left', width: starColumnWidth }
 
@@ -312,10 +293,10 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
         if (tab[restProps.tabIndex]?.key === 'favorite') {
-            if(!restProps.auth) {
+            if (!restProps.auth) {
                 tableStatus = <NoData />
             } else {
-                if(!dataSource.length) {
+                if (!dataSource.length) {
                     return renderSuggested
                 }
             }
@@ -435,25 +416,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    {/* <div className="h-12 w-[100px] sm:w-[368px] flex items-center py-2 px-3 rounded-[6px] bg-dark-2 cursor-pointer justify-between">
-                        <div className='flex items-center'>
-                            <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />
-                            <input className="bg-transparent outline-none px-2 text-base font-normal text-gray-4"
-                                value={restProps.search}
-                                onChange={({ target: { value } }) => parentState({ search: value })}
-                                placeholder={t('common:search')}
-                            />
-                        </div>
-                        <X className={restProps.search ? 'visible' : 'invisible'}
-                            onClick={() => parentState({ search: '' })}
-                            color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
-                            size={20} />
-                    </div> */}
-                    <InputV2 value={restProps.search}
+                    <InputV2
+                        value={restProps.search}
                         onChange={(value) => parentState({ search: value })}
                         placeholder={t('common:search')}
-                        prefix={(<Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={16} />)}
-                        className='pb-0 w-[100px] sm:w-[368px] '
+                        prefix={(<Search color={colors.darkBlue5} size={16} />)}
+                        className='pb-0 w-[100px] sm:w-[368px]'
+                        suffix={(<X color={colors.gray10} size={16} />)}
                     />
                 </div>
             </div>
