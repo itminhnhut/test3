@@ -318,9 +318,8 @@ const Luckydraw = ({ platform }) => {
                                     'text-nao-text2': platform === 'frame'
                                 })}
                             >
-                                <div>{t('nao:luckydraw:updated_vol')}</div>
                                 <div>
-                                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}:{' '}
+                                    {t('nao:contest:last_updated_time_dashboard', { minute: 20 })}:{' '}
                                     {last_updated_at.current ? formatTime(last_updated_at.current, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                 </div>
                             </div>
