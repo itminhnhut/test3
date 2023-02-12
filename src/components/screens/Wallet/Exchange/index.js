@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+import { SeeIcon, HideIcon, LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -21,7 +21,6 @@ import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
-import { ChevronDown } from 'react-feather';
 import useOutsideClick from 'hooks/useOutsideClick';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -434,10 +433,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 <div className="t-common-v2">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
                     <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
-                        <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
+                        <LogoIcon />
                         <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
                             {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
-                            <ChevronDown size={24} className="-rotate-90" />
+                            <BxChevronDown size={24} />
                         </a>
                     </div>
 
@@ -451,10 +450,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             isHide={state.hideSmallAsset}
                             className="mr-8"
                         />
-                        <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
-                            <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
+                        <div className="py-3 px-3 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                            <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
-                                className="text-sm w-full px-2.5"
+                                className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                                 value={state.search}
                                 onChange={(e) => {
                                     setState({ search: e?.target?.value });
@@ -462,7 +461,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 onFocus={() => setState({ currentPage: 1 })}
                                 placeholder={t('common:search')}
                             />
-                            {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />}
+                            {state.search && (
+                                <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
+                            )}
                         </div>
                     </div>
                 </div>
