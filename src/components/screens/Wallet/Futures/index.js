@@ -84,23 +84,25 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         ];
 
         return (
-            <div className="mt-8 border border-divider-dark dark:border-divider-dark rounded-xl">
-                <TableV2
-                    sort
-                    defaultSort={{ key: 'total', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    scroll={{ x: true }}
-                    limit={ASSET_ROW_LIMIT}
-                    skip={0}
-                    noBorder
-                    isSearch={!!state.search}
-                    pagingClassName="border-none"
-                    tableStyle={{ fontSize: '16px', padding: '16px' }}
-                />
-            </div>
+            <TableV2
+                sort
+                defaultSort={{ key: 'total', direction: 'desc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={(item) => item?.key}
+                scroll={{ x: true }}
+                limit={ASSET_ROW_LIMIT}
+                skip={0}
+                noBorder={true}
+                isSearch={!!state.search}
+                height={404}
+                pagingClassName="border-none"
+                className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+            />
+            // <div className="mt-8 py-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+            // </div>
         );
     }, [state.tableData, width]);
 
@@ -265,19 +267,19 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 </div>
             ),
             total: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                 </span>
             ),
             available: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.value - item?.wallet?.locked_value
                         ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
                         : '0.0000'}
                 </span>
             ),
             in_order: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.locked_value ? (
                         <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
                             <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
@@ -288,7 +290,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 </span>
             ),
             btc_value: (
-                <div className="text-sm">
+                <div>
                     {assetUsdRate ? (
                         <>
                             <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, utils?.btcAssetDigit || 8) : '0.0000'}</div>
@@ -327,6 +329,7 @@ const renderOperationLink = (assetName, translator, dispatch) => {
         <ButtonV2
             variants="blank"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
+            className="!text-base"
         >
             {translator('common:transfer')}
         </ButtonV2>

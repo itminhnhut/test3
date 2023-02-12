@@ -71,7 +71,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 align: 'left',
-                width: 200,
+                width: 170,
                 fixed: 'left'
             },
             {
@@ -114,24 +114,23 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
         ];
 
         return (
-            <>
-                <div className="mt-8 pt-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                    <TableV2
-                        sort
-                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                        useRowHover
-                        data={state.tableData || []}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        scroll={{ x: true }}
-                        limit={ASSET_ROW_LIMIT}
-                        skip={0}
-                        isSearch={!!state.search}
-                        pagingClassName="border-none"
-                        tableStyle={{ fontSize: '16px', padding: '16px' }}
-                    />
-                </div>
-            </>
+            <TableV2
+                sort
+                defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={(item) => item?.key}
+                scroll={{ x: true }}
+                limit={ASSET_ROW_LIMIT}
+                skip={0}
+                isSearch={!!state.search}
+                height={404}
+                noBorder
+                pagingClassName="border-none"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
+            />
         );
     }, [state.tableData, state.currentPage, width]);
 
@@ -289,25 +288,21 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     <div className="flex items-center gap-4">
                         <AssetLogo assetCode={item?.assetCode} size={32} />
                         <div className="flex flex-col space-y-1">
-                            <span className="font-semibold text-sm">{item?.assetCode}</span>
+                            <span className="font-semibold">{item?.assetCode}</span>
                             <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
                         </div>
                     </div>
                 ),
-                total: (
-                    <span className="text-sm whitespace-nowrap flex justify-end">
-                        {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
-                    </span>
-                ),
+                total: item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000',
                 available: (
-                    <span className="text-sm whitespace-nowrap">
+                    <span className="whitespace-nowrap">
                         {item?.wallet?.value - item?.wallet?.locked_value
                             ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
                             : '0.0000'}
                     </span>
                 ),
                 in_order: (
-                    <span className="text-sm whitespace-nowrap">
+                    <span className="whitespace-nowrap">
                         {item?.wallet?.locked_value ? (
                             <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
                                 <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
@@ -318,7 +313,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </span>
                 ),
                 btc_value: (
-                    <div className="text-sm">
+                    <div>
                         {assetUsdRate ? (
                             <>
                                 <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
@@ -491,7 +486,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     const noMarket = !markets?.length;
 
     let tradeButton = null;
-    const cssLi = `text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full
+    const cssLi = `text-txtPrimary dark:text-txtPrimary-dark text-left text-sm w-full
     px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
     dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
     `;
