@@ -32,7 +32,7 @@ const LanguageSelect = ({ t, language }) => {
 
             {isOpen && (
                 <div
-                    
+
                     className="absolute bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-0 rounded-xl  "
                 >
                     {Object.values(LANGUAGE_TAG).map((lang) => (

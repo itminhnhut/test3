@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Spinner from 'components/svg/Spinner'
 
 const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading }) => {
     return (
@@ -11,14 +12,14 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
                         variants === 'primary',
                     '!font-semibold px-0 !text-sm dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed':
                         variants === 'text',
-                    'bg-gray-2 dark:bg-dark-2 text-gray-5/[0.1]': disabled
+                    'bg-gray-2 dark:!bg-dark-2 !text-txtDisabled': !loading && disabled
                 },
                 className
             )}
-            onClick={onClick}
-            disabled={disabled || loading}
+            onClick={(loading || disabled) ? null : onClick}
+            disabled={loading || disabled}
         >
-            {children}
+            {loading ? <Spinner /> : children}
         </button>
     );
 };

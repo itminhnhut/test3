@@ -306,9 +306,9 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
         <path d="M22.1965 6.38355H20.17V3.84008H17.6367V1.81836H22.1965V6.38355Z" fill="#47ED95" />
         <defs>
             <linearGradient id="paint0_linear_395_205101" x1="4.64917" y1="8.69963" x2="25.1992" y2="13.4996" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#BDFEE7" />
-                <stop offset="0.891338" stop-color="#60F1A6" stop-opacity="0.93" />
-                <stop offset="1" stop-color="#47ED95" />
+                <stop stopColor="#BDFEE7" />
+                <stop offset="0.891338" stopColor="#60F1A6" stopOpacity="0.93" />
+                <stop offset="1" stopColor="#47ED95" />
             </linearGradient>
         </defs>
     </svg>
@@ -325,6 +325,22 @@ const AddCircleIcon = () => (
         <defs>
             <clipPath id="p8h6ijxpna">
                 <path fill="#fff" transform="translate(.398 .344)" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const AppleIcon = ({ size = 24, ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
+        <g clip-path="url(#ik9gb490da)">
+            <path
+                d="M22.292 18.703c-.363.839-.793 1.61-1.29 2.32-.679.968-1.234 1.637-1.662 2.01-.664.61-1.375.922-2.137.94-.546 0-1.206-.156-1.973-.471-.77-.314-1.478-.47-2.124-.47-.679 0-1.407.156-2.185.47-.78.315-1.407.48-1.888.496-.73.031-1.458-.29-2.184-.966-.464-.404-1.044-1.098-1.739-2.08-.745-1.049-1.358-2.265-1.838-3.652-.514-1.497-.772-2.948-.772-4.352 0-1.608.348-2.995 1.044-4.158A6.122 6.122 0 0 1 5.73 6.58a5.88 5.88 0 0 1 2.955-.835c.58 0 1.34.18 2.285.532.943.354 1.548.533 1.813.533.199 0 .871-.21 2.01-.628 1.078-.388 1.988-.548 2.733-.485 2.02.163 3.536.96 4.545 2.393-1.806 1.094-2.699 2.627-2.681 4.593.016 1.531.572 2.806 1.663 3.817.495.47 1.048.833 1.663 1.09-.134.387-.274.758-.424 1.113zM17.661.48c0 1.2-.439 2.321-1.313 3.358-1.054 1.234-2.33 1.946-3.714 1.834a3.742 3.742 0 0 1-.027-.455c0-1.152.501-2.386 1.392-3.394.445-.51 1.01-.935 1.696-1.273.685-.334 1.332-.518 1.94-.55.019.16.026.32.026.48z"
+                fill="#fff"
+            />
+        </g>
+        <defs>
+            <clipPath id="ik9gb490da">
+                <path fill="#fff" transform="translate(.5)" d="M0 0h24v24H0z" />
             </clipPath>
         </defs>
     </svg>
@@ -426,6 +442,8 @@ export {
     FutureIcon,
     FutureLaunchpadIcon,
     FuturePortfolioIcon,
+    FutureSimpleIcon,
+    FutureAdvanceIcon,
     SuccessfulTransactionIcon,
     AddCircleIcon,
     AddCircleColorIcon,

@@ -20,22 +20,22 @@ const SvgDropDown = ({ color, size, fill }) => {
             <path d="M103.127 22.744H83.609v.567h19.518v-.567zM97.252 25.185H83.61v.567h13.643v-.567zM97.252 27.625H83.61v.567h13.643v-.567z" fill="#fff" />
             <defs>
                 <linearGradient id="ozajrvvvfa" x1="60.983" y1="90.397" x2="75.514" y2="21.557" gradientUnits="userSpaceOnUse">
-                    <stop offset=".01" stop-color="#9FA4AB" />
-                    <stop offset=".26" stop-color="#9FA4AB" />
-                    <stop offset=".35" stop-color="#A2A7AE" stop-opacity=".96" />
-                    <stop offset=".46" stop-color="#ABAFB6" stop-opacity=".86" />
-                    <stop offset=".6" stop-color="#BABDC2" stop-opacity=".7" />
-                    <stop offset=".74" stop-color="#CFD1D4" stop-opacity=".47" />
-                    <stop offset=".89" stop-color="#E9EAEB" stop-opacity=".18" />
-                    <stop offset=".98" stop-color="#F9F9F9" stop-opacity="0" />
+                    <stop offset=".01" stopColor="#9FA4AB" />
+                    <stop offset=".26" stopColor="#9FA4AB" />
+                    <stop offset=".35" stopColor="#A2A7AE" stopOpacity=".96" />
+                    <stop offset=".46" stopColor="#ABAFB6" stopOpacity=".86" />
+                    <stop offset=".6" stopColor="#BABDC2" stopOpacity=".7" />
+                    <stop offset=".74" stopColor="#CFD1D4" stopOpacity=".47" />
+                    <stop offset=".89" stopColor="#E9EAEB" stopOpacity=".18" />
+                    <stop offset=".98" stopColor="#F9F9F9" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="g7bdevwrcb" x1="70.602" y1="37.639" x2="108.55" y2="37.639" gradientUnits="userSpaceOnUse">
-                    <stop offset=".01" stop-color="#9FA4AB" />
-                    <stop offset=".19" stop-color="#9FA4AB" />
-                    <stop offset=".33" stop-color="#A5AAB0" />
-                    <stop offset=".52" stop-color="#B6BABF" />
-                    <stop offset=".74" stop-color="#D2D4D7" />
-                    <stop offset=".98" stop-color="#F9F9F9" />
+                    <stop offset=".01" stopColor="#9FA4AB" />
+                    <stop offset=".19" stopColor="#9FA4AB" />
+                    <stop offset=".33" stopColor="#A5AAB0" />
+                    <stop offset=".52" stopColor="#B6BABF" />
+                    <stop offset=".74" stopColor="#D2D4D7" />
+                    <stop offset=".98" stopColor="#F9F9F9" />
                 </linearGradient>
             </defs>
         </svg>

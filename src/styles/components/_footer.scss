@@ -8,7 +8,7 @@ padding-block:48px;
   padding-inline:16px;
   padding-bottom: 80px;
   padding-top:60px;
-  
+
 }
     .mal-footer___pocket {
       @apply justify-between;
@@ -38,12 +38,12 @@ padding-block:48px;
       .mal-footer___pocket__links___group {
 
         margin-top: 32px;
-        
+
 
         .mal-footer___pocket__links___group__item {
           margin-bottom: 16px;
-          
-        
+
+
           canvas {
             border-radius:6px;
           }
@@ -52,16 +52,16 @@ padding-block:48px;
            @media screen and (min-width:1200px) {
             @apply px-0;
            }
-           
+
             &:hover {
               @apply bg-hover;
             }
 
             ~ .socials_link  {
               padding-inline:16px;
-              
+
             }
-            
+
             font-weight: 600;
             font-size: 14px;
             line-height: 24px;
@@ -81,16 +81,16 @@ padding-block:48px;
             overflow: hidden;
             transition: max-height .3s ease;
 
-           
+
 
             a {
-              @apply text-txtPrimary-dark text-sm py-3 block; 
+              @apply text-txtPrimary-dark text-sm py-3 block;
                   padding-left:48px;
-          
+
 
               @media screen and (min-width:1200px) {
                 @apply text-txtSecondary-dark py-0 pl-0;
-              
+
                 }
 
               margin-top: 8px;
@@ -107,8 +107,8 @@ padding-block:48px;
           .mal-footer___pocket__links___group__item__links__active {
             @apply text-txtPrimary-dark ;
             max-height: 40em;
-          
-            
+
+
           }
         }
       }
@@ -119,8 +119,8 @@ padding-block:48px;
   .mal-footer___desktop {
     .mal-footer___pocket .mal-footer___pocket___company .create__account {
       //width: 210px !important;
-     
-   
+
+
     }
 
 
@@ -155,7 +155,7 @@ padding-block:48px;
           .mal-footer___pocket__links___group__item__expander {
             @apply text-txtPrimary-dark capitalize text-sm font-semibold;
 
-            
+
             pointer-events: none;
 
             svg {
