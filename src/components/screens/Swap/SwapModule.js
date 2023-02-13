@@ -29,9 +29,8 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 // import SVG
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import SvgDropDown from 'components/svg/SvgDropdown';
-import SwapReverse from 'components/svg/SwapReverse';
 import SwapWarning from 'components/svg/SwapWarning';
-import { CheckCircleIcon, CloseIcon } from 'components/svg/SvgIcon';
+import { CheckCircleIcon, CloseIcon, SyncAltIcon } from 'components/svg/SvgIcon';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import NoData from 'components/common/V2/TableV2/NoData';
 
@@ -870,102 +869,71 @@ const SwapModule = ({ width, pair }) => {
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
                 <div className="relative min-w-[350px] rounded-xl bg-white dark:p-0 p-4 dark:bg-dark">
-                    <div className="flex flex-col justify-center items-center pb-8">
+                    <div className="flex flex-col justify-center items-center">
                         <span className="text-4xl font-bold leading-[1.19]">{t('navbar:submenu.swap')}</span>
                     </div>
-
-                    {/* <div className="flex mb-3 items-center justify-between font-bold">
-                        {t('navbar:submenu.swap')}
-                        {renderDepositLink()}
-                    </div> */}
-
-                    {/*INPUT WRAPPER*/}
-                    <div className="relative">
-                        <div
-                            className={`py-6 px-4 rounded-xl relative border border-solid
-                            ${state.inputHighlighted === 'from' ? 'border-dominant' : `border-divider dark:border-divider-dark`} `}
-                        >
-                            <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                <span>{t('common:from')}</span>
-                                <div className="flex gap-2 items-center">
-                                    <span>
-                                        {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
-                                    </span>
-                                    <button
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            handleDepositIconBtn();
-                                        }}
-                                    >
-                                        <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
-                                    </button>
-                                </div>
-                            </div>
-                            {renderFromInput()}
-                            {renderFromAssetList()}
-                        </div>
-                        {renderHelperTextFrom()}
-
-                        <div className="flex justify-center items-center py-4">
-                            <button
-                                className={`p-1.5 dark:bg-hover-dark shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
-                                onClick={onReverse}
+                    <div className="mt-8 p-6 rounded-xl border dark:border-divider-dark">
+                        {/*INPUT WRAPPER*/}
+                        <div className="relative">
+                            <div
+                                className={`py-6 px-4 rounded-xl relative bg-bgInput dark:bg-bgInput-dark border dark:border-listItemSelected-dark
+                                ${state.inputHighlighted === 'from' && 'dark:border-dominant'} `}
                             >
-                                <SwapReverse size={width < 1280 && 24} />
-                            </button>
-                        </div>
+                                <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
+                                    <span>{t('common:from')}</span>
+                                    <div className="flex gap-2 items-center">
+                                        <span>
+                                            {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
+                                        </span>
+                                        <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                e.stopPropagation();
+                                                handleDepositIconBtn();
+                                            }}
+                                        >
+                                            <SvgAddCircle size={13.3} color={colors.teal} className="cursor-pointer" />
+                                        </button>
+                                    </div>
+                                </div>
+                                {renderFromInput()}
+                                {renderFromAssetList()}
+                            </div>
+                            {renderHelperTextFrom()}
 
-                        <div
-                            className={`py-6 px-4 rounded-xl relative border border-solid
+                            <div className="flex justify-center items-center py-4">
+                                <button
+                                    className={`p-1.5 dark:bg-hover-dark shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                    onClick={onReverse}
+                                >
+                                    <SyncAltIcon size={width < 1280 && 24} />
+                                </button>
+                            </div>
+
+                            <div
+                                className={`py-6 px-4 rounded-xl relative border border-solid
                             ${state.inputHighlighted === 'to' ? 'border-dominant' : `border-divider dark:border-divider-dark`} `}
-                        >
-                            <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                <span>{t('common:to')}</span>
-                                <span>
-                                    {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
-                                </span>
+                            >
+                                <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
+                                    <span>{t('common:to')}</span>
+                                    <span>
+                                        {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
+                                    </span>
+                                </div>
+                                {renderToInput()}
+                                {renderToAssetList()}
                             </div>
-                            {renderToInput()}
-                            {renderToAssetList()}
+                            {renderHelperTextTo()}
                         </div>
-                        {renderHelperTextTo()}
-                        {/* <div
-                            className={
-                                state.inputHighlighted === 'to'
-                                    ? 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative border-dominant'
-                                    : 'pt-[14px] pb-[18px] px-[20px] rounded-xl border relative border-divider dark:border-divider-dark'
-                            }
-                        >
-                            <div className="flex items-center justify-between text-[14px]">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                    {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
-                                </span>
-                                <span className="font-bold">{t('common:to')}</span>
-                            </div>
-                            {renderToInput()}
-                            {renderToAssetList()}
-                        </div> */}
-                        {/* <div
-                            className={
-                                state.openAssetList?.from
-                                    ? 'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer invisible'
-                                    : 'absolute z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer'
-                            }
-                            onClick={onReverse}
-                        >
-                            <SwapReverse color={currentTheme === THEME_MODE.DARK ? colors.darkBlue3 : undefined} size={width < 1280 && 26} />
-                        </div> */}
-                    </div>
-                    {/*END:INPUT WRAPPER*/}
+                        {/*END:INPUT WRAPPER*/}
 
-                    {/*SWAP RATE*/}
-                    <div className="flex items-center justify-between mt-4">
-                        {/* <div className="text-sm flex items-center"></div> */}
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-left">{t('common:rate')}:</span>
+                        {/*SWAP RATE*/}
+                        <div className="flex items-center justify-between mt-4">
+                            {/* <div className="text-sm flex items-center"></div> */}
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-left">{t('common:rate')}:</span>
 
-                        {renderRate()}
-                        {/* <div
+                            {renderRate()}
+                            {/* <div
                             className={
                                 state.estRate && state.fromAmount
                                     ? 'ml-2 p-1 rounded-md cursor-pointer ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
@@ -977,20 +945,26 @@ const SwapModule = ({ width, pair }) => {
                         >
                             <RefreshCw className={state?.onHoverEstRateBtn ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'} size={16} />
                         </div> */}
+                        </div>
+                        {/*END:SWAP RATE*/}
+
+                        {/*{renderErrors()}*/}
+
+                        {/*SWAP BUTTON*/}
+                        {renderSwapBtn()}
+                        {/*END:SWAP BUTTON*/}
+
+                        <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
+                            <Trans i18nKey="common:term_swap">
+                                <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
+                            </Trans>
+                        </div>
                     </div>
-                    {/*END:SWAP RATE*/}
 
-                    {/*{renderErrors()}*/}
-
-                    {/*SWAP BUTTON*/}
-                    {renderSwapBtn()}
-                    {/*END:SWAP BUTTON*/}
-
-                    <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
-                        <Trans i18nKey="common:term_swap">
-                            <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
-                        </Trans>
-                    </div>
+                    {/* <div className="flex mb-3 items-center justify-between font-bold">
+                        {t('navbar:submenu.swap')}
+                        {renderDepositLink()}
+                    </div> */}
                 </div>
             </div>
             {renderPreOrderModal()}
