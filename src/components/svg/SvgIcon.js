@@ -428,7 +428,7 @@ export {
     FuturePortfolioIcon,
     SuccessfulTransactionIcon,
     AddCircleIcon,
-    AddCircleColorIcon
+    AddCircleColorIcon,
     FutureSimpleIcon,
     FutureAdvanceIcon,
     AppleIcon,
