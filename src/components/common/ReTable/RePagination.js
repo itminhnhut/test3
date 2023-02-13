@@ -27,7 +27,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
 
     const Wapper = NamiV2PaginationWrapper;
     if (!_.isEmpty(pagingPrevNext)) {
-        const { language, page, histories, onChangeNextPrev } = pagingPrevNext;
+        const { language, page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
         return (
             <Wapper isDark={currentTheme === THEME_MODE.DARK}>
@@ -36,7 +36,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
                         <ChevronLeft size={16} />
                         {language === LANGUAGE_TAG.VI ? 'Trước' : 'Prev'}
                     </TextButton>
-                    <TextButton disabled={!histories?.length} className={`!text-base gap-2`} onClick={() => histories?.length && onChangeNextPrev(+1)}>
+                    <TextButton disabled={!hasNext} className={`!text-base gap-2`} onClick={() => hasNext && onChangeNextPrev(+1)}>
                         {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
                         <ChevronRight size={16} />
                     </TextButton>
