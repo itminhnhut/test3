@@ -113,8 +113,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-semibold text-base text-darkBlue-5 cursor-pointer flex items-center',
-                        { 'text-gray-4 font-semibold': restProps.tabIndex === index }
+                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        { '!text-gray-4 !font-semibold': restProps.tabIndex === index }
                     )}
                 >
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>
@@ -311,8 +311,14 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         let tableStatus
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
-        if (!restProps.auth && tab[restProps.tabIndex]?.key === 'favorite') {
-            tableStatus = <NoData />
+        if (tab[restProps.tabIndex]?.key === 'favorite') {
+            if(!restProps.auth) {
+                tableStatus = <NoData />
+            } else {
+                if(!dataSource.length) {
+                    return renderSuggested
+                }
+            }
         } else {
             if (loading) {
                 tableStatus = <ScaleLoader color={colors.teal} size={12} />
@@ -321,7 +327,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             }
         }
 
-        return (tab[restProps.tabIndex]?.key === 'favorite' && !dataSource.length) ? renderSuggested : (
+        return (
             <ReTable
                 // @ts-ignore
                 sort
@@ -722,7 +728,7 @@ const renderTradeLink = (b, q, lang, mode) => {
 const TokenTypes = ({ type, setType, types, lang }) => {
     return <div className='flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'>
         {types.map(e =>
-            <div key={e.id} className={classNames('h-full px-4 py-3 rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
+            <div key={e.id} className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
                 'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
             })}
                 onClick={() => setType(e.id)}
