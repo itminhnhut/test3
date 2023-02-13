@@ -51,23 +51,12 @@ const SwapHistory = ({ width }) => {
     }, [state.page, state.pageSize, auth]);
 
     const onChangePagination = (delta) => {
-        // console.log('Here: ', delta);
         setState({ page: state.page + delta });
     };
     return (
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
-                // <TableV2
-                //     useRowHover
-                //     data={data}
-                //     columns={columns}
-                //     rowKey={(item) => `${item?.displayingId}`}
-                //     loading={state.loading}
-                //     scroll={{ x: true }}
-                //     limit={LIMIT_ROW}
-                //     skip={0}
-                // />
                 <div className="mt-8 pt-4 border border-divider-dark dark:border-divider-dark rounded-xl">
                     <TableV2
                         useRowHover
@@ -81,6 +70,7 @@ const SwapHistory = ({ width }) => {
                         pagingClassName="border-none"
                         height={350}
                         pagingPrevNext={{ page: state.page, histories: state.histories, onChangeNextPrev: onChangePagination, language }}
+                        tableStyle={{ fontSize: '16px', padding: '16px' }}
                         // page={state.currentPage}
                         // onChangePage={(currentPage) => setState({ currentPage })}
                     />

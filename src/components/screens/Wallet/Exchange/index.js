@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+import { SeeIcon, HideIcon, LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -16,22 +16,15 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
-import Empty from 'components/common/Empty';
 import Skeletor from 'components/common/Skeletor';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
-import { ChevronDown } from 'react-feather';
-import PopoverV2 from 'components/common/V2/PopoverV2';
 import useOutsideClick from 'hooks/useOutsideClick';
-import NoData from 'components/common/V2/TableV2/NoData';
 import TableV2 from 'components/common/V2/TableV2';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-
+import HideSmallBalance from 'components/common/HideSmallBalance';
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
@@ -72,15 +65,13 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             {
                 key: 'asset',
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 align: 'left',
-                width: 200,
+                width: 170,
                 fixed: 'left'
             },
             {
@@ -123,49 +114,23 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
         ];
 
         return (
-            <>
-                <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                    <TableV2
-                        sort
-                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
-                        useRowHover
-                        data={state.tableData || []}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        scroll={{ x: true }}
-                        limit={ASSET_ROW_LIMIT}
-                        skip={0}
-                        isSearch={!!state.search}
-                        pagingClassName="border-none"
-                        // page={state.currentPage}
-                        // onChangePage={(currentPage) => setState({ currentPage })}
-                    />
-                    {/* <ReTable
-                        tableStatus={tableStatus}
-                        paginationProps={{
-                            hide: true,
-                            current: state.currentPage,
-                            pageSize: 10,
-                            onChange: (currentPage) => setCurrentPage(currentPage)
-                        }}
-                        isNamiV2
-                        // height={height}
-                        emptyText={<NoData isSearch={!!state.search} />}
-                        // {...props}
-                    /> */}
-                    {/* {state.tableData?.length > 0 && (
-                        <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
-                            <RePagination
-                                total={state.tableData?.length}
-                                current={state.currentPage}
-                                pageSize={ASSET_ROW_LIMIT}
-                                onChange={(currentPage) => setState({ currentPage })}
-                                name="market_table___list"
-                            />
-                        </div>
-                    )} */}
-                </div>
-            </>
+            <TableV2
+                sort
+                defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={(item) => item?.key}
+                scroll={{ x: true }}
+                limit={ASSET_ROW_LIMIT}
+                skip={0}
+                isSearch={!!state.search}
+                height={404}
+                noBorder
+                pagingClassName="border-none"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
+            />
         );
     }, [state.tableData, state.currentPage, width]);
 
@@ -323,25 +288,21 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     <div className="flex items-center gap-4">
                         <AssetLogo assetCode={item?.assetCode} size={32} />
                         <div className="flex flex-col space-y-1">
-                            <span className="font-semibold text-sm">{item?.assetCode}</span>
+                            <span className="font-semibold">{item?.assetCode}</span>
                             <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
                         </div>
                     </div>
                 ),
-                total: (
-                    <span className="text-sm whitespace-nowrap flex justify-end">
-                        {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
-                    </span>
-                ),
+                total: item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000',
                 available: (
-                    <span className="text-sm whitespace-nowrap">
+                    <span className="whitespace-nowrap">
                         {item?.wallet?.value - item?.wallet?.locked_value
                             ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
                             : '0.0000'}
                     </span>
                 ),
                 in_order: (
-                    <span className="text-sm whitespace-nowrap">
+                    <span className="whitespace-nowrap">
                         {item?.wallet?.locked_value ? (
                             <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
                                 <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
@@ -352,7 +313,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </span>
                 ),
                 btc_value: (
-                    <div className="text-sm">
+                    <div>
                         {assetUsdRate ? (
                             <>
                                 <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
@@ -403,7 +364,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     return (
         <>
             {/* <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between"> */}
-            {/* <div className="t-common whitespace-nowrap">{t('common:overview')}</div> */}
+            {/* <div className="t-common-v2 whitespace-nowrap">{t('common:overview')}</div> */}
             {/* <div className="flex flex-wrap sm:flex-nowrap items-center w-full mt-3 sm:mt-0 sm:w-auto"> */}
             {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT)}>
                         <a className="py-1.5 md:py-2 text-center w-[45%] max-w-[180px] sm:w-[80px] md:w-[120px] sm:mr-0 sm:ml-2 bg-bgContainer dark:bg-bgContainer-dark rounded-md font-medium text-xs xl:text-sm text-dominant border border-dominant hover:text-white hover:!bg-dominant cursor-pointer">
@@ -450,90 +411,44 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <HrefButton className="min-w-[120px] py-3" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                {t('common:deposit')}
-                            </HrefButton>
-                            <HrefButton
-                                className="min-w-[120px] py-3"
-                                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}
-                                variants="secondary"
-                            >
+                            <ButtonV2 href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>{t('common:deposit')}</ButtonV2>
+                            <ButtonV2 variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </HrefButton>
-                            <ButtonV2
-                                className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
-                                text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2"
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            </ButtonV2>
+                            <ButtonV2 variants="secondary" onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
                                 {t('common:transfer')}
                             </ButtonV2>
-
-                            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                <a className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer bg-bgBtnPrimary">
-                                    {t('common:deposit')}
-                                </a>
-                            </Link>
-                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                                <a
-                                    className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                   text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                "
-                                >
-                                    {t('common:withdraw')}
-                                </a>
-                            </Link>
-                            <div
-                                className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                 "
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
-                                {t('common:transfer')}
-                            </div> */}
                         </div>
-                        {/* <img src={getS3Url('/images/screen/wallet/wallet_overview_grp.png')} width="140" height="140" alt="" /> */}
                     </div>
                 </div>
                 {renderAvailableBalance()}
             </MCard>
 
             <div className="mt-16 lg:items-center lg:justify-between">
-                <div className="t-common">Exchange</div>
+                <div className="t-common-v2">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
                     <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
-                        <img src={getS3Url('/images/logo/nami_maldives.png')} alt="" width="24" height="24" />
+                        <LogoIcon />
                         <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
                             {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
-                            <ChevronDown size={24} className="-rotate-90" />
+                            <BxChevronDown size={24} />
                         </a>
                     </div>
 
                     <div className="mt-2 lg:flex">
-                        <div className="flex items-center justify-between lg:mr-5">
-                            <div
-                                className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
-                                onClick={() =>
-                                    setState({
-                                        hideSmallAsset: !state.hideSmallAsset
-                                    })
-                                }
-                            >
-                                <span
-                                    className={
-                                        state.hideSmallAsset
-                                            ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-dominant bg-dominant'
-                                            : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-divider dark:border-divider-dark'
-                                    }
-                                >
-                                    {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                                </span>
-                                <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
-                            </div>
-                        </div>
-                        <div className="py-2 px-3 mt-4 lg:mt-0 lg:py-3 lg:px-5 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
-                            <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="mr-8"
+                        />
+                        <div className="py-3 px-3 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                            <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
-                                className="text-sm w-full px-2.5"
+                                className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                                 value={state.search}
                                 onChange={(e) => {
                                     setState({ search: e?.target?.value });
@@ -541,13 +456,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 onFocus={() => setState({ currentPage: 1 })}
                                 placeholder={t('common:search')}
                             />
-                            {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />}
+                            {state.search && (
+                                <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* <TableV2 /> */}
             {/* <MCard
                 getRef={(ref) => (tableRef.current = ref)}
                 style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
@@ -570,7 +486,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     const noMarket = !markets?.length;
 
     let tradeButton = null;
-    const cssLi = `text-txtSecondary dark:text-gray-4 leading-6 text-left text-base w-full
+    const cssLi = `text-txtPrimary dark:text-txtPrimary-dark text-left text-sm w-full
     px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
     dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
     `;

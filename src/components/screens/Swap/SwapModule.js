@@ -571,9 +571,9 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
+                <ButtonV2 className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
-                </HrefButton>
+                </ButtonV2>
             );
         }
 
@@ -651,9 +651,7 @@ const SwapModule = ({ width, pair }) => {
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
             <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
-                <div className="my-6 text-left font-medium leading-7 text-[20px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
-                    {t('convert:confirm')}
-                </div>
+                <div className="my-6 text-left font-medium leading-7 text-[20px] text-dark-2 dark:text-gray-4 hover:bg-transparent">{t('convert:confirm')}</div>
                 <div className="flex flex-col items-start justify-between gap-2">
                     <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
                     <div className="w-full rounded-md bg-gray-4 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
@@ -706,7 +704,6 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const onCloseAlertResultSwap = () => {
-        console.log('here');
         if (state.resultSwap) set((prevState) => ({ ...prevState, resultSwap: null }));
     };
 
@@ -991,8 +988,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
                         <Trans i18nKey="common:term_swap">
-                            {/* <HrefButton className="!inline !p-0 focus:text-white" href="/swap" variants="blank" /> */}
-                            <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
+                            <ButtonV2 className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
                         </Trans>
                     </div>
                 </div>

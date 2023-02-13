@@ -180,6 +180,11 @@ body {
     text-txtPrimary dark:text-txtPrimary-dark;
     }
 
+    .t-common-v2 {
+        @apply font-semibold text-[32px] leading-[38px]
+        text-txtPrimary dark:text-txtPrimary-dark;
+    }
+
     .value-up {
         @apply text-teal;
     }

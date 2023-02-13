@@ -238,6 +238,7 @@ const ReTable = memo(
         // useEffect(() => {
         //     console.log('namidev-DEBUG: reTable => ', current, data)
         // }, [data, current])
+        // console.log('here', restProps?.noBorder);
         return (
             <ReTableWrapperV2
                 ref={reference}
@@ -333,6 +334,7 @@ const ReTableWrapperV2 = styled.div`
     .rc-table td {
         font-weight: 400;
         padding: 0 16px;
+        padding: ${({ padding }) => (padding ? padding : '0 16px')};
         height: 52px;
         max-height: 52px;
         color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
@@ -372,7 +374,7 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${({ noBorder }) => noBorder ? 'none' : `1px solid ${colors.divider.dark}`};
+            border-left: ${({ noBorder }) => (noBorder ? ' none' : `1px solid ${colors.divider.dark}`)};
             z-index: 10;
             width: 1px;
             visibility: visible;
