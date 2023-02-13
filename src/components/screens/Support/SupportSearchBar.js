@@ -6,6 +6,7 @@ import { PATHS } from 'constants/paths';
 import useApp from 'hooks/useApp';
 import { useRouter } from 'next/router';
 import { appUrlHandler } from 'constants/faqHelper';
+import InputV2 from 'components/common/V2/InputV2'
 
 const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetPage }) => {
     const [type, setType] = useState(0);
@@ -16,7 +17,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
     const isApp = useApp();
     const router = useRouter();
 
-    const onSearch = (type, searchKey) => {
+    const onSearch = (searchKey) => {
         resetPage && resetPage();
         router.push({
             pathname: PATHS.SUPPORT.SEARCH,
@@ -33,21 +34,21 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
     useEffect(() => {
         if (
             router?.query &&
-            Object.keys(router.query).length &&
-            router.query?.query &&
-            router.query?.type
+            Object.keys(router?.query).length &&
+            router?.query?.query &&
+            router?.query?.type
         ) {
             setType(+router.query?.type);
-            setQuery(router.query.query);
-            if (router.query.query?.length) {
-                setSearchKey(router.query.query);
+            setQuery(router.query?.query);
+            if (router?.query?.query?.length) {
+                setSearchKey(router?.query?.query);
             }
         }
     }, [router]);
 
     return (
         <div className='flex space-x-4'>
-            <div
+            {/* <div
                 className={classNames(
                     'flex space-x-2 items-center bg-dark-2 p-3 rounded-md  w-[368px]',
                     containerClassNames,
@@ -75,7 +76,23 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
                     }
                 />
 
-            </div>
+            </div> */}
+
+            <InputV2
+                className={classNames('w-[368px] tracking-[0.005em] pb-0', 
+                {
+                    '!w-full': simpleMode
+                }, 
+                containerClassNames)}
+                prefix={(<Search
+                    strokeWidth={2}
+                    className="text-gray-1 w-4 h-4"
+                />)}
+                value={searchKey}
+                onChange={(value) => setSearchKey(value)}
+                onHitEnterButton={(value) => onSearch(value)}
+            />
+
             {!simpleMode && (
                 <button
                     onClick={() => onSearch(type, searchKey)}

@@ -140,7 +140,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                      ${active.community ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
 
-                        
+
                          <Link href="https://www.facebook.com/namifutures">
                             <a target="_blank" className="!flex items-center ">
                                 <div className="mr-3 border p-2 rounded-full border-divider">
@@ -183,7 +183,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             <a target="_blank" className="!flex items-center">
                                 <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16" /> CoinGecko
                             </a>
-                        </Link> 
+                        </Link>
                     </div>
                 </div>*/}
 

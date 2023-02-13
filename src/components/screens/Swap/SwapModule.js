@@ -571,9 +571,9 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
+                <ButtonV2 className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
-                </HrefButton>
+                </ButtonV2>
             );
         }
 
