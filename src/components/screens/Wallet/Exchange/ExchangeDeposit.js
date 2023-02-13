@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { formatTime, formatWallet, shortHashAddress, } from 'redux/actions/utils';
+import { formatTime, formatWallet, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X, } from 'react-feather';
-import { API_GET_DEPWDL_HISTORY, API_PUSH_ORDER_BINANCE, API_REVEAL_DEPOSIT_TOKEN_ADDRESS, } from 'redux/actions/apis';
+import { Check, ChevronLeft, ChevronRight, Copy, Search, Slash, X } from 'react-feather';
+import { API_GET_DEPWDL_HISTORY, API_PUSH_ORDER_BINANCE, API_REVEAL_DEPOSIT_TOKEN_ADDRESS } from 'redux/actions/apis';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ApiStatus, DepWdlStatus } from 'redux/actions/const';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
@@ -33,6 +33,9 @@ import Tooltip from 'components/common/Tooltip';
 import Button from 'components/common/Button';
 import AssetName from 'components/wallet/AssetName';
 
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
+
 const INITIAL_STATE = {
     type: 1, // 0. fiat, 1. crypto
     loadingConfigs: false,
@@ -54,14 +57,14 @@ const INITIAL_STATE = {
     blockConfirm: {},
     openModal: {},
     pushingOrder: false,
-    pushedOrder: null,
+    pushedOrder: null
 
     // Add new state here
 };
 
 const TYPE = {
     fiat: 0,
-    crypto: 1,
+    crypto: 1
 };
 
 const ExchangeDeposit = () => {
@@ -83,18 +86,19 @@ const ExchangeDeposit = () => {
     const [currentTheme] = useDarkMode();
     const {
         t,
-        i18n: { language },
+        i18n: { language }
     } = useTranslation(['modal']);
     const { width } = useWindowSize();
 
-    useOutsideClick(
-        cryptoListRef,
-        () => state.openList?.cryptoList && setState({ openList: {} })
-    );
-    useOutsideClick(
-        networkListRef,
-        () => state.openList?.networkList && setState({ openList: {} })
-    );
+    useOutsideClick(cryptoListRef, () => state.openList?.cryptoList && setState({ openList: {} }));
+    useOutsideClick(networkListRef, () => state.openList?.networkList && setState({ openList: {} }));
+
+    const auth = useSelector((state) => state.auth.user) || null;
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+
+    useEffect(() => {
+        setIsOpenModalKyc(auth?.kyc_status !== 2);
+    }, [auth]);
 
     const qrSize = useMemo(() => {
         let _ = 110;
@@ -124,8 +128,8 @@ const ExchangeDeposit = () => {
                 params: {
                     assetId,
                     network,
-                    shouldCreate,
-                },
+                    shouldCreate
+                }
             });
             if (data && data?.status === 'ok') {
                 // setState({ address: {...data.data, memo: 'abcxyszmemo34723'} })
@@ -155,8 +159,8 @@ const ExchangeDeposit = () => {
                     type: 1,
                     lastId: undefined,
                     page,
-                    pageSize: HISTORY_SIZE,
-                },
+                    pageSize: HISTORY_SIZE
+                }
             });
 
             if (data?.status === ApiStatus.SUCCESS) {
@@ -175,7 +179,7 @@ const ExchangeDeposit = () => {
             openList: {},
             errors: {},
             address: '',
-            selectedNetwork: null,
+            selectedNetwork: null
         });
     };
 
@@ -188,8 +192,7 @@ const ExchangeDeposit = () => {
         setState({ isCopying: { [key]: true } });
         try {
             setTimeout(() => setState({ isCopying: { [key]: false } }), 1000);
-        } catch (err) {
-        }
+        } catch (err) {}
     };
 
     const onPushOrder = async (currency) => {
@@ -198,7 +201,7 @@ const ExchangeDeposit = () => {
 
         try {
             const { data } = await Axios.post(API_PUSH_ORDER_BINANCE, {
-                currency,
+                currency
             });
             if (data?.status === 'ok') {
                 setState({
@@ -239,7 +242,7 @@ const ExchangeDeposit = () => {
                 <Link
                     href={{
                         pathname: PATHS.WALLET.EXCHANGE.DEPOSIT,
-                        query: { type: 'crypto' },
+                        query: { type: 'crypto' }
                     }}
                     prefetch={false}
                 >
@@ -253,9 +256,7 @@ const ExchangeDeposit = () => {
                         <div className="pb-2.5">TOKEN</div>
                         <div
                             className={
-                                state.type === TYPE.crypto
-                                    ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant'
-                                    : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'
+                                state.type === TYPE.crypto ? 'w-[32px] h-[3px] md:h-[2px] bg-dominant' : 'w-[32px] h-[3px] md:h-[2px] bg-dominant invisible'
                             }
                         />
                     </a>
@@ -274,24 +275,14 @@ const ExchangeDeposit = () => {
         return (
             <>
                 <div className="flex items-center">
-                    <AssetLogo assetCode={state.selectedAsset?.assetCode}/>
-                    <span className="ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark">
-                        {state.selectedAsset?.assetCode || '--'}
-                    </span>
+                    <AssetLogo assetCode={state.selectedAsset?.assetCode} />
+                    <span className="ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark">{state.selectedAsset?.assetCode || '--'}</span>
                     <span className="ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        {state.selectedAsset?.assetCode ||
-                            state.selectedAsset?.assetCode}
+                        {state.selectedAsset?.assetCode || state.selectedAsset?.assetCode}
                     </span>
                 </div>
                 <div className={state.openList?.cryptoList ? 'rotate-180' : ''}>
-                    <ChevronDown
-                        size={16}
-                        color={
-                            currentTheme === THEME_MODE.DARK
-                                ? colors.grey4
-                                : colors.darkBlue
-                        }
-                    />
+                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue} />
                 </div>
             </>
         );
@@ -303,47 +294,29 @@ const ExchangeDeposit = () => {
         let items = [];
 
         if (state.search) {
-            origin =
-                paymentConfigs &&
-                [...paymentConfigs].filter((e) =>
-                    e?.assetCode?.includes(state.search.toUpperCase())
-                );
+            origin = paymentConfigs && [...paymentConfigs].filter((e) => e?.assetCode?.includes(state.search.toUpperCase()));
         }
         if (!origin.length) return null;
         origin.forEach((cfg) => {
             if (!IGNORE_TOKEN.includes(cfg?.assetCode)) {
                 items.push(
-                    <Link
-                        key={`wdl_cryptoList__${cfg?.assetCode}`}
-                        href={depositLinkBuilder(state.type, cfg?.assetCode)}
-                        prefetch={false}
-                    >
+                    <Link key={`wdl_cryptoList__${cfg?.assetCode}`} href={depositLinkBuilder(state.type, cfg?.assetCode)} prefetch={false}>
                         <a
                             className={
-                                state.selectedAsset?.assetCode ===
-                                cfg?.assetCode
+                                state.selectedAsset?.assetCode === cfg?.assetCode
                                     ? 'flex items-center justfify-between w-full px-3.5 py-2.5 md:px-5 bg-teal-opacity cursor-pointer'
                                     : 'flex items-center justfify-between w-full px-3.5 py-2.5 md:px-5 hover:bg-teal-opacity cursor-pointer'
                             }
                             onClick={onChangeAsset}
                         >
                             <div className="flex items-center w-full">
-                                <AssetLogo
-                                    assetCode={cfg?.assetCode}
-                                    size={24}
-                                />
-                                <span className="font-bold text-sm ml-2">
-                                    {cfg?.assetCode}
-                                </span>
-                                <span
-                                    className="font-medium text-sm ml-2 text-txtSecondary dark:text-txtSecondary-dark">
+                                <AssetLogo assetCode={cfg?.assetCode} size={24} />
+                                <span className="font-bold text-sm ml-2">{cfg?.assetCode}</span>
+                                <span className="font-medium text-sm ml-2 text-txtSecondary dark:text-txtSecondary-dark">
                                     {cfg?.fullName || cfg?.assetCode}
                                 </span>
                             </div>
-                            <div>
-                                {state.selectedAsset?.assetCode ===
-                                    cfg?.assetCode && <Check size={16}/>}
-                            </div>
+                            <div>{state.selectedAsset?.assetCode === cfg?.assetCode && <Check size={16} />}</div>
                         </a>
                     </Link>
                 );
@@ -359,31 +332,21 @@ const ExchangeDeposit = () => {
             >
                 <div className="px-3.5 md:px-5">
                     <div className="flex items-center bg-gray-4 dark:bg-darkBlue-3 px-2.5 py-1.5 mb-3.5 rounded-lg">
-                        <Search size={16}/>
+                        <Search size={16} />
                         <input
                             className="w-full px-2.5 text-sm font-medium"
                             value={state.search}
                             ref={cryptoListSearchRef}
-                            onChange={(e) =>
-                                setState({ search: e.target?.value })
-                            }
+                            onChange={(e) => setState({ search: e.target?.value })}
                             placeholder={t('wallet:search_asset')}
                         />
-                        <X
-                            size={16}
-                            onClick={onSearchClear}
-                            className="cursor-pointer"
-                        />
+                        <X size={16} onClick={onSearchClear} className="cursor-pointer" />
                     </div>
                 </div>
                 <div className="max-h-[200px] overflow-y-auto">
                     {!items.length ? (
                         <div className="py-6">
-                            <Empty
-                                grpSize={68}
-                                message={t('common:not_found')}
-                                messageStyle="text-sm"
-                            />
+                            <Empty grpSize={68} message={t('common:not_found')} messageStyle="text-sm" />
                         </div>
                     ) : (
                         items
@@ -396,31 +359,12 @@ const ExchangeDeposit = () => {
     const renderNetworkInput = useCallback(() => {
         return (
             <>
-                <div
-                    className={
-                        state.selectedNetwork?.depositEnable
-                            ? 'flex items-center'
-                            : 'flex items-center opacity-40'
-                    }
-                >
-                    <span className="font-bold text-sm text-dominant">
-                        {state.selectedNetwork?.network || '--'}
-                    </span>
-                    <span className="ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        {state.selectedNetwork?.name || '--'}
-                    </span>
+                <div className={state.selectedNetwork?.depositEnable ? 'flex items-center' : 'flex items-center opacity-40'}>
+                    <span className="font-bold text-sm text-dominant">{state.selectedNetwork?.network || '--'}</span>
+                    <span className="ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">{state.selectedNetwork?.name || '--'}</span>
                 </div>
-                <div
-                    className={state.openList?.networkList ? 'rotate-180' : ''}
-                >
-                    <ChevronDown
-                        size={16}
-                        color={
-                            currentTheme === THEME_MODE.DARK
-                                ? colors.grey4
-                                : colors.darkBlue
-                        }
-                    />
+                <div className={state.openList?.networkList ? 'rotate-180' : ''}>
+                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue} />
                 </div>
             </>
         );
@@ -448,16 +392,10 @@ const ExchangeDeposit = () => {
                     }
                 >
                     <div>
-                        <span className="text-sm font-medium">
-                            {nw?.network}
-                        </span>
-                        <span className="ml-2 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                            {nw?.name}
-                        </span>
+                        <span className="text-sm font-medium">{nw?.network}</span>
+                        <span className="ml-2 text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{nw?.name}</span>
                     </div>
-                    {state.selectedNetwork?.network === nw?.network && (
-                        <Check size={16}/>
-                    )}
+                    {state.selectedNetwork?.network === nw?.network && <Check size={16} />}
                 </div>
             );
         });
@@ -471,10 +409,7 @@ const ExchangeDeposit = () => {
             >
                 <div className="max-h-[200px] overflow-y-auto">
                     {!items.length ? (
-                        <div className="py-6 h-full w-full items-center justify-center">
-                            Chưa hỗ trợ rút đối với token{' '}
-                            {state.selectedAsset?.assetCode}
-                        </div>
+                        <div className="py-6 h-full w-full items-center justify-center">Chưa hỗ trợ rút đối với token {state.selectedAsset?.assetCode}</div>
                     ) : (
                         items
                     )}
@@ -490,7 +425,7 @@ const ExchangeDeposit = () => {
                     <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                         {t('wallet:errors.network_not_support_dep', {
                             asset: state.selectedNetwork?.coin,
-                            chain: state.selectedNetwork?.network,
+                            chain: state.selectedNetwork?.network
                         })}
                     </div>
                 </div>
@@ -500,19 +435,11 @@ const ExchangeDeposit = () => {
         if (!state.address) {
             return (
                 <div className="flex flex-col items-center justify-center py-3">
-                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
-                        {t('wallet:address_not_available')}
-                    </div>
+                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
                     <div
                         className="bg-dominant px-3 py-1.5 rounded-lg text-sm font-medium text-white mt-3 cursor-pointer
                                      hover:opacity-80"
-                        onClick={() =>
-                            getDepositTokenAddress(
-                                true,
-                                state.selectedAsset?.assetId,
-                                state.selectedNetwork?.network
-                            )
-                        }
+                        onClick={() => getDepositTokenAddress(true, state.selectedAsset?.assetId, state.selectedNetwork?.network)}
                     >
                         {t('wallet:reveal_address')}
                     </div>
@@ -523,9 +450,7 @@ const ExchangeDeposit = () => {
         if (!state.address?.address && state.errors?.addressNotFound) {
             return (
                 <div className="flex flex-col items-center justify-center py-3">
-                    <div className="text-sm font-medium text-red text-center">
-                        {t('wallet:errors.address_not_found')}
-                    </div>
+                    <div className="text-sm font-medium text-red text-center">{t('wallet:errors.address_not_found')}</div>
                 </div>
             );
         }
@@ -536,9 +461,7 @@ const ExchangeDeposit = () => {
                             justify-between rounded-xl border border-divider dark:border-divider-dark
                             hover:!border-dominant"
             >
-                <div className="w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all">
-                    {state.address?.address}
-                </div>
+                <div className="w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all">{state.address?.address}</div>
                 {state.selectedNetwork?.shouldShowPushDeposit && (
                     <span
                         className={
@@ -548,20 +471,12 @@ const ExchangeDeposit = () => {
                                     : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer'
                                 : 'mr-3 md:mr-5 font-medium text-xs md:text-sm text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'
                         }
-                        onClick={() =>
-                            (!state.pushingOrder || state.pushingOrder !== 1) &&
-                            onPushOrder(state.selectedAsset?.id)
-                        }
+                        onClick={() => (!state.pushingOrder || state.pushingOrder !== 1) && onPushOrder(state.selectedAsset?.id)}
                     >
                         {t('wallet:push_order')}
                     </span>
                 )}
-                <CopyToClipboard
-                    text={state.address?.address}
-                    onCopy={() =>
-                        !state.isCopying?.address && onCopy('address')
-                    }
-                >
+                <CopyToClipboard text={state.address?.address} onCopy={() => !state.isCopying?.address && onCopy('address')}>
                     <span
                         className={
                             state.address.address
@@ -569,23 +484,12 @@ const ExchangeDeposit = () => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.address ? (
-                            <Check size={16}/>
-                        ) : (
-                            <Copy size={16}/>
-                        )}
+                        {state.isCopying?.address ? <Check size={16} /> : <Copy size={16} />}
                     </span>
                 </CopyToClipboard>
             </div>
         );
-    }, [
-        state.address,
-        state.selectedAsset,
-        state.selectedNetwork,
-        state.errors,
-        state.isCopying?.address,
-        state.pushingOrder,
-    ]);
+    }, [state.address, state.selectedAsset, state.selectedNetwork, state.errors, state.isCopying?.address, state.pushingOrder]);
 
     const renderMemoInput = useCallback(() => {
         if (state.selectedNetwork?.memoRegex && state.address?.addressTag) {
@@ -595,13 +499,8 @@ const ExchangeDeposit = () => {
                             justify-between rounded-xl border border-divider dark:border-divider-dark
                             hover:!border-dominant"
                 >
-                    <div className="w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all">
-                        {state.address.addressTag}
-                    </div>
-                    <CopyToClipboard
-                        text={state.address.addressTag}
-                        onCopy={() => !state.isCopying?.memo && onCopy('memo')}
-                    >
+                    <div className="w-full font-medium text-xs sm:text-sm pr-3 cursor-text break-all">{state.address.addressTag}</div>
+                    <CopyToClipboard text={state.address.addressTag} onCopy={() => !state.isCopying?.memo && onCopy('memo')}>
                         <span
                             className={
                                 state.address.addressTag
@@ -609,11 +508,7 @@ const ExchangeDeposit = () => {
                                     : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                             }
                         >
-                            {state.isCopying?.memo ? (
-                                <Check size={16}/>
-                            ) : (
-                                <Copy size={16}/>
-                            )}
+                            {state.isCopying?.memo ? <Check size={16} /> : <Copy size={16} />}
                         </span>
                     </CopyToClipboard>
                 </div>
@@ -626,26 +521,19 @@ const ExchangeDeposit = () => {
     const renderDepositConfirmBlocks = useCallback(() => {
         let inner;
         const block =
-            state.selectedNetwork?.minConfirm >
-            state.selectedNetwork?.unLockConfirm
-                ? state.selectedNetwork?.minConfirm
-                : state.selectedNetwork?.unLockConfirm;
+            state.selectedNetwork?.minConfirm > state.selectedNetwork?.unLockConfirm ? state.selectedNetwork?.minConfirm : state.selectedNetwork?.unLockConfirm;
 
         if (language === LANGUAGE_TAG.EN) {
             inner = (
                 <>
-                    <span className="text-dominant font-bold mr-1">
-                        {block}
-                    </span>
+                    <span className="text-dominant font-bold mr-1">{block}</span>
                     network confirmation
                 </>
             );
         } else {
             inner = (
                 <>
-                    <span className="text-dominant font-bold mr-1">
-                        {block}
-                    </span>
+                    <span className="text-dominant font-bold mr-1">{block}</span>
                     lần xác nhận từ mạng lưới
                 </>
             );
@@ -653,9 +541,7 @@ const ExchangeDeposit = () => {
 
         return (
             <div className="flex items-center text-sm mt-2.5">
-                <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('wallet:expected_unlock')}
-                </span>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:expected_unlock')}</span>
                 <span className="font-medium ml-2">{inner}</span>
             </div>
         );
@@ -663,7 +549,7 @@ const ExchangeDeposit = () => {
 
     const renderQrAddress = useCallback(() => {
         if (state.loadingAddress) {
-            return <Skeletor width={qrSize} height={qrSize}/>;
+            return <Skeletor width={qrSize} height={qrSize} />;
         }
 
         if (!state.address?.address) {
@@ -675,34 +561,25 @@ const ExchangeDeposit = () => {
                         height: qrSize
                     }}
                 >
-                    <Slash size={(qrSize * 30) / 100}/>
+                    <Slash size={(qrSize * 30) / 100} />
                 </div>
             );
         }
 
         return (
             <div className="ml-3.5 md:ml-6">
-                {state.address?.memo && (
-                    <div className="text-center text-sm font-bold mb-3.5">
-                        {t('wallet:scan_address_qr')}
-                    </div>
-                )}
+                {state.address?.memo && <div className="text-center text-sm font-bold mb-3.5">{t('wallet:scan_address_qr')}</div>}
                 <div
                     style={
                         currentTheme === THEME_MODE.LIGHT
                             ? {
-                                boxShadow:
-                                    '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
-                            }
+                                  boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)'
+                              }
                             : undefined
                     }
                     className="p-2 bg-white rounded-lg"
                 >
-                    <QRCode
-                        value={state.address?.address}
-                        size={qrSize}
-                        bgColor={colors.white}
-                    />
+                    <QRCode value={state.address?.address} size={qrSize} bgColor={colors.white} />
                 </div>
             </div>
         );
@@ -712,30 +589,23 @@ const ExchangeDeposit = () => {
         if (!state.address?.memo) return null;
 
         if (state.loadingAddress) {
-            return <Skeletor width={qrSize} height={qrSize}/>;
+            return <Skeletor width={qrSize} height={qrSize} />;
         }
 
         return (
             <div className="ml-3.5 md:ml-6">
-                <div className="text-center text-sm font-bold mb-3.5">
-                    {t('common:scan')} Memo
-                </div>
+                <div className="text-center text-sm font-bold mb-3.5">{t('common:scan')} Memo</div>
                 <div
                     style={
                         currentTheme === THEME_MODE.LIGHT
                             ? {
-                                boxShadow:
-                                    '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)',
-                            }
+                                  boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.05), 0px 25px 35px rgba(0, 0, 0, 0.03)'
+                              }
                             : undefined
                     }
                     className="p-2 bg-white rounded-lg"
                 >
-                    <QRCode
-                        value={state.address?.memo}
-                        size={qrSize}
-                        bgColor={colors.white}
-                    />
+                    <QRCode value={state.address?.memo} size={qrSize} bgColor={colors.white} />
                 </div>
             </div>
         );
@@ -744,9 +614,7 @@ const ExchangeDeposit = () => {
     const renderMinDep = () => {
         return (
             <div className="flex items-center text-sm mt-2.5">
-                <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                    {t('wallet:minimum_deposit')}
-                </span>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:minimum_deposit')}</span>
                 <span className="font-bold ml-2">--</span>
             </div>
         );
@@ -762,78 +630,46 @@ const ExchangeDeposit = () => {
         if (language === LANGUAGE_TAG.EN) {
             noteObj.common = (
                 <>
-                    Please carefully check the information about the token, the
-                    token network before transferring the token. Only send{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    to this address, sending any other tokens may result in the
-                    loss of tokens.
+                    Please carefully check the information about the token, the token network before transferring the token. Only send{' '}
+                    <span className="font-medium text-dominant">{tokenName}</span> to this address, sending any other tokens may result in the loss of tokens.
                 </>
             );
             noteObj.kai = (
                 <>
-                    For <span className="font-medium text-dominant">KAI</span>{' '}
-                    tokens, NamiExchange only supports{' '}
-                    <span className="font-medium text-dominant">
-                        Kardiachain Mainnet
-                    </span>
-                    , please make sure your entered information is correct.
+                    For <span className="font-medium text-dominant">KAI</span> tokens, NamiExchange only supports{' '}
+                    <span className="font-medium text-dominant">Kardiachain Mainnet</span>, please make sure your entered information is correct.
                 </>
             );
             noteObj.pushOrder = (
                 <>
-                    If your Deposit Order has not been updated on Nami, use the{' '}
-                    <span className="font-medium text-dominant">
-                        Push Order
-                    </span>{' '}
-                    button to have Nami update the balance automatically.
+                    If your Deposit Order has not been updated on Nami, use the <span className="font-medium text-dominant">Push Order</span> button to have
+                    Nami update the balance automatically.
                 </>
             );
             noteObj.memoTips = (
                 <>
-                    Both a{' '}
-                    <span className="text-dominant font-medium">MEMO</span> and
-                    an{' '}
-                    <span className="text-dominant font-medium">Address</span>{' '}
-                    are required to successfully deposit your {tokenName}.
-                    NamiExchange will not handle any deposit which lacks
-                    information.
+                    Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are
+                    required to successfully deposit your {tokenName}. NamiExchange will not handle any deposit which lacks information.
                 </>
             );
             noteObj.memo_1 = (
                 <>
-                    Send{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    with MEMO to this address, the deposit will be completed
-                    after{' '}
-                    <span className="text-dominant font-medium">30 block</span>{' '}
-                    confirmations.
+                    Send <span className="font-medium text-dominant">{tokenName}</span> with MEMO to this address, the deposit will be completed after{' '}
+                    <span className="text-dominant font-medium">30 block</span> confirmations.
                 </>
             );
             noteObj.memo_2 = (
                 <>
-                    Multi-send transaction is not supported, send only{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    to this address. Send other tokens may result in loss of
-                    your deposit.
+                    Multi-send transaction is not supported, send only <span className="font-medium text-dominant">{tokenName}</span> to this address. Send
+                    other tokens may result in loss of your deposit.
                 </>
             );
             noteObj.runItBackTitle = <>Having a mistake?</>;
             noteObj.runItBackNotes = (
                 <>
-                    Depending on the case, Nami Exchange can support to recover
-                    tokens when users send wrong token, wrong wallet address or
-                    wrong network, the minimum fee for recovery support is 100
-                    USDT, please{' '}
-                    <span
-                        onClick={() => window?.fcWidget.open()}
-                        className="text-dominant cursor-pointer hover:!underline"
-                    >
+                    Depending on the case, Nami Exchange can support to recover tokens when users send wrong token, wrong wallet address or wrong network, the
+                    minimum fee for recovery support is 100 USDT, please{' '}
+                    <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline">
                         contact support
                     </span>{' '}
                     for specific advice.
@@ -842,75 +678,46 @@ const ExchangeDeposit = () => {
         } else {
             noteObj.common = (
                 <>
-                    Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng
-                    lưới token trước khi chuyển token. Chỉ gửi{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    đến địa chỉ này, gửi bất cứ token nào khác có thể dẫn đến
-                    việc mất mát token.
+                    Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng lưới token trước khi chuyển token. Chỉ gửi{' '}
+                    <span className="font-medium text-dominant">{tokenName}</span> đến địa chỉ này, gửi bất cứ token nào khác có thể dẫn đến việc mất mát token.
                 </>
             );
             noteObj.kai = (
                 <>
-                    Đối với token{' '}
-                    <span className="font-medium text-dominant">KAI</span>,
-                    NamiExchange chỉ hỗ trợ{' '}
-                    <span className="font-medium text-dominant">
-                        Kardiachain Mainnet
-                    </span>
-                    , hãy chắc chắn các thông tin đã nhập của bạn là chính xác.
+                    Đối với token <span className="font-medium text-dominant">KAI</span>, NamiExchange chỉ hỗ trợ{' '}
+                    <span className="font-medium text-dominant">Kardiachain Mainnet</span>, hãy chắc chắn các thông tin đã nhập của bạn là chính xác.
                 </>
             );
             noteObj.pushOrder = (
                 <>
-                    Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng
-                    click vào nút{' '}
-                    <span className="font-medium text-dominant">Đẩy lệnh</span>{' '}
-                    để Nami cập nhật số dư tự động.
+                    Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng click vào nút <span className="font-medium text-dominant">Đẩy lệnh</span> để
+                    Nami cập nhật số dư tự động.
                 </>
             );
             noteObj.memoTips = (
                 <>
-                    Cần cả 2 trường{' '}
-                    <span className="text-dominant font-medium">MEMO</span> và{' '}
-                    <span className="text-dominant font-medium">Địa chỉ</span>{' '}
-                    để nạp thành công {tokenName}. Nami sẽ không xử lý các lệnh
-                    nạp thiếu thông tin yêu cầu.
+                    Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
+                    thành công {tokenName}. Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
                 </>
             );
             noteObj.memo_1 = (
                 <>
-                    Gửi{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    kèm MEMO tới địa chỉ ví này, token sẽ được cộng vào tài
-                    khoản của bạn sau khi có{' '}
-                    <span className="text-dominant font-medium">30 block</span>{' '}
-                    xác thực.
+                    Gửi <span className="font-medium text-dominant">{tokenName}</span> kèm MEMO tới địa chỉ ví này, token sẽ được cộng vào tài khoản của bạn sau
+                    khi có <span className="text-dominant font-medium">30 block</span> xác thực.
                 </>
             );
             noteObj.memo_2 = (
                 <>
-                    Giao dịch dạng multi-send không được hỗ trợ, chỉ gửi{' '}
-                    <span className="font-medium text-dominant">
-                        {tokenName}
-                    </span>{' '}
-                    đến địa chỉ này. Gửi các token khác có thể dẫn đến mất mát.
+                    Giao dịch dạng multi-send không được hỗ trợ, chỉ gửi <span className="font-medium text-dominant">{tokenName}</span> đến địa chỉ này. Gửi các
+                    token khác có thể dẫn đến mất mát.
                 </>
             );
             noteObj.runItBackTitle = <>Gặp sự cố nhầm lẫn?</>;
             noteObj.runItBackNotes = (
                 <>
-                    Tùy từng trường hợp, NamiExchange có thể hỗ trợ khôi phục
-                    token khi người dùng gửi nhầm token, sai địa chỉ ví hoặc
-                    nhầm mạng, phí hỗ trợ khôi phục tối thiểu là 100 USDT, vui
-                    lòng liên hệ{' '}
-                    <span
-                        onClick={() => window?.fcWidget.open()}
-                        className="text-dominant cursor-pointer hover:!underline"
-                    >
+                    Tùy từng trường hợp, NamiExchange có thể hỗ trợ khôi phục token khi người dùng gửi nhầm token, sai địa chỉ ví hoặc nhầm mạng, phí hỗ trợ
+                    khôi phục tối thiểu là 100 USDT, vui lòng liên hệ{' '}
+                    <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline">
                         {' '}
                         bộ phận hỗ trợ
                     </span>{' '}
@@ -925,9 +732,7 @@ const ExchangeDeposit = () => {
                     <span>{t('common:important_notes')}:</span>
                     <div>
                         <Tooltip id="wrongthings" place="left" effect="solid">
-                            <div className="w-[320px]">
-                                {noteObj.runItBackNotes}
-                            </div>
+                            <div className="w-[320px]">{noteObj.runItBackNotes}</div>
                         </Tooltip>
                         <span
                             data-tip=""
@@ -980,34 +785,24 @@ const ExchangeDeposit = () => {
     }, [language, state.selectedAsset, state.selectedNetwork]);
 
     const renderMemoNotice = useCallback(() => {
-        const isMemoNotice =
-            WITH_MEMO.includes(state.selectedNetwork?.network) &&
-            state.selectedNetwork?.depositEnable;
+        const isMemoNotice = WITH_MEMO.includes(state.selectedNetwork?.network) && state.selectedNetwork?.depositEnable;
         if (!isMemoNotice) return null;
 
         let msg;
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Cần cả 2 trường{' '}
-                    <span className="text-dominant font-medium">MEMO</span> và{' '}
-                    <span className="text-dominant font-medium">Địa chỉ</span>{' '}
-                    để nạp thành công {state.selectedAsset?.assetCode}.<br/>{' '}
-                    Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+                    Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
+                    thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
                 </>
             );
         } else {
             msg = (
                 <>
-                    Both a{' '}
-                    <span className="text-dominant font-medium">MEMO</span> and
-                    an{' '}
-                    <span className="text-dominant font-medium">Address</span>{' '}
-                    are required to successfully deposit your{' '}
-                    {state.selectedAsset?.assetCode}.
-                    <br/>
-                    NamiExchange will not handle any deposit which lacks
-                    information.
+                    Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are
+                    required to successfully deposit your {state.selectedAsset?.assetCode}.
+                    <br />
+                    NamiExchange will not handle any deposit which lacks information.
                 </>
             );
         }
@@ -1015,39 +810,21 @@ const ExchangeDeposit = () => {
         return (
             <Modal isVisible={state.openModal?.memoNotice}>
                 <div className="text-center text-sm font-medium w-[320px]">
-                    <div className="my-2 text-center font-bold text-[18px]">
-                        {t('common:important_notes')}
-                    </div>
+                    <div className="my-2 text-center font-bold text-[18px]">{t('common:important_notes')}</div>
                     <div>{msg}</div>
                     <div className="mt-4 w-full flex flex-row items-center justify-between">
-                        <Button
-                            title={t('common:confirm')}
-                            type="primary"
-                            componentType="button"
-                            className="!py-2"
-                            onClick={closeModal}
-                        />
+                        <Button title={t('common:confirm')} type="primary" componentType="button" className="!py-2" onClick={closeModal} />
                     </div>
                 </div>
             </Modal>
         );
-    }, [
-        state.selectedNetwork,
-        state.selectedAsset?.assetCode,
-        state.openModal?.memoNotice,
-        language,
-    ]);
+    }, [state.selectedNetwork, state.selectedAsset?.assetCode, state.openModal?.memoNotice, language]);
 
     const renderDepHistory = useCallback(() => {
-        const data = dataHandler(
-            state.histories,
-            state.loadingHistory,
-            paymentConfigs,
-            {
-                t,
-                blockConfirm: state.blockConfirm
-            }
-        );
+        const data = dataHandler(state.histories, state.loadingHistory, paymentConfigs, {
+            t,
+            blockConfirm: state.blockConfirm
+        });
         let tableStatus;
 
         const columns = [
@@ -1057,61 +834,61 @@ const ExchangeDeposit = () => {
                 title: 'ID',
                 width: 200,
                 fixed: 'left',
-                align: 'left',
+                align: 'left'
             },
             {
                 key: 'asset',
                 dataIndex: 'asset',
                 title: t('common:asset'),
                 width: 100,
-                align: 'left',
+                align: 'left'
             },
             {
                 key: 'amount',
                 dataIndex: 'amount',
                 title: t('common:amount'),
                 width: 100,
-                align: 'right',
+                align: 'right'
             },
             {
                 key: 'address',
                 dataIndex: 'address',
                 title: t('common:address_wallet'),
                 width: 100,
-                align: 'right',
+                align: 'right'
             },
             {
                 key: 'network',
                 dataIndex: 'network',
                 title: t('wallet:network'),
                 width: 100,
-                align: 'right',
+                align: 'right'
             },
             {
                 key: 'txId',
                 dataIndex: 'txId',
                 title: 'TxHash',
                 width: 100,
-                align: 'right',
+                align: 'right'
             },
             {
                 key: 'time',
                 dataIndex: 'time',
                 title: t('common:time'),
                 width: 100,
-                align: 'right',
+                align: 'right'
             },
             {
                 key: 'status',
                 dataIndex: 'status',
                 title: t('common:status'),
                 width: 100,
-                align: 'right',
-            },
+                align: 'right'
+            }
         ];
 
         if (!state.histories?.length) {
-            tableStatus = <Empty/>;
+            tableStatus = <Empty />;
         }
 
         return (
@@ -1129,8 +906,8 @@ const ExchangeDeposit = () => {
                     rowStyle: {},
                     shadowWithFixedCol: width < 1366,
                     noDataStyle: {
-                        minHeight: '280px',
-                    },
+                        minHeight: '280px'
+                    }
                 }}
             />
         );
@@ -1145,13 +922,9 @@ const ExchangeDeposit = () => {
                             ? 'flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
                             : 'flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
                     }
-                    onClick={() =>
-                        state.historyPage !== 0 &&
-                        setState({ historyPage: state.historyPage - 1 })
-                    }
+                    onClick={() => state.historyPage !== 0 && setState({ historyPage: state.historyPage - 1 })}
                 >
-                    <ChevronLeft size={18} className="mr-2"/>{' '}
-                    {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
+                    <ChevronLeft size={18} className="mr-2" /> {language === LANGUAGE_TAG.VI ? 'Trước' : 'Previous'}
                 </div>
                 <div
                     className={
@@ -1159,13 +932,9 @@ const ExchangeDeposit = () => {
                             ? 'ml-10 flex items-center text-md font-medium cursor-pointer hover:!text-dominant'
                             : 'ml-10 flex items-center text-md font-medium cursor-not-allowed text-txtSecondary dark:text-txtSecondary-dark'
                     }
-                    onClick={() =>
-                        state.histories?.length &&
-                        setState({ historyPage: state.historyPage + 1 })
-                    }
+                    onClick={() => state.histories?.length && setState({ historyPage: state.historyPage + 1 })}
                 >
-                    {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}{' '}
-                    <ChevronRight size={18} className="ml-2"/>
+                    {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'} <ChevronRight size={18} className="ml-2" />
                 </div>
             </div>
         );
@@ -1177,25 +946,19 @@ const ExchangeDeposit = () => {
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Yêu cầu đẩy lệnh đã được ghi nhận, <br/> vui lòng chờ trong
-                    giây lát.
+                    Yêu cầu đẩy lệnh đã được ghi nhận, <br /> vui lòng chờ trong giây lát.
                 </>
             );
         } else {
             msg = (
                 <>
-                    Your push request has been record, <br/> please wait a
-                    moment.
+                    Your push request has been record, <br /> please wait a moment.
                 </>
             );
         }
 
         return (
-            <Modal
-                isVisible={!!state.pushedOrder}
-                title={t('modal:notice')}
-                onBackdropCb={() => setState({ pushedOrder: null })}
-            >
+            <Modal isVisible={!!state.pushedOrder} title={t('modal:notice')} onBackdropCb={() => setState({ pushedOrder: null })}>
                 <div className="text-sm text-center mt-5">{msg}</div>
                 <div className="mt-4 w-full flex flex-row items-center justify-between">
                     <Button
@@ -1226,11 +989,7 @@ const ExchangeDeposit = () => {
     }, [state.historyPage]);
 
     useEffect(() => {
-        getDepositTokenAddress(
-            false,
-            state.selectedAsset?.assetId,
-            state.selectedNetwork?.network
-        );
+        getDepositTokenAddress(false, state.selectedAsset?.assetId, state.selectedNetwork?.network);
 
         if (WITH_MEMO.includes(state.selectedNetwork?.network)) {
             setState({ openModal: { memoNotice: true } });
@@ -1251,13 +1010,8 @@ const ExchangeDeposit = () => {
         // }
 
         if (paymentConfigs && asset) {
-            const selectedAsset = find(
-                paymentConfigs,
-                (o) => o?.assetCode === asset
-            );
-            const defaultNetwork =
-                selectedAsset?.networkList?.find((o) => o.isDefault) ||
-                selectedAsset?.networkList?.[0];
+            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === asset);
+            const defaultNetwork = selectedAsset?.networkList?.find((o) => o.isDefault) || selectedAsset?.networkList?.[0];
             selectedAsset && setState({ selectedAsset });
             defaultNetwork && setState({ selectedNetwork: defaultNetwork });
         }
@@ -1266,10 +1020,7 @@ const ExchangeDeposit = () => {
     useEffect(() => {
         let interval;
         if (focused) {
-            interval = setInterval(
-                () => getDepositHistory(state.historyPage, true),
-                30000
-            );
+            interval = setInterval(() => getDepositHistory(state.historyPage, true), 30000);
         }
         return () => interval && clearInterval(interval);
     }, [focused, state.historyPage]);
@@ -1281,12 +1032,10 @@ const ExchangeDeposit = () => {
                     <div className="t-common mb-4">
                         <span
                             className="max-w-[150px] flex items-center cursor-pointer rounded-lg hover:text-dominant"
-                            onClick={() =>
-                                router?.push(PATHS.WALLET.EXCHANGE.DEFAULT)
-                            }
+                            onClick={() => router?.push(PATHS.WALLET.EXCHANGE.DEFAULT)}
                         >
                             <span className="inline-flex items-center justify-center h-full mr-3 mt-0.5">
-                                <ChevronLeft size={24}/>
+                                <ChevronLeft size={24} />
                             </span>
                             {t('common:deposit')}
                         </span>
@@ -1299,8 +1048,7 @@ const ExchangeDeposit = () => {
                                 {state.type === TYPE.crypto && (
                                     <>
                                         <div className="relative">
-                                            <div
-                                                className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                            <div className="mb-1.5 text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                                 {t('wallet:crypto_select')}
                                             </div>
                                             <div
@@ -1309,21 +1057,17 @@ const ExchangeDeposit = () => {
                                                 onClick={() =>
                                                     setState({
                                                         openList: {
-                                                            cryptoList:
-                                                                !state.openList
-                                                                    ?.cryptoList,
-                                                        },
+                                                            cryptoList: !state.openList?.cryptoList
+                                                        }
                                                     })
                                                 }
                                             >
                                                 {renderDepositInput()}
                                             </div>
-                                            {state.openList?.cryptoList &&
-                                                renderCryptoList()}
+                                            {state.openList?.cryptoList && renderCryptoList()}
                                         </div>
                                         <div className="relative mt-5">
-                                            <div
-                                                className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                            <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                                 {t('wallet:network')}
                                                 {/*<span>{state.validator?.allowDeposit && <Check size={16} className="text-dominant"/>}</span>*/}
                                             </div>
@@ -1333,36 +1077,29 @@ const ExchangeDeposit = () => {
                                                 onClick={() =>
                                                     setState({
                                                         openList: {
-                                                            networkList:
-                                                                !state.openList
-                                                                    ?.networkList,
-                                                        },
+                                                            networkList: !state.openList?.networkList
+                                                        }
                                                     })
                                                 }
                                             >
                                                 {renderNetworkInput()}
                                             </div>
-                                            {state.openList?.networkList &&
-                                                renderNetworkList()}
+                                            {state.openList?.networkList && renderNetworkList()}
                                         </div>
                                         <div className="relative mt-5">
-                                            <div
-                                                className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                            <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
                                                 {t('wallet:deposit_address')}
                                             </div>
                                             {renderAddressInput()}
                                         </div>
-                                        {state.address?.addressTag &&
-                                            state.selectedNetwork
-                                                ?.memoRegex && (
-                                                <div className="relative mt-5">
-                                                    <div
-                                                        className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
-                                                        Memo
-                                                    </div>
-                                                    {renderMemoInput()}
+                                        {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
+                                            <div className="relative mt-5">
+                                                <div className="mb-1.5 flex items-center justify-between text-sm font-medium text-txtPrimary dark:text-txtPrimary-dark">
+                                                    Memo
                                                 </div>
-                                            )}
+                                                {renderMemoInput()}
+                                            </div>
+                                        )}
                                         <div className="mt-4">
                                             {renderDepositConfirmBlocks()}
                                             {/*{renderMinDep()}*/}
@@ -1379,24 +1116,20 @@ const ExchangeDeposit = () => {
                             </div>
                         </div>
                     </MCard>
-                    <div className="t-common mt-11">
-                        {t('wallet:dep_history')}
-                    </div>
-                    <MCard addClass="mt-8 py-0 px-0 overflow-hidden">
-                        {renderDepHistory()}
-                    </MCard>
+                    <div className="t-common mt-11">{t('wallet:dep_history')}</div>
+                    <MCard addClass="mt-8 py-0 px-0 overflow-hidden">{renderDepHistory()}</MCard>
                     {renderPagination()}
                 </div>
             </Background>
             {renderMemoNotice()}
             {renderPushedOrderNotice()}
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
         </MaldivesLayout>
     );
 };
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-10' })`
-  background-color: ${({ isDark }) =>
-          isDark ? colors.darkBlue1 : '#F8F9FA'};
+    background-color: ${({ isDark }) => (isDark ? colors.darkBlue1 : '#F8F9FA')};
 `;
 
 const IGNORE_TOKEN = [
@@ -1407,7 +1140,7 @@ const IGNORE_TOKEN = [
     'SPIN_BONUS',
     'SPIN_CONQUEST',
     'TURN_CHRISTMAS_2017',
-    'SPIN_CLONE',
+    'SPIN_CLONE'
 ];
 
 const HISTORY_SIZE = 6;
@@ -1418,7 +1151,7 @@ function dataHandler(data, loading, configList, utils) {
         for (let i = 0; i < HISTORY_SIZE; ++i) {
             skeleton.push({
                 ...ROW_LOADING_SKELETON,
-                key: `wdl__skeletor___${i}`,
+                key: `wdl__skeletor___${i}`
             });
         }
         return skeleton;
@@ -1430,97 +1163,47 @@ function dataHandler(data, loading, configList, utils) {
     let networkList = [];
 
     if (configList && configList.length) {
-        configList.forEach((e) =>
-            networkList.push(...e.networkList?.map((o) => o?.network))
-        );
+        configList.forEach((e) => networkList.push(...e.networkList?.map((o) => o?.network)));
     }
 
     networkList = [...new Set(networkList)];
 
     data.forEach((h) => {
-        const {
-            _id,
-            amount,
-            assetId,
-            fee,
-            executeAt,
-            network,
-            status,
-            txId,
-            txIdUrl,
-        } = h;
+        const { _id, amount, assetId, fee, executeAt, network, status, txId, txIdUrl } = h;
         let statusInner;
         let address = h?.metadata?.address;
         let transactionHash = h?.metadata?.transactionHash;
         switch (status) {
             case DepWdlStatus.Success:
-                statusInner = (
-                    <span className="text-green">
-                        {utils?.t('common:success')}
-                    </span>
-                );
+                statusInner = <span className="text-green">{utils?.t('common:success')}</span>;
                 break;
             case DepWdlStatus.Declined: {
-                statusInner = (
-                    <span className="text-red">
-                        {utils?.t('common:declined')}
-                    </span>
-                );
+                statusInner = <span className="text-red">{utils?.t('common:declined')}</span>;
                 break;
             }
             case DepWdlStatus.Pending:
             default:
-                statusInner = (
-                    <span className="text-yellow">
-                        {utils?.t('common:pending')}
-                    </span>
-                );
+                statusInner = <span className="text-yellow">{utils?.t('common:pending')}</span>;
                 break;
         }
 
         result.push({
             key: `dep_${_id}_${transactionHash}`,
-            id: (
-                <span className="!text-sm whitespace-nowrap uppercase">
-                    {_id}
-                </span>
-            ),
+            id: <span className="!text-sm whitespace-nowrap uppercase">{_id}</span>,
             asset: (
                 <div className="flex items-center">
-                    <AssetLogo assetId={assetId} size={24}/>
+                    <AssetLogo assetId={assetId} size={24} />
                     <span className="!text-sm whitespace-nowrap ml-2.5">
-                        <AssetName assetId={assetId}/>
+                        <AssetName assetId={assetId} />
                     </span>
                 </div>
             ),
-            amount: (
-                <span className="!text-sm whitespace-nowrap">
-                    {formatWallet(amount)}
-                </span>
-            ),
-            address: (
-                <span className="!text-sm whitespace-nowrap">
-                    {shortHashAddress(address, 5, 5)}
-                </span>
-            ),
-            network: (
-                <span className="!text-sm whitespace-nowrap">
-                    {network === '0' ? 'Internal' : network}
-                </span>
-            ),
-            txId: <span className="!text-sm whitespace-nowrap ml-2.5">
-                 {txId ? shortHashAddress(txId, 6, 6) : '--'}
-            </span>,
-            time: (
-                <span className="!text-sm whitespace-nowrap">
-                    {formatTime(executeAt, 'HH:mm dd-MM-yyyy')}
-                </span>
-            ),
-            status: (
-                <span className="!text-sm whitespace-nowrap">
-                    {statusInner}
-                </span>
-            ),
+            amount: <span className="!text-sm whitespace-nowrap">{formatWallet(amount)}</span>,
+            address: <span className="!text-sm whitespace-nowrap">{shortHashAddress(address, 5, 5)}</span>,
+            network: <span className="!text-sm whitespace-nowrap">{network === '0' ? 'Internal' : network}</span>,
+            txId: <span className="!text-sm whitespace-nowrap ml-2.5">{txId ? shortHashAddress(txId, 6, 6) : '--'}</span>,
+            time: <span className="!text-sm whitespace-nowrap">{formatTime(executeAt, 'HH:mm dd-MM-yyyy')}</span>,
+            status: <span className="!text-sm whitespace-nowrap">{statusInner}</span>
         });
     });
 
@@ -1536,14 +1219,14 @@ const WITH_MEMO = ['BNB', 'VITE'];
 // }
 
 const ROW_LOADING_SKELETON = {
-    id: <Skeletor width={65}/>,
-    asset: <Skeletor width={65}/>,
-    amount: <Skeletor width={65}/>,
-    network: <Skeletor width={65}/>,
-    withdraw_to: <Skeletor width={65}/>,
-    txhash: <Skeletor width={65}/>,
-    time: <Skeletor width={65}/>,
-    status: <Skeletor width={65}/>,
+    id: <Skeletor width={65} />,
+    asset: <Skeletor width={65} />,
+    amount: <Skeletor width={65} />,
+    network: <Skeletor width={65} />,
+    withdraw_to: <Skeletor width={65} />,
+    txhash: <Skeletor width={65} />,
+    time: <Skeletor width={65} />,
+    status: <Skeletor width={65} />
 };
 
 const depositLinkBuilder = (type, asset) => {
