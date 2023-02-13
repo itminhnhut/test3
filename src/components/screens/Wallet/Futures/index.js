@@ -327,7 +327,7 @@ const ROW_LOADING_SKELETON = {
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         <ButtonV2
-            variants="blank"
+            variants="text"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
             className="!text-base"
         >
