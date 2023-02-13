@@ -1,9 +1,10 @@
 import { getV1Url } from 'redux/actions/utils';
 import { PATHS } from 'constants/paths';
+import { KYC_STATUS } from 'redux/actions/const';
 
-export const DESKTOP_NAV_HEIGHT = 74
+export const DESKTOP_NAV_HEIGHT = 74;
 
-export const MOBILE_NAV_HEIGHT = 58
+export const MOBILE_NAV_HEIGHT = 58;
 
 export const SPOTLIGHT = {
     // key: 0,
@@ -12,7 +13,7 @@ export const SPOTLIGHT = {
     // isNew: true,
     // url: '/',
     // child_lv1: []
-}
+};
 
 export const NAV_DATA = [
     {
@@ -21,7 +22,7 @@ export const NAV_DATA = [
         localized: 'market',
         isNew: false,
         url: '/market',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 1,
@@ -37,7 +38,7 @@ export const NAV_DATA = [
                 localized: 'spot',
                 isNew: false,
                 url: '/trade',
-                child_lv2: [],
+                child_lv2: []
             },
             {
                 key: 1,
@@ -45,7 +46,7 @@ export const NAV_DATA = [
                 localized: 'futures',
                 isNew: false,
                 url: '/futures',
-                child_lv1: [],
+                child_lv1: []
             },
             {
                 key: 7,
@@ -53,16 +54,16 @@ export const NAV_DATA = [
                 localized: 'swap',
                 isNew: false,
                 url: '/swap',
-                child_lv2: [],
+                child_lv2: []
             },
-            
+
             {
                 key: 2,
                 title: 'Launchpad',
                 localized: 'launchpad',
                 isNew: false,
                 url: 'https://launchpad.nami.exchange/',
-                child_lv1: [],
+                child_lv1: []
             },
             // {
             //     key: 3,
@@ -78,8 +79,8 @@ export const NAV_DATA = [
                 localized: 'referral',
                 isNew: false,
                 url: '/reference',
-                child_lv2: [],
-            },
+                child_lv2: []
+            }
             // {
             //     key: 4,
             //     title: 'Staking',
@@ -96,7 +97,7 @@ export const NAV_DATA = [
             //     url: getV1Url('/farming'),
             //     child_lv2: [],
             // },
-        ],
+        ]
     },
     {
         key: 8,
@@ -111,25 +112,33 @@ export const NAV_DATA = [
                 localized: 'swap',
                 isNew: false,
                 url: '/swap',
-                child_lv2: [],
-            },
-            {
-                key: 7,
-                title: 'Classic',
-                localized: 'classic',
-                isNew: false,
-                url: '/trade',
-                child_lv2: [],
+                child_lv2: []
             },
             {
                 key: 1,
-                title: 'Advance',
-                localized: 'advance',
+                title: 'Transfer',
+                localized: 'transfer',
                 isNew: false,
-                url: '/trade/BTC-USDT?layout=pro',
-                child_lv1: [],
-            },
-        ],
+                url: '/',
+                child_lv2: []
+            }
+            // {
+            //     key: 7,
+            //     title: 'Classic',
+            //     localized: 'classic',
+            //     isNew: false,
+            //     url: '/trade',
+            //     child_lv2: []
+            // },
+            // {
+            //     key: 1,
+            //     title: 'Advance',
+            //     localized: 'advance',
+            //     isNew: false,
+            //     url: '/trade/BTC-USDT?layout=pro',
+            //     child_lv1: []
+            // }
+        ]
     },
     {
         key: 3,
@@ -137,7 +146,7 @@ export const NAV_DATA = [
         localized: 'today',
         isNew: false,
         url: 'https://nami.today/',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 4,
@@ -145,36 +154,36 @@ export const NAV_DATA = [
         localized: 'support_center',
         isNew: false,
         url: '/support',
-        child_lv1: [],
-    },
-]
+        child_lv1: []
+    }
+];
 
 export const MOBILE_NAV_DATA = [
-    {
-        key: 10,
-        title: 'Profile',
-        localized: 'user.user',
-        isNew: false,
-        url: PATHS.ACCOUNT,
-        child_lv1: [
-            {
-                key: 0,
-                title: 'APIManagement',
-                localized: 'api_mng',
-                // hide: true,
-                isNew: true,
-                url: getV1Url('/settings/api-management'),
-                child_lv1: [],
-            },
-        ],
-    },
+    // {
+    //     key: 10,
+    //     title: 'Profile',
+    //     localized: 'user.user',
+    //     isNew: false,
+    //     url: PATHS.ACCOUNT,
+    //     child_lv1: [
+    //         {
+    //             key: 0,
+    //             title: 'APIManagement',
+    //             localized: 'api_mng',
+    //             // hide: true,
+    //             isNew: true,
+    //             url: getV1Url('/settings/api-management'),
+    //             child_lv1: []
+    //         }
+    //     ]
+    // },
     {
         key: 1,
         title: 'Market',
         localized: 'market',
         isNew: false,
         url: '/market',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 0,
@@ -189,7 +198,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'spot',
                 isNew: false,
                 url: '/trade',
-                child_lv2: [],
+                child_lv2: []
             },
             {
                 key: 1,
@@ -197,7 +206,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'futures',
                 isNew: false,
                 url: '/futures',
-                child_lv1: [],
+                child_lv1: []
             },
             {
                 key: 7,
@@ -205,7 +214,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'swap',
                 isNew: false,
                 url: '/swap',
-                child_lv2: [],
+                child_lv2: []
             },
             {
                 key: 2,
@@ -213,24 +222,24 @@ export const MOBILE_NAV_DATA = [
                 localized: 'launchpad',
                 isNew: true,
                 url: 'https://launchpad.nami.exchange/',
-                child_lv1: [],
+                child_lv1: []
             },
-            {
-                key: 3,
-                title: 'Copy Trade',
-                localized: 'copytrade',
-                isNew: false,
-                url: '/',
-                child_lv2: [],
-            },
-            {
-                key: 5,
-                title: 'Futures Mobile',
-                localized: 'mobile_futures',
-                isNew: false,
-                url: 'https://test.nami.exchange/mobile/futures',
-                child_lv2: [],
-            },
+            // {
+            //     key: 3,
+            //     title: 'Copy Trade',
+            //     localized: 'copytrade',
+            //     isNew: false,
+            //     url: '/',
+            //     child_lv2: []
+            // },
+            // {
+            //     key: 5,
+            //     title: 'Futures Mobile',
+            //     localized: 'mobile_futures',
+            //     isNew: false,
+            //     url: 'https://test.nami.exchange/mobile/futures',
+            //     child_lv2: []
+            // },
             // {
             //     key: 5,
             //     title: 'Farming',
@@ -245,58 +254,44 @@ export const MOBILE_NAV_DATA = [
                 localized: 'referral',
                 isNew: false,
                 url: '/reference',
-                child_lv2: [],
-            },
-        ],
+                child_lv2: []
+            }
+        ]
     },
     {
-        key: 5,
-        title: 'Wallet',
-        localized: 'wallet',
+        key: 8,
+        title: 'Trade',
+        localized: 'trade',
         isNew: false,
         url: '/',
         child_lv1: [
             {
                 key: 0,
-                title: 'Spot Wallet',
-                localized: 'spot_wallet',
+                title: 'Swap',
+                localized: 'swap',
                 isNew: false,
-                url: PATHS.WALLET.EXCHANGE.DEFAULT,
-                child_lv2: [],
+                url: '/swap',
+                child_lv2: []
             },
             {
                 key: 1,
-                title: 'Futures Wallet',
-                localized: 'futures_wallet',
+                title: 'Transfer',
+                localized: 'transfer',
                 isNew: false,
-                url: PATHS.WALLET.FUTURES,
-                child_lv2: [],
-            },
-            // {
-            //     key: 2,
-            //     title: 'Staking Wallet',
-            //     localized: 'staking_wallet',
-            //     isNew: false,
-            //     url: PATHS.WALLET.STAKING,
-            //     child_lv2: [],
-            // },
-            // {
-            //     key: 3,
-            //     title: 'Farming Wallet',
-            //     localized: 'farming_wallet',
-            //     isNew: false,
-            //     url: PATHS.WALLET.FARMING,
-            //     child_lv2: [],
-            // },
-        ],
+                url: '/',
+                child_lv2: []
+            }
+        ]
     },
+
+    ,
     {
         key: 7,
         title: 'Nami.Today',
         localized: 'today',
         isNew: false,
         url: 'https://nami.today/',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 2,
@@ -304,7 +299,7 @@ export const MOBILE_NAV_DATA = [
         localized: 'support_center',
         isNew: false,
         url: '/support',
-        child_lv1: [],
+        child_lv1: []
     },
     // {
     //     key: 3,
@@ -328,8 +323,49 @@ export const MOBILE_NAV_DATA = [
         localized: 'support',
         isNew: false,
         url: '/',
-        child_lv1: [],
+        child_lv1: []
     },
+    {
+        key: 5,
+        title: 'Wallet',
+        localized: 'wallet',
+        isNew: false,
+        url: '/',
+        child_lv1: [
+            {
+                key: 0,
+                title: 'Spot Wallet',
+                localized: 'spot_wallet',
+                isNew: false,
+                url: PATHS.WALLET.EXCHANGE.DEFAULT,
+                child_lv2: []
+            },
+            {
+                key: 1,
+                title: 'Futures Wallet',
+                localized: 'futures_wallet',
+                isNew: false,
+                url: PATHS.WALLET.FUTURES,
+                child_lv2: []
+            }
+            // {
+            //     key: 2,
+            //     title: 'Staking Wallet',
+            //     localized: 'staking_wallet',
+            //     isNew: false,
+            //     url: PATHS.WALLET.STAKING,
+            //     child_lv2: [],
+            // },
+            // {
+            //     key: 3,
+            //     title: 'Farming Wallet',
+            //     localized: 'farming_wallet',
+            //     isNew: false,
+            //     url: PATHS.WALLET.FARMING,
+            //     child_lv2: [],
+            // },
+        ]
+    }
     // {
     //     key: 'spotlight',
     //     title: 'Spotlight',
@@ -365,7 +401,7 @@ export const MOBILE_NAV_DATA = [
     //         }
     //     ]
     // },
-]
+];
 
 export const USER_CP = [
     {
@@ -375,7 +411,7 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: PATHS.ACCOUNT.PROFILE,
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 1,
@@ -384,7 +420,7 @@ export const USER_CP = [
         hide: true,
         isNew: true,
         url: '/',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 2,
@@ -393,7 +429,7 @@ export const USER_CP = [
         hide: true,
         isNew: true,
         url: '/',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 4,
@@ -402,7 +438,7 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: '/reference',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 3,
@@ -411,7 +447,7 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: '/account/reward-center',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 5,
@@ -420,7 +456,7 @@ export const USER_CP = [
         hide: true,
         isNew: true,
         url: '/',
-        child_lv1: [],
+        child_lv1: []
     },
     {
         key: 6,
@@ -429,8 +465,8 @@ export const USER_CP = [
         // hide: true,
         isNew: true,
         url: getV1Url('/settings/api-management'),
-        child_lv1: [],
-    },
+        child_lv1: []
+    }
     // {
     //     key: 7,
     //     title: 'LogOut',
@@ -440,6 +476,4 @@ export const USER_CP = [
     //     url: '/',
     //     child_lv1: [],
     // },
-]
-
-
+];
