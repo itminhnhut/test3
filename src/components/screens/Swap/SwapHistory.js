@@ -78,15 +78,18 @@ const SwapHistory = ({ width }) => {
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <p className="text-base text-darkBlue-5 mt-3">
+                    <p className="!text-base dark:text-txtSecondary-dark mt-3">
                         <a
                             href={getLoginUrl('sso', 'login')}
-                            className="text-txtTextBtn dark:text-txtTextBtn-dark focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed font-semibold leading-6"
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
                         >
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
-                        <a href={getLoginUrl('sso', 'register')} className="text-teal font-semibold leading-6">
+                        <a
+                            href={getLoginUrl('sso', 'register')}
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
+                        >
                             {t('common:sign_up')}{' '}
                         </a>
                         {t('common:swap_history')}

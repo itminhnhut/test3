@@ -23,7 +23,7 @@ import { useAsync } from 'react-use';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
-import NeedLogin from 'components/common/NeedLogin';
+import NeedLoginV2 from 'components/common/NeedLoginV2';
 import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
@@ -479,7 +479,7 @@ const Wallet = () => {
                 </CustomContainer>
             ) : (
                 <div className="h-[480px] flex items-center justify-center">
-                    <NeedLogin addClass="flex items-center justify-center" />
+                    <NeedLoginV2 addClass="flex items-center justify-center" />
                 </div>
             )}
         </Background>
