@@ -119,7 +119,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 align: 'right',
                 width: 213,
                 render: (v, item) => {
-                    let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit, 0, true);
+                    let lockedValue = formatWallet(v, item?.assetDigit, 0, true);
                     if (lockedValue === 'NaN') {
                         lockedValue = '0.0000';
                     }
@@ -182,7 +182,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         return (
             <TableV2
                 sort
-                defaultSort={{ key: 'total', direction: 'desc' }}
+                defaultSort={{ key: 'wallet.value', direction: 'desc' }}
                 useRowHover
                 data={state.tableData || []}
                 columns={columns}
