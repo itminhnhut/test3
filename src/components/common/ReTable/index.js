@@ -146,7 +146,9 @@ const ReTable = memo(
         }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
+
             if (!paginationProps || paginationProps?.hide) return null;
+
 
             return (
                 <div className="flex items-center justify-center py-8">

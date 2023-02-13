@@ -356,6 +356,6 @@ export const getStaticProps = async ({ locale }) => ({
     },
 })
 
-export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE })(
+export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE,containerClassname: 'lg:pt-20 fee-schedule ' })(
     DepositWithdrawFee
 )
