@@ -248,8 +248,10 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     useEffect(() => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
             let tableData = state.allAssets;
+
+            const minSmallBalance = 0;
             if (state.hideSmallAsset) {
-                tableData = tableData.filter((item) => item?.wallet?.value > 1);
+                tableData = tableData.filter((item) => item?.wallet?.value > minSmallBalance);
             }
 
             if (state.search) {

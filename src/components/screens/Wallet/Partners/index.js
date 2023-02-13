@@ -246,14 +246,11 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     useEffect(() => {
         if (state.allAssets && Array.isArray(state.allAssets)) {
-            // const origin = dataHandler(state.allAssets, t, dispatch, {
-            //     usdRate,
-            //     marketWatch,
-            //     btcAssetDigit: estBtc?.assetDigit
-            // });
             let tableData = state.allAssets;
+            const minSmallBalance = 0;
+
             if (state.hideSmallAsset) {
-                tableData = tableData.filter((item) => item?.wallet?.value > 1);
+                tableData = tableData.filter((item) => item?.wallet?.value > minSmallBalance);
             }
 
             if (state.search) {
@@ -341,90 +338,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 };
 
 const ASSET_ROW_LIMIT = 8;
-
-const dataHandler = (data, translator, dispatch, utils) => {
-    if (!data || !data?.length) {
-        const skeleton = [];
-        for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
-            skeleton.push({ ...ROW_LOADING_SKELETON, key: `asset_loading__skeleton_${i}` });
-        }
-        return skeleton;
-    }
-
-    const result = [];
-
-    data.forEach((item) => {
-        let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit, 0, true);
-        if (lockedValue === 'NaN') {
-            lockedValue = '0.0000';
-        }
-
-        const assetUsdRate = utils?.usdRate?.[item?.id] || 0;
-        const btcUsdRate = utils?.usdRate?.['9'] || 0;
-
-        const totalUsd = item?.wallet?.value * assetUsdRate;
-        const totalBtc = totalUsd / btcUsdRate;
-
-        result.push({
-            key: `exchange_asset___${item?.assetCode}`,
-            asset: (
-                <div className="flex items-center gap-4">
-                    <AssetLogo assetCode={item?.assetCode} size={32} />
-                    <div className="flex flex-col space-y-1">
-                        <span className="font-semibold text-sm">{item?.assetCode}</span>
-                        <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
-                    </div>
-                </div>
-            ),
-            total: (
-                <span className="whitespace-nowrap">
-                    {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
-                </span>
-            ),
-            available: (
-                <span className="whitespace-nowrap">
-                    {item?.wallet?.value - item?.wallet?.locked_value
-                        ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
-                        : '0.0000'}
-                </span>
-            ),
-            in_order: (
-                <span className="whitespace-nowrap">
-                    {item?.wallet?.locked_value ? (
-                        <Link href={PATHS.PARTNERS.TRADE.DEFAULT}>
-                            <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                        </Link>
-                    ) : (
-                        '0.0000'
-                    )}
-                </span>
-            ),
-            btc_value: (
-                <div>
-                    {assetUsdRate ? (
-                        <>
-                            <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, utils?.btcAssetDigit || 8) : '0.0000'}</div>
-                            <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
-                            </div>
-                        </>
-                    ) : (
-                        '--'
-                    )}
-                </div>
-            ),
-            operation: renderOperationLink(item?.assetName, translator, dispatch),
-            [RETABLE_SORTBY]: {
-                asset: item?.assetName,
-                total: +item?.wallet?.value,
-                available: +item?.wallet?.value - +item?.wallet?.locked_value,
-                in_order: item?.wallet?.locked_value
-            }
-        });
-    });
-
-    return result;
-};
 
 const ROW_LOADING_SKELETON = {
     asset: <Skeletor width={65} />,
