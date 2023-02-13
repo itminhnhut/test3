@@ -837,7 +837,7 @@ export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
         return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
     } else {
-        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant';
+        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-teal';
     }
 };
 

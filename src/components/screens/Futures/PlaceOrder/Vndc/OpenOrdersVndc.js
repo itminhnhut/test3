@@ -25,6 +25,7 @@ import CloseAllOrders from 'components/screens/Futures/PlaceOrder/Vndc/CloseAllO
 import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
+import TableV2 from 'components/common/V2/TableV2'
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -54,27 +55,35 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
+
+    // { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
     const columns = useMemo(
         () => [
+            // {
+            //     key: 'pair',
+            //     dataIndex: 'symbol',
+            //     name: t('futures:order_table:id'),
+            //     selector: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
+            //     sortable: true,
+            //     minWidth: '50px',
+            // },
+            // {
+            //     name: t('futures:order_table:created_time'),
+            //     selector: (row) => row?.created_at,
+            //     cell: (row) => (
+            //         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+            //             {formatTime(row?.created_at, 'yyyy-MM-dd HH:mm:ss')}
+            //         </span>
+            //     ),
+            //     sortable: true,
+            //     minWidth: '150px',
+            // },
             {
-                name: t('futures:order_table:id'),
-                selector: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
-                sortable: true,
-                minWidth: '50px',
-            },
-            {
-                name: t('futures:order_table:created_time'),
-                selector: (row) => row?.created_at,
-                cell: (row) => (
-                    <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        {formatTime(row?.created_at, 'yyyy-MM-dd HH:mm:ss')}
-                    </span>
-                ),
-                sortable: true,
-                minWidth: '150px',
-            },
-            {
-                name: t('futures:order_table:symbol'),
+                key: 'pair',
+                dataIndex: 'symbol',
+                title: t('common:pair'),
+                align: 'left',
+                width: 128,
                 selector: (row) => row?.symbol,
                 cell: (row) => (
                     pairConfig?.pair !== row?.symbol ?
@@ -86,6 +95,42 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                         : <FuturesRecordSymbolItem symbol={row?.symbol} />
                 ),
                 sortable: true,
+            },
+            {
+                key: 'pnl',
+                title: 'PNL (ROE%)',
+                align: 'right',
+                width: 138,
+                selector: (row) => row?.pnl?.value,
+                render: (row) => {
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                    return <OrderProfit
+                        className='w-full'
+                        key={row.displaying_id} order={row}
+                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
+                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                },
+                sortable: false,
+            },
+            {
+                key: 'sltp',
+                title: 'SL/TP',
+                align: 'left',
+                width: 224,
+                render: (row) => (
+                    <div className='flex items-center'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
+                            <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
+                            <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
+                        </div>
+                        {row.status !== VndcFutureOrderType.Status.CLOSED &&
+                            <Edit onClick={() => onOpenModify(row)}
+                                className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
+                        }
+                    </div>
+                ),
+                minWidth: '150px',
+                sortable: false,
             },
             {
                 name: t('futures:order_table:type'),
@@ -133,19 +178,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 minWidth: '150px',
                 sortable: true,
             },
-            {
-                name: 'PNL (ROE%)',
-                selector: (row) => row?.pnl?.value,
-                cell: (row) => {
-                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
-                    return <OrderProfit
-                        key={row.displaying_id} order={row}
-                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
-                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
-                },
-                minWidth: '150px',
-                sortable: false,
-            },
+
             {
                 name: 'TP/SL',
                 cell: (row) => (
@@ -357,6 +390,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return filters.symbol ? items.filter(item => item?.symbol === filters.symbol) : items;
     }, [hideOther, dataSource, filters, pair])
 
+    console.log('dataFilter', dataFilter)
+
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <Link href={getLoginUrl('sso', 'login')} locale={false}>
             <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
@@ -379,7 +414,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     pairTicker={marketWatch}
                 />
             }
-            <div className='flex flex-row items-center flex-wrap'>
+            {/* <div className='flex flex-row items-center flex-wrap'>
                 <FuturesTimeFilter2
                     currentTimeRange={filters.timeRange}
                     onChange={(value) => {
@@ -435,8 +470,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     {t('common:reset')}
                 </div>
                 <CloseAllOrders />
-            </div>
-            <DataTable
+            </div> */}
+            {/* <DataTable
                 responsive
                 fixedHeader
                 sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
@@ -444,6 +479,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 columns={columns}
                 customStyles={customTableStyles}
                 noDataComponent={<TableNoData title={t('futures:order_table:no_opening_order')} />}
+            /> */}
+            <TableV2
+                data={dataFilter}
+                columns={columns}
             />
         </>
     )

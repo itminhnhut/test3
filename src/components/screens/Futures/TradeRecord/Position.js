@@ -14,13 +14,16 @@ import Skeletor from 'components/common/Skeletor';
 import { BINANCE_LEVERAGE_MARGIN } from 'constants/constants';
 import fetchAPI from 'utils/fetch-api';
 import useMakePrice from 'hooks/useMakePrice';
-import TableV2 from 'components/common/V2/Table'
+import TableV2 from 'components/common/V2/TableV2'
+import { useTranslation } from 'next-i18next';
 
 const FuturesPosition = ({
     pairConfig,
     isHideOthers,
     onForceUpdate
 }) => {
+    const { t } = useTranslation()
+
     const [isEdit, setIsEdit] = useState(false);
     const [positionOrder, setPositionOrder] = useState([]);
     const [currentOrder, setCurrentOrder] = useState(null);
@@ -36,14 +39,20 @@ const FuturesPosition = ({
         setCurrentOrder(null);
     };
 
+    // { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'right', width: 168 },
+
     const columns = useMemo(
         () => [
             {
-                name: 'Symbol',
+                key: 'pair',
+                dataIndex: 'symbol',
+                title: t('common:pair'),
+                align: 'left',
+                width: 128,
                 selector: (row) => row?.symbol.symbol,
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={100}/>
+                        <Skeletor width={100} />
                     ) : (
                         <div className="flex items-center">
                             <div
@@ -62,11 +71,26 @@ const FuturesPosition = ({
                 sortable: true,
             },
             {
+                key: 'pnl',
+                title: 'PNL (ROE%)',
+                align: 'right', 
+                selector: (row) => row?.pnl?.value,
+                render: (row) => {
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                    return <OrderProfit
+                        key={row.displaying_id} order={row}
+                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
+                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                },
+                width: 150,
+                sortable: false,
+            },
+            {
                 name: 'Size',
                 selector: (row) => row?.positionAmt,
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={100}/>
+                        <Skeletor width={100} />
                     ) : (
                         <span
                             className={classNames({
@@ -89,7 +113,7 @@ const FuturesPosition = ({
             {
                 name: 'Entry Price',
                 selector: (row) =>
-                    loading ? <Skeletor width={65}/> : formatNumber(
+                    loading ? <Skeletor width={65} /> : formatNumber(
                         +row?.entryPrice,
                         pairConfig?.pricePrecision,
                         2
@@ -99,7 +123,7 @@ const FuturesPosition = ({
             {
                 name: 'Mark Price',
                 selector: (row) =>
-                    loading ? <Skeletor width={65}/> : formatNumber(
+                    loading ? <Skeletor width={65} /> : formatNumber(
                         +row?.markPrice,
                         pairConfig?.pricePrecision,
                         2
@@ -109,7 +133,7 @@ const FuturesPosition = ({
             {
                 name: 'Liq Price',
                 selector: (row) =>
-                    loading ? <Skeletor width={65}/> : formatNumber(
+                    loading ? <Skeletor width={65} /> : formatNumber(
                         +row?.liquidationPrice,
                         pairConfig?.pricePrecision,
                         2
@@ -121,7 +145,7 @@ const FuturesPosition = ({
                 selector: (row) => row?.marginRatio,
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={65}/>
+                        <Skeletor width={65} />
                     ) : (
                         <span>{formatNumber(row?.marginRatio, pairConfig?.pricePrecision, 2)}%</span>
                     ),
@@ -132,7 +156,7 @@ const FuturesPosition = ({
                 selector: (row) => row?.year,
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={65}/>
+                        <Skeletor width={65} />
                     ) : (
                         <div>
                             <div>
@@ -150,7 +174,7 @@ const FuturesPosition = ({
                 selector: (row) => row?.pnl?.value,
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={65}/>
+                        <Skeletor width={65} />
                     ) : (
                         <div className="flex items-center">
                             <div className={getPriceColor(row?.pnl?.value)}>
@@ -171,7 +195,7 @@ const FuturesPosition = ({
                 name: 'Close All Position',
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={200}/>
+                        <Skeletor width={200} />
                     ) : (
                         <div className="flex items-center whitespace-nowrap">
                             <div className="mr-3">Market</div>
@@ -192,7 +216,7 @@ const FuturesPosition = ({
                 name: 'TP/SL for Position',
                 cell: (row) =>
                     loading ? (
-                        <Skeletor width={65}/>
+                        <Skeletor width={65} />
                     ) : (
                         <div className="flex items-center">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -276,21 +300,19 @@ const FuturesPosition = ({
             if (data?.status === 'ok') {
                 const filtered = [];
 
-                data?.data &&
-                data.data.forEach((o) => {
-                    if (+o?.positionAmt > 0) {
-                        const symbol = getSymbolObject(o?.symbol);
+                // data?.data &&
+                //     data.data.forEach((o) => {
+                //         if (+o?.positionAmt > 0) {
+                //             const symbol = getSymbolObject(o?.symbol);
 
-                        filtered.push({
-                            ...o,
-                            symbol,
-                            closeAllPosition: [3066.47, 0.019],
-                            tpslForPosition: [44000.0, 41900.0],
-                        });
-                    }
-                });
+                //             filtered.push({
+                //                 ...o,
+                //                 symbol,
+                //             });
+                //         }
+                //     });
 
-                setPositionOrder(filtered);
+                setPositionOrder(data?.data);
             } else {
                 setPositionOrder([]);
             }
@@ -319,9 +341,10 @@ const FuturesPosition = ({
                     </div>
                 }
             /> */}
-
-            <TableV2>
-            </TableV2>
+            <TableV2
+                data={loading ? data : positionOrder}
+                columns={columns}
+            />
             <FuturesEditSLTP
                 isVisible={isEdit}
                 order={currentOrder}
