@@ -85,32 +85,35 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 128,
                 selector: (row) => row?.symbol,
-                cell: (row) => (
-                    pairConfig?.pair !== row?.symbol ?
-                        <Link href={`/futures/${row?.symbol}`}>
+                render: (row, item) => (
+                    pairConfig?.pair !== item?.symbol ?
+                        <Link href={`/futures/${item?.symbol}`}>
                             <a className='dark:text-white text-darkBlue'>
-                                <FuturesRecordSymbolItem symbol={row?.symbol} />
+                                <FuturesRecordSymbolItem symbol={item?.symbol} leverage={item?.leverage} type={item?.type} side={item?.side}/>
                             </a>
                         </Link>
-                        : <FuturesRecordSymbolItem symbol={row?.symbol} />
+                        : <FuturesRecordSymbolItem symbol={item?.symbol} leverage={(item?.leverage)} type={item?.type} side={item?.side}/>
                 ),
                 sortable: true,
             },
             {
-                key: 'pnl',
-                title: 'PNL (ROE%)',
-                align: 'right',
-                width: 138,
-                selector: (row) => row?.pnl?.value,
-                render: (row) => {
-                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
-                    return <OrderProfit
-                        className='w-full'
-                        key={row.displaying_id} order={row}
-                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
-                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
-                },
-                sortable: false,
+                key: 'volume-margin',
+                dataIndex: 'order_value',
+                title: `${t('futures:order_table:volume')}/${t('futures:margin')}`,
+                align: 'left',
+                width: 184,
+                selector: (row) => row?.order_value,
+                render: (row, item) => item?.order_value ?
+                    <div className='flex flex-col gap-1'>
+                        <div>
+                            {formatNumber(item?.order_value, 8, 0, true)}
+                        </div>
+                        <div>
+                            {formatNumber(item?.margin, 8, 0, true)}
+                        </div>
+                    </div>
+                    : '-',
+                sortable: true,
             },
             {
                 key: 'sltp',
@@ -130,6 +133,22 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     </div>
                 ),
                 minWidth: '150px',
+                sortable: false,
+            },
+            {
+                key: 'pnl',
+                title: 'PNL (ROE%)',
+                align: 'right',
+                width: 138,
+                selector: (row) => row?.pnl?.value,
+                render: (row) => {
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                    return <OrderProfit
+                        className='w-full'
+                        key={row.displaying_id} order={row}
+                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
+                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                },
                 sortable: false,
             },
             {
