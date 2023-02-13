@@ -408,6 +408,11 @@ const ReTableWrapperV2 = styled.div`
         }
     }
 
+    .rc-table-ping-right .rc-table-cell-fix-right-first::after,
+    .rc-table-ping-right .rc-table-cell-fix-right-last::after {
+        box-shadow: none !important;
+    }
+
     table {
         width: 100% !important;
         ${({ tableStyle }) => (tableStyle ? { ...tableStyle } : '')};

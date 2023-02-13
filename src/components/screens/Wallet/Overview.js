@@ -18,6 +18,7 @@ import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { HideIcon, SeeIcon } from '../../svg/SvgIcon';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -182,11 +183,17 @@ const OverviewWallet = (props) => {
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <ButtonV2 href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>{t('common:deposit')}</ButtonV2>
-                            <ButtonV2 variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
+                            <HrefButton href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                                {t('common:deposit')}
+                            </HrefButton>
+                            <HrefButton variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </ButtonV2>
-                            <ButtonV2 variants="secondary" onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
+                            </HrefButton>
+                            <ButtonV2
+                                variants="none"
+                                className="whitespace-nowrap rounded-md font-semibold text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
+                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                            >
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -217,16 +224,16 @@ const OverviewWallet = (props) => {
                                 </Link>
                             </div>
                             <div className="flex items-center mt-4 lg:mt-0">
-                                <ButtonV2 variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                                <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
                                     {t('common:deposit')}
-                                </ButtonV2>
+                                </HrefButton>
                                 <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                                <ButtonV2 variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
+                                <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                     {t('common:withdraw')}
-                                </ButtonV2>
+                                </HrefButton>
                                 <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
                                 <ButtonV2
-                                    variants="blank"
+                                    variants="text"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
@@ -246,7 +253,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div className="flex">
                                 <ButtonV2
-                                    variants="blank"
+                                    variants="text"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
@@ -266,7 +273,7 @@ const OverviewWallet = (props) => {
                             </div>
                             <div className="flex">
                                 <ButtonV2
-                                    variants="blank"
+                                    variants="text"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}

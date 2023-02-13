@@ -21,7 +21,7 @@ body {
 
     @apply bg-bgPrimary dark:bg-bgSpotContainer-dark font-SF-Pro;
 
-    // font-family: "Barlow", sans-serif !important;
+    font-family: 'SF-Pro' !important;
 
     -ms-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
@@ -137,7 +137,7 @@ body {
         .ant-picker-input input {
             @apply font-medium text-center w-[80px] text-[12.5px] translate-y-[1px] text-txtSecondary dark:text-txtSecondary-dark;
 
-            font-family: 'Barlow', sans-serif !important;
+            font-family: 'SF-Pro' !important;
             border: none !important;
             outline: none !important;
 
@@ -393,7 +393,7 @@ input[type='number'] {
 }
 
 .shadow-swapicon {
-  box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.15);
+    box-shadow: 0px 4px 15px rgba(255, 255, 255, 0.15);
 }
 
 .__rdt_custom_sort_icon__ svg {
@@ -949,11 +949,11 @@ input[type='number'] {
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
-input:-webkit-autofill:active{
+input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #1c232e inset !important;
 }
 
-input:-webkit-autofill{
+input:-webkit-autofill {
     -webkit-text-fill-color: #e2e8f0 !important;
 }
 .no-scroll {
@@ -974,7 +974,7 @@ input:-webkit-autofill{
         position: absolute;
         width: 3px;
         height: 3px;
-        left: .5rem;
+        left: 0.5rem;
         top: 50%;
         @apply bg-white rounded-full;
     }

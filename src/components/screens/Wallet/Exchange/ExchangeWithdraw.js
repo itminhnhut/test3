@@ -38,6 +38,7 @@ import useWindowFocus from 'hooks/useWindowFocus';
 import Button from 'components/common/Button';
 import classNames from 'classnames';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -1194,7 +1195,7 @@ const ExchangeWithdraw = () => {
                 <div className="text-center px-4">{t('wallet:errors.invalid_kyc_status')}</div>
                 <div className="mt-6 flex items-center justify-between">
                     <div className="w-[47%]">
-                        <ButtonV2
+                        <HrefButton
                             href={
                                 currentLocale === 'en'
                                     ? 'https://nami.exchange/support/announcement/announcement/important-update-about-nami-exchange-identity-verification-kyc'
@@ -1203,12 +1204,12 @@ const ExchangeWithdraw = () => {
                             target="_blank"
                         >
                             {t('common:view_manual')}
-                        </ButtonV2>
+                        </HrefButton>
                     </div>
                     <div className="w-[47%]">
-                        <ButtonV2 href="https://nami.exchange/account/identification" target="_blank">
+                        <HrefButton href="https://nami.exchange/account/identification" target="_blank">
                             {t('common:kyc_now')}
-                        </ButtonV2>
+                        </HrefButton>
                     </div>
                 </div>
                 {/* </ReModal> */}

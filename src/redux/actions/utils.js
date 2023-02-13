@@ -31,6 +31,7 @@ const EthereumAddress = require('ethereum-address');
 import ChevronDown from 'src/components/svg/ChevronDown';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
+import { createSelector } from 'reselect';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -40,13 +41,13 @@ export function scrollHorizontal(el, parentEl) {
         padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
         border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
 
-    const rect = el.getBoundingClientRect();
-    const { left, right, bottom, top, width } = parentEl.getBoundingClientRect();
-    // const inView = rect.left >= left && rect.right <= right
-    // const position = rect.left < left ? 0 : rect.right;
-    const center = rect.left + parentEl.scrollLeft + margin + padding + border - width / 2;
+    const child = el.getBoundingClientRect();
+    const parent = parentEl.getBoundingClientRect();
+    const activeWidth = el.clientWidth / 2;
+    var pos = child.left - parent.left + activeWidth;
+    pos = pos + parentEl.scrollLeft + margin + padding + border - parentEl.clientWidth / 2;
     parentEl.scrollTo({
-        left: center,
+        left: pos,
         behavior: 'smooth'
     });
 }
@@ -89,8 +90,8 @@ export const formatSwapRate = (value, scaleMore = 2) => {
     return x;
 };
 
-export const formatCurrency = (n, digits = 4, vi = false) => {
-    if (n < 1e3) return formatNumber(n, 0, 0, true);
+export const formatCurrency = (n, digits = 4, vi = false, e = 1e3) => {
+    if (n < e) return formatNumber(n, 0, 0, true);
     if (n >= 1e3 && n < 1e6) return formatNumber(+(n / 1e3).toFixed(4), digits, 0, true) + 'K';
     if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), digits, 0, true) + (vi ? ' triệu' : 'M');
     if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), digits, 0, true) + (vi ? ' tỷ' : 'B');
@@ -1034,3 +1035,17 @@ export const TypeTable = ({ type, data }) => {
             return null;
     }
 };
+
+export const getDecimalPrice = (config) => {
+    const decimalScalePrice = config?.filters?.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+    return +countDecimals(decimalScalePrice?.tickSize);
+};
+
+export const getDecimalQty = (config) => {
+    const decimal = config?.filters?.find((rs) => rs.filterType === 'LOT_SIZE') ?? 1;
+    return +countDecimals(decimal?.stepSize);
+};
+
+export const getUnit = createSelector([(state) => state.utils.assetConfig, (unitConfig, assetCode) => assetCode], (unitConfig, assetCode) =>
+    unitConfig.find((rs) => rs?.assetCode === assetCode)
+);

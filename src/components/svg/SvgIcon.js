@@ -314,6 +314,35 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
     </svg>
 );
 
+const AddCircleIcon = () => (
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#p8h6ijxpna)">
+            <path
+                d="M8.4 1.678a6.67 6.67 0 0 0-6.668 6.666A6.67 6.67 0 0 0 8.4 15.011a6.67 6.67 0 0 0 6.667-6.667 6.67 6.67 0 0 0-6.667-6.666zm3.332 7.333H9.066v2.667H7.732V9.01H5.066V7.678h2.666V5.01h1.334v2.667h2.666V9.01z"
+                fill="#8694B3"
+            />
+        </g>
+        <defs>
+            <clipPath id="p8h6ijxpna">
+                <path fill="#fff" transform="translate(.398 .344)" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const AddCircleColorIcon = (props) => (
+    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#zfktez410a)">
+            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
+        </g>
+        <defs>
+            <clipPath id="zfktez410a">
+                <path fill="#fff" d="M0 0h12v12H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const AppleIcon = ({ size = 24, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
         <g clip-path="url(#ik9gb490da)">
@@ -397,9 +426,11 @@ export {
     FutureIcon,
     FutureLaunchpadIcon,
     FuturePortfolioIcon,
+    SuccessfulTransactionIcon,
+    AddCircleIcon,
+    AddCircleColorIcon,
     FutureSimpleIcon,
     FutureAdvanceIcon,
-    SuccessfulTransactionIcon,
     AppleIcon,
     GooglePlayIcon,
     LogoIcon,

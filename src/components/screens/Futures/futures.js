@@ -4,20 +4,14 @@ import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/con
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDispatch, useSelector } from 'react-redux';
 import { API_GET_FUTURES_MARK_PRICE } from 'redux/actions/apis';
-import { FUTURES_DEFAULT_SYMBOL } from 'pages/futures';
 import { useRouter } from 'next/router';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import FuturesChart from 'components/screens/Futures/FuturesChart';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import FuturesOrderBook from 'components/screens/Futures/OrderBook';
-import FuturesPlaceOrder from 'components/screens/Futures/PlaceOrder';
 import FuturesPairDetail from 'components/screens/Futures/PairDetail';
-import FuturesMarginRatio from 'components/screens/Futures/MarginRatio';
 import FuturesTradeRecord from 'components/screens/Futures/TradeRecord';
-import FuturesRecentTrades from 'components/screens/Futures/RecentTrades';
 import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
-import FuturesMarginRatioVndc from 'components/screens/Futures/PlaceOrder/Vndc/MarginRatioVndc';
 import futuresGridConfig, { futuresGridKey, getLayoutFromLS, setLayoutToLS } from 'components/screens/Futures/_futuresGrid';
 import useWindowSize from 'hooks/useWindowSize';
 import DynamicNoSsr from 'components/DynamicNoSsr';
@@ -26,10 +20,10 @@ import Emitter from 'redux/actions/emitter';
 import Axios from 'axios';
 import 'react-grid-layout/css/styles.css';
 import { getOrdersList } from 'redux/actions/futures';
-import { PATHS } from 'constants/paths';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
-import { countDecimals } from 'redux/actions/utils';
+import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -82,6 +76,7 @@ const Futures = () => {
 
     // Memmoized Variable
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
+    const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
 
     // Helper
     const getPairMarkPrice = async (symbol) => {
@@ -323,6 +318,14 @@ const Futures = () => {
         setFilterLayout({ ...initFuturesComponent });
     };
 
+    const decimals = useMemo(() => {
+        return {
+            price: getDecimalPrice(pairConfig),
+            qty: getDecimalQty(pairConfig),
+            symbol: unitConfig?.assetDigit ?? 0
+        };
+    }, [unitConfig, pairConfig]);
+
     return (
         <>
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
@@ -358,12 +361,12 @@ const Futures = () => {
                                 }
                             >
                                 {auth && filterLayout.isShowFavorites && (
-                                    <div key={futuresGridKey.favoritePair} className={`border border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.favoritePair} className={`border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
                                 )}
                                 {filterLayout.isShowPairDetail && (
-                                    <div key={futuresGridKey.pairDetail} className={`relative z-20 border border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.pairDetail} className={`relative z-20 border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
                                             markPrice={state.markPrice}
@@ -407,7 +410,7 @@ const Futures = () => {
                                     </div>
                                 } */}
                                 {filterLayout.isShowOpenOrders && (
-                                    <div key={futuresGridKey.tradeRecord} className={`border border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
@@ -419,24 +422,27 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowPlaceOrder && (
-                                    <div key={futuresGridKey.placeOrder} className={`border border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.placeOrder} className={`border-l  border-divider dark:border-divider-dark`}>
                                         <FuturesPlaceOrderVndc
                                             isAuth={!!auth}
-                                            markPrice={state.markPrice?.markPrice}
-                                            lastPrice={state.pairPrice?.lastPrice}
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
                                             isVndcFutures={true}
-                                            ask={state.pairPrice?.ask}
-                                            bid={state.pairPrice?.bid}
+                                            pairPrice={state.pairPrice}
                                             pair={state.pair}
+                                            decimals={decimals}
                                         />
                                     </div>
                                 )}
                                 {filterLayout.isShowAssets && (
                                     <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
-                                        <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} />
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            decimals={decimals}
+                                        />
                                     </div>
                                 )}
                             </GridLayout>

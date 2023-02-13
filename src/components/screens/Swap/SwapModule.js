@@ -369,7 +369,7 @@ const SwapModule = ({ width, pair }) => {
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
-                   
+
                     ${state.fromAsset === fromAsset && 'dark:bg-hover'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
@@ -476,7 +476,7 @@ const SwapModule = ({ width, pair }) => {
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
                     first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
-                   
+
                     ${state.toAsset === toAsset && 'dark:bg-hover'}
                     `}
                     onClick={() => onClickToAsset(toAsset)}
@@ -571,9 +571,9 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <ButtonV2 className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
-                </ButtonV2>
+                </HrefButton>
             );
         }
 
@@ -988,7 +988,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
                         <Trans i18nKey="common:term_swap">
-                            <ButtonV2 className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
+                            <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
                         </Trans>
                     </div>
                 </div>

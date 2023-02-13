@@ -6,14 +6,12 @@ import SvgWarning from 'components/svg/SvgWarning';
 import Button from 'components/common/Button';
 import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
-import Modal from 'components/common/ReModal';
 import axios from 'axios';
-import { formatNumber, getLoginUrl, scrollFocusInput, emitWebViewEvent } from 'redux/actions/utils';
+import { formatNumber, scrollFocusInput, emitWebViewEvent } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
-import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const FuturesLeverageSettings = ({
     pair,
@@ -47,7 +45,6 @@ const FuturesLeverageSettings = ({
                 symbol,
                 leverage
             });
-            console.log(data);
             if (data?.status === 'ok') {
                 setLeverage(data?.data?.[symbol]);
             }
