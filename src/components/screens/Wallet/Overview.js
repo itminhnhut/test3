@@ -16,9 +16,6 @@ import { PATHS } from 'constants/paths';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
-import SvgWalletStake from 'components/svg/SvgWalletStake';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { HideIcon, SeeIcon } from '../../svg/SvgIcon';
 
@@ -179,22 +176,11 @@ const OverviewWallet = (props) => {
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <HrefButton className="min-w-[120px] py-3" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                {t('common:deposit')}
-                            </HrefButton>
-                            <HrefButton
-                                className="min-w-[120px] py-3"
-                                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}
-                                variants="secondary"
-                            >
+                            <ButtonV2 href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>{t('common:deposit')}</ButtonV2>
+                            <ButtonV2 variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </HrefButton>
-                            <ButtonV2
-                                className="min-w-[120px] py-3 text-base text-center cursor-pointer rounded-md
-                                    text-txtSecondary dark:text-txtSecondary-dark dark:bg-dark-2 !font-semibold
-                                 "
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            </ButtonV2>
+                            <ButtonV2 variants="secondary" onClick={() => dispatch(setTransferModal({ isVisible: true }))}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -208,7 +194,7 @@ const OverviewWallet = (props) => {
                 {/* mark1 */}
                 {/* <Link href="/wallet/exchange"> */}
                 {/* Exchange */}
-                <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover rounded-t-xl hover:bg-teal-5 cursor-pointer group">
+                <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row dark:hover:bg-hover rounded-t-xl hover:bg-teal-5 cursor-pointer group">
                     <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                         <div className="flex items-center mt-4 lg:mt-0">
@@ -225,40 +211,39 @@ const OverviewWallet = (props) => {
                             </Link>
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
-                            <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                            <ButtonV2 variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
                                 {t('common:deposit')}
-                            </HrefButton>
+                            </ButtonV2>
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                            <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
+                            <ButtonV2 variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </HrefButton>
+                            </ButtonV2>
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-
-                            <TextButton
-                                className="text-sm !font-semibold"
+                            <ButtonV2
+                                variants="blank"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                             >
                                 {t('common:transfer')}
-                            </TextButton>
+                            </ButtonV2>
                         </div>
                     </div>
                 </div>
 
                 {/* Futures */}
                 <Link href="/wallet/futures">
-                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer group">
+                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row dark:hover:bg-hover hover:bg-teal-5 cursor-pointer group">
                         <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                             <div className="flex items-center mt-4 pr-4 lg:mt-0">
                                 <Trans>{t('wallet:futures_overview')}</Trans>
                             </div>
                             <div className="flex">
-                                <TextButton
-                                    className="text-sm !font-semibold"
+                                <ButtonV2
+                                    variants="blank"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
-                                </TextButton>
+                                </ButtonV2>
                             </div>
                         </div>
                     </div>
@@ -266,19 +251,19 @@ const OverviewWallet = (props) => {
 
                 {/* Partners */}
                 <Link href="/wallet/partners">
-                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row border-b border-divider dark:border-divider-dark dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
+                    <div className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row  dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group">
                         <AssetBalance title="Partners" icon={<SvgWalletFutures />} renderEstBalance={renderPartnersEstBalance} />
                         <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                             <div className="flex items-center mt-4 pr-4 lg:mt-0">
                                 <Trans>{t('wallet:partners_overview')}</Trans>
                             </div>
                             <div className="flex">
-                                <TextButton
-                                    className="text-sm !font-semibold"
+                                <ButtonV2
+                                    variants="blank"
                                     onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT }))}
                                 >
                                     {t('common:transfer')}
-                                </TextButton>
+                                </ButtonV2>
                             </div>
                         </div>
                     </div>
