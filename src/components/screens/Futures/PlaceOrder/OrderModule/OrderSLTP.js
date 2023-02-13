@@ -1,14 +1,11 @@
 import TradingInput from 'components/trade/TradingInput';
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useMemo, useRef, useState } from 'react';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
-import Tooltip from 'components/common/Tooltip';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AddCircleIcon } from 'components/svg/SvgIcon';
-import EditSLTPV2 from './EditSLTPV2';
+import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/OrderModule/EditSLTPV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const FuturesOrderSLTP = ({

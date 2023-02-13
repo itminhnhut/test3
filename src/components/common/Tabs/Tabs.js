@@ -49,7 +49,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         const y = e.pageY - TabRef.current.offsetTop;
         const scrollY = y - startY.current;
         TabRef.current.scrollTop = scrollTop.current - scrollY;
-        isClick = false;
+      if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
     };
 
     useEffect(() => {

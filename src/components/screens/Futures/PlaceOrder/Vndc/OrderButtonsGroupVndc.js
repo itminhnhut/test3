@@ -3,27 +3,13 @@ import { placeFuturesOrder, fetchFuturesSetting } from 'redux/actions/futures';
 import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { getLoginUrl, formatNumber, TypeTable } from 'src/redux/actions/utils';
+import { getLoginUrl, formatNumber, TypeTable, getType } from 'src/redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 import CheckBox from 'components/common/CheckBox';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useDispatch, useSelector } from 'react-redux';
-
-export const getType = (type) => {
-    switch (type) {
-        case FuturesOrderTypes.Limit:
-            return VndcFutureOrderType.Type.LIMIT;
-        case FuturesOrderTypes.Market:
-            return VndcFutureOrderType.Type.MARKET;
-        case FuturesOrderTypes.StopLimit:
-        case FuturesOrderTypes.StopMarket:
-            return VndcFutureOrderType.Type.STOP;
-        default:
-            return VndcFutureOrderType.Limit;
-    }
-};
 
 export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
