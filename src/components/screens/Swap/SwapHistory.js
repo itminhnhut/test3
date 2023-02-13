@@ -69,7 +69,7 @@ const SwapHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
-                        pagingPrevNext={{ page: state.page, histories: state.histories, onChangeNextPrev: onChangePagination, language }}
+                        pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
                         // page={state.currentPage}
                         // onChangePage={(currentPage) => setState({ currentPage })}
