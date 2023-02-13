@@ -14,14 +14,16 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
     return (
         <>
             <div className="mal-footer___pocket">
-                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[240px]' : ''} `}>
+                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px]' : ''} `}>
                     {auth ? (
                         width >= 1200 && (
                             <>
                                 <div className="mal-footer___pocket__logo mb-6">
                                     <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="188" alt="Nami Exchange" />
                                 </div>
-                                <SocialsLink language={language}   />
+                                <div className="w-[188px]">
+                                    <SocialsLink language={language} />
+                                </div>
                             </>
                         )
                     ) : (
@@ -31,10 +33,11 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <HrefButton href={getLoginUrl('sso', 'register')} className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm">
                                     {t('common:create_account')}
                                 </HrefButton>
-                                {
-                                    width < 1200 && <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'),"_self")}className="ml-4 w-[171px]">{t('common:sign_in')}</TextButton>
-                                }
-                                
+                                {width < 1200 && (
+                                    <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
+                                        {t('common:sign_in')}
+                                    </TextButton>
+                                )}
                             </div>
 
                             {width < 1200 && <hr className="border-divider-dark border mt-6" />}
