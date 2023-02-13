@@ -67,7 +67,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             >
                                 <a className="">{language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}</a>
                             </Link>
-                            <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
+                            {/* <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                                 <a className="invisible">Whitepaper</a>
                             </Link>
 
@@ -81,7 +81,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <a target="_blank" className="invisible">
                                     {t('navbar:menu.about')}
                                 </a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
 

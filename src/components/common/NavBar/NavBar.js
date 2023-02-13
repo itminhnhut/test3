@@ -414,7 +414,7 @@ const NavBar = ({
         });
 
         return (
-            <div className="mal-navbar__dropdown !pt-[31px]">
+            <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">

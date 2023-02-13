@@ -25,7 +25,7 @@ const LanguageSetting = () => {
                 <SvgGlobe type={2} size={20} />
             </a>
 
-            {isOpen && <div ref={ref} className="absolute bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-4 rounded-b-xl  ">
+            {isOpen && <div ref={ref} className="absolute mt-[1px] bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-4 rounded-b-xl  ">
                 {Object.values(LANGUAGE_TAG).map((lang) => (
                     <button
                         key={lang}
