@@ -42,15 +42,19 @@ const ModalV2 = ({
             },
             isVisible ? 10 : 200
         );
-        // if (isVisible) {
-        //     setTimeout(() => {
-        //         top.current = scroll_pause();
-        //     }, 100);
-        // } else {
-        //     if (top.current) scroll_resume(top.current);
-        // }
+        const hidding = document.body.classList.contains('overflow-hidden');
+        if (hidding) return;
+        if (isVisible) {
+            // setTimeout(() => {
+            //     top.current = scroll_pause();
+            // }, 100);
+            document.body.classList.add('overflow-hidden');
+        } else {
+            document.body.classList.remove('overflow-hidden');
+            // if (top.current) scroll_resume(top.current);
+        }
         return () => {
-            document.body.classList.remove('no-scroll');
+            document.body.classList.remove('no-scroll', 'overflow-hidden');
         };
     }, [isVisible]);
 

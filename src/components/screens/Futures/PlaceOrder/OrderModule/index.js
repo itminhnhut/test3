@@ -46,16 +46,28 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? lastPrice : price);
     }, [side, type, decimals, leverage, price]);
 
-    const onChangeSlTp = (leverage, _lastPrice) => {
-        const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
-        const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
-        if (leverage <= 10) {
-            setOrderSlTp({ tp: '', sl: '' });
-        } else if (leverage <= 20) {
-            setOrderSlTp({ tp: '', sl: _sl });
+    useEffect(() => {
+        if (!localStorage.getItem('web_auto_type_tp_sl')) {
+            localStorage.setItem('web_auto_type_tp_sl', JSON.stringify({ auto: true }));
         }
-        if (leverage > 20) {
-            setOrderSlTp({ tp: _tp, sl: _sl });
+    }, [pair]);
+
+    const onChangeSlTp = (leverage, _lastPrice) => {
+        let autoTypeInput = localStorage.getItem('web_auto_type_tp_sl');
+        if (autoTypeInput) {
+            autoTypeInput = JSON.parse(autoTypeInput);
+            if (autoTypeInput.auto) {
+                const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
+                const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
+                if (leverage <= 10) {
+                    setOrderSlTp({ tp: '', sl: '' });
+                } else if (leverage <= 20) {
+                    setOrderSlTp({ tp: '', sl: _sl });
+                }
+                if (leverage > 20) {
+                    setOrderSlTp({ tp: _tp, sl: _sl });
+                }
+            }
         }
     };
 
@@ -278,7 +290,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
     };
 
     const isMarket = FuturesOrderTypes.Market === type;
-    
+
     return (
         <div className="mt-4 space-y-4">
             <TradingInput

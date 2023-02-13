@@ -41,7 +41,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const [show, setShow] = useState({ tp: +order?.tp > 0, sl: +order?.sl > 0 });
     const profit = useRef({ tp: 0, sl: 0 });
     const [percent, setPercent] = useState({ tp: 0, sl: 0 });
-    const [mode, setMode] = useState({ tp: 'percent', sl: 'percent' });
+    const [mode, setMode] = useState({ tp: 'profit', sl: 'profit' });
     const dotStep = useRef(4);
     const isChangeSlide = useRef(false);
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -169,7 +169,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
             });
         }, 200);
 
-        let autoTypeInput = localStorage.getItem('auto_type_tp_sl');
+        let autoTypeInput = localStorage.getItem('web_auto_type_tp_sl');
         if (autoTypeInput) {
             autoTypeInput = JSON.parse(autoTypeInput);
             setAutoType(autoTypeInput?.auto);
@@ -207,6 +207,11 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
             ...show,
             [key]: !show[key]
         });
+    };
+
+    const onChangeAutoType = () => {
+        localStorage.setItem('web_auto_type_tp_sl', JSON.stringify({ auto: !autoType }));
+        setAutoType(!autoType);
     };
 
     const onHandleSwap = (key) => {
@@ -362,7 +367,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         <span className="font-semibold">{formatNumber(lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
-                <CheckBox isV3 onChange={() => setAutoType(!autoType)} active={autoType} className="h-full" label={t('futures:mobile:auto_type_sltp')} />
+                <CheckBox isV3 onChange={onChangeAutoType} active={autoType} className="h-full" label={t('futures:mobile:auto_type_sltp')} />
                 <div className="mt-8 space-y-6">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between space-x-2">
@@ -394,11 +399,11 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         validator={inputValidator('stop_loss')}
                                     />
                                     <div
-                                        onClick={() => onHandleSwap('sl')}
+                                        // onClick={() => onHandleSwap('sl')}
                                         className="flex items-center p-3 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
                                     >
                                         <span className="min-w-[3rem] text-center">{mode.sl === 'profit' ? quoteAsset : '%'}</span>
-                                        <SwapIcon color={colors.teal} />
+                                        {/* <SwapIcon color={colors.teal} /> */}
                                     </div>
                                 </div>
                                 <div className={`mt-2 ${!show.sl ? 'hidden' : ''}`}>
@@ -448,11 +453,11 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         validator={inputValidator('take_profit')}
                                     />
                                     <div
-                                        onClick={() => onHandleSwap('tp')}
+                                        // onClick={() => onHandleSwap('tp')}
                                         className="flex items-center p-3 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
                                     >
                                         <span className="min-w-[3rem] text-center">{mode.tp === 'profit' ? quoteAsset : '%'}</span>
-                                        <SwapIcon color={colors.teal} />
+                                        {/* <SwapIcon color={colors.teal} /> */}
                                     </div>
                                 </div>
                                 <div className={`mt-2`}>
