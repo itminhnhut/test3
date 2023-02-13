@@ -60,25 +60,22 @@ const FuturesOrderButtonsGroupVndc = ({
         return settings?.user_setting?.show_place_order_confirm_modal;
     }, [settings]);
 
-    const handleParams = useCallback(
-        (side) => {
-            const requestId = Math.floor(Date.now() / 2000);
-            const params = {
-                symbol: pairConfig?.symbol,
-                type: getType(type),
-                side: side,
-                price: +_price,
-                leverage,
-                sl: +orderSlTp?.sl,
-                tp: +orderSlTp?.tp,
-                quoteQty: +quoteQty,
-                useQuoteQty: true,
-                requestId
-            };
-            return params;
-        },
-        [pairConfig?.symbol, type, price, orderSlTp, ask, bid]
-    );
+    const handleParams = (side) => {
+        const requestId = Math.floor(Date.now() / 2000);
+        const params = {
+            symbol: pairConfig?.symbol,
+            type: getType(type),
+            side: side,
+            price: +_price,
+            leverage,
+            sl: +orderSlTp?.sl,
+            tp: +orderSlTp?.tp,
+            quoteQty: +quoteQty,
+            useQuoteQty: true,
+            requestId
+        };
+        return params;
+    };
 
     const onSave = () => {
         setLoading(true);
@@ -205,7 +202,7 @@ const FuturesOrderButtonsGroupVndc = ({
                 <ButtonV2
                     onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
                     disabled={isAuth && isError}
-                    className="flex flex-col !h-[60px]"
+                    className={`flex flex-col !h-[60px] ${isBuy ? '' : '!bg-red'}`}
                 >
                     <span>{isAuth ? (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title : t('futures:order_table:login_to_continue')}</span>
                     <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>

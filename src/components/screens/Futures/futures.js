@@ -23,6 +23,7 @@ import { getOrdersList } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -434,11 +435,16 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowAssets && (
+                                {filterLayout.isShowAssets && (
                                     <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
-                                        <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} />
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            decimals={decimals}
+                                        />
                                     </div>
-                                )} */}
+                                )}
                             </GridLayout>
                         )}
                     </div>

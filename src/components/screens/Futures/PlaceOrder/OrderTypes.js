@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -50,7 +50,7 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
         return (
             <Tabs isDark tab={currentType} className="gap-8 border-b border-divider-dark">
                 {orderFilter?.map((tab) => (
-                    <TabItem className="!text-left !px-0" value={tab} onClick={() => setOrderTypes(tab)}>
+                    <TabItem className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setOrderTypes(tab)}>
                         {getTypesLabel(tab)}
                     </TabItem>
                 ))}
@@ -109,8 +109,8 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
     };
 
     return (
-        <div className="relative flex items-center select-none">
-            <div className="relative z-20 mr-[18px] flex flex-grow">
+        <div className="relative flex items-center select-none ">
+            <div className="relative z-20 overflow-hidden">
                 {renderCommonTypes()}
                 {!isVndcFutures && renderCurrentAdvanceTypes()}
             </div>

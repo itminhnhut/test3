@@ -54,17 +54,22 @@ const TradingInput = ({
                     { 'border-onus-green': onusMode && state.isFocus },
                     { '!border-red': !onusMode && isError },
                     { '!border-onus-red': onusMode && isError },
+                    { 'h-11 sm:h-12': !onusMode },
                     containerClassName
                 )}
             >
                 {/* Label */}
-                <div
-                    onClick={focusInput}
-                    className={classNames('text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-default whitespace-nowrap', labelClassName)}
-                >
-                    {label || 'Label?'}
-                </div>
-
+                {label && (
+                    <div
+                        onClick={focusInput}
+                        className={classNames(
+                            'text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-default whitespace-nowrap',
+                            labelClassName
+                        )}
+                    >
+                        {label || 'Label?'}
+                    </div>
+                )}
                 {isError && state?.isFocus && errorTooltip ? (
                     <div className="absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center">
                         {validator?.msg && (

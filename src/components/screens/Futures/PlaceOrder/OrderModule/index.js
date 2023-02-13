@@ -46,7 +46,6 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         onChangeSlTp(leverage, type === FuturesOrderTypes.Market ? lastPrice : price);
     }, [side, type, decimals, leverage, price]);
 
-
     const onChangeSlTp = (leverage, _lastPrice) => {
         const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
         const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
@@ -70,7 +69,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             case 'quoteQty':
                 const _min = pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
                 const _decimals = 0;
-                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.NamiFrameOnus);
+                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.Nami);
                 const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
@@ -198,7 +197,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         },
                         _activePrice
                     );
-                    const bias = DefaultFuturesFee.NamiFrameOnus;
+                    const bias = DefaultFuturesFee.Nami;
                     const liquidatePriceBound = {
                         upper: liquidatePrice * (1 - bias),
                         lower: liquidatePrice * (1 + bias)
@@ -279,7 +278,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
     };
 
     const isMarket = FuturesOrderTypes.Market === type;
-
+    
     return (
         <div className="mt-4 space-y-4">
             <TradingInput
@@ -343,6 +342,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 type={type}
                 leverage={leverage}
                 isAuth={isAuth}
+                quoteQty={quoteQty}
             />
 
             {renderAvail()}

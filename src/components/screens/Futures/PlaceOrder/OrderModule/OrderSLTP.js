@@ -8,13 +8,31 @@ import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/Edit
 import Tooltip from 'components/common/Tooltip';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AddCircleIcon } from 'components/svg/SvgIcon';
+import EditSLTPV2 from './EditSLTPV2';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
-const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig, price, lastPrice, ask, bid, type, leverage, isAuth, inputValidator }) => {
+const FuturesOrderSLTP = ({
+    orderSlTp,
+    setOrderSlTp,
+    decimals,
+    side,
+    pairConfig,
+    price,
+    lastPrice,
+    ask,
+    bid,
+    type,
+    leverage,
+    isAuth,
+    inputValidator,
+    quoteQty
+}) => {
     const useSltp = useSelector((state) => state.futures.preloadedState?.useSltp) || false;
 
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const [showEditSLTP, setShowEditSLTP] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
     const rowData = useRef(null);
     const _price = type === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) : price;
 
@@ -39,7 +57,7 @@ const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig,
         rowData.current = {
             fee: 0,
             side: side,
-            quantity: +Number(String(size).replace(/,/g, '')),
+            quantity: quoteQty / lastPrice,
             status: 0,
             price: _price,
             quoteAsset: pairConfig.quoteAsset,
@@ -56,18 +74,27 @@ const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig,
             sl: data.sl
         });
         setShowEditSLTP(false);
+        setShowAlert(true);
     };
 
     return (
         <div className="space-y-4 mt-4">
+            <AlertModalV2
+                isVisible={showAlert}
+                onClose={() => setShowAlert(false)}
+                type="success"
+                title={t('common:success')}
+                message={t('futures:modify_order_success')}
+            />
             {showEditSLTP && (
-                <FuturesEditSLTPVndc
+                <EditSLTPV2
                     isVisible={showEditSLTP}
                     order={rowData.current}
                     onClose={() => setShowEditSLTP(false)}
-                    status={rowData.current.status}
+                    status={rowData.current?.status}
                     onConfirm={onConfirm}
                     lastPrice={lastPrice}
+                    decimals={decimals}
                 />
             )}
 

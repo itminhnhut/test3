@@ -42,13 +42,13 @@ const ModalV2 = ({
             },
             isVisible ? 10 : 200
         );
-        if (isVisible) {
-            setTimeout(() => {
-                top.current = scroll_pause();
-            }, 100);
-        } else {
-            if (top.current) scroll_resume(top.current);
-        }
+        // if (isVisible) {
+        //     setTimeout(() => {
+        //         top.current = scroll_pause();
+        //     }, 100);
+        // } else {
+        //     if (top.current) scroll_resume(top.current);
+        // }
         return () => {
             document.body.classList.remove('no-scroll');
         };
@@ -125,5 +125,8 @@ const scroll_pause = () => {
 const scroll_resume = (top) => {
     document.body.classList.remove('no-scroll');
     document.body.removeAttribute('style');
-    window.scrollTo(0, top);
+    if (top)
+        window.scrollTo({
+            top: top
+        });
 };
