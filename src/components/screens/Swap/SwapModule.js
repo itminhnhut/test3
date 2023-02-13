@@ -906,13 +906,13 @@ const SwapModule = ({ width, pair }) => {
                                     className={`p-1.5 dark:bg-hover-dark shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
                                     onClick={onReverse}
                                 >
-                                    <SyncAltIcon size={width < 1280 && 24} />
+                                    <SyncAltIcon size={width < 640 && 24} />
                                 </button>
                             </div>
 
                             <div
-                                className={`py-6 px-4 rounded-xl relative border border-solid
-                            ${state.inputHighlighted === 'to' ? 'border-dominant' : `border-divider dark:border-divider-dark`} `}
+                                className={`py-6 px-4 rounded-xl relative bg-bgInput dark:bg-bgInput-dark border dark:border-listItemSelected-dark
+                                                            ${state.inputHighlighted === 'to' && 'dark:border-dominant'} `}
                             >
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:to')}</span>
