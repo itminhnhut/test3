@@ -14,6 +14,7 @@ import Skeletor from 'components/common/Skeletor';
 import { BINANCE_LEVERAGE_MARGIN } from 'constants/constants';
 import fetchAPI from 'utils/fetch-api';
 import useMakePrice from 'hooks/useMakePrice';
+import TableV2 from 'components/common/V2/Table'
 
 const FuturesPosition = ({
     pairConfig,
@@ -303,7 +304,7 @@ const FuturesPosition = ({
 
     return (
         <>
-            <DataTable
+            {/* <DataTable
                 responsive
                 fixedHeader
                 sortIcon={<ChevronDown size={8} strokeWidth={1.5}/>}
@@ -312,13 +313,15 @@ const FuturesPosition = ({
                 customStyles={customTableStyles}
                 noDataComponent={
                     <div className="min-h-[200px] flex items-center justify-center">
-                        {/* Place graphics here if needed */}
                         <div className="text-txtSecondary dark:text-txtSecondary-dark">
                             No data
                         </div>
                     </div>
                 }
-            />
+            /> */}
+
+            <TableV2>
+            </TableV2>
             <FuturesEditSLTP
                 isVisible={isEdit}
                 order={currentOrder}

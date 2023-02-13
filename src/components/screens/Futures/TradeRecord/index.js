@@ -89,7 +89,7 @@ const FuturesTradeRecord = ({
 
     return (
         <div ref={tableRef} className="flex flex-col h-full overflow-y-hidden">
-            <div className="min-h-[42px] px-5 flex items-center border-b border-divider dark:border-divider-dark">
+            <div className="min-h-[52px] px-5 flex items-center border-b border-divider dark:border-divider-dark">
                 <FuturesRecordTableTab
                     tabActive={tabActive}
                     onChangeTab={onChangeTab}
@@ -97,11 +97,11 @@ const FuturesTradeRecord = ({
                     countOrders={ordersList.length}
                 />
                 <div
-                    className="flex items-center text-sm font-medium cursor-pointer select-none"
+                    className="flex items-center text-sm font-medium cursor-pointer select-none gap-3"
                     onClick={hideOtherToggle}
                 >
-                    <CheckBox active={hideOther}/>{' '}
-                    <span className="ml-1 font-medium whitespace-nowrap text-gray dark:text-txtSecondary-dark">
+                    <CheckBox active={hideOther}/>
+                    <span className="font-medium whitespace-nowrap text-gray dark:text-txtSecondary-dark">
                         {t('futures:hide_other_symbols')}
                     </span>
                 </div>
