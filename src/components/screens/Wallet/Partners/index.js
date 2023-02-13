@@ -338,7 +338,7 @@ const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         // <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.TRANSFER, { from: 'futures', to: '', asset: assetName })} prefetch={false}>
         <ButtonV2
-            variants="blank"
+            variants="text"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
             className="!text-base"
         >
