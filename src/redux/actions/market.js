@@ -17,14 +17,14 @@ import {
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 
-export const actionExample = async (payload, next = f => f) => {
+export const actionExample = async (payload, next = (f) => f) => {
     return {
         type: types.SINGLE_API,
         payload: {
             url: '/example',
             payload,
             options: {
-                method: 'POST',
+                method: 'POST'
             },
             next: async (err, response) => {
                 if (err) {
@@ -33,56 +33,56 @@ export const actionExample = async (payload, next = f => f) => {
 
                 // Do smt
                 next();
-            },
-        },
+            }
+        }
     };
 };
 
 export function getExchangeConfig() {
-    return async dispatch => {
+    return async (dispatch) => {
         try {
             const res = await fetchAPI({
                 url: API_GET_EXCHANGE_CONFIG,
                 options: {
-                    method: 'GET',
-                },
+                    method: 'GET'
+                }
             });
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.SET_EXCHANGE_CONFIG,
-                    payload: data,
+                    payload: data
                 });
             }
         } catch (e) {
             dispatch({
                 type: types.SET_EXCHANGE_CONFIG,
-                payload: [],
+                payload: []
             });
         }
     };
 }
 
 export function getAssetConfig() {
-    return async dispatch => {
+    return async (dispatch) => {
         try {
             const res = await fetchAPI({
                 url: API_GET_ASSET_CONFIG,
                 options: {
-                    method: 'GET',
-                },
+                    method: 'GET'
+                }
             });
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.SET_ASSET_CONFIG,
-                    payload: data,
+                    payload: data
                 });
             }
         } catch (e) {
             dispatch({
                 type: types.SET_ASSET_CONFIG,
-                payload: [],
+                payload: []
             });
         }
     };
@@ -93,12 +93,12 @@ export async function getMarketWatch(symbol = null) {
         const opts = {
             url: API_GET_MARKET_WATCH,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         };
         if (symbol) {
             opts.params = {
-                symbol,
+                symbol
             };
         }
         const res = await fetchAPI(opts);
@@ -119,16 +119,16 @@ export async function getSwapEstimatePrice(params) {
                 method: 'GET'
             },
             params
-        }
+        };
 
-        const { data  } = await fetchAPI(opts)
+        const { data } = await fetchAPI(opts);
         if (data && data?.status === ApiStatus.SUCCESS && data?.data) {
-            console.log('namidev-DEBUG: __ EST RATE ', data)
-            return { status: ApiStatus.SUCCESS, data: data.data }
+            console.log('namidev-DEBUG: __ EST RATE ', data);
+            return { status: ApiStatus.SUCCESS, data: data.data };
         }
     } catch (e) {
-        console.log(`Cant estimate price `, e)
-        return { status: ApiStatus.ERROR }
+        console.log(`Cant estimate price `, e);
+        return { status: ApiStatus.ERROR };
     }
 }
 
@@ -137,11 +137,11 @@ export async function getFuturesMarketWatch() {
         const opts = {
             url: API_GET_FUTURES_MARKET_WATCH,
             options: { method: 'GET' }
-        }
-        const data = await fetchAPI(opts)
-        if (data?.status === 'ok' && data.data) return data.data
+        };
+        const data = await fetchAPI(opts);
+        if (data?.status === 'ok' && data.data) return data.data;
     } catch (e) {
-        return []
+        return [];
     }
 }
 
@@ -150,8 +150,8 @@ export async function getUserSymbolList() {
         const opts = {
             url: API_WATCH_LIST,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -168,11 +168,11 @@ export async function postSymbolViews(symbol) {
         const opts = {
             url: API_METRIC_VIEW,
             options: {
-                method: 'POST',
+                method: 'POST'
             },
             params: {
-                symbol,
-            },
+                symbol
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -189,11 +189,12 @@ export async function setUserSymbolList(id, assets) {
         const opts = {
             url: API_WATCH_LIST,
             options: {
-                method: 'PUT',
+                method: 'PUT'
             },
             params: {
-                id, assets,
-            },
+                id,
+                assets
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -210,9 +211,9 @@ export async function getOrderBook(symbol) {
         const res = await fetchAPI({
             url: API_GET_ORDER_BOOK,
             options: {
-                method: 'GET',
+                method: 'GET'
             },
-            params: { symbol },
+            params: { symbol }
         });
         const { status, data } = res;
         if (status === ApiStatus.SUCCESS) {
@@ -228,9 +229,9 @@ export async function getRecentTrade(symbol) {
         const res = await fetchAPI({
             url: API_GET_RECENT_TRADE,
             options: {
-                method: 'GET',
+                method: 'GET'
             },
-            params: { symbol },
+            params: { symbol }
         });
         const { status, data } = res;
         if (status === ApiStatus.SUCCESS) {
@@ -246,8 +247,8 @@ export async function getCategoryAvatarList() {
         const opts = {
             url: API_CATEGORY_AVATAR_LIST,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -265,14 +266,14 @@ export async function createCategory({ name = '', assets = '', avatar = null, is
         const opts = {
             url: API_WATCH_LIST,
             options: {
-                method: 'POST',
+                method: 'POST'
             },
             params: {
                 name,
                 assets,
                 avatar,
-                isDefault,
-            },
+                isDefault
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -289,8 +290,8 @@ export async function getCategoryList() {
         const opts = {
             url: API_WATCH_LIST,
             options: {
-                method: 'GET',
-            },
+                method: 'GET'
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -309,28 +310,28 @@ export async function updateCategory({ id = '', assets = [], avatar = '', isDefa
             opts = {
                 url: API_WATCH_LIST,
                 options: {
-                    method: 'PUT',
+                    method: 'PUT'
                 },
                 params: {
                     id,
                     assets,
                     avatar,
                     isDefault,
-                    name,
-                },
+                    name
+                }
             };
         } else {
             opts = {
                 url: API_WATCH_LIST,
                 options: {
-                    method: 'PUT',
+                    method: 'PUT'
                 },
                 params: {
                     id,
                     assets,
                     avatar,
-                    isDefault,
-                },
+                    isDefault
+                }
             };
         }
         const res = await fetchAPI(opts);
@@ -348,11 +349,11 @@ export async function deleteCategory({ id = '' }) {
         const opts = {
             url: API_WATCH_LIST,
             options: {
-                method: 'DELETE',
+                method: 'DELETE'
             },
             params: {
-                id,
-            },
+                id
+            }
         };
         const res = await fetchAPI(opts);
         const { status, data } = res;
@@ -369,13 +370,13 @@ export async function getUsdRate() {
         const otps = {
             url: API_GET_USD_RATE,
             options: { method: 'GET' }
-        }
+        };
 
-        const { status, data } = await fetchAPI(otps)
+        const { status, data } = await fetchAPI(otps);
         if (status === ApiStatus.SUCCESS) {
-            return data
+            return data;
         }
     } catch (e) {
-        return null
+        return null;
     }
 }

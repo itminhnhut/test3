@@ -39,6 +39,7 @@ const Market = () => {
 
     const { user: auth } = useSelector(state => state.auth) || null
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
+    const futuresConfigs = useSelector((state) => state?.futures?.pairConfigs);
 
     let categories = useMemo(() => {
         const data = {
@@ -166,6 +167,7 @@ const Market = () => {
                 auth={auth}
                 suggestedSymbols={suggested}
                 favType={state.favType}
+                futuresConfigs={futuresConfigs}
             />
         )
     }, [
@@ -198,6 +200,9 @@ const Market = () => {
     useEffect(() => {
         let watch = []
         let convert = []
+
+        const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
+
         if (state.exchangeMarket && state.futuresMarket) {
             setState({ loading: true })
             convert = {
@@ -282,7 +287,7 @@ const Market = () => {
         
             setState({
                 tabLabelCount: {
-                    favorite: favorite?.length - 1,
+                    favorite: favorite?.length,
                     exchange: exchange?.length,
                     futures: futures?.length
                 }
@@ -371,29 +376,7 @@ const filterer = (data, keyWord) => {
 }
 
 const MarketWrapper = styled.div.attrs({ className: 'mal-container' })`
-  @media (min-width: 1024px) {
-    max-width: 980px !important;
-  }
-
-  @media (min-width: 1280px) {
-    max-width: 1164px !important;
-  }
-
-  @media (min-width: 1366px) {
-    max-width: 1280px !important;
-  }
-
-  @media (min-width: 1440px) {
-    max-width: 1366px !important;
-  }
-
-  @media (min-width: 1920px) {
-    max-width: 1440px !important;
-  }
-
-  @media (min-width: 2560px) {
-    max-width: unset !important;
-  }
+  max-width: 1216px;
 `
 
 export default Market

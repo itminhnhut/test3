@@ -46,15 +46,16 @@ const Tab = memo(
 
         const render = useCallback(() => {
             if (type === TAB_TYPE.TYPE1) {
-                let className = 'relative py-4 font-medium cursor-pointer whitespace-nowrap hover:text-txtPrimary dark:hover:text-txtPrimary-dark ';
+                let className = 'relative py-4 font-normal text-base cursor-pointer whitespace-nowrap ' + ' ';
                 if (itemClassName) {
                     className = className + itemClassName;
                 }
 
-                const inactive = 'text-txtSecondary dark:text-txtSecondary-dark ';
-                const active = 'font-semibold text-txtPrimary dark:text-txtPrimary-dark ';
+                const inactive = 'text-txtSecondary dark:text-txtSecondary-dark dark:hover:text-txtTabHover-dark ';
+                const active = '!font-semibold text-txtPrimary dark:text-txtPrimary-dark ';
 
                 return series.map((s) => {
+                    const x = s?.key === currentIndex ? className + active : className + inactive;
                     return (
                         <TabItem
                             key={`tab_${name}__${s?.key}`}
@@ -75,7 +76,11 @@ const Tab = memo(
             }
         }, [name, type, itemStyles, itemClassName, currentIndex]);
 
-        return <TabWrapper className={className} isBorderBottom={isBorderBottom}>{render()}</TabWrapper>;
+        return (
+            <TabWrapper className={className} isBorderBottom={isBorderBottom}>
+                {render()}
+            </TabWrapper>
+        );
     }
 );
 

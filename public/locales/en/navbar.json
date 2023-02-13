@@ -20,7 +20,7 @@
         "product": "Product",
         "market": "Market",
         "explained": "Explained",
-        "today": "Nami.Today",
+        "today": "Nami Today",
         "more": "More",
         "user": {
             "user": "User Control",
@@ -56,6 +56,8 @@
         "farming_description": "Farming NAMI and get many potential tokens",
         "referral": "Referral Report",
         "referral_description": "Receive up to 20% commission from friends' trades",
+        "transfer": "Transfer",
+        "transfer_description": "",
         "spot_wallet": "Exchange Wallet",
         "futures_wallet": "Futures Wallet",
         "staking_wallet": "Staking Wallet",
@@ -109,5 +111,12 @@
     "read_all_noti": "You have scrolled through all the notifications",
     "not_verified": "Not verified",
     "pending_approval": "Pending approval",
-    "verified": "Verified"
+    "verified": "Verified",
+    "verify_account": "Verify account",
+    "use": "Use",
+    "get_discount": "to get discount",
+    "trade_on": "Download on the",
+    "scan_qr": "Scan the QR code to download Nami Exchange",
+    "down_with_qr": "Down Nami Exchange",
+    "footer_title": "Secure Exchanges and Futures Exchange"
 }

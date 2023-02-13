@@ -598,7 +598,7 @@ const StakingWallet = memo(({ summary, loadingSummary }) => {
     return (
         <div>
             {renderDashboard2()}
-            <div className="t-common mt-12">Staking</div>
+            <div className="t-common-v2 mt-12">Staking</div>
             <MCard addClass="mt-8 pt-10 pb-0 px-0 rounded-bl-none rounded-br-none overflow-hidden">
                 {renderTableTab()}
                 <div className="mt-8">

@@ -153,7 +153,9 @@ body {
     }
 
     .mal-container {
-        @apply container;
+        // @apply container;
+        // padding:0 16px;
+        margin:auto;
 
         @media (min-width: 1024px) {
             max-width: 900px;
@@ -164,7 +166,7 @@ body {
         }
 
         @media (min-width: 1920px) {
-            max-width: 1200px;
+            max-width: 1216px;
         }
 
         @media (min-width: 2560px) {
@@ -176,6 +178,11 @@ body {
         @apply font-bold text-[20px] leading-[34px]
     md:text-[26px] md:leading-[40px]
     text-txtPrimary dark:text-txtPrimary-dark;
+    }
+
+    .t-common-v2 {
+        @apply font-semibold text-[32px] leading-[38px]
+        text-txtPrimary dark:text-txtPrimary-dark;
     }
 
     .value-up {

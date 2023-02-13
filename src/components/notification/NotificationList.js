@@ -12,6 +12,7 @@ import colors from 'styles/colors';
 import { useClickAway, useToggle } from 'react-use';
 import Bell from 'components/svg/Bell';
 import { BxsBellIcon } from '../svg/SvgIcon';
+import TextButton from 'src/components/common/V2/ButtonV2/TextButton';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
@@ -141,7 +142,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     }
     return (
         <>
-            <div className="mal-navbar__hamburger__spacing h-full sm:relative">
+            <div  ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
                     className={`!h-full btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
@@ -164,7 +165,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                 </button>
 
                 <div
-                    ref={ref}
+                   
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
                         'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
@@ -173,11 +174,13 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     <div className="py-6">
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
-                            {unreadCount > 0 && (
+
+                            <TextButton className="w-[fit-content] text-sm font-semibold">Xoá tất cả</TextButton>
+                            {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                         <div className="max-h-[488px]  min-h-[400px] overflow-y-auto mb-8">{content}</div>
 
