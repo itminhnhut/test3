@@ -1,12 +1,12 @@
 import React from 'react';
 import classNames from 'classnames';
-import Spinner from 'components/svg/Spinner'
+import Spinner from 'components/svg/Spinner';
 
 const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading }) => {
     return (
         <button
             className={classNames(
-                'flex items-center justify-center rounded-lg px-auto py-auto font-medium h-[2.75rem] sm:h-[3rem] text-sm sm:text-base w-full py-3',
+                'flex items-center justify-center rounded-lg px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3',
                 {
                     'dark:bg-bgBtnV2 dark:hover:bg-bgBtnV2-dark_pressed dark:active:bg-bgBtnV2-pressed dark:disabled:bg-bgBtnV2-dark_disabled text-white':
                         variants === 'primary',
@@ -16,7 +16,7 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
                 },
                 className
             )}
-            onClick={(loading || disabled) ? null : onClick}
+            onClick={loading || disabled ? null : onClick}
             disabled={loading || disabled}
         >
             {loading ? <Spinner /> : children}

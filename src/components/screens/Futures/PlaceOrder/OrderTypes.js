@@ -50,7 +50,7 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
         return (
             <Tabs isDark tab={currentType} className="gap-8 border-b border-divider-dark">
                 {orderFilter?.map((tab) => (
-                    <TabItem className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setOrderTypes(tab)}>
+                    <TabItem V2 className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setOrderTypes(tab)}>
                         {getTypesLabel(tab)}
                     </TabItem>
                 ))}

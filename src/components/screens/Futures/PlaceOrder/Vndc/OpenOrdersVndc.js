@@ -26,9 +26,9 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
 import TableV2 from 'components/common/V2/TableV2';
-import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/OrderModule/EditSLTPV2';
+import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import EditVolV2 from 'components/screens/Futures/PlaceOrder/OrderModule/EditVolV2';
+import EditVolV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditVolV2';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair }) => {
     const {
