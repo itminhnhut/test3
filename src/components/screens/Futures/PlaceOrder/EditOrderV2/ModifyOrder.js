@@ -22,7 +22,7 @@ const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, p
     const _avlb = wallet?.[params.assetId];
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
-const ModifyOrder = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, pairTicker }) => {
+const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicker }) => {
     const { t } = useTranslation();
     const [tab, setTab] = useState('vol');
     const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
@@ -48,6 +48,10 @@ const ModifyOrder = ({ isVisible, onClose, order, status, lastPrice, decimals, o
         notes: ''
     });
 
+    useEffect(() => {
+        if (isVisible) setTab('vol');
+    }, [isVisible]);
+
     const _onConfirm = (msg) => {
         message.current = msg;
         setShowAlert(true);
@@ -59,9 +63,10 @@ const ModifyOrder = ({ isVisible, onClose, order, status, lastPrice, decimals, o
             <AlertModalV2
                 isVisible={showAlert}
                 onClose={() => setShowAlert(false)}
-                type={message.current.status}
-                title={message.current.title}
-                message={message.current.message}
+                type={message.current?.status}
+                title={message.current?.title}
+                message={message.current?.message}
+                notes={message.current?.notes}
             />
             <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-2xl font-semibold mb-2">Điều chỉnh lệnh</div>
@@ -93,8 +98,6 @@ const ModifyOrder = ({ isVisible, onClose, order, status, lastPrice, decimals, o
                     {tab === 'margin' && (
                         <EditMarginV2
                             order={order}
-                            pairConfig={pairConfig}
-                            pairTicker={pairTicker}
                             available={available}
                             _lastPrice={_lastPrice}
                             quoteAsset={quoteAsset}

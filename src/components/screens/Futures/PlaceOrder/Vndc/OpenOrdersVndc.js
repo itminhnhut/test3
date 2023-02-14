@@ -479,7 +479,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showEditVol}
                 order={rowData.current}
                 onClose={() => setShowEditVol(false)}
-                status={rowData.current?.status}
                 onConfirm={() => console.log(232323)}
                 pairConfig={pairConfig}
                 decimals={decimals}
