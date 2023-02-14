@@ -1,0 +1,39 @@
+import React from 'react';
+import styled, { css } from 'styled-components';
+import colors from 'styles/colors';
+
+const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
+    return (
+        <TabWrapper isOverflow={isOverflow}>
+            {tabs.map((tab) => {
+                const isActive = tab.key === activeTabKey;
+                return (
+                    <Tab onClick={isActive ? undefined : () => onChangeTab(tab.key)} key={tab.key} active={isActive}>
+                        {tab.children}
+                    </Tab>
+                );
+            })}
+        </TabWrapper>
+    );
+};
+
+const TabWrapper = styled.div.attrs({ className: 'flex gap-4 items-center' })`
+    ${({ isOverflow }) =>
+        !isOverflow
+            ? css`
+                  flex-wrap: wrap;
+              `
+            : 'overflow-x: auto;padding-bottom:16px;'};
+`;
+
+const Tab = styled.div`
+    color: ${({ active }) => (active ? colors.teal : colors.darkBlue5)};
+    border: 1px solid ${({ active }) => (active ? colors.teal : colors.divider.dark)};
+    padding: 8px 16px;
+    border-radius: 10000px;
+    background: ${({ active }) => (active ? `${colors.teal}10` : 'transparent')};
+    cursor: ${({ active }) => (active ? 'default' : 'pointer')};
+    min-width: fit-content;
+`;
+
+export default TabV2;

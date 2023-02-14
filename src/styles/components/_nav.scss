@@ -21,7 +21,11 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
+    
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
@@ -83,6 +87,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -157,6 +164,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -261,7 +271,11 @@
   .mal-navbar__user___wallet {
     @apply flex items-center cursor-pointer;
     font-size: 14px;
-
+    :hover {
+      svg {
+        transform:rotate(360deg) ;
+      }
+    }
     span {
       @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
@@ -344,7 +358,7 @@
     .mal-navbar__link__group___item {
       @apply flex items-center h-full text-sm font-normal text-txtPrimary-dark
       relative;
-
+      letter-spacing: normal;
       cursor: pointer;
       margin-left: 44px;
       
@@ -359,9 +373,11 @@
         .mal-navbar__link__group___item___childen__lv1__w__icon {
           @apply flex #{!important};
         }
+        
 
         .chevron__down {
-          transform: rotate(-180deg);
+          transform: rotate(360deg);
+          
           
 
           path {
@@ -522,7 +538,8 @@
 
     &:hover {
       .chevron__down {
-        transform: rotate(180deg);
+        transform: rotate(360deg);
+       
 
         path {
           stroke: #00c8bc;
@@ -594,7 +611,7 @@
   height: 100%;
   transition: all 0.1s ease;
   transform: translateX(100%);
-  padding-top: 13px;
+  padding-top: 20px;
   padding-bottom: 76px;
   overflow-y: scroll;
   user-select: none;
@@ -604,7 +621,7 @@
     .user__button {
       padding-left: 16px;
       padding-right: 16px;
-      margin-top: 20px;
+      margin-top: 16px;
 
       div {
         width: calc(97% / 2);
@@ -617,11 +634,15 @@
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item {
-    @apply flex flex-row flex-wrap items-center justify-between text-sm;
+    @apply flex flex-row flex-wrap items-center justify-between text-sm mb-2;
 
     font-weight: 600;
-    padding: 16px;
+    padding: 12px 16px;
+   
     cursor: pointer;
+    &:last-child {
+    margin-bottom:0;
+    }
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item__lv1 {
@@ -645,7 +666,7 @@
 
   .mal-pocket-nabar__item___hover {
     &:hover {
-      @apply bg-listItemSelected dark:bg-listItemSelected-dark;
+      @apply bg-listItemSelected dark:bg-hover;
 
       span {
         @apply text-dominant;

@@ -42,7 +42,7 @@ function TagV2({
         }}
         className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
     >
-        {style.icon && React.createElement(style.icon, {className: 'mr-2'})}
+        {/* {style.icon && React.createElement(style.icon, {className: 'mr-2'})} */}
         <span>{children}</span>
     </span>;
 }

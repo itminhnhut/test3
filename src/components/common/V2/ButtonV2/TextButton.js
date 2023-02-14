@@ -5,9 +5,10 @@ const TextButton = ({ className = '', disabled = false, children, variants = 'pr
     return (
         <button
             className={classNames(
-                'flex justify-center items-center whitespace-nowrap font-semibold text-sm h-[2.75rem] sm:h-[3rem] w-full py-6 bg-transparent',
+                'flex whitespace-nowrap items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
                 {
-                    'text-teal !text-sm focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed': variants === 'primary',
+                    'px-0 text-sm dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed dark:disabled:text-txtTextBtn-dark_disabled dark:disabled:pointer-events-none':
+                        variants === 'primary',
                     'text-gray-5/[0.1]': disabled
                 },
                 className

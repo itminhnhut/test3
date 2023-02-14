@@ -42,15 +42,19 @@ const ModalV2 = ({
             },
             isVisible ? 10 : 200
         );
+        const hidding = document.body.classList.contains('overflow-hidden');
+        if (hidding) return;
         if (isVisible) {
-            setTimeout(() => {
-                top.current = scroll_pause();
-            }, 100);
+            // setTimeout(() => {
+            //     top.current = scroll_pause();
+            // }, 100);
+            document.body.classList.add('overflow-hidden');
         } else {
-            if (top.current) scroll_resume(top.current);
+            document.body.classList.remove('overflow-hidden');
+            // if (top.current) scroll_resume(top.current);
         }
         return () => {
-            document.body.classList.remove('no-scroll');
+            document.body.classList.remove('no-scroll', 'overflow-hidden');
         };
     }, [isVisible]);
 
@@ -60,7 +64,6 @@ const ModalV2 = ({
             <div
                 className={classnames(
                     'fixed top-0 left-0 z-[99] w-full h-full overflow-hidden bg-shadow/[0.6]',
-                    'z-30',
                     {
                         invisible: !isVisible && !mount,
                         visible: isVisible
@@ -88,7 +91,7 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-bgSpotContainer dark:bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()
@@ -96,7 +99,7 @@ const ModalV2 = ({
                                           <div
                                               className={classnames(
                                                   'flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2',
-                                                  { '-mt-6': !isMobile, 'dark:bg-dark': isMobile },
+                                                  { '-mt-6': !isMobile, 'bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}
                                           >
@@ -125,5 +128,8 @@ const scroll_pause = () => {
 const scroll_resume = (top) => {
     document.body.classList.remove('no-scroll');
     document.body.removeAttribute('style');
-    window.scrollTo(0, top);
+    if (top)
+        window.scrollTo({
+            top: top
+        });
 };

@@ -10,11 +10,15 @@ import Pagination from 'rc-pagination';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import styled from 'styled-components';
 import colors from 'styles/colors';
+import * as _ from 'lodash';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 import 'rc-pagination/assets/index.css';
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'react-feather';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, ...restProps }) => {
     const [currentTheme] = useDarkMode();
 
     useEffect(() => {
@@ -22,6 +26,24 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
     }, [current, name]);
 
     const Wapper = NamiV2PaginationWrapper;
+    if (!_.isEmpty(pagingPrevNext)) {
+        const { language, page, hasNext, onChangeNextPrev } = pagingPrevNext;
+
+        return (
+            <Wapper isDark={currentTheme === THEME_MODE.DARK}>
+                <div className="w-full flex items-center justify-center select-none gap-8">
+                    <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
+                        <ChevronLeft size={16} />
+                        {language === LANGUAGE_TAG.VI ? 'Trước' : 'Prev'}
+                    </TextButton>
+                    <TextButton disabled={!hasNext} className={`!text-base gap-2`} onClick={() => hasNext && onChangeNextPrev(+1)}>
+                        {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
+                        <ChevronRight size={16} />
+                    </TextButton>
+                </div>
+            </Wapper>
+        );
+    }
 
     return (
         <Wapper isDark={currentTheme === THEME_MODE.DARK}>

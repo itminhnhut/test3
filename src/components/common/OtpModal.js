@@ -2,8 +2,15 @@ import useWindowSize from 'hooks/useWindowSize'
 import classNames from 'classnames'
 import OtpInput from 'react-otp-input'
 import Modal from './ReModal'
+import ModalV2 from 'components/common/V2/ModalV2'
+import Button from 'components/common/V2/ButtonV2/Button'
 
 import { BREAK_POINTS } from 'constants/constants'
+import { getLoginUrl } from 'redux/actions/utils'
+import { X } from 'react-feather'
+import Copy from 'components/svg/Copy'
+import colors from 'styles/colors'
+import { useTranslation } from 'next-i18next'
 
 const OtpModal = ({
     isVisible,
@@ -17,22 +24,35 @@ const OtpModal = ({
     renderLower,
     className,
 }) => {
-    const { width } = useWindowSize()
+    const { t } = useTranslation()
+
+    const doPaste = async () => {
+        const data = await navigator.clipboard.readText()
+        onChange(data.slice(0, 6))
+    }
 
     return (
-        <Modal
+        <ModalV2
             isVisible={isVisible}
             containerClassName={classNames(
-                'p-[32px] !translate-y-0 sm:min-w-[0px] rounded-[12px]',
+                'p-[32px] !translate-y-0 sm:min-w-[0px] !bg-[#000]',
                 className
             )}
+            className='!max-w-[488px]'
+            customHeader={() =>
+                <div className='flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2 text-gray-4 bg-dark'>
+                    <a href={getLoginUrl('sso', 'login')}>
+                        <X size={24} className="cursor-pointer" />
+                    </a>
+                </div>
+            }
         >
-            <div className={classNames({ 'mb-[32px]': !!renderUpper })}>
+            <div className={classNames({ 'mb-4 text-gray-4 font-semibold text-[22px] leading-[30px] mt-6': !!renderUpper })}>
                 {typeof renderUpper === 'function'
                     ? renderUpper()
                     : renderUpper}
             </div>
-            {label && <div className='font-medium text-sm max-w-lg'>{label}</div>}
+            {label && <div className='text-darkBlue-5 font-normal text-base max-w-lg'>{label}</div>}
             <OtpInput
                 value={value}
                 onChange={(otp) => onChange(otp)}
@@ -40,14 +60,32 @@ const OtpModal = ({
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!w-[40px] !h-[40px] sm:!w-[58.3px] mr-1.5 sm:mr-2 sm:!h-[58.3px] font-bold text-lg sm:text-2xl border border-divider dark:border-divider-dark rounded-[10px] sm:rounded-[13.72px] selection:bg-transparent focus:!border-dominant placeholder:font-medium placeholder:text-txtSecondary dark:placeholder:text-txtSecondary-dark'
+                inputStyle='!h-[64px] !w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
             />
-            <div className={classNames({ 'mt-4': !!renderLower })}>
-                {typeof renderLower === 'function'
-                    ? renderLower()
-                    : renderLower}
+            <div className='flex w-full justify-between items-center'>
+                <div className={classNames({ 'mt-4': !!renderLower })}>
+                    {typeof renderLower === 'function'
+                        ? renderLower()
+                        : renderLower}
+                </div>
+                <div className='w-full flex justify-end items-center space-x-2 mt-7 cursor-pointer'
+                    onClick={async () => await doPaste()}
+                >
+                    <Copy color={colors.teal} />
+                    <div className='text-teal font-semibold text-base'>
+                        {t('common:paste')}
+                    </div>
+                </div>
             </div>
-        </Modal>
+            <div className='mt-10'>
+                <Button
+                    disabled
+                    loading={value?.length >= 6}
+                >
+                    {t('common:confirm')}
+                </Button>
+            </div>
+        </ModalV2>
     )
 }
 

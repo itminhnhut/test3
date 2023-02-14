@@ -3,27 +3,13 @@ import { placeFuturesOrder, fetchFuturesSetting } from 'redux/actions/futures';
 import { useTranslation } from 'next-i18next';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { getLoginUrl, formatNumber, TypeTable } from 'src/redux/actions/utils';
+import { getLoginUrl, formatNumber, TypeTable, getType } from 'src/redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 import CheckBox from 'components/common/CheckBox';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useDispatch, useSelector } from 'react-redux';
-
-export const getType = (type) => {
-    switch (type) {
-        case FuturesOrderTypes.Limit:
-            return VndcFutureOrderType.Type.LIMIT;
-        case FuturesOrderTypes.Market:
-            return VndcFutureOrderType.Type.MARKET;
-        case FuturesOrderTypes.StopLimit:
-        case FuturesOrderTypes.StopMarket:
-            return VndcFutureOrderType.Type.STOP;
-        default:
-            return VndcFutureOrderType.Limit;
-    }
-};
 
 export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
@@ -60,25 +46,22 @@ const FuturesOrderButtonsGroupVndc = ({
         return settings?.user_setting?.show_place_order_confirm_modal;
     }, [settings]);
 
-    const handleParams = useCallback(
-        (side) => {
-            const requestId = Math.floor(Date.now() / 2000);
-            const params = {
-                symbol: pairConfig?.symbol,
-                type: getType(type),
-                side: side,
-                price: +_price,
-                leverage,
-                sl: +orderSlTp?.sl,
-                tp: +orderSlTp?.tp,
-                quoteQty: +quoteQty,
-                useQuoteQty: true,
-                requestId
-            };
-            return params;
-        },
-        [pairConfig?.symbol, type, price, orderSlTp, ask, bid]
-    );
+    const handleParams = (side) => {
+        const requestId = Math.floor(Date.now() / 2000);
+        const params = {
+            symbol: pairConfig?.symbol,
+            type: getType(type),
+            side: side,
+            price: +_price,
+            leverage,
+            sl: +orderSlTp?.sl,
+            tp: +orderSlTp?.tp,
+            quoteQty: +quoteQty,
+            useQuoteQty: true,
+            requestId
+        };
+        return params;
+    };
 
     const onSave = () => {
         setLoading(true);
@@ -205,7 +188,7 @@ const FuturesOrderButtonsGroupVndc = ({
                 <ButtonV2
                     onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
                     disabled={isAuth && isError}
-                    className="flex flex-col !h-[60px]"
+                    className={`flex flex-col !h-[60px] ${isBuy ? '' : '!bg-red'}`}
                 >
                     <span>{isAuth ? (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title : t('futures:order_table:login_to_continue')}</span>
                     <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>

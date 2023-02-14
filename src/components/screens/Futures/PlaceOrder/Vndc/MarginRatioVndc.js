@@ -1,123 +1,110 @@
-import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { formatNumber, setTransferModal, } from 'redux/actions/utils';
-import { useEffect, useState } from 'react';
-import { getProfitVndc } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import orderBy from 'lodash/orderBy';
+import { formatCurrency, formatNumber } from 'redux/actions/utils';
+import { useSelector } from 'react-redux';
+import { getProfitVndc, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import isNil from 'lodash/isNil';
+import Emitter from 'redux/actions/emitter';
+import { PublicSocketEvent } from 'redux/actions/const';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const AVAILBLE_KEY = 'futures_available';
-
-const FuturesMarginRatioVndc = ({
-    pairConfig,
-    auth,
-    lastPrice
-}) => {
-    const dispatch = useDispatch();
+const FuturesMarginRatioVndc = ({ pairConfig, decimals }) => {
+    const quoteAsset = pairConfig?.quoteAsset;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
     const futuresMarketWatch = useSelector((state) => state?.futures?.marketWatch) || null;
-    const ordersList = useSelector(state => state?.futures?.ordersList);
-    const wallets = useSelector(state => state.wallet.FUTURES);
-    const [balance, setBalance] = useState([]);
-    const [totalProfit, setTotalProfit] = useState(0);
+    const ordersList = useSelector((state) => state?.futures?.ordersList);
+    const wallets = useSelector((state) => state.wallet.FUTURES);
     const { t } = useTranslation();
+    const [state, set] = useState();
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const walletMapper = (allWallet, assetConfig) => {
-        if (!allWallet || !assetConfig) return;
-        const mapper = [];
-        const FUTURES_ASSET = ['VNDC', 'USDT', 'NAMI'];
-        if (Array.isArray(assetConfig) && assetConfig?.length) {
-            const futures = assetConfig.filter(o => FUTURES_ASSET.includes(o?.assetCode));
-            futures && futures.forEach(item => allWallet?.[item.id]
-                && mapper.push(
-                    {
-                        ...item,
-                        [AVAILBLE_KEY]: allWallet?.[item?.id]?.value - allWallet?.[item?.id]?.locked_value,
-                        wallet: allWallet?.[item?.id]
-                    }));
-        }
-        const dataFilter = orderBy(mapper, ['assetCode', 'VNDC'], ['desc']);
-        if (Array.isArray(dataFilter) && dataFilter.length > 0) {
-            setBalance(dataFilter);
-        }
-    };
-
+    // Handle socket here
     useEffect(() => {
-        walletMapper(wallets, assetConfig);
-    }, [wallets, assetConfig]);
-
-    useEffect(() => {
-        let _totalProfit = 0;
-        ordersList.forEach((item) => {
-            if (item.symbol.includes(pairConfig?.quoteAsset)) {
-                const dataKey = item.side === 'Buy' ? 'bid' : 'ask';
-                const lastPrice = futuresMarketWatch?.[item.symbol]?.[dataKey] || 0;
-                _totalProfit += getProfitVndc(item, lastPrice, true);
+        // ? Subscribe publicSocket
+        // ? Get Pair Ticker
+        Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE, async (data) => {
+            if (data?.s && data?.p > 0) {
+                const _pairPrice = FuturesMarketWatch.create(data);
+                setState({ [data.s]: _pairPrice });
             }
         });
-        setTotalProfit(_totalProfit);
-    }, [ordersList, futuresMarketWatch]);
+        return () => {
+            // Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE);
+        };
+    }, []);
 
-    const onOpenTransfer = () => {
-        dispatch(setTransferModal({ isVisible: true }));
-    };
+    const balance = useMemo(() => {
+        if (!wallets || !assetConfig) return;
+        let value = 0;
+        if (Array.isArray(assetConfig) && assetConfig?.length) {
+            const futures = assetConfig.filter((o) => o?.assetCode === quoteAsset);
+            const dataFilter = {
+                ...futures[0],
+                wallet: wallets?.[futures[0]?.id]
+            };
+            value = Math.max(dataFilter?.wallet?.value, 0);
+            if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;
+            return {
+                value,
+                item: dataFilter
+            };
+        }
+        return value;
+    }, [wallets, assetConfig, pairConfig]);
+
+    const totalProfit = useMemo(() => {
+        let _totalProfit = 0;
+        const dataFilter = ordersList.filter((order) => order.symbol.includes(quoteAsset));
+        dataFilter.forEach((item) => {
+            const _priceData = state?.[item.symbol] || futuresMarketWatch?.[item.symbol];
+            const refPrice = item?.side === VndcFutureOrderType.Side.BUY ? _priceData?.bid : _priceData?.ask;
+            const lastPrice = refPrice || 0;
+            _totalProfit += getProfitVndc(item, lastPrice, true);
+        });
+        return _totalProfit;
+    }, [ordersList, futuresMarketWatch, state, pairConfig]);
+
+    const volume = useMemo(() => {
+        const dataFilter = ordersList.filter((order) => order.symbol.includes(quoteAsset));
+        const total = dataFilter.reduce((a, b) => a + ((b.status !== VndcFutureOrderType.Status.PENDING && b?.order_value) || 0), 0);
+        return parseFloat(total).toFixed(10);
+    }, [ordersList, pairConfig]);
+
+    const dataFormat = useMemo(() => {
+        const pnl = formatNumber(totalProfit, balance?.item?.assetDigit, 0, true);
+        const equity = formatNumber(balance.value + totalProfit, 2);
+        const _volume = formatNumber(volume, decimals.symbol);
+        const _balance = formatNumber(balance.value, decimals.symbol);
+        return {
+            pnl,
+            balance: _balance,
+            volume: _volume,
+            equity
+        };
+    }, [balance, totalProfit, volume, decimals]);
 
     return (
-        <div className="pt-5 h-full !overflow-x-hidden overflow-y-auto ">
-            <div className="pt-4 pb-5 px-[10px]">
-                <div className="flex items-center justify-between dragHandleArea">
-                    <span className="futures-component-title">{t('common:assets')}</span>
-                </div>
-                <div className="mt-4 flex items-center">
-                    <Link href="/trade">
-                        <a target="_blank"
-                            className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
-                            {t('futures:spot_trading')}
-                        </a>
-                    </Link>
-                    <Link href="/swap">
-                        <a target="_blank"
-                            className="!text-darkBlue dark:!text-txtSecondary-dark px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 rounded-[4px]">
-                            {t('futures:convert')}
-                        </a>
-                    </Link>
-                    <div onClick={onOpenTransfer}
-                        className="cursor-pointer px-[14px] py-1 mr-2.5 font-medium text-xs bg-gray-5 dark:bg-darkBlue-3 dark:!text-txtSecondary-dark rounded-[4px]">
-                        {t('common:transfer')}
+        <div className="p-6 pl-4 h-full !overflow-x-hidden overflow-y-auto ">
+            <div className="flex items-center justify-between dragHandleArea">
+                <span className="futures-component-title text-lg font-semibold">{t('common:overview')}</span>
+            </div>
+
+            <div className="mt-6 space-y-4">
+                <div className="flex justify-between">
+                    <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:balance')}</span>
+                    <div className="font-semibold">
+                        {dataFormat.balance} {quoteAsset}
                     </div>
                 </div>
-                <div className="mt-3.5 flex items-center justify-between">
-                    <span className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        {t('futures:unrealized_pnl')}
-                    </span>
-                    <span className="flex items-center font-medium">
-                        <span
-                            className={totalProfit === 0 ? '' : totalProfit < 0 ? 'text-red' : 'text-teal'}>{totalProfit === 0 ? '' : totalProfit > 0 ? '+' : ''}{formatNumber(totalProfit, 0, 0, true)}</span>
-                        <span className="ml-1 text-txtSecondary dark:text-txtSecondary-dark">
-                            {pairConfig?.quoteAsset}
-                        </span>
-                    </span>
-                </div>
-                <div className="mt-3.5 flex justify-between">
-                    <span className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                        {t('futures:balance')}
-                    </span>
-                    <div className="flex flex-col items-end">
-                        {balance?.map((item, i) => {
-                            let value = item?.wallet?.value;
-                            if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;
-                            return (
-                                <span key={i} className="flex font-medium">
-                                    {value ? formatNumber(value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : Number(0)
-                                        .toPrecision((item?.assetDigit ?? 0) + 1)}
-                                    <span className="ml-1 text-txtSecondary dark:text-txtSecondary-dark">
-                                        {item?.assetCode}
-                                    </span>
-                                </span>
-                            );
-                        })}
+                <div className="flex items-center justify-between">
+                    <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:pnl')}</span>
+                    <div className={`font-semibold ${totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red'}`}>
+                        {dataFormat.pnl} {quoteAsset}
                     </div>
+                </div>
+                <div className="flex items-center justify-between">
+                    <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:volume_2')}</span>
+                    <div className="font-semibold">{dataFormat.volume}</div>
                 </div>
             </div>
         </div>

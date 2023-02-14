@@ -14,13 +14,13 @@
         "home": "Trang chủ",
         "about": "Về chúng tôi",
         "support_center": "Trung tâm hỗ trợ",
-        "mode": "Chế độ",
+        "mode": "Chủ đề",
         "lang": "Ngôn ngữ",
         "download_app": "Tải ứng dụng",
         "product": "Sản phẩm",
         "market": "Thị trường",
         "explained": "Explained",
-        "today": "Nami.Today",
+        "today": "Nami Today",
         "more": "Thêm",
         "user": {
             "user": "Quản lí người dùng",
@@ -56,6 +56,8 @@
         "farming_description": "Farm NAMI và nhận nhiều token tiềm năng",
         "referral": "Báo cáo hoa hồng",
         "referral_description": "Nhận hoa hồng lên tới 20% từ giao dịch của bạn bè",
+        "transfer": "Chuyển đổi",
+        "transfer_description": "Chuyển đổi nhanh từ ví Exchange sang ví Futures chỉ với một lần chạm",
         "spot_wallet": "Ví Exchange",
         "futures_wallet": "Ví Futures",
         "staking_wallet": "Ví Staking",
@@ -109,5 +111,12 @@
     "read_all_noti": "Bạn không còn thông báo nào",
     "not_verified": "Chưa được xác minh",
     "pending_approval": "Đang chờ xác minh",
-    "verified": "Đã xác minh"
+    "verified": "Đã xác minh",
+    "verify_account": "Xác minh tài khoản",
+    "use": "Sử dụng",
+    "get_discount": "nhận thêm ưu đãi",
+    "trade_on": "Giao dịch trên",
+    "scan_qr": "Quét mã QR để tải ứng dụng",
+    "down_with_qr": "Tải Nami Exchange ngay nào!",
+    "footer_title": "Sàn giao dịch Exchange và Futures an toàn"
 }

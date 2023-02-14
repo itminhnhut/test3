@@ -1,29 +1,20 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAsync } from 'react-use';
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
+import { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
-import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
-import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
-import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
 import TableV2 from 'components/common/V2/TableV2';
-
-import { PATHS } from 'constants/paths';
-import { SwapIcon } from '../../svg/SvgIcon';
+import { SwapIcon } from 'components/svg/SvgIcon';
 
 const SwapHistory = ({ width }) => {
     const [state, set] = useState({
         page: 0,
-        pageSize: 5,
+        pageSize: LIMIT_ROW,
         loading: false,
         histories: null
     });
@@ -58,24 +49,16 @@ const SwapHistory = ({ width }) => {
             setState({ loading: false });
         }
     }, [state.page, state.pageSize, auth]);
+
+    const onChangePagination = (delta) => {
+        setState({ page: state.page + delta });
+    };
     return (
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
-                // <TableV2
-                //     useRowHover
-                //     data={data}
-                //     columns={columns}
-                //     rowKey={(item) => `${item?.displayingId}`}
-                //     loading={state.loading}
-                //     scroll={{ x: true }}
-                //     limit={LIMIT_ROW}
-                //     skip={0}
-                // />
-                <div className="mt-8 pt-4 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <div className="mt-8 pt-4 border border-divider-dark dark:border-divider-dark rounded-xl">
                     <TableV2
-                        sort
-                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
                         useRowHover
                         data={data || []}
                         columns={columns}
@@ -86,6 +69,8 @@ const SwapHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
+                        pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
+                        tableStyle={{ fontSize: '16px', padding: '16px' }}
                         // page={state.currentPage}
                         // onChangePage={(currentPage) => setState({ currentPage })}
                     />
@@ -93,15 +78,18 @@ const SwapHistory = ({ width }) => {
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <p className="text-base text-darkBlue-5 mt-3">
+                    <p className="!text-base dark:text-txtSecondary-dark mt-3">
                         <a
                             href={getLoginUrl('sso', 'login')}
-                            className="text-txtTextBtn dark:text-txtTextBtn-dark focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed font-semibold leading-6"
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
                         >
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
-                        <a href={getLoginUrl('sso', 'register')} className="text-teal font-semibold leading-6">
+                        <a
+                            href={getLoginUrl('sso', 'register')}
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
+                        >
                             {t('common:sign_up')}{' '}
                         </a>
                         {t('common:swap_history')}

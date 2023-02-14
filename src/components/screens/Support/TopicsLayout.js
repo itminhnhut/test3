@@ -64,17 +64,17 @@ const TopicsLayout = ({
     }, [isFaq, router]);
 
     const renderTopics = useMemo(() => topics?.map((item) => (
-        <div key={item.id}>
+        <div key={item?.id}>
             <div
                 className={classNames(
                     'h-14 mb-3 flex items-center hover:bg-hover dark:hover:bg-hover-dark cursor-pointer',
                     {
-                        'bg-hover dark:bg-hover-dark': router?.query?.topic === item.displaySlug,
-                        // 'hidden': isMobile && router?.query?.topic !== item.displaySlug,
+                        'bg-hover dark:bg-hover-dark': router?.query?.topic === item?.displaySlug,
+                        // 'hidden': isMobile && router?.query?.topic !== item?.displaySlug,
                     }
                 )}
             >
-                {!isMobile && router?.query?.topic === item.displaySlug ?
+                {!isMobile && router?.query?.topic === item?.displaySlug ?
                     <div className='h-8 w-1 bg-teal rounded-[10px]'></div>
                     :
                     null
@@ -84,18 +84,18 @@ const TopicsLayout = ({
                         pathname:
                             PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
                         query: appUrlHandler(
-                            { topic: item.displaySlug },
+                            { topic: item?.displaySlug },
                             isApp
                         )
                     }}
                 >
                     <a className={classNames(
                         'px-4 sm:px-6 flex flex-grow items-center text-gray-4 font-normal text-sm sm:font-semibold sm:text-base cursor-pointer', {
-                        'sm:!px-5': !isFaq && router?.query?.topic === item.displaySlug
+                        'sm:!px-5': !isFaq && router?.query?.topic === item?.displaySlug
                     })}>
                         <div className="h-6 w-6 mr-3 sm:mr-6">
                             <Image
-                                src={getSupportCategoryIcons(item.id)}
+                                src={getSupportCategoryIcons(item?.id)}
                                 layout="responsive"
                                 width={24}
                                 height={24}
@@ -104,18 +104,18 @@ const TopicsLayout = ({
                         <span className="flex-grow"> {item?.title}</span>
                     </a>
                 </Link>
-                {isFaq && !!item.subCats?.length && (
+                {isFaq && !!item?.subCats?.length && (
                     <span
                         className="hover:text-teal cursor-pointer pr-4"
                         onClick={() =>
                             setShowDropdown((prevState) => ({
                                 ...prevState,
-                                [item.displaySlug]:
-                                    !showDropdown?.[item.displaySlug]
+                                [item?.displaySlug]:
+                                    !showDropdown?.[item?.displaySlug]
                             }))
                         }
                     >
-                        {!!showDropdown?.[item.displaySlug] ? (
+                        {!!showDropdown?.[item?.displaySlug] ? (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#kstei7ehqa)">
                                     <path d="M4.667 9.333 8 6l3.333 3.333H4.667z" fill="#8694B3" />
@@ -142,22 +142,22 @@ const TopicsLayout = ({
                     </span>
                 )}
             </div>
-            {isFaq && !!item.subCats?.length && (
+            {isFaq && !!item?.subCats?.length && (
                 <div
                     className={classNames('hidden mb-3', {
-                        '!flex flex-col gap-4': !!showDropdown?.[item.displaySlug]
+                        '!flex flex-col gap-4': !!showDropdown?.[item?.displaySlug]
                     })}
                 >
-                    {item.subCats?.map((subCats, index) => (
+                    {item?.subCats?.map((subCats, index) => (
                         <Link
                             key={index}
                             href={{
                                 pathname:
                                     PATHS.SUPPORT.FAQ +
-                                    `/${item.displaySlug}`,
+                                    `/${item?.displaySlug}`,
                                 query: appUrlHandler(
                                     {
-                                        group: subCats.displaySlug
+                                        group: subCats?.displaySlug
                                     },
                                     isApp
                                 )
@@ -168,12 +168,12 @@ const TopicsLayout = ({
                                     'block pl-[72px] text-sm font-semibold sm:text-base sm:font-normal cursor-pointer text-darkBlue-5 ',
                                     {
                                         '!font-semibold !text-gray-4 leading-6':
-                                            subCats.displaySlug ===
+                                            subCats?.displaySlug ===
                                             faqCurrentGroup
                                     }
                                 )}
                             >
-                                {subCats.title}
+                                {subCats?.title}
                             </a>
                         </Link>
                     ))}
@@ -212,13 +212,13 @@ const TopicsLayout = ({
                                 >
                                     <div className="w-6 h-6 mr-3">
                                         <Image
-                                            src={getSupportCategoryIcons(mainTopic.id)}
+                                            src={getSupportCategoryIcons(mainTopic?.id)}
                                             width={24}
                                             height={24}
                                         />
                                     </div>
                                     <div className='flex justify-between w-full' onClick={() => setToggleMenu(!toggleMenu)}>
-                                        <div className="flex-grow text-gray-4 font-semibold text-sm"> {subTopics ? subTopics?.title : mainTopic.title}</div>
+                                        <div className="flex-grow text-gray-4 font-semibold text-sm"> {subTopics ? subTopics?.title : mainTopic?.title}</div>
                                         <div>
                                             {toggleMenu ?
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -263,7 +263,7 @@ const TopicsLayout = ({
                                 {children}
                             </div>
 
-                            {lastedArticles && Array.isArray(lastedArticles) && lastedArticles.length && (
+                            {lastedArticles && Array.isArray(lastedArticles) && lastedArticles?.length && (
                                 <div className='px-[112px] pb-24'>
                                     <div className='text-gray-4 text-xl font-medium mb-2'>{t('support-center:lasted_articles')}</div>
                                     <LastedArticles lastedArticles={lastedArticles} language={language} isApp={isApp} t={t} containerClassName="!bg-transparent px-0" />

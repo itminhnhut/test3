@@ -146,7 +146,9 @@ const ReTable = memo(
         }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
+
             if (!paginationProps || paginationProps?.hide) return null;
+
 
             return (
                 <div className="flex items-center justify-center py-8">
@@ -238,6 +240,7 @@ const ReTable = memo(
         // useEffect(() => {
         //     console.log('namidev-DEBUG: reTable => ', current, data)
         // }, [data, current])
+        // console.log('here', restProps?.noBorder);
         return (
             <ReTableWrapperV2
                 ref={reference}
@@ -246,6 +249,7 @@ const ReTable = memo(
                 isDark={currentTheme === THEME_MODE.DARK}
                 useRowHover={useRowHover}
                 height={height}
+                noBorder={restProps.noBorder}
                 {...tableStyle}
             >
                 {renderTable()}
@@ -332,6 +336,7 @@ const ReTableWrapperV2 = styled.div`
     .rc-table td {
         font-weight: 400;
         padding: 0 16px;
+        padding: ${({ padding }) => (padding ? padding : '0 16px')};
         height: 52px;
         max-height: 52px;
         color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
@@ -371,7 +376,7 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${() => `1px solid ${colors.divider.dark}`};
+            border-left: ${({ noBorder }) => noBorder ? 'none' : `1px solid ${colors.divider.dark}`};
             z-index: 10;
             width: 1px;
             visibility: visible;
@@ -403,6 +408,11 @@ const ReTableWrapperV2 = styled.div`
         ::after {
             display: none;
         }
+    }
+
+    .rc-table-ping-right .rc-table-cell-fix-right-first::after,
+    .rc-table-ping-right .rc-table-cell-fix-right-last::after {
+        box-shadow: none !important;
     }
 
     table {

@@ -23,6 +23,7 @@ import { getOrdersList } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
+import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -381,33 +382,6 @@ const Futures = () => {
                                         <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowOrderBook &&
-                                    <div
-                                        key={futuresGridKey.orderBook}
-                                        className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
-                                    >
-                                        <FuturesOrderBook
-                                            pairConfig={pairConfig}
-                                            markPrice={state.markPrice?.markPrice}
-                                            lastPrice={state.pairPrice?.lastPrice}
-                                            orderBookLayout={state.orderBookLayout}
-                                            setOrderInput={setOrderInput}
-                                            setAssumingPrice={(assumingPrice) =>
-                                                setState({ assumingPrice })
-                                            }
-                                        />
-                                    </div>
-                                }
-                                {filterLayout.isShowTrades &&
-                                    <div
-                                        key={futuresGridKey.recentTrades}
-                                        className={`border border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
-                                    >
-                                        <FuturesRecentTrades
-                                            pairConfig={pairConfig}
-                                        />
-                                    </div>
-                                } */}
                                 {filterLayout.isShowOpenOrders && (
                                     <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
                                         <FuturesTradeRecord
@@ -427,18 +401,23 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={true}
+                                            isVndcFutures={state.isVndcFutures}
                                             pairPrice={state.pairPrice}
                                             pair={state.pair}
                                             decimals={decimals}
                                         />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowAssets && (
+                                {filterLayout.isShowAssets && (
                                     <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
-                                        <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} />
+                                        <FuturesMarginRatioVndc
+                                            pairConfig={pairConfig}
+                                            auth={auth}
+                                            lastPrice={state.pairPrice?.lastPrice}
+                                            decimals={decimals}
+                                        />
                                     </div>
-                                )} */}
+                                )}
                             </GridLayout>
                         )}
                     </div>

@@ -120,13 +120,13 @@ const SupportSearchResult = () => {
         <MaldivesLayout>
             <div className='w-full bg-shadow'>
                 <SearchSection t={t} width={width} />
-                <div className='container mt-7 sm:mt-0 pt-6 max-w-[1440px]'>
+                <div className='container mt-7 sm:mt-0 pt-6 max-w-[1216px]'>
                     <div className='pb-[120px] px-6 lg:px-[112px] h-full drop-shadow-onlyLight bg-transparent'>
                         <div className='w-full block sm:flex items-end justify-between text-gray-4'>
                             <div className='font-semibold text-base sm:text-[32px] sm:leading-[38px]'>
                                 {t('support-center:search_result')}: {state?.query}
                             </div>
-                            <div className='my-2 border-t-[1px] border-divider-dark w-full'></div>
+                            {isMobile ? <div className='my-2 border-t-[1px] border-divider-dark w-full'></div> : null}
                             <div className='font-normal text-xs text-darkBlue-5 sm:text-base sm:text-gray-4 h-full'>
                                 {isMobile ?
                                    `'${state?.totalArticle}'` + ' ' + t('futures:result').toLowerCase()

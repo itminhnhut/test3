@@ -32,6 +32,7 @@ import ChevronDown from 'src/components/svg/ChevronDown';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -41,13 +42,13 @@ export function scrollHorizontal(el, parentEl) {
         padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
         border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
 
-    const rect = el.getBoundingClientRect();
-    const { left, right, bottom, top, width } = parentEl.getBoundingClientRect();
-    // const inView = rect.left >= left && rect.right <= right
-    // const position = rect.left < left ? 0 : rect.right;
-    const center = rect.left + parentEl.scrollLeft + margin + padding + border - width / 2;
+    const child = el.getBoundingClientRect();
+    const parent = parentEl.getBoundingClientRect();
+    const activeWidth = el.clientWidth / 2;
+    var pos = child.left - parent.left + activeWidth;
+    pos = pos + parentEl.scrollLeft + margin + padding + border - parentEl.clientWidth / 2;
     parentEl.scrollTo({
-        left: center,
+        left: pos,
         behavior: 'smooth'
     });
 }
@@ -90,8 +91,8 @@ export const formatSwapRate = (value, scaleMore = 2) => {
     return x;
 };
 
-export const formatCurrency = (n, digits = 4, vi = false) => {
-    if (n < 1e3) return formatNumber(n, 0, 0, true);
+export const formatCurrency = (n, digits = 4, vi = false, e = 1e3) => {
+    if (n < e) return formatNumber(n, 0, 0, true);
     if (n >= 1e3 && n < 1e6) return formatNumber(+(n / 1e3).toFixed(4), digits, 0, true) + 'K';
     if (n >= 1e6 && n < 1e9) return formatNumber(+(n / 1e6).toFixed(4), digits, 0, true) + (vi ? ' triệu' : 'M');
     if (n >= 1e9 && n < 1e12) return formatNumber(+(n / 1e9).toFixed(4), digits, 0, true) + (vi ? ' tỷ' : 'B');
@@ -316,18 +317,13 @@ export function render24hChange(ticker, showPrice = false, className = '') {
 
         percent = `${formatPercentage(Math.abs(change24h), 2, true)}%`;
     } else {
-        percent = '-';
+        percent = null;
     }
     return (
         <div className={`${className} text-xs space-x-2 flex font-semibold`}>
-            {showPrice && (
-                <span>
-                    {priceChange <= 0 ? '' : '+'}
-                    {formatNumber(priceChange, ticker?.q === 'VNDC' ? 0 : 2, 0, true)}
-                </span>
-            )}
-            <span className="flex items-center">
-                <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> {percent}
+            {showPrice && <span>{formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
+            <span className={'flex items-center ' + (percent ? '' : 'text-teal')}>
+                {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> : null} {percent ?? '-'}
             </span>
         </div>
     );
@@ -838,7 +834,7 @@ export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
         return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
     } else {
-        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant';
+        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-teal';
     }
 };
 
@@ -1050,3 +1046,17 @@ export const getDecimalQty = (config) => {
 export const getUnit = createSelector([(state) => state.utils.assetConfig, (unitConfig, assetCode) => assetCode], (unitConfig, assetCode) =>
     unitConfig.find((rs) => rs?.assetCode === assetCode)
 );
+
+export const getType = (type) => {
+    switch (type) {
+        case FuturesOrderTypes.Limit:
+            return VndcFutureOrderType.Type.LIMIT;
+        case FuturesOrderTypes.Market:
+            return VndcFutureOrderType.Type.MARKET;
+        case FuturesOrderTypes.StopLimit:
+        case FuturesOrderTypes.StopMarket:
+            return VndcFutureOrderType.Type.STOP;
+        default:
+            return VndcFutureOrderType.Limit;
+    }
+};
