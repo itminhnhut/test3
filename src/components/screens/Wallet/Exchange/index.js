@@ -8,7 +8,7 @@ import { SeeIcon, HideIcon, LogoIcon, BxChevronDown } from 'components/svg/SvgIc
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
 import { WalletType } from 'redux/actions/const';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PATHS } from 'constants/paths';
 import { Menu, useContextMenu } from 'react-contexify';
 
@@ -26,6 +26,8 @@ import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import HrefButton from '../../../common/V2/ButtonV2/HrefButton';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
+
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
@@ -326,7 +328,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 align: 'right',
                 width: 210,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -335,7 +339,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 title: t('common:available_balance'),
                 align: 'right',
                 width: 210,
-                render: (v, item) => (v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
+                render: (v, item) => (state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
             },
             {
                 key: 'wallet.locked_value',
@@ -350,7 +354,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     }
                     return (
                         <span className="whitespace-nowrap">
-                            {v ? (
+                            {state.hideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
                                 <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
                                     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
                                 </Link>
@@ -378,9 +384,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         <div>
                             {assetUsdRate ? (
                                 <>
-                                    <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
+                                    <div className="whitespace-nowrap">{state.hideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                        ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                        ({state.hideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                     </div>
                                 </>
                             ) : (
@@ -451,7 +457,20 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
             />
         );
-    }, [state.tableData, state.currentPage, width, usdRate, curRowSelected]);
+    }, [state.tableData, state.currentPage, width, usdRate, curRowSelected, state.hideAsset]);
+
+    // Check Kyc before redirect to page Deposit / Withdraw
+    const router = useRouter();
+    const auth = useSelector((state) => state.auth.user) || null;
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+
+    const handleKycRequest = (href) => {
+        if (auth?.kyc_status !== 2) {
+            return setIsOpenModalKyc(true);
+        } else {
+            return router.push(href);
+        }
+    };
 
     return (
         <>
@@ -471,15 +490,28 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     </div>
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <HrefButton href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
+                            <ButtonV2
+                                className="px-6"
+                                onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            >
+                                {t('common:deposit')}
+                            </ButtonV2>
+                            <ButtonV2
+                                variants="none"
+                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
+                                onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                            >
+                                {t('common:withdraw')}
+                            </ButtonV2>
+                            {/* <HrefButton href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
                                 {t('common:deposit')}
                             </HrefButton>
                             <HrefButton variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                 {t('common:withdraw')}
-                            </HrefButton>
+                            </HrefButton> */}
                             <ButtonV2
                                 variants="none"
-                                className="whitespace-nowrap rounded-md font-semibold text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
+                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
@@ -511,7 +543,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             isHide={state.hideSmallAsset}
                             className="mr-8"
                         />
-                        <div className="py-3 px-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                        <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                             <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
                                 className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
@@ -541,6 +573,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             {/* {renderPagination()} */}
 
             {renderMarketListContext()}
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
         </>
     );
 };
