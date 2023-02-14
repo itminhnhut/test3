@@ -157,7 +157,7 @@ const DepositWithdrawFee = () => {
                             ))}
                         </div>
                     ),
-                    deposit_fee: <span className=" text-dominant">{t('common:free')}</span>,
+                    deposit_fee: <span className="text-base text-dominant">{t('common:free')}</span>,
                     withdraw_fee: (
                         <div>
                             {raw?.networkList?.map((network, index) => (
@@ -229,6 +229,7 @@ const DepositWithdrawFee = () => {
                 inputProps={{
                     value: state.search,
                     onChange: (e) => setState({ search: e.target?.value }),
+                    
                     placeholder: `${t('common:search')}...`
                 }}
             />
