@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
 import { useSelector } from 'react-redux';
-import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
+import { ApiStatus } from 'redux/actions/const';
 import FuturesOrderModule from 'components/screens/Futures/PlaceOrder/OrderModule';
 import FuturesOrderTypes from 'components/screens/Futures/PlaceOrder/OrderTypes';
 import axios from 'axios';
@@ -14,9 +14,8 @@ const FuturesPlaceOrderVndc = ({ pairConfig, userSettings, pairPrice, isAuth, is
     const [availableAsset, setAvailableAsset] = useState(null);
     const [side, setSide] = useState(VndcFutureOrderType.Side.BUY);
 
-    const preloadedForm = useSelector((state) => state.futures.preloadedState);
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
-    const currentType = useMemo(() => preloadedForm?.orderType || OrderTypes.Limit, [preloadedForm]);
+    const [currentType, setCurrentType] = useState(OrderTypes.Market);
 
     const getLeverage = async (symbol) => {
         const { data } = await axios.get(API_FUTURES_LEVERAGE, {
@@ -43,7 +42,7 @@ const FuturesPlaceOrderVndc = ({ pairConfig, userSettings, pairPrice, isAuth, is
     return (
         <div className="p-6 pl-4 h-full overflow-x-hidden overflow-y-auto">
             <OrderSide side={side} setSide={setSide} leverage={leverage} setLeverage={setLeverage} pair={pair} pairConfig={pairConfig} isAuth={isAuth} />
-            <FuturesOrderTypes currentType={currentType} orderTypes={pairConfig?.orderTypes} isVndcFutures={true} />
+            <FuturesOrderTypes currentType={currentType} setCurrentType={setCurrentType} orderTypes={pairConfig?.orderTypes} />
 
             <FuturesOrderModule
                 leverage={leverage}

@@ -1,21 +1,8 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import Slider from 'components/trade/InputSlider';
-import { getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import floor from 'lodash/floor';
 const initPercent = 0;
-const initValue = 100000;
-const FuturesOrderSlider = ({ pairConfig, quoteQty, onChange, side, type, isAuth, decimals, availableAsset, price, leverage, pairPrice }) => {
+const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty }) => {
     const [percent, setPercent] = useState(isAuth && initPercent);
-
-    const minQuoteQty = useMemo(() => {
-        return pairConfig ? +pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional : initValue;
-    }, [pairConfig]);
-
-    const maxQuoteQty = useMemo(() => {
-        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
-        const max = Math.min(leverage * availableAsset, _maxQuoteQty);
-        return floor(max, decimals?.symbol);
-    }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
 
     const arrDot = useMemo(() => {
         const size = 100 / 4;

@@ -401,7 +401,7 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={true}
+                                            isVndcFutures={state.isVndcFutures}
                                             pairPrice={state.pairPrice}
                                             pair={state.pair}
                                             decimals={decimals}
