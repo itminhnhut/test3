@@ -99,7 +99,9 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 align: 'right',
                 width: 213,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -109,7 +111,9 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 align: 'right',
                 width: 213,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -126,7 +130,9 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
                     return (
                         <span className="whitespace-nowrap">
-                            {v ? (
+                            {state.hideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
                                 <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
                                     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
                                 </Link>
@@ -154,9 +160,11 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         <div>
                             {assetUsdRate ? (
                                 <>
-                                    <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}</div>
+                                    <div className="whitespace-nowrap">
+                                        {state.hideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}
+                                    </div>
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                        ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                        ({state.hideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                     </div>
                                 </>
                             ) : (
@@ -200,7 +208,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             // <div className="mt-8 py-4 border border-divider-dark dark:border-divider-dark rounded-xl">
             // </div>
         );
-    }, [state.tableData, width, usdRate]);
+    }, [state.tableData, width, usdRate, state.hideAsset]);
 
     const renderEstWallet = useCallback(() => {
         return (

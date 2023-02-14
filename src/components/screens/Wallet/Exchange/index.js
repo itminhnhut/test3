@@ -326,7 +326,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 align: 'right',
                 width: 210,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -335,7 +337,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 title: t('common:available_balance'),
                 align: 'right',
                 width: 210,
-                render: (v, item) => (v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
+                render: (v, item) => (state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
             },
             {
                 key: 'wallet.locked_value',
@@ -350,7 +352,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                     }
                     return (
                         <span className="whitespace-nowrap">
-                            {v ? (
+                            {state.hideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
                                 <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
                                     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
                                 </Link>
@@ -378,9 +382,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                         <div>
                             {assetUsdRate ? (
                                 <>
-                                    <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
+                                    <div className="whitespace-nowrap">{state.hideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                        ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                        ({state.hideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                     </div>
                                 </>
                             ) : (
@@ -451,7 +455,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
             />
         );
-    }, [state.tableData, state.currentPage, width, usdRate, curRowSelected]);
+    }, [state.tableData, state.currentPage, width, usdRate, curRowSelected, state.hideAsset]);
 
     return (
         <>
