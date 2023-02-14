@@ -229,9 +229,10 @@ const DepositWithdrawFee = () => {
                 inputProps={{
                     value: state.search,
                     onChange: (e) => setState({ search: e.target?.value }),
-                    
+
                     placeholder: `${t('common:search')}...`
                 }}
+                withFocusStyle
             />
         );
     }, [state.search]);
@@ -273,7 +274,7 @@ const DepositWithdrawFee = () => {
             {width > BREAK_POINTS.lg ? (
                 <div className="mt-8 overflow-hidden border border-divider-dark rounded-xl ">{renderTable()}</div>
             ) : (
-                <WithdrawDepositList t={t} paymentConfigs={paymentConfigs} search={state.search} configs={state.configs}  />
+                <WithdrawDepositList t={t} paymentConfigs={paymentConfigs} search={state.search} configs={state.configs} />
             )}
         </div>
     );
