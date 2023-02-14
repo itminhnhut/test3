@@ -49,7 +49,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         const y = e.pageY - TabRef.current.offsetTop;
         const scrollY = y - startY.current;
         TabRef.current.scrollTop = scrollTop.current - scrollY;
-      if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
+        if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
     };
 
     useEffect(() => {
@@ -130,10 +130,11 @@ const Tab = styled.div.attrs(({ className }) => ({
     }
 `;
 
-export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false }) => ({
+export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false, V2 = false }) => ({
     className: classnames('text-sm font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
         'text-gray-1': !isMobile,
-        'text-darkBlue-5': isMobile
+        'text-darkBlue-5': isMobile,
+        'dark:hover:text-txtTabHover-dark': V2
     }),
     id: `tab-item-${value}`
 }))``;
