@@ -54,7 +54,7 @@ const Terms = () => {
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="px-4">
                 <div
-                    className={`max-w-screen-v3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-base font-normal text-left tracking-normal ${
+                    className={`max-w-screen-v3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-base font-normal text-left tracking-normal leading-7 ${
                         width <= 640 ? 'term-mobile-view !px-5' : 'px-24 pt-20 pb-[120px]'
                     }`}
                 >
