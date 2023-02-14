@@ -5,11 +5,12 @@ import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp 
 import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';
 import FuturesOrderSLTP from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSLTP';
 import FuturesOrderButtonsGroupVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import TradingInput from 'components/trade/TradingInput';
 import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
 import { AddCircleColorIcon } from 'components/svg/SvgIcon';
 import usePrevious from 'hooks/usePrevious';
+import floor from 'lodash/floor';
 
 const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
     const { t } = useTranslation();
@@ -71,6 +72,16 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         }
     };
 
+    const maxQuoteQty = useMemo(() => {
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
+        const max = Math.min(leverage * availableAsset, _maxQuoteQty);
+        return floor(max, decimals?.symbol);
+    }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
+
+    const minQuoteQty = useMemo(() => {
+        return pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
+    }, [pairConfig]);
+
     const inputValidator = (key) => {
         let isValid = true,
             msg = null;
@@ -80,8 +91,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         switch (key) {
             // input check
             case 'quoteQty':
-                const _min = pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
-                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.Nami);
+                const _min = minQuoteQty;
+                const _max = maxQuoteQty;
                 const _displayingMax = `${formatNumber(_max, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
@@ -334,6 +345,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     price={price}
                     pairPrice={pairPrice}
                     inputValidator={inputValidator}
+                    minQuoteQty={minQuoteQty}
+                    maxQuoteQty={maxQuoteQty}
                 />
             </div>
 
