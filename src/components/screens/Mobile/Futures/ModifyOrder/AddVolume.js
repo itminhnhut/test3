@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef, useContext } from "react";
 import { useTranslation } from "next-i18next";
-import { formatNumber, countDecimals, checkLargeVolume, checkInFundingTime } from 'redux/actions/utils';
+import { formatNumber, countDecimals, checkLargeVolume, checkInFundingTime, getType } from 'redux/actions/utils';
 import { useSelector } from "react-redux";
 import TradingInput from "components/trade/TradingInput";
 import { Minus, Plus, ChevronDown } from "react-feather";
@@ -21,7 +21,6 @@ import { API_DCA_ORDER } from "redux/actions/apis";
 import { ApiStatus } from "redux/actions/const";
 import fetchApi from "utils/fetch-api";
 import { AlertContext } from "components/common/layouts/LayoutMobile";
-import { getType } from "components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc";
 import { getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { createSelector } from 'reselect';
 import find from 'lodash/find';
