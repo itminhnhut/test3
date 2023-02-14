@@ -32,6 +32,7 @@ import ChevronDown from 'src/components/svg/ChevronDown';
 import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
+import { FuturesOrderTypes } from 'redux/reducers/futures';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -320,12 +321,8 @@ export function render24hChange(ticker, showPrice = false, className = '') {
     }
     return (
         <div className={`${className} text-xs space-x-2 flex font-semibold`}>
-            {showPrice && (
-                <span>
-                    {formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}
-                </span>
-            )}
-            <span className={"flex items-center " + (percent ? '' : 'text-teal')}>
+            {showPrice && <span>{formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
+            <span className={'flex items-center ' + (percent ? '' : 'text-teal')}>
                 {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> : null} {percent ?? '-'}
             </span>
         </div>
@@ -837,7 +834,7 @@ export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
         return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
     } else {
-        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-dominant';
+        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-teal';
     }
 };
 
@@ -1049,3 +1046,17 @@ export const getDecimalQty = (config) => {
 export const getUnit = createSelector([(state) => state.utils.assetConfig, (unitConfig, assetCode) => assetCode], (unitConfig, assetCode) =>
     unitConfig.find((rs) => rs?.assetCode === assetCode)
 );
+
+export const getType = (type) => {
+    switch (type) {
+        case FuturesOrderTypes.Limit:
+            return VndcFutureOrderType.Type.LIMIT;
+        case FuturesOrderTypes.Market:
+            return VndcFutureOrderType.Type.MARKET;
+        case FuturesOrderTypes.StopLimit:
+        case FuturesOrderTypes.StopMarket:
+            return VndcFutureOrderType.Type.STOP;
+        default:
+            return VndcFutureOrderType.Limit;
+    }
+};

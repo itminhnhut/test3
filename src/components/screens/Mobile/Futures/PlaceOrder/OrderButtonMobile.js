@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useTranslation } from 'next-i18next';
-import { emitWebViewEvent, formatNumber } from 'redux/actions/utils';
+import { emitWebViewEvent, formatNumber, getType } from 'redux/actions/utils';
 import { FuturesOrderTypes, FuturesOrderTypes as OrderTypes, FuturesSettings } from 'redux/reducers/futures';
-import { getPrice, getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
+import { getPrice } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { placeFuturesOrder, reFetchOrderListInterval } from 'redux/actions/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { useDispatch, useSelector } from 'react-redux';
@@ -36,7 +36,7 @@ const OrderButtonMobile = ({
     const _price = getPrice(getType(type), side, price, pairPrice?.ask, pairPrice?.bid, stopPrice);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const rowData = useRef(null);
-    const settings = useSelector(state => state.futures.settings)
+    const settings = useSelector((state) => state.futures.settings);
 
     const getTypesLabel = (type) => {
         switch (type) {
@@ -98,7 +98,7 @@ const OrderButtonMobile = ({
                 leverage,
                 sl: sl,
                 tp: tp,
-                quoteQty,
+                quoteQty
             };
             setShowConfirmModal(true);
         } else {
@@ -107,7 +107,14 @@ const OrderButtonMobile = ({
     };
 
     const classNameError = disabled || (isAuth && isError) ? 'opacity-[0.3] cursor-not-allowed' : '';
-    const title = type === FuturesOrderTypes.Limit ? t('futures:mobile:limit') : type === FuturesOrderTypes.StopMarket ? 'stop market' : type === FuturesOrderTypes.StopLimit ? 'stop limit' : '';
+    const title =
+        type === FuturesOrderTypes.Limit
+            ? t('futures:mobile:limit')
+            : type === FuturesOrderTypes.StopMarket
+            ? 'stop market'
+            : type === FuturesOrderTypes.StopLimit
+            ? 'stop limit'
+            : '';
 
     // const isShowConfirm = useMemo(() => {
     //     if (typeof window === 'undefined') return false;
@@ -121,19 +128,28 @@ const OrderButtonMobile = ({
 
     return (
         <>
-            {showConfirmModal &&
-                <OrderConfirm disabled={disabled} isShowConfirm={false} open={showConfirmModal}
-                    data={rowData.current} decimals={decimals}
-                    onConfirm={handlePlaceOrder} decimalSymbol={decimalSymbol}
-                    onClose={() => !disabled && setShowConfirmModal(false)} />
-            }
-            <div onClick={onHandleSave}
-                className={`${isBuy ? 'bg-onus-green' : 'bg-onus-red'} text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}>
-                <div
-                    className="font-semibold text-center">{!isAuth ? t('futures:mobile:login_short') : (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</div>
-                <div
-                    className="font-medium break-all text-center">{formatNumber(_price, decimals.decimalScalePrice, 0, true)}</div>
-
+            {showConfirmModal && (
+                <OrderConfirm
+                    disabled={disabled}
+                    isShowConfirm={false}
+                    open={showConfirmModal}
+                    data={rowData.current}
+                    decimals={decimals}
+                    onConfirm={handlePlaceOrder}
+                    decimalSymbol={decimalSymbol}
+                    onClose={() => !disabled && setShowConfirmModal(false)}
+                />
+            )}
+            <div
+                onClick={onHandleSave}
+                className={`${
+                    isBuy ? 'bg-onus-green' : 'bg-onus-red'
+                } text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}
+            >
+                <div className="font-semibold text-center">
+                    {!isAuth ? t('futures:mobile:login_short') : (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}
+                </div>
+                <div className="font-medium break-all text-center">{formatNumber(_price, decimals.decimalScalePrice, 0, true)}</div>
             </div>
         </>
     );

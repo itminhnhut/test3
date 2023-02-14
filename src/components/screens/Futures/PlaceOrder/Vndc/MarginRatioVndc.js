@@ -40,7 +40,7 @@ const FuturesMarginRatioVndc = ({ pairConfig, decimals }) => {
             const futures = assetConfig.filter((o) => o?.assetCode === quoteAsset);
             const dataFilter = {
                 ...futures[0],
-                wallet: wallets?.[futures[0].id]
+                wallet: wallets?.[futures[0]?.id]
             };
             value = Math.max(dataFilter?.wallet?.value, 0);
             if (+value < 0 || Math.abs(+value) < 1e-4 || isNil(value) || !value) value = 0;

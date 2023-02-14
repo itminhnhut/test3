@@ -12,22 +12,22 @@ const NoResult = ({ size = "124", text = '' }) => {
                 <path d="m115.017 81.744-1.555 4.59L70.348 71.64a24.924 24.924 0 0 0 1.432-4.635l43.237 14.738z" fill="#C2C7CF" />
                 <defs>
                     <linearGradient id="znqa0gqk6a" x1="7.346" y1="61.535" x2="57.323" y2="61.535" gradientUnits="userSpaceOnUse">
-                        <stop offset=".056" stop-color="#E2E8F0" />
-                        <stop offset=".135" stop-color="#D8DEE5" stop-opacity=".91" />
-                        <stop offset=".272" stop-color="#BDC2C9" stop-opacity=".753" />
-                        <stop offset=".451" stop-color="#91959A" stop-opacity=".548" />
-                        <stop offset=".666" stop-color="#545659" stop-opacity=".303" />
-                        <stop offset=".908" stop-color="#080808" stop-opacity=".026" />
-                        <stop offset=".931" stop-opacity="0" />
+                        <stop offset=".056" stopColor="#E2E8F0" />
+                        <stop offset=".135" stopColor="#D8DEE5" stopOpacity=".91" />
+                        <stop offset=".272" stopColor="#BDC2C9" stopOpacity=".753" />
+                        <stop offset=".451" stopColor="#91959A" stopOpacity=".548" />
+                        <stop offset=".666" stopColor="#545659" stopOpacity=".303" />
+                        <stop offset=".908" stopColor="#080808" stopOpacity=".026" />
+                        <stop offset=".931" stopOpacity="0" />
                     </linearGradient>
                     <linearGradient id="rax2tboycb" x1=".989" y1="60.489" x2="47.931" y2="60.489" gradientUnits="userSpaceOnUse">
-                        <stop offset=".056" stop-color="#E2E8F0" />
-                        <stop offset=".138" stop-color="#D9DFE7" stop-opacity=".911" />
-                        <stop offset=".273" stop-color="#C1C6CD" stop-opacity=".764" />
-                        <stop offset=".447" stop-color="#9A9EA4" stop-opacity=".576" />
-                        <stop offset=".65" stop-color="#64676A" stop-opacity=".354" />
-                        <stop offset=".877" stop-color="#202122" stop-opacity=".108" />
-                        <stop offset=".977" stop-opacity="0" />
+                        <stop offset=".056" stopColor="#E2E8F0" />
+                        <stop offset=".138" stopColor="#D9DFE7" stopOpacity=".911" />
+                        <stop offset=".273" stopColor="#C1C6CD" stopOpacity=".764" />
+                        <stop offset=".447" stopColor="#9A9EA4" stopOpacity=".576" />
+                        <stop offset=".65" stopColor="#64676A" stopOpacity=".354" />
+                        <stop offset=".877" stopColor="#202122" stopOpacity=".108" />
+                        <stop offset=".977" stopOpacity="0" />
                     </linearGradient>
                 </defs>
             </svg>

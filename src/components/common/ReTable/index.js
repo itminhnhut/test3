@@ -376,7 +376,7 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${({ noBorder }) => (noBorder ? ' none' : `1px solid ${colors.divider.dark}`)};
+            border-left: ${({ noBorder }) => noBorder ? 'none' : `1px solid ${colors.divider.dark}`};
             z-index: 10;
             width: 1px;
             visibility: visible;

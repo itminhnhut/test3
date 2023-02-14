@@ -382,33 +382,6 @@ const Futures = () => {
                                         <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowOrderBook &&
-                                    <div
-                                        key={futuresGridKey.orderBook}
-                                        className={`border z-20 border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
-                                    >
-                                        <FuturesOrderBook
-                                            pairConfig={pairConfig}
-                                            markPrice={state.markPrice?.markPrice}
-                                            lastPrice={state.pairPrice?.lastPrice}
-                                            orderBookLayout={state.orderBookLayout}
-                                            setOrderInput={setOrderInput}
-                                            setAssumingPrice={(assumingPrice) =>
-                                                setState({ assumingPrice })
-                                            }
-                                        />
-                                    </div>
-                                }
-                                {filterLayout.isShowTrades &&
-                                    <div
-                                        key={futuresGridKey.recentTrades}
-                                        className={`border border-divider dark:border-divider-dark ${isVndcFutures ? 'hidden' : ''}`}
-                                    >
-                                        <FuturesRecentTrades
-                                            pairConfig={pairConfig}
-                                        />
-                                    </div>
-                                } */}
                                 {filterLayout.isShowOpenOrders && (
                                     <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
                                         <FuturesTradeRecord

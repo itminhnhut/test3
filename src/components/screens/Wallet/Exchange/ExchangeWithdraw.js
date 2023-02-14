@@ -39,6 +39,7 @@ import Button from 'components/common/Button';
 import classNames from 'classnames';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 // import clevertap from 'clevertap-web-sdk'
 
 const INITIAL_STATE = {
@@ -1180,7 +1181,6 @@ const ExchangeWithdraw = () => {
     const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
 
     useEffect(() => {
-        console.log('AUTH_WITHDRAW: ', auth);
         setIsOpenModalKyc(auth?.kyc_status !== 2);
     }, [auth]);
 
@@ -1481,7 +1481,8 @@ const ExchangeWithdraw = () => {
                     {renderPagination()}
                 </div>
                 {renderWdlConfirm()}
-                {renderKycRequiredModal()}
+                {/* {renderKycRequiredModal()} */}
+                <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
             </Background>
         </MaldivesLayout>
     );

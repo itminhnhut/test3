@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import { countDecimals, formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { formatNumber, getFilter, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
 import CheckBox from 'components/common/CheckBox';
 import SwitchV2 from 'components/common/V2/SwitchV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import TradingInput from 'components/trade/TradingInput';
 import { isNumeric } from 'utils';
-import { SwapIcon } from '../../../../svg/SvgIcon';
-import colors from 'styles/colors';
+// import { SwapIcon } from '../../../../svg/SvgIcon';
+// import colors from 'styles/colors';
 import Slider from 'components/trade/InputSlider';
 import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import { ceil, find } from 'lodash';
@@ -24,20 +24,16 @@ const initValue = {
     tp: 0
 };
 
-const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm }) => {
+const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, pairTicker }) => {
     const { t } = useTranslation();
-    const _price = +(status === VndcFutureOrderType.Status.PENDING
-        ? order?.price
-        : status === VndcFutureOrderType.Status.ACTIVE
-        ? order?.open_price
-        : order?.close_price);
     const symbol = order?.symbol;
     const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
     const pairConfig = find(futuresConfigs, { symbol });
     const [currentTheme] = useDarkMode();
-    const quoteAsset = order?.quoteAsset;
+    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
+    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const [autoType, setAutoType] = useState(false);
-    const [data, setData] = useState({ displaying_id: order?.displaying_id, price: _price, sl: order?.sl, tp: order?.tp });
+    const [data, setData] = useState(initValue);
     const [show, setShow] = useState({ tp: +order?.tp > 0, sl: +order?.sl > 0 });
     const profit = useRef({ tp: 0, sl: 0 });
     const [percent, setPercent] = useState({ tp: 0, sl: 0 });
@@ -148,6 +144,19 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     };
 
     useEffect(() => {
+        if (!isVisible) return;
+        const _price = +(status === VndcFutureOrderType.Status.PENDING
+            ? order?.price
+            : status === VndcFutureOrderType.Status.ACTIVE
+            ? order?.open_price
+            : order?.close_price);
+        setData({
+            displaying_id: order?.displaying_id,
+            price: _price,
+            sl: order?.sl,
+            tp: order?.tp
+        });
+        setShow({ tp: +order?.tp > 0, sl: +order?.sl > 0 });
         if (order?.sl) {
             profit.current.sl = getProfitSLTP(Number(order?.sl));
         }
@@ -174,7 +183,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
             autoTypeInput = JSON.parse(autoTypeInput);
             setAutoType(autoTypeInput?.auto);
         }
-    }, []);
+    }, [isVisible]);
 
     const onSwitch = (key) => {
         if (!order?.displaying_id) {
@@ -287,7 +296,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                 const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, pairConfig);
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
-                let _activePrice = order?.status === FuturesOrderEnum.Status.PENDING ? order?.price : lastPrice;
+                let _activePrice = order?.status === FuturesOrderEnum.Status.PENDING ? order?.price : _lastPrice;
                 // Truong hop dat lenh market
                 const lowerBound = {
                     min: Math.max(_minPrice, _activePrice * percentPriceFilter?.multiplierDown),
@@ -364,7 +373,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     <div className="h-[1px] bg-divider-dark w-full my-3"></div>
                     <div className="flex items-center justify-between">
                         <span className="text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</span>
-                        <span className="font-semibold">{formatNumber(lastPrice, 2, 0, true)}</span>
+                        <span className="font-semibold">{formatNumber(_lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
                 <CheckBox isV3 onChange={onChangeAutoType} active={autoType} className="h-full" label={t('futures:mobile:auto_type_sltp')} />

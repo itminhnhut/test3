@@ -1,20 +1,26 @@
 import { useTranslation } from 'next-i18next';
+import { FuturesOrderEnum } from 'redux/actions/const';
+import { TypeTable } from 'redux/actions/utils';
+import FuturesLeverage from 'components/common/FuturesLeverage'
 
-const FuturesRecordSymbolItem = ({ symbol, leverage }) => {
+const FuturesRecordSymbolItem = ({ symbol, leverage, type, side }) => {
     const { t } = useTranslation()
     return (
-        <div className='flex items-center whitespace-nowrap'>
-            <div className='font-medium text-xs'>
-                <div>{symbol}</div>
-                <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    {t('futures:tp_sl:perpetual')}
+        <div className='flex flex-col justify-center whitespace-nowrap gap-1'>
+            <div className='flex gap-3'>
+                <div className='font-semibold text-sm'>
+                    {symbol}
+                </div>
+                <div className='flex gap-2'>
+                    {leverage && (
+                        <FuturesLeverage value={leverage} />
+                    )}
+                    <div>✿</div>
                 </div>
             </div>
-            {leverage && (
-                <div className='ml-2 px-2  bg-gray-4 dark:bg-darkBlue-3 font-medium text-dominant text-[9px] rounded-sm'>
-                    {leverage}
-                </div>
-            )}
+            <div className={`${side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'} font-normal text-xs`}>
+                {side && <TypeTable type="side" data={{ side }} />}&nbsp;/&nbsp;{type && <TypeTable type="type" data={{ type }} />}
+            </div>
         </div>
     )
 }
