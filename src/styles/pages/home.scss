@@ -3,8 +3,12 @@
 }
 
 .homepage-introduce {
-  background: linear-gradient(97.82deg, #000E2F 0%, #1C2A4F 100%);
+  @apply bg-[#000]; // bg-homepageBg dark:bg-[#000];
+
+  // background: linear-gradient(97.82deg, #000E2F 0%, #1C2A4F 100%);
   padding-top: 118px;
+  padding-bottom: 100px;
+  // height:100vh;
   position: relative;
   z-index: 1;
 
@@ -18,9 +22,9 @@
       @apply relative z-20;
 
       .homepage-introduce___nami_exchange {
-        @apply text-sm text-dominant font-bold;
+        @apply text-sm text-dominant font-medium;
 
-        letter-spacing: 0.15em;
+        // letter-spacing: 0.15em;
 
         @media (min-width: 1366px) {
           font-size: 16px;
@@ -44,8 +48,10 @@
 
         @media (min-width: 1366px) {
           @apply mt-4;
-          font-size: 64px;
-          line-height: 70px;
+          // font-size: 64px;
+          // line-height: 70px;
+          font-size: 54px;
+          line-height: 68px;
         }
       }
 
@@ -148,16 +154,16 @@
           transform: translateZ(60px);
         }
 
-        @media (min-width: 1280px) {
-          margin-top: 0;
-          img {
-            width: 484px;
-          }
-        }
+        // @media (min-width: 1280px) {
+        //   margin-top: 0;
+        //   img {
+        //     width: 484px;
+        //   }
+        // }
 
-        @media (min-width: 1920px) {
-          img { width: 520px }
-        }
+        // @media (min-width: 1920px) {
+        //   img { width: 520px }
+        // }
       }
 
       .homepage-introduce___graphics__backward {
@@ -184,12 +190,9 @@
     }
 
     .homepage-introduce___statitics {
-      @apply flex flex-row items-start w-full bg-bgContainer dark:bg-darkBlue-3;
+      @apply flex flex-row items-start w-full mt-8; // bg-bgContainer dark:bg-darkBlue-3;
 
-      padding: 30px 16px;
       border-radius: 16px;
-      margin-top: 24px;
-      transform: translateY(50%);
       box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
 
       .homepage-introduce___statitics____item {
@@ -204,11 +207,12 @@
         }
 
         .homepage-introduce___statitics____item___value {
-          @apply text-txtPrimary dark:text-txtPrimary-dark font-bold;
+          @apply text-dominant  font-semibold mb-2;
           font-size: 16px;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
+          
 
           .bott-line {
             @apply bg-dominant;
@@ -235,12 +239,12 @@
             font-size: 22px;
           }
           @media (min-width: 1366px) {
-            font-size: 26px;
+            font-size: 24px;
           }
         }
 
         .homepage-introduce___statitics____item___description {
-          @apply text-txtSecondary dark:text-txtSecondary-dark;
+          @apply text-txtPrimary-dark;
 
           font-size: 12px;
           font-weight: 500;
@@ -254,14 +258,14 @@
         }
       }
 
-      @media (min-width: 768px) {
-        padding-left: 36px;
-        padding-right: 36px;
-      }
+      // @media (min-width: 768px) {
+      //   padding-left: 36px;
+      //   padding-right: 36px;
+      // }
 
-      @media (min-width: 1280px) {
-        padding: 30px 85px;
-      }
+      // @media (min-width: 1280px) {
+      //   padding: 30px 85px;
+      // }
     }
 
     @media (min-width: 768px) {
@@ -270,7 +274,7 @@
   }
 
   @media (min-width: 1366px) {
-    padding-top: 176px;
+    padding-top: 160px;
   }
 }
 
@@ -602,14 +606,29 @@
 }
 
 .homepage-news {
+  @apply bg-[#f1f4f5] dark:bg-darkBlue-3;
   margin-top: 60px;
   user-select: none;
 
   .homepage-news___wrapper {
     padding-bottom: 25px;
+    padding-top:80px;
 
     .homepage-news___news {
-
+      .keen-slider__dots__wrapper {
+  @apply mt-8;
+        .dots {
+          @apply items-center py-0;
+          .dot {
+            @apply   bg-gray-9 dark:bg-bgSecondary-dark w-2 h-2 transition-all duration-150;
+          }
+          .active {
+            @apply w-10 rounded-full  bg-dominant dark:bg-dominant;
+        
+          }
+        }
+       
+      }
       .slider-container {
         @apply relative;
 
@@ -624,6 +643,7 @@
             overflow: hidden !important;
           }
         }
+        
 
         @media (min-width: 390px) {
           padding-left: 95px;
@@ -671,12 +691,10 @@
     }
 
     .homepage-news___lastest___news {
-        @apply flex items-center;
+        @apply flex items-center justify-between lg:px-0 px-4;
 
-        padding-left: 16px;
-        padding-right: 16px;
-        margin-top: 32px;
-        margin-bottom: 30px;
+       
+        margin-bottom: 44px;
 
       div.homepage-news___lastest___news____left {
         @apply w-5/6 flex flex-nowrap items-center;
@@ -748,10 +766,10 @@
       }
 
       div.homepage-news___lastest___news____right {
-        @apply w-1/6 flex justify-end text-dominant cursor-pointer hover:underline;
+        @apply w-1/6 flex justify-end items-center text-dominant cursor-pointer hover:underline;
 
         font-weight: 600;
-        font-size: 12px;
+
         line-height: 24px;
 
         @media (min-width: 576px) {
@@ -768,24 +786,14 @@
         }
       }
 
-      @media (min-width: 340px) {
-        //margin-top: 55px;
-        margin-bottom: 32px;
-      }
+      
 
-      @media (min-width: 576px) {
-        @apply justify-center;
-      }
+      
 
-      @media (min-width: 992px) {
-        //margin-top: 75px;
-        margin-bottom: 0;
-      }
+      
     }
 
-    @media (min-width: 340px) {
-      //padding-bottom: 50px;
-    }
+  
 
     @media (min-width: 992px) {
       padding-bottom: 80px;
@@ -808,17 +816,14 @@
       @apply text-txtPrimary dark:text-txtPrimary-dark;
 
       font-weight: 600;
-      font-size: 28px;
-      line-height: 36px;
+      font-size: 32px;
+line-height: 38px;
 
       span {
         @apply text-dominant;
       }
 
-      @media (min-width: 1280px) {
-        font-size: 36px;
-        line-height: 50px;
-      }
+     
     }
 
     .homepage-first_award___step {
@@ -828,36 +833,35 @@
         margin-top: 24px;
 
         .homepage-first_award__manual__item {
-          @apply text-txtSecondary dark:text-txtSecondary-dark;
+          @apply flex items-center text-[#1F2633] dark:text-txtPrimary-dark;
 
-          font-weight: 500;
           font-size: 16px;
           line-height: 26px;
           margin-top: 8px;
 
-          &:last-child {
-            @apply flex flex-col;
-            margin-top: 27px;
+          // &:last-child {
+          //   @apply flex flex-col;
+          //   margin-top: 27px;
 
-            a {
-              @apply flex items-center justify-center;
+          //   a {
+          //     @apply flex items-center justify-center;
 
-              margin-top: 16px;
-              margin-right: 12px;
-            }
-          }
+          //     margin-top: 16px;
+          //     margin-right: 12px;
+          //   }
+          // }
 
 
-          @media (min-width: 768px) {
-            &:last-child {
-              @apply text-txtPrimary dark:text-txtPrimary-dark flex-col items-start;
+          // @media (min-width: 768px) {
+          //   &:last-child {
+          //     @apply text-txtPrimary dark:text-txtPrimary-dark flex-col items-start;
 
-              a {
-                @apply mt-3;
-                margin-right: 16px;
-              }
-            }
-          }
+          //     a {
+          //       @apply mt-3;
+          //       margin-right: 16px;
+          //     }
+          //   }
+          // }
 
           @media (min-width: 992px) {
             a {
@@ -888,12 +892,12 @@
     }
 
     .homepage-first_award___form {
-      @apply w-full dark:shadow-none dark:border dark:border-divider-dark;
+      @apply w-full dark:shadow-none rounded-xl dark:bg-darkBlue-3 dark:border dark:border-divider-dark;
 
       margin-top: 40px;
-      padding: 40px 16px;
+      padding: 48px;
       box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
-      border-radius: 15px;
+
 
       .homepage-first_award___form___title {
         @apply text-center text-txtPrimary dark:text-txtPrimary-dark;
@@ -929,13 +933,13 @@
       .homepage-first_award___form___input_group {
 
         .homepage-first_award___form___input__wrapper {
-          @apply w-full flex flex-row items-center border border-divider dark:border-divider-dark;
+          @apply w-full flex flex-row items-center border p-3 border-divider dark:border-divider-dark;
 
-          margin-top: 24px;
+
           height: 48px;
-          border-radius: 12px;
-          padding-left: 20px;
-          padding-right: 20px;
+          border-radius: 6px;
+          // padding-left: 20px;
+          // padding-right: 20px;
 
           svg {
             @apply text-txtSecondary dark:text-txtSecondary-dark;

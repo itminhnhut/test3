@@ -421,6 +421,21 @@ const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
     </svg>
 );
 
+const ArrowRightIcon = ({ color, size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 8" fill="none">
+        <path d="M12.01 3L0 3L0 5L12.01 5L12.01 8L16 4L12.01 0V3Z" fill={color || '#47CC85'} />
+    </svg>
+);
+
+const CheckedDoubleIcon = ({ color, size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 20 11" fill="none">
+        <path
+            d="M0.394043 6.74204L5.13704 10.362L12.753 1.65804L11.247 0.342041L4.86304 7.63804L1.60604 5.15204L0.394043 6.74204ZM19.753 1.65804L18.247 0.342041L11.878 7.62104L11.125 7.01904L9.87504 8.58104L12.122 10.379L19.753 1.65804Z"
+            fill={color || '#47CC85'}
+        />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -449,5 +464,7 @@ export {
     GooglePlayIcon,
     LogoIcon,
     BxChevronDown,
-    SyncAltIcon
+    SyncAltIcon,
+    ArrowRightIcon,
+    CheckedDoubleIcon
 };

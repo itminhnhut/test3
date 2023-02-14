@@ -56,14 +56,14 @@ const News = ({ data, lang }) => {
         if (!slider || width < 768) return null
         return (
             <div className="keen-slider__slide__control__wrapper mal-container">
-                <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
+                {/* <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
                     onClick={() => slider.prev()}>
                     <ChevronLeft size={width >= 1024 ? 26 : 18} />
                 </div>
                 <div className="keen-slider__slide__control__item keen-slider__slide__control__next"
                     onClick={() => slider.next()}>
                     <ChevronRight size={width >= 1024 ? 26 : 18} />
-                </div>
+                </div> */}
             </div>
         )
     }, [slider, width])

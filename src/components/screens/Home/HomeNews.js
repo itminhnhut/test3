@@ -14,56 +14,55 @@ const HomeNews = () => {
         loadingNews: false,
         news: null,
         lastedNewsAutoplay: true
-    })
-    const setState = (state) => set(prevState => ({ ...prevState, ...state }))
+    });
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const { i18n: { language } } = useTranslation()
+    const {
+        i18n: { language }
+    } = useTranslation();
 
     const getNewPostsBanner = async (lang = 'vi') => {
         try {
             const en = lang === 'en' ? 'en' : '-en';
-            const result = await ghost.posts.browse(
-                {
-                    limit: 10,
-                    filter: `featured:true+tags:${en}`,
-                    include: 'tags',
-                }   
-            )
+            const result = await ghost.posts.browse({
+                limit: 10,
+                filter: `featured:true+tags:${en}`,
+                include: 'tags'
+            });
             if (result) {
-                setState({ news: result })
+                setState({ news: result });
             }
-        } catch (e) {
-        }
-    }
+        } catch (e) {}
+    };
 
     // Helper
     const getNews = async (lang = 'vi') => {
-        setState({ loadingNews: true })
+        setState({ loadingNews: true });
         try {
-            const { status, data: news } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`)
+            const { status, data: news } = await Axios.get(`https://nami.io/api/v1/top_posts?language=${lang}`);
             if (status === 200 && news) {
-                setState({ news })
+                setState({ news });
             }
         } catch (e) {
-            console.log('Cant get news data: ', e)
+            console.log('Cant get news data: ', e);
         } finally {
-            setState({ loadingNews: false })
+            setState({ loadingNews: false });
         }
-    }
+    };
 
     useEffect(() => {
-        getNewPostsBanner(language)
-    }, [language])
-
+        getNewPostsBanner(language);
+    }, [language]);
 
     return (
         <section className="homepage-news">
             <div className="homepage-news___wrapper mal-container">
-                {state.news && <News data={state.news} lang={language} />}
                 {state.news && <LastedNews data={state.news} lang={language} />}
+
+                {state.news && <News data={state.news} lang={language} />}
             </div>
         </section>
-    )
-}
+    );
+};
 
-export default HomeNews
+export default HomeNews;

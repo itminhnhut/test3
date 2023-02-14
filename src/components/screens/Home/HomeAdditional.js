@@ -3,7 +3,7 @@ import Button from 'src/components/common/Button';
 import Link from 'next/link';
 import colors from '../../../styles/colors';
 
-import { Eye, Lock, Mail } from 'react-feather';
+import { Eye, EyeOff } from 'react-feather';
 import { useWindowSize } from 'utils/customHooks';
 import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
@@ -11,6 +11,8 @@ import { Trans, useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useEffect, useState } from 'react';
 import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
+import { CheckedDoubleIcon } from '../../svg/SvgIcon';
+import { useToggle } from 'react-use';
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State
@@ -19,6 +21,8 @@ const HomeAdditional = ({ parentState }) => {
         focus: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+
+    const [isPwShow, togglePwShow] = useToggle(false);
 
     // * Use Hooks
     const { width } = useWindowSize();
@@ -53,34 +57,52 @@ const HomeAdditional = ({ parentState }) => {
                         <div className="homepage-first_award__title">{t('home:first_award.title')}</div>
                         <div className="homepage-first_award__manual">
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans>{t('home:first_award.rule_1')}</Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans i18nKey="home:first_award.rule_2">
-                                    <span className="text-teal">40,000+</span>
+                                    <span className="text-teal mx-1">40,000+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans i18nKey="home:first_award.rule_3">
-                                    <span className="text-teal">400+</span>
+                                    <span className="text-teal mx-1">400+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans i18nKey="home:first_award.rule_4">
-                                    <span className="text-teal">125x</span>
+                                    <span className="text-teal mx-1">125x</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans i18nKey="home:first_award.rule_5">
-                                    <span className="text-teal">0,06%</span>
+                                    <span className="text-teal mx-1">0,06%</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
+                                <div className="mr-3">
+                                    <CheckedDoubleIcon size={19} />
+                                </div>
                                 <Trans i18nKey="home:first_award.rule_6">
-                                    <span className="text-teal">24/7</span>
+                                    <span className="text-teal mx-1">24/7</span>
                                 </Trans>
                             </div>
-                            <div className="homepage-first_award__manual__item">
+                            {/* <div className="homepage-first_award__manual__item">
                                 {t('home:first_award.following_at')}
                                 <div className="flex flex-row items-center">
                                     <Link href="https://www.facebook.com/namifutures">
@@ -120,12 +142,12 @@ const HomeAdditional = ({ parentState }) => {
                                         </a>
                                     </Link>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                     <div className="homepage-first_award___form">
-                        <div className="homepage-first_award___form___title">{t('home:first_award.join_nami_by')}</div>
-                        <div className="homepage-first_award___form___platform">
+                        {/* <div className="homepage-first_award___form___title">{t('home:first_award.join_nami_by')}</div> */}
+                        {/* <div className="homepage-first_award___form___platform">
                             <a href={getLoginUrl('sso', 'register')}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 75 75" fill="none">
                                     <rect x="0.5" y="0.5" width="74" height="74" rx="14.5" stroke={theme === THEME_MODE.LIGHT ? '#E2E8F0' : colors.darkBlue3} />
@@ -157,35 +179,47 @@ const HomeAdditional = ({ parentState }) => {
                                     />
                                 </svg>
                             </a>
-                        </div>
-                        <div className="homepage-first_award___form___or">{language === LANGUAGE_TAG.VI ? 'hoặc' : 'or'}</div>
+                        </div> */}
+                        {/* <div className="homepage-first_award___form___or">{language === LANGUAGE_TAG.VI ? 'hoặc' : 'or'}</div> */}
                         <div className="homepage-first_award___form___input_group">
+                            <label htmlFor="homepage-form-input" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                                Email
+                            </label>
                             <div
                                 className={`homepage-first_award___form___input__wrapper
-                                             ${state.focus === 'email' ? 'homepage-first_award___form___focus' : ''}`}
+                                             ${state.focus === 'email' ? 'homepage-first_award___form___focus' : ''} mb-4`}
                             >
-                                <Mail size={16} />
+                                {/* <Mail size={16} /> */}
+
                                 <input
+                                    id="homepage-form-input"
                                     className="homepage-first_award___form___input"
                                     onFocus={() => setState({ focus: 'email' })}
                                     onBlur={() => setState({ focus: null })}
                                     placeholder={t('input:email_placeholder')}
                                 />
                             </div>
-                            <div
-                                style={{ marginTop: 12 }}
-                                className={`homepage-first_award___form___input__wrapper
+
+                            <div className="">
+                                <label htmlFor="homepage-form-input" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                                    {t('input:password_placeholder')}
+                                </label>
+                                <div
+                                    className={`homepage-first_award___form___input__wrapper
                                              ${state.focus === 'pwd' ? 'homepage-first_award___form___focus' : ''}`}
-                            >
-                                <Lock size={20} />
-                                <input
-                                    className="homepage-first_award___form___input"
-                                    onFocus={() => setState({ focus: 'pwd' })}
-                                    onBlur={() => setState({ focus: null })}
-                                    placeholder={t('input:password_placeholder')}
-                                />
-                                <Eye size={16} />
+                                >
+                                    {/* <Lock size={20} /> */}
+                                    <input
+                                        type={isPwShow ? 'text' : 'password'}
+                                        className="homepage-first_award___form___input"
+                                        onFocus={() => setState({ focus: 'pwd' })}
+                                        onBlur={() => setState({ focus: null })}
+                                        placeholder={language === LANGUAGE_TAG.VI ? 'Nhập mật khẩu của bạn (8 - 50 ký tự)' : 'Your password (8 - 50 letters)'}
+                                    />
+                                    <div className="cursor-pointer" onClick={togglePwShow}>{isPwShow ? <Eye size={16} /> : <EyeOff  size={16} />}</div>
+                                </div>
                             </div>
+
                             <div>
                                 <Button
                                     style={{
