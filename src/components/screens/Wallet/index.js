@@ -428,7 +428,9 @@ const Wallet = () => {
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             {auth ? (
                 <CustomContainer>
-                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left">{t('common:my_wallet')}</div>
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden sm:block">
+                        {t('common:my_wallet')}
+                    </div>
                     {renderScreenTab()}
                     <div className="mt-8 text-txtPrimary dark:text-txtPrimary-dark">
                         {state.screen === WALLET_SCREENS.OVERVIEW && (
@@ -533,6 +535,6 @@ const Background = styled.div.attrs({ className: 'w-full h-full' })`
     background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
-const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 m-auto px-4 py-20' })``;
+const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 m-auto md:px-4 md:py-20' })``;
 
 export default Wallet;
