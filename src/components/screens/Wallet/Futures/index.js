@@ -320,7 +320,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                     <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
-                            className="text-sm w-full px-2.5"
+                            className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                             value={state.search}
                             onChange={(e) => setState({ search: e?.target?.value })}
                             onFocus={() => setState({ currentPage: 1 })}

@@ -195,7 +195,9 @@ const Wallet = () => {
                                 V2
                                 key={e?.key}
                                 className={`text-left !px-0 !text-base ${
-                                    e?.key === state.screenIndex ? ' text-txtPrimary-dark !font-semibold dark:hover:text-txtPrimary-dark ' : ' !font-normal '
+                                    e?.key === state.screenIndex
+                                        ? ' text-txtPrimary-dark font-semibold dark:font-semibold dark:hover:text-txtPrimary-dark '
+                                        : ' !font-normal '
                                 }`}
                                 value={e.key}
                                 onClick={() => {
