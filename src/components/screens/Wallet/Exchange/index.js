@@ -558,13 +558,23 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </a>
                 </li>
                 {!noMarket && tradeButton}
-                <li className={cssLi} onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                    }
+                >
                     {utils?.translator('common:deposit')}
                     {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
                         {utils?.translator('common:deposit')}
                     </a> */}
                 </li>
-                <li className={cssLi} onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                    }
+                >
                     {utils?.translator('common:withdraw')}
                     {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
                         {utils?.translator('common:withdraw')}
