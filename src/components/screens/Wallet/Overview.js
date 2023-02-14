@@ -191,7 +191,7 @@ const OverviewWallet = (props) => {
                             </HrefButton>
                             <ButtonV2
                                 variants="none"
-                                className="whitespace-nowrap rounded-md font-semibold text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
+                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}

@@ -287,7 +287,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
                                 // className={isBuy ? 'bg-teal' : 'bg-red'}
-                                className="!px-6 !py-3"
+                                className="!px-6 !py-3 !font-semibold !text-base"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
@@ -318,7 +318,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         isHide={state.hideSmallAsset}
                         className="mr-8"
                     />
-                    <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
+                    <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5"
@@ -327,7 +327,9 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                             onFocus={() => setState({ currentPage: 1 })}
                             placeholder={t('common:search')}
                         />
-                        {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />}
+                        {state.search && (
+                            <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
+                        )}
                     </div>
                 </div>
             </div>

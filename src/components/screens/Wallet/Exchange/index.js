@@ -479,7 +479,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             </HrefButton>
                             <ButtonV2
                                 variants="none"
-                                className="whitespace-nowrap rounded-md font-semibold text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
+                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                             >
                                 {t('common:transfer')}
@@ -511,7 +511,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             isHide={state.hideSmallAsset}
                             className="mr-8"
                         />
-                        <div className="py-3 px-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                        <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                             <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                             <input
                                 className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
