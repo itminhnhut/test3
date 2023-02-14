@@ -71,12 +71,13 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         }
     };
 
-    const inputValidator = (type) => {
+    const inputValidator = (key) => {
         let isValid = true,
             msg = null;
         const { sl, tp } = orderSlTp;
         if (oldPair !== pair) return { isValid, msg };
-        switch (type) {
+        const stopPrice = price;
+        switch (key) {
             // input check
             case 'quoteQty':
                 const _min = pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
@@ -99,7 +100,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             case 'stop_loss':
             case 'take_profit':
                 // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
-                if ((type === 'stop_loss' && !sl) || (type === 'take_profit' && !tp)) {
+                if ((key === 'stop_loss' && !sl) || (key === 'take_profit' && !tp)) {
                     return {
                         isValid,
                         msg
@@ -110,7 +111,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 const _maxPrice = priceFilter?.maxPrice;
                 const _minPrice = priceFilter?.minPrice;
                 let _activePrice = lastPrice;
-                if (type !== 'price') {
+                if (key !== 'price') {
                     if (type === 'LIMIT') {
                         _activePrice = price;
                     } else if (type === 'STOP_MARKET') {
@@ -131,12 +132,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
 
                 let bound = lowerBound;
                 if (side === FuturesOrderEnum.Side.BUY) {
-                    bound = type === 'stop_loss' ? lowerBound : upperBound;
+                    bound = key === 'stop_loss' ? lowerBound : upperBound;
                 } else {
-                    bound = type === 'stop_loss' ? upperBound : lowerBound;
+                    bound = key === 'stop_loss' ? upperBound : lowerBound;
                 }
 
-                if (type === 'stop_loss') {
+                if (key === 'stop_loss') {
                     bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
                     // Modify bound base on type
                     if (sl < bound.min) {
@@ -146,7 +147,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         isValid = false;
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
                     }
-                } else if (type === 'take_profit') {
+                } else if (key === 'take_profit') {
                     bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
                     if (tp < bound.min) {
                         isValid = false;
@@ -155,7 +156,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         isValid = false;
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
                     }
-                } else if (type === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
+                } else if (key === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
                     const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price;
                     if (side === FuturesOrderEnum.Side.BUY) {
                         // Truong hop la buy thi gia limit phai nho hon gia hien tai
@@ -197,7 +198,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     }
                 }
 
-                if (type === 'stop_loss' && isValid) {
+                if (key === 'stop_loss' && isValid) {
                     //  Kiểm tra hợp lệ giá liquidate không
                     // const size = size
                     const liquidatePrice = getLiquidatePrice(

@@ -1,12 +1,7 @@
 import React, { useMemo, useState, useRef, useEffect } from 'react';
-import ModalV2 from 'components/common/V2/ModalV2';
-import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { useTranslation } from 'next-i18next';
 import { formatNumber, getType, checkLargeVolume, checkInFundingTime } from 'redux/actions/utils';
-import { createSelector } from 'reselect';
-import find from 'lodash/find';
 import { DefaultFuturesFee } from 'redux/actions/const';
-import { useSelector } from 'react-redux';
 import { Minus, Plus } from 'react-feather';
 import TradingInput from 'components/trade/TradingInput';
 import Slider from 'components/trade/InputSlider';
@@ -20,34 +15,10 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { API_DCA_ORDER } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import classNames from 'classnames';
 
-const tabs = [
-    { label: 'futures:mobile:adjust_margin:add_volume', value: 'vol' },
-    { label: 'futures:margin', value: 'margin' }
-];
-
-const getPairConfig = createSelector([(state) => state?.futures?.pairConfigs, (utils, params) => params], (pairConfigs, params) => {
-    return find(pairConfigs, { ...params });
-});
-
-const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, params) => params], (wallet, params) => {
-    const _avlb = wallet?.[params.assetId];
-    return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
-});
-const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, pairTicker }) => {
+const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decimals, quoteAsset, order_value, side, margin, quantity, fee, onConfirm }) => {
     const { t } = useTranslation();
-    const [tab, setTab] = useState('vol');
-    const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
-    const available = useSelector((state) => getAvailable(state, { assetId: pairConfig?.quoteAssetId }));
-    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
-    const order_value = order?.order_value ?? 0;
-    const side = order?.side;
-    const margin = order?.margin ?? 0;
-    const quantity = order?.quantity ?? 0;
-
     const [volume, setVolume] = useState();
     const [leverage, setLeverage] = useState(order?.leverage);
     const [type, setType] = useState(order?.type);
@@ -56,13 +27,6 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
     const [showCustomized, setShowCustomized] = useState(false);
     const isChangeSlide = useRef(false);
     const [loading, setLoading] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-    const message = useRef({
-        status: '',
-        title: '',
-        message: '',
-        notes: ''
-    });
 
     const minQuoteQty = useMemo(() => {
         const initValue = quoteAsset === 'VNDC' ? 100000 : 5;
@@ -75,15 +39,6 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
         const max = Math.min(leverage * available, _maxQuoteQty);
         return floor(max, decimals.symbol);
     }, [price, side, leverage, pairTicker, pairConfig, type, showCustomized, available]);
-
-    useEffect(() => {
-        if (!isVisible) return;
-        setType(order?.type);
-        setLeverage(order?.leverage);
-        setPrice(_lastPrice);
-        setPercent(1);
-        setShowCustomized(false);
-    }, [isVisible]);
 
     useEffect(() => {
         if (showCustomized) {
@@ -131,12 +86,6 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
         setVolume(value);
         setPercent(_x ? _x : x);
     };
-
-    const fee = useMemo(() => {
-        const _fee = order?.fee ?? 0;
-        // const funding = order?.funding_fee?.margin ? Math.abs(order?.funding_fee?.margin) : 0
-        return _fee;
-    }, [order]);
 
     const general = useMemo(() => {
         const _price = type === VndcFutureOrderType.Type.MARKET ? _lastPrice : price;
@@ -190,6 +139,7 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
         } else if (isLargeVolume) {
             notice = t('futures:high_volume_note');
         }
+        let message;
         try {
             setLoading(true);
             const params = {
@@ -206,10 +156,10 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
                 params: params
             });
             if (status === ApiStatus.SUCCESS) {
-                message.current = {
+                message = {
                     status: 'success',
                     title: t('futures:mobile:adjust_margin:add_volume_success'),
-                    message: t('futures:place_order_success_message'),
+                    message: t('futures:modify_order_success'),
                     notes: notice
                 };
             } else {
@@ -220,7 +170,7 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
                         value: `${formatNumber(data?.max_notional)} ${order?.symbol.includes('VNDC') ? 'VNDC' : 'USDT'}`
                     });
                 }
-                message.current = {
+                message = {
                     status: 'error',
                     title: t('common:failed'),
                     message: _message,
@@ -229,7 +179,7 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
             }
         } catch (e) {
             if (e.message === 'Network Error' || !navigator?.onLine) {
-                message.current = {
+                message = {
                     status: 'error',
                     title: t('common:failed'),
                     message: t('error:futures:NETWORK_ERROR')
@@ -237,239 +187,215 @@ const EditVolV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onC
             }
         } finally {
             setLoading(false);
-            if (onClose) onClose();
-            setShowAlert(true);
+            if (onConfirm) onConfirm(message);
         }
     };
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
-
     const isError =
         (available && !_validator('quoteQty')?.isValid) ||
         leverage > pairConfig?.leverageConfig.max ||
         leverage < pairConfig?.leverageConfig.min ||
         (!_validator('price')?.isValid && showCustomized && type !== VndcFutureOrderType.Type.MARKET);
+
     return (
         <>
-            <AlertModalV2
-                isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
-                type={message.current.status}
-                title={message.current.title}
-                message={message.current.message}
-            />
-            <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
-                <div className="text-2xl font-semibold mb-2">Điều chỉnh lệnh</div>
-                <Tabs isDark tab={tab} className="gap-8 border-b border-divider-dark">
-                    {tabs?.map((item) => (
-                        <TabItem V2 className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && setTab(item.value)}>
-                            {t(item.label)}
-                        </TabItem>
-                    ))}
-                </Tabs>
-                <div className="mt-6">
-                    <div className="grid grid-cols-2 gap-11">
-                        <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6">
-                            <div>
-                                <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
-                                    {order?.symbol} {order?.leverage}x
-                                </div>
-                                <div className="border border-divider-dark p-4 rounded-md">
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
-                                        <span className="font-semibold">{formatNumber(order?.open_price, decimals.price, 0, true)}</span>
-                                    </div>
-                                    <div className="h-[1px] bg-divider-dark w-full my-3"></div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
-                                        <span className="font-semibold">{formatNumber(order?.order_value, decimals.symbol, 0, true)}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="relative">
-                                <div className="text-sm text-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
-                                <div
-                                    className={classNames('px-4 mb-3 flex items-center bg-dark-2 rounded-md', {
-                                        'ring-1 ring-red mx-[1px]': !_validator('quoteQty').isValid
-                                    })}
-                                >
-                                    <div className={changeClass}>
-                                        <Minus
-                                            size={15}
-                                            className="text-onus-white cursor-pointer"
-                                            onClick={() =>
-                                                volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))
-                                            }
-                                        />
-                                    </div>
-                                    <TradingInput
-                                        value={volume}
-                                        decimalScale={decimals.symbol}
-                                        allowNegative={false}
-                                        thousandSeparator={true}
-                                        containerClassName="px-2.5 !bg-dark-2 w-full !border-none"
-                                        inputClassName="!text-center"
-                                        onValueChange={({ value }) => onChangeVolume(value)}
-                                        disabled={!available}
-                                        inputMode="decimal"
-                                        validator={_validator('quoteQty')}
-                                        allowedDecimalSeparators={[',', '.']}
-                                    />
-                                    <div className={changeClass}>
-                                        <Plus
-                                            size={15}
-                                            className="text-onus-white cursor-pointer"
-                                            onClick={() =>
-                                                volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <div className="w-full px-2">
-                                    <Slider
-                                        useLabel
-                                        positionLabel="top"
-                                        labelSuffix="%"
-                                        x={percent}
-                                        axis="x"
-                                        xmax={200}
-                                        xmin={0}
-                                        onChange={({ x }) => available && onChangePercent(x)}
-                                        dots={4}
-                                    />
-                                </div>
-                            </div>
-                            <div className="space-y-4">
-                                <CollapseV2
-                                    className="w-full"
-                                    isCustom
-                                    active={showCustomized}
-                                    label={
-                                        <div
-                                            className="font-semibold flex items-center space-x-2 cursor-pointer w-max mb-4"
-                                            onClick={() => setShowCustomized(!showCustomized)}
-                                        >
-                                            <span>{t('futures:mobile:adjust_margin:advanced_custom')}</span>
-                                            <ChevronDown size={16} className={`${showCustomized ? 'rotate-0' : ''} transition-all`} />
-                                        </div>
-                                    }
-                                >
-                                    <>
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div className="space-y-2">
-                                                <div className="text-sm text-txtSecondary-dark">{t('common:order_type')}</div>
-                                                <SelectV2
-                                                    options={optionsTypes}
-                                                    value={type}
-                                                    onChange={(e) => {
-                                                        setType(e);
-                                                        setPrice(_lastPrice);
-                                                    }}
-                                                    keyExpr="value"
-                                                    displayExpr="title"
-                                                    className=""
-                                                    position="top"
-                                                />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <div className="text-sm text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
-                                                <div className="px-4 flex items-center bg-dark-2 rounded-md">
-                                                    <div className={changeClass}>
-                                                        <Minus
-                                                            size={15}
-                                                            className="text-onus-white cursor-pointer"
-                                                            onClick={() =>
-                                                                leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
-                                                            }
-                                                        />
-                                                    </div>
-                                                    <TradingInput
-                                                        value={leverage}
-                                                        decimalScale={0}
-                                                        allowNegative={false}
-                                                        thousandSeparator={true}
-                                                        inputClassName="!text-center w-full"
-                                                        containerClassName="px-2.5 !bg-dark-2 w-full"
-                                                        onValueChange={({ value }) => setLeverage(value)}
-                                                        disabled={!available}
-                                                        inputMode="decimal"
-                                                        suffix={'x'}
-                                                        allowedDecimalSeparators={[',', '.']}
-                                                    />
-                                                    <div className={changeClass}>
-                                                        <Plus
-                                                            size={15}
-                                                            className="text-onus-white cursor-pointer"
-                                                            onClick={() =>
-                                                                leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
-                                                            }
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2 mt-4">
-                                            <div className="text-sm text-txtSecondary-dark">{t('common:price')}</div>
-                                            <TradingInput
-                                                label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
-                                                value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
-                                                decimalScale={decimals.price}
-                                                allowNegative={false}
-                                                thousandSeparator={true}
-                                                containerClassName="px-2.5 !bg-dark-2 w-full"
-                                                inputClassName="!text-left !ml-0"
-                                                onValueChange={({ value }) => setPrice(value)}
-                                                disabled={type === VndcFutureOrderType.Type.MARKET}
-                                                validator={_validator('price')}
-                                                renderTail={() => <span className={`text-txtSecondary-dark`}>{quoteAsset}</span>}
-                                                allowedDecimalSeparators={[',', '.']}
-                                            />
-                                        </div>
-                                    </>
-                                </CollapseV2>
-                            </div>
+            <div className="grid grid-cols-2 gap-11">
+                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6">
+                    <div>
+                        <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
+                            {order?.symbol} {order?.leverage}x
                         </div>
-                        <div className="p-4 rounded-xl bg-darkBlue-3 text-base">
-                            <div className="font-semibold mb-6">{t('futures:calulator:result')}</div>
-                            <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</div>
-                                    <div className="font-semibold">
-                                        {formatNumber(_lastPrice, decimals.symbol, 0, true)} {quoteAsset}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary-dark">{t('futures:margin')}</div>
-                                    <div className="font-semibold">
-                                        {formatNumber(general.margin, decimals.symbol, 0, true)} {quoteAsset}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:average_open_price')}</div>
-                                    <div className="font-semibold">
-                                        {formatNumber(general.AvePrice, decimals.symbol, 0, true)} {quoteAsset}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
-                                    <div className="font-semibold">
-                                        {formatNumber(general.liqPrice, decimals.symbol, 0, true)} {quoteAsset}
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <div className="text-txtSecondary-dark">{t('futures:mobile:available')}</div>
-                                    <div className="font-semibold">
-                                        {formatNumber(available, decimals.symbol, 0, true)} {quoteAsset}
-                                    </div>
-                                </div>
+                        <div className="border border-divider-dark p-4 rounded-md">
+                            <div className="flex items-center justify-between">
+                                <span className="text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
+                                <span className="font-semibold">{formatNumber(order?.open_price, decimals.price, 0, true)}</span>
+                            </div>
+                            <div className="h-[1px] bg-divider-dark w-full my-3"></div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
+                                <span className="font-semibold">{formatNumber(order?.order_value, decimals.symbol, 0, true)}</span>
                             </div>
                         </div>
                     </div>
-                    <ButtonV2 disabled={loading || isError} onClick={_onConfirm} className="mt-8">
-                        {t('common:confirm')}
-                    </ButtonV2>
+                    <div className="relative">
+                        <div className="text-sm text-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
+                        <div
+                            className={classNames('px-4 mb-3 flex items-center bg-dark-2 rounded-md', {
+                                'ring-1 ring-red mx-[1px]': !_validator('quoteQty').isValid
+                            })}
+                        >
+                            <div className={changeClass}>
+                                <Minus
+                                    size={15}
+                                    className="text-onus-white cursor-pointer"
+                                    onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
+                                />
+                            </div>
+                            <TradingInput
+                                value={volume}
+                                decimalScale={decimals.symbol}
+                                allowNegative={false}
+                                thousandSeparator={true}
+                                containerClassName="px-2.5 !bg-dark-2 w-full !border-none"
+                                inputClassName="!text-center"
+                                onValueChange={({ value }) => onChangeVolume(value)}
+                                disabled={!available}
+                                inputMode="decimal"
+                                validator={_validator('quoteQty')}
+                                allowedDecimalSeparators={[',', '.']}
+                            />
+                            <div className={changeClass}>
+                                <Plus
+                                    size={15}
+                                    className="text-onus-white cursor-pointer"
+                                    onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
+                                />
+                            </div>
+                        </div>
+                        <div className="w-full px-2">
+                            <Slider
+                                useLabel
+                                positionLabel="top"
+                                labelSuffix="%"
+                                x={percent}
+                                axis="x"
+                                xmax={200}
+                                xmin={0}
+                                onChange={({ x }) => available && onChangePercent(x)}
+                                dots={4}
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-4">
+                        <CollapseV2
+                            className="w-full"
+                            isCustom
+                            active={showCustomized}
+                            label={
+                                <div
+                                    className="font-semibold flex items-center space-x-2 cursor-pointer w-max mb-4"
+                                    onClick={() => setShowCustomized(!showCustomized)}
+                                >
+                                    <span>{t('futures:mobile:adjust_margin:advanced_custom')}</span>
+                                    <ChevronDown size={16} className={`${showCustomized ? 'rotate-0' : ''} transition-all`} />
+                                </div>
+                            }
+                        >
+                            <>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-2">
+                                        <div className="text-sm text-txtSecondary-dark">{t('common:order_type')}</div>
+                                        <SelectV2
+                                            options={optionsTypes}
+                                            value={type}
+                                            onChange={(e) => {
+                                                setType(e);
+                                                setPrice(_lastPrice);
+                                            }}
+                                            keyExpr="value"
+                                            displayExpr="title"
+                                            className=""
+                                            position="top"
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="text-sm text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
+                                        <div className="px-4 flex items-center bg-dark-2 rounded-md">
+                                            <div className={changeClass}>
+                                                <Minus
+                                                    size={15}
+                                                    className="text-onus-white cursor-pointer"
+                                                    onClick={() =>
+                                                        leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
+                                                    }
+                                                />
+                                            </div>
+                                            <TradingInput
+                                                value={leverage}
+                                                decimalScale={0}
+                                                allowNegative={false}
+                                                thousandSeparator={true}
+                                                inputClassName="!text-center w-full"
+                                                containerClassName="px-2.5 !bg-dark-2 w-full"
+                                                onValueChange={({ value }) => setLeverage(value)}
+                                                disabled={!available}
+                                                inputMode="decimal"
+                                                suffix={'x'}
+                                                allowedDecimalSeparators={[',', '.']}
+                                            />
+                                            <div className={changeClass}>
+                                                <Plus
+                                                    size={15}
+                                                    className="text-onus-white cursor-pointer"
+                                                    onClick={() =>
+                                                        leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="space-y-2 mt-4">
+                                    <div className="text-sm text-txtSecondary-dark">{t('common:price')}</div>
+                                    <TradingInput
+                                        label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
+                                        value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
+                                        decimalScale={decimals.price}
+                                        allowNegative={false}
+                                        thousandSeparator={true}
+                                        containerClassName="px-2.5 !bg-dark-2 w-full"
+                                        inputClassName="!text-left !ml-0"
+                                        onValueChange={({ value }) => setPrice(value)}
+                                        disabled={type === VndcFutureOrderType.Type.MARKET}
+                                        validator={_validator('price')}
+                                        renderTail={() => <span className={`text-txtSecondary-dark`}>{quoteAsset}</span>}
+                                        allowedDecimalSeparators={[',', '.']}
+                                    />
+                                </div>
+                            </>
+                        </CollapseV2>
+                    </div>
                 </div>
-            </ModalV2>
+                <div className="p-4 rounded-xl bg-darkBlue-3 text-base">
+                    <div className="font-semibold mb-6">{t('futures:calulator:result')}</div>
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div className="text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</div>
+                            <div className="font-semibold">
+                                {formatNumber(_lastPrice, decimals.symbol, 0, true)} {quoteAsset}
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="text-txtSecondary-dark">{t('futures:margin')}</div>
+                            <div className="font-semibold">
+                                {formatNumber(general.margin, decimals.symbol, 0, true)} {quoteAsset}
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:average_open_price')}</div>
+                            <div className="font-semibold">
+                                {formatNumber(general.AvePrice, decimals.symbol, 0, true)} {quoteAsset}
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
+                            <div className="font-semibold">
+                                {formatNumber(general.liqPrice, decimals.symbol, 0, true)} {quoteAsset}
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <div className="text-txtSecondary-dark">{t('futures:mobile:available')}</div>
+                            <div className="font-semibold">
+                                {formatNumber(available, decimals.symbol, 0, true)} {quoteAsset}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ButtonV2 disabled={loading || isError} onClick={_onConfirm} className="mt-8">
+                {t('common:confirm')}
+            </ButtonV2>
         </>
     );
 };
