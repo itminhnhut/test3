@@ -440,7 +440,7 @@ const NavBar = ({
                         )}
                     </div>
                     {isNotVerified && (
-                        <HrefButton className="mb-6" href={PATHS.ACCOUNT.IDENTIFICATION}>
+                        <HrefButton className="mb-6 !text-white" href={PATHS.ACCOUNT.IDENTIFICATION}>
                             {t('navbar:verify_account')}
                         </HrefButton>
                     )}

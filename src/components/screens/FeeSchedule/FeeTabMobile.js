@@ -29,13 +29,14 @@ const FeeTabMobile = ({ tabIndex, translate, futuresFeeConfig, loadingFuturesFee
     }, [futuresFeeConfig, tabIndex]);
 
     const onShowMore = () => {
-        if (chosenFuturesFee.page + 1 > chosenFuturesFee.maxPage) {
-            setChosenFuturesFee((prev) => ({ ...prev, data: prev.dataFilter.slice(0, ROW_PER_PAGE), page: 1 }));
+        const newPage = chosenFuturesFee.page + 1;
+        if (newPage > chosenFuturesFee.maxPage) {
+            // setChosenFuturesFee((prev) => ({ ...prev, data: prev.dataFilter.slice(0, ROW_PER_PAGE), page: 1 }));
             return;
         }
 
-        const newFuturesFee = [...chosenFuturesFee.dataFilter.slice(0, ROW_PER_PAGE * (chosenFuturesFee.page + 1))];
-        setChosenFuturesFee((prev) => ({ ...prev, page: prev.page + 1, data: newFuturesFee }));
+        const newFuturesFee = [...chosenFuturesFee.dataFilter.slice(0, ROW_PER_PAGE * newPage)];
+        setChosenFuturesFee((prev) => ({ ...prev, page: newPage, data: newFuturesFee }));
     };
     return (
         <div>
@@ -45,12 +46,11 @@ const FeeTabMobile = ({ tabIndex, translate, futuresFeeConfig, loadingFuturesFee
                 <></>
             ) : (
                 <>
-                    {chosenFuturesFee.data.map((feeEx) => (
-                        <FuturesTabColumn key={feeEx.level} translate={translate} fee={feeEx} />
+                    {chosenFuturesFee.data.map((feeEx, index) => (
+                        <FuturesTabColumn lastIndex={index === chosenFuturesFee.data.length - 1} key={feeEx.level} translate={translate} fee={feeEx} />
                     ))}
-                    <div>
-                        <TextButton onClick={onShowMore}>{chosenFuturesFee.page + 1 > chosenFuturesFee.maxPage ? 'Hide all' : 'Show more'}</TextButton>
-                    </div>
+
+                    <TextButton onClick={onShowMore}>{chosenFuturesFee.page + 1 <= chosenFuturesFee.maxPage && translate('common:show_more')}</TextButton>
                 </>
             )}
         </div>
@@ -94,8 +94,8 @@ const ExchangeTabColumn = ({ fee, translate }) => (
     </div>
 );
 
-const FuturesTabColumn = ({ fee, translate }) => (
-    <div className="pb-4 border-b border-divider-dark pt-4 last:border-b-0">
+const FuturesTabColumn = ({ fee, translate, lastIndex }) => (
+    <div className={`pb-4 ${!lastIndex ? 'border-b border-divider-dark ' : ' '} pt-4`}>
         <div className="mb-6">
             <div className="flex text-txtSecondary-dark justify-between items-center text-xs mb-2">
                 <div className="">{translate('common:pair')}</div>

@@ -495,7 +495,7 @@ const TradingFee = () => {
                 {/* {width <= 475 && <div className="w-full" />} */}
                 <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
                     <ButtonV2 className="!px-6 lg:w-auto w-[90%] lg:static absolute bottom-[-25px]">
-                        <span className="mr-2">Nâng cấp VIP</span>
+                        <span className="mr-2">{t('fee-structure:upgrade_level')}</span>
                         <Crown />
                     </ButtonV2>
                 </Link>
@@ -630,7 +630,7 @@ const TradingFee = () => {
                     {t('fee-structure:maker_taker_description')}
                     <span className="ml-2">{t('fee-structure:maker_taker_description_2')}</span>
                     <Link href={PATHS.REFERENCE.MAKER_TAKER}>
-                        <a className="ml-4 text-dominant hover:!underline font-semibold" target="_blank">
+                        <a className="lg:ml-4 ml-2 text-dominant hover:!underline font-semibold" target="_blank">
                             {t('common:read_more')}
                         </a>
                     </Link>
@@ -638,7 +638,7 @@ const TradingFee = () => {
                 <div>
                     {t('fee-structure:referral_description_value', { value: '20%' })}
                     <Link href={PATHS.ACCOUNT.REFERRAL}>
-                        <a className="ml-4 text-dominant hover:!underline font-semibold">{t('common:read_more')}</a>
+                        <a className="lg:ml-4 ml-2 text-dominant hover:!underline font-semibold">{t('common:read_more')}</a>
                     </Link>
                 </div>
                 <div>{t('fee-structure:swap_fee_description')}</div>
@@ -781,7 +781,7 @@ const TradingFeeColumn = styled.div`
         background: ${colors.divider.dark};
         bottom: -32px;
     }
-    @media (min-width: ${BREAK_POINTS.lg}) {
+    @media (min-width: ${BREAK_POINTS.lg}px) {
         :after {
             height: 100%;
             width: 1px;
