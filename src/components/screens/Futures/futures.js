@@ -360,7 +360,7 @@ const Futures = () => {
                                     })
                                 }
                             >
-                                {auth && filterLayout.isShowFavorites && (
+                                {/* {auth && filterLayout.isShowFavorites && (
                                     <div key={futuresGridKey.favoritePair} className={`border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
@@ -381,7 +381,7 @@ const Futures = () => {
                                     <div key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
                                         <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
                                     </div>
-                                )}
+                                )} */}
                                 {filterLayout.isShowOpenOrders && (
                                     <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
                                         <FuturesTradeRecord
