@@ -119,4 +119,5 @@ export const ThumbLabel = styled.div`
     font-weight: ${({ onusMode }) => (onusMode ? '400' : '600')};
     margin-top: ${({ onusMode }) => (onusMode ? '-3px' : '0')};
     line-height: 18px;
+    left: ${({ min, max }) => (min ? '16px' : max ? 0 : null)};
 `;

@@ -129,8 +129,8 @@ const FuturesOrderButtonsGroupVndc = ({
                 notes={messages.current?.notes}
                 className="max-w-[448px]"
             />
-            <ModalV2 className="max-w-[448px]" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
-                <div className="text-2xl mb-6">{t('futures:preferences:order_confirm')}</div>
+            <ModalV2 className="max-w-[448px] text-base" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
+                <div className="text-2xl mb-6 font-semibold">{t('futures:preferences:order_confirm')}</div>
                 <div className="p-4 mb-6 rounded-md border border-divider-dark divide-y divide-divider-dark space-y-3">
                     <div className="flex items-center justify-between">
                         <span className="text-txtSecondary-dark">{t('futures:mobile:leverage_v2')}</span>

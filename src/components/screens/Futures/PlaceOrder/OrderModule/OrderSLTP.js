@@ -59,29 +59,27 @@ const FuturesOrderSLTP = ({
             sl: data.sl
         });
         setShowEditSLTP(false);
-        setShowAlert(true);
+        // setShowAlert(true);
     };
 
     return (
         <div className="space-y-4 mt-4">
-            <AlertModalV2
+            {/* <AlertModalV2
                 isVisible={showAlert}
                 onClose={() => setShowAlert(false)}
                 type="success"
                 title={t('common:success')}
                 message={t('futures:modify_order_success')}
+            /> */}
+            <EditSLTPV2
+                isVisible={showEditSLTP}
+                order={rowData.current}
+                onClose={() => setShowEditSLTP(false)}
+                status={rowData.current?.status}
+                onConfirm={onConfirm}
+                lastPrice={lastPrice}
+                decimals={decimals}
             />
-            {showEditSLTP && (
-                <EditSLTPV2
-                    isVisible={showEditSLTP}
-                    order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
-                    status={rowData.current?.status}
-                    onConfirm={onConfirm}
-                    lastPrice={lastPrice}
-                    decimals={decimals}
-                />
-            )}
 
             <TradingInput
                 label={t('futures:take_profit')}

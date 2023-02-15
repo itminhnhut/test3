@@ -89,7 +89,11 @@ const TradingInput = ({
                     </div>
                 )}
                 {isError && state?.isFocus && errorTooltip ? (
-                    <div className="absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center">
+                    <div
+                        className={classNames('absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center', {
+                            '!left-1/2 !-translate-x-1/2 w-full': !onusMode
+                        })}
+                    >
                         {validator?.msg && (
                             <>
                                 <div className="px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md bg-gray-3 dark:bg-hover-dark text-xs sm:text-sm">

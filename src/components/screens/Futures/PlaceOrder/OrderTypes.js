@@ -27,7 +27,7 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, setCurrentType }) => 
     const orderFilter = orderTypes;
     return (
         <div className="relative flex items-center select-none ">
-            <div className="relative z-20 overflow-hidden">
+            <div className="relative z-20 overflow-hidden w-full">
                 <Tabs isDark tab={currentType} className="gap-8 border-b border-divider-dark">
                     {orderFilter?.map((tab) => (
                         <TabItem V2 className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setCurrentType(tab)}>
