@@ -234,7 +234,7 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
                             <div className="font-semibold">
-                                {formatNumber(newLiqPrice, decimals.price, 0, true)}
+                                {formatNumber(newLiqPrice, decimals.price)}
                                 <span className="ml-1">{quoteAsset}</span>
                             </div>
                         </div>

@@ -81,7 +81,8 @@ const TradingInput = ({
                     <div
                         onClick={focusInput}
                         className={classNames(
-                            'text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-default whitespace-nowrap',
+                            'text-txtSecondary dark:text-txtSecondary-dark text-sm cursor-default whitespace-nowrap',
+                            { 'font-medium !text-xs': onusMode },
                             labelClassName
                         )}
                     >
