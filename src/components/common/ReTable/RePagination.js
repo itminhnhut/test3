@@ -30,7 +30,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
         const { language, page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
         return (
-            <Wapper isDark={currentTheme === THEME_MODE.DARK}>
+            <Wapper isDark>
                 <div className="w-full flex items-center justify-center select-none gap-8">
                     <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
                         <ChevronLeft size={16} />

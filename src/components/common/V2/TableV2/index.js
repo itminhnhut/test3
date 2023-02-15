@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
-import RePagination from 'src/components/common/ReTable/RePagination';
+import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import RePagination from 'components/common/ReTable/RePagination';
 import NoData from './NoData';
 import sumBy from 'lodash/sumBy';
 
@@ -9,9 +9,8 @@ const index = ({
     columns,
     loading,
     limit = 10,
-    skip = 0,
     onChangePage,
-    page,
+    page = 1,
     useRowHover = true,
     height = 575,
     rowKey,

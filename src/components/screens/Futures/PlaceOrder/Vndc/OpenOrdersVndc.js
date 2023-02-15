@@ -131,7 +131,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                             {t('common:market')}: <span className='text-gray-4'> {marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}</span>
                         </div>
                         <div>
-                            {t('futures:order_table.open')}: <span className='text-gray-4'>{renderOpenPrice(row)}</span>
+                            {t('futures:order_table.open')}: <span className='text-gray-4'>{formatNumber(row?.price, row?.decimalScalePrice, 0, true)}</span>
                         </div>
                     </div>,
                 sortable: false,
@@ -144,8 +144,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 render: (row) => (
                     <div className='flex items-center'>
                         <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
-                            <div>SL: <span className='text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.sl, row)})` : '_'}</span></div>
-                            <div>TP: <span className='text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.tp, row)})` : '_'}</span></div>
+                            <div>SL: <span className='text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.sl, row)}%)` : '_'}</span></div>
+                            <div>TP: <span className='text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.tp, row)}%)` : '_'}</span></div>
                         </div>
                         {row.status !== VndcFutureOrderType.Status.CLOSED && (
                             <Edit onClick={() => onOpenModify('sltp', row)} className="ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60" />
@@ -160,7 +160,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:open_price'),
                 align: 'right',
                 width: 118,
-                render: (row) => <div className='text-gray-4 text-sm font-normal'>{renderOpenPrice(row)}</div>,
+                render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>,
                 sortable: false,
             },
             {
@@ -169,7 +169,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:mobile.market_price'),
                 align: 'right',
                 width: 140,
-                render: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
+                render: (row, item) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
                 sortable: false,
             },
             {
@@ -296,40 +296,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     };
 
 
-    const renderOpenPrice = (row) => {
-        let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
-        switch (row.status) {
-            case VndcFutureOrderType.Status.PENDING:
-                let bias = null;
-                const value = row['price'];
-
-                const pairPrice = marketWatch?.[row.symbol];
-                if (!pairPrice) return null;
-                const openPrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
-                const closePrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
-                if (pairPrice?.lastPrice > 0 && value > 0) {
-                    let biasValue = +Big(value).minus(openPrice);
-                    const formatedBias = formatNumber(biasValue, 8, 0, true);
-                    bias =
-                        biasValue > 0 ? (
-                            <span className="text-mint">(+{formatedBias})</span>
-                        ) : (
-                            <span className="text-pink">({formatedBias})</span>
-                        );
-                }
-                text = row.price ? formatNumber(row.price, row?.decimalScalePrice) : '';
-                return text
-            case VndcFutureOrderType.Status.ACTIVE:
-                text = row.open_price ? formatNumber(row.open_price, row?.decimalScalePrice) : '';
-                return <div>{text}</div>;
-            case VndcFutureOrderType.Status.CLOSED:
-                text = row.close_price ? formatNumber(row.close_price, row?.decimalScalePrice) : '';
-                return <div>{text}</div>;
-            default:
-                return <div>{text}</div>;
-        }
-    };
-
     const onOpenModify = (key, data) => {
         rowData.current = data;
         switch (key) {
@@ -446,9 +412,16 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             />
             <TableV2
                 data={dataFilter}
-                columns={columns}
+                columns={dataFilter?.length ? columns : columns.map(e => { return { ...e, width: 100 } })}
                 scroll={{ x: true }}
                 height={'300px'}
+                tableStyle={{
+                    tableStyle: { paddingBottom: '24px !important' },
+                    padding: '14px 16px',
+                    headerStyle: { 
+                        padding: '0px'
+                    }
+                }}
             />
         </>
     )
