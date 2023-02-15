@@ -62,7 +62,7 @@ const ReTable = memo(
         pagination,
         paginationProps,
         tableStyle,
-        tableStatus,
+        emptyText,
         useRowHover,
         isNamiV2,
         height,
@@ -142,8 +142,8 @@ const ReTable = memo(
             // console.log('namidev-DEBUG: Paged ', _)
             // console.log('namidev-DEBUG: Origin ', data)
 
-            return <RcTable data={_} columns={resizable ? _columns : ownColumns} components={resizable && components} emptyText={tableStatus} {...restProps} />;
-        }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize]);
+            return <RcTable data={_} columns={resizable ? _columns : ownColumns} components={resizable && components} emptyText={emptyText} {...restProps} />;
+        }, [data, resizable, emptyText, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
 
@@ -244,8 +244,8 @@ const ReTable = memo(
         return (
             <ReTableWrapperV2
                 ref={reference}
-                loading={loading || data.length <= 0}
-                empty={data.length <= 0}
+                loading={loading}
+                empty={loading || data.length <= 0}
                 isDark={currentTheme === THEME_MODE.DARK}
                 useRowHover={useRowHover}
                 height={height}

@@ -3,11 +3,11 @@ import { ChevronDown, Share2 } from 'react-feather';
 
 import DataTable from 'react-data-table-component';
 import fetchApi from 'utils/fetch-api';
-import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
+import { API_GET_FUTURES_ORDER, API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import Skeletor from 'src/components/common/Skeletor';
 import { formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url, countDecimals } from 'redux/actions/utils';
-import { renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getRatioProfit, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
 import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
 import { tableStyle } from 'config/tables';
@@ -19,7 +19,9 @@ import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import TableV2 from 'components/common/V2/TableV2'
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
-import classNames from 'classnames';
+import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
+import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel'
+import _ from 'lodash';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -32,7 +34,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const darkMode = useSelector(state => state.user.theme === 'dark');
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
-
+    const hasNext = useRef(true);
 
     const columns = useMemo(() => [
         {
@@ -54,11 +56,77 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         },
         {
             key: 'status',
+            dataIndex: 'reason_close_code',
             title: t('common:status'),
-            align: 'right',
+            align: 'center',
             width: 178,
-            render: (row) => renderOrderStatus(row?.reason_close),
+            render: (row) => <OrderStatusLabel type={row?.reason_close_code} t={t} />,
             sortable: true,
+        },
+        {
+            key: 'sltp',
+            title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
+            align: 'left',
+            width: 224,
+            render: (row) => (
+                <div className='flex items-center'>
+                    <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
+                        <div>SL: <span className='text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.sl, row)}%)` : '_'}</span></div>
+                        <div>TP: <span className='text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.tp, row)}%)` : '_'}</span></div>
+                    </div>
+                </div>
+            ),
+            sortable: false,
+        },
+        {
+            key: 'pnl',
+            title: 'PNL (ROE%)',
+            align: 'right',
+            width: 118,
+            render: (row) => {
+                const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                return <OrderProfit
+                    className='w-full'
+                    key={row.displaying_id} order={row}
+                    initPairPrice={row.close_price} setShareOrderModal={() => setShareOrder(row)}
+                    decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+            },
+            sortable: false,
+        },
+        {
+            key: 'volume',
+            dataIndex: 'order_value',
+            title: t('futures:order_table:volume'),
+            align: 'right',
+            width: 118,
+            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>,
+            sortable: false,
+        },
+        {
+            key: 'open_price',
+            dataIndex: 'open_price',
+            title: t('futures:order_table:open_price'),
+            align: 'right',
+            width: 118,
+            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>,
+            sortable: false,
+        },
+        {
+            key: 'close_price',
+            dataIndex: 'close_price',
+            title: t('futures:order_table:close_price'),
+            align: 'right',
+            width: 118,
+            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)}</div>,
+            sortable: false,
+        },
+        {
+            key: 'reason_close',
+            title: t('futures:mobile:reason_close'),
+            align: 'right',
+            width: 118,
+            render: (row) => <div className='text-gray-4 text-sm font-normal'>{renderReasonClose(row)}</div>,
+            sortable: false,
         },
     ], [loading, pair])
 
@@ -75,10 +143,6 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         pageSize: 10
     })
 
-    const symbolOptions = useMemo(() => {
-        return allPairConfigs?.map(e => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }))
-    }, [allPairConfigs])
-
     useEffect(() => {
         setFilters({ ...filters, symbol: hideOther ? pairConfig?.symbol : '' })
     }, [hideOther])
@@ -93,47 +157,20 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
-    const renderOrderStatus = (type) => {
-        let bgColor
-        let textColor
-        let content
-        switch (type) {
-            // lenh hoan tat
-            case VndcFutureOrderType.ReasonCloseCode.HIT_SL:
-            case VndcFutureOrderType.ReasonCloseCode.HIT_TP:
-            case VndcFutureOrderType.ReasonCloseCode.LIQUIDATE: {
-                bgColor = 'bg-teal/[0.1]'
-                textColor = 'text-teal'
-                content = t('futures:adjust_margin.order_completed')
-                break;
-            }
-
-            // lenh huy
-            case VndcFutureOrderType.ReasonCloseCode.PARTIAL_CLOSE:
-            case VndcFutureOrderType.ReasonCloseCode.NORMAL: {
-                bgColor = 'bg-darkBlue-5/[0.5]'
-                textColor = 'text-darkBlue-5'
-                content = t('futures:adjust_margin.order_completed')
-                break;
-            }
-        }
-
-        return <div className={classNames('px-4 py-1  text-yellow-100 font-normal text-sm rounded-[80px] text-center', bgColor, textColor)}>{content}</div>
-    }
-
-    const getOrders = async () => {
+    const getOrders = _.debounce(async () => {
         setLoading(true)
         try {
             const { status, data } = await fetchApi({
-                url: API_GET_FUTURES_ORDER,
+                url: API_GET_FUTURES_ORDER_HISTORY,
                 options: { method: 'GET' },
                 params: {
                     status: 1,
-                    pageSize: pagination.pageSize,
+                    // pageSize: pagination.pageSize,
                     page: pagination.page - 1,
-                    ...filters,
-                    timeFrom: filters.timeFrom?.valueOf(),
-                    timeTo: filters.timeTo?.valueOf(),
+                    pageSize: pagination.pageSize
+                    // ...filters,
+                    // timeFrom: filters.timeFrom?.valueOf(),
+                    // timeTo: filters.timeTo?.valueOf(),
                 },
             })
 
@@ -149,6 +186,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 })
                 setDataSource(data?.orders)
                 setPagination({ ...pagination, total: data?.total })
+                hasNext.current = data?.hasNext
             } else {
                 setDataSource([])
             }
@@ -159,7 +197,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             onForceUpdate()
             setResetPage(false);
         }
-    }
+    }, 300)
 
     const cellRenderRevenue = (row) => {
         const isVndc = row?.symbol.indexOf('VNDC') !== -1
@@ -203,42 +241,6 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         </Link>
     </div>
 
-    const customStyles = {
-        headCells: {
-            style: {
-                whiteSpace: 'nowrap',
-            },
-        },
-        rows: {
-            style: {
-                marginBottom: '8px',
-            },
-        },
-        pagination: {
-            style: {
-                ...tableStyle.pagination?.style,
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                backgroundColor: darkMode ? '#141523' : '#FFFFFF',
-            },
-            pageButtonsStyle: {
-                color: darkMode ? '#DBE3E6' : '#8B8C9B',
-                fill: darkMode ? '#DBE3E6' : '#8B8C9B',
-                '&:hover:not(:disabled)': {
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:focus': {
-                    outline: 'none',
-                    backgroundColor: darkMode ? '#212738' : '#DBE3E6',
-                },
-                '&:disabled': {
-                    cursor: 'unset',
-                    color: darkMode ? '#8B8C9B' : '#d1d1d1',
-                    fill: darkMode ? '#8B8C9B' : '#d1d1d1',
-                },
-            },
-        },
-    }
-
     const onShowDetail = (row) => {
         rowData.current = row;
         setShowDetail(!showDetail);
@@ -248,66 +250,28 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         <>
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
-            {/* <DataTable
-                responsive
-                fixedHeader
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
-                data={loading ? data : dataSource}
-                columns={columns}
-                customStyles={customStyles}
-                pagination
-                paginationServer
-                paginationTotalRows={pagination.total}
-                onChangeRowsPerPage={(pageSize) => {
-                    setPagination({ ...pagination, page: 1, pageSize })
-                    setResetPage(true);
-                }}
-                onChangePage={(page) => {
-                    if (!loading) setPagination({ ...pagination, page })
-                }}
-                currentPage={pagination.page}
-                noDataComponent={<TableNoData />}
-                paginationResetDefaultPage={resetPage}
-                paginationComponentOptions={{
-                    rowsPerPageText: t('futures:rows_per_page'),
-                    rangeSeparatorText: t('common:of'),
-                    noRowsPerPage: false,
-                    selectAllRowsItem: false,
-                    selectAllRowsItemText: t('common:all'),
-                }}
-            // progressPending={loading}
-            // progressComponent={<TableLoader/>}
-            /> */}
-
             <TableV2
-                data={loading ? data : dataSource}
+                data={loading ? [] : dataSource}
+                loading={loading}
                 columns={columns}
+                pagingPrevNext={{
+                    language,
+                    page: pagination.page - 1,
+                    hasNext: hasNext.current,
+                    onChangeNextPrev: (e) => setPagination({ ...pagination, page: pagination.page + e })
+                }}
                 scroll={{ x: true }}
                 height={'300px'}
+                tableStyle={{
+                    tableStyle: { paddingBottom: '24px !important' },
+                    padding: '14px 16px',
+                    headerStyle: {
+                        padding: '0px'
+                    }
+                }}
             />
         </>
     )
 }
-
-const data = [
-    {
-        id: 1,
-    },
-    {
-        id: 2,
-    },
-    {
-        id: 3,
-    },
-    {
-        id: 4,
-    },
-    {
-        id: 5,
-    },
-    {
-        id: 6,
-    },
-]
 
 export default FuturesOrderHistoryVndc
