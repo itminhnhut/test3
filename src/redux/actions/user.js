@@ -37,46 +37,47 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import { find } from 'lodash';
 
 export const setTheme = () => {
-    let theme = THEME_MODE.LIGHT;
-    const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME);
+    let theme = THEME_MODE.LIGHT
+    const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME)
 
     if (localTheme) {
-        theme = localTheme;
+        theme = localTheme
     }
 
-    const root = window.document.documentElement;
-    root.classList.remove(theme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT);
-    root.classList.add(theme);
+    const root = window.document.documentElement
+    root.classList.remove(theme === THEME_MODE.LIGHT ? THEME_MODE.DARK : THEME_MODE.LIGHT)
+    root.classList.add(theme)
 
     return async (dispatch) => {
         dispatch({
             type: SET_THEME,
-            payload: theme
-        });
-    };
-};
+            payload: theme,
+        })
+    }
+}
 
 export const setUser = (user) => (dispatch) => dispatch({ type: types.SET_USER, payload: user });
 
 export const favoriteAction = async (method, tradingMode = TRADING_MODE.EXCHANGE, pairKey = null) => {
     try {
-        let result = {};
+        let result = {}
 
-        if (method === 'get' && tradingMode) result = await Axios.get(API_GET_FAVORITE, { params: { tradingMode } });
-        if (method === 'put' && pairKey && tradingMode) result = await Axios.put(API_GET_FAVORITE, { pairKey, tradingMode });
-        if (method === 'delete' && pairKey && tradingMode) result = await Axios.delete(API_GET_FAVORITE, { data: { pairKey, tradingMode } });
+        if (method === 'get' && tradingMode) result = await Axios.get(API_GET_FAVORITE, { params: { tradingMode } })
+        if (method === 'put' && pairKey && tradingMode) result = await Axios.put(API_GET_FAVORITE, { pairKey, tradingMode })
+        if (method === 'delete' && pairKey && tradingMode) result = await Axios.delete(API_GET_FAVORITE, { data: { pairKey, tradingMode } })
 
-        const { data } = result;
+        const { data } = result
         if (data?.status === 'ok' && data.data) {
-            return data.data;
+            return data.data
         }
+
     } catch (e) {
-        console.log('Cant execute action');
+        console.log('Cant execute action')
     }
-};
+}
 
 export function refreshToken() {
-    return async (dispatch) => {
+    return async dispatch => {
         if (!AuthStorage.refreshToken) {
             AuthStorage.destroy();
         }
@@ -84,22 +85,22 @@ export function refreshToken() {
             const res = await fetchAPI({
                 url: API_REFRESH_TOKEN,
                 options: {
-                    method: 'POST'
+                    method: 'POST',
                 },
                 params: {
                     refreshToken: AuthStorage.refreshToken,
-                    clientId: AuthStorage.clientId
-                }
+                    clientId: AuthStorage.clientId,
+                },
             });
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 AuthStorage.value = {
                     ...data,
-                    clientId: AuthStorage.clientId
+                    clientId: AuthStorage.clientId,
                 };
                 dispatch({
                     type: types.SET_ACCESS_TOKEN,
-                    payload: data.accessToken
+                    payload: data.accessToken,
                 });
             } else {
                 AuthStorage.destroy();
@@ -110,13 +111,16 @@ export function refreshToken() {
         }
     };
 }
-export function getMe() {
+export function getMe(resetCache = false) {
     return async (dispatch) => {
         try {
             const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
                     method: 'GET'
+                },
+                params: {
+                    resetCache
                 }
             });
             if (status === 'ok') {
@@ -135,20 +139,20 @@ export function getMe() {
 }
 
 export async function actionLogout() {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const res = await fetchAPI({
                 url: API_LOG_OUT,
                 options: {
-                    method: 'GET'
-                }
+                    method: 'GET',
+                },
             });
             const { status } = res;
             if (status === ApiStatus.SUCCESS) {
                 AuthStorage.destroy();
                 dispatch({
                     type: types.SET_USER,
-                    payload: null
+                    payload: null,
                 });
             }
         } catch (e) {
@@ -158,12 +162,12 @@ export async function actionLogout() {
 }
 
 export function getWallet() {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const res = await fetchAPI({
                 url: API_GET_USER_BALANCE,
                 options: {
-                    method: 'GET'
+                    method: 'GET',
                 }
             });
             const { status, data } = res;
@@ -171,89 +175,76 @@ export function getWallet() {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     walletType: WalletType.SPOT,
-                    payload: data
+                    payload: data,
                 });
             }
         } catch (e) {
             dispatch({
                 type: types.UPDATE_WALLET,
-                payload: null
+                payload: null,
             });
         }
     };
 }
 
 export function getUserFuturesBalance() {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 2 } }); // old wallet type
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2,
+                { params: { type: 2 } }) // old wallet type
 
             if (data && data.status === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     walletType: WalletType.FUTURES,
-                    payload: data.data
-                });
+                    payload: data.data,
+                })
             }
-        } catch (e) {}
-    };
-}
-
-export function getUserPartnersBalance() {
-    return async (dispatch) => {
-        try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 8 } }); // partners wallet type
-
-            if (data && data.status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_WALLET,
-                    walletType: WalletType.PARTNERS,
-                    payload: data.data
-                });
-            }
-        } catch (e) {}
-    };
+        } catch (e) {
+        }
+    }
 }
 
 export function getUserEarnedBalance(walletType) {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
-            const { data } = await Axios.get(`/api/v1/earn/${walletType}/summary`);
-            let result;
+            const { data } = await Axios.get(`/api/v1/earn/${walletType}/summary`)
+            let result
 
             if (data && data.status === ApiStatus.SUCCESS) {
-                const balanceData = find(data?.data, { currency: 1 });
-                const estimateData = find(data?.data, { currency: 72 });
+                const balanceData = find(data?.data , { currency: 1 })
+                const estimateData = find(data?.data , { currency: 72 })
 
                 if (balanceData) {
-                    result = { value: balanceData?.summary?.total_balance, locked_value: 0, estimate: estimateData };
+                    result = { value: balanceData?.summary?.total_balance, locked_value: 0, estimate: estimateData }
                 }
 
                 dispatch({
                     type: types.UPDATE_WALLET,
                     walletType: walletType,
-                    payload: result
-                });
+                    payload: result,
+                })
             }
-        } catch (e) {}
-    };
+        } catch (e) {
+        }
+    }
 }
 
 export function getAllWallet() {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const res = await fetchAPI({
                 url: API_GET_USER_BALANCE,
                 options: {
-                    method: 'GET'
-                }
+                    method: 'GET',
+                },
             });
             // console.log('__ chekc user balance', res);
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.UPDATE_ALL_WALLET,
-                    payload: data
+                    payload: data,
                 });
             }
         } catch (e) {
@@ -266,38 +257,38 @@ export function getAllWallet() {
 }
 
 export function getAssetConfig() {
-    return async (dispatch) => {
+    return async dispatch => {
         try {
             const res = await fetchAPI({
                 url: API_GET_ASSET_CONFIG,
                 options: {
-                    method: 'GET'
-                }
+                    method: 'GET',
+                },
             });
             const { status, data } = res;
             if (status === ApiStatus.SUCCESS) {
                 dispatch({
                     type: types.UPDATE_WALLET,
-                    payload: data
+                    payload: data,
                 });
             }
         } catch (e) {
             dispatch({
                 type: types.UPDATE_WALLET,
-                payload: []
+                payload: [],
             });
         }
     };
 }
 
 export function setQuoteAsset(asset) {
-    return async (dispatch) => {
+    return async dispatch => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('wallet:quote_asset', asset);
         }
         dispatch({
             type: types.SET_QUOTE_ASSET,
-            payload: asset
+            payload: asset,
         });
     };
 }
@@ -308,19 +299,19 @@ export const getKycCountry = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_KYC_COUNTRY_LIST,
             options: {
-                method: 'GET'
-            }
+                method: 'GET',
+            },
         });
         const { status, data } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.GET_KYC_COUNTRY_SUCCESS,
-                payload: data
+                payload: data,
             });
         }
     } catch (error) {
         dispatch({
-            type: types.GET_KYC_COUNTRY_FAILURE
+            type: types.GET_KYC_COUNTRY_FAILURE,
         });
     }
 };
@@ -331,19 +322,19 @@ export const getKycData = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_KYC_STATUS,
             options: {
-                method: 'GET'
-            }
+                method: 'GET',
+            },
         });
         const { status, data } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.GET_KYC_STATUS_SUCCESS,
-                payload: data
+                payload: data,
             });
         }
     } catch (error) {
         dispatch({
-            type: types.GET_KYC_STATUS_FAILURE
+            type: types.GET_KYC_STATUS_FAILURE,
         });
     }
 };
@@ -354,27 +345,27 @@ export const setKycInformation = (information) => async (dispatch) => {
         const res = await fetchAPI({
             url: API_KYC_INFORMATION,
             options: {
-                method: 'POST'
+                method: 'POST',
             },
-            params: information
+            params: information,
         });
         const { status, data, message, code } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.SET_KYC_INFORMATION_SUCCESS,
-                payload: data
+                payload: data,
             });
             return null;
         }
         dispatch({
             type: types.SET_KYC_INFORMATION_FAILURE,
-            payload: message
+            payload: message,
         });
         return code;
     } catch (error) {
         return dispatch({
             type: types.SET_KYC_INFORMATION_FAILURE,
-            payload: error
+            payload: error,
         });
     }
 };
@@ -385,27 +376,27 @@ export const setKycBankInfo = (bank) => async (dispatch) => {
         const res = await fetchAPI({
             url: API_KYC_BANK_INFORMATION,
             options: {
-                method: 'POST'
+                method: 'POST',
             },
-            params: bank
+            params: bank,
         });
         const { status, data, message, code } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.SET_KYC_BANK_SUCCESS,
-                payload: data
+                payload: data,
             });
             return null;
         }
         dispatch({
             type: types.SET_KYC_BANK_FAILURE,
-            payload: message
+            payload: message,
         });
         return code;
     } catch (error) {
         dispatch({
             type: types.SET_KYC_BANK_FAILURE,
-            payload: error
+            payload: error,
         });
     }
 };
@@ -418,47 +409,47 @@ export const setKycImages = (image) => async (dispatch) => {
         const res = await fetchAPI({
             url: `${API_KYC_IMAGES}/${image?.type}`,
             options: {
-                method: 'POST'
+                method: 'POST',
             },
-            params: formData
+            params: formData,
         });
         const { status, data, message, code } = res;
         if (status === ApiStatus.SUCCESS) {
             if (image?.actionType === 'front') {
                 dispatch({
                     type: types.SET_KYC_IMAGE_FRONT_SUCCESS,
-                    payload: data?.metadata?.front
+                    payload: data?.metadata?.front,
                 });
             }
             if (image?.actionType === 'passport') {
                 dispatch({
                     type: types.SET_KYC_IMAGE_PASSPORT_SUCCESS,
-                    payload: data?.metadata?.front
+                    payload: data?.metadata?.front,
                 });
             }
             if (image?.actionType === 'back') {
                 dispatch({
                     type: types.SET_KYC_IMAGE_BACK_SUCCESS,
-                    payload: data?.metadata?.back
+                    payload: data?.metadata?.back,
                 });
             }
             if (image?.actionType === 'selfie') {
                 dispatch({
                     type: types.SET_KYC_IMAGE_SELFIE_SUCCESS,
-                    payload: data?.metadata?.portfolio
+                    payload: data?.metadata?.portfolio,
                 });
             }
             return null;
         }
         dispatch({
             type: types.SET_KYC_IMAGE_FAILURE,
-            payload: message
+            payload: message,
         });
         return code;
     } catch (error) {
         dispatch({
             type: types.SET_KYC_IMAGE_FAILURE,
-            payload: error
+            payload: error,
         });
     }
 };
@@ -469,276 +460,260 @@ export const submitKyc = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_KYC_SUBMIT,
             options: {
-                method: 'POST'
-            }
+                method: 'POST',
+            },
         });
         const { status, data, message, code } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.SUBMIT_KYC_SUCCESS,
-                payload: data
+                payload: data,
             });
             return null;
         }
         dispatch({
             type: types.SUBMIT_KYC_FAILURE,
-            payload: message
+            payload: message,
         });
         return code;
     } catch (error) {
         dispatch({
             type: types.SUBMIT_KYC_FAILURE,
-            payload: error
+            payload: error,
         });
     }
 };
 
-export const updateName =
-    ({ name }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.UPDATE_PROFILE_NAME_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_NAME,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    name
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_PROFILE_NAME_SUCCESS,
-                    payload: data?.user?.name
-                });
-                return data?.user;
-            }
+export const updateName = ({ name }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.UPDATE_PROFILE_NAME_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_NAME,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                name,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.UPDATE_PROFILE_NAME_FAILURE,
-                payload: message
+                type: types.UPDATE_PROFILE_NAME_SUCCESS,
+                payload: data?.user?.name,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_PROFILE_NAME_FAILURE,
-                payload: error
-            });
+            return data?.user;
         }
-    };
+        dispatch({
+            type: types.UPDATE_PROFILE_NAME_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.UPDATE_PROFILE_NAME_FAILURE,
+            payload: error,
+        });
+    }
+};
 
-export const getPhoneCheckPassId =
-    ({ phone, countryCode }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_PHONE,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    phone,
-                    countryCode
-                }
-            });
-            const { data, code } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const getPhoneCheckPassId = ({ phone, countryCode }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_PHONE,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                phone,
+                countryCode,
+            },
+        });
+        const { data, code } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_FAILURE
+                type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_PROFILE_PHONE_CHECK_PASS_ID_FAILURE,
+        });
+    }
+};
 
-export const getPasswordCheckPassId =
-    ({ currentPassword, newPassword }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_PASSWORD,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    currentPassword,
-                    newPassword
-                }
-            });
-            const { data, code } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const getPasswordCheckPassId = ({ currentPassword, newPassword }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_PASSWORD,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                currentPassword,
+                newPassword,
+            },
+        });
+        const { data, code } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_FAILURE
+                type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_PROFILE_PASSWORD_CHECK_PASS_ID_FAILURE,
+        });
+    }
+};
 
-export const getCheckPassCode =
-    ({ checkpassId, method }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_PROFILE_CHECK_PASS_CODE_REQUEST });
-            const res = await fetchAPI({
-                url: API_CHECK_PASS,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    checkpassId,
-                    method
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.GET_PROFILE_CHECK_PASS_CODE_SUCCESS,
-                    payload: data
-                });
-                return null;
-            }
+export const getCheckPassCode = ({ checkpassId, method }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_PROFILE_CHECK_PASS_CODE_REQUEST });
+        const res = await fetchAPI({
+            url: API_CHECK_PASS,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                checkpassId,
+                method,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.GET_PROFILE_CHECK_PASS_CODE_FAILURE,
-                payload: message
+                type: types.GET_PROFILE_CHECK_PASS_CODE_SUCCESS,
+                payload: data,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_PROFILE_CHECK_PASS_CODE_FAILURE,
-                payload: error
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.GET_PROFILE_CHECK_PASS_CODE_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_PROFILE_CHECK_PASS_CODE_FAILURE,
+            payload: error,
+        });
+    }
+};
 
-export const verifyCheckPassCode =
-    ({ checkpassId, methods }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.VERIFY_CHECK_PASS_CODE_REQUEST });
-            const res = await fetchAPI({
-                url: API_CHECK_PASS_AUTH,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    checkpassId,
-                    methods
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.VERIFY_CHECK_PASS_CODE_SUCCESS,
-                    payload: data
-                });
-                return null;
-            }
+export const verifyCheckPassCode = ({ checkpassId, methods }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.VERIFY_CHECK_PASS_CODE_REQUEST });
+        const res = await fetchAPI({
+            url: API_CHECK_PASS_AUTH,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                checkpassId,
+                methods,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.VERIFY_CHECK_PASS_CODE_FAILURE,
-                payload: message
+                type: types.VERIFY_CHECK_PASS_CODE_SUCCESS,
+                payload: data,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.VERIFY_CHECK_PASS_CODE_FAILURE,
-                payload: error
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.VERIFY_CHECK_PASS_CODE_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.VERIFY_CHECK_PASS_CODE_FAILURE,
+            payload: error,
+        });
+    }
+};
 
-export const updatePhoneNumber =
-    ({ phone, countryCode, checkpassId }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.UPDATE_PROFILE_PHONE_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_PHONE,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    phone,
-                    countryCode,
-                    checkpassId
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_PROFILE_PHONE_SUCCESS,
-                    payload: data?.user?.phone
-                });
-                return null;
-            }
+export const updatePhoneNumber = ({ phone, countryCode, checkpassId }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.UPDATE_PROFILE_PHONE_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_PHONE,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                phone,
+                countryCode,
+                checkpassId,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.UPDATE_PROFILE_PHONE_FAILURE,
-                payload: message
+                type: types.UPDATE_PROFILE_PHONE_SUCCESS,
+                payload: data?.user?.phone,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_PROFILE_PHONE_FAILURE,
-                payload: error
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.UPDATE_PROFILE_PHONE_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.UPDATE_PROFILE_PHONE_FAILURE,
+            payload: error,
+        });
+    }
+};
 
-export const updatePassword =
-    ({ currentPassword, newPassword, checkpassId }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.UPDATE_PROFILE_PASSWORD_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_PASSWORD,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    currentPassword,
-                    newPassword,
-                    checkpassId
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_PROFILE_PASSWORD_SUCCESS,
-                    payload: data?.user?.name
-                });
-                return null;
-            }
+export const updatePassword = ({ currentPassword, newPassword, checkpassId }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.UPDATE_PROFILE_PASSWORD_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_PASSWORD,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                currentPassword, newPassword, checkpassId,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.UPDATE_PROFILE_PASSWORD_FAILURE,
-                payload: message
+                type: types.UPDATE_PROFILE_PASSWORD_SUCCESS,
+                payload: data?.user?.name,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_PROFILE_PASSWORD_FAILURE,
-                payload: error
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.UPDATE_PROFILE_PASSWORD_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.UPDATE_PROFILE_PASSWORD_FAILURE,
+            payload: error,
+        });
+    }
+};
 
 export const getAvatarList = () => async (dispatch) => {
     try {
@@ -746,62 +721,60 @@ export const getAvatarList = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_GET_AVATAR_LIST,
             options: {
-                method: 'GET'
-            }
+                method: 'GET',
+            },
         });
         const { status, data, message } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.GET_AVATAR_LIST_SUCCESS,
-                payload: data?.avatars
+                payload: data?.avatars,
             });
             return data?.avatars;
         }
         dispatch({
             type: types.GET_AVATAR_LIST_FAILURE,
-            payload: message
+            payload: message,
         });
         return null;
     } catch (error) {
         dispatch({
             type: types.GET_AVATAR_LIST_FAILURE,
-            payload: error
+            payload: error,
         });
     }
 };
 
-export const setProfileAvatar =
-    ({ avatarUrl }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.SET_PROFILE_AVATAR_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_AVATAR,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    avatarUrl
-                }
-            });
-            const { status, data } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.SET_PROFILE_AVATAR_SUCCESS,
-                    payload: data?.user?.avatar
-                });
-                return true;
-            }
+export const setProfileAvatar = ({ avatarUrl }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.SET_PROFILE_AVATAR_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_AVATAR,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                avatarUrl,
+            },
+        });
+        const { status, data } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.SET_PROFILE_AVATAR_FAILURE
+                type: types.SET_PROFILE_AVATAR_SUCCESS,
+                payload: data?.user?.avatar,
             });
-            return false;
-        } catch (error) {
-            dispatch({
-                type: types.SET_PROFILE_AVATAR_FAILURE
-            });
+            return true;
         }
-    };
+        dispatch({
+            type: types.SET_PROFILE_AVATAR_FAILURE,
+        });
+        return false;
+    } catch (error) {
+        dispatch({
+            type: types.SET_PROFILE_AVATAR_FAILURE,
+        });
+    }
+};
 
 export const generate2FASecret = () => async (dispatch) => {
     try {
@@ -809,194 +782,184 @@ export const generate2FASecret = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_2FA_GENERATE_SECRET,
             options: {
-                method: 'POST'
-            }
+                method: 'POST',
+            },
         });
         const { status, data, code } = res;
         if (status === ApiStatus.SUCCESS && data?.secret) {
             dispatch({
-                type: types.GENERATE_2_FA_SUCCESS
+                type: types.GENERATE_2_FA_SUCCESS,
             });
             return data;
         }
         dispatch({
-            type: types.GENERATE_2_FA_FAILURE
+            type: types.GENERATE_2_FA_FAILURE,
         });
         return code;
     } catch (error) {
         dispatch({
-            type: types.GENERATE_2_FA_FAILURE
+            type: types.GENERATE_2_FA_FAILURE,
         });
     }
 };
 
-export const get2FACheckPassId =
-    ({ secretKey }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_2FA_CHECK_PASS_ID_REQUEST });
-            const res = await fetchAPI({
-                url: API_2FA_CHECK_PASS,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    secretKey
-                }
-            });
-            const { code, data } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.GET_2FA_CHECK_PASS_ID_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const get2FACheckPassId = ({ secretKey }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_2FA_CHECK_PASS_ID_REQUEST });
+        const res = await fetchAPI({
+            url: API_2FA_CHECK_PASS,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                secretKey,
+            },
+        });
+        const { code, data } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.GET_2FA_CHECK_PASS_ID_FAILURE
+                type: types.GET_2FA_CHECK_PASS_ID_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_2FA_CHECK_PASS_ID_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.GET_2FA_CHECK_PASS_ID_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_2FA_CHECK_PASS_ID_FAILURE,
+        });
+    }
+};
 
-export const enable2FA =
-    ({ secretKey, checkpassId }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.ENABLE_2FA_REQUEST });
-            const res = await fetchAPI({
-                url: API_2FA_CHECK_PASS,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    secretKey,
-                    checkpassId
-                }
-            });
-            const { status, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.ENABLE_2FA_SUCCESS
-                });
-                return null;
-            }
+export const enable2FA = ({ secretKey, checkpassId }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.ENABLE_2FA_REQUEST });
+        const res = await fetchAPI({
+            url: API_2FA_CHECK_PASS,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                secretKey,
+                checkpassId,
+            },
+        });
+        const { status, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.ENABLE_2FA_FAILURE
+                type: types.ENABLE_2FA_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.ENABLE_2FA_FAILURE
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.ENABLE_2FA_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.ENABLE_2FA_FAILURE,
+        });
+    }
+};
 
-export const getEmailCheckPassId =
-    ({ email }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_EMAIL,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    email
-                }
-            });
-            const { data, code } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const getEmailCheckPassId = ({ email }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_EMAIL,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                email,
+            },
+        });
+        const { data, code } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_FAILURE
+                type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_PROFILE_EMAIL_CHECK_PASS_ID_FAILURE,
+        });
+    }
+};
 
-export const updateEmail =
-    ({ email, checkpassId }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.UPDATE_PROFILE_EMAIL_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_EMAIL,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    email,
-                    checkpassId
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_PROFILE_EMAIL_SUCCESS,
-                    payload: data?.user?.email
-                });
-                return null;
-            }
+export const updateEmail = ({ email, checkpassId }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.UPDATE_PROFILE_EMAIL_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_EMAIL,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                email,
+                checkpassId,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.UPDATE_PROFILE_EMAIL_FAILURE,
-                payload: message
+                type: types.UPDATE_PROFILE_EMAIL_SUCCESS,
+                payload: data?.user?.email,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_PROFILE_EMAIL_FAILURE,
-                payload: error
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.UPDATE_PROFILE_EMAIL_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.UPDATE_PROFILE_EMAIL_FAILURE,
+            payload: error,
+        });
+    }
+};
 
-export const updateUsername =
-    ({ username }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.UPDATE_PROFILE_USERNAME_REQUEST });
-            const res = await fetchAPI({
-                url: API_PROFILE_USERNAME,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    username
-                }
-            });
-            const { status, data, message, code } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_PROFILE_USERNAME_SUCCESS,
-                    payload: data?.user?.username
-                });
-                return data?.user;
-            }
+export const updateUsername = ({ username }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.UPDATE_PROFILE_USERNAME_REQUEST });
+        const res = await fetchAPI({
+            url: API_PROFILE_USERNAME,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                username,
+            },
+        });
+        const { status, data, message, code } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.UPDATE_PROFILE_USERNAME_FAILURE,
-                payload: message
+                type: types.UPDATE_PROFILE_USERNAME_SUCCESS,
+                payload: data?.user?.username,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.UPDATE_PROFILE_USERNAME_FAILURE,
-                payload: error
-            });
+            return data?.user;
         }
-    };
+        dispatch({
+            type: types.UPDATE_PROFILE_USERNAME_FAILURE,
+            payload: message,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.UPDATE_PROFILE_USERNAME_FAILURE,
+            payload: error,
+        });
+    }
+};
 
 export const getUserReferral = () => async (dispatch) => {
     try {
@@ -1004,149 +967,146 @@ export const getUserReferral = () => async (dispatch) => {
         const res = await fetchAPI({
             url: API_USER_REFERRAL,
             options: {
-                method: 'GET'
-            }
+                method: 'GET',
+            },
         });
         const { data, code, status } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.GET_USER_REFERRAL_SUCCESS,
-                payload: data
+                payload: data,
             });
             return null;
         }
         dispatch({
-            type: types.GET_USER_REFERRAL_FAILURE
+            type: types.GET_USER_REFERRAL_FAILURE,
         });
         return code;
     } catch (error) {
         dispatch({
-            type: types.GET_USER_REFERRAL_FAILURE
+            type: types.GET_USER_REFERRAL_FAILURE,
         });
     }
 };
 
-export const setUserReferral =
-    ({ refTerm }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.SET_USER_REFERRAL_REQUEST });
-            const res = await fetchAPI({
-                url: API_USER_REFERRAL,
-                options: {
-                    method: 'PUT'
-                },
-                params: {
-                    refTerm
-                }
-            });
-            const { data, code, status } = res;
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.SET_USER_REFERRAL_SUCCESS,
-                    payload: data
-                });
-                return null;
-            }
+export const setUserReferral = ({ refTerm }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.SET_USER_REFERRAL_REQUEST });
+        const res = await fetchAPI({
+            url: API_USER_REFERRAL,
+            options: {
+                method: 'PUT',
+            },
+            params: {
+                refTerm,
+            },
+        });
+        const { data, code, status } = res;
+        if (status === ApiStatus.SUCCESS) {
             dispatch({
-                type: types.SET_USER_REFERRAL_FAILURE
+                type: types.SET_USER_REFERRAL_SUCCESS,
+                payload: data,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.SET_USER_REFERRAL_FAILURE
-            });
+            return null;
         }
-    };
+        dispatch({
+            type: types.SET_USER_REFERRAL_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.SET_USER_REFERRAL_FAILURE,
+        });
+    }
+};
 
-export const getWithdrawOnchainCheckPassId =
-    ({ assetId, amount, network, withdrawTo, tag }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_REQUEST });
-            const res = await fetchAPI({
-                url: API_WITHDRAW_ONCHAIN,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    assetId,
-                    amount,
-                    network,
-                    withdrawTo,
-                    tag
-                }
-            });
-            const { data, code } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const getWithdrawOnchainCheckPassId = ({ assetId, amount, network, withdrawTo, tag }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_REQUEST });
+        const res = await fetchAPI({
+            url: API_WITHDRAW_ONCHAIN,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                assetId,
+                amount,
+                network,
+                withdrawTo,
+                tag,
+            },
+        });
+        const { data, code } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_FAILURE
+                type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.GET_WITHDRAW_ONCHAIN_CHECK_PASS_ID_FAILURE,
+        });
+    }
+};
 
-export const withdrawOnchain =
-    ({ assetId, amount, network, withdrawTo, tag, checkpassId }) =>
-    async (dispatch) => {
-        try {
-            dispatch({ type: types.WITHDRAW_ONCHAIN_REQUEST });
-            const res = await fetchAPI({
-                url: API_WITHDRAW_ONCHAIN,
-                options: {
-                    method: 'POST'
-                },
-                params: {
-                    assetId,
-                    amount,
-                    network,
-                    withdrawTo,
-                    tag,
-                    checkpassId
-                }
-            });
-            const { data, code } = res;
-            if (data?.checkpass) {
-                dispatch({
-                    type: types.WITHDRAW_ONCHAIN_SUCCESS
-                });
-                return data?.checkpass;
-            }
+export const withdrawOnchain = ({ assetId, amount, network, withdrawTo, tag, checkpassId }) => async (dispatch) => {
+    try {
+        dispatch({ type: types.WITHDRAW_ONCHAIN_REQUEST });
+        const res = await fetchAPI({
+            url: API_WITHDRAW_ONCHAIN,
+            options: {
+                method: 'POST',
+            },
+            params: {
+                assetId,
+                amount,
+                network,
+                withdrawTo,
+                tag,
+                checkpassId,
+            },
+        });
+        const { data, code } = res;
+        if (data?.checkpass) {
             dispatch({
-                type: types.WITHDRAW_ONCHAIN_FAILURE
+                type: types.WITHDRAW_ONCHAIN_SUCCESS,
             });
-            return code;
-        } catch (error) {
-            dispatch({
-                type: types.WITHDRAW_ONCHAIN_FAILURE
-            });
+            return data?.checkpass;
         }
-    };
+        dispatch({
+            type: types.WITHDRAW_ONCHAIN_FAILURE,
+        });
+        return code;
+    } catch (error) {
+        dispatch({
+            type: types.WITHDRAW_ONCHAIN_FAILURE,
+        });
+    }
+};
+
 
 export const getVip = () => async (dispatch) => {
     try {
         const res = await fetchAPI({
             url: API_GET_VIP,
             options: {
-                method: 'GET'
-            }
+                method: 'GET',
+            },
+
         });
         const { status, data, message, code } = res;
         if (status === ApiStatus.SUCCESS) {
             dispatch({
                 type: types.SET_VIP,
-                payload: data
+                payload: data,
             });
             return null;
         }
-    } catch (error) {}
+    } catch (error) {
+    }
 };

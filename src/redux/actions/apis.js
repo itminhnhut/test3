@@ -307,6 +307,7 @@ export const API_NEW_REFERRAL_CREATE_INVITE = API_V3_PREFIX + "users/referral/in
 export const API_CHECK_REFERRAL = API_V3_PREFIX + "users/referral/is-exist";
 export const API_NEW_REFERRAL_CHECK_REF = API_V3_PREFIX + "users/referral/check-duplicate"
 export const API_PARTNER_REGISTER = API_V3_PREFIX + "users/partner";
+export const API_CHECK_REFERRAL = API_V3_PREFIX + "users/referral/is-exist";
 
 
 //referal

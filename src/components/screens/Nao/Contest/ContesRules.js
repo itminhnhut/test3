@@ -100,6 +100,10 @@ const ContesRules = ({
         return arr;
     };
 
+    const onRedirect = () => {
+        router.push(typeof rules === 'object' ? rules[language] : rules);
+    };
+
     const current = seasons[seasons.length - 1];
     const seasonsFilter = useMemo(() => {
         const dataFilter = orderBy(seasons, 'season', 'desc');
@@ -129,7 +133,7 @@ const ContesRules = ({
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
-                        <ButtonNao onClick={() => router.push(rules)} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3">
+                        <ButtonNao onClick={onRedirect} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3">
                             {t('nao:contest:detail_rules')}
                         </ButtonNao>
                     )}

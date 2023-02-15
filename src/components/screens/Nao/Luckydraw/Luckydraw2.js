@@ -54,10 +54,11 @@ const Luckydraw = ({ platform }) => {
     };
 
     const getImage = (isModal) => {
+        const isFrame = platform === 'frame';
         if (!isModal) {
-            return `/images/screen/futures/luckdraw/bg_lucky_${platform}${xs ? '_xs' : ''}.png`;
+            return `/images/screen/futures/luckdraw/${isFrame ? '' : 'n_'}bg_lucky_${platform}${xs ? '_xs' : ''}.png`;
         } else {
-            return `/images/screen/futures/luckdraw/bg_claim_${platform}${xs ? '_xs' : ''}.png`;
+            return `/images/screen/futures/luckdraw/${isFrame ? '' : 'n_'}bg_claim_${platform}${xs ? '_xs' : ''}.png`;
         }
     };
 
@@ -271,13 +272,7 @@ const Luckydraw = ({ platform }) => {
                     <div className={`${xs ? 'mt-2' : 'mt-10'}`}>
                         <div
                             className={`font-semibold ${
-                                xs
-                                    ? language === 'en'
-                                        ? 'text-3xl leading-8'
-                                        : 'text-xl'
-                                    : language === 'en'
-                                    ? 'text-[2rem] leading-10'
-                                    : 'text-2xl leading-8'
+                                xs ? (language === 'en' ? 'text-lg' : 'text-xl') : language === 'en' ? 'text-[2rem] leading-10' : 'text-2xl leading-8'
                             } ${platform === 'nami' ? 'italic' : ''}`}
                         >
                             {t('nao:luckydraw:reward_title')}
@@ -323,15 +318,14 @@ const Luckydraw = ({ platform }) => {
                                     'text-nao-text2': platform === 'frame'
                                 })}
                             >
-                                <div>{t('nao:luckydraw:updated_vol')}</div>
                                 <div>
-                                    {t('nao:luckydraw:last_updated_time')}:{' '}
+                                    {t('nao:contest:last_updated_time_dashboard', { minute: 20 })}:{' '}
                                     {last_updated_at.current ? formatTime(last_updated_at.current, 'yyyy-MM-dd HH:mm:ss') : '-'}
                                 </div>
                             </div>
                         )}
                     </div>
-                    <div className={classNames(`fixed left-0 bottom-0 w-full ${platform === 'frame' ? 'bg-[#00288c]' : 'bg-[#0E1113]'}`)}>
+                    <div className={classNames(`fixed left-0 bottom-0 w-full z-10 ${platform === 'frame' ? 'bg-[#00288c]' : 'bg-[#0E1113]'}`)}>
                         <div
                             className={classNames('font-semibold leading-6 py-2.5 cursor-pointer relative mx-4 mb-8 mt-6', {
                                 'bg-teal rounded-md': platform === 'nami',
