@@ -104,7 +104,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                             onChange={(e) => setKeyWord(e.target?.value.trim())}
                             placeholder={t('common:search')}
                         />
-                        {keyword && <X size={16} className="cursor-pointer" onClick={() => setKeyWord('')} />}
+                        {keyword && <X size={16} className="cursor-pointer" color="#8694b2" onClick={() => setKeyWord('')} />}
                     </div>
                 </div>
 

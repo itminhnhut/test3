@@ -1,7 +1,16 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, formatPrice, getDecimalScale, getFilter, getS3Url, secondToMinutesAndSeconds, formatFundingRate } from 'redux/actions/utils';
+import {
+    formatNumber,
+    formatPrice,
+    getDecimalScale,
+    getFilter,
+    getS3Url,
+    secondToMinutesAndSeconds,
+    formatFundingRate,
+    RefCurrency
+} from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
 import { ChevronDown, X } from 'react-feather';
@@ -19,7 +28,7 @@ import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import useDarkMode from 'hooks/useDarkMode';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
@@ -34,7 +43,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const [pairListMode, setPairListMode] = useState('');
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
-
     // state, vars for information modal (Trading rules)
     const [currentSelectedPair, setCurrentSelectedPair] = useState(pairConfig);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
@@ -46,7 +54,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const lastPrice = _pairPrice?.lastPrice;
     const [showPopover, setShowPopover] = useState(false);
     const isFunding = useRef(true);
-
     const router = useRouter();
     const { t } = useTranslation();
 
@@ -93,19 +100,27 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         (isShownOnModal = false) => {
             const className = isShownOnModal
                 ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
-                : 'ml-6 font-bold text-center text-sm text-dominant dragHandleArea tracking-wide';
+                : 'font-bold text-left text-sm text-dominant dragHandleArea tracking-wide';
             return (
                 <div
                     ref={lastPriceRef}
-                    style={{ minWidth: lastPriceMinW }}
+                    // style={{ minWidth: lastPriceMinW }}
+                    style={{ minWidth: 82 }}
                     className={classNames(className, {
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
                 >
-                    {formatNumber(
-                        roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : priceFromMarketWatch?.lastPrice || 0, pricePrecision),
-                        pricePrecision,
-                        lastPriceMinW !== undefined ? 0 : pricePrecision
+                    <div>
+                        {formatNumber(
+                            roundTo(!isShownOnModal ? pairPrice?.lastPrice || 0 : priceFromMarketWatch?.lastPrice || 0, pricePrecision),
+                            pricePrecision,
+                            lastPriceMinW !== undefined ? 0 : pricePrecision
+                        )}
+                    </div>
+                    {!isShownOnModal && (
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                            <RefCurrency price={pairPrice?.lastPrice} quoteAsset={pairPrice?.quoteAsset} />
+                        </span>
                     )}
                 </div>
             );
@@ -187,12 +202,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
     const renderFundingFee = useCallback(() => {
         const { key, code, localized: localizedPath, icon } = PAIR_PRICE_DETAIL_ITEMS[0];
-
         let minWidth = itemsPriceMinW || 0;
-
-        let localized = t(localizedPath);
-        const titleFundingFee = 'funding-fee-tooltip';
-        const idFundingFee = 'funding-fee-id';
 
         return (
             <div style={{ minWidth: minWidth || 0 }}>
@@ -324,20 +334,10 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
     const renderFunding = () => {
         return (
-            <div className="flex items-center space-x-1">
-                <div className="flex items-center" onClick={() => onClickFunding(true)}>
-                    <span>Funding</span>
-                    <div className="flex px-2">
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
-                    </div>
-                </div>
-                <span className="text-onus-grey ">/</span>
-                <div className="flex items-center" onClick={() => onClickFunding(false)}>
-                    <span>{t('futures:countdown')}</span>
-                    <div className="flex px-2">
-                        <img src={getS3Url('/images/icon/ic_help.png')} height={10} width={10} />
-                    </div>
-                </div>
+            <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
+                <span onClick={onClickFunding} className="border-b border-darkBlue-5 border-dashed cursor-pointer">
+                    Funding / {t('futures:countdown')}
+                </span>
             </div>
         );
     };
@@ -486,10 +486,15 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
                             <div
-                                className={classNames('text-teal text-sm mt-2', {
+                                className={classNames('text-teal text-sm mt-2 flex items-center', {
                                     '!text-red': priceFromMarketWatch?.priceChangePercent < 0
                                 })}
                             >
+                                <ArrowDropDownIcon
+                                    color={priceFromMarketWatch?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
+                                    size={16}
+                                    className={`${priceFromMarketWatch?.priceChangePercent > 0 && 'rotate-180'}`}
+                                />
                                 {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
                             </div>
                         </div>
@@ -521,36 +526,42 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         <div className="flex items-center h-full pl-5">
             {/* Pair */}
             <PopoverFunding visible={showPopover} onClose={() => setShowPopover(false)} isFunding={isFunding.current} />
-            <div className="relative cursor-pointer group" onMouseOver={() => setActivePairList(true)} onMouseLeave={() => setActivePairList(false)}>
-                <div className="relative z-10 flex items-center font-bold text-[18px]">
-                    {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'}
-                    <ChevronDown
+            <div
+                className="relative cursor-pointer group pr-4 mr-4 border-r border-divider dark:border-divider-dark"
+                onMouseOver={() => setActivePairList(true)}
+                onMouseLeave={() => setActivePairList(false)}
+            >
+                <div className="relative z-10 flex items-center gap-1">
+                    <span className="text-[22px] font-semibold leading-[30px]">
+                        {pairPrice?.baseAsset ? pairPrice?.baseAsset + '/' + pairPrice?.quoteAsset : '-/-'}
+                    </span>
+                    <ArrowDropDownIcon
+                        isFilled
                         size={16}
-                        className={classNames('mt-1 ml-2 transition-transform duration-75', {
+                        className={classNames(' transition-transform duration-75', {
                             'rotate-180': activePairList
                         })}
                     />
                 </div>
-                <div className="relative z-10 flex items-center text-xs font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                <div
+                    onClick={handleToggleModalInfo}
+                    className="flex items-center relative z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark gap-2"
+                >
                     {t('futures:tp_sl:perpetual')}
-                    <div onClick={handleToggleModalInfo} className={'ml-1'}>
-                        <img src={getS3Url('/images/icon/ic_book-open.png')} height={14} width={14} />
-                    </div>
+                    <BxsBookIcon />
                 </div>
                 <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListRef}>
                     <FuturesPairList mode={pairListMode} setMode={setPairListMode} isAuth={isAuth} activePairList={activePairList} />
                 </div>
                 {/* )} */}
+                {RenderInfoModal()}
             </div>
 
             {/* Price */}
             {renderLastPrice()}
-            {RenderInfoModal()}
 
             {/* Details */}
-            <InfoSlider forceUpdateState={forceUpdateState} className="ml-2">
-                {renderPairPriceItems()}
-            </InfoSlider>
+            <InfoSlider forceUpdateState={forceUpdateState}>{renderPairPriceItems()}</InfoSlider>
         </div>
     );
 };
