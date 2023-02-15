@@ -24,6 +24,7 @@
         "type": "Type",
         "side": "Side",
         "open_price": "Entry Price",
+        "open": "Entry",
         "mark_price": "Market Price",
         "liquidation_price": "Liq. Price",
         "close_price": "Close Price",
@@ -507,5 +508,6 @@
     "max_order_size_market": "Max Market Order Volume",
     "max_order_size_market_tooltip": "Maximum trading volume required to place an Market or Stop Market order.",
     "view_all_trading_rule": "View all trading rules.",
-    "the_glossary": "Glossary"
+    "the_glossary": "Glossary",
+    "order_canceled": "Order Canceled"
 }

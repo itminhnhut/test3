@@ -26,6 +26,7 @@
         "type": "Loại",
         "side": "Bên",
         "open_price": "Giá mở",
+        "open": "Mở",
         "close_price": "Giá đóng",
         "mark_price": "Giá thị trường",
         "liquidation_price": "Giá Liq.",
@@ -509,5 +510,6 @@
     "max_order_size_market": "KLGD tối đa lệnh thị trường",
     "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market.",
     "view_all_trading_rule": "Xem tất cả quy tắc giao dịch.",
-    "the_glossary": "Bảng chú giải thuật ngữ"
+    "the_glossary": "Bảng chú giải thuật ngữ",
+    "order_canceled": "Lệnh huỷ"
 }
