@@ -207,9 +207,11 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <div style={{ minWidth: minWidth || 0 }}>
                 <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <span onClick={onClickFunding} className="border-b border-darkBlue-5 border-dashed cursor-pointer">
-                        Funding / {t('futures:countdown')}
-                    </span>
+                    <div className="border-b border-darkBlue-5 border-dashed pb-0.5">
+                        <span onClick={onClickFunding} className="cursor-pointer">
+                            Funding / {t('futures:countdown')}
+                        </span>
+                    </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
                     1<span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
@@ -242,7 +244,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 case 'fundingCountdown':
                     value = (
                         <div>
-                            <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
+                            {formatFundingRate(pairPrice?.fundingRate * 100)} /
                             <Countdown
                                 now={() => (timesync ? timesync.now() : Date.now())}
                                 date={pairPrice?.fundingTime}
@@ -267,12 +269,18 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
-                        <div className="flex items-center">
-                            <div
-                                className={classNames('pl-2 text-dominant', {
-                                    '!text-red': pairPrice?.priceChangePercent < 0
-                                })}
-                            >
+                        <div
+                            className={classNames('flex items-center text-dominant', {
+                                '!text-red': pairPrice?.priceChangePercent < 0
+                            })}
+                        >
+                            <span> {formatNumber(roundTo(priceFromMarketWatch?.priceChange || 0, 2), 2, 2, true)}</span>
+                            <div className="ml-1 flex items-center">
+                                <ArrowDropDownIcon
+                                    color={pairPrice?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
+                                    size={16}
+                                    className={`${pairPrice?.priceChangePercent > 0 && 'rotate-180'}`}
+                                />
                                 {formatNumber(roundTo(pairPrice?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
                             </div>
                         </div>
@@ -335,9 +343,11 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderFunding = () => {
         return (
             <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
-                <span onClick={onClickFunding} className="border-b border-darkBlue-5 border-dashed cursor-pointer">
-                    Funding / {t('futures:countdown')}
-                </span>
+                <div className=" border-b border-darkBlue-5 border-dashed pb-[2px]">
+                    <span onClick={onClickFunding} className=" cursor-pointer">
+                        Funding / {t('futures:countdown')}
+                    </span>
+                </div>
             </div>
         );
     };
