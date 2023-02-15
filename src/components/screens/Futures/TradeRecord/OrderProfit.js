@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
-import { Share2 } from 'react-feather';
+import ChevronDown from 'src/components/svg/ChevronDown';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
 import Emitter from 'redux/actions/emitter';
@@ -55,7 +55,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
             {profit !== 0 ? <>
                 <div className={isMobile ? 'text-sm font-semibold leading-[1.375rem]' : ''}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)}
                 </div>
                 <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : 'text-xs font-normal w-full flex justify-end'}>
                     {onusMode ?
@@ -64,7 +64,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
                             {percent + '%'}
                         </>
                         :
-                        <> ({percent + '%'}) </>
+                        <><ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={percent < 0 ? '' : 'rotate-0'} />{percent + '%'}</>
                     }
                 </div>
             </>

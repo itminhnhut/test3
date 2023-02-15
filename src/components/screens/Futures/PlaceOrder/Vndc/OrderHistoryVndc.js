@@ -17,6 +17,9 @@ import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
 import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
+import TableV2 from 'components/common/V2/TableV2'
+import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
+import classNames from 'classnames';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -29,118 +32,35 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const darkMode = useSelector(state => state.user.theme === 'dark');
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
-    const TimeFilterRef = useRef(null);
 
 
     const columns = useMemo(() => [
         {
-            name: t('futures:order_table:id'),
-            cell: (row) => loading ? <Skeletor width={65} /> : row?.displaying_id,
-            sortable: true,
-            selector: (row) => row?.displaying_id,
-        },
-        {
-            name: t('futures:order_table:symbol'),
-            cell: (row) => loading ? <Skeletor width={65} /> : pairConfig?.pair !== row?.symbol ?
-                <Link href={`/futures/${row?.symbol}`}>
-                    <a className='dark:text-white text-darkBlue'>
-                        {row?.symbol}
-                    </a>
-                </Link>
-                : row?.symbol,
-            sortable: true,
-            selector: (row) => row?.symbol,
-        },
-        {
-            name: t('futures:order_table:created_time'),
-            selector: (row) => row?.opened_at,
-            cell: (row) => loading ? <Skeletor width={65} /> : (
-                <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(row?.opened_at, 'yyyy-MM-dd HH:mm:ss')}
-                </span>
+            key: 'pair',
+            dataIndex: 'symbol',
+            title: t('common:pair'),
+            align: 'left',
+            width: 192,
+            render: (row, item) => (
+                pairConfig?.pair !== item?.symbol ?
+                    <Link href={`/futures/${item?.symbol}`}>
+                        <a className='dark:text-white text-darkBlue'>
+                            <FuturesRecordSymbolItem symbol={item?.symbol} leverage={item?.leverage} type={item?.type} side={item?.side} />
+                        </a>
+                    </Link>
+                    : <FuturesRecordSymbolItem symbol={item?.symbol} leverage={(item?.leverage)} type={item?.type} side={item?.side} />
             ),
             sortable: true,
-            minWidth: '150px',
         },
         {
-            name: t('futures:order_table:closed_time'),
-            selector: (row) => row?.closed_at,
-            cell: (row) => loading ? <Skeletor width={65} /> : (
-                <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(row?.closed_at, 'yyyy-MM-dd HH:mm:ss')}
-                </span>
-            ),
-            sortable: true,
-            minWidth: '150px',
-        },
-        {
-            name: t('futures:order_table:type'),
-            cell: (row) => loading ? <Skeletor width={65} /> : renderCellTable('type', row, t, language),
-            selector: (row) => row?.type,
-            sortable: false,
-        },
-        {
-            name: t('futures:side'),
-            selector: (row) => row?.sdie,
-            cell: (row) => loading ? <Skeletor width={65} /> : <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>{renderCellTable('side', row, t, language)}</span>,
-            sortable: false,
-        },
-        {
-            name: t('futures:order_table:volume'),
-            selector: (row) => row?.quantity,
-            cell: (row) => loading ? <Skeletor width={65} /> : row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-',
+            key: 'status',
+            title: t('common:status'),
+            align: 'right',
+            width: 178,
+            render: (row) => renderOrderStatus(row?.reason_close),
             sortable: true,
         },
-        {
-            name: t('futures:order_table:open_price'),
-            selector: (row) => row?.open_price,
-            cell: (row) => loading ? <Skeletor width={100} /> : row?.open_price ? formatNumber(row?.open_price, row?.decimalScalePrice, 0, true) : '-',
-            sortable: true,
-        },
-        {
-            name: t('futures:order_table:close_price'),
-            selector: (row) => row?.close_price,
-            cell: (row) => loading ? <Skeletor width={100} /> : row?.close_price ? formatNumber(row?.close_price, row?.decimalScalePrice, 0, true) : '-',
-            sortable: true,
-        },
-        {
-            name: 'TP/SL',
-            cell: (row) => loading ? <Skeletor width={100} /> : (
-                <div className='flex items-center'>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
-                        <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
-                    </div>
-                </div>
-            ),
-            minWidth: '150px',
-            sortable: false,
-        },
-        {
-            name: t('futures:order_history:revenue'),
-            selector: (row) => row?.profit,
-            cell: (row) => loading ? <Skeletor width={100} /> : cellRenderRevenue(row),
-            minWidth: '150px',
-            sortable: true,
-        },
-        {
-            name: t('futures:order_table:reason_close'),
-            selector: (row) => row?.reason_close_code,
-            cell: (row) => renderReasonClose(row),
-            minWidth: '150px',
-            sortable: false,
-        },
-        {
-            name: t('futures:order_history:adjustment_detail'),
-            cell: (row) => loading ? <Skeletor width={65} /> : (
-                <div onClick={() => onShowDetail(row)} className='cursor-pointer px-[12px] py-1 bg-bgPrimary dark:bg-bgPrimary-dark text-xs text-dominant border border-dominant rounded-[4px]'>
-                    {t('futures:order_history:view_detail')}
-                </div>
-            ),
-            sortable: false,
-        },
-    ], [loading, pair]
-    )
+    ], [loading, pair])
 
     const [filters, setFilters] = useState({
         timeFrom: null,
@@ -172,6 +92,34 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
+
+    const renderOrderStatus = (type) => {
+        let bgColor
+        let textColor
+        let content
+        switch (type) {
+            // lenh hoan tat
+            case VndcFutureOrderType.ReasonCloseCode.HIT_SL:
+            case VndcFutureOrderType.ReasonCloseCode.HIT_TP:
+            case VndcFutureOrderType.ReasonCloseCode.LIQUIDATE: {
+                bgColor = 'bg-teal/[0.1]'
+                textColor = 'text-teal'
+                content = t('futures:adjust_margin.order_completed')
+                break;
+            }
+
+            // lenh huy
+            case VndcFutureOrderType.ReasonCloseCode.PARTIAL_CLOSE:
+            case VndcFutureOrderType.ReasonCloseCode.NORMAL: {
+                bgColor = 'bg-darkBlue-5/[0.5]'
+                textColor = 'text-darkBlue-5'
+                content = t('futures:adjust_margin.order_completed')
+                break;
+            }
+        }
+
+        return <div className={classNames('px-4 py-1  text-yellow-100 font-normal text-sm rounded-[80px] text-center', bgColor, textColor)}>{content}</div>
+    }
 
     const getOrders = async () => {
         setLoading(true)
@@ -300,60 +248,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         <>
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
-            <div className='flex flex-row items-center flex-wrap'>
-                <FuturesTimeFilter2
-                    currentTimeRange={[filters.timeFrom, filters.timeTo]}
-                    onChange={(value = []) => {
-                        setFilters({ ...filters, timeFrom: value[0], timeTo: value[1] })
-                    }}
-                    ref={TimeFilterRef}
-                />
-                <FilterTradeOrder
-                    label={t('futures:order_table:symbol')}
-                    options={symbolOptions}
-                    value={filters.symbol}
-                    onChange={(value) => {
-                        setFilters({ ...filters, symbol: value })
-                    }}
-                    allowSearch
-                />
-                <FilterTradeOrder
-                    label={t('futures:side')}
-                    options={[{ value: 'Buy', label: t('common:buy') }, { value: 'Sell', label: t('common:sell') }]}
-                    value={filters.side}
-                    onChange={(value) => {
-                        setFilters({ ...filters, side: value })
-                    }}
-                />
-                <div
-                    onClick={() => {
-                        setResetPage(true);
-                        if (pagination.page > 1) {
-                            setPagination({ ...pagination, page: 1 })
-                        } else {
-                            getOrders()
-                        }
-                    }}
-                    className="px-[8px] flex items-center py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:text-txtSecondary-dark dark:bg-darkBlue-3 cursor-pointer hover:opacity-80 rounded-md">
-                    <img className='w-[12px] h-[12px]' src={getS3Url("/images/icon/ic_search.png")} />&nbsp; {t('common:search')}
-                </div>
-                <div
-                    onClick={() => {
-                        setFilters({
-                            timeFrom: null,
-                            timeTo: null,
-                            symbol: '',
-                            side: '',
-                        })
-                        TimeFilterRef.current.onReset([]);
-                        setResetPage(true);
-                        setPagination({ ...pagination, page: 1 })
-                    }}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:text-txtSecondary-dark dark:bg-darkBlue-3 cursor-pointer hover:opacity-80 rounded-md">
-                    {t('common:reset')}
-                </div>
-            </div>
-            <DataTable
+            {/* <DataTable
                 responsive
                 fixedHeader
                 sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
@@ -382,6 +277,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 }}
             // progressPending={loading}
             // progressComponent={<TableLoader/>}
+            /> */}
+
+            <TableV2
+                data={loading ? data : dataSource}
+                columns={columns}
+                scroll={{ x: true }}
+                height={'300px'}
             />
         </>
     )
