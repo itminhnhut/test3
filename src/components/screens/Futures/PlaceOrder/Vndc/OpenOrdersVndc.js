@@ -1,15 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { formatNumber, formatTime, getLoginUrl, countDecimals } from 'redux/actions/utils';
-import { customTableStyles } from 'components/screens/Futures/TradeRecord/index';
-import { ChevronDown, Edit } from 'react-feather';
+import { formatNumber, formatTime, getLoginUrl, countDecimals, formatPrice } from 'redux/actions/utils';
+import { Edit } from 'react-feather';
 
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
-import DataTable from 'react-data-table-component';
 import showNotification from 'utils/notificationService';
-import { renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
+import { getRatioProfit, renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
-import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
 
 import { useSelector } from 'react-redux';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
@@ -20,310 +16,275 @@ import fetchApi from 'utils/fetch-api';
 import Big from 'big.js';
 import { isArray } from 'lodash';
 import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
-import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import CloseAllOrders from 'components/screens/Futures/PlaceOrder/Vndc/CloseAllOrders';
-import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
-import TableV2 from 'components/common/V2/TableV2';
-import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import ModifyOrder from 'components/screens/Futures/PlaceOrder/EditOrderV2/ModifyOrder';
+import TableV2 from 'components/common/V2/TableV2'
+import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
+import classNames from 'classnames';
 
-const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair }) => {
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation();
-    const ordersList = useSelector((state) => state?.futures?.ordersList);
-    const marketWatch = useSelector((state) => state.futures.marketWatch);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const [showModalDelete, setShowModalDelete] = useState(false);
+const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair, status }) => {
+    const { t, i18n: { language } } = useTranslation()
+    const ordersList = useSelector(state => state?.futures?.ordersList)
+    const marketWatch = useSelector((state) => state.futures.marketWatch)
+    const isPosition = status === VndcFutureOrderType.Status.ACTIVE
+    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const [showModalDelete, setShowModalDelete] = useState(false)
     const rowData = useRef(null);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const [showEditSLTP, setShowEditSLTP] = useState(false);
-    const [showEditVol, setShowEditVol] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-    const message = useRef({
-        status: '',
-        title: '',
-        message: '',
-        notes: ''
-    });
-    const [shareOrder, setShareOrder] = useState(null);
+    const [showModalEdit, setShowModalEdit] = useState(false)
+    const [shareOrder, setShareOrder] = useState(null)
     const [filters, setFilters] = useState({
         timeRange: [],
         symbol: '',
         status: '',
-        side: ''
-    });
-
-    const TimeFilterRef = useRef(null);
-
-    const symbolOptions = useMemo(() => {
-        return allPairConfigs?.map((e) => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }));
-    }, [allPairConfigs]);
+        side: '',
+    })
 
     const getDecimalPrice = (config) => {
-        const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
+        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
     // { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
     const columns = useMemo(
         () => [
-            // {
-            //     key: 'pair',
-            //     dataIndex: 'symbol',
-            //     name: t('futures:order_table:id'),
-            //     selector: (row) => row?.status !== 3 ? row?.displaying_id : t('futures:requesting'),
-            //     sortable: true,
-            //     minWidth: '50px',
-            // },
-            // {
-            //     name: t('futures:order_table:created_time'),
-            //     selector: (row) => row?.created_at,
-            //     cell: (row) => (
-            //         <span className='text-txtSecondary dark:text-txtSecondary-dark'>
-            //             {formatTime(row?.created_at, 'yyyy-MM-dd HH:mm:ss')}
-            //         </span>
-            //     ),
-            //     sortable: true,
-            //     minWidth: '150px',
-            // },
             {
                 key: 'pair',
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 128,
-                selector: (row) => row?.symbol,
-                render: (row, item) =>
-                    pairConfig?.pair !== item?.symbol ? (
+                width: 192,
+                render: (row, item) => (
+                    pairConfig?.pair !== item?.symbol ?
                         <Link href={`/futures/${item?.symbol}`}>
-                            <a className="dark:text-white text-darkBlue">
+                            <a className='dark:text-white text-darkBlue'>
                                 <FuturesRecordSymbolItem symbol={item?.symbol} leverage={item?.leverage} type={item?.type} side={item?.side} />
                             </a>
                         </Link>
-                    ) : (
-                        <FuturesRecordSymbolItem symbol={item?.symbol} leverage={item?.leverage} type={item?.type} side={item?.side} />
-                    ),
-                sortable: true
+                        : <FuturesRecordSymbolItem symbol={item?.symbol} leverage={(item?.leverage)} type={item?.type} side={item?.side} />
+                ),
+                sortable: true,
             },
             {
-                key: 'volume-margin',
+                key: 'pnl',
+                visible: isPosition,
+                title: 'PNL (ROE%)',
+                align: 'right',
+                width: 138,
+                render: (row) => {
+                    if (!isPosition) return undefined
+                    const isVndc = row?.symbol.indexOf('VNDC') !== -1
+                    return <OrderProfit
+                        className='w-full'
+                        key={row.displaying_id} order={row}
+                        initPairPrice={marketWatch[row?.symbol]} setShareOrderModal={() => setShareOrder(row)}
+                        decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                },
+                sortable: false,
+            },
+            {
+                key: 'volume_margin',
+                visible: isPosition,
                 dataIndex: 'order_value',
                 title: `${t('futures:order_table:volume')}/${t('futures:margin')}`,
                 align: 'left',
                 width: 184,
-                selector: (row) => row?.order_value,
-                render: (row, item) =>
-                    item?.order_value ? (
-                        <div onClick={() => onOpenModify('vol', item)} className="flex flex-col gap-1">
-                            <div>{formatNumber(item?.order_value, 8, 0, true)}</div>
-                            <div>{formatNumber(item?.margin, 8, 0, true)}</div>
+                render: (row, item) => item?.order_value ?
+                    <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
+                        <div>
+                            {t('futures:volume')}: <span className='text-gray-4'>{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
                         </div>
-                    ) : (
-                        '-'
-                    ),
-                sortable: true
+                        <div>
+                            {t('futures:margin')}: <span className='text-gray-4'>{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
+                        </div>
+                    </div>
+                    : '-',
+                sortable: true,
+            },
+            {
+                key: 'market_price-open_price',
+                visible: !isPosition,
+                title: `${t('futures:mobile.market_price')} / ${t('futures:order_table:open_price')}`,
+                align: 'left',
+                width: 200,
+                render: (row) =>
+                    <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
+                        <div>
+                            {t('common:market')}: <span className='text-gray-4'> {marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}</span>
+                        </div>
+                        <div>
+                            {t('futures:order_table.open')}: <span className='text-gray-4'>{renderOpenPrice(row)}</span>
+                        </div>
+                    </div>,
+                sortable: false,
             },
             {
                 key: 'sltp',
-                title: 'SL/TP',
+                title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
                 align: 'left',
                 width: 224,
                 render: (row) => (
-                    <div className="flex items-center">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
-                            <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
+                    <div className='flex items-center'>
+                        <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
+                            <div>SL: <span className='text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.sl, row)})` : '_'}</span></div>
+                            <div>TP: <span className='text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.tp, row)})` : '_'}</span></div>
                         </div>
-                        {row.status !== VndcFutureOrderType.Status.CLOSED && (
-                            <Edit onClick={() => onOpenModify('sltp', row)} className="ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60" />
-                        )}
+                        {row.status !== VndcFutureOrderType.Status.CLOSED &&
+                            <Edit onClick={() => onOpenModify(row)}
+                                className='ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60' />
+                        }
                     </div>
                 ),
-                minWidth: '150px',
-                sortable: false
+                sortable: false,
             },
             {
-                key: 'pnl',
-                title: 'PNL (ROE%)',
+                key: 'open_price',
+                visible: isPosition,
+                title: t('futures:order_table:open_price'),
                 align: 'right',
-                width: 138,
-                selector: (row) => row?.pnl?.value,
-                render: (row) => {
-                    const isVndc = row?.symbol.indexOf('VNDC') !== -1;
-                    return (
-                        <OrderProfit
-                            className="w-full"
-                            key={row.displaying_id}
-                            order={row}
-                            initPairPrice={marketWatch[row?.symbol]}
-                            setShareOrderModal={() => setShareOrder(row)}
-                            decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2}
-                        />
-                    );
-                },
-                sortable: false
+                width: 118,
+                render: (row) => <div className='text-gray-4 text-sm font-normal'>{renderOpenPrice(row)}</div>,
+                sortable: false,
             },
             {
-                name: t('futures:order_table:type'),
-                selector: (row) => row?.type,
-                cell: (row) => renderCellTable('type', row, t, language),
-                sortable: false
+                key: 'market_price',
+                visible: isPosition,
+                title: t('futures:mobile.market_price'),
+                align: 'right',
+                width: 140,
+                render: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
+                sortable: false,
             },
             {
-                name: t('futures:side'),
-                selector: (row) => row?.side,
-                cell: (row) => (
-                    <span className={row?.side === VndcFutureOrderType.Side.BUY ? 'text-dominant' : 'text-red'}>
-                        {renderCellTable('side', row, t, language)}
-                    </span>
-                ),
-                sortable: false
+                key: 'volume',
+                visible: !isPosition,
+                title: t('futures:order_table:volume'),
+                align: 'left',
+                width: 120,
+                render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>,
+                sortable: false,
             },
             {
-                name: t('futures:leverage:leverage'),
-                selector: (row) => row?.leverage,
-                cell: (row) => row?.leverage + 'x',
-                sortable: true
+                key: 'last_price',
+                title: t('futures:order_table:last_price'),
+                align: 'right',
+                width: 140,
+                render: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true),
+                sortable: true,
             },
             {
-                name: t('futures:order_table:volume'),
-                selector: (row) => row?.quantity,
-                cell: (row) => (row?.quantity ? formatNumber(row?.quantity, 8, 0, true) : '-'),
-                sortable: true
+                key: 'liq_price',
+                visible: isPosition,
+                title: t('futures:calulator:liq_price'),
+                align: 'right',
+                width: 140,
+                render: (row) => renderLiqPrice(row, false),
+                sortable: true,
             },
             {
-                name: t('futures:order_table:open_price'),
-                selector: (row) => getSelectorOpenPrice(row),
-                cell: (row) => renderOpenPrice(row),
-                minWidth: '150px',
-                sortable: true
+                key: 'margin',
+                visible: !isPosition,
+                title: t('futures:margin'),
+                align: 'right',
+                width: 120,
+                render: (row) => formatNumber(row?.margin, row?.decimalScalePrice, 0, true),
+                sortable: true,
             },
             {
-                name: t('futures:order_table:last_price2'),
-                selector: (row) => marketWatch[row?.symbol]?.lastPrice ?? 0,
-                cell: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
-                minWidth: '150px',
-                sortable: true
+                key: 'status',
+                visible: !isPosition,
+                title: t('common:status'),
+                align: 'right',
+                width: 178,
+                render: (row) => <div className='px-4 py-1 bg-yellow-100/[0.15] text-yellow-100 font-normal text-sm rounded-[80px] text-center'>{t('futures:mobile.pending_order')}</div>,
+                sortable: true,
             },
             {
-                name: t('futures:calulator:liq_price'),
-                selector: (row) => renderLiqPrice(row, true),
-                cell: (row) => renderLiqPrice(row, false),
-                minWidth: '150px',
-                sortable: true
-            },
-
-            {
-                name: 'TP/SL',
-                cell: (row) => (
-                    <div className="flex items-center">
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div>{formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}/</div>
-                            <div>{formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}</div>
-                        </div>
-                        {row.status !== VndcFutureOrderType.Status.CLOSED && (
-                            <Edit onClick={() => onOpenModify(row)} className="ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60" />
-                        )}
-                    </div>
-                ),
-                minWidth: '150px',
-                sortable: false
-            },
-            {
-                name: '',
-                cell: (row) => (
-                    <div
-                        onClick={() => onDelete(row)}
-                        className="cursor-pointer hover:opacity-80 px-[28px] py-1 font-medium text-xs text-txtSecondary bg-gray-5 dark:text-txtSecondary-dark dark:bg-darkBlue-3 rounded-[4px]"
-                    >
+                key: 'operator',
+                title: <CloseButton>{t('common:close_all_orders')}</CloseButton>,
+                align: 'center',
+                fixed: 'right',
+                width: 160,
+                render: (row) => (
+                    <CloseButton onClick={() => onDelete(row)}>
                         {t('common:close')}
-                    </div>
-                )
-            }
+                    </CloseButton>
+                ),
+            },
         ],
         [marketWatch, pair, dataFilter]
-    );
+    )
 
     const fetchOrder = async (method = 'GET', params, cb) => {
         try {
             const { status, data, message } = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
                 options: { method },
-                params: params
-            });
+                params: params,
+            })
             if (status === ApiStatus.SUCCESS) {
                 if (cb) cb(data?.orders);
             } else {
-                setShowEditSLTP(false);
-                setShowAlert(true);
-                message.current = {
-                    status: 'error',
-                    title: t('common:failed'),
-                    message: message
-                };
+                showNotification(
+                    {
+                        message: message,
+                        title: t('common:failed'),
+                        type: 'failure'
+                    },
+                    1800,
+                    'bottom',
+                    'bottom-right'
+                )
             }
         } catch (e) {
-            if (cb) cb(e?.message);
+            console.log(e)
         } finally {
             setTimeout(() => {
-                onForceUpdate();
-            }, 2000);
+                onForceUpdate()
+            }, 2000)
         }
-    };
+    }
 
     useEffect(() => {
-        onForceUpdate();
-    }, [ordersList]);
+        onForceUpdate()
+    }, [ordersList])
 
     const onDelete = (item) => {
         rowData.current = item;
-        setShowModalDelete(true);
-    };
+        setShowModalDelete(true)
+    }
 
     const onConfirm = () => {
         const params = {
             displaying_id: rowData.current.displaying_id,
             special_mode: 1
-        };
+        }
         fetchOrder('DELETE', params, () => {
             setShowModalDelete(false);
-            setShowEditSLTP(false);
-            setShowAlert(true);
-            message.current = {
-                status: 'success',
-                title: t('futures:close_order:modal_title', { value: rowData.current?.displaying_id }),
-                message: t('futures:close_order:request_successfully', { value: rowData.current?.displaying_id })
-            };
+            showNotification(
+                {
+                    message: t('futures:close_order:request_successfully', { value: rowData.current?.displaying_id }),
+                    title: t('futures:close_order:modal_title', { value: rowData.current?.displaying_id }),
+                    type: 'success',
+                },
+                1800,
+                'bottom',
+                'bottom-right'
+            )
         });
-    };
+    }
 
     const renderLiqPrice = (row, returnNumber) => {
-        const size = row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity;
-        const number = row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1;
-        const swap = row?.swap || 0;
+        const size = (row?.side === VndcFutureOrderType.Side.SELL ? -row?.quantity : row?.quantity)
+        const number = (row?.side === VndcFutureOrderType.Side.SELL ? -1 : 1);
+        const swap = row?.swap || 0
         // const funding = row?.funding_fee?.margin ? Math.abs(row?.funding_fee?.margin) : 0
-        const liqPrice = (size * row?.open_price + row?.fee + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami));
+        const liqPrice = (size * row?.open_price + row?.fee + swap - row?.margin) / (row?.quantity * (number - DefaultFuturesFee.Nami))
         if (returnNumber) row?.status === VndcFutureOrderType.Status.ACTIVE ? liqPrice : 0;
-        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, row?.decimalScalePrice, 0, false) : '-';
-    };
+        return row?.status === VndcFutureOrderType.Status.ACTIVE && liqPrice > 0 ? formatNumber(liqPrice, row?.decimalScalePrice, 0, false) : '-'
+    }
 
-    const getSelectorOpenPrice = (row) => {
-        switch (row.status) {
-            case VndcFutureOrderType.Status.PENDING:
-                return row?.price;
-            case VndcFutureOrderType.Status.ACTIVE:
-                return row?.open_price;
-            case VndcFutureOrderType.Status.CLOSED:
-                return row?.close_price;
-            default:
-                return 0;
-        }
-    };
 
     const renderOpenPrice = (row) => {
         let text = row?.price ? formatNumber(row?.price, 8, 0, true) : 0;
@@ -332,8 +293,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 let bias = null;
                 const value = row['price'];
 
-                const pairPrice = marketWatch?.[row.symbol];
-                if (!pairPrice) return null;
+                const pairPrice = marketWatch?.[row.symbol]
+                if (!pairPrice) return null
                 const openPrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.ask : pairPrice?.bid;
                 const closePrice = row.side === VndcFutureOrderType.Side.BUY ? pairPrice?.bid : pairPrice?.ask;
                 if (pairPrice?.lastPrice > 0 && value > 0) {
@@ -341,26 +302,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     const formatedBias = formatNumber(biasValue, 8, 0, true);
                     bias =
                         biasValue > 0 ? (
-                            <span>
-                                (<span className="text-mint">+{formatedBias}</span>)
-                            </span>
+                            <span className="text-mint">(+{formatedBias})</span>
                         ) : (
-                            <span>
-                                (<span className="text-pink">{formatedBias}</span>)
-                            </span>
+                            <span className="text-pink">({formatedBias})</span>
                         );
                 }
                 text = row.price ? formatNumber(row.price, row?.decimalScalePrice) : '';
-                return (
-                    <div className="flex items-center ">
-                        <div>
-                            {text}
-                            <br />
-                            {bias}
-                        </div>
-                        <Edit onClick={() => onOpenModify(row)} className="ml-2 !w-4 !h-4 cursor-pointer hover:opacity-60" />
-                    </div>
-                );
+                return text
             case VndcFutureOrderType.Status.ACTIVE:
                 text = row.open_price ? formatNumber(row.open_price, row?.decimalScalePrice) : '';
                 return <div>{text}</div>;
@@ -370,190 +318,109 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             default:
                 return <div>{text}</div>;
         }
-    };
+    }
 
-    const onOpenModify = (key, data) => {
+    const onOpenModify = (data) => {
         rowData.current = data;
-        switch (key) {
-            case 'vol':
-                setShowEditVol(true);
-                break;
-            case 'sltp':
-                setShowEditSLTP(true);
-                break;
-            default:
-                break;
-        }
-    };
+        setShowModalEdit(true);
+    }
 
     const onConfirmEdit = (params) => {
         fetchOrder('PUT', params, () => {
             localStorage.setItem('edited_id', params.displaying_id);
-            setShowEditSLTP(false);
-            setShowAlert(true);
-            message.current = {
-                status: 'success',
-                title: t('common:success'),
-                message: t('futures:modify_order_success')
-            };
+            setShowModalEdit(false);
+            showNotification(
+                {
+                    message: t('futures:modify_order_success'),
+                    title: t('common:success'),
+                    type: 'success'
+                },
+                1800,
+                'bottom',
+                'bottom-right'
+            )
         });
-    };
+    }
 
     const dataSource = useMemo(() => {
-        return ordersList.map((item) => {
-            const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
-            const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+        const filteredData = [0, 1, 2].includes(status) ? ordersList.filter(e => e.status === status) : ordersList
+        return filteredData.map(item => {
+            const symbol = allPairConfigs.find(rs => rs.symbol === item.symbol);
+            const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
             const decimalScalePrice = getDecimalPrice(symbol);
             item['decimalSymbol'] = decimalSymbol;
             item['decimalScalePrice'] = decimalScalePrice;
             return item;
-        });
-    }, [ordersList]);
+        })
+    }, [ordersList, status])
+
 
     const dataFilter = useMemo(() => {
-        const items = dataSource.filter((o) => {
-            if(o.status===0)return
-            const conditions = [];
+        const items = dataSource.filter(o => {
+            const conditions = []
             if (hideOther) {
-                conditions.push(o.symbol === pairConfig?.symbol);
+                conditions.push(o.symbol === pairConfig?.symbol)
             }
             if (filters.side) {
-                conditions.push(o.side === filters.side);
+                conditions.push(o.side === filters.side)
             }
             if (Object.values(VndcFutureOrderType.Status).includes(filters.status)) {
-                conditions.push(parseInt(o.status) === filters.status);
+                conditions.push(parseInt(o.status) === filters.status)
             }
 
-            const createdAt = new Date(o.created_at).valueOf();
+            const createdAt = new Date(o.created_at).valueOf()
 
             if (isArray(filters.timeRange) && filters.timeRange.length > 0) {
-                conditions.push(createdAt > filters.timeRange[0].valueOf() && createdAt < filters.timeRange[1].valueOf());
+                conditions.push(createdAt > filters.timeRange[0].valueOf() && createdAt < filters.timeRange[1].valueOf())
             }
 
-            return conditions.every((e) => e);
+            return conditions.every(e => e)
         });
 
-        return filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
-    }, [hideOther, dataSource, filters, pair]);
+        return filters.symbol ? items.filter(item => item?.symbol === filters.symbol) : items;
+    }, [hideOther, dataSource, filters, pair, status])
 
-    const decimals = useMemo(() => {
-        return {
-            price: rowData.current?.decimalScalePrice || 0,
-            symbol: rowData.current?.decimalSymbol || 0
-        };
-    }, [showEditSLTP]);
-
-    if (!isAuth)
-        return (
-            <div className="cursor-pointer flex items-center justify-center h-full">
-                <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                    <a className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80">
-                        {t('futures:order_table:login_to_continue')}
-                    </a>
-                </Link>
-            </div>
-        );
-
+    if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
+        <Link href={getLoginUrl('sso', 'login')} locale={false}>
+            <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+                {t('futures:order_table:login_to_continue')}
+            </a>
+        </Link>
+    </div>
     return (
         <>
-            <AlertModalV2
-                isVisible={showAlert}
-                onClose={() => setShowAlert(false)}
-                type={message.current.status}
-                title={message.current.title}
-                message={message.current.message}
-                className="max-w-[448px]"
-            />
             <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} />
             <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} />
-            <EditSLTPV2
-                isVisible={showEditSLTP}
-                order={rowData.current}
-                onClose={() => setShowEditSLTP(false)}
-                status={rowData.current?.status}
-                onConfirm={onConfirmEdit}
-                pairConfig={pairConfig}
-                decimals={decimals}
-                pairTicker={marketWatch}
-            />
-            <ModifyOrder
-                isVisible={showEditVol}
-                order={rowData.current}
-                onClose={() => setShowEditVol(false)}
-                onConfirm={() => console.log(232323)}
-                pairConfig={pairConfig}
-                decimals={decimals}
-                pairTicker={marketWatch}
-            />
-            {/* <div className='flex flex-row items-center flex-wrap'>
-                <FuturesTimeFilter2
-                    currentTimeRange={filters.timeRange}
-                    onChange={(value) => {
-                        setFilters({ ...filters, timeRange: value })
-                    }}
-                    ref={TimeFilterRef}
+            {showModalEdit &&
+                <FuturesEditSLTPVndc
+                    isVisible={showModalEdit}
+                    order={rowData.current}
+                    onClose={() => setShowModalEdit(false)}
+                    status={rowData.current.status}
+                    onConfirm={onConfirmEdit}
+                    pairConfig={pairConfig}
+                    pairTicker={marketWatch}
                 />
-                <FilterTradeOrder
-                    label={t('futures:order_table:symbol')}
-                    options={symbolOptions}
-                    value={filters.symbol}
-                    onChange={(value) => {
-                        setFilters({ ...filters, symbol: value })
-                    }}
-                    allowSearch
-                />
-                <FilterTradeOrder
-                    label={t('futures:side')}
-                    options={[{ value: 'Buy', label: t('common:buy') }, { value: 'Sell', label: t('common:sell') }]}
-                    value={filters.side}
-                    onChange={(value) => {
-                        setFilters({ ...filters, side: value })
-                    }}
-                />
-                <FilterTradeOrder
-                    label={t('common:status')}
-                    options={[
-                        {
-                            value: VndcFutureOrderType.Status.PENDING,
-                            label: t('common:pending')
-                        },
-                        {
-                            value: VndcFutureOrderType.Status.ACTIVE,
-                            label: t('futures:order_table:opening_title')
-                        }
-                    ]}
-                    value={filters.status}
-                    onChange={(value) => {
-                        setFilters({ ...filters, status: value })
-                    }}
-                />
-                <div
-                    onClick={() => {
-                        setFilters({
-                            timeRange: [],
-                            symbol: '',
-                            status: '',
-                            side: '',
-                        })
-                        TimeFilterRef.current.onReset([]);
-                    }}
-                    className="px-[8px] flex py-[1px] mr-2 text-xs font-medium bg-bgSecondary dark:text-txtSecondary-dark dark:bg-darkBlue-3 cursor-pointer hover:opacity-80 rounded-md">
-                    {t('common:reset')}
-                </div>
-                <CloseAllOrders />
-            </div> */}
-            {/* <DataTable
-                responsive
-                fixedHeader
-                sortIcon={<ChevronDown size={8} strokeWidth={1.5} />}
+            }
+            <TableV2
                 data={dataFilter}
                 columns={columns}
-                customStyles={customTableStyles}
-                noDataComponent={<TableNoData title={t('futures:order_table:no_opening_order')} />}
-            /> */}
-            <TableV2 data={dataFilter} columns={columns} />
+                scroll={{ x: true }}
+                height={'300px'}
+            />
         </>
-    );
-};
+    )
+}
 
-export default FuturesOpenOrdersVndc;
+const CloseButton = ({ children, onClick }) => {
+    return (
+        <div
+            className='w-[112px] h-[36px] flex items-center justify-center font-semibold text-sm text-darkBlue-5 bg-dark-2 cursor-pointer rounded-md'
+            onClick={onClick}
+        >
+            {children}
+        </div>
+    )
+}
+
+export default FuturesOpenOrdersVndc

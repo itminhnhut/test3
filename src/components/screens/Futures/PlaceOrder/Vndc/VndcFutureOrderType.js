@@ -28,6 +28,8 @@ export const VndcFutureOrderType = {
         HIT_TP: 2,
         LIQUIDATE: 3,
         HIT_LIMIT_CLOSE: 4,
+        DCA_ORDER: 5,
+        PARTIAL_CLOSE: 6
     },
     BitmexTransferError: {
         PROCESS_SUCCESSFULLY: 0,

@@ -35,8 +35,9 @@ const index = ({
     };
 
     const _columns = useMemo(() => {
-        const isAdd = !columns.find((rs) => rs.fixed) && ref.current?.offsetWidth < sumBy(columns, 'width');
-        return !isAdd ? columns : columns.concat([{ fixed: 'right', width: 0 }]);
+        const filterdData = columns.filter((child) => child?.visible === true || child?.visible === undefined);
+        const isAdd = !filterdData.find((rs) => rs.fixed) && ref.current?.offsetWidth < sumBy(filterdData, 'width');
+        return !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
     }, [columns, ref.current]);
 
     return (
