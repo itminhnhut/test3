@@ -86,7 +86,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
                 }
             });
         }
-    }, [tab, TabRef, children]);
+    }, [tab, TabRef, children, mount]);
 
     const active = useMemo(() => {
         const _currentTab = Array.isArray(children) ? children.findIndex((rs) => rs?.props?.value === tab) : 0;

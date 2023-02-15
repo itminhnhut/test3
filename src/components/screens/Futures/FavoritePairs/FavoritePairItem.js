@@ -25,7 +25,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
                     'text-dominant': !negative
                 })}
             >
-                <ChevronDown color={negative < 0 ? colors.red : colors.teal} className={negative ? '' : 'rotate-0'} />
+                <ChevronDown color={negative ? colors.red : colors.teal} className={negative ? '' : 'rotate-0'} />
                 {formatNumber(roundTo(pair?.priceChangePercent * 100, 2), 2, 2, true)}%
             </div>
         </div>

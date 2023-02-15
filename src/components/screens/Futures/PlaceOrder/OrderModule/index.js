@@ -77,8 +77,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
 
     const maxQuoteQty = useMemo(() => {
         const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
-        const max = Math.min(leverage * availableAsset, _maxQuoteQty);
-        return floor(max, decimals?.symbol);
+        return floor(_maxQuoteQty, decimals?.symbol);
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
 
     const minQuoteQty = useMemo(() => {
@@ -381,7 +380,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             />
 
             {renderAvail()}
-            {maxQuoteQty < minQuoteQty && (
+            {maxQuoteQty < minQuoteQty && mount.current && (
                 <div className="text-red text-xs flex items-center space-x-1">
                     <ErrorTriggersIcon />
                     <span>{t('futures:mobile:balance_insufficient')}</span>

@@ -10,6 +10,7 @@ import CheckBox from 'components/common/CheckBox';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useDispatch, useSelector } from 'react-redux';
+import Link from 'next/link';
 
 export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
@@ -184,15 +185,32 @@ const FuturesOrderButtonsGroupVndc = ({
                     {t('common:confirm')}
                 </ButtonV2>
             </ModalV2>
-            <div className="flex items-center justify-between font-bold text-sm text-white select-none !mt-8">
-                <ButtonV2
-                    onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
-                    disabled={isAuth && isError}
-                    className={`flex flex-col !h-[60px] ${isBuy ? '' : '!bg-red'}`}
-                >
-                    <span>{isAuth ? (isBuy ? t('common:buy') : t('common:sell')) + ' ' + title : t('futures:order_table:login_to_continue')}</span>
-                    <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
-                </ButtonV2>
+            <div className="!mt-8">
+                {!isAuth ? (
+                    <>
+                        <Link href={getLoginUrl('sso')}>
+                            <a>
+                                <ButtonV2>{t('common:sign_up')}</ButtonV2>
+                            </a>
+                        </Link>
+                        <Link href={getLoginUrl('sso', 'register')}>
+                            <a>
+                                <ButtonV2 className="mt-3" color="dark">
+                                    {t('common:sign_in')}
+                                </ButtonV2>
+                            </a>
+                        </Link>
+                    </>
+                ) : (
+                    <ButtonV2
+                        onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
+                        disabled={isError}
+                        className={`flex flex-col !h-[60px] ${isBuy ? '' : '!bg-red'}`}
+                    >
+                        <span>{(isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</span>
+                        <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
+                    </ButtonV2>
+                )}
             </div>
         </>
     );

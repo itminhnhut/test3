@@ -294,8 +294,14 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowChart && (
-                                    <div key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
-                                        <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
+                                    <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
+                                        <FuturesChart
+                                            chartKey="futures_containter_chart"
+                                            pair={pairConfig?.pair}
+                                            initTimeFrame="1D"
+                                            isVndcFutures={state.isVndcFutures}
+                                            ordersList={ordersList}
+                                        />
                                     </div>
                                 )}
                                 {filterLayout.isShowOpenOrders && (

@@ -260,7 +260,7 @@ const SpotComp = () => {
         setOrderBookLayout(_orderbookLayout);
         setTradesLayout(_tradesLayout);
     }, []);
-console.log(layoutConfig)
+    console.log(layoutConfig);
     // Spot Socket
 
     const subscribeExchangeSocket = (s) => {
@@ -372,11 +372,13 @@ console.log(layoutConfig)
                                 hidden: !state.isShowChart
                             })}
                         >
-                            <Chart symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
+                            <Chart chartKey="spot_containter_chart" symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
                         </div>
                         <div
                             key="symbolDetail"
-                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
+                                hidden: !state.isShowSymbolDetail || fullScreen
+                            })}
                         >
                             <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
                         </div>

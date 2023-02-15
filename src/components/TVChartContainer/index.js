@@ -146,7 +146,7 @@ export class TVChartContainer extends React.PureComponent {
     };
 
     handleFullScreen = (flag) => {
-        const el = document.querySelector('#spot_containter_chart');
+        const el = document.querySelector('#' + this.props.chartKey);
         if (el) {
             el.classList[flag ? 'add' : 'remove']('!fixed', '!inset-0', '!w-screen', '!h-screen', '!translate-x-0', '!translate-y-0', '!z-[9999999999]');
         }
