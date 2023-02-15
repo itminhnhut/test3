@@ -28,7 +28,6 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         sl: '',
         tp: ''
     });
-    const sideChanged = useRef(false);
 
     useEffect(() => {
         mount.current = false;
@@ -339,7 +338,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             />
 
             {/* Slider */}
-            <div className="mt-4 px-2">
+            <div className="mt-4">
                 <FuturesOrderSlider
                     availableAsset={availableAsset}
                     quoteQty={quoteQty}
@@ -357,6 +356,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     inputValidator={inputValidator}
                     minQuoteQty={minQuoteQty}
                     maxQuoteQty={maxQuoteQty}
+                    pair={pair}
                 />
             </div>
 

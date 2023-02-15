@@ -103,7 +103,7 @@ const ModalV2 = ({
                                                   btnCloseclassName
                                               )}
                                           >
-                                              <X size={18} onClick={handleOutside} className="cursor-pointer" />
+                                              <X size={24} onClick={handleOutside} className="cursor-pointer" />
                                           </div>
                                       )}
                                 {children}

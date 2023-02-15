@@ -6,7 +6,7 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
     return (
         <button
             className={classNames(
-                'flex items-center justify-center rounded-lg px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3',
+                'flex items-center justify-center rounded-md px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3',
                 {
                     'dark:bg-bgBtnV2 dark:hover:bg-bgBtnV2-dark_pressed dark:active:bg-bgBtnV2-pressed dark:disabled:bg-bgBtnV2-dark_disabled text-white':
                         variants === 'primary',

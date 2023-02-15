@@ -301,7 +301,7 @@ const Slider = ({
                             {
                                 'left-1/2 -translate-x-1/2':
                                     i > 0 && i !== _dots,
-                                '-left-1/2 translate-x-[-80%]':
+                                '-left-1/2 translate-x-[-80%] pr-1':
                                     i === _dots,
                             },
                             { '!font-normal': onusMode },
@@ -322,23 +322,17 @@ const Slider = ({
         <>
             {useLabel && positionLabel === 'top' && (
                 <>
-                    <div className='relative w-full flex items-center justify-between'>
+                    <div className="relative w-full flex items-center justify-between">
                         {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
                     </div>
-                    <div className='h-[20px] w-full' />
+                    <div className="h-[20px] w-full" />
                 </>
             )}
-            <Track
-                {...props}
-                onusMode={onusMode}
-                ref={container}
-                onTouchStart={handleTrackMouseDown}
-                onMouseDown={handleTrackMouseDown}
-            >
+            <Track {...props} onusMode={onusMode} ref={container} onTouchStart={handleTrackMouseDown} onMouseDown={handleTrackMouseDown}>
                 <Active onusMode={onusMode} height={height} style={valueStyle} bgColorSlide={bgColorSlide} />
                 <SliderBackground onusMode={onusMode} height={height} isDark={currentTheme === THEME_MODE.DARK} BgColorLine={BgColorLine} />
                 <DotContainer>
-                    {!customDotAndLabel &&
+                    {!customDotAndLabel && (
                         <Dot
                             active={pos.left >= 0}
                             percentage={0}
@@ -346,7 +340,7 @@ const Slider = ({
                             bgColorActive={bgColorActive}
                             onusMode={onusMode}
                         />
-                    }
+                    )}
                     {customDotAndLabel ? customDotAndLabel(xmax, pos)?.dot : renderDotAndLabel()?.dot}
                 </DotContainer>
                 <div
@@ -355,8 +349,8 @@ const Slider = ({
                     onTouchStart={handleMouseDown}
                     onMouseDown={handleMouseDown}
                     onClick={function (e) {
-                        e.stopPropagation()
-                        e.nativeEvent.stopImmediatePropagation()
+                        e.stopPropagation();
+                        e.nativeEvent.stopImmediatePropagation();
                     }}
                 >
                     <Thumb
@@ -368,28 +362,32 @@ const Slider = ({
                         className={naoMode ? '!flex justify-center items-center' : ''}
                     >
                         {naoMode && <img src={getS3Url('/images/nao/ic_nao.png')} width={22} height={22} alt="" />}
-                        {customPercentLabel ? customPercentLabel(pos) :
-                            showPercentLabel && <ThumbLabel
-                                isZero={pos.left === 0}
-                                isDark={currentTheme === THEME_MODE.DARK}
-                                onusMode={onusMode}
-                            >
-                                {ceil(pos.left, 0)}%
-                            </ThumbLabel>
-                        }
+                        {customPercentLabel
+                            ? customPercentLabel(pos)
+                            : showPercentLabel && (
+                                  <ThumbLabel
+                                      isZero={pos.left === 0}
+                                      min={pos.left === 0}
+                                      max={pos.left === xmax}
+                                      isDark={currentTheme === THEME_MODE.DARK}
+                                      onusMode={onusMode}
+                                  >
+                                      {ceil(pos.left, 0)}%
+                                  </ThumbLabel>
+                              )}
                     </Thumb>
                 </div>
             </Track>
             {useLabel && positionLabel === 'bottom' && (
                 <>
-                    <div className='relative w-full flex items-center justify-between'>
+                    <div className="relative w-full flex items-center justify-between">
                         {customDotAndLabel ? customDotAndLabel(xmax, pos)?.label : renderDotAndLabel()?.label}
                     </div>
-                    <div className='h-[12px] w-full' />
+                    <div className="h-[12px] w-full" />
                 </>
             )}
         </>
-    )
+    );
 }
 
 Slider.defaultProps = {

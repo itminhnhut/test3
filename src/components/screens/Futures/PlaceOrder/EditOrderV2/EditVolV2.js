@@ -200,8 +200,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
 
     return (
         <>
-            <div className="grid grid-cols-2 gap-11">
-                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6">
+            <div className="grid grid-cols-2 gap-6">
+                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6 pr-6">
                     <div>
                         <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
                             {order?.symbol} {order?.leverage}x
@@ -254,7 +254,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 />
                             </div>
                         </div>
-                        <div className="w-full px-2">
+                        <div className="w-full pl-1">
                             <Slider
                                 useLabel
                                 positionLabel="top"

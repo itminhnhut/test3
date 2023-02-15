@@ -161,14 +161,15 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
 
     return (
         <>
-            <div className="grid grid-cols-2 gap-11">
-                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6">
+            <div className="grid grid-cols-2 gap-6 text-base">
+                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6 pr-6">
                     <div>
                         <div className="text-txtSecondary-dark text-sm mb-3">{t('futures:mobile:adjust_margin:adjustment_type')}</div>
                         <div className="flex items-center">
                             <div
                                 className={classNames('w-full flex items-center justify-center py-3 rounded-l border border-divider-dark cursor-pointer', {
-                                    'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.ADD
+                                    'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.ADD,
+                                    'text-txtSecondary-dark': adjustType !== ADJUST_TYPE.ADD
                                 })}
                                 onClick={() => setAdjustType(ADJUST_TYPE.ADD)}
                             >
@@ -178,7 +179,8 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                                 className={classNames(
                                     'w-full flex items-center justify-center py-3 rounded-r border border-l-0 border-divider-dark cursor-pointer',
                                     {
-                                        'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.REMOVE
+                                        'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.REMOVE,
+                                        'text-txtSecondary-dark': adjustType !== ADJUST_TYPE.REMOVE
                                     }
                                 )}
                                 onClick={() => setAdjustType(ADJUST_TYPE.REMOVE)}
@@ -204,7 +206,7 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                                 renderTail={() => quoteAsset}
                                 clearAble
                             />
-                            <div className="w-full px-2 mt-4">
+                            <div className="w-full mt-4 pl-1">
                                 <Slider
                                     useLabel
                                     positionLabel="top"
@@ -253,7 +255,7 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                 </div>
             </div>
             <div className="relative mt-8">
-                <div className="flex items-start space-x-2 absolute -top-5">
+                <div className="flex items-start space-x-2 absolute -top-6">
                     {errorProfit && (
                         <>
                             <WarningCircle className="flex-none" />
