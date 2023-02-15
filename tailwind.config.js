@@ -485,7 +485,10 @@ module.exports = {
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
                 dark: commonColors.darkBlue3,
-                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')"
+                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
+                'gradient-button-dark':
+                    'linear-gradient(301.55deg, rgba(10, 119, 54, 0.2) 0.69%, rgba(5, 138, 90, 0.3) 19.95%, rgba(0, 158, 130, 0.5) 38.33%, rgba(17, 180, 125, 0.654344) 50.56%, rgba(32, 200, 120, 0.8) 67.5%, rgba(59, 225, 131, 0.893133) 79.26%, #59FF91 91.02%)',
+                'gradient-button': 'linear-gradient(299.97deg, #4FFF8B 12.35%, #ECFFCA 88.35%)'
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

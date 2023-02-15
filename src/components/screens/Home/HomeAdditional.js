@@ -1,5 +1,6 @@
 import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
 import Button from 'src/components/common/Button';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import Link from 'next/link';
 import colors from '../../../styles/colors';
 
@@ -12,7 +13,11 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useEffect, useState } from 'react';
 import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
 import { CheckedDoubleIcon } from '../../svg/SvgIcon';
+import CheckBox from 'components/common/CheckBox';
 import { useToggle } from 'react-use';
+import HomeCommunity from './HomeCommunity';
+import HomeJourney from './HomeJourney';
+import HomeLightDark from './HomeLightDark';
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State
@@ -21,6 +26,8 @@ const HomeAdditional = ({ parentState }) => {
         focus: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+
+    const [checkedTermAndPolicy, toggleCheckedTermAndPolicy] = useToggle(false);
 
     const [isPwShow, togglePwShow] = useToggle(false);
 
@@ -51,7 +58,157 @@ const HomeAdditional = ({ parentState }) => {
 
     return (
         <>
-            <section className="homepage-first_award">
+            <section className="homepage-whynami">
+                <div className="homepage-whynami___wrapper mal-container">
+                    <div className="homepage-whynami___title">
+                        {t('home:why_nami.title')}
+                        {width < 992 && <br />}
+                        <span className="text-dominant"> Nami Exchange ?</span>
+                    </div>
+                    <div className="homepage-whynami___description">{t('home:why_nami.description')}</div>
+
+                    <div className="homepage-whynami___reason__group">
+                        <div className="homepage-whynami___reason__item">
+                            <img src={getS3Url('/images/screen/homepage/registered_people.png')} width="52" height="52" />
+                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_1')}</div>
+                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_1_description')}</div>
+                        </div>
+
+                        <div className="homepage-whynami___reason__item">
+                            <img src={getS3Url('/images/screen/homepage/investment_diversity.png')} width="52" height="52" />
+                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_2')}</div>
+                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_2_description')}</div>
+                        </div>
+
+                        <div className="homepage-whynami___reason__item">
+                            <img src={getS3Url('/images/screen/homepage/fee_saving.png')} width="52" height="52" />
+                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_3')}</div>
+                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_3_description')}</div>
+                        </div>
+
+                        <div className="homepage-whynami___reason__item">
+                            <img src={getS3Url('/images/screen/homepage/effective_support.png')} width="52" height="52" />
+                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_4')}</div>
+                            <div className="homepage-whynami___reason__item___description">
+                                {t('home:why_nami.reason_4_description')}
+                                {/*Luôn có nhân viên hỗ trợ trực tiếp<br/>*/}
+                                {/*đa ngôn ngữ 24/7*/}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="homepage-whynami___reason__group__btn___group">
+                        {/*<Button title={t('navbar:menu.about')} target="_blank"*/}
+                        {/*        type="primary" href="https://ico.nami.trade/#nami-team"/>*/}
+                    </div>
+                </div>
+            </section>
+            <section className="homepage-trade3step">
+                <div className="homepage-trade3step___wrapper">
+                    <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
+
+                    <div className="homepage-trade3step___step___wrapper">
+                        <div className="homepage-trade3step___step___item">
+                            <div className="homepage-trade3step___step___item___inner">
+                                <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    01
+                                </div>
+                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
+                            </div>
+                            <div className="homepage-trade3step__vertial_dot_line" />
+                            <div className="homepage-trade3step__horizontal_dot_line" />
+                        </div>
+                        <div className="homepage-trade3step___step___item">
+                            <div className="homepage-trade3step___step___item___inner">
+                                <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    02
+                                </div>
+                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
+                            </div>
+                            <div className="homepage-trade3step__vertial_dot_line" />
+                            <div className="homepage-trade3step__horizontal_dot_line" />
+                        </div>
+                        <div className="homepage-trade3step___step___item">
+                            <div className="homepage-trade3step___step___item___inner">
+                                <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    03
+                                </div>
+                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="homepage-trade3step___create_account">
+                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')} />
+                        <div className="homepage-trade3step___create_account___pr">{t('home:trade3step.chill_a_bit')}</div>
+                    </div>
+                </div>
+            </section>
+
+            <HomeLightDark onShowQr={() => parentState && parentState({ showQR: true })} />
+            {/* <section id="nami_exchange_download_app" className="homepage-app_intro">
+                <div className="homepage-app_intro___wrapper mal-container">
+                    <div className="homepage-app_intro___content">
+                        <div className="homepage-app_intro___content___title">
+                            {t('home:intro_app.title_1')}
+                            <br />
+                            {t('home:intro_app.title_2')}
+                        </div>
+                        <div className="homepage-app_intro___content___description">{t('home:intro_app.description')}</div>
+                        <div className="homepage-app_intro___content___button__group">
+                            <div onClick={() => window.open('https://apps.apple.com/app/id1480302334', '_blank')}>
+                                <img src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="Nami Exchange" />
+                            </div>
+                            <div onClick={() => window.open('https://play.google.com/store/apps/details?id=com.namicorp.exchange', '_blank')}>
+                                <img src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="Nami Exchange" />
+                            </div>
+                            <div onClick={() => parentState && parentState({ showQR: true })}>
+                                {theme && theme !== THEME_MODE.LIGHT ? (
+                                    <img src={getS3Url('/images/icon/ic_qr.png')} alt="Nami Exchange" />
+                                ) : (
+                                    <img src={getS3Url('/images/screen/homepage/qr_light.png')} alt="Nami Exchange" />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="homepage-app_intro___graphics">
+                        <img
+                            className="homepage-app_intro___mb_graphics"
+                            src={getS3Url(`/images/screen/homepage/mobile_dual_ip_${theme === THEME_MODE.LIGHT ? 'light' : 'dark'}.png`)}
+                            alt="Nami Exchange"
+                        />
+                        <img
+                            className="homepage-app_intro___desktop_graphics"
+                            src={getS3Url(`/images/screen/homepage/dual_ip_${theme === THEME_MODE.LIGHT ? 'light' : 'dark'}.png`)}
+                            alt="Nami Exchange"
+                        />
+                    </div>
+                    {theme && theme === THEME_MODE.LIGHT && (
+                        <img
+                            className="homepage-app_intro___graphics__backward"
+                            src={getS3Url('/images/screen/homepage/corner_right.png')}
+                            alt="Nami Exchange"
+                        />
+                    )}
+                </div>
+            </section> */}
+
+            <HomeCurrentActivity />
+            <section className="homepage-first_award relative">
+            <img src="/images/screen/homepage/half-circle.png" alt="half-circle" className="absolute z-[-1] top-0" />
+
                 <div className="homepage-first_award__wrapper mal-container">
                     <div className="homepage-first_award___step">
                         <div className="homepage-first_award__title">{t('home:first_award.title')}</div>
@@ -182,17 +339,15 @@ const HomeAdditional = ({ parentState }) => {
                         </div> */}
                         {/* <div className="homepage-first_award___form___or">{language === LANGUAGE_TAG.VI ? 'hoặc' : 'or'}</div> */}
                         <div className="homepage-first_award___form___input_group">
-                            <label htmlFor="homepage-form-input" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                            <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                                 Email
                             </label>
                             <div
                                 className={`homepage-first_award___form___input__wrapper
                                              ${state.focus === 'email' ? 'homepage-first_award___form___focus' : ''} mb-4`}
                             >
-                                {/* <Mail size={16} /> */}
-
                                 <input
-                                    id="homepage-form-input"
+                                    id="homepage-form-email"
                                     className="homepage-first_award___form___input"
                                     onFocus={() => setState({ focus: 'email' })}
                                     onBlur={() => setState({ focus: null })}
@@ -201,42 +356,53 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
 
                             <div className="">
-                                <label htmlFor="homepage-form-input" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                                <label htmlFor="homepage-form-password" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                                     {t('input:password_placeholder')}
                                 </label>
                                 <div
                                     className={`homepage-first_award___form___input__wrapper
                                              ${state.focus === 'pwd' ? 'homepage-first_award___form___focus' : ''}`}
                                 >
-                                    {/* <Lock size={20} /> */}
                                     <input
+                                        id="homepage-form-password"
                                         type={isPwShow ? 'text' : 'password'}
                                         className="homepage-first_award___form___input"
                                         onFocus={() => setState({ focus: 'pwd' })}
                                         onBlur={() => setState({ focus: null })}
                                         placeholder={language === LANGUAGE_TAG.VI ? 'Nhập mật khẩu của bạn (8 - 50 ký tự)' : 'Your password (8 - 50 letters)'}
                                     />
-                                    <div className="cursor-pointer" onClick={togglePwShow}>{isPwShow ? <Eye size={16} /> : <EyeOff  size={16} />}</div>
+                                    <div className="cursor-pointer" onClick={togglePwShow}>
+                                        {isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <Button
-                                    style={{
-                                        marginTop: 28,
-                                        borderRadius: 12,
-                                        fontSize: 14,
-                                        height: 48,
-                                        lineHeight: '35px'
-                                    }}
-                                    href={getLoginUrl('sso', 'register')}
-                                    title={t('common:sign_up')}
-                                    type="primary"
-                                />
+                            <div className="flex items-center mt-6">
+                                <div>
+                                    <CheckBox
+                                        active={checkedTermAndPolicy}
+                                        onChange={toggleCheckedTermAndPolicy}
+                                        label={
+                                            <div className="dark:text-darkBlue-5 text-gray-9 text-base">
+                                                Tôi đồng ý với
+                                                <Link href="/">
+                                                    <a className="mx-1 text-dominant">Điều kiện và điều khoản </a>
+                                                </Link>{' '}
+                                                của Nami Exchange
+                                            </div>
+                                        }
+                                    />
+                                </div>
                             </div>
-                            <div className="text-sm text-center text-txtSecondary dark:text-txtSecondary-dark font-medium mt-3">
+
+                            <div className="mt-10">
+                                <HrefButton className="bg-dominant text-white" href={getLoginUrl('sso', 'register')}>
+                                    {t('common:sign_up')}
+                                </HrefButton>
+                            </div>
+                            <div className="text-center text-txtSecondary dark:text-txtSecondary-dark mt-6">
                                 {t('common:already_have_account')}
-                                <a href={getLoginUrl('sso', 'login')} className="text-dominant">
+                                <a href={getLoginUrl('sso', 'login')} className="ml-2 text-dominant">
                                     {t('common:sign_in')}
                                 </a>
                             </div>
@@ -244,334 +410,8 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
                 </div>
             </section>
-
-            <section className="homepage-journey">
-                <div className="homepage-journey__wrapper mal-container">
-                    <div className="homepage-journey__title">{t('home:journey.title')}</div>
-                    <div className="homepage-journey__description">
-                        {width >= 992 ? (
-                            <>
-                                {t('home:journey.description_desktop1')}
-                                <br />
-                                {t('home:journey.description_desktop2')}
-                            </>
-                        ) : (
-                            <>{t('home:journey.description_mobile')}</>
-                        )}
-                    </div>
-                    <div className="homepage-journey__group_content">
-                        <div className="homepage-journey__group_content___left">
-                            <div className="homepage-journey__group_content___left__item">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        src={getS3Url('/images/screen/homepage/maxium_performance.png')}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_1')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_1_description')}
-                                    </div>
-                                    <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary" href={getV1Url('/futures')} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="homepage-journey__group_content___left__item" style={{ marginBottom: 26 }}>
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        src={getS3Url('/images/screen/homepage/master_revenue.png')}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_2')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_2_description')}
-                                    </div>
-                                    <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        {/*<Button title={null} type="primary" />*/}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="homepage-journey__group_content___left__item">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        src={getS3Url('/images/screen/homepage/token_saving_cost.png')}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_3')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_3_description')}
-                                    </div>
-                                    <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary" href="https://launchpad.nami.exchange" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="homepage-journey__group_content___left__item">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        src={getS3Url('/images/screen/homepage/crypto_knowledge.png')}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_4')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_4_description')}
-                                    </div>
-                                    <div className="homepage-journey__group_content___left__item___content__viewmore">
-                                        <Button title={t('common:read_more')} type="primary" href="https://explained.nami.exchange/" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="homepage-journey__group_content___right">
-                            <img src={getS3Url('/images/screen/homepage/journey_graphics2.png')} alt="Nami Exchange" />
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="nami_exchange_download_app" className="homepage-app_intro">
-                <div className="homepage-app_intro___wrapper mal-container">
-                    <div className="homepage-app_intro___content">
-                        <div className="homepage-app_intro___content___title">
-                            {t('home:intro_app.title_1')}
-                            <br />
-                            {t('home:intro_app.title_2')}
-                        </div>
-                        <div className="homepage-app_intro___content___description">{t('home:intro_app.description')}</div>
-                        <div className="homepage-app_intro___content___button__group">
-                            <div onClick={() => window.open('https://apps.apple.com/app/id1480302334', '_blank')}>
-                                <img src={getS3Url('/images/screen/homepage/app_store_light.png')} alt="Nami Exchange" />
-                            </div>
-                            <div onClick={() => window.open('https://play.google.com/store/apps/details?id=com.namicorp.exchange', '_blank')}>
-                                <img src={getS3Url('/images/screen/homepage/play_store_light.png')} alt="Nami Exchange" />
-                            </div>
-                            <div onClick={() => parentState && parentState({ showQR: true })}>
-                                {theme && theme !== THEME_MODE.LIGHT ? (
-                                    <img src={getS3Url('/images/icon/ic_qr.png')} alt="Nami Exchange" />
-                                ) : (
-                                    <img src={getS3Url('/images/screen/homepage/qr_light.png')} alt="Nami Exchange" />
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="homepage-app_intro___graphics">
-                        <img
-                            className="homepage-app_intro___mb_graphics"
-                            src={getS3Url(`/images/screen/homepage/mobile_dual_ip_${theme === THEME_MODE.LIGHT ? 'light' : 'dark'}.png`)}
-                            alt="Nami Exchange"
-                        />
-                        <img
-                            className="homepage-app_intro___desktop_graphics"
-                            src={getS3Url(`/images/screen/homepage/dual_ip_${theme === THEME_MODE.LIGHT ? 'light' : 'dark'}.png`)}
-                            alt="Nami Exchange"
-                        />
-                    </div>
-                    {theme && theme === THEME_MODE.LIGHT && (
-                        <img
-                            className="homepage-app_intro___graphics__backward"
-                            src={getS3Url('/images/screen/homepage/corner_right.png')}
-                            alt="Nami Exchange"
-                        />
-                    )}
-                </div>
-            </section>
-
-            <section className="homepage-trade3step">
-                <div className="homepage-trade3step___wrapper">
-                    <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
-
-                    <div className="homepage-trade3step___step___wrapper">
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    01
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
-                            </div>
-                            <div className="homepage-trade3step__vertial_dot_line" />
-                            <div className="homepage-trade3step__horizontal_dot_line" />
-                        </div>
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    02
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
-                            </div>
-                            <div className="homepage-trade3step__vertial_dot_line" />
-                            <div className="homepage-trade3step__horizontal_dot_line" />
-                        </div>
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    03
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="homepage-trade3step___create_account">
-                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')} />
-                        <div className="homepage-trade3step___create_account___pr">{t('home:trade3step.chill_a_bit')}</div>
-                    </div>
-                </div>
-            </section>
-
-            <section className="homepage-whynami">
-                <div className="homepage-whynami___wrapper mal-container">
-                    <div className="homepage-whynami___title">
-                        {t('home:why_nami.title')}
-                        {width < 992 && <br />}
-                        <span className="text-dominant"> Nami Exchange ?</span>
-                    </div>
-                    <div className="homepage-whynami___description">{t('home:why_nami.description')}</div>
-
-                    <div className="homepage-whynami___reason__group">
-                        <div className="homepage-whynami___reason__item">
-                            <img src={getS3Url('/images/screen/homepage/registered_people.png')} width="52" height="52" />
-                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_1')}</div>
-                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_1_description')}</div>
-                        </div>
-
-                        <div className="homepage-whynami___reason__item">
-                            <img src={getS3Url('/images/screen/homepage/investment_diversity.png')} width="52" height="52" />
-                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_2')}</div>
-                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_2_description')}</div>
-                        </div>
-
-                        <div className="homepage-whynami___reason__item">
-                            <img src={getS3Url('/images/screen/homepage/fee_saving.png')} width="52" height="52" />
-                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_3')}</div>
-                            <div className="homepage-whynami___reason__item___description">{t('home:why_nami.reason_3_description')}</div>
-                        </div>
-
-                        <div className="homepage-whynami___reason__item">
-                            <img src={getS3Url('/images/screen/homepage/effective_support.png')} width="52" height="52" />
-                            <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_4')}</div>
-                            <div className="homepage-whynami___reason__item___description">
-                                {t('home:why_nami.reason_4_description')}
-                                {/*Luôn có nhân viên hỗ trợ trực tiếp<br/>*/}
-                                {/*đa ngôn ngữ 24/7*/}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="homepage-whynami___reason__group__btn___group">
-                        {/*<Button title={t('navbar:menu.about')} target="_blank"*/}
-                        {/*        type="primary" href="https://ico.nami.trade/#nami-team"/>*/}
-                    </div>
-                </div>
-            </section>
-
-            <HomeCurrentActivity />
-
-            <section className="homepage-community">
-                <div className="homepage-community___wrapper mal-container">
-                    <div className="homepage-community___title">{t('home:community.title')}</div>
-                    <div className="homepage-community___description">
-                        {width >= 992 ? (
-                            <>
-                                {t('home:community.description_desktop1')}
-                                <br />
-                                {t('home:community.description_desktop2')}
-                            </>
-                        ) : (
-                            <>{t('home:community.description_mobile')}</>
-                        )}
-                    </div>
-                    <div className="homepage-community___channel__group">
-                        <Link href="https://www.facebook.com/namifutures">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_facebook.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Facebook</div>
-                            </a>
-                        </Link>
-                        <Link href="https://www.facebook.com/groups/nami.exchange">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_facebook.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Facebook Group</div>
-                            </a>
-                        </Link>
-                        <Link href="https://t.me/namitrade">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_telegram.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Telegram Global</div>
-                            </a>
-                        </Link>
-                        <Link href="https://t.me/namitradevn">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_telegram.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Telegram</div>
-                            </a>
-                        </Link>
-                        <Link href="https://twitter.com/NamiTrade">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_twitter.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Twitter</div>
-                            </a>
-                        </Link>
-                        <Link href="https://www.reddit.com/r/NAMIcoin">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_reddit.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Reddit</div>
-                            </a>
-                        </Link>
-                        <Link href="https://nami.io">
-                            <a className="homepage-community___channel__group___item" target="_blank">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_globe.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">Blog</div>
-                            </a>
-                        </Link>
-                        <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
-                            <a className="homepage-community___channel__group___item">
-                                <div className="homepage-community___channel__group___item__icon">
-                                    <img src={getS3Url('/images/icon/ic_coingecko.png')} width="44" height="44" />
-                                </div>
-                                <div className="homepage-community___channel__group___item__label">CoinGecko</div>
-                            </a>
-                        </Link>
-                    </div>
-                </div>
-            </section>
+            <HomeJourney />
+            <HomeCommunity />
         </>
     );
 };

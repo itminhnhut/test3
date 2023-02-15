@@ -301,7 +301,7 @@ const Slider = ({
                             {
                                 'left-1/2 -translate-x-1/2':
                                     i > 0 && i !== _dots,
-                                '-left-1/2 translate-x-[-80%]':
+                                'right-0':
                                     i === _dots,
                             },
                             { '!font-normal': onusMode },

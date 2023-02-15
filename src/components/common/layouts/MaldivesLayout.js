@@ -1,7 +1,7 @@
 import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT } from 'src/components/common/NavBar/constants';
 import NavBar from 'src/components/common/NavBar/NavBar';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import TransferModal from 'components/wallet/TransferModal';
@@ -11,6 +11,7 @@ import { NavBarBottomShadow } from '../NavBar/NavBar';
 import { ToastContainer } from 'react-toastify'
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
+import { useRouter } from 'next/router';
 
 const MadivesLayout = ({
     navOverComponent,
@@ -38,6 +39,7 @@ const MadivesLayout = ({
 
     // Use Hooks
     const { width, height } = useWindowSize();
+    const router = useRouter()
 
     const isApp = useApp();
 
@@ -47,6 +49,8 @@ const MadivesLayout = ({
         top: 0,
         left: 0
     };
+    const isHomePage = useMemo(() => router.pathname === '/', [router]);
+
     const store = useStore();
     useEffect(() => {
         store.dispatch(setTheme());
@@ -78,7 +82,7 @@ const MadivesLayout = ({
                     <NavBar
                         name={navName}
                         useOnly={navMode}
-                        style={{ ...navbarStyle, ...navStyle }}
+                        style={ isHomePage ? {...navStyle} : {  ...navbarStyle, ...navStyle }}
                         spotState={spotState}
                         onChangeSpotState={onChangeSpotState}
                         resetDefault={resetDefault}

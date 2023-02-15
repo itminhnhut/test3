@@ -5,16 +5,22 @@ import { getMarketWatch } from 'redux/actions/market';
 import { useWindowSize } from 'utils/customHooks';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
+import { API_GET_TRENDING } from 'redux/actions/apis';
 
 import colors from 'styles/colors';
 import CountUp from 'react-countup';
 import Link from 'next/link';
+import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
+import axios from 'axios';
+import TrendingSlide from './TrendingSlide';
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
-        makedData: null
+        makedData: null,
+        trending: null,
+        loadingTrend: false
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
@@ -22,11 +28,25 @@ const HomeIntroduce = ({ parentState }) => {
     const { width } = useWindowSize();
     const { t } = useTranslation(['home']);
 
-    const animRef = useRef();
+    const getTrending = async () => {
+        setState({ loadingTrend: true });
+        try {
+            const { data } = await axios.get(API_GET_TRENDING);
+            if (data && data.status === 'ok') {
+                setState({ trending: data?.data });
+            }
+        } catch (e) {
+            console.log('Cant get top trending data: ', e);
+        } finally {
+            setState({ loadingTrend: false });
+        }
+    };
+    // const animRef = useRef();
 
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
+                <TrendingSlide trending={state.trending}/>
                 <div className="homepage-introduce___wrapper mal-container">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
@@ -86,8 +106,7 @@ const HomeIntroduce = ({ parentState }) => {
                                             {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
                                     )}{' '}
-                                    +
-                                    {/* <div className="bott-line" /> */}
+                                    +{/* <div className="bott-line" /> */}
                                 </div>
                                 <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
                             </div>
@@ -114,36 +133,19 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <Link href="https://apps.apple.com/app/id1480302334">
-                                <a className="homepage-introduce___download__item" target="_blank">
-                                    <img src={getS3Url('/images/download_app_store.png')} alt="Nami Exchange" />
-                                </a>
-                            </Link>
-                            <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
-                                <a className="homepage-introduce___download__item" target="_blank">
-                                    <img src={getS3Url('/images/download_play_store.png')} alt="Nami Exchange" />
-                                </a>
-                            </Link>
-                            <div className="homepage-introduce___download__item" onClick={() => parentState({ showQR: true })}>
-                                <img src={getS3Url('/images/icon/ic_qr.png')} alt="Nami Exchange" />
-                            </div>
+                            <GradientButton className="w-auto !bg-gradient-button-dark  text-txtPrimary-dark">Tải ứng dụng</GradientButton>
                         </div>
                     </div>
-                    <div className="homepage-introduce___wrapper__right">
-                        <div ref={animRef} className="homepage-introduce___graphics">
-                            <div className="homepage-introduce___graphics__anim__wrapper">
-                                <img src={getS3Url('/images/screen/homepage/banner_graphics.png')} alt="Nami Exchange" />
-                            </div>
-                        </div>
-                        {/*{width >= 1024 &&*/}
-                        {/*<div className="homepage-introduce___graphics__backward">*/}
-                        {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
-                        {/*</div>}*/}
-                    </div>
+
+                    <img
+                        className="absolute right-0 -z-1 bottom-0 hidden md:w-[700px] md:block lg:w-auto h-[534px]"
+                        src={'/images/screen/homepage/banner_graphics_1.png'}
+                        alt="Nami Exchange"
+                    />
                 </div>
             </section>
         );
-    }, [width, state.loading, state.pairsLength, state.makedData]);
+    }, [width, state.loading, state.pairsLength, state.makedData,state.trending]);
 
     useAsync(async () => {
         setState({ loading: true });
@@ -161,6 +163,11 @@ const HomeIntroduce = ({ parentState }) => {
         }
     }, []);
 
+    useEffect(() => {
+        getTrending();
+        const inverval = setInterval(() => getTrending(), 60000);
+        return () => inverval && clearInterval(inverval);
+    }, []);
     return renderIntroduce();
 };
 

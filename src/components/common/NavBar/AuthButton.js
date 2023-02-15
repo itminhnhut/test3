@@ -20,7 +20,7 @@ const AuthButton = ({ t, showSignInBreakPoint = 0, showSignUpBreakPoint = 0 }) =
                 </TextButton>
             )}
             {width >= showSignUpBreakPoint && (
-                <HrefButton href={getLoginUrl('sso', 'register')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
+                <HrefButton href={getLoginUrl('sso', 'register')} className="ml-4 py-2 w-[105px] text-txtPrimary-dark !h-[36px] rounded-md !text-sm">
                     {t('common:sign_up')}
                 </HrefButton>
             )}

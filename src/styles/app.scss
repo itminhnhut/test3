@@ -987,3 +987,23 @@ input:-webkit-autofill {
     text-decoration-color: #8694b2;
     text-underline-offset: .25rem;
 }
+
+
+.tooltip-arrow-bottom {
+    @apply dark:bg-darkBlue-6 bg-black-300 text-[#1f2633] dark:text-txtPrimary-dark relative;
+}
+.tooltip-arrow-bottom:after {
+  
+    @apply dark:border-darkBlue-6 border-black-300;
+    --size:8px;
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform:translateX(-50%);
+    bottom:calc(var(--size) * -1);
+    border-width:calc(var(--size) / 2 );
+    border-right-color:  transparent !important;
+    border-bottom-color:  transparent !important;
+    border-left-color:transparent !important;
+}
+
