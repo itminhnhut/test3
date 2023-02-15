@@ -1,16 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ChevronDown, Share2 } from 'react-feather';
-
-import DataTable from 'react-data-table-component';
 import fetchApi from 'utils/fetch-api';
 import { API_GET_FUTURES_ORDER, API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import Skeletor from 'src/components/common/Skeletor';
 import { formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url, countDecimals } from 'redux/actions/utils';
 import { getRatioProfit, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
-import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
-import { tableStyle } from 'config/tables';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
@@ -35,6 +29,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
     const hasNext = useRef(true);
+
 
     const columns = useMemo(() => [
         {
@@ -127,7 +122,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             width: 118,
             render: (row) => <div className='text-gray-4 text-sm font-normal'>{renderReasonClose(row)}</div>,
             sortable: false,
-        },
+        }
     ], [loading, pair])
 
     const [filters, setFilters] = useState({
