@@ -86,25 +86,25 @@ const FuturesMarginRatioVndc = ({ pairConfig, decimals }) => {
     return (
         <div className="p-6 pl-4 h-full !overflow-x-hidden overflow-y-auto ">
             <div className="flex items-center justify-between dragHandleArea">
-                <span className="futures-component-title text-lg font-semibold">{t('common:overview')}</span>
+                <span className="futures-component-title !text-lg !font-semibold">{t('common:overview')}</span>
             </div>
 
             <div className="mt-6 space-y-4">
                 <div className="flex justify-between">
                     <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:balance')}</span>
-                    <div className="font-semibold">
+                    <div className="font-semibold !text-base">
                         {dataFormat.balance} {quoteAsset}
                     </div>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:pnl')}</span>
-                    <div className={`font-semibold ${totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red'}`}>
+                    <div className={`font-semibold !text-base ${totalProfit === 0 ? '' : totalProfit > 0 ? 'text-teal' : 'text-red'}`}>
                         {dataFormat.pnl} {quoteAsset}
                     </div>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="flex items-center text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:volume_2')}</span>
-                    <div className="font-semibold">{dataFormat.volume}</div>
+                    <div className="font-semibold !text-base">{dataFormat.volume}</div>
                 </div>
             </div>
         </div>

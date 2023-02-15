@@ -244,6 +244,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 inputMode="decimal"
                                 validator={_validator('quoteQty')}
                                 allowedDecimalSeparators={[',', '.']}
+                                clearAble
                             />
                             <div className={changeClass}>
                                 <Plus
@@ -323,6 +324,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                                 inputMode="decimal"
                                                 suffix={'x'}
                                                 allowedDecimalSeparators={[',', '.']}
+                                                clearAble
                                             />
                                             <div className={changeClass}>
                                                 <Plus
@@ -351,6 +353,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                         validator={_validator('price')}
                                         renderTail={() => <span className={`text-txtSecondary-dark`}>{quoteAsset}</span>}
                                         allowedDecimalSeparators={[',', '.']}
+                                        clearAble
                                     />
                                 </div>
                             </>

@@ -401,14 +401,14 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={true}
+                                            isVndcFutures={state.isVndcFutures}
                                             pairPrice={state.pairPrice}
                                             pair={state.pair}
                                             decimals={decimals}
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowAssets && (
+                                {filterLayout.isShowAssets && !!auth && (
                                     <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
