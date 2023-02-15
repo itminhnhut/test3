@@ -11,7 +11,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
 import { orderBy } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
@@ -21,7 +21,8 @@ import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import NoData from 'components/common/V2/TableV2/NoData';
+import TableV2 from 'components/common/V2/TableV2';
+import HideSmallBalance from 'components/common/HideSmallBalance';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -73,8 +74,6 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
-        let tableStatus;
-
         const columns = [
             { key: 'asset', dataIndex: 'asset', title: t('common:asset'), align: 'left', width: 150, fixed: width >= 992 ? 'none' : 'left' },
             { key: 'total', dataIndex: 'total', title: t('common:total'), align: 'right', width: 213 },
@@ -85,66 +84,25 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         ];
 
         return (
-            <div className="mt-8 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
-                <ReTable
-                    sort
-                    defaultSort={{ key: 'total', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    limit={ASSET_ROW_LIMIT}
-                    skip={0}
-                    tableStatus={tableStatus}
-                    paginationProps={{
-                        hide: true,
-                        current: state.currentPage,
-                        pageSize: 10,
-                        onChange: (currentPage) => setCurrentPage(currentPage)
-                    }}
-                    isNamiV2
-                    // height={height}
-                    emptyText={<NoData isSearch={!!state.search} />}
-                    // {...props}
-                />
-                {state.tableData?.length > 0 && (
-                    <div className="pt-8 flex items-center justify-center dark:bg-bgSpotContainer-dark">
-                        <RePagination
-                            total={state.tableData?.length}
-                            current={state.currentPage}
-                            pageSize={ASSET_ROW_LIMIT}
-                            onChange={(currentPage) => setState({ currentPage })}
-                            name="market_table___list"
-                        />
-                    </div>
-                )}
-                {/* <ReTable
-                    sort
-                    defaultSort={{ key: 'total', direction: 'desc' }}
-                    useRowHover
-                    data={state.tableData || []}
-                    columns={columns}
-                    rowKey={(item) => item?.key}
-                    loading={!state.tableData?.length}
-                    scroll={{ x: true }}
-                    tableStatus={tableStatus}
-                    tableStyle={{
-                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                        tableStyle: { minWidth: '888px !important' },
-                        headerStyle: {},
-                        rowStyle: {},
-                        shadowWithFixedCol: width < 1366,
-                        noDataStyle: {
-                            minHeight: '480px'
-                        }
-                    }}
-                    paginationProps={{
-                        hide: true
-                    }}
-                /> */}
-            </div>
+            // <div className="mt-8 border border-divider-dark dark:border-divider-dark rounded-xl">
+            <TableV2
+                sort
+                defaultSort={{ key: 'total', direction: 'desc' }}
+                useRowHover
+                data={state.tableData || []}
+                columns={columns}
+                rowKey={(item) => item?.key}
+                scroll={{ x: true }}
+                limit={ASSET_ROW_LIMIT}
+                skip={0}
+                noBorder={true}
+                isSearch={!!state.search}
+                height={404}
+                pagingClassName="border-none"
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
+            />
+            // </div>
         );
     }, [state.tableData, width]);
 
@@ -254,39 +212,15 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             <div className="mt-16 sm:flex sm:items-end sm:justify-between">
                 <div className="t-common-v2">{t('common:partners')}</div>
                 <div className="flex items-center justify-between mt-4 sm:mt-0">
-                    {/* <div className="flex items-center select-none cursor-pointer" onClick={() => setState({ hideSmallAsset: !state.hideSmallAsset })}>
-                        <span
-                            className={
-                                state.hideSmallAsset
-                                    ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-dominant bg-dominant'
-                                    : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[4px] border border-gray-3 dark:border-darkBlue-4'
-                            }
-                        >
-                            {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                        </span>
-                        <span className="ml-3 text-xs">{t('wallet:hide_small_balance')}</span>
-                    </div> */}
-                    <div className="flex items-center justify-between sm:mr-5">
-                        <div
-                            className="flex items-center select-none cursor-pointer lg:mr-5 text-txtSecondary dark:text-txtSecondary-dark"
-                            onClick={() =>
-                                setState({
-                                    hideSmallAsset: !state.hideSmallAsset
-                                })
-                            }
-                        >
-                            <span
-                                className={
-                                    state.hideSmallAsset
-                                        ? 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-dominant bg-dominant'
-                                        : 'inline-flex items-center justify-center w-[16px] h-[16px] rounded-[3px] border border-divider dark:border-divider-dark'
-                                }
-                            >
-                                {state.hideSmallAsset ? <Check size={10} color="#FFFFFF" /> : null}
-                            </span>
-                            <span className="ml-3 text-xs ">{t('wallet:hide_small_balance')}</span>
-                        </div>
-                    </div>
+                    <HideSmallBalance
+                        onClick={() =>
+                            setState({
+                                hideSmallAsset: !state.hideSmallAsset
+                            })
+                        }
+                        isHide={state.hideSmallAsset}
+                        className="mr-8"
+                    />
                     <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
@@ -343,19 +277,19 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 </div>
             ),
             total: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                 </span>
             ),
             available: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.value - item?.wallet?.locked_value
                         ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
                         : '0.0000'}
                 </span>
             ),
             in_order: (
-                <span className="text-sm whitespace-nowrap">
+                <span className="whitespace-nowrap">
                     {item?.wallet?.locked_value ? (
                         <Link href={PATHS.PARTNERS.TRADE.DEFAULT}>
                             <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
@@ -366,7 +300,7 @@ const dataHandler = (data, translator, dispatch, utils) => {
                 </span>
             ),
             btc_value: (
-                <div className="text-sm">
+                <div>
                     {assetUsdRate ? (
                         <>
                             <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, utils?.btcAssetDigit || 8) : '0.0000'}</div>
@@ -406,6 +340,7 @@ const renderOperationLink = (assetName, translator, dispatch) => {
         <ButtonV2
             variants="blank"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
+            className="!text-base"
         >
             {translator('common:transfer')}
         </ButtonV2>

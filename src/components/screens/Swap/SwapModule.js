@@ -704,7 +704,6 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const onCloseAlertResultSwap = () => {
-        console.log('here');
         if (state.resultSwap) set((prevState) => ({ ...prevState, resultSwap: null }));
     };
 
@@ -989,8 +988,7 @@ const SwapModule = ({ width, pair }) => {
 
                     <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
                         <Trans i18nKey="common:term_swap">
-                            {/* <HrefButton className="!inline !p-0 focus:text-white" href="/swap" variants="blank" /> */}
-                            <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
+                            <ButtonV2 className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
                         </Trans>
                     </div>
                 </div>

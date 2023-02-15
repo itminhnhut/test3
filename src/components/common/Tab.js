@@ -45,7 +45,6 @@ const Tab = memo(
         const { t } = useTranslation(['tab', ...tArr]);
 
         const render = useCallback(() => {
-            console.log('here_____', type);
             if (type === TAB_TYPE.TYPE1) {
                 let className = 'relative py-4 font-normal text-base cursor-pointer whitespace-nowrap ' + ' ';
                 if (itemClassName) {
@@ -57,7 +56,6 @@ const Tab = memo(
 
                 return series.map((s) => {
                     const x = s?.key === currentIndex ? className + active : className + inactive;
-                    console.log('x: ', x);
                     return (
                         <TabItem
                             key={`tab_${name}__${s?.key}`}

@@ -238,6 +238,7 @@ const ReTable = memo(
         // useEffect(() => {
         //     console.log('namidev-DEBUG: reTable => ', current, data)
         // }, [data, current])
+        // console.log('here', restProps?.noBorder);
         return (
             <ReTableWrapperV2
                 ref={reference}
@@ -332,7 +333,7 @@ const ReTableWrapperV2 = styled.div`
 
     .rc-table td {
         font-weight: 400;
-        padding: 0 16px;
+        padding: ${({ padding }) => (padding ? padding : '0 16px')};
         height: 52px;
         max-height: 52px;
         color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
