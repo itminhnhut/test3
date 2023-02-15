@@ -201,7 +201,8 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                                 allowedDecimalSeparators={[',', '.']}
                                 validator={validator()}
                                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
-                                renderTail={() => <div>{quoteAsset}</div>}
+                                renderTail={() => quoteAsset}
+                                clearAble
                             />
                             <div className="w-full px-2 mt-4">
                                 <Slider

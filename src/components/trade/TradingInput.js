@@ -2,6 +2,9 @@ import { useRef, useState } from 'react';
 import classNames from 'classnames';
 import NumberFormat from 'react-number-format';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import { X } from 'react-feather';
+import colors from 'styles/colors';
+import { isFunction } from 'redux/actions/utils';
 
 const INITIAL_STATE = {
     isFocus: false
@@ -20,6 +23,7 @@ const TradingInput = ({
     errorTooltip = true,
     onFocus,
     onBlur,
+    clearAble = false,
     ...inputProps
 }) => {
     // ? Input state management
@@ -38,6 +42,20 @@ const TradingInput = ({
         if (onBlur) onBlur();
         setState({ isFocus: false });
     };
+
+    const onClear = () => {
+        focusInput();
+        setTimeout(() => {
+            if (inputProps?.onValueChange) {
+                inputProps?.onValueChange({
+                    floatValue: '',
+                    formattedValue: '',
+                    value: ''
+                });
+            }
+        }, 10);
+    };
+
     const isError =
         (isNaN(inputProps?.value) ? inputProps?.value : inputProps?.value && inputProps?.value >= 0) && Object.keys(validator)?.length && !validator?.isValid
             ? true
@@ -48,9 +66,9 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md  border border-transparent ${
-                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'hover:border-base bg-gray-5 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-5 dark:bg-darkBlue-3'
                     }`,
-                    { 'border-dominant': !onusMode && state.isFocus },
+                    { '!border-dominant': !onusMode && state.isFocus && !isError },
                     { 'border-onus-green': onusMode && state.isFocus },
                     { '!border-red': !onusMode && isError },
                     { '!border-onus-red': onusMode && isError },
@@ -108,7 +126,12 @@ const TradingInput = ({
                     />
                 )}
                 {/* Tail */}
-                <div className={classNames('', tailContainerClassName)}>{renderTail && renderTail()}</div>
+                {!!inputProps?.value && !disabled && clearAble && (
+                    <div className={classNames('relative z-10', { 'pr-2 mr-2 border-r border-divider-dark': !!renderTail, 'pl-2': !renderTail })}>
+                        <X onClick={onClear} size={16} className="cursor-pointer" color={colors.darkBlue5} />
+                    </div>
+                )}
+                <div className={classNames('', tailContainerClassName)}>{renderTail && isFunction(renderTail) ? renderTail() : renderTail}</div>
             </div>
             {isError && validator?.msg && !errorTooltip && (
                 <div className={`text-xs mt-3 text-red`}>

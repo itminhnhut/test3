@@ -406,6 +406,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('stop_loss')}
+                                        clearAble
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('sl')}
@@ -460,6 +461,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('take_profit')}
+                                        clearAble
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('tp')}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
-import { FuturesOrderTypes as OrderTypes, FuturesStopOrderMode } from 'redux/reducers/futures';
+import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
 import FuturesOrderModule from 'components/screens/Futures/PlaceOrder/OrderModule';
@@ -16,6 +16,10 @@ const FuturesPlaceOrderVndc = ({ pairConfig, userSettings, pairPrice, isAuth, is
 
     const avlbAsset = useSelector((state) => state.wallet?.FUTURES);
     const [currentType, setCurrentType] = useState(OrderTypes.Market);
+
+    useEffect(() => {
+        setCurrentType(OrderTypes.Market);
+    }, [isAuth]);
 
     const getLeverage = async (symbol) => {
         const { data } = await axios.get(API_FUTURES_LEVERAGE, {

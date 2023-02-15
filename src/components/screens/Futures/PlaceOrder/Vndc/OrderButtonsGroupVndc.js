@@ -43,7 +43,7 @@ const FuturesOrderButtonsGroupVndc = ({
     const messages = useRef(null);
 
     const isShowConfirm = useMemo(() => {
-        return settings?.user_setting?.show_place_order_confirm_modal;
+        return settings?.user_setting ? settings?.user_setting?.show_place_order_confirm_modal : true;
     }, [settings]);
 
     const handleParams = (side) => {

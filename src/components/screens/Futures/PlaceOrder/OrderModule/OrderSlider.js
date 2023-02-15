@@ -14,7 +14,8 @@ const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty,
     }, []);
 
     useEffect(() => {
-        setPercent((quoteQty * 100) / maxQuoteQty);
+        const _percent = quoteQty ? (quoteQty * 100) / maxQuoteQty : 0;
+        setPercent(_percent);
     }, [quoteQty]);
 
     const onPercentChange = ({ x }) => {
