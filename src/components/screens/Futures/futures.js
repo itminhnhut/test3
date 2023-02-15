@@ -408,7 +408,7 @@ const Futures = () => {
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowAssets && (
+                                {filterLayout.isShowAssets && !!auth && (
                                     <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}

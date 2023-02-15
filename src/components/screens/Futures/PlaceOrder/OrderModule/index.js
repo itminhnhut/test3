@@ -1,19 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, setTransferModal } from 'redux/actions/utils';
 import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';
 import FuturesOrderSLTP from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSLTP';
 import FuturesOrderButtonsGroupVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { VndcFutureOrderType, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import TradingInput from 'components/trade/TradingInput';
-import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, WalletType } from 'redux/actions/const';
 import { AddCircleColorIcon } from 'components/svg/SvgIcon';
 import usePrevious from 'hooks/usePrevious';
 import floor from 'lodash/floor';
+import { useDispatch } from 'react-redux';
+import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 
 const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const ask = pairPrice?.ask ?? 0;
     const bid = pairPrice?.bid ?? 0;
     const lastPrice = pairPrice?.lastPrice ?? 0;
@@ -95,7 +98,10 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 const _max = maxQuoteQty;
                 const _displayingMax = `${formatNumber(_max, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
-                if (quoteQty < +_min) {
+                if (_max < _min) {
+                    msg = t('futures:mobile:balance_insufficient');
+                    isValid = false;
+                } else if (quoteQty < +_min) {
                     msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
                 } else if (quoteQty > +Number(_max).toFixed(decimals.symbol)) {
@@ -283,7 +289,10 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 <div className="flex items-center justify-between">
                     <div className="text-darkBlue-5 flex items-center space-x-1">
                         <span>{t('futures:mobile:available')}</span>
-                        <AddCircleColorIcon className="cursor-pointer" />
+                        <AddCircleColorIcon
+                            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
+                            className="cursor-pointer"
+                        />
                     </div>
                     <span className="font-medium">
                         {formatNumber(availableAsset, decimals.symbol)} {pairConfig?.quoteAsset}
@@ -313,7 +322,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 decimalScale={decimals.price}
                 validator={inputValidator('price')}
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
-                renderTail={() => <div>{pairConfig?.quoteAsset}</div>}
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
             />
             <TradingInput
                 label={t('futures:order_table:volume')}
@@ -325,11 +335,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
-                renderTail={() => <div>{pairConfig?.quoteAsset}</div>}
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
             />
 
             {/* Slider */}
-            <div className="mt-4">
+            <div className="mt-4 px-2">
                 <FuturesOrderSlider
                     availableAsset={availableAsset}
                     quoteQty={quoteQty}
@@ -370,7 +381,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             />
 
             {renderAvail()}
-
+            {maxQuoteQty < minQuoteQty && (
+                <div className="text-red text-xs flex items-center space-x-1">
+                    <ErrorTriggersIcon />
+                    <span>{t('futures:mobile:balance_insufficient')}</span>
+                </div>
+            )}
             <FuturesOrderButtonsGroupVndc
                 pairConfig={pairConfig}
                 type={type}

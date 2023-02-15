@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Spinner from 'components/svg/Spinner';
 
-const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading }) => {
+const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, color }) => {
     return (
         <button
             className={classNames(
@@ -12,7 +12,8 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
                         variants === 'primary',
                     '!font-semibold px-0 !text-sm dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed':
                         variants === 'text',
-                    'bg-gray-2 dark:!bg-dark-2 !text-txtDisabled': !loading && disabled
+                    'bg-gray-2 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark': !loading && disabled,
+                    'dark:!bg-dark-2 dark:hover:!bg-hover-dark dark:active:!bg-hover-dark dark:!text-txtSecondary-dark': color === 'dark'
                 },
                 className
             )}

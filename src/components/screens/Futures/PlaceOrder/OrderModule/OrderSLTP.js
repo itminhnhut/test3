@@ -85,6 +85,7 @@ const FuturesOrderSLTP = ({
 
             <TradingInput
                 label={t('futures:take_profit')}
+                clearAble
                 allowNegative={false}
                 value={orderSlTp.tp}
                 decimalScale={decimals.price}
@@ -93,7 +94,7 @@ const FuturesOrderSLTP = ({
                 labelClassName="whitespace-nowrap"
                 containerClassName="w-full dark:bg-dark-2"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() =>
+                renderTail={
                     canShowChangeTpSL && (
                         <div data-tip="" data-for="tooltipTPSL" className=" flex items-center cursor-pointer" onClick={() => onChangeTpSL('tp')}>
                             <AddCircleIcon />
@@ -104,6 +105,7 @@ const FuturesOrderSLTP = ({
 
             <TradingInput
                 containerClassName="w-full dark:bg-dark-2"
+                clearAble
                 label={t('futures:stop_loss')}
                 allowNegative={false}
                 value={orderSlTp.sl}
@@ -112,7 +114,7 @@ const FuturesOrderSLTP = ({
                 onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() =>
+                renderTail={
                     canShowChangeTpSL && (
                         <div data-tip="" data-for="tooltipTPSL" className="flex items-center cursor-pointer" onClick={() => onChangeTpSL('sl')}>
                             <AddCircleIcon />
