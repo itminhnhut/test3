@@ -350,8 +350,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const _onConfirm = () => {
         const newData = {
             ...data,
-            sl: show?.sl ? data.sl : '',
-            tp: show?.tp ? data.tp : ''
+            sl: show?.sl ? data.sl || '' : '',
+            tp: show?.tp ? data.tp || '' : ''
         };
         if (onConfirm) onConfirm(newData);
     };
