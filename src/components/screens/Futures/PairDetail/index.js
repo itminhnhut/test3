@@ -30,6 +30,7 @@ import useDarkMode from 'hooks/useDarkMode';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import PriceChangePercent from 'components/common/PriceChangePercent';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -275,14 +276,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                             })}
                         >
                             <span> {formatNumber(roundTo(priceFromMarketWatch?.priceChange || 0, 2), 2, 2, true)}</span>
-                            <div className="ml-1 flex items-center">
-                                <ArrowDropDownIcon
-                                    color={pairPrice?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
-                                    size={16}
-                                    className={`${pairPrice?.priceChangePercent > 0 && 'rotate-180'}`}
-                                />
-                                {formatNumber(roundTo(pairPrice?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
-                            </div>
+                            <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
                     minWidth = itemsPriceMinW + 36;
@@ -495,18 +489,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         </div>
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
-                            <div
-                                className={classNames('text-teal text-sm mt-2 flex items-center', {
-                                    '!text-red': priceFromMarketWatch?.priceChangePercent < 0
-                                })}
-                            >
-                                <ArrowDropDownIcon
-                                    color={priceFromMarketWatch?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
-                                    size={16}
-                                    className={`${priceFromMarketWatch?.priceChangePercent > 0 && 'rotate-180'}`}
-                                />
-                                {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
-                            </div>
+                            <PriceChangePercent priceChangePercent={priceFromMarketWatch?.priceChangePercent} className="mt-2 text-sm" />
                         </div>
                     </div>
                     {/* Funding fee */}
@@ -548,7 +531,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     <ArrowDropDownIcon
                         isFilled
                         size={16}
-                        className={classNames(' transition-transform duration-75', {
+                        className={classNames(' transition-transform duration-200', {
                             'rotate-180': activePairList
                         })}
                     />
