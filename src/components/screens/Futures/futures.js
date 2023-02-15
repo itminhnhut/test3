@@ -365,7 +365,7 @@ const Futures = () => {
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowPairDetail && (
+                                {filterLayout.isShowPairDetail && (
                                     <div key={futuresGridKey.pairDetail} className={`relative z-20 border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
@@ -381,7 +381,7 @@ const Futures = () => {
                                     <div key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
                                         <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
                                     </div>
-                                )} */}
+                                )}
                                 {filterLayout.isShowOpenOrders && (
                                     <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
                                         <FuturesTradeRecord
@@ -401,7 +401,7 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={true}
+                                            isVndcFutures={state.isVndcFutures}
                                             pairPrice={state.pairPrice}
                                             pair={state.pair}
                                             decimals={decimals}

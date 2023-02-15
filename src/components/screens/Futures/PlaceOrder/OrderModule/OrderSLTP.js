@@ -1,14 +1,11 @@
 import TradingInput from 'components/trade/TradingInput';
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useMemo, useRef, useState } from 'react';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
-import Tooltip from 'components/common/Tooltip';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AddCircleIcon } from 'components/svg/SvgIcon';
-import EditSLTPV2 from './EditSLTPV2';
+import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const FuturesOrderSLTP = ({
@@ -37,23 +34,11 @@ const FuturesOrderSLTP = ({
     const _price = type === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) : price;
 
     const canShowChangeTpSL = useMemo(() => {
-        if (!isAuth) return false;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        if (!inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid) {
-            return false;
-        }
-        return true;
-    }, [isAuth, type, pairConfig, price, side, leverage]);
-
-    // const setSLTP = (status) => {
-    //     dispatch({
-    //         type: SET_FUTURES_PRELOADED_FORM,
-    //         payload: { useSltp: !status }
-    //     });
-    // };
+        return !(!quoteQty || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid || !isAuth);
+    }, [isAuth, type, pairConfig, price, side, leverage, quoteQty]);
 
     const onChangeTpSL = (key) => {
-        // if (canShowChangeTpSL) return;
         rowData.current = {
             fee: 0,
             side: side,
@@ -108,11 +93,13 @@ const FuturesOrderSLTP = ({
                 labelClassName="whitespace-nowrap"
                 containerClassName="w-full dark:bg-dark-2"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() => (
-                    <div data-tip="" data-for="tooltipTPSL" className=" flex items-center cursor-pointer" onClick={() => onChangeTpSL('tp')}>
-                        <AddCircleIcon />
-                    </div>
-                )}
+                renderTail={() =>
+                    canShowChangeTpSL && (
+                        <div data-tip="" data-for="tooltipTPSL" className=" flex items-center cursor-pointer" onClick={() => onChangeTpSL('tp')}>
+                            <AddCircleIcon />
+                        </div>
+                    )
+                }
             />
 
             <TradingInput
@@ -125,11 +112,13 @@ const FuturesOrderSLTP = ({
                 onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() => (
-                    <div data-tip="" data-for="tooltipTPSL" className="flex items-center cursor-pointer" onClick={() => onChangeTpSL('sl')}>
-                        <AddCircleIcon />
-                    </div>
-                )}
+                renderTail={() =>
+                    canShowChangeTpSL && (
+                        <div data-tip="" data-for="tooltipTPSL" className="flex items-center cursor-pointer" onClick={() => onChangeTpSL('sl')}>
+                            <AddCircleIcon />
+                        </div>
+                    )
+                }
             />
         </div>
     );

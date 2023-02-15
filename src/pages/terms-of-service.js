@@ -15,11 +15,11 @@ const Title1 = styled.div.attrs({
 })``;
 
 const Title2 = styled.div.attrs({
-    className: 'text-xl font-semibold mt-8 mb-8'
+    className: 'text-xl font-semibold mt-8 mb-8 sm:ml-4 md:ml-8 lg:ml-10'
 })``;
 
 const Title3 = styled.div.attrs({
-    className: 'text-lg font-semibold mt-8 mb-6'
+    className: 'text-lg font-semibold mt-8 mb-6 sm:ml-8 md:ml-16 lg:ml-20'
 })``;
 
 const Strong = styled.span.attrs({
@@ -54,7 +54,7 @@ const Terms = () => {
         <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
             <div className="px-4">
                 <div
-                    className={`max-w-screen-3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-base font-normal text-left ${
+                    className={`max-w-screen-v3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-base font-normal text-left tracking-normal ${
                         width <= 640 ? 'term-mobile-view !px-5' : 'px-24 pt-20 pb-[120px]'
                     }`}
                 >

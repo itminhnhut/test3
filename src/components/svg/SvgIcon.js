@@ -330,6 +330,19 @@ const AddCircleIcon = () => (
     </svg>
 );
 
+const AddCircleColorIcon = (props) => (
+    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#zfktez410a)">
+            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
+        </g>
+        <defs>
+            <clipPath id="zfktez410a">
+                <path fill="#fff" d="M0 0h12v12H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const AppleIcon = ({ size = 24, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
         <g clip-path="url(#ik9gb490da)">
@@ -341,19 +354,6 @@ const AppleIcon = ({ size = 24, ...props }) => (
         <defs>
             <clipPath id="ik9gb490da">
                 <path fill="#fff" transform="translate(.5)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
-
-const AddCircleColorIcon = (props) => (
-    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#zfktez410a)">
-            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
-        </g>
-        <defs>
-            <clipPath id="zfktez410a">
-                <path fill="#fff" d="M0 0h12v12H0z" />
             </clipPath>
         </defs>
     </svg>
@@ -407,6 +407,20 @@ const BxChevronDown = ({ size = 24, color = '#E2E8F0', ...props }) => (
     </svg>
 );
 
+const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
+    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#0dcfa1hmna)">
+            <path fill={bgColor} d="M0 24V0h24v24z" />
+            <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color ? color : '#47CC85'} />
+        </g>
+        <defs>
+            <clipPath id="0dcfa1hmna">
+                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -426,13 +440,14 @@ export {
     FutureIcon,
     FutureLaunchpadIcon,
     FuturePortfolioIcon,
+    SuccessfulTransactionIcon,
+    AddCircleIcon,
+    AddCircleColorIcon,
     FutureSimpleIcon,
     FutureAdvanceIcon,
-    SuccessfulTransactionIcon,
     AppleIcon,
     GooglePlayIcon,
     LogoIcon,
     BxChevronDown,
-    AddCircleIcon,
-    AddCircleColorIcon,
+    SyncAltIcon
 };

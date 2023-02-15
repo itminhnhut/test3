@@ -14,14 +14,16 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
     return (
         <>
             <div className="mal-footer___pocket">
-                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[240px]' : ''} `}>
+                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px]' : ''} `}>
                     {auth ? (
                         width >= 1200 && (
                             <>
                                 <div className="mal-footer___pocket__logo mb-6">
                                     <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="188" alt="Nami Exchange" />
                                 </div>
-                                <SocialsLink language={language}   />
+                                <div className="w-[188px]">
+                                    <SocialsLink language={language} />
+                                </div>
                             </>
                         )
                     ) : (
@@ -31,10 +33,11 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <HrefButton href={getLoginUrl('sso', 'register')} className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm">
                                     {t('common:create_account')}
                                 </HrefButton>
-                                {
-                                    width < 1200 && <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'),"_self")}className="ml-4 w-[171px]">{t('common:sign_in')}</TextButton>
-                                }
-                                
+                                {width < 1200 && (
+                                    <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
+                                        {t('common:sign_in')}
+                                    </TextButton>
+                                )}
                             </div>
 
                             {width < 1200 && <hr className="border-divider-dark border mt-6" />}
@@ -67,7 +70,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             >
                                 <a className="">{language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}</a>
                             </Link>
-                            <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
+                            {/* <Link href={`https://nami.exchange/files/whitepaper_${language}_1510.pdf`}>
                                 <a className="invisible">Whitepaper</a>
                             </Link>
 
@@ -81,7 +84,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 <a target="_blank" className="invisible">
                                     {t('navbar:menu.about')}
                                 </a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
 
@@ -137,7 +140,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                      ${active.community ? 'mal-footer___pocket__links___group__item__links__active' : ''}`}
                     >
 
-                        
+
                          <Link href="https://www.facebook.com/namifutures">
                             <a target="_blank" className="!flex items-center ">
                                 <div className="mr-3 border p-2 rounded-full border-divider">
@@ -180,7 +183,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             <a target="_blank" className="!flex items-center">
                                 <img src={getS3Url('/images/icon/ic_footer_coingecko.png')} className="mr-3" alt="" width="16" height="16" /> CoinGecko
                             </a>
-                        </Link> 
+                        </Link>
                     </div>
                 </div>*/}
 

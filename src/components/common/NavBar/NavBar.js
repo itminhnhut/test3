@@ -414,7 +414,7 @@ const NavBar = ({
         });
 
         return (
-            <div className="mal-navbar__dropdown !pt-[31px]">
+            <div className="mal-navbar__dropdown">
                 <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
@@ -440,7 +440,7 @@ const NavBar = ({
                         )}
                     </div>
                     {isNotVerified && (
-                        <HrefButton className="mb-6" href={PATHS.ACCOUNT.IDENTIFICATION}>
+                        <HrefButton className="mb-6 !text-txtPrimary-dark" href={PATHS.ACCOUNT.IDENTIFICATION}>
                             {t('navbar:verify_account')}
                         </HrefButton>
                     )}

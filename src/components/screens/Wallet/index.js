@@ -13,7 +13,7 @@ import StakingWallet from 'components/screens/Wallet/Staking';
 import FarmingWallet from 'components/screens/Wallet/Farming';
 import TransactionHistory from 'components/screens/Wallet/Transaction';
 import Axios from 'axios';
-import Tab from 'components/common/Tab';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
 import styled from 'styled-components';
@@ -23,9 +23,10 @@ import { useAsync } from 'react-use';
 import { getFuturesMarketWatch, getMarketWatch, getUsdRate } from 'redux/actions/market';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { PATHS } from 'constants/paths';
-import NeedLogin from 'components/common/NeedLogin';
+import NeedLoginV2 from 'components/common/NeedLoginV2';
 import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 
 const INITIAL_STATE = {
     screen: null,
@@ -186,19 +187,38 @@ const Wallet = () => {
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <Tab
-                series={SCREEN_TAB_SERIES}
-                currentIndex={state.screenIndex}
-                onChangeTab={(screenIndex) => {
-                    const current = SCREEN_TAB_SERIES.find((o) => o?.key === screenIndex);
-                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
-                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
-                    // } else {
-                    r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
-                    // }
-                }}
-                tArr={['common']}
-            />
+            <div className="relative flex">
+                <Tabs tab={state.screenIndex} className="gap-6 border-b border-divider-dark">
+                    {SCREEN_TAB_SERIES.map((e, index) => {
+                        return (
+                            <TabItem
+                                V2
+                                key={e?.key}
+                                className={`text-left !px-0 !text-base ${
+                                    e?.key === state.screenIndex
+                                        ? ' text-txtPrimary-dark font-semibold dark:font-semibold dark:hover:text-txtPrimary-dark '
+                                        : ' !font-normal '
+                                }`}
+                                value={e.key}
+                                onClick={() => {
+                                    const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
+                                    // if (current?.code === WALLET_SCREENS.FARMING || current?.code === WALLET_SCREENS.STAKING) {
+                                    //     r.push(`https://nami.exchange/wallet/account?type=${current?.code}`)
+                                    // } else {
+                                    r.push(`${PATHS.WALLET.DEFAULT}/${current?.code}`);
+                                }}
+                            >
+                                {t(`${e.localized ? e.localized : e.title}`)}
+                            </TabItem>
+                        );
+                    })}
+                </Tabs>
+                <div className="absolute right-0">
+                    <HrefButton variants="blank" className="w-auto !text-base" href={`${PATHS.WALLET.DEFAULT}/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
+                        {t('common:transaction_history')}
+                    </HrefButton>
+                </div>
+            </div>
         );
     }, [state.screenIndex]);
 
@@ -460,7 +480,7 @@ const Wallet = () => {
                 </CustomContainer>
             ) : (
                 <div className="h-[480px] flex items-center justify-center">
-                    <NeedLogin addClass="flex items-center justify-center" />
+                    <NeedLoginV2 addClass="flex items-center justify-center" />
                 </div>
             )}
         </Background>

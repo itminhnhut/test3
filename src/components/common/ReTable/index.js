@@ -146,7 +146,9 @@ const ReTable = memo(
         }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
+
             if (!paginationProps || paginationProps?.hide) return null;
+
 
             return (
                 <div className="flex items-center justify-center py-8">
@@ -405,6 +407,11 @@ const ReTableWrapperV2 = styled.div`
         ::after {
             display: none;
         }
+    }
+
+    .rc-table-ping-right .rc-table-cell-fix-right-first::after,
+    .rc-table-ping-right .rc-table-cell-fix-right-last::after {
+        box-shadow: none !important;
     }
 
     table {

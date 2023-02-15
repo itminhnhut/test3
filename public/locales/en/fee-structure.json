@@ -29,6 +29,7 @@
     "current_fee_level": "Current level",
     "your_fee_level": "Your fee level",
     "upgrade_level_suggest": "How to upgrade level?",
+    "upgrade_level":"Upgrade level",
     "fee_rate": "Fee Rate",
     "maker_taker_description": "\"Taker\" is an order that trades at a market price.",
     "maker_taker_description_2": "\"Maker\" is an order that trades at a limited price.",
