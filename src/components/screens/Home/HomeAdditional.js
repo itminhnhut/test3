@@ -60,9 +60,9 @@ const HomeAdditional = ({ parentState }) => {
                                     <span className="text-teal">40,000+</span>
                                 </Trans>
                             </div>
-                            <div className="homepage-first_award__manual__item">
-                                <Trans i18nKey="home:first_award.rule_3">
-                                    <span className="text-teal">400+</span>
+                            <div className='homepage-first_award__manual__item'>
+                                <Trans i18nKey='home:first_award.rule_3'>
+                                    <span className='text-teal'>400+</span>
                                 </Trans>
                             </div>
                             <div className="homepage-first_award__manual__item">
