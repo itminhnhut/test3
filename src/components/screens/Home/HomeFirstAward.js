@@ -18,14 +18,12 @@ const HomeFirstAward = ({ t, language }) => {
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     return (
-        <section className="homepage-first_award relative min-h-screen">
-            <img src="/images/screen/homepage/half-circle.png" alt="half-circle" className="absolute z-[-1] w-full left-1/2 -translate-x-1/2 top-0 max-h-full" />
-            <img src="/images/screen/homepage/form_splash.png" alt="form_splash" className="absolute z-[-1] w-1/2 left-0 bottom-0 h-[505px] max-h-full" />
+        <section className="homepage-first_award relative">
+            {/* <img src="/images/screen/homepage/half-circle.png" alt="half-circle" className="absolute z-[-1] w-full left-1/2 -translate-x-1/2 top-0 max-h-full" /> */}
+            {/* <img src="/images/screen/homepage/form_splash.png" alt="form_splash" className="absolute z-[-1] w-1/2 left-0 bottom-0 h-[505px] max-h-full" /> */}
 
             <div className="homepage-first_award__wrapper mal-container">
                 <div className="homepage-first_award___step relative">
-                
-
                     <div className="homepage-first_award__title">{t('home:first_award.title')}</div>
                     <div className="homepage-first_award__manual">
                         <div className="homepage-first_award__manual__item">
@@ -76,8 +74,9 @@ const HomeFirstAward = ({ t, language }) => {
                         </div>
                     </div>
                 </div>
-                <div className="homepage-first_award___form">
-
+                <div className="homepage-first_award___form relative">
+                    <img src="/images/screen/homepage/first_award_corner.png" className=" absolute left-[-24px] top-[-24px] z-[-10]" />
+                    <img src="/images/screen/homepage/first_award_corner.png" className="rotate-180 absolute right-[-24px] bottom-[-24px] z-[-10]" />
                     <div className="homepage-first_award___form___input_group">
                         <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                             Email

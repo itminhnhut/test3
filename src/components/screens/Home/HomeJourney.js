@@ -5,7 +5,8 @@ import { getS3Url } from 'redux/actions/utils';
 
 const HomeJourney = ({ t, width }) => {
     return (
-        <section className="homepage-journey z-1000">
+        <section className="homepage-journey z-10">
+            {/* <img src="/images/screen/homepage/journey_background.png" className="absolute w-full z-0 left-0" /> */}
             <div className="homepage-journey__wrapper mal-container">
                 <div className="homepage-journey__title">{t('home:journey.title')}</div>
                 <div className="homepage-journey__description">
@@ -24,7 +25,8 @@ const HomeJourney = ({ t, width }) => {
                         <div className="homepage-journey__group_content___left__item">
                             <div className="homepage-journey__group_content___left__item___icon">
                                 <img
-                                    src={getS3Url('/images/screen/homepage/maxium_performance.png')}
+                                    // src={getS3Url('/images/screen/homepage/maxium_performance.png')}
+                                    src={'/images/screen/homepage/maxium_performance_1.png'}
                                     width={width >= 1366 ? '52' : '44'}
                                     height={width >= 1366 ? '52' : '44'}
                                 />
@@ -42,7 +44,8 @@ const HomeJourney = ({ t, width }) => {
                         <div className="homepage-journey__group_content___left__item">
                             <div className="homepage-journey__group_content___left__item___icon">
                                 <img
-                                    src={getS3Url('/images/screen/homepage/crypto_knowledge.png')}
+                                    // src={getS3Url('/images/screen/homepage/crypto_knowledge.png')}
+                                    src={'/images/screen/homepage/crypto_knowledge_1.png'}
                                     width={width >= 1366 ? '52' : '44'}
                                     height={width >= 1366 ? '52' : '44'}
                                 />
@@ -61,7 +64,8 @@ const HomeJourney = ({ t, width }) => {
                         <div className="homepage-journey__group_content___left__item">
                             <div className="homepage-journey__group_content___left__item___icon">
                                 <img
-                                    src={getS3Url('/images/screen/homepage/token_saving_cost.png')}
+                                    // src={getS3Url('/images/screen/homepage/token_saving_cost.png')}
+                                    src={'/images/screen/homepage/token_saving_cost_1.png'}
                                     width={width >= 1366 ? '52' : '44'}
                                     height={width >= 1366 ? '52' : '44'}
                                 />
@@ -79,7 +83,8 @@ const HomeJourney = ({ t, width }) => {
                         <div className="homepage-journey__group_content___left__item">
                             <div className="homepage-journey__group_content___left__item___icon">
                                 <img
-                                    src={getS3Url('/images/screen/homepage/master_revenue.png')}
+                                    // src={getS3Url('/images/screen/homepage/master_revenue.png')}
+                                    src={'/images/screen/homepage/master_revenue_1.png'}
                                     width={width >= 1366 ? '52' : '44'}
                                     height={width >= 1366 ? '52' : '44'}
                                 />

@@ -444,6 +444,7 @@ const BxsBookIcon = ({ size, color, ...props }) => (
         />
     </svg>
 );
+
 export {
     ArrowDownIcon,
     TrendIcon,

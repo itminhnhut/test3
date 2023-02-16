@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors');
 const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
-    ...colors2,
+    ...colors2
 };
 
 module.exports = {
@@ -386,8 +386,11 @@ module.exports = {
                 dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
                 'gradient-button-dark':
-                    'linear-gradient(301.55deg, rgba(10, 119, 54, 0.2) 0.69%, rgba(5, 138, 90, 0.3) 19.95%, rgba(0, 158, 130, 0.5) 38.33%, rgba(17, 180, 125, 0.654344) 50.56%, rgba(32, 200, 120, 0.8) 67.5%, rgba(59, 225, 131, 0.893133) 79.26%, #59FF91 91.02%)',
-                'gradient-button': 'linear-gradient(299.97deg, #4FFF8B 12.35%, #ECFFCA 88.35%)'
+                    'linear-gradient(95deg, rgba(62, 166, 111, 0.49) -2%, rgba(55, 220, 131, 0.54) 26%, rgba(50, 222, 133, 0.66) 37%, rgba(40, 226, 137, 0.7) 50%, rgba(48, 220, 137, 0.7) 61%, rgba(57, 212, 138, 0.63) 71%, rgba(60, 210, 134, 0.37) 86%, rgba(63, 207, 130, 0.15) 101%)',
+                'gradient-button':
+                    'linear-gradient(280deg, rgba(98, 255, 104, 0.24) 98%, rgba(50, 244, 110, 0.59) 63%, rgba(45, 225, 96, 0.53) 35%, #3be29c 7%)',
+                'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
+                'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

@@ -11,6 +11,8 @@ import { useToggle } from 'react-use';
 import HomeCommunity from './HomeCommunity';
 import HomeJourney from './HomeJourney';
 import HomeLightDark from './HomeLightDark';
+import { THEME_MODE } from 'hooks/useDarkMode';
+
 import HomeFirstAward from './HomeFirstAward';
 
 const HomeAdditional = ({ parentState }) => {
@@ -44,7 +46,77 @@ const HomeAdditional = ({ parentState }) => {
 
     return (
         <>
-            <section className="homepage-whynami">
+            <div className="relative">
+                <div className="absolute z-0 right-0 top-20">
+                    <img src="/images/screen/homepage/right_up.png" className="" />
+                </div>
+                <div className="absolute z-0 bottom-0 left-0">
+                    <img src="/images/screen/homepage/left_down.png" className="-mb-20" />
+                    <img src="/images/screen/homepage/ghost_down.png" className="" />
+                </div>
+                <HomeJourney t={t} width={width} />
+                <section className="homepage-trade3step">
+                    {/* <div className="homepage-trade3step__bubble left-[0] bottom-0 absolute" /> */}
+
+                    <div className="homepage-trade3step___wrapper relative mal-container">
+                        <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
+                        <div className="homepage-trade3step___step___wrapper">
+                            <div className="homepage-trade3step___step___item">
+                                <div className="homepage-trade3step___step___item___inner">
+                                    {/* <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    01
+                                </div> */}
+                                    <img src={`/images/screen/homepage/create_account_${theme !== THEME_MODE.LIGHT ? 'light' : 'dark'}.png`} width="48" />
+                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
+                                </div>
+                                <div className="homepage-trade3step__vertial_dot_line" />
+                                <div className="homepage-trade3step__horizontal_dot_line" />
+                            </div>
+                            <div className="homepage-trade3step___step___item">
+                                <div className="homepage-trade3step___step___item___inner">
+                                    {/* <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    02
+                                </div> */}
+                                    <img src="/images/screen/homepage/fiat_crypto.png" width="48" />
+
+                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
+                                </div>
+                                <div className="homepage-trade3step__vertial_dot_line" />
+                                <div className="homepage-trade3step__horizontal_dot_line" />
+                            </div>
+                            <div className="homepage-trade3step___step___item">
+                                <div className="homepage-trade3step___step___item___inner">
+                                    {/* <div
+                                    className={`homepage-trade3step___step___item__label ${
+                                        stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''
+                                    }`}
+                                >
+                                    03
+                                </div> */}
+                                    <img src={`/images/screen/homepage/start_trading_${theme !== THEME_MODE.LIGHT ? 'light' : 'dark'}.png`} width="48" />
+
+                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* <div className="homepage-trade3step___create_account">
+                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')} />
+                        <div className="homepage-trade3step___create_account___pr">{t('home:trade3step.chill_a_bit')}</div>
+                    </div> */}
+                    </div>
+                </section>
+            </div>
+
+            {/* <section className="homepage-whynami">
                 <div className="homepage-whynami___wrapper mal-container">
                     <div className="homepage-whynami___title">
                         {t('home:why_nami.title')}
@@ -77,71 +149,18 @@ const HomeAdditional = ({ parentState }) => {
                             <div className="homepage-whynami___reason__item___title">{t('home:why_nami.reason_4')}</div>
                             <div className="homepage-whynami___reason__item___description">
                                 {t('home:why_nami.reason_4_description')}
-                                {/*Luôn có nhân viên hỗ trợ trực tiếp<br/>*/}
-                                {/*đa ngôn ngữ 24/7*/}
+                                
                             </div>
                         </div>
                     </div>
 
                     <div className="homepage-whynami___reason__group__btn___group">
-                        {/*<Button title={t('navbar:menu.about')} target="_blank"*/}
-                        {/*        type="primary" href="https://ico.nami.trade/#nami-team"/>*/}
+                        
                     </div>
                 </div>
-            </section>
-            <section className="homepage-trade3step">
-                <div className="homepage-trade3step___wrapper">
-                    <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
+            </section> */}
 
-                    <div className="homepage-trade3step___step___wrapper">
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    01
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
-                            </div>
-                            <div className="homepage-trade3step__vertial_dot_line" />
-                            <div className="homepage-trade3step__horizontal_dot_line" />
-                        </div>
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    02
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
-                            </div>
-                            <div className="homepage-trade3step__vertial_dot_line" />
-                            <div className="homepage-trade3step__horizontal_dot_line" />
-                        </div>
-                        <div className="homepage-trade3step___step___item">
-                            <div className="homepage-trade3step___step___item___inner">
-                                <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    03
-                                </div>
-                                <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="homepage-trade3step___create_account">
-                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')} />
-                        <div className="homepage-trade3step___create_account___pr">{t('home:trade3step.chill_a_bit')}</div>
-                    </div>
-                </div>
-            </section>
+            <HomeCurrentActivity />
 
             <HomeLightDark t={t} onShowQr={() => parentState && parentState({ showQR: true })} />
             {/* <section id="nami_exchange_download_app" className="homepage-app_intro">
@@ -191,9 +210,7 @@ const HomeAdditional = ({ parentState }) => {
                 </div>
             </section> */}
 
-            <HomeCurrentActivity />
             <HomeFirstAward t={t} language={language} />
-            <HomeJourney t={t} width={width} />
             <HomeCommunity t={t} language={language} width={width} />
         </>
     );
