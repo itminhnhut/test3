@@ -13,7 +13,7 @@ export default (themeMode = THEME_MODE.DARK) => {
         ..._theme,
         textColor: {
             [THEME_MODE.DARK]: colors.white,
-            [THEME_MODE.LIGHT]: colors.grey1,
+            [THEME_MODE.LIGHT]: colors.gray[1],
         }[themeMode],
     };
     return {
@@ -30,7 +30,7 @@ export default (themeMode = THEME_MODE.DARK) => {
             vertical: {
                 show: false,
                 size: 1,
-                color: colors.grey4,
+                color: colors.gray[4],
                 // 'solid'|'dash'
                 style: 'dash',
                 dashValue: [2, 2],
@@ -64,7 +64,7 @@ export default (themeMode = THEME_MODE.DARK) => {
                 show: true,
                 high: {
                     show: true,
-                    color: colors.grey1,
+                    color: colors.gray[1],
                     textMargin: 5,
                     textSize: 10,
                     textFamily: theme.fontFamily,
@@ -72,7 +72,7 @@ export default (themeMode = THEME_MODE.DARK) => {
                 },
                 low: {
                     show: true,
-                    color: colors.grey1,
+                    color: colors.gray[1],
                     textMargin: 5,
                     textSize: 10,
                     textFamily: theme.fontFamily,

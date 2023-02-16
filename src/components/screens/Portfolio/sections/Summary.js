@@ -519,7 +519,7 @@ const Summary = (props) => {
                         },
                     },
                     backgroundColor: colors.white,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                     displayColors: false
                 },
             },
@@ -951,7 +951,7 @@ const Summary = (props) => {
                     },
                     backgroundColor: colors.white,
                     displayColors: false,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                 },
             },
             scales: {
@@ -1061,7 +1061,7 @@ const Summary = (props) => {
                         }
                     },
                     backgroundColor: colors.white,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                     displayColors: false,
                 },
             },

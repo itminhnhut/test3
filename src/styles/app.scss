@@ -14,11 +14,6 @@ body {
     /* Disable web page navigation on swipe(back and forward) */
     /* overscroll-behavior-x: none; */
     @apply text-base;
-    @apply text-black;
-
-    @apply lg:text-base;
-    @apply md:text-base;
-
     @apply bg-bgPrimary dark:bg-bgSpotContainer-dark font-SF-Pro;
 
     font-family: 'SF-Pro' !important;

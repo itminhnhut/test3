@@ -556,7 +556,7 @@ const FuturePortfolio = (props) => {
                     },
                     backgroundColor: colors.white,
                     displayColors: false,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                 },
             },
             scales: {
