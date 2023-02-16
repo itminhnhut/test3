@@ -71,10 +71,12 @@ const SpotOrderList = (props) => {
                             height={height}
                             orderListWrapperHeight={props.orderListWrapperHeight}
                             currentPair={query?.id}
+                            isPro={props.isPro}
                         />
                     )}
                     {activeTab === 'order_history' && (
                         <OrderHistory
+                            isPro={props.isPro}
                             filterByCurrentPair={hideOther}
                             height={height}
                             orderListWrapperHeight={props.orderListWrapperHeight}

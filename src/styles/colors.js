@@ -94,7 +94,8 @@ const colors = {
     },
     hover: {
         DEFAULT: '#e9e9e9',
-        dark: '#262b34'
+        dark: '#262b34',
+        1: '#f2f4f5'
     }
 };
 module.exports = colors;

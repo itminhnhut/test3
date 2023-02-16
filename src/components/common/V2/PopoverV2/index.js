@@ -1,5 +1,6 @@
 import React, { Fragment, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import { Popover, Transition } from '@headlessui/react';
+import { isFunction } from 'redux/actions/utils';
 
 const index = forwardRef(({ containerClassName = '', label, className = '', visible = true, children, isHover = false }, ref) => {
     const refPopover = useRef(null);
@@ -40,7 +41,7 @@ const index = forwardRef(({ containerClassName = '', label, className = '', visi
                             className="inline-flex items-center focus:outline-none w-full"
                             aria-expanded="false"
                         >
-                            {label}
+                            {isFunction(label) ? label(open) : label}
                         </Popover.Button>
                         {/* <Popover.Overlay className="fixed inset-0 bg-red opacity-30" /> */}
                         <Transition
@@ -55,7 +56,7 @@ const index = forwardRef(({ containerClassName = '', label, className = '', visi
                         >
                             <Popover.Panel
                                 static
-                                className={`${className} absolute left-1/2 -translate-x-1/2 w-full z-10 mt-3 bg-white dark:bg-darkBlue-3 border border-divider-dark rounded-md`}
+                                className={`${className} absolute left-1/2 -translate-x-1/2 w-full z-10 mt-3 bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark rounded-md`}
                             >
                                 {children}
                             </Popover.Panel>

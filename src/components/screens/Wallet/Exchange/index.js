@@ -463,23 +463,15 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     const noMarket = !markets?.length;
 
     let tradeButton = null;
-    const cssLi = `text-txtPrimary dark:text-txtPrimary-dark text-left text-sm w-full
-    px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
-    dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
+    const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
+    hover:text-txtTabHover dark:hover:text-txtTextBtn-dark 
+    hover:bg-hover-1 dark:hover:bg-hover-dark
     `;
     const cssPopover = () => {
         if (isStickyColOperation) {
-            return `absolute ${
-                idx >= 0 && idx < ASSET_ROW_LIMIT - 4 ? 'top-full mt-2' : 'bottom-full mb-2'
-            } right-full py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
-            border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-            dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+            return `absolute ${idx >= 0 && idx < ASSET_ROW_LIMIT - 3 ? 'top-2/3 mt-2' : 'bottom-2/3 mb-2'} right-full`;
         } else {
-            return `absolute ${
-                ASSET_ROW_LIMIT - idx < 4 ? 'bottom-full' : 'top-full'
-            } right-1/2 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
-        border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-        dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+            return `absolute ${ASSET_ROW_LIMIT - idx < 4 ? 'bottom-2/3 mb-2' : 'top-2/3 mt-2'} right-1/2`;
         }
     };
 
@@ -522,7 +514,14 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <SvgMoreHoriz />
             </button>
             {/* Popover */}
-            <ul ref={isShow ? popover : null} className={cssPopover()}>
+            <ul
+                ref={isShow ? popover : null}
+                className={`py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl 
+                border-[0.5px] border-divider dark:border-divider-dark
+                bg-white dark:bg-listItemSelected-dark
+                text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
+                ${isShow ? 'block' : 'hidden'} ${cssPopover()}`}
+            >
                 <li className={cssLi}>
                     <a
                         href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
@@ -541,9 +540,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     }
                 >
                     {utils?.translator('common:deposit')}
-                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
-                        {utils?.translator('common:deposit')}
-                    </a> */}
                 </li>
                 <li
                     className={cssLi}
@@ -552,9 +548,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     }
                 >
                     {utils?.translator('common:withdraw')}
-                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
-                        {utils?.translator('common:withdraw')}
-                    </a> */}
                 </li>
                 {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                     <li
@@ -574,94 +567,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </li>
                 )}
             </ul>
-        </div>
-    );
-};
-
-const renderOperationLink = (assetName, utils) => {
-    const markets = utils?.marketAvailable;
-    const noMarket = !markets?.length;
-
-    let tradeButton = null;
-    if (Array.isArray(markets) && markets?.length) {
-        if (markets?.length === 1) {
-            const pair = initMarketWatchItem(markets?.[0]);
-            // console.log('namidev-DEBUG: => ', pair)
-            tradeButton = (
-                <Link
-                    href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
-                        pair: `${assetName}-${pair?.quoteAsset}`
-                    })}
-                    prefetch={false}
-                >
-                    <a
-                        className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    >
-                        {utils?.translator('common:trade')}
-                    </a>
-                </Link>
-            );
-        } else {
-            tradeButton = (
-                <div
-                    className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    onClick={(e) => {
-                        utils?.setState({
-                            currentMarketList: utils?.marketAvailable
-                        });
-                        setTimeout(() => utils?.show(e), 200);
-                    }}
-                >
-                    {utils?.translator('common:trade')}
-                </div>
-            );
-        }
-    }
-
-    return (
-        <div className="relative flex pl-12">
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
-                    fromAsset: 'USDT',
-                    toAsset: assetName
-                })}
-            >
-                {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
-                {utils?.translator('common:buy')}
-            </a>
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}
-            >
-                {utils?.translator('common:deposit')}
-            </a>
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}
-            >
-                {utils?.translator('common:withdraw')}
-            </a>
-            {!noMarket && tradeButton}
-            {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
-                <div
-                    className="py-1.5 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    onClick={() =>
-                        utils?.dispatch(
-                            setTransferModal({
-                                isVisible: true,
-                                fromWallet: WalletType.SPOT,
-                                toWallet: WalletType.FUTURES,
-                                asset: assetName
-                            })
-                        )
-                    }
-                >
-                    {utils?.translator('common:transfer')}
-                </div>
-            )}
         </div>
     );
 };

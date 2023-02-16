@@ -327,12 +327,11 @@ const ReTableWrapperV2 = styled.div`
 
     .rc-table th {
         color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.gray[1])};
-        font-weight: 400;
         padding: 24px 16px;
+        max-height: 68px;
     }
 
     .rc-table td {
-        font-weight: 400;
         padding: 0 16px;
         padding: ${({ padding }) => (padding ? padding : '0 16px')};
         height: 52px;

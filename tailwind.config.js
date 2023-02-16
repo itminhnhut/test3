@@ -138,6 +138,7 @@ module.exports = {
             },
 
             hover: {
+                ...commonColors.hover,
                 DEFAULT: commonColors.hover.DEFAULT,
                 dark: commonColors.hover.dark
             },
@@ -172,7 +173,7 @@ module.exports = {
                 crayola: '#1e77eb'
             },
             darkBlue: {
-                DEFAULT: '#223050',
+                DEFAULT: commonColors.darkBlue,
                 1: commonColors.darkBlue1,
                 2: commonColors.darkBlue2,
                 3: commonColors.darkBlue3,
@@ -354,7 +355,7 @@ module.exports = {
                     dark: commonColors.darkBlue
                 },
                 bgInput: {
-                    DEFAULT: commonColors.gray[5],
+                    DEFAULT: commonColors.gray[10],
                     dark: commonColors.darkBlue3
                 },
                 bgHover: {

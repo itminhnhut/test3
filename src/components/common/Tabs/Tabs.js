@@ -137,7 +137,7 @@ const Tab = styled.div.attrs(({ className }) => ({
 `;
 
 export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false, V2 = false }) => ({
-    className: classnames('text-sm font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
+    className: classnames('text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
         'text-gray-1': !isMobile,
         'text-darkBlue-5': isMobile,
         'dark:hover:text-txtTabHover-dark': V2

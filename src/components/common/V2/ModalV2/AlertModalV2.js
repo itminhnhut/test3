@@ -2,7 +2,19 @@ import React from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 
-const AlertModalV2 = ({ isVisible, onClose, type = 'success', title = '', message = '', children, textButton = '', customButton, onConfirm, notes, loading = false }) => {
+const AlertModalV2 = ({
+    isVisible,
+    onClose,
+    type = 'success',
+    title = '',
+    message = '',
+    children,
+    textButton = '',
+    customButton,
+    onConfirm,
+    notes,
+    loading = false
+}) => {
     const getIcon = () => {
         switch (type) {
             case 'success':
@@ -21,9 +33,9 @@ const AlertModalV2 = ({ isVisible, onClose, type = 'success', title = '', messag
             <div className="mt-6 flex flex-col items-center">
                 {getIcon()}
                 <div className="mt-6 mb-4 font-semibold text-xl">{title}</div>
-                {message && <span className="text-txtSecondary-dark text-center text-base">{message}</span>}
+                {message && <span className="text-txtSecondary dark:text-txtSecondary-dark text-center text-base">{message}</span>}
                 {children}
-                {notes && <span className="mt-2 text-gray-1 text-center text-xs">{notes}</span>}
+                {notes && <span className="mt-2 dark:text-gray-1 text-center text-xs">{notes}</span>}
                 {!customButton && textButton && (
                     <Button onClick={onConfirm} className="mt-10">
                         <span>{textButton}</span>
