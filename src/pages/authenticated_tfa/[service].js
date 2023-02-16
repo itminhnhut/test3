@@ -1,7 +1,7 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'react-input-range/lib/css/index.css';
 import OtpModal from 'components/common/OtpModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import axios from 'axios';
 import { API_AUTH_USER_OTP } from 'redux/actions/apis';
@@ -10,6 +10,10 @@ import _ from 'lodash';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import toast from 'utils/toast';
+import { ToastContainer } from 'react-toastify';
+import { setTheme } from 'redux/actions/user';
+import { useStore } from 'react-redux';
 
 const INITIAL_STATE = {
     redirectTo: null,
@@ -24,7 +28,16 @@ const ExternalWithdrawal = (props) => {
     } = useTranslation()
     const {
         service,
+        theme
     } = router.query;
+
+    const light = theme === 'light'
+
+    const store = useStore();
+    useEffect(() => {
+        store.dispatch(setTheme());
+    }, []);
+
     const [state, set] = useState(INITIAL_STATE);
     const setState = state => set(prevState => ({ ...prevState, ...state }));
     const doLoginWithOtp = async (otp) => {
@@ -88,34 +101,41 @@ const ExternalWithdrawal = (props) => {
                 pathnameAndSearch = redirectTo;
             }
             window.location.href = pathnameAndSearch;
-        }else{
-            setState({message: t('common:otp_verify_expired')})
+        } else {
+            // setState({message: t('common:otp_verify_expired')})
+            toast({ type: 'warning', text: t('common:otp_verify_expired') })
         }
     };
 
     const onChange = (value) => {
         setState({ value, message: null });
-        if (value && value.length === 6) {
+        if (value && value.length >= 6) {
             doLoginWithOtp(value);
         }
-
     };
 
     return (
         <>
+            <ToastContainer
+                position="top-center"
+                autoClose={3000}
+                hideProgressBar
+                closeButton={false}
+                theme={light ? 'light' : 'dark'}
+                className='nami-toast'
+            />
+
             <div className={`mal-layouts mal-layouts___light`}>
                 <div className="flex flex-1 justify-center items-center h-full">
-                    <div id={`${PORTAL_MODAL_ID}`}/>
+                    <div id={`${PORTAL_MODAL_ID}`} />
                     <OtpModal
                         label={t('common:otp_verify')}
                         isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
                         renderUpper={() => <div className="font-bold text-lg"> {t('common:tfa_authentication')}</div>}
                         renderLower={() => state.message
-
-
                             ? <div className="text-red text-center text-sm">{state.message}</div>
                             : <div className="text-red text-center text-sm">&nbsp;</div>
-                    }
+                        }
                     />
                 </div>
             </div>

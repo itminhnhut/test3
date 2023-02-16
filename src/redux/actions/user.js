@@ -110,6 +110,7 @@ export function refreshToken() {
         }
     };
 }
+
 export function getMe(resetCache = false) {
     return async (dispatch) => {
         try {

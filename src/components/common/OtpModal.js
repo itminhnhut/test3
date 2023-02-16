@@ -7,10 +7,11 @@ import Button from 'components/common/V2/ButtonV2/Button'
 
 import { BREAK_POINTS } from 'constants/constants'
 import { getLoginUrl } from 'redux/actions/utils'
-import { X } from 'react-feather'
+import { Check, X } from 'react-feather'
 import Copy from 'components/svg/Copy'
 import colors from 'styles/colors'
 import { useTranslation } from 'next-i18next'
+import { useState } from 'react'
 
 const OtpModal = ({
     isVisible,
@@ -25,10 +26,12 @@ const OtpModal = ({
     className,
 }) => {
     const { t } = useTranslation()
-
+    const [copied, setCopied] = useState(false)
     const doPaste = async () => {
         const data = await navigator.clipboard.readText()
-        onChange(data.slice(0, 6))
+        onChange(data.replace(/\D/g,'').slice(0, 6))
+        setCopied(true)
+        setTimeout(() => setCopied(false), 1000)
     }
 
     return (
@@ -46,6 +49,8 @@ const OtpModal = ({
                     </a>
                 </div>
             }
+            canBlur
+            onBackdropCb={() => window?.location?.assign(getLoginUrl('sso', 'login'))}
         >
             <div className={classNames({ 'mb-4 text-gray-4 font-semibold text-[22px] leading-[30px] mt-6': !!renderUpper })}>
                 {typeof renderUpper === 'function'
@@ -71,7 +76,7 @@ const OtpModal = ({
                 <div className='w-full flex justify-end items-center space-x-2 mt-7 cursor-pointer'
                     onClick={async () => await doPaste()}
                 >
-                    <Copy color={colors.teal} />
+                    {copied ? <Check size={16} color={colors.teal} />  :<Copy color={colors.teal} />}
                     <div className='text-teal font-semibold text-base'>
                         {t('common:paste')}
                     </div>
