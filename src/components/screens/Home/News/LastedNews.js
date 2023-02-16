@@ -98,11 +98,7 @@ const LastedNews = ({ data, lang }) => {
                     <a target="_blank" className="!text-teal mr-3">
                         {language === LANGUAGE_TAG.VI ? 'Xem Thêm' : 'More'}
                     </a>
-
                     <ArrowRightIcon size={16} />
-                    {/* <Link href={`/${language}/support/announcement`}>
-                        
-                    </Link> */}
                 </div>
             </div>
         </div>

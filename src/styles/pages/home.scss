@@ -210,7 +210,7 @@
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
-          
+
 
           .bott-line {
             @apply bg-dominant;
@@ -271,11 +271,13 @@
     }
   }
 
- 
+
 }
 
 .homepage-markettrend {
-  margin-top: 130px;
+  @apply bg-white dark:bg-dark-dark;
+  padding-top: 120px;
+  padding-bottom: 120px;
 
   .homepage-markettrend__wrapper {
     @apply flex flex-col;
@@ -304,27 +306,26 @@
 
       .homepage-markettrend__title {
         font-weight: 600;
-        font-size: 20px;
-        line-height: 30px;
+        font-size: 32px;
+        line-height: 38px;
 
         @media (min-width: 1366px) {
-          font-size: 24px;
+          font-size: 32px;
         }
       }
 
       .homepage-markettrend__tab {
-        @apply flex flex-row items-center;
-        margin-top: 24px;
+        @apply flex items-center w-full;
+        margin-top: 2rem;
         overflow-y: auto;
         cursor: pointer;
         user-select: none;
-
         &::-webkit-scrollbar {
           display: none;
         }
 
         .homepage-markettrend__tab___item__wrapper {
-          @apply flex flex-row items-center justify-between;
+          @apply flex items-center justify-between;
 
           margin-right: 12px;
 
@@ -340,8 +341,7 @@
         }
 
         .homepage-markettrend__tab___item {
-          @apply text-txtTabInactive bg-gray-4 text-center
-          dark:text-txtTabInactive-dark  dark:bg-bgTabInactive-dark;
+          @apply text-txtTabInactive bg-gray-4 text-center dark:text-txtTabInactive-dark  dark:bg-bgTabInactive-dark;
 
           padding: 4px 16px;
           font-size: 12px;
@@ -351,8 +351,6 @@
           background-color: #ebedf3;
 
           @media (min-width: 992px) {
-            //margin-right: 0;
-            //margin-bottom: 24px;
             padding: 6px 16px;
             width: 58%;
           }
@@ -380,13 +378,13 @@
         }
 
         @media (min-width: 992px) {
-          @apply flex-col items-start justify-start;
+          @apply flex items-start justify-start;
         }
       }
     }
 
     .homepage-markettrend__market_table {
-
+      margin-top: 2rem;
       .homepage-markettrend__market_table__wrapper {
         margin-top: 20px;
 
@@ -423,7 +421,6 @@
             //@apply text-right;
 
             width: 25%;
-
             @media (min-width: 576px) {
               width: calc(60% / 3);
             }
@@ -439,20 +436,8 @@
             }
           }
 
-          @media (min-width: 992px) {
-            padding-right: 18px;
-            padding-left: 18px;
-          }
-
-          @media (min-width: 1200px) {
-            padding-right: 24px;
-            padding-left: 24px;
-          }
-
-          @media (min-width: 1366px) {
-            padding-right: 35px;
-            padding-left: 35px;
-          }
+            padding-right: 1rem;
+            padding-left: 1rem;
         }
 
         .homepage-markettrend__market_table__header {
@@ -486,7 +471,7 @@
               border-radius: 12px;
 
               &:hover {
-                @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
+                @apply bg-white dark:bg-[#2d333d] dark:shadow-none;
                 box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
               }
             }
@@ -499,19 +484,19 @@
 
           // Coin style
           .homepage-markettrend__market_table__coin {
-            @apply flex flex-row items-center;
+            @apply flex flex-row items-center text-base;
 
             .homepage-markettrend__market_table__coin__icon {
-              width: 26px;
-              height: 26px;
-              min-width: 26px;
-              min-height: 26px;
+              width: 32px;
+              height: 32px;
+              min-width: 32px;
+              min-height: 32px;
 
               @media (min-width: 350px) {
-                width: 30px;
-                height: 30px;
-                min-width: 30px;
-                min-height: 30px;
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                min-height: 32px;
               }
             }
 
@@ -533,8 +518,7 @@
 
           // Price Style
           .homepage-markettrend__market_table__price {
-            @apply text-txtPrimary dark:text-txtPrimary-dark;
-
+            @apply text-txtPrimary dark:text-txtPrimary-dark text-base;
             font-weight: 500;
           }
 
@@ -574,36 +558,11 @@
         }
       }
     }
-
-    @media (min-width: 992px) {
-      @apply flex-row items-start;
-
-      .homepage-markettrend__tab_and_title {
-        @apply w-1/4;
-      }
-
-      .homepage-markettrend__market_table {
-        @apply w-3/4;
-
-      }
-    }
-
-    @media (min-width: 1280px) {
-      .homepage-markettrend__tab_and_title {
-        @apply w-1/5;
-      }
-
-      .homepage-markettrend__market_table {
-        @apply w-4/5;
-
-      }
-    }
   }
 }
 
 .homepage-news {
   @apply bg-[#f1f4f5] dark:bg-darkBlue-3;
-  margin-top: 60px;
   user-select: none;
 
   .homepage-news___wrapper {
@@ -620,10 +579,10 @@
           }
           .active {
             @apply w-10 rounded-full  bg-dominant dark:bg-dominant;
-        
+
           }
         }
-       
+
       }
       .slider-container {
         @apply relative;
@@ -639,7 +598,7 @@
             overflow: hidden !important;
           }
         }
-        
+
 
         @media (min-width: 390px) {
           padding-left: 95px;
@@ -689,7 +648,7 @@
     .homepage-news___lastest___news {
         @apply flex items-center justify-between lg:px-0 px-4;
 
-       
+
         margin-bottom: 44px;
 
       div.homepage-news___lastest___news____left {
@@ -782,14 +741,14 @@
         }
       }
 
-      
 
-      
 
-      
+
+
+
     }
 
-  
+
 
     @media (min-width: 992px) {
       padding-bottom: 80px;
@@ -819,7 +778,7 @@ line-height: 38px;
         @apply text-dominant;
       }
 
-     
+
     }
 
     .homepage-first_award___step {
@@ -1066,7 +1025,7 @@ line-height: 38px;
               font-size: 14px;
               line-height: 24px;
 
-              
+
 
               @media (min-width: 1920px) {
                 font-size: 16px;
@@ -1764,20 +1723,20 @@ line-height: 38px;
         margin-top: 32px;
         border-radius: 12px;
         transition: all .3s ease;
-       
+
         .homepage-community___channel__group___item__icon {
           @apply absolute left-1/2 -top-2 -translate-x-1/2;
           min-width: 44px;
           min-height: 44px;
-          
-          
+
+
         }
 
         .homepage-community___channel__group___item__label {
           @apply dark:text-txtPrimary-dark;
           font-weight: 600;
           line-height: 24px;
-    
+
         }
       }
 
