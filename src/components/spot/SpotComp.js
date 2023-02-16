@@ -416,9 +416,9 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="orderbook"
-                            className={classNames(`border-r border-b border-divider dark:border-divider-dark`, {
+                            className={classNames(`border-r border-t border-b border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowOrderBook || fullScreen,
-                                'border-l': isPro
+                                'border-l !border-t-0': isPro
                             })}
                         >
                             <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />
