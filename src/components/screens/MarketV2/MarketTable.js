@@ -422,7 +422,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         placeholder={t('common:search')}
                         prefix={(<Search color={colors.darkBlue5} size={16} />)}
                         className='pb-0 w-[100px] sm:w-[368px]'
-                        suffix={(<X color={colors.gray10} size={16} />)}
+                        suffix={(<X color={colors.gray[10]} size={16} />)}
                     />
                 </div>
             </div>

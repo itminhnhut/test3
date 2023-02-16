@@ -257,7 +257,13 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const customPercentLabel = useCallback((pos) => {
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         return (
-            <ThumbLabel isZero={pos.left === 0} isDark={isDark} className={`left-1/2 translate-x-[-50%] w-max !text-white`}>
+            <ThumbLabel
+                min={pos.left === 0}
+                max={pos.left === 100}
+                isZero={pos.left === 0}
+                isDark={isDark}
+                className={`left-1/2 translate-x-[-50%] w-max !text-white`}
+            >
                 {ceil(postion, 0)}%
             </ThumbLabel>
         );
@@ -350,8 +356,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const _onConfirm = () => {
         const newData = {
             ...data,
-            sl: show?.sl ? data.sl : '',
-            tp: show?.tp ? data.tp : ''
+            sl: show?.sl ? data.sl || '' : '',
+            tp: show?.tp ? data.tp || '' : ''
         };
         if (onConfirm) onConfirm(newData);
     };
@@ -359,7 +365,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const isError = !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
 
     return (
-        <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+        <ModalV2 className="!max-w-[488px] text-base" isVisible={isVisible} onBackdropCb={onClose}>
             <div>
                 <div className="text-2xl leading-[30px] font-semibold mb-3">{t('futures:mobile:modify_tpsl_title')}</div>
                 <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
@@ -376,7 +382,14 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         <span className="font-semibold">{formatNumber(_lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
-                <CheckBox isV3 onChange={onChangeAutoType} active={autoType} className="h-full" label={t('futures:mobile:auto_type_sltp')} />
+                <CheckBox
+                    isV3
+                    onChange={onChangeAutoType}
+                    active={autoType}
+                    className="h-full"
+                    labelClassName="!text-base"
+                    label={t('futures:mobile:auto_type_sltp')}
+                />
                 <div className="mt-8 space-y-6">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between space-x-2">
@@ -406,6 +419,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('stop_loss')}
+                                        clearAble
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('sl')}
@@ -415,7 +429,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         {/* <SwapIcon color={colors.teal} /> */}
                                     </div>
                                 </div>
-                                <div className={`mt-2 ${!show.sl ? 'hidden' : ''}`}>
+                                <div className={`mt-2`}>
                                     <Slider
                                         useLabel
                                         labelSuffix="%"
@@ -460,6 +474,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('take_profit')}
+                                        clearAble
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('tp')}

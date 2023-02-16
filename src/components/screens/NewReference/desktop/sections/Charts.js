@@ -202,11 +202,11 @@ const RenderContent = ({
                             return [level, friends, commission];
                         },
                         labelTextColor: function (context) {
-                            return baseColors.grey4;
+                            return basecolors.gray[4];
                         }
                     },
                     backgroundColor: baseColors.dark.dark,
-                    titleColor: baseColors.grey4,
+                    titleColor: basecolors.gray[4],
                     displayColors: false
                 }
             },

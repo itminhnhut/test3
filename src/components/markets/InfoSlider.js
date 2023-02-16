@@ -83,7 +83,7 @@ const InfoSlider = ({
         <div
             ref={containerRef}
             className={classNames(
-                'flex items-center overflow-hidden',
+                'flex items-center overflow-hidden h-full',
                 className
             )}
         >

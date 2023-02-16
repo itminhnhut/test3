@@ -202,105 +202,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
         }
     }, [allAssets, usdRate, marketWatch, state.hideSmallAsset, state.search, curRowSelected]);
 
-    const dataHandler = (data, utils) => {
-        if (!data || !data?.length) {
-            const skeleton = [];
-            for (let i = 0; i < ASSET_ROW_LIMIT; ++i) {
-                skeleton.push({
-                    ...ROW_LOADING_SKELETON,
-                    key: `asset_loading__skeleton_${i}`
-                });
-            }
-            return skeleton;
-        }
-
-        const result = [];
-
-        data.forEach((item, idx) => {
-            let lockedValue = formatWallet(item?.wallet?.locked_value, item?.assetDigit);
-            if (lockedValue === 'NaN') {
-                lockedValue = '0.0000';
-            }
-
-            const marketAvailable = getMarketAvailable(item?.assetCode, utils?.marketWatch);
-
-            const assetUsdRate = utils?.usdRate?.[item?.id] || 0;
-            const btcUsdRate = utils?.usdRate?.['9'] || 0;
-
-            const totalUsd = item?.wallet?.value * assetUsdRate;
-            const totalBtc = totalUsd / btcUsdRate;
-
-            result.push({
-                key: `exchange_asset___${item?.assetCode}`,
-                asset: (
-                    <div className="flex items-center gap-4">
-                        <AssetLogo assetCode={item?.assetCode} size={32} />
-                        <div className="flex flex-col space-y-1">
-                            <span className="font-semibold">{item?.assetCode}</span>
-                            <span className="text-xs text-txtSecondary-dark">{item?.assetName}</span>
-                        </div>
-                    </div>
-                ),
-                total: item?.wallet?.value ? formatWallet(item?.wallet?.value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000',
-                available: (
-                    <span className="whitespace-nowrap">
-                        {item?.wallet?.value - item?.wallet?.locked_value
-                            ? formatWallet(item?.wallet?.value - item?.wallet?.locked_value, item?.assetCode === 'USDT' ? 2 : item?.assetDigit)
-                            : '0.0000'}
-                    </span>
-                ),
-                in_order: (
-                    <span className="whitespace-nowrap">
-                        {item?.wallet?.locked_value ? (
-                            <Link href={PATHS.EXCHANGE.TRADE.DEFAULT}>
-                                <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
-                            </Link>
-                        ) : (
-                            '0.0000'
-                        )}
-                    </span>
-                ),
-                btc_value: (
-                    <div>
-                        {assetUsdRate ? (
-                            <>
-                                <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, 4) : '0.0000'}</div>
-                                <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                    ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
-                                </div>
-                            </>
-                        ) : (
-                            '--'
-                        )}
-                    </div>
-                ),
-                operation: (
-                    <RenderOperationLink2
-                        isShow={curRowSelected?.id === item?.id}
-                        idx={idx}
-                        onClick={(e) => {
-                            flag.current = true;
-                            setCurRowSelected((prev) => {
-                                return prev && prev?.id === e?.id ? null : e;
-                            });
-                        }}
-                        isStickyColOperation={isStickyColOperation}
-                        item={item}
-                        popover={popover}
-                        assetName={item?.assetName}
-                        utils={{
-                            ...utils,
-                            marketAvailable
-                        }}
-                        onMouseOut={() => (flag.current = false)}
-                    />
-                )
-            });
-        });
-
-        return result;
-    };
-
     // Render Handler
     const renderAssetTable = useCallback(() => {
         const columns = [
@@ -432,6 +333,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 marketAvailable
                             }}
                             onMouseOut={() => (flag.current = false)}
+                            handleKycRequest={handleKycRequest}
                         />
                     );
                 }
@@ -580,7 +482,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
 const ASSET_ROW_LIMIT = 10;
 
-const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, data }) => {
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, handleKycRequest }) => {
     const markets = utils?.marketAvailable;
     const noMarket = !markets?.length;
 
@@ -656,15 +558,27 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </a>
                 </li>
                 {!noMarket && tradeButton}
-                <li className={cssLi}>
-                    <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                    }
+                >
+                    {utils?.translator('common:deposit')}
+                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
                         {utils?.translator('common:deposit')}
-                    </a>
+                    </a> */}
                 </li>
-                <li className={cssLi}>
-                    <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
+                <li
+                    className={cssLi}
+                    onClick={() =>
+                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                    }
+                >
+                    {utils?.translator('common:withdraw')}
+                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
                         {utils?.translator('common:withdraw')}
-                    </a>
+                    </a> */}
                 </li>
                 {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                     <li

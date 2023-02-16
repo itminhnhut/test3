@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useRef } from 'react';
-import { formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils';
-import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
+import { render24hChange } from 'redux/actions/utils';
+import { initMarketWatchItem } from 'src/utils';
 import { shuffle } from 'lodash';
 
 const TrendingSlide = ({ trending }) => {
     const increaseRef = useRef(null);
     const moveLeftRef = useRef(true);
+    const isHoveringRef = useRef(false);
 
     useEffect(() => {
         const scrollInterval = setInterval(() => {
@@ -15,7 +16,9 @@ const TrendingSlide = ({ trending }) => {
                 } else if (increaseRef.current.scrollLeft === 0) {
                     moveLeftRef.current = true;
                 }
-                increaseRef.current.scrollTo(moveLeftRef.current ? increaseRef.current.scrollLeft + 1 : increaseRef.current.scrollLeft - 1, 0);
+                if (!isHoveringRef.current) {
+                    increaseRef.current.scrollTo(moveLeftRef.current ? increaseRef.current.scrollLeft + 1 : increaseRef.current.scrollLeft - 1, 0);
+                }
             }
         }, 50);
 
@@ -31,17 +34,26 @@ const TrendingSlide = ({ trending }) => {
     );
 
     return (
-        <div ref={increaseRef} className="flex md:mb-20 z-[1000] overflow-x-hidden ">
+        <div
+            onMouseEnter={() => {
+                isHoveringRef.current = true;
+            }}
+            onMouseLeave={() => {
+                isHoveringRef.current = false;
+            }}
+            ref={increaseRef}
+            className="flex justify-center z-[1000] overflow-x-hidden "
+        >
             {listTrending?.map((pair) => {
                 const _ = initMarketWatchItem(pair);
                 return (
-                    <div className="text-txtPrimary-dark text-xs font-semibold flex px-4 py-3">
+                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="text-txtPrimary-dark text-xs font-semibold flex px-4 py-3">
                         <div>
                             <span>{_?.baseAsset}</span>
                             <span>/{_?.quoteAsset}</span>
                         </div>
                         {render24hChange(pair)}
-                    </div>
+                    </a>
                 );
             })}
         </div>

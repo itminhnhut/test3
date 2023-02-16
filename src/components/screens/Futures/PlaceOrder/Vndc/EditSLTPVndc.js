@@ -561,7 +561,7 @@ const TabItem = styled.div`
             ? isMobile
                 ? colors.onus.white
                 : colors.darkBlue5
-            : colors.grey1};
+            : colors.gray[1]};
     font-weight: ${({ active }) => (active ? 600 : 500)};
     position: relative;
     height: 45px;

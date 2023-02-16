@@ -13,6 +13,7 @@ import Link from 'next/link';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
 import TrendingSlide from './TrendingSlide';
+import { ArrowRightIcon } from 'components/svg/SvgIcon';
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
@@ -41,25 +42,26 @@ const HomeIntroduce = ({ parentState }) => {
             setState({ loadingTrend: false });
         }
     };
-    // const animRef = useRef();
+    const animRef = useRef();
 
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
-                <TrendingSlide trending={state.trending}/>
+                <TrendingSlide trending={state.trending} />
                 <div className="homepage-introduce___wrapper mal-container">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
-                            {width < 576 ? (
+                            {/* {width < 576 ? (
                                 <>{t('home:introduce.title_mobile')}</>
                             ) : (
                                 <>
-                                    {t('home:introduce.title_desktop1')}
-                                    <br />
-                                    {t('home:introduce.title_desktop2')}
+                                   
                                 </>
-                            )}
+                            )} */}
+                            {t('home:introduce.title_desktop1')}
+                            <br />
+                            {t('home:introduce.title_desktop2')}
                         </div>
                         {/* <div className="homepage-introduce___description">
                             <Trans>{t('home:introduce.description')}</Trans>
@@ -133,19 +135,44 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <GradientButton className="w-auto !bg-gradient-button-dark  text-txtPrimary-dark">Tải ứng dụng</GradientButton>
+                            <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
+                                Tải ứng dụng
+                            </GradientButton>
                         </div>
                     </div>
-
-                    <img
-                        className="absolute right-0 -z-1 bottom-0 hidden md:w-[700px] md:block lg:w-auto h-[534px]"
-                        src={'/images/screen/homepage/banner_graphics_1.png'}
-                        alt="Nami Exchange"
-                    />
+                    {width > 1440 ? (
+                        <div className={`homepage-introduce___wrapper__right`}>
+                            <div ref={animRef} className="homepage-introduce___graphics">
+                                <div className="homepage-introduce___graphics__anim__wrapper">
+                                    <img className="h-[534px]" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+                                    {/* <img src={getS3Url('/images/screen/homepage/banner_graphics.png')} alt="Nami Exchange" /> */}
+                                </div>
+                            </div>
+                            {/*{width >= 1024 &&*/}
+                            {/*<div className="homepage-introduce___graphics__backward">*/}
+                            {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
+                            {/*</div>}*/}
+                        </div>
+                    ) : width > 1024 ? (
+                        <img className="h-[534px] absolute right-0 bottom-0" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+                    ) : (
+                        <div className={`homepage-introduce___wrapper__right`}>
+                            <div ref={animRef} className="homepage-introduce___graphics">
+                                <div className="homepage-introduce___graphics__anim__wrapper">
+                                    <img className="h-[534px]" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+                                    {/* <img src={getS3Url('/images/screen/homepage/banner_graphics.png')} alt="Nami Exchange" /> */}
+                                </div>
+                            </div>
+                            {/*{width >= 1024 &&*/}
+                            {/*<div className="homepage-introduce___graphics__backward">*/}
+                            {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
+                            {/*</div>}*/}
+                        </div>
+                    )}
                 </div>
             </section>
         );
-    }, [width, state.loading, state.pairsLength, state.makedData,state.trending]);
+    }, [width, state.loading, state.pairsLength, state.makedData, state.trending]);
 
     useAsync(async () => {
         setState({ loading: true });

@@ -5,12 +5,8 @@ import Link from 'next/link';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { getS3Url } from 'redux/actions/utils';
 
-const HomeCommunity = () => {
-    const { width } = useWindowSize();
-    const {
-        t,
-        i18n: { language }
-    } = useTranslation(['home']);
+const HomeCommunity = ({width,t,language}) => {
+    
     return (
         <section className="homepage-community">
             <div className="homepage-community___wrapper mal-container">

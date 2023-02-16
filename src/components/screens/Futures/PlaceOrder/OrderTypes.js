@@ -1,17 +1,10 @@
 import { memo, useState } from 'react';
 import { FuturesOrderTypes as OrderTypes } from 'redux/reducers/futures';
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
-import { ChevronDown } from 'react-feather';
-
-import classNames from 'classnames';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
-const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
+const FuturesOrderTypes = memo(({ currentType, orderTypes, setCurrentType }) => {
     const { t } = useTranslation();
-    const currentAdvType = useSelector((state) => state.futures.preloadedState?.orderAdvanceType);
-    const dispatch = useDispatch();
 
     // ? Helper
     const getTypesLabel = (type) => {
@@ -30,100 +23,19 @@ const FuturesOrderTypes = memo(({ currentType, orderTypes, isVndcFutures }) => {
                 return '--';
         }
     };
-    const setOrderTypes = (payload, isAdvance = false) => {
-        if (payload !== currentType) {
-            dispatch({
-                type: SET_FUTURES_PRELOADED_FORM,
-                payload: { orderType: payload }
-            });
-            isAdvance &&
-                dispatch({
-                    type: SET_FUTURES_PRELOADED_FORM,
-                    payload: { orderAdvanceType: payload }
-                });
-        }
-    };
 
-    // ? Render handler
-    const renderCommonTypes = () => {
-        const orderFilter = orderTypes;
-        return (
-            <Tabs isDark tab={currentType} className="gap-8 border-b border-divider-dark">
-                {orderFilter?.map((tab) => (
-                    <TabItem V2 className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setOrderTypes(tab)}>
-                        {getTypesLabel(tab)}
-                    </TabItem>
-                ))}
-            </Tabs>
-        );
-    };
-
-    const renderCurrentAdvanceTypes = () => {
-        return (
-            <>
-                <div
-                    className={classNames(
-                        'pb-2 w-1/3 max-w-1/3 max-w-[78px] text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs text-center cursor-pointer border-b-[2px] border-transparent truncate',
-                        {
-                            '!text-txtPrimary dark:!text-txtPrimary-dark border-dominant': currentAdvType === currentType
-                        }
-                    )}
-                    onClick={() => setOrderTypes(currentAdvType)}
-                >
-                    {getTypesLabel(currentAdvType)}
-                </div>
-            </>
-        );
-    };
-
-    const renderAdvanceTypesDropdown = () => {
-        const advanceTypes =
-            orderTypes?.filter(
-                (o) =>
-                    o !== OrderTypes.TakeProfit &&
-                    o !== OrderTypes.TakeProfitMarket &&
-                    o !== OrderTypes.Limit &&
-                    o !== OrderTypes.Market &&
-                    o !== OrderTypes.TrailingStopMarket
-            ) || false;
-        if (!advanceTypes) return null;
-
-        const advTypesElement = advanceTypes?.map((o) => (
-            <div
-                key={`futures_margin_mode_${o}`}
-                className={classNames('px-3 py-2 mb-2 last:mb-0 hover:bg-teal-lightTeal dark:hover:bg-teal-opacity', {
-                    'text-dominant': currentType === o
-                })}
-                onClick={() => setOrderTypes(o, true)}
-            >
-                {getTypesLabel(o)}
-            </div>
-        ));
-        return (
-            <div className="pt-2 absolute z-30 bottom-0 right-0 translate-y-full hidden group-hover:block">
-                <div className="py-1 rounded-md min-w-[114px] bg-bgPrimary dark:bg-bgPrimary-dark drop-shadow-onlyLight dark:border dark:border-darkBlue-4 text-xs font-medium whitespace-nowrap">
-                    {advTypesElement}
-                </div>
-            </div>
-        );
-    };
-
+    const orderFilter = orderTypes;
     return (
         <div className="relative flex items-center select-none ">
-            <div className="relative z-20 overflow-hidden">
-                {renderCommonTypes()}
-                {!isVndcFutures && renderCurrentAdvanceTypes()}
+            <div className="relative z-20 overflow-hidden w-full">
+                <Tabs tab={currentType} className="gap-8 border-b border-divider dark:border-divider-dark">
+                    {orderFilter?.map((tab) => (
+                        <TabItem V2 className="!text-left !px-0" value={tab} onClick={(isClick) => isClick && setCurrentType(tab)}>
+                            {getTypesLabel(tab)}
+                        </TabItem>
+                    ))}
+                </Tabs>
             </div>
-            {!isVndcFutures && (
-                <div className="relative group pb-2 cursor-pointer">
-                    <ChevronDown
-                        size={16}
-                        strokeWidth={1.8}
-                        className="text-txtSecondary dark:text-txtSecondary-dark hover:text-txtPrimary dark:hover:text-txtPrimary-dark group-hover:rotate-180"
-                    />
-                    {renderAdvanceTypesDropdown()}
-                </div>
-            )}
         </div>
     );
 });

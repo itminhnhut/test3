@@ -412,6 +412,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const dataFilter = useMemo(() => {
         const items = dataSource.filter((o) => {
+            if(o.status===0)return
             const conditions = [];
             if (hideOther) {
                 conditions.push(o.symbol === pairConfig?.symbol);
@@ -479,7 +480,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showEditVol}
                 order={rowData.current}
                 onClose={() => setShowEditVol(false)}
-                status={rowData.current?.status}
                 onConfirm={() => console.log(232323)}
                 pairConfig={pairConfig}
                 decimals={decimals}

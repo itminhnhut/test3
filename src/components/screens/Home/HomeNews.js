@@ -55,7 +55,7 @@ const HomeNews = () => {
     }, [language]);
 
     return (
-        <section className="homepage-news">
+        <section className="homepage-news relative z-10">
             <div className="homepage-news___wrapper mal-container">
                 {state.news && <LastedNews data={state.news} lang={language} />}
 

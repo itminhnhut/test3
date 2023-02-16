@@ -14,11 +14,6 @@ body {
     /* Disable web page navigation on swipe(back and forward) */
     /* overscroll-behavior-x: none; */
     @apply text-base;
-    @apply text-black;
-
-    @apply lg:text-base;
-    @apply md:text-base;
-
     @apply bg-bgPrimary dark:bg-bgSpotContainer-dark font-SF-Pro;
 
     font-family: 'SF-Pro' !important;
@@ -990,7 +985,7 @@ input:-webkit-autofill {
 
 
 .tooltip-arrow-bottom {
-    @apply dark:bg-darkBlue-6 bg-black-300 text-[#1f2633] dark:text-txtPrimary-dark relative;
+    @apply dark:bg-darkBlue-6 bg-gray-11 text-txtPrimary dark:text-txtPrimary-dark relative;
 }
 .tooltip-arrow-bottom:after {
   

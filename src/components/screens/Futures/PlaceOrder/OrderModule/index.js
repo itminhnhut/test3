@@ -1,18 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { useTranslation } from 'next-i18next';
-import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp } from 'redux/actions/utils';
+import { formatNumber, getFilter, getLiquidatePrice, getSuggestSl, getSuggestTp, setTransferModal } from 'redux/actions/utils';
 import FuturesOrderSlider from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSlider';
 import FuturesOrderSLTP from 'components/screens/Futures/PlaceOrder/OrderModule/OrderSLTP';
 import FuturesOrderButtonsGroupVndc from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { VndcFutureOrderType, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import TradingInput from 'components/trade/TradingInput';
-import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
+import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum, WalletType } from 'redux/actions/const';
 import { AddCircleColorIcon } from 'components/svg/SvgIcon';
 import usePrevious from 'hooks/usePrevious';
+import floor from 'lodash/floor';
+import { useDispatch } from 'react-redux';
+import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 
 const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
     const { t } = useTranslation();
+    const dispatch = useDispatch();
     const ask = pairPrice?.ask ?? 0;
     const bid = pairPrice?.bid ?? 0;
     const lastPrice = pairPrice?.lastPrice ?? 0;
@@ -24,7 +28,6 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         sl: '',
         tp: ''
     });
-    const sideChanged = useRef(false);
 
     useEffect(() => {
         mount.current = false;
@@ -71,6 +74,15 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         }
     };
 
+    const maxQuoteQty = useMemo(() => {
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
+        return floor(_maxQuoteQty, decimals?.symbol);
+    }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
+
+    const minQuoteQty = useMemo(() => {
+        return pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
+    }, [pairConfig]);
+
     const inputValidator = (key) => {
         let isValid = true,
             msg = null;
@@ -80,15 +92,17 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         switch (key) {
             // input check
             case 'quoteQty':
-                const _min = pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
-                const _decimals = 0;
-                const _max = availableAsset / (1 / leverage + DefaultFuturesFee.Nami);
-                const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
-                const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
-                if (quoteQty < +_min) {
+                const _min = minQuoteQty;
+                const _max = maxQuoteQty;
+                const _displayingMax = `${formatNumber(_max, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
+                const _displayingMin = `${formatNumber(_min, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
+                if (_max < _min) {
+                    msg = t('futures:mobile:balance_insufficient');
+                    isValid = false;
+                } else if (quoteQty < +_min) {
                     msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
-                } else if (quoteQty > +Number(_max).toFixed(_decimals)) {
+                } else if (quoteQty > +Number(_max).toFixed(decimals.symbol)) {
                     msg = `${t('futures:maximum_qty')} ${_displayingMax}`;
                     isValid = false;
                 }
@@ -142,19 +156,19 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     // Modify bound base on type
                     if (sl < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
                     } else if (sl > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
                     }
                 } else if (key === 'take_profit') {
                     bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
                     if (tp < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
                     } else if (tp > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
                     }
                 } else if (key === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
                     const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price;
@@ -163,36 +177,36 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         if (type === 'LIMIT') {
                             if (price < lowerBound.min) {
                                 isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
                             } else if (price > lowerBound.max) {
                                 isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.price, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
                             if (stopPrice < upperBound.min) {
                                 isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
                             } else if (stopPrice > upperBound.max) {
                                 isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.price, 0, true)}`;
                             }
                         }
                     } else if (side === FuturesOrderEnum.Side.SELL) {
                         if (type === 'LIMIT') {
                             if (price < upperBound.min) {
                                 isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
                             } else if (price > upperBound.max) {
                                 isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.price, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
                             if (stopPrice < lowerBound.min) {
                                 isValid = false;
-                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
                             } else if (stopPrice > lowerBound.max) {
                                 isValid = false;
-                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.decimalScalePrice, 0, true)}`;
+                                msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.price, 0, true)}`;
                             }
                         }
                     }
@@ -217,10 +231,10 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     };
                     if (side === VndcFutureOrderType.Side.SELL && sl > liquidatePriceBound.upper) {
                         isValid = false;
-                        msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:liquidate_alert_less')} ${formatNumber(liquidatePriceBound.upper, decimals.price, 0, true)}`;
                     } else if (side === VndcFutureOrderType.Side.BUY && sl < liquidatePriceBound.lower) {
                         isValid = false;
-                        msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.decimalScalePrice, 0, true)}`;
+                        msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.price, 0, true)}`;
                     }
                 }
 
@@ -250,9 +264,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
     };
 
     const isError = useMemo(() => {
-        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
         const not_valid =
-            !inputValidator('price', ArrStop.includes(type)).isValid ||
+            !inputValidator('price').isValid ||
             !inputValidator('stop_loss').isValid ||
             !inputValidator('take_profit').isValid ||
             !inputValidator('quoteQty').isValid ||
@@ -274,15 +287,18 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 <div className="flex items-center justify-between">
                     <div className="text-darkBlue-5 flex items-center space-x-1">
                         <span>{t('futures:mobile:available')}</span>
-                        <AddCircleColorIcon className="cursor-pointer" />
+                        <AddCircleColorIcon
+                            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
+                            className="cursor-pointer"
+                        />
                     </div>
-                    <span>
+                    <span className="font-medium">
                         {formatNumber(availableAsset, decimals.symbol)} {pairConfig?.quoteAsset}
                     </span>
                 </div>
                 <div className="flex items-center justify-between">
                     <span className="text-darkBlue-5">{t('futures:margin')}</span>
-                    <span>
+                    <span className="font-medium">
                         {formatNumber(margin, decimals.symbol)} {pairConfig?.quoteAsset}
                     </span>
                 </div>
@@ -304,7 +320,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 decimalScale={decimals.price}
                 validator={inputValidator('price')}
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
-                renderTail={() => <div>{pairConfig?.quoteAsset}</div>}
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
             />
             <TradingInput
                 label={t('futures:order_table:volume')}
@@ -316,7 +333,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
-                renderTail={() => <div>{pairConfig?.quoteAsset}</div>}
+                renderTail={() => pairConfig?.quoteAsset}
+                clearAble
             />
 
             {/* Slider */}
@@ -336,6 +354,9 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     price={price}
                     pairPrice={pairPrice}
                     inputValidator={inputValidator}
+                    minQuoteQty={minQuoteQty}
+                    maxQuoteQty={maxQuoteQty}
+                    pair={pair}
                 />
             </div>
 
@@ -359,7 +380,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             />
 
             {renderAvail()}
-
+            {maxQuoteQty < minQuoteQty && mount.current && (
+                <div className="text-red text-xs flex items-center space-x-1">
+                    <ErrorTriggersIcon />
+                    <span>{t('futures:mobile:balance_insufficient')}</span>
+                </div>
+            )}
             <FuturesOrderButtonsGroupVndc
                 pairConfig={pairConfig}
                 type={type}

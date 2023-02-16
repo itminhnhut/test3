@@ -1060,3 +1060,7 @@ export const getType = (type) => {
             return VndcFutureOrderType.Limit;
     }
 };
+
+export function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+}

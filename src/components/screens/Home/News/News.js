@@ -17,7 +17,7 @@ const News = ({ data, lang }) => {
     const [refNews, slider] = useKeenSlider({
         initial: 0,
         slidesPerView: 1,
-        spacing: 12,
+        spacing: 32,
         loop: true,
         dot: true,
         slideChanged: slide => setState({ currentSlide: slide.details().relativeSlide }),
@@ -90,7 +90,7 @@ const News = ({ data, lang }) => {
     }, [refNews])
 
     useEffect(() => {
-        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 2300)
+        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000)
         return () => clearInterval(timer.current)
     }, [state.autoplay, slider])
 
