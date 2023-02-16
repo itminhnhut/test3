@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors');
 const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
-    ...colors2,
+    ...colors2
 };
 
 module.exports = {
@@ -311,7 +311,7 @@ module.exports = {
                     dark: '#3e4351'
                 },
                 txtTabHover: {
-                    DEFAULT: '#acbde5',
+                    DEFAULT: '#1e1e1e',
                     dark: '#acbde5'
                 }
             },
@@ -384,7 +384,8 @@ module.exports = {
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
                 dark: commonColors.darkBlue3,
-                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')"
+                'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
+                'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')"
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
@@ -400,7 +401,8 @@ module.exports = {
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
                 rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
                 ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
-                popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)'
+                popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)',
+                overview_light: '0 6px 20px 0 rgba(31, 47, 70, 0.1)'
             },
             cursor: {
                 grabbing: 'grabbing'

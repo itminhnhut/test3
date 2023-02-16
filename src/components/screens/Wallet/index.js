@@ -187,7 +187,7 @@ const Wallet = () => {
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <div className="relative flex">
+            <div className="relative flex tracking-normal">
                 <Tabs tab={state.screenIndex} className="gap-6 border-b border-divider-dark">
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
@@ -195,9 +195,13 @@ const Wallet = () => {
                                 V2
                                 key={e?.key}
                                 className={`text-left !px-0 !text-base ${
-                                    e?.key === state.screenIndex
-                                        ? ' text-txtPrimary-dark font-semibold dark:font-semibold dark:hover:text-txtPrimary-dark '
-                                        : ' !font-normal '
+                                    currentTheme === THEME_MODE.DARK
+                                        ? e?.key === state.screenIndex
+                                            ? ' text-txtPrimary-dark dark:hover:text-txtPrimary-dark '
+                                            : ' '
+                                        : e?.key === state.screenIndex
+                                        ? ' hover:text-txtPrimary text-txtSecondary'
+                                        : '  '
                                 }`}
                                 value={e.key}
                                 onClick={() => {
