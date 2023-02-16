@@ -74,14 +74,17 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
         const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, config || []);
         const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, config || []);
+        const quantityMarketFilter = getFilter(ExchangeOrderEnum.Filter.MARKET_LOT_SIZE, config || []);
         const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, config || []);
         const maxNumberVolumeFilter = getFilter(ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME, config || []);
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, config || []);
 
+        // console.log('quantityMarketFilter: ', quantityMarketFilter);
         return {
             config,
             priceFilter,
+            quantityMarketFilter,
             quantityFilter,
             minNotionalFilter,
             maxNumOrderFilter,
@@ -366,15 +369,18 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const RenderInfoModal = () => {
         const renderContent = (title) => {
             if (!currentExchangeConfig?.config) return '-';
-            const exchange = allPairConfigs.find((e) => e.symbol === currentExchangeConfig?.config?.symbol);
+            // const exchange = allPairConfigs.find((e) => e.symbol === currentExchangeConfig?.config?.symbol);
             const quoteAsset = currentExchangeConfig?.config?.quoteAsset || '';
             const currentAssetConfig = assetConfig?.find((item) => item.assetCode === quoteAsset);
             switch (title) {
                 case 'min_order_size': {
                     return formatPrice(currentExchangeConfig?.minNotionalFilter?.notional) + ' ' + quoteAsset;
                 }
-                case 'max_order_size': {
+                case 'max_order_size_limit': {
                     return formatPrice(currentExchangeConfig?.quantityFilter?.maxQuoteQty || 0) + ' ' + quoteAsset;
+                }
+                case 'max_order_size_market': {
+                    return formatPrice(currentExchangeConfig?.quantityMarketFilter?.maxQuoteQty || 0) + ' ' + quoteAsset;
                 }
                 case 'total_max_trading_volumn':
                     return formatPrice(currentExchangeConfig?.maxNumberVolumeFilter?.notional || 0) + ' ' + quoteAsset;
@@ -473,19 +479,17 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                         'rotate-180': isShowModalPriceList
                                     })}
                                 />
+                                <div className="absolute left-0 z-50 hidden group-hover:block top-full mt-2" ref={pairListModalRef}>
+                                    <FuturesPairList
+                                        mode={pairListMode}
+                                        setMode={setPairListMode}
+                                        isAuth={isAuth}
+                                        activePairList={isShowModalPriceList}
+                                        onSelectPair={onSelectPair}
+                                    />
+                                </div>
                             </div>
-                            <div className="relative z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">
-                                {t('futures:tp_sl:perpetual')}
-                            </div>
-                            <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
-                                <FuturesPairList
-                                    mode={pairListMode}
-                                    setMode={setPairListMode}
-                                    isAuth={isAuth}
-                                    activePairList={isShowModalPriceList}
-                                    onSelectPair={onSelectPair}
-                                />
-                            </div>
+                            <div className="z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">{t('futures:tp_sl:perpetual')}</div>
                         </div>
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
@@ -663,8 +667,13 @@ const ITEMS_WITH_TOOLTIPS = [
         leftPercent: 40
     },
     {
-        title: 'max_order_size',
-        tooltip: 'max_order_size_tooltips',
+        title: 'max_order_size_limit',
+        tooltip: 'max_order_size_limit_tooltip',
+        leftPercent: 40
+    },
+    {
+        title: 'max_order_size_market',
+        tooltip: 'max_order_size_market_tooltip',
         leftPercent: 40
     },
     {
@@ -676,15 +685,15 @@ const ITEMS_WITH_TOOLTIPS = [
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
         leftPercent: 70
-    },
-    {
-        title: 'min_limit_order_price',
-        tooltip: 'min_limit_order_price_tooltips',
-        leftPercent: 40
     }
 ];
 
 const RIGHT_ITEMS_WITH_TOOLTIPS = [
+    {
+        title: 'min_limit_order_price',
+        tooltip: 'min_limit_order_price_tooltips',
+        leftPercent: 40
+    },
     {
         title: 'max_limit_order_price',
         tooltip: 'max_limit_order_price_tooltips',
