@@ -93,7 +93,7 @@ const MadivesLayout = ({
                         paddingTop: !navOverComponent && !hideInApp && !isApp ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
                         ...contentWrapperStyle
                     }}
-                    className='relative flex-1 bg-white dark:bg-dark'
+                    className='relative flex-1'
                 >
                     {useNavShadow && <NavBarBottomShadow />}
                     {children}

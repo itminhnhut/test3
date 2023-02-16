@@ -29,7 +29,7 @@ export const Active = styled.div`
 export const SliderBackground = styled.div`
     position: absolute;
     background-color: ${({ isDark, BgColorLine, onusMode }) =>
-        BgColorLine ? BgColorLine : onusMode ? colors.onus.bg2 : isDark ? colors.dark[2] : colors.grey5};
+        BgColorLine ? BgColorLine : onusMode ? colors.onus.bg2 : isDark ? colors.dark[2] : colors.gray[11]};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
@@ -55,8 +55,7 @@ export const Dot = styled.span`
     width: ${({ onusMode, active }) => (onusMode ? (active ? '15px' : '9px') : '8px')};
     height: ${({ onusMode, active }) => (onusMode ? (active ? '15px' : '9px') : '8px')};
     box-sizing: content-box;
-    background-color: ${({ active, isDark, bgColorActive, bgColorDot }) =>
-        active ? (bgColorActive ? bgColorActive : colors.darkBlue3) : bgColorDot ? bgColorDot : isDark ? colors.dark[2] : colors.grey5};
+    background-color: ${({ active, bgColorActive, bgColorDot }) => (active ? (bgColorActive ? bgColorActive : colors.teal) : bgColorDot)};
     z-index: 30;
     border: ${({ onusMode, active }) => (onusMode && !active ? '3px solid #36445A' : 'none')};
     transition: transform 0.2s; /* Animation */
@@ -77,7 +76,7 @@ export const Dot = styled.span`
         height: 6px;
         border-radius: 50%;
         z-index: -1;
-        background-color: ${({ active, isDark }) => isDark && (active ? colors.teal : colors.darkBlue3)};
+        background-color: ${({ active, isDark }) => (isDark ? (active ? colors.teal : colors.darkBlue3) : active ? colors.teal : colors.white)};
     }
 `;
 
@@ -92,17 +91,7 @@ export const Thumb = styled.div`
     border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
     border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? '4px solid #76AEFF' : 'none')};
     background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
-        naoMode
-            ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)'
-            : isZero
-            ? isDark
-                ? colors.dark[2]
-                : bgColorActive
-                ? bgColorActive
-                : colors.grey5
-            : bgColorActive
-            ? bgColorActive
-            : colors.teal};
+        naoMode ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)' : bgColorActive ? bgColorActive : colors.teal};
     user-select: none;
     cursor: pointer;
     pointer-events: none;
@@ -113,7 +102,7 @@ export const ThumbLabel = styled.div`
     top: -1.25rem;
     right: -10px;
     text-align: center;
-    color: ${({ isZero, isDark, onusMode }) => (onusMode ? colors.onus.white : isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal)};
+    color: ${({ bgColorActive, isDark }) => (bgColorActive ? bgColorActive : isDark ? colors.dark[2] : colors.teal)};
     font-size: 12px;
     font-style: normal;
     font-weight: ${({ onusMode }) => (onusMode ? '400' : '600')};

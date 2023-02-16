@@ -604,7 +604,7 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
             <ModalV2 className="!max-w-[342px]" isVisible={visible} onBackdropCb={onClose}>
                 {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
                 <div className="font-semibold">{isFunding ? 'Funding' : t('futures:countdown')}</div>
-                <div className="text-gray4 text-sm pt-4">
+                <div className="text-gray-4 text-sm pt-4">
                     {' '}
                     {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}
                     {isFunding && (

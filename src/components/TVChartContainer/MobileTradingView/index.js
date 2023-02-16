@@ -656,7 +656,7 @@ export class MobileTradingView extends React.PureComponent {
                         <Funding symbol={this.props.symbol} />
                     }
                     {/*<div className="!w-32 cheat-watermark">*/}
-                    {/*    <NamiExchangeSvg color={colors.grey4}/>*/}
+                    {/*    <NamiExchangeSvg color={colors.gray[4]}/>*/}
                     {/*</div>*/}
                 </div>
             </>

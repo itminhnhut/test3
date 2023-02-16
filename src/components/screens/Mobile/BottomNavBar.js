@@ -71,7 +71,7 @@ const Tabs = styled.div.attrs({
     justify-content:space-around;
     box-shadow: 3px -5px 30px -16px rgba(0, 0, 0, 0.16);
     svg,path{
-            fill:${colors.grey3}
+            fill:${colors.gray[3]}
         }
     .active{
         color: ${({ isDark }) => isDark ? colors.white : colors.darkBlue1};

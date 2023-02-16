@@ -5,6 +5,7 @@ import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 import { X } from 'react-feather';
 import colors from 'styles/colors';
 import { isFunction } from 'redux/actions/utils';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const INITIAL_STATE = {
     isFocus: false
@@ -26,11 +27,10 @@ const TradingInput = ({
     clearAble = false,
     ...inputProps
 }) => {
-    // ? Input state management
+    const [currentTheme] = useDarkMode();
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
-    // ? Helper
+    const isDark = currentTheme === THEME_MODE.DARK;
     const inputRef = useRef();
 
     const focusInput = () => inputRef?.current?.focus();
@@ -66,7 +66,7 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md  border border-transparent ${
-                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-5 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-10 dark:bg-darkBlue-3'
                     }`,
                     { '!border-dominant': !onusMode && state.isFocus && !isError },
                     { 'border-onus-green': onusMode && state.isFocus },
@@ -132,8 +132,13 @@ const TradingInput = ({
                 )}
                 {/* Tail */}
                 {!!inputProps?.value && !disabled && clearAble && (
-                    <div className={classNames('relative z-10', { 'pr-2 mr-2 border-r border-divider-dark': !!renderTail, 'pl-2': !renderTail })}>
-                        <X onClick={onClear} size={16} className="cursor-pointer" color={colors.darkBlue5} />
+                    <div
+                        className={classNames('relative z-10', {
+                            'pr-2 mr-2 border-r border-divider dark:border-divider-dark': !!renderTail,
+                            'pl-2': !renderTail
+                        })}
+                    >
+                        <X onClick={onClear} size={16} className="cursor-pointer" color={isDark ? colors.darkBlue5 : colors.gray[1]} />
                     </div>
                 )}
                 <div className={classNames('', tailContainerClassName)}>{renderTail && isFunction(renderTail) ? renderTail() : renderTail}</div>

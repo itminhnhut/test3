@@ -28,7 +28,7 @@ export const Active = styled.div`
 
 export const SliderBackground = styled.div`
     position: absolute;
-    background-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.grey5)};
+    background-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.gray[5])};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
@@ -77,7 +77,7 @@ export const ThumbLabel = styled.div`
     top: -1.25rem;
     right: -10px;
     text-align: center;
-    color: ${({ isZero, isDark }) => (isZero ? (isDark ? colors.darkBlue4 : colors.grey5) : colors.teal)};
+    color: ${({ isZero, isDark }) => (isZero ? (isDark ? colors.darkBlue4 : colors.gray[5]) : colors.teal)};
     font-size: 12px;
     font-style: normal;
     font-weight: 600;
