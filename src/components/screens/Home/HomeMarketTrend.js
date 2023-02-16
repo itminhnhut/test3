@@ -13,6 +13,7 @@ import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
 
 import classNames from 'classnames';
+
 const types = [
     {
         id: 'MOST_TRADED',
@@ -90,7 +91,7 @@ const HomeMarketTrend = () => {
         return (
             <div className="w-full flex justify-between">
                 <TokenTypes type={type?.id} setType={(i) => {
-                    setType(i)
+                    setType(i);
                 }} types={types} lang={'vi'}/>
                 {width >= 992 &&
                     <span className="flex flex-row items-center text-base font-semibold">
@@ -125,28 +126,45 @@ const HomeMarketTrend = () => {
         );
     }, [width]);
 
-
-
     const TokenTypes = ({
         type,
         setType,
         types,
         lang
     }) => {
-        return <div className="flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar">
-            {types.map(e =>
-                <div key={e.id}
-                     className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
-                         'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                     })}
-                     onClick={() => {
-                         setType(e)
-                     }}
-                >
-                    {e?.content[lang]}
-                </div>
-            )}
-        </div>;
+        if(width >= 992 ){
+            return <div className="flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar">
+                {types.map(e =>
+                    <div key={e.id}
+                         className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
+                             'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                         })}
+                         onClick={() => {
+                             setType(e);
+                         }}
+                    >
+                        {e?.content[lang]}
+                    </div>
+                )}
+            </div>;
+        } else {
+            return <div className="flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar">
+                {types.map(e =>
+                    <div key={e.id}
+                         className={classNames('flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
+                             'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                         })}
+                         onClick={() => {
+                             setType(e);
+                         }}
+                    >
+                        {e?.content[lang]}
+                    </div>
+                )}
+            </div>;
+        }
+
+
     };
 
     const renderMarketBody = useCallback(() => {
@@ -163,42 +181,72 @@ const HomeMarketTrend = () => {
                 if (_24hChange > 0) sparkLineColor = colors.teal;
                 if (_24hChange <= 0) sparkLineColor = colors.red2;
             }
-
             const sparkLine = sparkLineBuilder(_?.symbol, sparkLineColor);
-            // console.log('namidev-DEBUG: ___ ', _24hChange)
 
-            return (
-                <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row"
-                   key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
-                    <div className="homepage-markettrend__market_table__row__col1">
-                        <div className="homepage-markettrend__market_table__coin">
-                            <div className="homepage-markettrend__market_table__coin__icon">
-                                <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset}/>
+            if(width >= 992 ){
+                return (
+                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row"
+                       key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
+                        <div className="homepage-markettrend__market_table__row__col1">
+                            <div className="homepage-markettrend__market_table__coin">
+                                <div className="homepage-markettrend__market_table__coin__icon">
+                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset}/>
+                                </div>
+                                <div className="homepage-markettrend__market_table__coin__pair">
+                                    <span>{_?.baseAsset}</span>
+                                    <span>/{_?.quoteAsset}</span>
+                                </div>
                             </div>
-                            <div className="homepage-markettrend__market_table__coin__pair">
-                                <span>{_?.baseAsset}</span>
-                                <span>/{_?.quoteAsset}</span>
+                        </div>
+                        <div className="homepage-markettrend__market_table__row__col2">
+                            <div className="homepage-markettrend__market_table__price">
+                                {formatPrice(_?.lastPrice)}
                             </div>
                         </div>
-                    </div>
-                    <div className="homepage-markettrend__market_table__row__col2">
-                        <div className="homepage-markettrend__market_table__price">
-                            {formatPrice(_?.lastPrice)}
+                        <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                {render24hChange(pair, false, '!text-base')}
+                            </div>
                         </div>
-                    </div>
-                    <div className="homepage-markettrend__market_table__row__col3">
-                        <div
-                            className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
-                            {render24hChange(pair, false, '!text-base')}
+                        <div className="homepage-markettrend__market_table__row__col4">
+                            <div className="homepage-markettrend__market_table__chart">
+                                <img src={sparkLine} alt="Nami Exchange"/>
+                            </div>
                         </div>
-                    </div>
-                    <div className="homepage-markettrend__market_table__row__col4">
-                        <div className="homepage-markettrend__market_table__chart">
-                            <img src={sparkLine} alt="Nami Exchange"/>
+                    </a>
+                );
+            }else{
+                return (
+                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row"
+                       key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
+                        <div className="homepage-markettrend__market_table__row__col1">
+                            <div className="homepage-markettrend__market_table__coin">
+                                <div className="homepage-markettrend__market_table__coin__icon">
+                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset}/>
+                                </div>
+                                <div className="homepage-markettrend__market_table__coin__pair">
+                                    <span>{_?.baseAsset}</span>
+                                    <span>/{_?.quoteAsset}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </a>
-            );
+                        <div className="homepage-markettrend__market_table__row__col2 ">
+                            <div className="homepage-markettrend__market_table__chart">
+                                <img src={sparkLine} alt="Nami Exchange"/>
+                            </div>
+                        </div>
+                        <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                            <div className="homepage-markettrend__market_table__price text-sm">
+                                {formatPrice(_?.lastPrice)}
+                            </div>
+                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                {render24hChange(pair, false, '!text-sm')}
+                            </div>
+                        </div>
+                    </a>
+                );
+            }
+
         });
     }, [width, state.trending, state.marketTabIndex, exchangeConfig]);
 
@@ -223,18 +271,22 @@ const HomeMarketTrend = () => {
 
                 <div className="homepage-markettrend__market_table">
                     <div className="homepage-markettrend__market_table__wrapper">
-                        <div className="homepage-markettrend__market_table__header">
-                            {renderMarketHeader()}
-                        </div>
+                        {width >= 992 &&
+                            <div className="homepage-markettrend__market_table__header">
+                                {renderMarketHeader()}
+                            </div>
+                        }
                         <div className="homepage-markettrend__market_table__content">
                             {renderMarketBody()}
                         </div>
                     </div>
                     {width < 992 &&
-                        <a href="/trade" className="homepage-markettrend__market_table__explore">
+                        <span className="flex flex-row items-center justify-center text-sm font-semibold pt-6">
+                        <a href="/markets" className="!text-teal mr-3">
                             {t('home:markettrend.explore_market')}
                         </a>
-
+                        <ArrowRightIcon size={14}/>
+                        </span>
                     }
                 </div>
 

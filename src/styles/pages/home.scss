@@ -279,8 +279,8 @@
 
 .homepage-markettrend {
   @apply bg-white dark:bg-dark-dark;
-  padding-top: 120px;
-  padding-bottom: 120px;
+  padding-top: 80px;
+  padding-bottom: 80px;
 
   .homepage-markettrend__wrapper {
     @apply flex flex-col;
@@ -300,6 +300,8 @@
 
       @media (min-width: 992px) {
         @apply text-left;
+        padding-top: 120px;
+        padding-bottom: 120px;
         margin-top: 0;
         margin-left: 2px;
       }
@@ -309,7 +311,7 @@
 
       .homepage-markettrend__title {
         font-weight: 600;
-        font-size: 32px;
+        font-size: 28px;
         line-height: 38px;
 
         @media (min-width: 1366px) {
@@ -387,10 +389,11 @@
     }
 
     .homepage-markettrend__market_table {
-      margin-top: 2rem;
+      margin-top: 30px;
+      @media (min-width: 992px) {
+        margin-top: 2rem;
+      }
       .homepage-markettrend__market_table__wrapper {
-        margin-top: 20px;
-
         .homepage-markettrend__market_table__row {
           @apply flex flex-row items-center;
 
@@ -402,29 +405,21 @@
 
           .homepage-markettrend__market_table__row__col1 {
             @apply flex-grow;
-
-            width: 50%;
-
-            @media (min-width: 576px) {
-              width: 40%;
-            }
+            width: 40%;
           }
 
           .homepage-markettrend__market_table__row__col2 {
-            //@apply text-right;
-
-            width: 25%;
-
-            @media (min-width: 576px) {
+            @apply text-right;
+            width: 30%;
+            @media (min-width: 992px) {
               width: calc(60% / 3);
             }
           }
 
           .homepage-markettrend__market_table__row__col3 {
-            //@apply text-right;
-
-            width: 25%;
-            @media (min-width: 576px) {
+            @apply text-right;
+            width: 30%;
+            @media (min-width: 992px) {
               width: calc(60% / 3);
             }
           }
@@ -434,7 +429,7 @@
             display: none;
             width: 20%;
 
-            @media (min-width: 576px) {
+            @media (min-width: 992px) {
               display: block;
             }
           }
@@ -466,10 +461,10 @@
           font-size: 14px;
 
           .homepage-markettrend__market_table__row {
-            padding-top: 10px;
-            padding-bottom: 10px;
-
+            padding-bottom: 24px;
             @media (min-width: 992px) {
+              padding-top: 8px;
+              padding-bottom: 8px;
               transition: all .3s ease;
               border-radius: 12px;
 
@@ -487,13 +482,16 @@
 
           // Coin style
           .homepage-markettrend__market_table__coin {
-            @apply flex flex-row items-center text-base;
+            @apply flex flex-row items-center text-sm;
 
+            @media (min-width: 992px) {
+              @apply text-base;
+            }
             .homepage-markettrend__market_table__coin__icon {
-              width: 32px;
-              height: 32px;
-              min-width: 32px;
-              min-height: 32px;
+              width: 30px;
+              height: 30px;
+              min-width: 30px;
+              min-height: 30px;
 
               @media (min-width: 350px) {
                 width: 32px;
@@ -521,8 +519,11 @@
 
           // Price Style
           .homepage-markettrend__market_table__price {
-            @apply text-txtPrimary dark:text-txtPrimary-dark text-base;
+            @apply text-txtPrimary dark:text-txtPrimary-dark text-sm;
             font-weight: 500;
+            @media (min-width: 992px) {
+              @apply text-base;
+            }
           }
 
 
