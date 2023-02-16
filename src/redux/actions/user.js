@@ -203,22 +203,6 @@ export function getUserFuturesBalance() {
     };
 }
 
-export function getUserPartnersBalance() {
-    return async (dispatch) => {
-        try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 8 } }); // partners wallet type
-
-            if (data && data.status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_WALLET,
-                    walletType: WalletType.PARTNERS,
-                    payload: data.data
-                });
-            }
-        } catch (e) {}
-    };
-}
-
 export function getUserEarnedBalance(walletType) {
     return async (dispatch) => {
         try {
