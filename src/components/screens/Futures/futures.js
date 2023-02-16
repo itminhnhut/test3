@@ -281,7 +281,7 @@ const Futures = () => {
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
                                 )}
-                                {/* {filterLayout.isShowPairDetail && (
+                                {filterLayout.isShowPairDetail && (
                                     <div key={futuresGridKey.pairDetail} className={`relative z-20 border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
@@ -292,7 +292,7 @@ const Futures = () => {
                                             isAuth={!!auth}
                                         />
                                     </div>
-                                )} */}
+                                )}
                                 {filterLayout.isShowChart && (
                                     <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
                                         <FuturesChart

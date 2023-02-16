@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-const TFA = ({ token }) => {
+const SpotDefault = ({ token }) => {
     const router = useRouter();
     if (typeof window !== 'undefined') {
         router.push('/authenticated/nami', undefined, { shallow: true });
@@ -8,4 +8,4 @@ const TFA = ({ token }) => {
     return null;
 };
 
-export default TFA;
+export default SpotDefault;
