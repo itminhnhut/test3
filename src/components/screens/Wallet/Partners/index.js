@@ -93,7 +93,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 )
             },
             {
-                key: 'wallet',
+                key: 'wallet.value',
                 dataIndex: ['wallet', 'value'],
                 title: t('common:total'),
                 align: 'right',
