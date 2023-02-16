@@ -6,18 +6,15 @@ import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import NumberFormat from 'react-number-format';
-import { useSelector } from 'react-redux';
-import { useAsync, useDebounce } from 'react-use';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { getMarketWatch } from 'redux/actions/market';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
-import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
+import { ApiStatus, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
-import { formatBalance, formatPrice, formatWallet, getDecimalScale, getFilter, getLoginUrl, getSymbolString } from 'src/redux/actions/utils';
+import { formatBalance, formatPrice, formatWallet, getDecimalScale, getFilter, getLoginUrl, getSymbolString, setTransferModal } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
-import showNotification from 'utils/notificationService';
 import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInput from './TradingInput';
@@ -27,6 +24,7 @@ import Link from 'next/link';
 import { roundToDown } from 'round-to';
 import { formatNumber } from 'redux/actions/utils';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import { WalletType } from 'redux/actions/const';
 
 let initPrice = '';
 
@@ -45,6 +43,7 @@ const useFocus = () => {
 const allSubTabs = [ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.Type.LIMIT];
 
 const PlaceOrderForm = ({ symbol }) => {
+    const dispatch = useDispatch();
     const [priceRef, setPriceFocus] = useFocus();
     const [quantityRef, setQuantityFocus] = useFocus();
     const [quoteQtyRef, setQuoteQtyFocus] = useFocus();
@@ -381,9 +380,9 @@ const PlaceOrderForm = ({ symbol }) => {
         if (isMarket) {
             _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
         }
-        const per = ceil(((+quantity * (isBuy ? _price : 1)) / balance) * 100, 0);
+        const per = quantity ? ceil(((+quantity * (isBuy ? _price : 1)) / balance) * 100, 0) : 0;
         const quoteQty = floor(+quantity * _price, 2);
-        setPercentage(Math.min(per, 100));
+        setPercentage(quoteQty ? Math.min(per, 100) : 0);
         setQuoteQty(quoteQty);
     }, [quantity, decimals, notEnough]);
 
@@ -591,6 +590,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{quote}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -633,6 +633,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{quote}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -655,6 +656,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{base}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -670,11 +672,20 @@ const PlaceOrderForm = ({ symbol }) => {
             <>
                 <div className="mt-8">
                     {!user ? (
-                        <a
-                            href={getLoginUrl('sso')}
-                            className="btn w-full capitalize button-common block text-center"
-                            dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
-                        ></a>
+                        <>
+                            <Link href={getLoginUrl('sso')}>
+                                <a>
+                                    <ButtonV2>{t('common:sign_up')}</ButtonV2>
+                                </a>
+                            </Link>
+                            <Link href={getLoginUrl('sso', 'register')}>
+                                <a>
+                                    <ButtonV2 className="mt-3" color="dark">
+                                        {t('common:sign_in')}
+                                    </ButtonV2>
+                                </a>
+                            </Link>
+                        </>
                     ) : (
                         <ButtonV2
                             onClick={confirmModal}
@@ -689,17 +700,17 @@ const PlaceOrderForm = ({ symbol }) => {
         );
     };
 
+    const onTransFer = () => {
+        dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }));
+    };
+
     const _renderUserBalance = () => {
         return (
             <>
                 <div className="flex justify-between items-center">
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark flex items-center space-x-1">
                         <span>{t('spot:available_balance')}</span>
-                        <Link href={`/wallet/exchange/deposit?type=crypto&asset=${currentExchangeConfig?.baseAsset}`}>
-                            <a target={'_blank'}>
-                                <AddCircle className="cursor-pointer" />
-                            </a>
-                        </Link>
+                        <AddCircle onClick={onTransFer} className="cursor-pointer" />
                     </div>
                     <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark text-right">
                         {

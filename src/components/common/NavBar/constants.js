@@ -2,7 +2,7 @@ import { getV1Url } from 'redux/actions/utils';
 import { PATHS } from 'constants/paths';
 import { KYC_STATUS } from 'redux/actions/const';
 
-export const DESKTOP_NAV_HEIGHT = 74;
+export const DESKTOP_NAV_HEIGHT = 80;
 
 export const MOBILE_NAV_HEIGHT = 58;
 

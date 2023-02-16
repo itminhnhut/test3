@@ -12,7 +12,7 @@ import FuturesPairDetail from 'components/screens/Futures/PairDetail';
 import FuturesTradeRecord from 'components/screens/Futures/TradeRecord';
 import FuturesFavoritePairs from 'components/screens/Futures/FavoritePairs';
 import FuturesPlaceOrderVndc from 'components/screens/Futures/PlaceOrder/Vndc/FuturesPlaceOrderVndc';
-import futuresGridConfig, { futuresGridKey, getLayoutFromLS, setLayoutToLS } from 'components/screens/Futures/_futuresGrid';
+import futuresGridConfig, { futuresGridKey } from 'components/screens/Futures/_futuresGrid';
 import useWindowSize from 'hooks/useWindowSize';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import dynamic from 'next/dynamic';
@@ -30,7 +30,7 @@ const GridLayout = WidthProvider(Responsive);
 const FuturesProfitEarned = dynamic(() => import('components/screens/Futures/TakedProfit'), { ssr: false });
 
 const INITIAL_STATE = {
-    layouts: futuresGridConfig.layouts,
+    layouts: futuresGridConfig.layoutsVndc,
     loading: false,
     pair: null,
     prevPair: null,
@@ -51,9 +51,7 @@ const initFuturesComponent = {
     isShowChart: true,
     isShowOpenOrders: true,
     isShowPlaceOrder: true,
-    isShowAssets: true,
-    isShowOrderBook: true,
-    isShowTrades: true
+    isShowAssets: true
 };
 
 const Futures = () => {
@@ -67,11 +65,9 @@ const Futures = () => {
     const auth = useSelector((state) => state.auth?.user);
     const userSettings = useSelector((state) => state.futures?.userSettings);
     const ordersList = useSelector((state) => state?.futures?.ordersList);
-    const assetConfig = useSelector((state) => state.utils.assetConfig);
     const router = useRouter();
     const { width } = useWindowSize();
     const isMediumDevices = width >= BREAK_POINTS.md;
-    const isVndcFutures = true;
     const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
@@ -144,82 +140,19 @@ const Futures = () => {
         };
     }, [userSocket]);
 
-    const setItemLayoutVndc = (item, layout) => {
-        const _item = futuresGridConfig.layoutsVndc[layout].find((i) => i.i === item.i);
-        if (_item) {
-            item.w = _item.w;
-            item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : _item.h;
-            item.x = _item.x;
-            item.y = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : _item.y;
-        }
-        if (!auth) {
-            if (item.i === futuresGridKey.chart) {
-                item.h = layout === 'md' ? 31 : layout === 'lg' ? 29 : layout === 'xl' ? 36 : layout === '2xl' ? 32 : item.w;
-            }
-        }
-        return item;
-    };
-
-    const setItemLayoutUsdt = (item, layout) => {
-        const _item = futuresGridConfig.layouts[layout].find((i) => i.i === item.i);
-        if (_item) {
-            item.w = _item.w;
-            item.h = _item.h;
-            item.x = _item.x;
-            item.y = _item.y;
-        }
-        return item;
-    };
-
-    const reloadLayouts = useRef(true);
-
-    useEffect(() => {
-        reloadLayouts.current = true;
-    }, [isVndcFutures, filterLayout]);
-
-    useEffect(() => {
-        if (!reloadLayouts.current) return;
-        const _layouts = getLayouts(isVndcFutures ? futuresGridConfig.layoutsVndc : futuresGridConfig.layouts);
-        reloadLayouts.current = false;
-        setState({
-            layouts: _layouts,
-            forceUpdateState: state.forceUpdateState + 1
-        });
-    }, [reloadLayouts.current]);
-
     const getLayouts = (layouts) => {
-        const oldLayouts = JSON.parse(JSON.stringify(layouts));
-        Object.keys(oldLayouts).map((layout) => {
-            return oldLayouts[layout].map((item) => {
-                if (reloadLayouts.current) {
-                    return setItemLayoutVndc(item, layout);
-                }
-                item.h = item.i === futuresGridKey.orderBook || item.i === futuresGridKey.recentTrades ? 0 : item.h;
-                return item;
-            });
-        });
-        setLayoutToLS('VNDC');
-        return oldLayouts;
+        return futuresGridConfig.layoutsVndc;
     };
 
     const onLayoutChange = (layout, layouts, isVNDC) => {
         const _layouts = getLayouts(layouts);
         setState({
             layouts: _layouts,
-            favoritePairLayout: layout?.find((o) => o.i === futuresGridKey.favoritePair),
-            orderBookLayout: layout?.find((o) => o.i === futuresGridKey.orderBook),
-            tradeRecordLayout: layout?.find((o) => o.i === futuresGridKey.tradeRecord),
+            // favoritePairLayout: layout?.find((o) => o.i === futuresGridKey.favoritePair),
+            // orderBookLayout: layout?.find((o) => o.i === futuresGridKey.orderBook),
+            // tradeRecordLayout: layout?.find((o) => o.i === futuresGridKey.tradeRecord),
             forceUpdateState: state.forceUpdateState + 1
         });
-    };
-
-    const setOrderInput = (
-        depth = {
-            rate: 0,
-            amount: 0
-        }
-    ) => {
-        console.log('Set Input ', depth);
     };
 
     // ? Init Price and MarkPrice
@@ -238,29 +171,12 @@ const Futures = () => {
     }, [state.pair]);
 
     useEffect(() => {
-        let originLayouts = getLayoutFromLS(isVndcFutures ? 'VNDC' : 'USDT');
-        const settingLayoutFutures = localStorage.getItem('settingLayoutFutures');
-        if (!settingLayoutFutures) {
-            localStorage.setItem('settingLayoutFutures', JSON.stringify(initFuturesComponent));
-        } else {
-            setFilterLayout(JSON.parse(settingLayoutFutures));
-        }
         // ? Hide global scroll
         document.body.className += ' no-scrollbar';
-        // Re-init lastest layouts
-        if (originLayouts) {
-            originLayouts = JSON.parse(JSON.stringify(originLayouts));
-        } else {
-            originLayouts = getLayouts(futuresGridConfig.layouts);
-        }
-        setState({
-            layouts: originLayouts,
-            forceUpdateState: state.forceUpdateState + 1
-        });
         return () => {
             document.body.className = document.body.className?.replace('no-scrollbar', '');
         };
-    }, [isVndcFutures]);
+    }, []);
 
     // Re-load Previous Pair
     useEffect(() => {
@@ -378,8 +294,14 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowChart && (
-                                    <div key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
-                                        <FuturesChart pair={pairConfig?.pair} initTimeFrame="1D" isVndcFutures={state.isVndcFutures} ordersList={ordersList} />
+                                    <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
+                                        <FuturesChart
+                                            chartKey="futures_containter_chart"
+                                            pair={pairConfig?.pair}
+                                            initTimeFrame="1D"
+                                            isVndcFutures={state.isVndcFutures}
+                                            ordersList={ordersList}
+                                        />
                                     </div>
                                 )}
                                 {filterLayout.isShowOpenOrders && (
@@ -401,15 +323,15 @@ const Futures = () => {
                                             pairConfig={pairConfig}
                                             userSettings={userSettings}
                                             assumingPrice={state.assumingPrice}
-                                            isVndcFutures={true}
+                                            isVndcFutures={state.isVndcFutures}
                                             pairPrice={state.pairPrice}
                                             pair={state.pair}
                                             decimals={decimals}
                                         />
                                     </div>
                                 )}
-                                {filterLayout.isShowAssets && (
-                                    <div key={futuresGridKey.marginRatio} className={`border border-divider dark:border-divider-dark`}>
+                                {filterLayout.isShowAssets && !!auth && (
+                                    <div key={futuresGridKey.marginRatio} className={`border border-b-0 border-divider dark:border-divider-dark`}>
                                         <FuturesMarginRatioVndc
                                             pairConfig={pairConfig}
                                             auth={auth}

@@ -77,11 +77,16 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', '!text-gray-6');
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove'](
+                        'tab-active',
+                        '!font-semibold',
+                        'dark:!text-gray-6',
+                        '!text-teal'
+                    );
                 }
             });
         }
-    }, [tab, TabRef]);
+    }, [tab, TabRef, children, mount]);
 
     const active = useMemo(() => {
         const _currentTab = Array.isArray(children) ? children.findIndex((rs) => rs?.props?.value === tab) : 0;

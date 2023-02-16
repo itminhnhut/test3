@@ -55,7 +55,7 @@ const layoutSimple = [
         x: 0,
         y: 4,
         w: 3.5,
-        h: 37,
+        h: 39,
         isDraggable: false,
         isResizable: false
     },
@@ -73,7 +73,7 @@ const layoutSimple = [
         x: 3.5,
         y: 6,
         w: 9,
-        h: 16,
+        h: 18,
         isDraggable: false,
         isResizable: false
     },
@@ -91,7 +91,7 @@ const layoutSimple = [
         x: 12.5,
         y: 17,
         w: 3.5,
-        h: 21,
+        h: 23,
         minW: 10,
         isDraggable: false,
         isResizable: false
@@ -260,7 +260,7 @@ const SpotComp = () => {
         setOrderBookLayout(_orderbookLayout);
         setTradesLayout(_tradesLayout);
     }, []);
-
+    console.log(layoutConfig);
     // Spot Socket
 
     const subscribeExchangeSocket = (s) => {
@@ -372,11 +372,13 @@ const SpotComp = () => {
                                 hidden: !state.isShowChart
                             })}
                         >
-                            <Chart symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
+                            <Chart chartKey="spot_containter_chart" symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
                         </div>
                         <div
                             key="symbolDetail"
-                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
+                                hidden: !state.isShowSymbolDetail || fullScreen
+                            })}
                         >
                             <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
                         </div>

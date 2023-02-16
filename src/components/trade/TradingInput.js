@@ -2,6 +2,9 @@ import { useRef, useState } from 'react';
 import classNames from 'classnames';
 import NumberFormat from 'react-number-format';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import { X } from 'react-feather';
+import colors from 'styles/colors';
+import { isFunction } from 'redux/actions/utils';
 
 const INITIAL_STATE = {
     isFocus: false
@@ -20,6 +23,7 @@ const TradingInput = ({
     errorTooltip = true,
     onFocus,
     onBlur,
+    clearAble = false,
     ...inputProps
 }) => {
     // ? Input state management
@@ -38,6 +42,20 @@ const TradingInput = ({
         if (onBlur) onBlur();
         setState({ isFocus: false });
     };
+
+    const onClear = () => {
+        focusInput();
+        setTimeout(() => {
+            if (inputProps?.onValueChange) {
+                inputProps?.onValueChange({
+                    floatValue: '',
+                    formattedValue: '',
+                    value: ''
+                });
+            }
+        }, 10);
+    };
+
     const isError =
         (isNaN(inputProps?.value) ? inputProps?.value : inputProps?.value && inputProps?.value >= 0) && Object.keys(validator)?.length && !validator?.isValid
             ? true
@@ -48,9 +66,9 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md  border border-transparent ${
-                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'hover:border-base bg-gray-5 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-5 dark:bg-darkBlue-3'
                     }`,
-                    { 'border-dominant': !onusMode && state.isFocus },
+                    { '!border-dominant': !onusMode && state.isFocus && !isError },
                     { 'border-onus-green': onusMode && state.isFocus },
                     { '!border-red': !onusMode && isError },
                     { '!border-onus-red': onusMode && isError },
@@ -63,7 +81,8 @@ const TradingInput = ({
                     <div
                         onClick={focusInput}
                         className={classNames(
-                            'text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs cursor-default whitespace-nowrap',
+                            'text-txtSecondary dark:text-txtSecondary-dark text-sm cursor-default whitespace-nowrap',
+                            { 'font-medium !text-xs': onusMode },
                             labelClassName
                         )}
                     >
@@ -71,7 +90,11 @@ const TradingInput = ({
                     </div>
                 )}
                 {isError && state?.isFocus && errorTooltip ? (
-                    <div className="absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center">
+                    <div
+                        className={classNames('absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center', {
+                            '!left-1/2 !-translate-x-1/2 w-full': !onusMode
+                        })}
+                    >
                         {validator?.msg && (
                             <>
                                 <div className="px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md bg-gray-3 dark:bg-hover-dark text-xs sm:text-sm">
@@ -108,7 +131,12 @@ const TradingInput = ({
                     />
                 )}
                 {/* Tail */}
-                <div className={classNames('', tailContainerClassName)}>{renderTail && renderTail()}</div>
+                {!!inputProps?.value && !disabled && clearAble && (
+                    <div className={classNames('relative z-10', { 'pr-2 mr-2 border-r border-divider-dark': !!renderTail, 'pl-2': !renderTail })}>
+                        <X onClick={onClear} size={16} className="cursor-pointer" color={colors.darkBlue5} />
+                    </div>
+                )}
+                <div className={classNames('', tailContainerClassName)}>{renderTail && isFunction(renderTail) ? renderTail() : renderTail}</div>
             </div>
             {isError && validator?.msg && !errorTooltip && (
                 <div className={`text-xs mt-3 text-red`}>
