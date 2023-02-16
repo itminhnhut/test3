@@ -401,17 +401,13 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 {t('common:deposit')}
                             </ButtonV2>
                             <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                                className="px-6"
+                                color="dark"
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark">
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>

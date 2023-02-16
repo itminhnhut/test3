@@ -305,7 +305,9 @@ module.exports = {
                     disabled: '#b5c0c9',
                     dark: '#47cc85',
                     dark_pressed: '#19a65b',
-                    dark_disabled: '#454c5c'
+                    dark_disabled: '#454c5c',
+                    tonal: '#8593a6',
+                    tonal_dark: '#8694b2'
                 },
                 txtDisabled: {
                     DEFAULT: '#b5c0c9',
@@ -372,12 +374,24 @@ module.exports = {
                 },
                 bgNaoStart: 'rgba(9, 61, 209, 0.5)',
                 bgBtnV2: {
+                    // Filled button light mode: https://app.zeplin.io/project/634cdbdac32a57166e77de3c/screen/63abbb11c737c2054d136381
                     DEFAULT: '#30bf73',
                     pressed: '#19a65b',
                     disabled: '#b5c0c9',
+                    // Filled button dark mode
                     dark: '#47cc85',
                     dark_pressed: '#19a65b',
-                    dark_disabled: '#454c5c'
+                    dark_disabled: '#454c5c',
+                    // Fill tonal button light mode
+                    tonal: '#ebeced',
+                    tonal_pressed: '#ddddde',
+                    tonal_disabled: '#ebeced',
+                    tonal_loading: '#ebeced',
+                    // Fill tonal button dark mode
+                    tonal_dark: '#1c232e',
+                    tonal_dark_pressed: '#262b34',
+                    tonal_dark_disabled: '#1c232e',
+                    tonal_dark_loading: '#1c232e'
                 }
             },
             backgroundImage: {
