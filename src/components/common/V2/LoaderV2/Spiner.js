@@ -27,7 +27,7 @@ const Loader = styled.div`
     .spinner::before {
         width: 100%;
         height: 100%;
-        background-image: ${() => `linear-gradient(0deg, ${colors.teal} 0%, #212121 50%)`};
+        background-image: ${({ isDark }) => `linear-gradient(0deg, ${colors.teal} 0%, ${isDark ? '#212121' : colors.gray[4]} 50%)`};
         animation: spin 0.5s infinite linear;
     }
 

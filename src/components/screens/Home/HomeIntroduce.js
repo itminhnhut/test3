@@ -46,7 +46,7 @@ const HomeIntroduce = ({ parentState }) => {
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
-                <TrendingSlide trending={state.trending}/>
+                <TrendingSlide trending={state.trending} />
                 <div className="homepage-introduce___wrapper mal-container">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
@@ -145,7 +145,7 @@ const HomeIntroduce = ({ parentState }) => {
                 </div>
             </section>
         );
-    }, [width, state.loading, state.pairsLength, state.makedData,state.trending]);
+    }, [width, state.loading, state.pairsLength, state.makedData, state.trending]);
 
     useAsync(async () => {
         setState({ loading: true });

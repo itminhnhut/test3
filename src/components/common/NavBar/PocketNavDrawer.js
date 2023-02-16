@@ -87,7 +87,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest" />}
                             </div>
                             <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
-                                <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.grey4 : colors.darkBlue} />
+                                <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} />
                             </div>
                         </div>
                         <div

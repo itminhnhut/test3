@@ -146,7 +146,7 @@ export class TVChartContainer extends React.PureComponent {
     };
 
     handleFullScreen = (flag) => {
-        const el = document.querySelector('#spot_containter_chart');
+        const el = document.querySelector('#' + this.props.chartKey);
         if (el) {
             el.classList[flag ? 'add' : 'remove']('!fixed', '!inset-0', '!w-screen', '!h-screen', '!translate-x-0', '!translate-y-0', '!z-[9999999999]');
         }
@@ -195,8 +195,8 @@ export class TVChartContainer extends React.PureComponent {
                 .setText(high[2].toString())
                 // .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setTooltip(high[2].toString())
-                .setArrowColor(!isDark ? colors.darkBlue2 : colors.grey4)
-                .setTextColor(!isDark ? colors.darkBlue2 : colors.grey4)
+                .setArrowColor(!isDark ? colors.darkBlue2 : colors.gray[4])
+                .setTextColor(!isDark ? colors.darkBlue2 : colors.gray[4])
                 .setArrowHeight(7);
             const lowArrow = this.widget
                 .chart()
@@ -208,8 +208,8 @@ export class TVChartContainer extends React.PureComponent {
                 .setText(low[3].toString())
                 // .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setTooltip(low[3].toString())
-                .setArrowColor(!isDark ? colors.darkBlue2 : colors.grey4)
-                .setTextColor(!isDark ? colors.darkBlue2 : colors.grey4)
+                .setArrowColor(!isDark ? colors.darkBlue2 : colors.gray[4])
+                .setTextColor(!isDark ? colors.darkBlue2 : colors.gray[4])
                 .setArrowHeight(7);
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
@@ -424,7 +424,7 @@ export class TVChartContainer extends React.PureComponent {
             'scalesProperties.fontSize': 10,
             'paneProperties.background': isDark ? colors.dark.dark : colors.white,
             'paneProperties.vertGridProperties.color': isDark ? colors.dark.dark : colors.white,
-            'paneProperties.horzGridProperties.color': isDark ? 'rgba(34, 41, 64, 0.5)' : colors.grey4
+            'paneProperties.horzGridProperties.color': isDark ? 'rgba(34, 41, 64, 0.5)' : colors.gray[4]
         };
     };
 
@@ -579,7 +579,7 @@ export class TVChartContainer extends React.PureComponent {
                     <div id={this.containerId} className={`${styles.TVChartContainer} flex-grow h-full w-full  ${chartType === 'depth' && 'hidden'}`} />
                     {chartType === 'depth' && <DepthChart symbol={this.props.symbol} chartSize={this.props.chartSize} darkMode={this.props.theme === 'dark'} />}
                     <div className="cheat-watermark">
-                        <NamiExchangeSvg color={this.props.theme === 'dark' ? colors.grey4 : colors.darkBlue4} />
+                        <NamiExchangeSvg color={this.props.theme === 'dark' ? colors.gray[4] : colors.darkBlue4} />
                     </div>
                 </div>
             </>

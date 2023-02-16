@@ -1,90 +1,9 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const colors = require('tailwindcss/colors');
-
+const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
-    transparent: 'transparent',
-
-    darkBlue: '#223050',
-    darkBlue1: '#00091F',
-    darkBlue2: '#151D2F',
-    darkBlue3: '#141921',
-    darkBlue4: '#445271',
-    darkBlue5: '#8694b2',
-    darkBlue6: '#2e333d',
-
-    dark: {
-        dark: '#0c0e14',
-        1: '#2e333d',
-        2: '#1c232e',
-        3: '#1f2f46'
-    },
-
-    gray1: '#718096',
-    gray2: '#A0AEC0',
-    gray3: '#CBD5E0',
-    gray4: '#e2e8f0',
-    gray5: '#EDF1F6',
-    gray6: '#E2E8F0',
-    gray7: '#8694b2',
-    gray8: '#262e40',
-    gray9: '#8593a6',
-
-    white: 'white',
-    teal: '#47cc85',
-    lightTeal: '#E2F6F5',
-
-    red2: '#f93636',
-
-    green1: '#7ee5ae',
-
-    onus: {
-        bg: '#1B222D',
-        bg2: '#36445A',
-        bg3: '#243042',
-        bgModal: '#243042',
-        bgModal2: '#1e1e1e',
-        bgModal3: '#090D17',
-        base: '#0068FF',
-        green: '#0DB787',
-        red: '#DC1F4E',
-        line: '#2B3247',
-        input: '#243042',
-        input2: '#36445A',
-        white: '#F6F6F6',
-        textPrimary: '#F6F6F6',
-        grey: '#8492A7',
-        grey2: '#445571',
-        textSecondary: '#8492A7',
-        orange: '#FF9F1A'
-    },
-    nao: {
-        bg: '#619095',
-        bg2: '#12182B',
-        bg3: '#192138',
-        bg4: '#202E42',
-        text: '#B9CCFF',
-        text2: '#A6BFE6',
-        grey: '#7686B1',
-        grey2: '#7586AD',
-        grey3: 'rgba(97, 144, 149, 0.15)',
-        white: '#F6F6F6',
-        blue: '#27CEE0',
-        blue2: '#093DD1',
-        blue3: '#99C3FF',
-        green: '#49E8D5',
-        green2: '#0DB787',
-        yellow: '#F3BA2F',
-        line: '#1C2644',
-        border: '#4AEDFF',
-        border2: '#18223E',
-        bgModal: '#161D32',
-        bgModal2: '#00030D',
-        bgShadow: '#000921',
-        red: '#DC1F4E',
-        tooltip: '#0E1D32',
-        nami: '#0E1113'
-    }
+    ...colors2,
 };
 
 module.exports = {
@@ -131,84 +50,72 @@ module.exports = {
             xs: [
                 '.75rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.125rem'
                 }
             ], // Caption 12px
             sm: [
                 '.875rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.25rem'
                 }
             ], // Small text 14px
             tiny: [
                 '.875rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.3125rem'
                 }
             ], // 14px
             base: [
                 '1rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.5rem'
                 }
             ], // 16px
             lg: [
                 '1.125rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.75rem'
                 }
             ], // Body 2 18px
             xl: [
                 '1.25rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '1.75rem'
                 }
             ], // Body 1, Heading 6 21px
             '2xl': [
                 '1.5rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '2.25rem'
                 }
             ], // Heading 5 24px
             '3xl': [
                 '1.75rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '2.5rem'
                 }
             ], // Heading 4 28px
             '4xl': [
                 '2.25rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '3.5rem'
                 }
             ], // Heading 3 36px
             '5xl': [
                 '2.5rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '3.5rem'
                 }
             ], // Heading 2 40px
             '6xl': [
                 '4rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '4.5rem'
                 }
             ], // Heading 1 64px
             '5.5xl': [
                 '3.5rem',
                 {
-                    letterSpacing: '-0.01em',
                     lineHeight: '4.25rem'
                 }
             ] // Heading 2 56px
@@ -226,13 +133,13 @@ module.exports = {
 
             shadow: '#0c0e14',
             divider: {
-                DEFAULT: commonColors.gray4,
-                dark: '#222940'
+                DEFAULT: commonColors.divider.DEFAULT,
+                dark: commonColors.divider.dark
             },
 
             hover: {
-                DEFAULT: '#262b34',
-                dark: '#262b34'
+                DEFAULT: commonColors.hover.DEFAULT,
+                dark: commonColors.hover.dark
             },
 
             //--------------------------------------------
@@ -277,15 +184,7 @@ module.exports = {
             gray: {
                 DEFAULT: '#8D9091',
                 ...colors.gray,
-                1: commonColors.gray1,
-                2: commonColors.gray2,
-                3: commonColors.gray3,
-                4: commonColors.gray4,
-                5: commonColors.gray5,
-                6: commonColors.gray6,
-                7: commonColors.gray7,
-                8: commonColors.gray8,
-                9: commonColors.gray9
+                ...commonColors.gray
             },
             teal: {
                 DEFAULT: commonColors.teal,
@@ -358,21 +257,21 @@ module.exports = {
             borderColor: ['group-focus'],
             placeholderColor: {
                 txtSecondary: {
-                    DEFAULT: commonColors.gray1,
+                    DEFAULT: commonColors.gray[1],
                     dark: commonColors.darkBlue5
                 }
             },
             textColor: {
                 txtPrimary: {
                     DEFAULT: commonColors.darkBlue,
-                    dark: commonColors.gray4
+                    dark: commonColors.gray[4]
                 },
                 txtSemiPrimary: {
-                    DEFAULT: commonColors.gray2,
+                    DEFAULT: commonColors.gray[2],
                     dark: commonColors.darkBlue4
                 },
                 txtSecondary: {
-                    DEFAULT: commonColors.gray1,
+                    DEFAULT: commonColors.gray[1],
                     dark: commonColors.darkBlue5
                 },
 
@@ -385,7 +284,7 @@ module.exports = {
                     dark: commonColors.teal
                 },
                 txtTabInactive: {
-                    DEFAULT: commonColors.gray1,
+                    DEFAULT: commonColors.gray[1],
                     dark: commonColors.darkBlue5
                 },
                 txtTabActive: {
@@ -408,7 +307,7 @@ module.exports = {
                     dark_disabled: '#454c5c'
                 },
                 txtDisabled: {
-                    DEFAULT: '#3e4351',
+                    DEFAULT: '#b5c0c9',
                     dark: '#3e4351'
                 },
                 txtTabHover: {
@@ -418,7 +317,7 @@ module.exports = {
             },
             backgroundColor: {
                 bgTabInactive: {
-                    DEFAULT: commonColors.gray4,
+                    DEFAULT: commonColors.gray[4],
                     dark: commonColors.darkBlue3
                 },
                 bgTabActive: commonColors.teal,
@@ -427,7 +326,7 @@ module.exports = {
                     dark: commonColors.dark.dark
                 },
                 bgSecondary: {
-                    DEFAULT: commonColors.gray4,
+                    DEFAULT: commonColors.gray[4],
                     dark: commonColors.darkBlue5
                 },
                 bgContainer: {
@@ -451,11 +350,11 @@ module.exports = {
                     dark: commonColors.teal
                 },
                 bgBtnSecondary: {
-                    DEFAULT: commonColors.gray4,
+                    DEFAULT: commonColors.gray[4],
                     dark: commonColors.darkBlue
                 },
                 bgInput: {
-                    DEFAULT: commonColors.gray5,
+                    DEFAULT: commonColors.gray[5],
                     dark: commonColors.darkBlue3
                 },
                 bgHover: {

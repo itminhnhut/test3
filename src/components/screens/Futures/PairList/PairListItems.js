@@ -45,7 +45,7 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
                     <Star
                         onClick={handleSetFavorite}
                         size={14}
-                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.grey2}
+                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.gray[2]}
                         className="cursor-pointer mr-[10px]"
                     />
                 )}

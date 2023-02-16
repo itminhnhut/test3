@@ -143,7 +143,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 data={`https://nami.exchange/ref/${data.code}`}
                                                 size={13.5}
                                                 className="cursor-pointer"
-                                                color={colors.gray4}
+                                                color={colors.gray[4]}
                                             />
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowFriendList(true);
                                             }}
                                         >
-                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.gray4} />
+                                            {data.invitedCount ?? 0} <FriendListIcon color={colors.gray[4]} />
                                         </div>
                                     </div>
                                     <div className="w-full flex justify-between items-center">
@@ -169,7 +169,7 @@ const RefDetail = ({ isShow = false, onClose, rank, defaultRef }) => {
                                                 setShowEditNote(true);
                                             }}
                                         >
-                                            {data.note} <NoteIcon color={colors.gray4} />
+                                            {data.note} <NoteIcon color={colors.gray[4]} />
                                         </div>
                                     </div>
                                 </div>

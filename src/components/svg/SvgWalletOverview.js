@@ -6,8 +6,8 @@ const SvgWalletOverview = ({ size, className = '' }) => {
     return (
         <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M17.976 14.02h6.623a8.083 8.083 0 0 0-2.034-8.03 8.107 8.107 0 0 0-11.472-.025 8.111 8.111 0 0 0-2.06 8.055h6.624l1.153 1.154 1.166-1.154zM17.975 14l2.308-2.297-3.462-3.465-3.463 3.452 2.296 2.31 1.142 1.155 1.179-1.155z"
                 fill="#9FF2C6"
             />

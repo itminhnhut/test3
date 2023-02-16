@@ -68,7 +68,7 @@ const FuturesSetting = (props) => {
         window.location = `${nextUrl}?layout=${_layout}`;
     };
     const inActiveLabel =
-        currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
+        currentTheme === 'dark' ? colors.gray[4] : colors.darkBlue;
 
     const onChangeFuturesComponent = (key, value) => {
         const _newSpotState = spotState;

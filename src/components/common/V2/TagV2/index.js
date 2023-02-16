@@ -14,7 +14,7 @@ const types = {
 const typeStyles = {
     [types.DEFAULT]: {
         backgroundColor: 'rgba(34,41,64,0.5)',
-        color: colors.grey4
+        color: colors.gray[4]
     },
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',
@@ -42,7 +42,7 @@ function TagV2({
         }}
         className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
     >
-        {/* {style.icon && React.createElement(style.icon, {className: 'mr-2'})} */}
+        {style.icon && React.createElement(style.icon, {className: 'mr-2'})}
         <span>{children}</span>
     </span>;
 }

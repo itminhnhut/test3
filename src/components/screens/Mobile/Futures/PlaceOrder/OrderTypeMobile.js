@@ -41,7 +41,7 @@ const OrderTypeMobile = ({ type, setType, orderTypes, isVndcFutures }) => {
                                 {getTypesLabel(type)}
                             </div>
                             <SortIcon size={20} color={colors.onus.grey} activeColor={colors.onus.grey} />
-                            {/* <ChevronDown color={colors.grey1} size={16} className="ml-1" /> */}
+                            {/* <ChevronDown color={colors.gray[1]} size={16} className="ml-1" /> */}
                         </div>
                     </Popover.Button>
                     <Transition
