@@ -115,6 +115,7 @@ const TradeHistory = (props) => {
             scroll={{ x: true }}
             limit={6}
             skip={0}
+            noBorder={!isPro}
         />
     );
 };
