@@ -286,7 +286,7 @@ const OverviewWallet = (props) => {
 
             {/* Số dư tài sản */}
             <div className="mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-8 !p-0 dark:bg-bgTabInactive-dark !bg-namiV2 border border-divider dark:border-none">
+            <MCard addClass="mt-8 !p-0 dark:bg-bgTabInactive-dark bg-namiV2 border border-divider dark:border-none">
                 {/* mark1 */}
                 {/* Exchange */}
                 <div

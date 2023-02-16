@@ -367,9 +367,9 @@ const SwapModule = ({ width, pair }) => {
                     key={`asset_item___${i}`}
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
 
-                    ${state.fromAsset === fromAsset && 'dark:bg-hover'}
+                    ${state.fromAsset === fromAsset && 'bg-hover dark:bg-hover-dark'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
@@ -474,9 +474,9 @@ const SwapModule = ({ width, pair }) => {
                     key={`asset_item___${i}`}
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
 
-                    ${state.toAsset === toAsset && 'dark:bg-hover'}
+                    ${state.toAsset === toAsset && 'dark:bg-hover-dark bg-hover'}
                     `}
                     onClick={() => onClickToAsset(toAsset)}
                 >
