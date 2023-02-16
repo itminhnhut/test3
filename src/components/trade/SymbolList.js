@@ -144,7 +144,7 @@ const SymbolList = (props) => {
                         {sortField === 'b' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                     <div
@@ -158,7 +158,7 @@ const SymbolList = (props) => {
                         {sortField === 'p' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                     <div
@@ -172,7 +172,7 @@ const SymbolList = (props) => {
                         {sortField === 'change24h' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                 </div>
@@ -258,7 +258,7 @@ const SymbolList = (props) => {
                         {sortField === 'b' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                     <div
@@ -272,7 +272,7 @@ const SymbolList = (props) => {
                         {sortField === 'p' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                     <div
@@ -286,7 +286,7 @@ const SymbolList = (props) => {
                         {sortField === 'change24h' ? (
                             <SortIcon direction={sortDirection} />
                         ) : (
-                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                            <IconNoSort fill={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                         )}
                     </div>
                 </div>
@@ -351,7 +351,7 @@ const SymbolList = (props) => {
                         >
                             <IconStarFilled
                                 size={14}
-                                color={activeTab === 'favorite' ? colors.yellow : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
+                                color={activeTab === 'favorite' ? colors.yellow : currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5}
                             />
                         </div>
                     )}

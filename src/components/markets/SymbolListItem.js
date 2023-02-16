@@ -70,7 +70,7 @@ const SymbolListItem = (props) => {
                 {alreadyInFav ? (
                     <IconStarFilled size={14} color={colors.yellow} />
                 ) : (
-                    <IconStarFilled size={14} color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} />
+                    <IconStarFilled size={14} color={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                 )}
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>

@@ -34,7 +34,7 @@ const LanguageSetting = () => {
                         className="py-3 w-full cursor-pointer items-center text-textPrimary px-4 flex justify-between dark:hover:bg-hover first:mb-3 disabled:cursor-default"
                     >
                         {(lang === LANGUAGE_TAG.EN && 'English') || (lang === LANGUAGE_TAG.VI && 'Tiếng Việt')}
-                        {currentLocale === lang && <CheckCircleIcon color={colors.grey4} size={16} />}
+                        {currentLocale === lang && <CheckCircleIcon color={colors.gray[4]} size={16} />}
                     </button>
                 ))}
             </div>}

@@ -61,7 +61,7 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
     };
     return (
         <div
-            className="px-4 py-0.5 flex items-center font-normal text-xs leading-[16px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none dark:text-txtPrimary-dark tracking-normal"
+            className="px-4 py-1.5 flex items-center font-normal text-xs leading-[16px] hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer select-none dark:text-txtPrimary-dark tracking-normal"
             onClick={handleClickItem}
         >
             <div style={{ flex: '1 1 0%' }} className="flex items-center">
