@@ -27,6 +27,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import HrefButton from '../../../common/V2/ButtonV2/HrefButton';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -376,16 +378,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     return (
         <>
-            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
-                        <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                        <div className="flex items-center font-normal text-base text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
                             </div>
                         </div>
                         {renderEstWallet()}
@@ -405,12 +407,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            {/* <HrefButton href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                {t('common:deposit')}
-                            </HrefButton>
-                            <HrefButton variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                                {t('common:withdraw')}
-                            </HrefButton> */}
                             <ButtonV2
                                 variants="none"
                                 className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
@@ -427,13 +423,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             <div className="mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
-                    <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
-                        <LogoIcon />
-                        <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
-                            {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
-                            <BxChevronDown size={24} />
-                        </a>
-                    </div>
+                    <TransferSmallBalanceToNami width={width} />
 
                     <div className="mt-2 lg:flex">
                         <HideSmallBalance
@@ -445,31 +435,17 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             isHide={state.hideSmallAsset}
                             className="mr-8"
                         />
-                        <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
-                            <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
-                            <input
-                                className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                                value={state.search}
-                                onChange={(e) => {
-                                    setState({ search: e?.target?.value });
-                                }}
-                                onFocus={() => setState({ currentPage: 1 })}
-                                placeholder={t('common:search')}
-                            />
-                            {state.search && (
-                                <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
-                            )}
-                        </div>
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            width
+                        />
                     </div>
                 </div>
             </div>
-
-            {/* <MCard
-                getRef={(ref) => (tableRef.current = ref)}
-                style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
-                addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden"
-            >
-            </MCard> */}
             {renderAssetTable()}
 
             {/* {renderPagination()} */}

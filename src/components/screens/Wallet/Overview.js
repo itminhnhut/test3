@@ -240,22 +240,18 @@ const OverviewWallet = (props) => {
             ${
                 currentTheme === THEME_MODE.DARK
                     ? 'bg-namiv2-linear-dark border border-divider-dark'
-                    : 'bg-namiv2-linear shadow-overview_light backdrop-blur-[60px] bg-[#ffffff66]'
+                    : 'bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66]'
             }`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between">
                     <div>
                         <div className="flex items-center font-medium text-base text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                            <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? (
-                                    <HideIcon size={24} className="mr-[4px]" color={currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394'} />
-                                ) : (
-                                    <SeeIcon size={24} className="mr-[4px]" color={currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394'} />
-                                )}
+                                {state.hideAsset ? <HideIcon size={24} /> : <SeeIcon size={24} />}
                             </div>
                         </div>
                         <div className="mt-12 flex items-center">

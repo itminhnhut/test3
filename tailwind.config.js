@@ -402,7 +402,7 @@ module.exports = {
                 rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
                 ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
                 popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)',
-                overview_light: '0 6px 20px 0 rgba(31, 47, 70, 0.1)'
+                card_light: '0 6px 20px 0 rgba(31, 47, 70, 0.1)'
             },
             cursor: {
                 grabbing: 'grabbing'

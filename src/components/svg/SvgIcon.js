@@ -1,3 +1,5 @@
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
 const ArrowDownIcon = ({ className = '', color = '#8694B3' }) => (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#clip0_295_61062)">
@@ -20,28 +22,38 @@ const TrendIcon = ({ onClick }) => (
     </svg>
 );
 
-const SeeIcon = ({ className = '', color, size }) => (
-    <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
-            fill={color || '#8694b2'}
-        />
-    </svg>
-);
+const SeeIcon = ({ className, color, size }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
 
-const HideIcon = ({ className = '', color, size }) => (
-    <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#5aan4m2usa)" fill={color || '#8694b2'}>
-            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-            <path fill-rule="evenodd" clipRule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
-        </g>
-        <defs>
-            <clipPath id="5aan4m2usa">
-                <path fill="#fff" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+    return (
+        <svg className={className || ''} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"
+                fill={color || defaultColor}
+            />
+        </svg>
+    );
+};
+
+const HideIcon = ({ className = '', color, size }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    return (
+        <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#5aan4m2usa)" fill={color || defaultColor}>
+                <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                <path fill-rule="evenodd" clipRule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
+            </g>
+            <defs>
+                <clipPath id="5aan4m2usa">
+                    <path fill="#fff" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
 const CheckCircleIcon = ({ className = '', color, size }) => (
     <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -409,11 +421,15 @@ const LogoIcon = ({ size = 24, ...props }) => (
     </svg>
 );
 
-const BxChevronDown = ({ size = 24, color = '#E2E8F0', ...props }) => (
-    <svg width={size} height={size} {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293 1.414 1.414z" fill={color} />
-    </svg>
-);
+const BxChevronDown = ({ size = 24, color, ...props }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1e1e1e';
+    return (
+        <svg width={size} height={size} {...props} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293 1.414 1.414z" fill={color || defaultColor} />
+        </svg>
+    );
+};
 
 const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
     <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
