@@ -67,6 +67,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
     const [currentTheme] = useDarkMode();
 
+
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
         const symbol = currentSelectedPair?.symbol || currentSelectedPair;
@@ -458,7 +459,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <ModalV2 className="!max-w-[800px]" isVisible={isShowModalInfo} onBackdropCb={() => setIsShowModalInfo(false)}>
                 <div className="mt-4 text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('futures:trading_rules')}</div>
-
                 <div className="mt-6 gap-6 flex">
                     <div className="w-full rounded-md border dark:border-divider-dark p-4 dark:bg-bgInput-dark flex justify-between">
                         <div

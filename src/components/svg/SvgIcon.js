@@ -33,7 +33,7 @@ const HideIcon = ({ className = '', color, size }) => (
     <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#5aan4m2usa)" fill={color || '#8694b2'}>
             <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
+            <path fill-rule="evenodd" clipRule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
         </g>
         <defs>
             <clipPath id="5aan4m2usa">
@@ -122,7 +122,7 @@ const FutureWalletIcon = ({ size = 36, ...props }) => (
     <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
             fill-rule="evenodd"
-            clip-rule="evenodd"
+            clipRule="evenodd"
             d="M17.976 14.02h6.623a8.083 8.083 0 0 0-2.034-8.03 8.107 8.107 0 0 0-11.472-.025 8.111 8.111 0 0 0-2.06 8.055h6.624l1.153 1.154 1.166-1.154zM17.975 14l2.308-2.297-3.462-3.465-3.463 3.452 2.296 2.31 1.142 1.155 1.179-1.155z"
             fill="#9FF2C6"
         />
@@ -200,7 +200,7 @@ const FutureReferralIcon = ({ size = 36, ...props }) => (
         <path d="m9.173 13.484 1.757 1.826-5.134 6.29H2.418l6.755-8.116zM21.597 2.4l-6.688 8.116-1.757-1.758L18.49 2.4h3.108z" fill="#5BD891" />
         <path
             fill-rule="evenodd"
-            clip-rule="evenodd"
+            clipRule="evenodd"
             d="M21.594 18.482a3.11 3.11 0 0 1-3.108 3.111 3.11 3.11 0 0 1-3.107-3.11 3.11 3.11 0 0 1 3.107-3.112 3.11 3.11 0 0 1 3.108 3.111zm-2.097.006-1.014-1.15-1.013 1.15 1.014 1.218 1.013-1.218z"
             fill="#9FF2C5"
         />
@@ -216,7 +216,7 @@ const FutureIcon = ({ size = 36, ...props }) => {
             <path d="M20.059 9.754v2.854h8.74V9.754h-8.74z" fill="#5BD891" />
             <path
                 fill-rule="evenodd"
-                clip-rule="evenodd"
+                clipRule="evenodd"
                 d="M17.825 8.639a5.44 5.44 0 0 1-5.44 5.438 5.44 5.44 0 1 1 0-10.877 5.44 5.44 0 0 1 5.44 5.439zm-5.605 2.673v-.57a1.41 1.41 0 0 1-.685-.172 1.807 1.807 0 0 1-.606-.515l.452-.451c.11.156.248.29.407.397.131.082.28.131.434.145h.117a.903.903 0 0 0 .362-.055.389.389 0 0 0 .19-.099.47.47 0 0 0 .207-.406.56.56 0 0 0-.108-.353.842.842 0 0 0-.28-.208 2.775 2.775 0 0 0-.38-.153h-.1l-.316-.118a2.796 2.796 0 0 1-.397-.216 1.175 1.175 0 0 1-.271-.344 1.074 1.074 0 0 1-.109-.524c-.004-.22.06-.438.181-.623.124-.172.293-.306.488-.388.13-.069.27-.114.414-.136v-.542h.48v.542c.385.053.734.25.977.551l-.443.46a1.87 1.87 0 0 0-.37-.315.38.38 0 0 0-.163-.073.66.66 0 0 0-.226 0l-.253.01a.579.579 0 0 0-.262.108.416.416 0 0 0-.172.38.497.497 0 0 0 .1.306c.082.083.18.147.289.19l.343.127.136.054.289.1c.143.06.277.143.397.243a.902.902 0 0 1 .28.352c.102.165.164.35.181.542a1.11 1.11 0 0 1-.388.904 1.31 1.31 0 0 1-.687.28l-.029.003v.567h-.479z"
                 fill="#5BD891"
             />
@@ -330,6 +330,19 @@ const AddCircleIcon = () => (
     </svg>
 );
 
+const AddCircleColorIcon = (props) => (
+    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#zfktez410a)">
+            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
+        </g>
+        <defs>
+            <clipPath id="zfktez410a">
+                <path fill="#fff" d="M0 0h12v12H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const AppleIcon = ({ size = 24, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
         <g clip-path="url(#ik9gb490da)">
@@ -341,19 +354,6 @@ const AppleIcon = ({ size = 24, ...props }) => (
         <defs>
             <clipPath id="ik9gb490da">
                 <path fill="#fff" transform="translate(.5)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
-
-const AddCircleColorIcon = (props) => (
-    <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#zfktez410a)">
-            <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
-        </g>
-        <defs>
-            <clipPath id="zfktez410a">
-                <path fill="#fff" d="M0 0h12v12H0z" />
             </clipPath>
         </defs>
     </svg>
@@ -407,6 +407,29 @@ const BxChevronDown = ({ size = 24, color = '#E2E8F0', ...props }) => (
     </svg>
 );
 
+const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
+    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#0dcfa1hmna)">
+            <path fill={bgColor} d="M0 24V0h24v24z" />
+            <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color ? color : '#47CC85'} />
+        </g>
+        <defs>
+            <clipPath id="0dcfa1hmna">
+                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsBookIcon = ({ size, color, ...props }) => (
+    <svg {...props} width={size || 12} height={size || 12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M3.006 9H10.5V2a1 1 0 0 0-1-1H3c-.603 0-1.5.4-1.5 1.5v7c0 1.1.897 1.5 1.5 1.5h7.5v-1H3.006c-.231-.006-.506-.098-.506-.5s.275-.494.506-.5zM4 3h4.5v1H4V3z"
+            fill={color || '#8694B3'}
+        />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -426,13 +449,15 @@ export {
     FutureIcon,
     FutureLaunchpadIcon,
     FuturePortfolioIcon,
+    SuccessfulTransactionIcon,
+    AddCircleIcon,
+    AddCircleColorIcon,
     FutureSimpleIcon,
     FutureAdvanceIcon,
-    SuccessfulTransactionIcon,
     AppleIcon,
     GooglePlayIcon,
     LogoIcon,
     BxChevronDown,
-    AddCircleIcon,
-    AddCircleColorIcon,
+    SyncAltIcon,
+    BxsBookIcon
 };
