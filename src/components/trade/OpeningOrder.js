@@ -353,7 +353,7 @@ const SpotOrderList = (props) => {
                 loading={loading}
                 limit={10}
                 skip={0}
-                noBorder={!props.isPro}
+                noBorder={!props.isPro || !filteredOrders.length}
             />
         </>
     );

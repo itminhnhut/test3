@@ -27,6 +27,7 @@ import TradingInput from 'components/trade/TradingInput';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { roundToDown } from 'round-to';
+import Link from 'next/link';
 
 let initPrice = '';
 
@@ -782,11 +783,11 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             (!isMarket && !validator('price', _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice))?.isValid;
         const disabled = placing || currentExchangeConfig?.status === 'MAINTAIN' || isErorr;
         return !user ? (
-            <a
-                href={getLoginUrl('sso')}
-                className="btn w-full capitalize button-common block text-center"
-                dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
-            ></a>
+            <Link href={getLoginUrl('sso')}>
+                <a className="w-full">
+                    <ButtonV2 disabled dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></ButtonV2>
+                </a>
+            </Link>
         ) : (
             <ButtonV2
                 onClick={() => !disabled && confirmModal(_orderSide)}

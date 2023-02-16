@@ -197,6 +197,7 @@ const OrderHistory = (props) => {
                 dataIndex: 'status',
                 align: 'center',
                 width: 150,
+                visible: histories.length > 0,
                 fixed: 'right',
                 render: (v) => {
                     switch (v) {
@@ -216,7 +217,7 @@ const OrderHistory = (props) => {
                 }
             }
         ],
-        [exchangeConfig, currentPair, status, isOpen]
+        [exchangeConfig, currentPair, status, isOpen, histories]
     );
 
     useEffect(
@@ -267,6 +268,7 @@ const OrderHistory = (props) => {
                 scroll={{ x: true }}
                 limit={10}
                 skip={0}
+                noBorder={!props.isPro || !data.length}
             />
         );
     }, [filteredHistories, isAuth, columns, loading, filterByCurrentPair, currentPair, props.orderListWrapperHeight, status]);

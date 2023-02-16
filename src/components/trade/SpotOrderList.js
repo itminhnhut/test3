@@ -76,6 +76,7 @@ const SpotOrderList = (props) => {
                     )}
                     {activeTab === 'order_history' && (
                         <OrderHistory
+                            isPro={props.isPro}
                             filterByCurrentPair={hideOther}
                             height={height}
                             orderListWrapperHeight={props.orderListWrapperHeight}
