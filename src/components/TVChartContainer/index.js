@@ -420,7 +420,7 @@ export class TVChartContainer extends React.PureComponent {
         return {
             'mainSeriesProperties.priceAxisProperties.autoScale': true,
             'scalesProperties.lineColor': isDark ? colors.dark.dark : colors.white,
-            'scalesProperties.textColor': isDark ? colors.darkBlue5 : colors.primary,
+            'scalesProperties.textColor': isDark ? colors.darkBlue5 : colors.gray[1],
             'scalesProperties.fontSize': 10,
             'paneProperties.background': isDark ? colors.dark.dark : colors.white,
             'paneProperties.vertGridProperties.color': isDark ? colors.dark.dark : colors.white,
@@ -465,7 +465,7 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             // fullscreen: this.state.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: this.props.theme === 'dark' ? colors.dark : '#fff' },
+            loading_screen: { backgroundColor: this.props.theme === 'dark' ? colors.dark.dark : '#fff' },
             studies_overrides: {
                 'volume.volume.color.1': colors.teal,
                 'volume.volume.color.0': colors.red2,

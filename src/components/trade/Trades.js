@@ -99,7 +99,7 @@ const Trades = (props) => {
                         } = trade;
                         // const [p, q] = order;
                         return (
-                            <div className="flex py-[1px]  cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3" key={index}>
+                            <div className="flex py-[1px]  cursor-pointer hover:bg-hover dark:hover:bg-darkBlue-3" key={index}>
                                 <div className={'flex-1 text-xs font-medium leading-table ' + (side === 'SELL' ? 'text-red' : 'text-teal')}>
                                     {formatPrice(price, 10)}
                                 </div>

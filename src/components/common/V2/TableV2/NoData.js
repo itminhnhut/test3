@@ -18,25 +18,23 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
             {!user ? (
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
-                    <div className='flex space-x-1'>
+                    <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 font-semibold">
                         <a href={getLoginUrl('sso', 'login')}>
-                            <span className='text-teal hover:underline cursor-pointer' dangerouslySetInnerHTML={{ __html: t('common:sign_in') }} />
+                            <span className="text-teal hover:underline cursor-pointer" dangerouslySetInnerHTML={{ __html: t('common:sign_in') }} />
                         </a>
-                        <div>
-                            {t('common:or')}
-                        </div>
+                        <div>{t('common:or')}</div>
                         <a href={getLoginUrl('sso', 'register')}>
-                            <span className='text-teal hover:underline cursor-pointer' dangerouslySetInnerHTML={{ __html: t('common:sign_up') }} />
+                            <span className="text-teal hover:underline cursor-pointer" dangerouslySetInnerHTML={{ __html: t('common:sign_up') }} />
                         </a>
-                        <div>
-                            {t('common:to_experience')}
-                        </div>
+                        <div>{t('common:to_experience')}</div>
                     </div>
                 </>
             ) : (
                 <>
-                    {isSearch ? <NotFoundIcon /> : <NoDataIcon isDark={isDark} />}
-                    <span className={'text-darkBlue-5 text-sm sm:text-base'}>{text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}</span>
+                    {isSearch ? isDark ? <NotFoundDarkIcon /> : <NotFoundLightIcon /> : isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
+                    <span className={'text-txtSecondary dark:text-darkBlue-5 text-sm sm:text-base'}>
+                        {text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}
+                    </span>
                 </>
             )}
         </div>
@@ -45,7 +43,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
 
 export default NoData;
 
-const NoDataIcon = ({ isDark }) => (
+const NoDataDarkIcon = () => (
     <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             opacity="0.8"
@@ -91,7 +89,38 @@ const NoDataIcon = ({ isDark }) => (
     </svg>
 );
 
-const NotFoundIcon = () => (
+const NoDataLightIcon = () => (
+    <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="m100.083 93.545-85.637 4.874-2.051-50.126-.342-8.132v-.194c0-.043-.021-.108-.021-.172l-.257-6.04c-.064-1.294.94-2.394 2.223-2.437L50 29.808a2.34 2.34 0 0 1 2.414 2.243l.172 4.098 24.87-1.035v8.692h20.79l.192 6.104 1.645 43.635z"
+            fill="#E9EEF4"
+        />
+        <path
+            d="m113.163 51.697-12.82 44.433c-.235.798-1.026 1.359-1.945 1.402h-.021L62.118 98.89l-1.602.064-30.02 1.122-13.632.517c-1.282.044-2.35-.84-2.415-1.984v-.172l13.867-43.29.406-1.272v-.022c.256-.755 1.026-1.294 1.902-1.337l.598-.022 67.198-2.61 12.585-.496c1.431-.064 2.5 1.1 2.158 2.308z"
+            fill="url(#vkvonmtuaa)"
+        />
+        <path d="M98.249 43.769h-20.79v-8.693l18.097-.755c1.282-.064 2.35.95 2.415 2.222l.064 1.575.064 1.574.15 3.86v.217z" fill="url(#3p2js4giyb)" />
+        <path d="M113.227 22.543v21.224H98.249v-.216l-.15-3.86-.064-1.575-.064-1.575a2.296 2.296 0 0 0-2.415-2.221l-18.097.755V22.543h35.768z" fill="#E9EEF4" />
+        <path d="M99.445 25.29H81.69v.517h17.755v-.518zM94.103 27.53H81.69v.517h12.413v-.518zM94.103 29.797H81.69v.517h12.413v-.517z" fill="#fff" />
+        <defs>
+            <linearGradient id="vkvonmtuaa" x1="61.421" y1="78.919" x2="107.328" y2="22.297" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".22" stop-color="#D1D8E4" />
+                <stop offset=".315" stop-color="#D8DEE8" />
+                <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
+                <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
+            </linearGradient>
+            <linearGradient id="3p2js4giyb" x1="76.703" y1="41.531" x2="108.881" y2="35.569" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".017" stop-color="#C7CFDE" />
+                <stop offset=".65" stop-color="#EFF2F6" />
+                <stop offset=".977" stop-color="#fff" />
+            </linearGradient>
+        </defs>
+    </svg>
+);
+
+const NotFoundDarkIcon = () => (
     <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M53.636 60.49c0 8.972-5.271 16.71-12.87 20.265-7.652-2.78-13.13-10.136-13.13-18.752 0-9.903 7.246-18.144 16.703-19.683a22.348 22.348 0 0 1 9.297 18.17z"
@@ -129,6 +158,40 @@ const NotFoundIcon = () => (
                 <stop offset=".65" stopColor="#64676A" stopOpacity=".354" />
                 <stop offset=".877" stopColor="#202122" stopOpacity=".108" />
                 <stop offset=".977" stopOpacity="0" />
+            </linearGradient>
+        </defs>
+    </svg>
+);
+
+const NotFoundLightIcon = () => (
+    <svg width="124" height="124" viewBox="0 0 124 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M54.559 61.674c0 8.567-5.044 15.953-12.318 19.345-7.317-2.65-12.563-9.68-12.563-17.904 0-9.456 6.932-17.324 15.976-18.793 5.393 3.882 8.905 10.204 8.905 17.352z"
+            fill="url(#y413son5ja)"
+        />
+        <path
+            d="M25.054 63.116c0-9.805 6.002-18.24 14.529-21.828a21.43 21.43 0 0 0-6.386-.972c-11.8 0-21.363 9.561-21.363 21.36 0 11.798 9.562 21.359 21.363 21.359.853 0 1.7-.05 2.525-.154-6.429-4.245-10.668-11.512-10.668-19.765z"
+            fill="url(#fd0c64skgb)"
+        />
+        <path
+            d="M71.928 67.906c.293-1.567.49-3.161.49-4.79 0-13.072-10.626-23.66-23.693-23.66-3.224 0-6.323.65-9.163 1.825-8.506 3.58-14.5 12.022-14.5 21.834 0 8.246 4.238 15.513 10.66 19.75a23.42 23.42 0 0 0 13.003 3.91c9.814 0 18.222-5.965 21.839-14.47l41.228 14.044 1.497-4.4-41.361-14.043zM67.5 66.409a18.226 18.226 0 0 1-1.336 4.4c-2.966 6.679-9.681 11.344-17.439 11.344-2.245 0-4.462-.392-6.484-1.14-7.303-2.637-12.549-9.68-12.549-17.89 0-9.45 6.911-17.338 15.97-18.807 1.007-.161 2.021-.231 3.063-.231 10.528 0 19.069 8.532 19.069 19.03 0 1.105-.098 2.217-.294 3.294z"
+            fill="#C2C7CF"
+        />
+        <defs>
+            <linearGradient id="y413son5ja" x1="22.261" y1="65.079" x2="53.663" y2="61.591" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".209" stop-color="#D1D8E4" />
+                <stop offset=".299" stop-color="#D8DEE8" />
+                <stop offset=".505" stop-color="#DEE3EC" stop-opacity=".816" />
+                <stop offset=".787" stop-color="#F0F2F6" stop-opacity=".562" />
+                <stop offset=".967" stop-color="#fff" stop-opacity=".4" />
+            </linearGradient>
+            <linearGradient id="fd0c64skgb" x1="51.232" y1="62.741" x2="2.649" y2="59.866" gradientUnits="userSpaceOnUse">
+                <stop offset=".385" stop-color="#C6CEDE" />
+                <stop offset=".525" stop-color="#CCD3E2" stop-opacity=".759" />
+                <stop offset=".719" stop-color="#DEE3EC" stop-opacity=".427" />
+                <stop offset=".943" stop-color="#FBFCFD" stop-opacity=".041" />
+                <stop offset=".967" stop-color="#fff" stop-opacity="0" />
             </linearGradient>
         </defs>
     </svg>

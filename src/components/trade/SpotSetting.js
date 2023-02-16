@@ -156,7 +156,7 @@ const SpotSetting = (props) => {
                                     })}
                                 </div>
                                 <div className="pt-6 text-center">
-                                    <span className="text-sm sm:text-base text-teal font-medium cursor-pointer py-[10px]" onClick={() => resetDefault()}>
+                                    <span className="text-sm sm:text-base text-teal font-semibold cursor-pointer py-[10px]" onClick={() => resetDefault()}>
                                         {t('spot:setting.reset_default_layout')}
                                     </span>
                                 </div>
