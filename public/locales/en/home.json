@@ -10,10 +10,11 @@
   },
   "markettrend": {
     "title": "Market Trend",
-    "top_gainer": "Top Gainer",
-    "top_loser": "Top Loser",
+    "top_gainer": "Gainer",
+    "top_loser": "Loser",
     "top_vol": "Hot 24h",
-    "explore_market": "Explore Market"
+    "new_listing": "New Listing",
+    "explore_market": "More"
   },
   "first_award": {
     "title": "Join Nami Exchange now!",

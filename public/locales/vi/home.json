@@ -9,11 +9,12 @@
         "total_pairs": "Tổng số cặp giao dịch"
     },
     "markettrend": {
-        "title": "Xu hướng thị trường",
-        "top_gainer": "Top tăng giá",
-        "top_loser": "Top giảm giá",
+        "title": "Xếp hạng thị trường",
+        "top_gainer": "Tăng giá",
+        "top_loser": "Giảm giá",
         "top_vol": "Hot 24h",
-        "explore_market": "Khám phá thêm"
+        "new_listing": "Mới niêm yết",
+        "explore_market": "Xem thêm"
     },
     "first_award": {
         "title": "Tham gia Nami Exchange ngay!",
