@@ -1,4 +1,3 @@
-import Delete from 'src/components/svg/Delete';
 import filter from 'lodash/filter';
 import findIndex from 'lodash/findIndex';
 import { useTranslation } from 'next-i18next';
@@ -9,7 +8,6 @@ import { API_GET_OPEN_ORDER } from 'src/redux/actions/apis';
 import { ApiStatus, ExchangeOrderEnum, UserSocketEvent } from 'src/redux/actions/const';
 import { formatBalance, formatTime, TypeTable } from 'src/redux/actions/utils';
 import fetchAPI, { useCancelToken } from 'utils/fetch-api';
-import showNotification from 'utils/notificationService';
 import Link from 'next/link';
 import { formatNumber } from 'redux/actions/utils';
 import TableV2 from '../common/V2/TableV2';
@@ -202,7 +200,7 @@ const SpotOrderList = (props) => {
     }, [userSocket]);
 
     const columns = useMemo(() => {
-        const init = [
+        return [
             {
                 key: 'displayingId',
                 title: t('common:order_id'),
@@ -266,38 +264,39 @@ const SpotOrderList = (props) => {
                 render: (row) => {
                     return <span>{formatBalance((row?.executedQty / row?.quantity) * 100, 2)}%</span>;
                 }
-            }
-        ];
-        if (filteredOrders.length > 0)
-            init.push({
+            },
+            {
                 key: 'actions',
                 title: (
-                    <span
+                    <div
                         onClick={() => {
                             if (filteredOrders.length) {
                                 Store.removeAllNotifications();
                                 setShowCloseAll(true);
                             }
                         }}
-                        className="dark:bg-dark-2 px-4 py-2 rounded-md cursor-pointer font-semibold"
+                        className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
                     >
                         {t('common:close_all_orders')}
-                    </span>
+                    </div>
                 ),
                 fixed: 'right',
                 align: 'center',
                 width: 180,
+                // visible: filteredOrders.length > 0,
                 className: filteredOrders.length > 0 ? '' : 'invisible',
                 render: (row) => (
-                    <Delete
-                        className="cursor-pointer flex m-auto w-full"
+                    <div
                         onClick={() => {
                             closeOrder(row);
                         }}
-                    />
+                        className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
+                    >
+                        {t('common:close')}
+                    </div>
                 )
-            });
-        return init;
+            }
+        ];
     }, [toggle, currentPair, showCloseAll, loaded, filteredOrders]);
 
     useEffect(
@@ -354,6 +353,7 @@ const SpotOrderList = (props) => {
                 loading={loading}
                 limit={10}
                 skip={0}
+                noBorder={!props.isPro}
             />
         </>
     );

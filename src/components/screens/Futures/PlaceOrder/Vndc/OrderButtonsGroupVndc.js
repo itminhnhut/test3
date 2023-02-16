@@ -188,12 +188,12 @@ const FuturesOrderButtonsGroupVndc = ({
             <div className="!mt-8">
                 {!isAuth ? (
                     <>
-                        <Link href={getLoginUrl('sso')}>
+                        <Link href={getLoginUrl('sso', 'register')}>
                             <a>
                                 <ButtonV2>{t('common:sign_up')}</ButtonV2>
                             </a>
                         </Link>
-                        <Link href={getLoginUrl('sso', 'register')}>
+                        <Link href={getLoginUrl('sso')}>
                             <a>
                                 <ButtonV2 className="mt-3" color="dark">
                                     {t('common:sign_in')}

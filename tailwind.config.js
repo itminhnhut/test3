@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors');
 const colors2 = require('./src/styles/colors');
 // Common colors
 const commonColors = {
-    ...colors2,
+    ...colors2
 };
 
 module.exports = {
@@ -138,6 +138,7 @@ module.exports = {
             },
 
             hover: {
+                ...commonColors.hover,
                 DEFAULT: commonColors.hover.DEFAULT,
                 dark: commonColors.hover.dark
             },
@@ -172,7 +173,7 @@ module.exports = {
                 crayola: '#1e77eb'
             },
             darkBlue: {
-                DEFAULT: '#223050',
+                DEFAULT: commonColors.darkBlue,
                 1: commonColors.darkBlue1,
                 2: commonColors.darkBlue2,
                 3: commonColors.darkBlue3,
@@ -354,7 +355,7 @@ module.exports = {
                     dark: commonColors.darkBlue
                 },
                 bgInput: {
-                    DEFAULT: commonColors.gray[5],
+                    DEFAULT: commonColors.gray[10],
                     dark: commonColors.darkBlue3
                 },
                 bgHover: {
@@ -383,7 +384,6 @@ module.exports = {
                 rank: "url('/images/contest/bg_rank.png')",
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
-                dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')"
             },
             dropShadow: {

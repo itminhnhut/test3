@@ -267,8 +267,8 @@ const Futures = () => {
                                 margin={[-1, -1]}
                                 containerPadding={[0, 0]}
                                 rowHeight={24}
-                                draggableHandle=".dragHandleArea"
-                                draggableCancel=".dragCancelArea"
+                                // draggableHandle=".dragHandleArea"
+                                // draggableCancel=".dragCancelArea"
                                 onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
                                 onResize={(e) =>
                                     setState({

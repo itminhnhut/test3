@@ -143,7 +143,7 @@ const layoutPro = [
         x: 9,
         y: 0,
         w: 3.5,
-        h: 27,
+        h: 28,
         isDraggable: false,
         isResizable: false,
         isDroppable: false
@@ -260,8 +260,6 @@ const SpotComp = () => {
         setOrderBookLayout(_orderbookLayout);
         setTradesLayout(_tradesLayout);
     }, []);
-    console.log(layoutConfig);
-    // Spot Socket
 
     const subscribeExchangeSocket = (s) => {
         if (!publicSocket) {
@@ -394,7 +392,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="placeOrderForm"
-                            className={classNames(`border-t border-b border-r border-divider dark:border-divider-dark`, {
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowPlaceOrderForm || fullScreen,
                                 'border-b-0': isPro
                             })}
@@ -418,7 +416,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="orderbook"
-                            className={classNames(`border-r border-b border-t border-divider dark:border-divider-dark`, {
+                            className={classNames(`border-r border-b border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowOrderBook || fullScreen,
                                 'border-l': isPro
                             })}

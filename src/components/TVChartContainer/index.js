@@ -476,7 +476,7 @@ export class TVChartContainer extends React.PureComponent {
             timezone: getTradingViewTimezone(),
             overrides: {
                 'scalesProperties.fontSize': 10,
-                editorFontsList: ['Barlow', 'Sans'],
+                editorFontsList: ['SF-Pro'],
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
                 volumePaneSize: 'small',
                 'mainSeriesProperties.candleStyle.borderUpColor': colors.teal,
@@ -544,7 +544,7 @@ export class TVChartContainer extends React.PureComponent {
                             this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''
                         }`}
                     >
-                        <Spiner isDark />
+                        <Spiner isDark={this.props.theme === 'dark'} />
                     </div>
                     <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea ${isPro ? 'pl-6' : ''}`}>
                         {this.state.chartStatus === ChartStatus.LOADED && (
