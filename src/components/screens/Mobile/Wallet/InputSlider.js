@@ -244,7 +244,7 @@ const Slider = ({
                     <Hexagon
                         size={10}
                         fill={isDark ? colors.darkBlue1 : colors.white}
-                        stroke={active ? colors.teal : isDark ? colors.darkBlue4 : colors.grey3}
+                        stroke={active ? colors.teal : isDark ? colors.darkBlue4 : colors.gray[3]}
                         strokeWidth={2}
                     />
                 </Dot>

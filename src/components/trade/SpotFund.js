@@ -37,7 +37,7 @@ const TradeHistory = (props) => {
 
     const renderActions = () => {
         return (
-            <div className={`flex items-center text-teal divide-x divide-divider-dark font-semibold`}>
+            <div className={`flex items-center text-teal divide-x divide-divider dark:divide-divider-dark font-semibold`}>
                 <span className="cursor-pointer pr-3">Mua</span>
                 <span className="cursor-pointer px-3">Nạp</span>
                 <span className="cursor-pointer px-3">Rút</span>

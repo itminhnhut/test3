@@ -59,7 +59,7 @@ const SpotSetting = (props) => {
         const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
         window.location = `${nextUrl}?layout=${_layout}`;
     };
-    const inActiveLabel = currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
+    const inActiveLabel = currentTheme === 'dark' ? colors.gray[4] : colors.darkBlue;
 
     const onChangeSpotComponent = (key, value) => {
         const _newSpotState = spotState;

@@ -430,3 +430,62 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
         />
     );
 };
+
+
+
+export const TabsNao = styled.div.attrs({
+    className: 'flex items-center space-x-4 relative mt-4'
+})`
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        width: 100%;
+        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
+    }
+`;
+
+export const TabItemNao = styled.div.attrs({
+    className: 'px-8 py-6 cursor-pointer relative'
+})`
+    background: rgba(97, 144, 149, 0.15);
+    border-radius: 12px 12px 0px 0px;
+    color: ${({ active }) => (active ? colors.nao.white : colors.nao.grey)};
+    font-weight: 600;
+    &::after {
+        display: ${({ active }) => (active ? 'block' : 'none')};
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 12px 12px 0px 0px;
+        padding: 2px;
+        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+    }
+    &:first-child::before {
+        content: '';
+        position: absolute;
+        /* inset: 0; */
+        left: 0;
+        bottom: 0;
+        z-index: 3;
+        border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
+        height: ${({ active }) => (active ? 0 : '2px')};
+        width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
+        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
+    }
+    &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        z-index: 2;
+        border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
+        height: ${({ active }) => (active ? '0' : '2px')};
+        width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
+    }
+`;

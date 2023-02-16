@@ -288,7 +288,7 @@ const Summary = (props) => {
                         },
                     },
                     backgroundColor: colors.white,
-                    titleColor: colors.grey2,
+                    titleColor: colors.gray[2],
                     displayColors: false
                 },
             },

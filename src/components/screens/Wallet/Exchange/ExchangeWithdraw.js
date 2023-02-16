@@ -377,7 +377,7 @@ const ExchangeWithdraw = () => {
                     </span>
                 </div>
                 <div className={state.openList?.cryptoList ? 'rotate-180' : ''}>
-                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue} />
+                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue} />
                 </div>
             </>
         );
@@ -459,7 +459,7 @@ const ExchangeWithdraw = () => {
                     <span className="ml-2 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">{state.selectedNetwork?.name || '--'}</span>
                 </div>
                 <div className={state.openList?.networkList ? 'rotate-180' : ''}>
-                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue} />
+                    <ChevronDown size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue} />
                 </div>
             </>
         );
