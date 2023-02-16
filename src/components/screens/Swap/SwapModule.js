@@ -397,7 +397,7 @@ const SwapModule = ({ width, pair }) => {
                 ref={fromAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
                         <Search size={16} />
                         <input
                             autoFocus
@@ -502,7 +502,7 @@ const SwapModule = ({ width, pair }) => {
                 ref={toAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
                         <Search size={16} />
                         <input
                             autoFocus
@@ -515,7 +515,7 @@ const SwapModule = ({ width, pair }) => {
                             onClick={() => !!state.search && setState({ search: '' })}
                             size={width >= 768 ? 20 : 16}
                             className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
-                        />{' '}
+                        />
                     </div>
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
@@ -841,7 +841,7 @@ const SwapModule = ({ width, pair }) => {
             }
         },
         DEBOUNCE_TIMEOUT,
-        [state.fromAmount, state.fromAmount, state.focus, config, availabelAsset]
+        [state.fromAmount, state.focus, config, availabelAsset]
     );
 
     useDebounce(
@@ -851,7 +851,7 @@ const SwapModule = ({ width, pair }) => {
             }
         },
         DEBOUNCE_TIMEOUT,
-        [`${state.fromAsset}_${state.toAsset}`]
+        [state.fromAsset, state.toAsset]
     );
 
     useDebounce(

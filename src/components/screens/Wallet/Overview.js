@@ -66,18 +66,20 @@ const OverviewWallet = (props) => {
         for (let i = 0; i < limitExchangeAsset; ++i) {
             const key = `overview__spot_${i}`;
             items.push(
-                <Link
-                    key={key}
-                    href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                        type: 'crypto',
-                        asset: allAssets[i]?.assetName
-                    })}
-                    prefetch={false}
+                <button
+                    onClick={() =>
+                        onHandleClick(
+                            'deposit_exchange',
+                            walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                type: 'crypto',
+                                asset: allAssets[i]?.assetCode
+                            })
+                        )
+                    }
+                    className="mr-3"
                 >
-                    <a className="mr-3">
-                        <AssetLogo assetCode={allAssets[i]?.assetCode} size={30} />
-                    </a>
-                </Link>
+                    <AssetLogo assetCode={allAssets[i]?.assetCode} size={30} />
+                </button>
             );
         }
 
@@ -176,11 +178,15 @@ const OverviewWallet = (props) => {
     };
 
     const flag = useRef(false);
-    const onHandleClick = (key) => {
+    const onHandleClick = (key, href) => {
         switch (key) {
             case 'deposit_exchange':
                 flag.current = true;
-                handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
+                if (href) {
+                    handleKycRequest(href);
+                } else {
+                    handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
+                }
                 break;
             case 'withdraw_exchange':
                 flag.current = true;
@@ -291,16 +297,16 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
-                            <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}>
-                                <a className="mr-3">
-                                    <div
-                                        className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
+                            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}> */}
+                            <button onClick={() => onHandleClick('deposit_exchange')} className="mr-3">
+                                <div
+                                    className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
                                          bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtSecondary dark:text-txtSecondary-dark "
-                                    >
-                                        +6
-                                    </div>
-                                </a>
-                            </Link>
+                                >
+                                    +6
+                                </div>
+                            </button>
+                            {/* </Link> */}
                         </div>
                         <div className="flex items-center mt-4 lg:mt-0">
                             <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick('deposit_exchange')}>
