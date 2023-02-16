@@ -13,7 +13,7 @@ import Modal from 'src/components/common/SwapReModal';
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
-import { find, orderBy, uniqBy } from 'lodash';
+import { divide, find, orderBy, uniqBy } from 'lodash';
 import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { Search, X, XCircle } from 'react-feather';

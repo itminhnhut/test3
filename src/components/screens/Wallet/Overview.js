@@ -286,12 +286,12 @@ const OverviewWallet = (props) => {
 
             {/* Số dư tài sản */}
             <div className="mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-8 !p-0 dark:!bg-bgTabInactive-dark !bg-namiV2 border border-divider dark:border-none">
+            <MCard addClass="mt-8 !p-0 dark:bg-bgTabInactive-dark !bg-namiV2 border border-divider dark:border-none">
                 {/* mark1 */}
                 {/* Exchange */}
                 <div
                     onClick={() => onHandleClick('details_exchange')}
-                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row dark:hover:bg-hover rounded-t-xl hover:bg-teal-5 cursor-pointer group"
+                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row rounded-t-xl cursor-pointer group hover:bg-hover dark:hover:bg-hover-dark"
                 >
                     <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
@@ -333,7 +333,7 @@ const OverviewWallet = (props) => {
                 {/* Futures */}
                 <div
                     onClick={() => onHandleClick('details_futures')}
-                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row  dark:hover:bg-hover hover:bg-teal-5 cursor-pointer group"
+                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row hover:bg-hover dark:hover:bg-hover-dark cursor-pointer group"
                 >
                     <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
@@ -352,7 +352,7 @@ const OverviewWallet = (props) => {
                 {/* <Link href="/wallet/partners"> */}
                 <div
                     onClick={() => onHandleClick('details_partners')}
-                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row  dark:hover:bg-hover hover:bg-teal-5 cursor-pointer rounded-b-xl group"
+                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row hover:bg-hover dark:hover:bg-hover-dark cursor-pointer rounded-b-xl group"
                 >
                     <AssetBalance title="Partners" icon={<SvgWalletFutures />} renderEstBalance={renderPartnersEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6">
