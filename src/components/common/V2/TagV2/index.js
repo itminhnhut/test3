@@ -8,7 +8,8 @@ import PropTypes from 'prop-types';
 const types = {
     DEFAULT: 'default',
     SUCCESS: 'success',
-    WARNING: 'warning'
+    WARNING: 'warning',
+    FAILED: 'failed'
 };
 
 const typeStyles = {
@@ -20,6 +21,10 @@ const typeStyles = {
         backgroundColor: 'rgba(71,204,133,0.1)',
         color: colors.teal,
         icon: CheckCircle
+    },
+    [types.FAILED]: {
+        backgroundColor: 'rgba(249,54,54 0.1)',
+        color: '#F93636'
     },
     [types.WARNING]: {
         backgroundColor: 'rgba(255,198,50,0.15)',
@@ -42,7 +47,7 @@ function TagV2({
         }}
         className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
     >
-        {style.icon && React.createElement(style.icon, {className: 'mr-2'})}
+        {style.icon && React.createElement(style.icon, { className: 'mr-2' })}
         <span>{children}</span>
     </span>;
 }
@@ -51,6 +56,6 @@ TagV2.propTypes = {
     type: PropTypes.oneOf(Object.values(types)),
     children: PropTypes.node.isRequired,
     className: PropTypes.string
-}
+};
 
 export default TagV2;
