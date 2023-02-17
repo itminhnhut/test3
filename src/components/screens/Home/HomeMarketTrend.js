@@ -125,11 +125,11 @@ const HomeMarketTrend = ({ trendData }) => {
                      className={
 
                          isMobile ? classNames('flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
-                                 'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                 '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
                              })
                              :
                              classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
-                                 'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                 '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
                              })}
                      onClick={() => {
                          setType(e);
