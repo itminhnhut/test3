@@ -454,6 +454,17 @@ const BxsBookIcon = ({ size, color, ...props }) => (
     </svg>
 );
 
+const BxsStarIcon = ({ size, fill, ...props }) => {
+    return (
+        <svg {...props} width={size || 16} height={size || 16} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M14.632 6.12a.667.667 0 0 0-.579-.45l-3.8-.303-1.645-3.64a.665.665 0 0 0-1.215-.001L5.748 5.367l-3.8.302a.666.666 0 0 0-.413 1.142L4.344 9.55l-.994 4.302a.667.667 0 0 0 1.02.704L8 12.135l3.63 2.42a.668.668 0 0 0 1.012-.737l-1.22-4.267 3.024-2.721a.668.668 0 0 0 .186-.71z"
+                fill={fill || '#8694B3'}
+            />
+        </svg>
+    );
+};
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -483,5 +494,6 @@ export {
     LogoIcon,
     BxChevronDown,
     SyncAltIcon,
-    BxsBookIcon
+    BxsBookIcon,
+    BxsStarIcon
 };

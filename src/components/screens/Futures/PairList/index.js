@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import FuturesPairListItems from './PairListItems';
 import FuturesPairListItemV2 from './PairListItemV2';
 import Star from 'components/svg/Star';
+import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -90,10 +91,9 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         () => (
             <div className="px-4 flex items-center">
                 {isAuth && (
-                    <Star
+                    <BxsStarIcon
                         onClick={() => onHandleMode('Starred')}
-                        size={14}
-                        fill={mode === 'Starred' ? colors.yellow : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={mode === 'Starred' ? colors.yellow[1] : isDark ? colors.darkBlue5 : colors.gray[2]}
                         className="cursor-pointer"
                     />
                 )}

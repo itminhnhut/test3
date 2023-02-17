@@ -13,7 +13,7 @@ import {
 } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
-import { ChevronDown, X } from 'react-feather';
+// import { ChevronDown, X } from 'react-feather';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
@@ -22,7 +22,7 @@ import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import Tooltip from 'components/common/Tooltip';
-import Modal from 'components/common/ReModal';
+// import Modal from 'components/common/ReModal';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -65,8 +65,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const pairListModalRef = useRef();
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
-    const [currentTheme] = useDarkMode();
-
+    // const [currentTheme] = useDarkMode();
 
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
@@ -212,10 +211,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <div style={{ minWidth: minWidth || 0 }}>
                 <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <div className="border-b border-darkBlue-5 border-dashed pb-0.5">
-                        <span onClick={onClickFunding} className="cursor-pointer">
-                            Funding / {t('futures:countdown')}
-                        </span>
+                    <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                        <span>Funding / {t('futures:countdown')}</span>
                     </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
@@ -271,7 +268,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     value = formatNumber(roundTo(pairPrice?.lowPrice || 0, pricePrecision), pricePrecision);
                     break;
                 case '24hChange':
-                    const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
+                    // const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div
@@ -279,7 +276,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 '!text-red': pairPrice?.priceChangePercent < 0
                             })}
                         >
-                            <span> {formatNumber(roundTo(priceFromMarketWatch?.priceChange || 0, 2), 2, 2, true)}</span>
+                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 2, 2, true)}</span>
                             <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
@@ -341,10 +338,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderFunding = () => {
         return (
             <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
-                <div className=" border-b border-darkBlue-5 border-dashed pb-[2px]">
-                    <span onClick={onClickFunding} className=" cursor-pointer">
-                        Funding / {t('futures:countdown')}
-                    </span>
+                <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                    <span>Funding / {t('futures:countdown')}</span>
                 </div>
             </div>
         );

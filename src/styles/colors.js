@@ -44,6 +44,9 @@ const colors = {
     red2: '#f93636',
 
     green1: '#7ee5ae',
+    yellow: {
+        1: '#ffc632'
+    },
 
     onus: {
         bg: '#1B222D',
