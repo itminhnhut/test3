@@ -142,6 +142,7 @@ const HomeMarketTrend = ({trendData}) => {
                          })}
                          onClick={() => {
                              setType(e);
+                             setState({marketTabIndex: index})
                          }}
                     >
                         {e?.content[lang]}
