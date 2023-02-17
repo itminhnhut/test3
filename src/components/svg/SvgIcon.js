@@ -465,6 +465,22 @@ const BxsStarIcon = ({ size, fill, ...props }) => {
     );
 };
 
+const TuneIcon = ({ size = 16, color, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#11nt6htp3a)">
+            <path
+                d="M2 11.333v1.334h4v-1.334H2zm0-8v1.334h6.667V3.333H2zM8.667 14v-1.333H14v-1.334H8.667V10H7.333v4h1.334zm-4-8v1.333H2v1.334h2.667V10H6V6H4.667zM14 8.667V7.333H7.333v1.334H14zM10 6h1.333V4.667H14V3.333h-2.667V2H10v4z"
+                fill="#8694B3"
+            />
+        </g>
+        <defs>
+            <clipPath id="11nt6htp3a">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -495,5 +511,6 @@ export {
     BxChevronDown,
     SyncAltIcon,
     BxsBookIcon,
-    BxsStarIcon
+    BxsStarIcon,
+    TuneIcon
 };

@@ -2,21 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-// @layer utilities {
-//     @variants responsive {
-//       /* Hide scrollbar for Chrome, Safari and Opera */
-//       .no-scrollbar::-webkit-scrollbar {
-//           display: none;
-//       }
-
-//       /* Hide scrollbar for IE, Edge and Firefox */
-//       .no-scrollbar {
-//           -ms-overflow-style: none;  /* IE and Edge */
-//           scrollbar-width: none;  /* Firefox */
-//       }
-//     }
-//   }
-
 @import 'theme';
 @import 'theme.tailwind';
 @import 'datepicker';
@@ -73,7 +58,7 @@ body {
 //}
 
 body {
-    @apply text-txtPrimary dark:text-txtPrimary-dark;
+    @apply text-txtPrimary dark:text-txtPrimary-dark font-normal;
 
     display: flex;
     flex-direction: column;
