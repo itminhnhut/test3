@@ -8,7 +8,7 @@ import { sumBy } from 'lodash';
 
 let currentKeyTab = 0;
 let isClick = true;
-const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMobile = false }, ref) => {
+const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', noScroll = false }, ref) => {
     const TabRef = useRef(null);
     const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
@@ -24,6 +24,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
     }));
 
     const startDragging = (e) => {
+        if (noScroll) return;
         TabRef.current.classList.add('cursor-grabbing');
         mouseDown.current = true;
         startX.current = e.pageX - TabRef.current.offsetLeft;
@@ -49,7 +50,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         const y = e.pageY - TabRef.current.offsetTop;
         const scrollY = y - startY.current;
         TabRef.current.scrollTop = scrollTop.current - scrollY;
-      if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
+        if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
     };
 
     useEffect(() => {
@@ -77,11 +78,16 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isMob
         if (TabRef.current) {
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
-                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove']('tab-active', '!font-semibold', '!text-gray-6');
+                    el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove'](
+                        'tab-active',
+                        '!font-semibold',
+                        'dark:!text-gray-6',
+                        '!text-txtPrimary'
+                    );
                 }
             });
         }
-    }, [tab, TabRef]);
+    }, [tab, TabRef, children, mount]);
 
     const active = useMemo(() => {
         const _currentTab = Array.isArray(children) ? children.findIndex((rs) => rs?.props?.value === tab) : 0;
@@ -130,10 +136,11 @@ const Tab = styled.div.attrs(({ className }) => ({
     }
 `;
 
-export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false }) => ({
-    className: classnames('text-sm font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
+export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false, V2 = false }) => ({
+    className: classnames('text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
         'text-gray-1': !isMobile,
-        'text-darkBlue-5': isMobile
+        'text-darkBlue-5': isMobile,
+        'dark:hover:text-txtTabHover-dark': V2
     }),
     id: `tab-item-${value}`
 }))``;

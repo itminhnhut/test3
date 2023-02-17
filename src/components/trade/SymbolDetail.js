@@ -108,7 +108,7 @@ const SymbolDetail = (props) => {
                             <div className={`block font-semibold ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}>
                                 {formatPrice(symbolTicker?.p, exchangeConfig, symbol?.quote)}
                             </div>
-                            <span className="text-txtSecondary-dark text-sm">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                 <RefCurrency price={symbolTicker?.p} quoteAsset={symbolTicker.q} />
                             </span>
                         </div>

@@ -7,6 +7,7 @@ import OrderHistory from './OrderHistory';
 import SpotFund from './SpotFund';
 import TradeHistory from './TradeHistory';
 import CheckBox from 'components/common/CheckBox';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const SpotOrderList = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -42,25 +43,20 @@ const SpotOrderList = (props) => {
             }
         ];
         return (
-            <ul className="tabs justify-start w-full px-6 relative">
-                {tabs.map((tab, index) => {
-                    const { label, value } = tab;
-                    const isActive = activeTab === value;
-                    return (
-                        <li className={`tab-item ${isActive ? 'active' : ''}`} key={value}>
-                            <a
-                                className={'tab-link !py-4 text-txtSecondary dark:text-txtSecondary-dark ' + (isActive ? 'active' : '')}
-                                onClick={() => setActiveTab(value)}
-                            >
-                                {label}
-                            </a>
-                        </li>
-                    );
-                })}
-                <div onClick={() => setHideOther(!hideOther)}>
-                    <CheckBox isV3 active={hideOther} className="absolute right-6 h-full" label={t('common:hide_other_symbols')} />
-                </div>
-            </ul>
+            <Tabs noScroll tab={activeTab} className="gap-8 border-b border-divider dark:border-divider-dark px-6">
+                {tabs?.map((tab) => (
+                    <TabItem V2 className="!text-left !px-0" value={tab.value} onClick={(isClick) => isClick && setActiveTab(tab.value)}>
+                        {tab.label}
+                    </TabItem>
+                ))}
+                <CheckBox
+                    onChange={() => setHideOther(!hideOther)}
+                    isV3
+                    active={hideOther}
+                    className="absolute right-6 h-full"
+                    label={t('common:hide_other_symbols')}
+                />
+            </Tabs>
         );
     }, [activeTab, hideOther]);
 
@@ -75,10 +71,12 @@ const SpotOrderList = (props) => {
                             height={height}
                             orderListWrapperHeight={props.orderListWrapperHeight}
                             currentPair={query?.id}
+                            isPro={props.isPro}
                         />
                     )}
                     {activeTab === 'order_history' && (
                         <OrderHistory
+                            isPro={props.isPro}
                             filterByCurrentPair={hideOther}
                             height={height}
                             orderListWrapperHeight={props.orderListWrapperHeight}

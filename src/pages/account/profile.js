@@ -59,10 +59,10 @@ const TextCopyable = ({
     }, [copied]);
 
     return (<span className={className + ' flex items-center'}>
-      <span className={'mr-1'}>{text}</span>
-      <CopyToClipboard text={text} onCopy={onCopy} className='cursor-pointer inline-block'>
-        {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
-      </CopyToClipboard>
+        <span className={'mr-1'}>{text}</span>
+        <CopyToClipboard text={text} onCopy={onCopy} className='cursor-pointer inline-block'>
+            {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+        </CopyToClipboard>
     </span>);
 };
 
@@ -182,7 +182,7 @@ const ModalChangeReferee = ({
     };
 
     const suffixInput = useMemo(() => {
-        if (checking) return <Spinner size={20}/>
+        if (checking) return <Spinner size={20} />
         if (!referrer) return <span className='text-txtSecondary'>{referrer?.username}</span>
         return null
     }, [referrer, checking])
@@ -202,7 +202,7 @@ const ModalChangeReferee = ({
             onClick={setInvite}
             disabled={!refCode || !referrer}
             className='mt-4'>{t('common:confirm')
-        }</ButtonV2>
+            }</ButtonV2>
     </ModalV2>;
 };
 
@@ -293,8 +293,8 @@ const Profile = () => {
                 <div className='w-[1px] bg-divider-dark mx-10' />
                 <div className='flex-1 flex flex-col justify-between'>
                     <div className='space-y-3'>
-                            <span
-                                className='text-txtSecondary'>{t('fee-structure:your_fee_level')} VIP {state.level}</span>
+                        <span
+                            className='text-txtSecondary'>{t('fee-structure:your_fee_level')} VIP {state.level}</span>
                         <div>
                             <span className='text-txtSecondary mr-2'>Marker</span>
                             <span className='text-xl font-semibold'>0.075%</span>
@@ -391,6 +391,7 @@ const Profile = () => {
         </div>
     </AccountLayout>);
 };
+
 export const getStaticProps = async ({ locale }) => ({
     props: {
         ...(await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification']))

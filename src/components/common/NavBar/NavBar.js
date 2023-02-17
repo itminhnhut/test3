@@ -98,12 +98,12 @@ const NavBar = ({
             case NAVBAR_USE_TYPE.FLUENT:
                 result.wrapper = '';
                 result.text = 'text-txtPrimary-dark';
-                result.color = colors.grey4;
+                result.color = colors.gray[4];
                 break;
             case NAVBAR_USE_TYPE.DARK:
                 result.wrapper = 'mal-navbar__wrapper__use__dark';
                 result.text = 'text-txtPrimary-dark';
-                result.color = colors.grey4;
+                result.color = colors.gray[4];
                 break;
             case NAVBAR_USE_TYPE.LIGHT:
                 result.wrapper = 'mal-navbar__wrapper__use__light';
@@ -113,7 +113,7 @@ const NavBar = ({
             default: //'mal-navbar__wrapper__no__blur';
                 result.wrapper = '';
                 result.text = 'text-txtPrimary dark:text-txtPrimary-dark';
-                result.color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
+                result.color = currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue;
                 break;
         }
 
@@ -189,7 +189,7 @@ const NavBar = ({
                                         paddingTop: 4,
                                         marginLeft: 8
                                     }}
-                                    color={colors.gray7}
+                                    color={colors.gray[7]}
                                 />
                                 <div className="mal-navbar__link__group___item___childen__lv1">{itemsLevel1}</div>
                             </div>
@@ -314,7 +314,7 @@ const NavBar = ({
 
                                 {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest" />}
                             </div>
-                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={colors.gray7} style={{ marginLeft: 4 }} />
+                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={colors.gray[7]} style={{ marginLeft: 4 }} />
                             <div
                                 className={`mal-navbar__link__group___item___childen__lv1
                                            ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
@@ -367,13 +367,13 @@ const NavBar = ({
 
         let color;
         if (useOnly === NAVBAR_USE_TYPE.FLUENT) {
-            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
+            color = currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue;
         } else if (useOnly === NAVBAR_USE_TYPE.DARK) {
-            color = colors.grey4;
+            color = colors.gray[4];
         } else if (useOnly === NAVBAR_USE_TYPE.LIGHT) {
             color = colors.darkBlue;
         } else {
-            color = currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue;
+            color = currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue;
         }
 
         const getUserControlSvg = (localized) => {
@@ -440,7 +440,7 @@ const NavBar = ({
                         )}
                     </div>
                     {isNotVerified && (
-                        <HrefButton className="mb-6" href={PATHS.ACCOUNT.IDENTIFICATION}>
+                        <HrefButton className="mb-6 !text-txtPrimary-dark" href={PATHS.ACCOUNT.IDENTIFICATION}>
                             {t('navbar:verify_account')}
                         </HrefButton>
                     )}
@@ -661,7 +661,7 @@ const NavBar = ({
                                         <SvgIcon
                                             name="chevron_down"
                                             size={15}
-                                            color={colors.gray7}
+                                            color={colors.gray[7]}
                                             className="chevron__down ml-2"
                                             style={{ marginLeft: 7 }}
                                         />

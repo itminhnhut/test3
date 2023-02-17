@@ -23,6 +23,7 @@ import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -93,13 +94,15 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 )
             },
             {
-                key: 'wallet',
+                key: 'wallet.value',
                 dataIndex: ['wallet', 'value'],
                 title: t('common:total'),
                 align: 'right',
                 width: 213,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -109,7 +112,9 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 align: 'right',
                 width: 213,
                 render: (v, item) => (
-                    <span className="whitespace-nowrap">{v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}</span>
+                    <span className="whitespace-nowrap">
+                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                    </span>
                 )
             },
             {
@@ -126,7 +131,9 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
                     return (
                         <span className="whitespace-nowrap">
-                            {v ? (
+                            {state.hideAsset ? (
+                                SECRET_STRING
+                            ) : v ? (
                                 <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
                                     <a className="hover:text-dominant hover:!underline">{lockedValue}</a>
                                 </Link>
@@ -154,9 +161,11 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         <div>
                             {assetUsdRate ? (
                                 <>
-                                    <div className="whitespace-nowrap">{totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}</div>
+                                    <div className="whitespace-nowrap">
+                                        {state.hideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}
+                                    </div>
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                        ({totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                        ({state.hideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                     </div>
                                 </>
                             ) : (
@@ -200,7 +209,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             // <div className="mt-8 py-4 border border-divider-dark dark:border-divider-dark rounded-xl">
             // </div>
         );
-    }, [state.tableData, width, usdRate]);
+    }, [state.tableData, width, usdRate, state.hideAsset]);
 
     const renderEstWallet = useCallback(() => {
         return (
@@ -267,16 +276,16 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
                 <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
-                        <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                        <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
                             </div>
                         </div>
                         {renderEstWallet()}
@@ -287,7 +296,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                                className="px-6 py-3"
+                                className="px-6 py-3 !font-semibold !text-base"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
@@ -309,17 +318,27 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         isHide={state.hideSmallAsset}
                         className="mr-8"
                     />
-                    <div className="py-2 px-3 sm:mt-0 lg:w-96 flex items-center rounded-md bg-gray-5 dark:bg-dark-2">
+                    <SearchBoxV2
+                        value={state.search}
+                        onChange={(value) => {
+                            setState({ search: value });
+                        }}
+                        onFocus={() => setState({ currentPage: 1 })}
+                        width
+                    />
+                    {/* <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
-                            className="text-sm w-full px-2.5"
+                            className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                             value={state.search}
                             onChange={(e) => setState({ search: e?.target?.value })}
                             onFocus={() => setState({ currentPage: 1 })}
                             placeholder={t('common:search')}
                         />
-                        {state.search && <X size={width >= 768 ? 20 : 16} className="cursor-pointer" onClick={() => setState({ search: '' })} />}
-                    </div>
+                        {state.search && (
+                            <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
+                        )}
+                    </div> */}
                 </div>
             </div>
 

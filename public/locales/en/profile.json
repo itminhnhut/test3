@@ -114,5 +114,10 @@
         "SELF_INVITE": "SELF_INVITE",
         "REFERRAL_CODE_NOT_FOUND": "Referral code does not exist.",
         "failed": "Add referral code failed."
-    }
+    },
+    "ref_title": "Set Referral",
+    "ref_placeholder": "Enter referral code",
+    "ref_success": "Congrats, you inserted referral code {{value}} successfully",
+    "ref_error": "Invalid referral code",
+    "ref_error_format": "The Referral ID is incorrectly formatted"
 }

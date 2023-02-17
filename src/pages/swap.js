@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import colors from 'styles/colors';
 
 import SwapIntroduce from 'src/components/screens/Swap/SwapIntroduce';
-import SwapModule from 'src/components/screens/Swap/SwapModule';
+import SwapModule from 'components/screens/Swap/SwapModule';
 import useWindowSize from 'hooks/useWindowSize';
 import SwapHistory from 'src/components/screens/Swap/SwapHistory';
 import { isMobile } from 'react-device-detect';

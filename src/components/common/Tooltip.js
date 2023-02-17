@@ -10,7 +10,7 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
     const ref = useRef();
 
     const arrow = useMemo(() => {
-        return arrowColor ? arrowColor : currentTheme === THEME_MODE.DARK ? colors.hover.dark : colors.grey3;
+        return arrowColor ? arrowColor : currentTheme === THEME_MODE.DARK ? colors.hover.dark : colors.gray[3];
     }, [arrowColor, isV3]);
 
     return (
@@ -40,14 +40,14 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
 const TooltipWrapper = styled.div`
     // .place-left {
     //   ::after {
-    //     border-left-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.grey3)} !important;
+    //     border-left-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.gray[3])} !important;
     //     border-top-color: transparent !important;
     //   }
     // }
     //
     // .__react_component_tooltip {
     //   ::after {
-    //     border-top-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.grey3)} !important;
+    //     border-top-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.gray[3])} !important;
     //   }
     // }
 `;

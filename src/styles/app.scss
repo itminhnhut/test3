@@ -14,11 +14,6 @@ body {
     /* Disable web page navigation on swipe(back and forward) */
     /* overscroll-behavior-x: none; */
     @apply text-base;
-    @apply text-black;
-
-    @apply lg:text-base;
-    @apply md:text-base;
-
     @apply bg-bgPrimary dark:bg-bgSpotContainer-dark font-SF-Pro;
 
     font-family: 'SF-Pro' !important;
@@ -63,7 +58,7 @@ body {
 //}
 
 body {
-    @apply text-txtPrimary dark:text-txtPrimary-dark;
+    @apply text-txtPrimary dark:text-txtPrimary-dark font-medium dark:font-normal;
 
     display: flex;
     flex-direction: column;
@@ -274,7 +269,7 @@ body {
 
     &::-webkit-scrollbar-thumb,
     ::-webkit-scrollbar-thumb {
-        @apply bg-gray-2 dark:bg-darkBlue-6 rounded-md;
+        @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
 
         &:hover {
             @apply bg-dominant;
@@ -329,6 +324,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
+    @apply bg-gray-11 dark:bg-darkBlue-6;
     background: rgba(0, 0, 0, 0.1);
     border-radius: 3px;
     height: 90px;

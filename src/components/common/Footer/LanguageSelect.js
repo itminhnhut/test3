@@ -27,7 +27,7 @@ const LanguageSelect = ({ t, language }) => {
             {/* <LanguageSetting /> */}
             <div className="flex items-center ml-3" onClick={toggleOpen}>
                 <div className="font-semibold">{language === LANGUAGE_TAG.EN ? 'English' : 'Tiếng Việt'} </div>
-                <SvgIcon name="chevron_down" size={15} className="chevron__down !pl-1" color={colors.grey4} />
+                <SvgIcon name="chevron_down" size={15} className="chevron__down !pl-1" color={colors.gray[4]} />
             </div>
 
             {isOpen && (
@@ -43,7 +43,7 @@ const LanguageSelect = ({ t, language }) => {
                             className=" w-full cursor-pointer items-center text-textPrimary px-4 flex justify-between dark:hover:bg-hover first:mb-3 disabled:cursor-default"
                         >
                             {(lang === LANGUAGE_TAG.EN && 'English') || (lang === LANGUAGE_TAG.VI && 'Tiếng Việt')}
-                            {/* {currentLocale === lang && <CheckCircleIcon color={colors.grey4} size={16} />} */}
+                            {/* {currentLocale === lang && <CheckCircleIcon color={colors.gray[4]} size={16} />} */}
                         </button>
                     ))}
                 </div>

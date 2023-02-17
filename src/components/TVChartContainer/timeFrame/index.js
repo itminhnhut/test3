@@ -263,8 +263,8 @@ export default class TimeFrame extends Component {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1"
                             >
-                                <Popover.Panel className="absolute z-10">
-                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 p-4">
+                                <Popover.Panel className="absolute z-10 mt-2">
+                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark p-4">
                                         <div className="text-txtPrimary dark:text-txtPrimary-dark font-medium text-xs mb-4">Select intervals</div>
                                         <div className="w-64 relative grid grid-cols-5 gap-3">
                                             {ListTimeFrame.map((item, index) => {
@@ -277,10 +277,10 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`cursor-pointer w-full px-3 py-1 text-xs text-center rounded-sm bg-dark-2 dark:hover:bg-hover-dark ${
+                                                        className={`cursor-pointer w-full text-txtSecondary px-3 py-1 text-xs text-center rounded-[3px] bg-gray-10 dark:bg-dark-2 dark:hover:bg-hover-dark ${
                                                             isActive
-                                                                ? 'border-teal text-teal dark:border-teal dark:text-teal font-semibold'
-                                                                : 'border-gray-5  text-txtSecondary dark:text-txtSecondary-dark dark:border-darkBlue-5'
+                                                                ? '!bg-gray-6 dark:!bg-hover-dark font-semibold'
+                                                                : 'border-gray-5 dark:!text-txtSecondary-dark dark:border-darkBlue-5'
                                                         }`}
                                                     >
                                                         {text}
@@ -310,8 +310,8 @@ export default class TimeFrame extends Component {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1"
                             >
-                                <Popover.Panel className="absolute z-10">
-                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3">
+                                <Popover.Panel className="absolute z-10 mt-2">
+                                    <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark">
                                         <div className="w-32 relative">
                                             {ListChartType.map((item, index) => {
                                                 const { type, value, icon } = item;
@@ -324,11 +324,10 @@ export default class TimeFrame extends Component {
                                                             close();
                                                         }}
                                                         key={index}
-                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm
+                                                        className={`h-8 px-2 flex content-start items-center cursor-pointer w-full text-xs text-center rounded-sm 
                                                                 text-txtSecondary dark:text-txtSecondary-dark
-                                                                hover:text-teal
                                                                 dark:hover:bg-hover-dark
-                                                                ${isActive ? 'bg-teal text-teal dark:text-white dark:bg-transparent font-semibold' : ''}
+                                                                ${isActive ? 'bg-gray-6 dark:text-white dark:bg-transparent font-semibold' : ''}
                                                                 `}
                                                     >
                                                         {icon}
@@ -406,8 +405,10 @@ export default class TimeFrame extends Component {
                     message="Bạn có muốn xoá hết dữ liệu Chỉ báo và Phân tích? Nếu bạn gặp lỗi với biểu đồ, nhấn “Đặt lại biểu đồ”."
                     customButton={
                         <div className="space-y-6 w-full mt-10 text-center">
-                            <Button onClick={() => this.onAction('remove')}>Xoá chỉ báo và phân tích</Button>
-                            <div onClick={() => this.onAction('reset')} className="font-medium text-teal cursor-pointer">
+                            <Button variants="primary" onClick={() => this.onAction('remove')}>
+                                Xoá chỉ báo và phân tích
+                            </Button>
+                            <div onClick={() => this.onAction('reset')} className="font-semibold text-teal cursor-pointer">
                                 Đặt lại biểu đồ
                             </div>
                         </div>

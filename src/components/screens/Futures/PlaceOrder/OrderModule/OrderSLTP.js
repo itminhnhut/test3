@@ -5,7 +5,7 @@ import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/
 import { useMemo, useRef, useState } from 'react';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AddCircleIcon } from 'components/svg/SvgIcon';
-import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/OrderModule/EditSLTPV2';
+import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const FuturesOrderSLTP = ({
@@ -59,32 +59,31 @@ const FuturesOrderSLTP = ({
             sl: data.sl
         });
         setShowEditSLTP(false);
-        setShowAlert(true);
+        // setShowAlert(true);
     };
 
     return (
         <div className="space-y-4 mt-4">
-            <AlertModalV2
+            {/* <AlertModalV2
                 isVisible={showAlert}
                 onClose={() => setShowAlert(false)}
                 type="success"
                 title={t('common:success')}
                 message={t('futures:modify_order_success')}
+            /> */}
+            <EditSLTPV2
+                isVisible={showEditSLTP}
+                order={rowData.current}
+                onClose={() => setShowEditSLTP(false)}
+                status={rowData.current?.status}
+                onConfirm={onConfirm}
+                lastPrice={lastPrice}
+                decimals={decimals}
             />
-            {showEditSLTP && (
-                <EditSLTPV2
-                    isVisible={showEditSLTP}
-                    order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
-                    status={rowData.current?.status}
-                    onConfirm={onConfirm}
-                    lastPrice={lastPrice}
-                    decimals={decimals}
-                />
-            )}
 
             <TradingInput
                 label={t('futures:take_profit')}
+                clearAble
                 allowNegative={false}
                 value={orderSlTp.tp}
                 decimalScale={decimals.price}
@@ -93,7 +92,7 @@ const FuturesOrderSLTP = ({
                 labelClassName="whitespace-nowrap"
                 containerClassName="w-full dark:bg-dark-2"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() =>
+                renderTail={
                     canShowChangeTpSL && (
                         <div data-tip="" data-for="tooltipTPSL" className=" flex items-center cursor-pointer" onClick={() => onChangeTpSL('tp')}>
                             <AddCircleIcon />
@@ -104,6 +103,7 @@ const FuturesOrderSLTP = ({
 
             <TradingInput
                 containerClassName="w-full dark:bg-dark-2"
+                clearAble
                 label={t('futures:stop_loss')}
                 allowNegative={false}
                 value={orderSlTp.sl}
@@ -112,7 +112,7 @@ const FuturesOrderSLTP = ({
                 onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() =>
+                renderTail={
                     canShowChangeTpSL && (
                         <div data-tip="" data-for="tooltipTPSL" className="flex items-center cursor-pointer" onClick={() => onChangeTpSL('sl')}>
                             <AddCircleIcon />

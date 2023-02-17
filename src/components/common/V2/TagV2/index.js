@@ -14,7 +14,7 @@ const types = {
 const typeStyles = {
     [types.DEFAULT]: {
         backgroundColor: 'rgba(34,41,64,0.5)',
-        color: colors.grey4
+        color: colors.gray[4]
     },
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',

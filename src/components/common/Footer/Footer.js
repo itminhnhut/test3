@@ -62,8 +62,8 @@ const Footer = memo(() => {
     );
 
     return (
-        <section className="mal-footer">
-            <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper mal-container`}>
+        <section className="mal-footer border-t border-divider-dark">
+            <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
                 <PocketFooter t={t} language={language} auth={auth} width={width} active={state.active} parentState={setState} />
                 {!auth ? (
                     <div>

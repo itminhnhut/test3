@@ -48,8 +48,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const style = {
-                color: restProps.tabIndex === index ? currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.grey4
-                    : currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5,
+                color: restProps.tabIndex === index ? currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray[4]
+                    : currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5,
                 fontWeight: restProps.tabIndex === index ? 600 : 500,
             }
 
@@ -299,13 +299,13 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         {t('common:market')}
                     </div>
                     <div className="flex items-center px-3 py-1.5 lg:py-[10px] lg:px-[18px] rounded-[6px] bg-gray-4 dark:bg-darkBlue-3 cursor-pointer">
-                        <Search color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5} size={20}/>
+                        <Search color={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} size={20}/>
                         <input className="bg-transparent outline-none px-2"
                                value={restProps.search}
                                onChange={({ target: { value } }) => parentState({ search: value })}/>
                         <X className={restProps.search ? 'visible' : 'invisible'}
                            onClick={() => parentState({ search: '' })}
-                           color={currentTheme === THEME_MODE.LIGHT ? colors.grey1 : colors.darkBlue5}
+                           color={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5}
                            size={20}/>
                     </div>
                 </div>
@@ -499,7 +499,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                  !loading && callback(already ? 'delete' : 'put', list)
              }}>
             {already ? <IconStarFilled size={16} color={colors.yellow}/>
-                : <StarOutlined style={{ color: colors.grey3 }} size={24}/>}
+                : <StarOutlined style={{ color: colors.gray[3] }} size={24}/>}
         </div>
     )
 }
