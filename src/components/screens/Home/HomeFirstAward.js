@@ -153,7 +153,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         </div>
                         <div className="text-center text-txtSecondary dark:text-txtSecondary-dark mt-6">
                             {t('common:already_have_account')}
-                            <a href={getLoginUrl('sso', 'login')} className="ml-2 text-dominant">
+                            <a href={getLoginUrl('sso', 'login')} className="ml-2 font-semibold text-dominant">
                                 {t('common:sign_in')}
                             </a>
                         </div>
