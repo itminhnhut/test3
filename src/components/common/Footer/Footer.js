@@ -6,6 +6,7 @@ import useApp from 'hooks/useApp';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import SocialsLink from './SocialsLink';
+import useDarkMode from 'hooks/useDarkMode';
 
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'next-i18next';
@@ -25,6 +26,8 @@ const Footer = memo(() => {
     // * Use Hooks
     const { width } = useWindowSize();
     const isApp = useApp();
+    const [currentTheme] = useDarkMode();
+
 
     if (isApp) return null;
     const MobileCopyright = useCallback(
@@ -34,14 +37,14 @@ const Footer = memo(() => {
                     <div className="">
                         <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="113" alt="Nami Exchange" />
                     </div>
-                    <LanguageSelect t={t} language={language} />
+                    <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
-                <div style={{ fontSize: 12 }} className="font-medium text-gray-2">
+                <div style={{ fontSize: 12 }} className="font-medium text-gray-1 dark:text-gray-2">
                     Copyright © 2020 Nami Corporation. All rights reserved.
                 </div>
             </div>
         ),
-        [t, language]
+        [t, language,currentTheme]
     );
 
     const DesktopNotAuthSocial = useCallback(
@@ -52,35 +55,35 @@ const Footer = memo(() => {
                         <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="251" alt="Nami Exchange" />
                     </div>
                     <SocialsLink language={language} />
-                    <LanguageSelect t={t} language={language} />
+                    <LanguageSelect t={t} language={language}  currentTheme={currentTheme}/>
                 </div>
-                <hr className="border-divider-dark mb-6" />
+                <hr className="border-divider dark:border-divider-dark mb-6" />
                 <div className="font-medium text-gray-2 mt-6 text-center text-sm">Copyright © 2020 Nami Corporation. All rights reserved.</div>
             </>
         ),
-        [t, language]
+        [t, language,currentTheme]
     );
 
     return (
-        <section className="mal-footer border-t border-divider-dark">
+        <section className="mal-footer border-t border-divider dark:border-divider-dark">
             <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
-                <PocketFooter t={t} language={language} auth={auth} width={width} active={state.active} parentState={setState} />
+                <PocketFooter currentTheme={currentTheme} t={t} language={language} auth={auth} width={width} active={state.active} parentState={setState} />
                 {!auth ? (
                     <div>
-                        <hr className="border-divider-dark mb-6" />
+                        <hr className="border-divider dark:border-divider-dark mb-6" />
 
                         {width >= 1200 ? <DesktopNotAuthSocial /> : <MobileCopyright />}
                     </div>
                 ) : (
                     <>
-                        <hr className="border-divider-dark" />
+                        <hr className="border-divider dark:border-divider-dark" />
                         {width > 1200 ? (
                             <>
                                 <div className="flex justify-between items-center mt-10 mb-6">
-                                    <div className="font-medium text-txtSecondary-dark text-sm text-center">
+                                    <div className="font-medium text-gray-1 dark:text-txtSecondary-dark text-sm text-center">
                                         Copyright © 2020 Nami Corporation. All rights reserved.
                                     </div>
-                                    <LanguageSelect t={t} language={language} />
+                                    <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                                 </div>{' '}
                             </>
                         ) : (

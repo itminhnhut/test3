@@ -16,7 +16,7 @@ const ScanQr = ({ t }) => {
             <div className="mb-5 flex justify-center">
                 <QRCode value={`${APP_URL}#nami_exchange_download_app`} id="qrCodeFooter" eyeRadius={6} size={100} />
             </div>
-            <div className="text-txtSecondary-dark">{t('navbar:scan_qr')}</div>
+            <div className="text-txtSecondary dark:text-txtTextBtn-tonal_dark">{t('navbar:scan_qr')}</div>
         </div>
     );
 };

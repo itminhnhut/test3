@@ -1,4 +1,4 @@
-const SvgChevronDown = ({ color = '#8694B3', size = 16, fill, style, className, onClick }) => {
+const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick }) => {
     return (
         <svg
             onClick={onClick}
@@ -10,7 +10,7 @@ const SvgChevronDown = ({ color = '#8694B3', size = 16, fill, style, className, 
             xmlns="http://www.w3.org/2000/svg"
         >
             <g clip-path="url(#clip0_295_61062)">
-                <path d="M11.3333 9.33337L7.99992 6.00004L4.66659 9.33337L11.3333 9.33337Z" fill={color} />
+                <path d="M11.3333 9.33337L7.99992 6.00004L4.66659 9.33337L11.3333 9.33337Z" fill={color || '#8694B3'} />
             </g>
             <defs>
                 <clipPath id="clip0_295_61062">

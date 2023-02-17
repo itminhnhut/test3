@@ -1,5 +1,5 @@
 .mal-footer {
-  @apply bg-dark-dark;
+  @apply bg-white dark:bg-dark-dark;
 
   .mal-footer__wrapper {
 
@@ -48,13 +48,19 @@ padding-block:48px;
             border-radius:6px;
           }
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-white flex flex-row items-center justify-between px-4 py-3;
+            @apply dark:text-txtPrimary-dark text-txtPrimary flex flex-row items-center justify-between px-4 py-3;
            @media screen and (min-width:1200px) {
             @apply px-0;
            }
-
+          
             &:hover {
-              @apply bg-hover;
+              @apply bg-hover dark:bg-hover-dark;
+            }
+            &.item_community {
+              @apply cursor-default;
+              &:hover {
+                @apply bg-transparent ;
+              }
             }
 
             ~ .socials_link  {
@@ -84,12 +90,12 @@ padding-block:48px;
 
 
             a {
-              @apply text-txtPrimary-dark text-sm py-3 block;
+              @apply text-sm py-3 block;
                   padding-left:48px;
 
 
               @media screen and (min-width:1200px) {
-                @apply text-txtSecondary-dark py-0 pl-0;
+                @apply  py-0 pl-0;
 
                 }
 
@@ -105,7 +111,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links__active {
-            @apply text-txtPrimary-dark ;
+            // @apply text-txtPrimary-dark ;
             max-height: 40em;
 
 
@@ -153,7 +159,7 @@ padding-block:48px;
         .mal-footer___pocket__links___group__item {
 
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-txtPrimary-dark capitalize text-sm font-semibold;
+            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize text-sm font-semibold;
 
 
             pointer-events: none;
@@ -164,6 +170,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links {
+            @apply text-txtSecondary dark:text-txtTextBtn-tonal_dark;
             max-height: 40em !important;
 
             a {
