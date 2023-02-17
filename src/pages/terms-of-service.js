@@ -11,15 +11,19 @@ import styled from 'styled-components';
 const term = [];
 
 const Title1 = styled.div.attrs({
-    className: 'text-[22px] font-semibold leading-[30px] mt-12 mb-6'
+    className: 'text-sm sm:text-[22px] sm:leading-[30px] font-semibold mt-12 mb-6'
 })``;
 
 const Title2 = styled.div.attrs({
-    className: 'text-xl font-semibold mt-8 mb-8 sm:ml-4 md:ml-8 lg:ml-10'
+    className: 'text-xl font-semibold my-6 sm:my-8 sm:ml-4 md:ml-8 lg:ml-10'
 })``;
 
 const Title3 = styled.div.attrs({
-    className: 'text-lg font-semibold mt-8 mb-6 sm:ml-8 md:ml-16 lg:ml-20'
+    className: 'text-lg font-semibold my-6 sm:my-8 sm:ml-8 md:ml-16 lg:ml-20'
+})``;
+
+const Paragraph = styled.div.attrs({
+    className: 'mt-6 sm:mt-8'
 })``;
 
 const Strong = styled.span.attrs({
@@ -51,15 +55,23 @@ const Terms = () => {
     }, []);
 
     return (
-        <MaldivesLayout hideNavBar={width <= 640 ? true : false} dark={true}>
-            <div className="px-4">
+        // <MaldivesLayout hideFooter={width <= 640 ? true : false} hideNavBar={width <= 640 ? true : false} dark={true}>
+        // </MaldivesLayout>
+        <div className="px-4">
+            <div
+                className={`relative max-w-screen-v3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-sm leading-7 sm:leading-6 sm:text-base font-normal text-left tracking-normal ${
+                    width <= 640 ? 'pb-20' : 'px-24 pb-[120px]'
+                }`}
+            >
                 <div
-                    className={`max-w-screen-v3 m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro text-base font-normal text-left tracking-normal leading-7 ${
-                        width <= 640 ? 'term-mobile-view !px-5' : 'px-24 pt-20 pb-[120px]'
+                    className={`w-full text-xl sm:text-[32px] sm:leading-[38px] font-semibold pb-8 sm:pb-12 bg-white ${
+                        width <= 640 ? 'sticky top-0 pt-6' : 'pt-20'
                     }`}
                 >
-                    <h1 className="text-[32px] font-semibold leading-[38px] mb-12">{t('common:terms_and_privacy')}</h1>
-                    {/* <div className={`${width <= 640 ? 'term-mobile-view' : 'px-24'}`}></div> */}
+                    {t('common:terms_and_privacy')}
+                </div>
+                {/* <div className={`${width <= 640 ? 'term-mobile-view' : 'px-24'}`}></div> */}
+                <div className="h-[2000px] overflow-y-scroll no-scrollbar">
                     {language === 'en' && (
                         <div className="text-left">
                             <p className="text-right pb-8">
@@ -77,7 +89,7 @@ const Terms = () => {
                                 . In addition, when using some features of the Services, you may be subject to specific additional terms and conditions
                                 applicable to those features.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 Please read the terms carefully as they govern your use of Nami.Exchange Services.{' '}
                                 <Strong>
                                     THESE TERMS CONTAIN IMPORTANT PROVISIONS INCLUDING AN ARBITRATION PROVISION THAT REQUIRES ALL CLAIMS TO BE RESOLVED BY WAY
@@ -93,11 +105,11 @@ const Terms = () => {
                                     DIGITAL CURRENCIES AND THEIR DERIVATIVES; AND (3) Nami.Exchange SHALL NOT BE LIABLE FOR ANY SUCH RISKS OR ADVERSE OUTCOMES
                                 </Strong>
                                 .
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 By accessing, using or attempting to use Nami.Exchange Services in any capacity, you acknowledge that you accept and agree to be
                                 bound by these Terms. If you do not agree, do not access Nami.Exchange or utilize Nami.Exchange services.
-                            </p>
+                            </Paragraph>
 
                             <Title1>I. Definitions</Title1>
                             <p>
@@ -109,7 +121,7 @@ const Terms = () => {
                                 applicable terms of such platforms shall prevail.
                             </p>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>2. Nami.Exchange Operators</Strong> refer to all parties that run Nami.Exchange, including but not limited to legal
                                 persons, unincorporated organizations and teams that provide Nami.Exchange Services and are responsible for such services. For
                                 convenience, unless otherwise stated, references to &ldquo;Nami.Exchange&rdquo; and &ldquo;we&rdquo; in these Terms specifically
@@ -124,61 +136,61 @@ const Terms = () => {
                                     SERVICES YOU USE AND THE PARTICULAR ACTIONS THAT AFFECT YOUR RIGHTS OR INTERESTS
                                 </Strong>
                                 .
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>3. Nami.Exchange Services</Strong> refer to various services provided to you by Nami.Exchange that are based on Internet
                                 and/or blockchain technologies and offered via Nami.Exchange websites, mobile applications, clients and other forms (including
                                 new ones enabled by future technological development). Nami.Exchange Services include but are not limited to such Nami.Exchange
                                 ecosystem components as Digital Asset Trading Platforms, the financing sector, Nami Labs, Nami Academy, Nami Today, Nami
                                 Launchpad, Nami Mining, Nami Newsroom&nbsp; and novel services to be provided by Nami Corporation.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>4. Nami.Exchange Platform Rules</Strong> refer to all rules, interpretations, announcements, statements, letters of
                                 consent and other contents that have been and will be subsequently released by Nami.Exchange, as well as all regulations,
                                 implementation rules, product process descriptions, and announcements published in the Help Center or within products or service
                                 processes.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>5. Users</Strong> refer to all individuals, institutions or organizations that access, download or use Nami.Exchange or
                                 Nami.Exchange Services and who meet the criteria and conditions stipulated by Nami.Exchange. If there exist other agreements for
                                 such entities as developers, distributors, market makers, and Digital Currencies exchanges, such agreements shall be followed.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>6. Digital Currencies</Strong> refer to encrypted or digital tokens or cryptocurrencies with a certain value that are
                                 based on blockchain and cryptography technologies and are issued and managed in a decentralized form.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 7. Digital Assets refer to Digital Currencies, their derivatives or other types of digitalized assets with a certain value.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>8. Nami.Exchange Accounts</Strong> refer to the foundational virtual accounts, including main accounts and subaccounts,
                                 which are opened by Nami.Exchange for Users to record on Nami.Exchange their usage of Nami.Exchange Services, transactions,
                                 asset changes and basic information. Nami.Exchange Accounts serve as the basis for Users to enjoy and exercise their rights on
                                 Nami.Exchange.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>9. Crypto-to-crypto Trading</Strong> refers to spot transactions in which one digital currency is exchanged for another
                                 digital currency.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>10. Collateral Accounts</Strong> refer to special accounts opened by Users on Nami.Exchange to deposit and withdraw
                                 collateral (such as margins) in accordance with these Terms (including the Nami.Exchange Contract Services Agreement and
                                 Nami.Exchange Platform Rules), as required for contract transactions, leveraged trading and/or currency borrowing services.
-                            </p>
+                            </Paragraph>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>11. Loan/Lending</Strong> refers to Nami.Exchange&rsquo;s lending of Digital Currencies to Users at an interest
                                 collected in certain ways (in the form of Digital Currencies), including but not limited to the leveraged trading and currency
                                 lending services currently offered, and other forms of loan/lending services to be launched by Nami.Exchange.
-                            </p>
+                            </Paragraph>
 
                             <Title1>II. General Provisions</Title1>
                             <Title2>1. About These Terms</Title2>
@@ -236,7 +248,7 @@ const Terms = () => {
                                 Digital Assets into their account prior to trading. Users may, subject to the restrictions set forth in these Terms, apply for
                                 the withdrawal of Digital Assets.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 Although Nami.Exchange has been committed to maintaining the accuracy of the information provided through Nami.Exchange
                                 Services, Nami.Exchange cannot and does not guarantee its accuracy, applicability, reliability, integrity, performance or
                                 appropriateness, nor shall Nami.Exchange be liable for any loss or damage that may be caused directly or indirectly by your use
@@ -245,7 +257,7 @@ const Terms = () => {
                                 any kind, and is not responsible for the use or interpretation of information on Nami.Exchange or any other communication
                                 medium. All Users of Nami.Exchange Services must understand the risks involved in Digital Assets trading, and are recommended to
                                 exercise prudence and trade responsibly within their own capabilities.
-                            </p>
+                            </Paragraph>
                             <Title2>3. Nami.Exchange Account Registration and Requirements</Title2>
                             <Title3>a. Registration</Title3>
                             <p>
@@ -296,7 +308,7 @@ const Terms = () => {
                                 </Strong>
                                 .
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>
                                     BY REGISTERING AN ACCOUNT, YOU HEREBY AUTHORIZE NAMI.EXCHANGE TO CONDUCT INVESTIGATIONS THAT NAMI.EXCHANGE CONSIDERS
                                     NECESSARY, EITHER DIRECTLY OR THROUGH A THIRD PARTY, TO VERIFY YOUR IDENTITY OR PROTECT YOU, OTHER USERS AND/OR
@@ -305,7 +317,7 @@ const Terms = () => {
                                     AGENCIES FOR FRAUD PREVENTION OR FINANCIAL CRIME PREVENTION, WHICH MAY RESPOND TO OUR INVESTIGATIONS IN FULL
                                 </Strong>
                                 .
-                            </p>
+                            </Paragraph>
                             <Title3>d. Account Usage Requirements</Title3>
                             <p>
                                 The Nami.Exchange Account can only be used by the account registrant. Nami.Exchange reserves the right to suspend, freeze or
@@ -322,13 +334,13 @@ const Terms = () => {
                                 third party. You also agree to be solely responsible for taking the necessary security measures to protect your Nami.Exchange
                                 Account and personal information.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 You should be solely responsible for keeping your Nami.Exchange Account and password safety, and be responsible for all the
                                 transactions under your Nami.Exchange Account. Nami.Exchange assumes no liability for any loss or consequences caused by
                                 authorized or unauthorized use of your account credentials, including but not limited to information disclosure, information
                                 release, consent or submission of various rules and agreements by clicking on the website, online agreement renewal, etc.
-                            </p>
-                            <p className="mt-8">By creating a Nami.Exchange Account, you hereby agree that:</p>
+                            </Paragraph>
+                            <Paragraph>By creating a Nami.Exchange Account, you hereby agree that:</Paragraph>
                             <ol className="list-decimal ml-3 space-y-4">
                                 <li>
                                     <p role="presentation">
@@ -445,7 +457,7 @@ const Terms = () => {
                                 reserves all rights not expressly granted in these Terms. Therefore, you are hereby prohibited from using Nami.Exchange Services
                                 in any way not expressly authorized by these Terms.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 These Terms only grant a limited license to access and use Nami.Exchange Services. Therefore, you hereby agree that when you use
                                 Nami.Exchange Services, Nami.Exchange does not transfer Nami.Exchange Services or the ownership of intellectual property rights
                                 of any Nami.Exchange intellectual property to you or anyone else. All the text, graphics, user interfaces, visual interface,
@@ -453,14 +465,14 @@ const Terms = () => {
                                 documents, as well as the design, structure, selection, coordination, expression, look and feel, and layout of any content
                                 included in the services or provided through Nami.Exchange Services, are exclusively owned, controlled and/or licensed by
                                 Nami.Exchange Operators or its members, parent companies, licensors or affiliates.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 Nami.Exchange owns any feedback, suggestions, ideas, or other information or materials (hereinafter collectively referred to as
                                 &ldquo;Feedback&rdquo;) about Nami.Exchange or Nami.Exchange Services that you provide through email, Nami.Exchange Services, or
                                 other ways. You hereby transfer all rights, ownership and interests of the Feedback and all related intellectual property rights
                                 to Nami.Exchange. You have no right and hereby waive any request for acknowledgment or compensation based on any Feedback, or
                                 any modifications based on any Feedback.
-                            </p>
+                            </Paragraph>
                             <Title3>b. Restrictions</Title3>
                             <p>When you use Nami.Exchange Services, you agree and undertake to comply with the following provisions:</p>
                             <ol className="list-decimal ml-3 space-y-4">
@@ -522,11 +534,11 @@ const Terms = () => {
                                     </p>
                                 </li>
                             </ol>
-                            <p className="mt-8">
+                            <Paragraph>
                                 By accessing Nami.Exchange Services, you agree that Nami.Exchange has the right to investigate any violation of these Terms,
                                 unilaterally determine whether you have violated these Terms, and take actions under relevant regulations without your consent
                                 or prior notice. Examples of such actions include, but are not limited to:
-                            </p>
+                            </Paragraph>
                             <ul className="ml-4 list-disc mt-8 space-y-1">
                                 <li>
                                     <p role="presentation">Blocking and closing order requests;</p>
@@ -591,25 +603,25 @@ const Terms = () => {
                                 Account, following the completion of registration and identity verification for your Nami.Exchange Account. You acknowledge and
                                 agree that:
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 a. You fully understand the high risks of Futures Trading, including but not limited to the risk of major fluctuations of
                                 Digital Assets in Futures Trading, and the risk of exacerbated adverse outcome when leverage is used;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 b. You have sufficient investment knowledge and experience and the capacity to take risks arising from Futures Trading, and
                                 agree to independently assume all the risks arising from the investment of Futures Trading;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 c. Before performing Futures Trading, you have read and understood all the contents of the Nami.Exchange Futures Service
                                 Agreement and the relevant Nami.Exchange Platform Rules, and have consulted relevant professionals to make informed decisions on
                                 whether and how to complete Futures Trading according to their recommendations and your own reasonable judgment;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 d. You agree and authorize Nami.Exchange to take various reasonable measures in its discretion (including but not limited to
                                 forced liquidation and forced position reduction under specific circumstances) in accordance with the Nami.Exchange Futures
                                 Service Agreement and the relevant Nami.Exchange Platform Rules to protect the legitimate interests of you, Nami.Exchange and
                                 other Users.
-                            </p>
+                            </Paragraph>
                             <Title2>4. Margins Trading</Title2>
                             <p>
                                 Unless otherwise specified by Nami.Exchange, prior to conducting Margins Trading, you must open a special Collateral Account
@@ -721,32 +733,32 @@ const Terms = () => {
                                 Services User Agreement and open a special Collateral Account and/or finish other relevant procedures, following the completion
                                 of registration and identity verification for your Nami.Exchange Account. You understand and agree that:
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 a. There are considerable risks involved in Lending Services, which include without limitation the risks of fluctuation of the
                                 borrowed Digital Assets&rsquo; value, derivative risks and technical risks. You shall carefully consider and exercise clear
                                 judgment to evaluate your financial situation and the aforesaid risks to make any decision on using Lending Services, and you
                                 shall be responsible for all losses arising therefrom;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 b. you shall cooperate to provide the information and materials related to identity verification and Lending Services as
                                 required by Nami.Exchange, and be solely responsible for taking necessary security measures to protect the security of your
                                 Collateral Account and personal information;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 c. you shall carefully read relevant Nami.Exchange Platform Rules before using Lending Services, and be aware of, understand and
                                 observe the specific information and rules regarding the operations of Lending Services, and you undertake that the use of the
                                 assets borrowed shall conform to requirements of these Terms and related laws and regulations;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 d. Nami.Exchange has the full right to manage your Collateral Account and collateral during the period in which Lending Services
                                 are offered, and reserves the right, under the circumstances specified in the Lending Services User Agreement or these Terms, to
                                 implement various risk control measures, which include but are not limited to forced liquidation. Such steps may cause major
                                 losses to you and you shall be solely responsible for the outcomes of such measures;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 e. Nami.Exchange has the right to temporarily or permanently prohibit you from using Lending Services when it deems it necessary
                                 or reasonable, and to the maximum extent permitted by law, without liability of any kind to you.
-                            </p>
+                            </Paragraph>
                             <Title2>6. Nami.Exchange Savings Service</Title2>
                             <p>
                                 Nami.Exchange offers Nami.Exchange Savings, a service to provide Users with value-added services for their idle Digital Assets.
@@ -755,54 +767,54 @@ const Terms = () => {
                                 Savings service account, following the completion of registration and identity verification for your Nami.Exchange Account. When
                                 using Nami.Exchange Savings service, you should note that:
                             </p>
-                            <p className="mt-8">a. Nami.Exchange Savings assets will be used in cryptocurrency leveraged borrowing and other businesses.</p>
-                            <p className="mt-8">
+                            <Paragraph>a. Nami.Exchange Savings assets will be used in cryptocurrency leveraged borrowing and other businesses.</Paragraph>
+                            <Paragraph>
                                 b. When you use Nami.Exchange Savings service, you will unconditionally authorize Nami.Exchange to distribute and grant the
                                 leveraged interest according to Nami.Exchange Platform Rules.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 c. You shall abide by relevant laws and regulations to ensure that the sources of Digital Assets are legitimate and compliant
                                 when using Nami.Exchange Savings service.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 d. When you use Nami.Exchange Savings service, you should fully recognize the risks of investing in Digital Assets and operate
                                 cautiously.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 e. You agree that all investment operations conducted on Nami.Exchange represent your true investment intentions and that
                                 unconditionally accept the potential risks and benefits of your investment decisions.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 f. Nami.Exchange reserves the right to suspend or terminate Nami.Exchange Savings service. If necessary, Nami.Exchange can
                                 suspend and terminate Nami.Exchange Savings service at any time.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 g. Due to network delay, computer system failures and other force majeure, which may lead to delay, suspension, termination or
                                 deviation of execution of Nami.Exchange Savings service, Nami.Exchange will use reasonable effort to ensure but not promise that
                                 Nami.Exchange Savings service execution system runs stably and effectively. Nami.Exchange does not take any responsibility if
                                 the final execution fails to match your expectations due to the above factors.
-                            </p>
+                            </Paragraph>
                             <Title2>7. Staking Programs</Title2>
                             <p>
                                 Nami.Exchange will from time to time launch Staking Programs for specific types of Digital Currencies to reward, as per certain
                                 rules, users who hold such Digital Currencies in their Nami.Exchange Accounts. When participating in Staking Programs, you
                                 should note that:
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 a. Unless otherwise stipulated by Nami.Exchange, Staking Programs are free of charge and Users may trade during the staking
                                 period;
-                            </p>
-                            <p className="mt-8">b. Nami.Exchange does not guarantee Users&rsquo; proceeds under any Staking Program;</p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>b. Nami.Exchange does not guarantee Users&rsquo; proceeds under any Staking Program;</Paragraph>
+                            <Paragraph>
                                 c. Nami.Exchange has the right to initiate or terminate Staking Program for any Digital Currencies or modify rules on such
                                 programs in its sole discretion;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 d. Users shall ensure that sources of the Digital Currencies they hold in Nami.Exchange Accounts are legal and compliant and
                                 undertake to observe related laws and regulations. Otherwise, Nami.Exchange has the right to take necessary steps in accordance
                                 with these Terms or Nami.Exchange Platform Rules, including, without limitation, freezing Nami.Exchange Accounts or deducting
                                 the Digital Currencies awarded to Users who violate the rules of respective Staking Programs.
-                            </p>
+                            </Paragraph>
                             <Title1>IV. Liabilities</Title1>
                             <Title2>1. Disclaimer of Warranties</Title2>
                             <p>
@@ -826,12 +838,12 @@ const Terms = () => {
                                     BY NAMI.EXCHANGE.
                                 </Strong>
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>
                                     THE DISCLAIMER OF IMPLIED WARRANTIES CONTAINED HEREIN MAY NOT APPLY IF AND TO THE EXTENT IT IS PROHIBITED BY APPLICABLE LAW
                                     OF THE JURISDICTION IN WHICH YOU RESIDE.
                                 </Strong>
-                            </p>
+                            </Paragraph>
                             <Title2>2. Disclaimer of Damages and Limitation of Liability</Title2>
                             <p>
                                 <Strong>
@@ -847,7 +859,7 @@ const Terms = () => {
                                     INCIDENTAL OR CONSEQUENTIAL DAMAGES, SO THE ABOVE LIMITATION MAY NOT APPLY TO YOU.
                                 </Strong>
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>
                                     NOTWITHSTANDING THE FOREGOING, IN NO EVENT WILL THE LIABILITY OF NAMI.EXCHANGE, ITS AFFILIATES AND THEIR RESPECTIVE
                                     SHAREHOLDERS, MEMBERS, DIRECTORS, OFFICERS, EMPLOYEES, ATTORNEYS, AGENTS, REPRESENTATIVES, SUPPLIERS OR CONTRACTORS ARISING
@@ -856,7 +868,7 @@ const Terms = () => {
                                     OTHER THEORY, EXCEED THE AMOUNT OF THE FEES PAID BY YOU TO NAMI.EXCHANGE UNDER THESE TERMS IN THE TWELVE-MONTH PERIOD
                                     IMMEDIATELY PRECEDING THE EVENT GIVING RISE TO THE CLAIM FOR LIABILITY.
                                 </Strong>
-                            </p>
+                            </Paragraph>
                             <Title2>3. Indemnification</Title2>
                             <p>
                                 You agree to indemnify and hold harmless Nami.Exchange Operators, their affiliates, contractors, licensors, and their respective
@@ -938,14 +950,14 @@ const Terms = () => {
                                     <p role="presentation">any other circumstances where Nami.Exchange deems it should terminate Nami.Exchange Services.</p>
                                 </li>
                             </ul>
-                            <p className="mt-8">
+                            <Paragraph>
                                 Should your Nami.Exchange Account be terminated, the account and transactional information that meet data retention standards
                                 will be securely stored for 5 years. In addition, if a transaction is unfinished during the account termination process,
                                 Nami.Exchange shall have the right to notify your counterparty of the situation at that time. You acknowledge that a
                                 user-initiated account exit (right to erasure under GDPR or other equivalent regulations) will also be subjected to the
                                 termination protocol stated above.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 If Nami.Exchange is informed that any Digital Assets or funds held in your Nami.Exchange Account are stolen or otherwise are not
                                 lawfully possessed by you, Nami.Exchange may, but has no obligation to, place an administrative hold on the affected funds and
                                 your Nami.Exchange Account. If Nami.Exchange does lay down an administrative hold on some or all of your funds or Nami.Exchange
@@ -954,7 +966,7 @@ const Terms = () => {
                                 involve itself in any such dispute or the resolution of the dispute. You agree that Nami.Exchange will have no liability or
                                 responsibility for any such hold, or for your inability to withdraw Digital Assets or funds or execute trades during the period
                                 of any such hold.
-                            </p>
+                            </Paragraph>
                             <Title2>3. Remaining Funds After Nami.Exchange Account Termination</Title2>
                             <p>
                                 Except as set forth in paragraph 4 below, once a Nami.Exchange Account is closed/withdrawn, all remaining account balance (which
@@ -1015,14 +1027,14 @@ const Terms = () => {
                                     CLASS ACTION.
                                 </Strong>
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 1. Notice of Claim and Dispute Resolution Period. Please contact Nami.Exchange first! Nami.Exchange wants to address your
                                 concerns without resorting to formal legal proceedings, if possible. If you have a dispute with Nami.Exchange, then you should
                                 contact Nami.Exchange and a ticket number will be assigned. Nami.Exchange will attempt to resolve your dispute internally as
                                 soon as possible. The parties agree to negotiate in good faith to resolve the dispute (which discussions shall remain
                                 confidential and be subject to applicable rules protecting settlement discussions from use as evidence in any legal proceeding).
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 In the event the dispute cannot be resolved satisfactorily, and you wish to assert a legal claim against Nami.Exchange, then you
                                 agree to set forth the basis of such claim in writing in a &ldquo;Notice of Claim,&rdquo; as a form of prior notice to
                                 Nami.Exchange. The Notice of Claim must (1) describe the nature and basis of the claim or dispute, (2) set forth the specific
@@ -1033,8 +1045,8 @@ const Terms = () => {
                                 dispute to Nami.Exchange for resolution internally and the delivery of a Notice of Claim to Nami.Exchange are prerequisites to
                                 commencement of an arbitration proceeding (or any other legal proceeding). During the arbitration, the amount of any settlement
                                 offer made by you or Nami.Exchange shall not be disclosed to the arbitrator.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 2. Agreement to Arbitrate. You and Nami.Exchange agree that, subject to paragraph 1 above, any dispute, claim, or controversy
                                 between you and Nami.Exchange arising in connection with or relating in any way to these Terms or to your relationship with
                                 Nami.Exchange as a user of Nami.Exchange Services (whether based in contract, tort, statute, fraud, misrepresentation, or any
@@ -1080,8 +1092,8 @@ const Terms = () => {
                                 be required to fulfill a legal duty, protect or pursue a legal right, or enforce or challenge an award in bona fide legal
                                 proceedings. This confidentiality provision shall survive termination of these Terms and of any arbitration brought pursuant to
                                 these Terms.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 3. Class Action Waiver. You and Nami.Exchange agree that any claims relating to these Terms or to your relationship with
                                 Nami.Exchange as a user of Nami.Exchange Services (whether based in contract, tort, statute, fraud, misrepresentation, or any
                                 other legal theory, and whether the claims arise during or after the termination of these Terms) shall be brought against the
@@ -1090,8 +1102,8 @@ const Terms = () => {
                                 arbitrated as a class, collective, representative, or private attorney general action, to the extent permissible by applicable
                                 law. Combining or consolidating individual arbitrations into a single arbitration is not permitted without the consent of all
                                 parties, including Nami.Exchange.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 4. Modifications. Nami.Exchange reserves the right to update, modify, revise, suspend, or make any future changes to Section X
                                 regarding the parties&rsquo; Agreement to Arbitrate, subject to applicable law. You hereby consent and agree that it is your
                                 responsibility to ensure that your understanding of this Section is up to date. Subject to the applicable law, your continued
@@ -1099,24 +1111,24 @@ const Terms = () => {
                                 parties&rsquo; Agreement to Arbitrate. You agree that if you object to the modifications to Section X, Nami.Exchange may block
                                 access to your account pending closure of your account. In such circumstances, the Terms of Use prior to modification shall
                                 remain in full force and effect pending closure of your account.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 5. Severability. If any portion of these Terms are adjudged to be invalid or unenforceable for any reason or to any extent, the
                                 remainder of these Terms will remain valid and enforceable and the invalid or unenforceable portion will be given effect to the
                                 greatest extent permitted by law. pending closure of your account.
-                            </p>
+                            </Paragraph>
                             <Title1>XI. Miscellaneous</Title1>
                             <p>
                                 1. Independent Parties. Nami.Exchange is an independent contractor but not an agent of you in the performance of these Terms.
                                 These Terms shall not be interpreted as facts or evidence of an association, joint venture, partnership, or franchise between
                                 the parties.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 2. Entire Agreement. These Terms constitute the entire agreement between the parties regarding use of Nami.Exchange Services and
                                 will supersede all prior written or oral agreements between the parties. No usage of trade or other regular practice or method
                                 of dealing between the parties will be used to modify, interpret, supplement, or alter the terms herein.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 3. Interpretation and Revision. Nami.Exchange reserves the right to alter, revise, modify, and/or change these Terms at any
                                 time. All changes will take effect immediately upon being published on Nami.Exchange websites. It is your responsibility to
                                 regularly check relevant pages on our websites/applications to confirm the latest version of these Terms. If you do not agree to
@@ -1124,46 +1136,45 @@ const Terms = () => {
                                 that, unless otherwise expressly provided in these Terms, Nami.Exchange will not be responsible for any modification or
                                 termination of Nami.Exchange Services by you or any third party, or suspension or termination of your access to Nami.Exchange
                                 Services.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 4. Force Majeure. Nami.Exchange will not be liable for any delay or failure to perform as required by these Terms because of any
                                 cause or condition beyond Nami.Exchange&rsquo;s reasonable control.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 5. Severability. If any portion of these Terms is held invalid or unenforceable, such invalidity or enforceability will not
                                 affect the other provisions of these Terms, which will remain in full force and effect, and the invalid or unenforceable portion
                                 will be given effect to the greatest extent possible.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 6. Assignment. You may not assign or transfer any right to use Nami.Exchange Services or any of your rights or obligations under
                                 these Terms without prior written consent from Nami.Exchange, including any right or obligation related to the enforcement of
                                 laws or the change of control. Nami.Exchange may assign or transfer any or all of its rights or obligations under these Terms,
                                 in whole or in part, without notice or obtaining your consent or approval.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 7. Waiver. The failure of one party to require performance of any provision will not affect that party&rsquo;s right to require
                                 performance at any time thereafter. At the same time, the waiver of one party to seek recovery for the other party&rsquo;s
                                 violation of these Terms or any provision of applicable terms shall not constitute a waiver by that party of any subsequent
                                 breach or violation by the other party or of the provision itself.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 8. Third-Party Website Disclaimer. Any links to third-party websites from Nami.Exchange Services does not imply endorsement by
                                 Nami.Exchange of any product, service, information or disclaimer presented therein, nor does Nami.Exchange guarantee the
                                 accuracy of the information contained on them. If you suffer loss from using such third-party product and service, Nami.Exchange
                                 will not be liable for such loss. In addition, since Nami.Exchange has no control over the terms of use or privacy policies of
                                 third-party websites, you should read and understand those policies carefully.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 9. Matters Related to Apple Inc. If you use any device manufactured by Apple Inc. to participate in any commercial activities or
                                 reward programs through Nami.Exchange Services, such activities and programs are provided by Nami.Exchange and are not
                                 associated with Apple Inc. in any manner.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 10. Contact Information. For more information on Nami.Exchange, you may refer to the company and license information found on
                                 Nami.Exchange websites. If you have questions regarding these Terms, please feel free to contact Nami.Exchange for clarification
                                 via our Customer Support team at&nbsp; support@nami.exchange
-                            </p>
-                            <p>&nbsp;</p>
+                            </Paragraph>
                         </div>
                     )}
                     {language === 'vi' && (
@@ -1179,7 +1190,7 @@ const Terms = () => {
                                     Ngoài ra, khi sử dụng một số tính năng của Dịch vụ, bạn có thể phải tuân theo các điều khoản và điều kiện bổ sung cụ thể áp
                                     dụng cho các tính năng đó.
                                 </p>
-                                <p className="mt-8">
+                                <Paragraph>
                                     Vui lòng đọc kỹ các điều khoản vì chúng chi phối việc sử dụng Dịch vụ Nami.Exchange của bạn.{' '}
                                     <Strong>
                                         CÁC ĐIỀU KHOẢN NÀY CHỨA CÁC ĐIỀU KHOẢN QUAN TRỌNG BAO GỒM MỘT ĐIỀU KHOẢN QUY ĐỊNH TẤT CẢ CÁC Y&Ecirc;U CẦU ĐƯỢC GIẢI
@@ -1189,20 +1200,20 @@ const Terms = () => {
                                     trọng tài, Từ bỏ Hành động Tập thể&rdquo;, dưới đây. Như với bất kỳ tài sản nào, giá trị của Tiền tệ kỹ thuật số (như được
                                     định nghĩa bên dưới) có thể dao động đáng kể và có rủi ro thiệt hại kinh tế đáng kể khi mua, bán, nắm giữ hoặc đầu tư vào
                                     Tiền tệ kỹ thuật số và các sản phẩm phái sinh của chúng.
-                                </p>
-                                <p className="mt-8">
+                                </Paragraph>
+                                <Paragraph>
                                     Bằng cách sử dụng dịch vụ <Strong>Nami.exchange</Strong>, bạn xác nhận và đồng ý rằng:
-                                </p>
+                                </Paragraph>
                                 <ul className="ml-4 list-disc mt-8 space-y-1">
                                     <li>Bạn nhận thức rủi ro liên quan đến giao dịch tiền tệ kỹ thuật số và các giao dịch phái sinh của chúng.</li>
                                     <li>Bạn sẽ đánh giá tất cả rủi ro liên quan đến việc sử dụng các dịch vụ chuyển đổi và giao dịch của nami.</li>
                                     <li>Nami.exchange sẽ không chịu trách nhiệm pháp lý đối với bất kỳ rủi ro nào.</li>
                                 </ul>
-                                <p className="mt-8">
+                                <Paragraph>
                                     Bằng cách truy cập, sử dụng hoặc cố gắng sử dụng Dịch vụ Nami.Exchange với bất kỳ khả năng nào, bạn xác nhận rằng bạn chấp
                                     nhận và đồng ý bị ràng buộc bởi các Điều khoản này. Nếu bạn không đồng ý, vui lòng không truy cập Nami.Exchange hoặc sử dụng
                                     các dịch vụ của Nami.Exchange.
-                                </p>
+                                </Paragraph>
                             </div>
 
                             {/* Terms 1*/}
@@ -1315,7 +1326,7 @@ const Terms = () => {
                                 Nami.Exchange, đồng thời gửi Tài sản kỹ thuật số vào tài khoản của họ trước khi giao dịch. Người dùng có thể, tuân theo các hạn
                                 chế được quy định trong các Điều khoản này, đăng ký rút Tài sản kỹ thuật số.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 Mặc dù Nami.Exchange đã cam kết duy trì tính chính xác của thông tin được cung cấp thông qua các dịch vụ của Nami.Exchange,
                                 Nami.Exchange không thể và không đảm bảo tính chính xác, khả năng ứng dụng, độ tin cậy, tính toàn vẹn, hiệu suất hoặc tính thích
                                 hợp, Nami.Exchange cũng không phải chịu trách nhiệm pháp lý đối với bất kỳ tổn thất hoặc thiệt hại nào có thể gây ra trực tiếp
@@ -1325,7 +1336,7 @@ const Terms = () => {
                                 Nami.Exchange hoặc bất kỳ phương tiện giao tiếp nào khác. Tất cả Người dùng của Dịch vụ Nami.Exchange phải hiểu những rủi ro
                                 liên quan đến giao dịch Tài sản kỹ thuật số và được khuyến nghị thực hiện thận trọng và giao dịch có trách nhiệm trong khả năng
                                 của mình.
-                            </p>
+                            </Paragraph>
 
                             <Title2>3. Yêu cầu và đăng ký tài khoản Nami.Exchange</Title2>
 
@@ -1375,13 +1386,13 @@ const Terms = () => {
                                 HOÀN TOÀN CHỊU TRÁCH NHIỆM ĐỐI VỚI BẤT KỲ KHOẢN THIỆT HẠI NÀO ĐỐI VỚI NAMI.EXCHANGE TRONG KHI BẠN SỬ DỤNG DỊCH VỤ NAMI.EXCHANGE.
                                 BẠN SAU Đ&Acirc;Y ĐỒNG &Yacute; RẰNG BẠN C&Oacute; NGHĨA VỤ CẬP NHẬT TẤT CẢ TH&Ocirc;NG TIN NẾU C&Oacute; BẤT KỲ THAY ĐỔI NÀO.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 BẰNG VIỆC ĐĂNG Ý TÀI KHOẢN, BẠN CHO PHÉP NAMI.EXCHANGE THỰC HIỆN CÁC CUỘC ĐIỀU TRA MÀ NAMI.EXCHANGE CẦN THIẾT, LÀ TRỰC TIẾP HOẶC
                                 TH&Ocirc;NG QUA B&Ecirc;N THỨ BA, ĐỂ XÁC MINH NHẬN DIỆN CỦA BẠN HOẶC BẢO VỆ BẠN, NHỮNG NGƯỜI D&Ugrave;NG KHÁC VÀ / HOẶC NAMI.
                                 CÁC TỘI PHẠM VÀ ĐỂ THỰC HIỆN CÁC HÀNH VI CẦN THIẾT DỰA TR&Ecirc;N KẾT QUẢ ĐIỀU TRA NHƯ VẬY. BẠN CŨNG ĐỒNG &Yacute; RẰNG
                                 TH&Ocirc;NG TIN CÁ NH&Acirc;N CỦA BẠN C&Oacute; THỂ ĐƯỢC TIẾT LỘ CHO T&Iacute;N DỤNG VÀ CÁC CƠ QUAN ĐỂ PH&Ograve;NG NGỪA HOẶC
                                 PH&Ograve;NG NGỪA TỘI PHẠM TÀI CH&Iacute;NH, MÀ C&Oacute; THỂ TRẢ LỜI ĐẦY ĐỦ ĐIỀU TRA CỦA CH&Uacute;NG T&Ocirc;I.
-                            </p>
+                            </Paragraph>
                             <Title3>d. Yêu cầu sử dụng tài khoản</Title3>
                             <p>
                                 Tài khoản Nami.Exchange chỉ có thể được sử dụng bởi người đăng ký tài khoản. Nami.Exchange có quyền đình chỉ, đáng băng hoặc hủy
@@ -1561,11 +1572,11 @@ const Terms = () => {
                                 </li>
                             </ol>
 
-                            <p className="mt-8">
+                            <Paragraph>
                                 Bằng cách truy cập Dịch vụ Nami.Exchange, bạn đồng ý rằng Nami.Exchange có quyền điều tra bất kỳ vi phạm nào đối với các Điều
                                 khoản này, đơn phương xác định xem bạn có vi phạm các Điều khoản này hay không và thực hiện các hành động theo quy định có liên
                                 quan mà không cần sự đồng ý của bạn hoặc thông báo trước. Ví dụ về các hành động như vậy bao gồm, nhưng không giới hạn ở:
-                            </p>
+                            </Paragraph>
                             <ul className="list-disc ml-8 mt-4 space-y-1">
                                 <li>Chặn và đáng yêu cầu đặt lệnh;</li>
                                 <li>Đáng băng tài khoản của bạn;</li>
@@ -1937,14 +1948,14 @@ const Terms = () => {
                                 <li>bạn yêu cầu chấm dứt Dịch vụ Nami.Exchange; và</li>
                                 <li>bất kỳ trường hợp nào khác mà Nami.Exchange cho rằng nên chấm dứt Dịch vụ Nami.Exchange.</li>
                             </ul>
-                            <p className="mt-8">
+                            <Paragraph>
                                 Nếu Tài khoản Nami.Exchange của bạn bị chấm dứt, tài khoản và thông tin giao dịch đáp ứng các tiêu chuẩn lưu giữ dữ liệu sẽ được
                                 lưu trữ an toàn trong 5 năm. Ngoài ra, nếu giao dịch chưa hoàn thành trong quá trình chấm dứt tài khoản, Nami.Exchange sẽ có
                                 quyền thông báo cho đối tác của bạn về tình hình tại thời điểm đó. Bạn thừa nhận rằng việc thoát tài khoản do người dùng thực
                                 hiện (quyền xáa theo Quy định bảo vệ dữ liệu chung - GDPR hoặc các quy định tương đương khác) cũng sẽ phải tuân theo giao thức
                                 chấm dứt được nêu ở trên.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 Nếu Nami.Exchange được thông báo rằng bất kỳ Tài sản kỹ thuật số hoặc số tiền nào được giữ trong Tài khoản Nami.Exchange của bạn
                                 bị đánh cắp hoặc không thuộc quyền sở hữu hợp pháp của bạn, Nami.Exchange có thể, nhưng không có nghĩa vụ, tạm giữ và quản lý
                                 các khoản tiền bị ảnh hưởng và Tài khoản Nami.Exchange của bạn. Nếu Nami.Exchange thực hiện việc tạm giữ hành chính đối với một
@@ -1953,7 +1964,7 @@ const Terms = () => {
                                 nào như vậy hoặc việc giải quyết tranh chấp. Bạn đồng ý rằng Nami.Exchange sẽ không có trách nhiệm pháp lý hoặc trách nhiệm đối
                                 với bất kỳ khoản giữ nào như vậy, hoặc việc bạn không thể rút Tài sản kỹ thuật số hoặc tiền mã hóa hoặc thực hiện các giao dịch
                                 trong khoảng thời gian bị giữ như vậy.
-                            </p>
+                            </Paragraph>
                             <Title2>3. Số tài sản còn lại sau khi Nami.Exchange Chấm dứt Tài khoản</Title2>
                             <p>
                                 Trừ khi được quy định trong điều 4 dưới đây, khi Tài khoản Nami.Exchange bị đáng / rút, tất cả số dư tài khoản còn lại (bao gồm
@@ -2015,15 +2026,15 @@ const Terms = () => {
                                 VUI L&Ograve;NG ĐỌC KỸ PHẦN NÀY, V&Igrave; PHẦN NÀY LI&Ecirc;N QUAN ĐẾN VIỆC LOẠI BỎ MỘT SỐ QUYỀN LỢI PHÁP L&Yacute; NHẤT ĐỊNH
                                 LI&Ecirc;N QUAN ĐẾN CÁC THỦ TỤC PHÁP L&Yacute;, BAO GỒM CẢ CÁC VỤ KIỆN TẬP THỂ.
                             </p>
-                            <p className="mt-8">
+                            <Paragraph>
                                 <Strong>1. Thông báo Khiếu nại và Thời hạn Giải quyết Tranh chấp. </Strong>Vui lòng liên hệ với Nami.Exchange trước!
                                 Nami.Exchange muốn giải quyết các mối quan tâm của bạn mà không cần đến các thủ tục pháp lý chính thức, nếu có thể. Nếu bạn có
                                 tranh chấp với Nami.Exchange, bạn nên liên hệ với Nami.Exchange. Nami.Exchange sẽ cố gắng giải quyết tranh chấp nội bộ của bạn
                                 sớm nhất có thể. Các bên đồng ý thương lượng một cách thiện chí để giải quyết tranh chấp (các cuộc thảo luận sẽ được giữ bí mật
                                 và tuân theo các quy tắc hiện hành bảo vệ các cuộc thảo luận dàn xếp không được sử dụng làm bằng chứng trong bất kỳ thủ tục pháp
                                 lý nào).
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 Trong trường hợp tranh chấp không thể được giải quyết một cách thỏa đáng và bạn muốn khẳng định một khiếu nại pháp lý chống lại
                                 Nami.Exchange, thì bạn đồng ý đưa ra cơ sở của khiếu nại đó bằng văn bản trong &ldquo;Thông báo Khiếu nại&rdquo;, như một hình
                                 thức thông báo trước đến Nami.Exchange. Thông báo Khiếu nại phải (1) mô tả bản chất và cơ sở của khiếu nại hoặc tranh chấp, (2)
@@ -2034,8 +2045,8 @@ const Terms = () => {
                                 và gửi Thông báo khiếu nại cho Nami.Exchange là những điều kiện tiên quyết để bắt đầu một thủ tục trọng tài (hoặc bất kỳ thủ tục
                                 pháp lý nào khác). Trong quá trình phân xử, số tiền của bất kỳ đề nghị dàn xếp nào do bạn hoặc Nami.Exchange đưa ra sẽ không
                                 được tiết lộ cho trọng tài viên.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>2. Thỏa thuận Trọng tài. </Strong>Bạn và Nami.Exchange đồng ý rằng, theo khoản 1 ở trên, bất kỳ tranh chấp, khiếu nại
                                 hoặc tranh cãi nào giữa bạn và Nami.Exchange phát sinh liên quan hoặc liên quan đến bất kỳ cách nào với các Điều khoản này hoặc
                                 mối quan hệ của bạn với Nami.Exchange với tư cách là người dùng có nhân của Nami (không phải tập thể người dùng), ngoại trừ các
@@ -2048,8 +2059,8 @@ const Terms = () => {
                                 tự như tòa án (bao gồm, nếu có, phí luật sư), ngoại trừ việc trọng tài viên không thể đưa ra biện pháp giải quyết theo hướng
                                 tuyên bố hoặc bắt buộc có lợi cho bất kỳ ai trừ các bên tham gia trọng tài. Các điều khoản trọng tài quy định trong Phần này sẽ
                                 vẫn còn hiệu lực khi các Điều khoản này chấm dứt.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Quy tắc Trọng tài. </Strong>Việc phán quyết trọng tài sẽ tuân theo Quy tắc Trọng tài của Phòng Thương mại Quốc tế
                                 (&ldquo;ICC&rdquo;) sau đó có hiệu lực (&ldquo;Các Quy tắc ICC&rdquo;), như được sửa đổi bởi Mục X. Việc phân xử sẽ do Tòa án
                                 Quốc tế của Trọng tài của ICC. Trừ khi các bên có thỏa thuận khác, sẽ chỉ có một trọng tài viên được chỉ định phù hợp với Quy
@@ -2059,34 +2070,34 @@ const Terms = () => {
                                 cho quyết định và phán quyết, nếu có. THẨM QUYỀN VỀ BẤT KỲ KHOẢN BỒI THƯỜNG NÀO C&Oacute; THỂ ĐƯỢC ĐƯA RA TRONG BẤT KỲ
                                 T&Ograve;A ÁN NÀO C&Oacute; TRÁCH NHIỆM PHÁP L&Yacute; ĐỐI VỚI B&Ecirc;N (HOẶC TR&Ecirc;N TÀI SẢN CỦA B&Ecirc;N) ĐỐI DIỆN VỚI
                                 B&Ecirc;N PHẢI CHI TRẢ KHOẢN BỒI THƯỜNG.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Thời gian nộp hồ sơ</Strong>: BẤT KỲ KHIẾU NẠI TRỌNG TÀI NÀO CHỐNG LẠI Nami.Exchange CẦN ĐƯỢC TIẾN HÀNH BẰNG CÁCH GỬI
                                 VĂN BẢN TRONG V&Ograve;NG MỘT (1) NĂM, SAU NGÀY B&Ecirc;N KHIẾU NẠI BIẾT TỚI HOẶC GHI NHẬN HÀNH ĐỘNG G&Acirc;Y KHIẾU NẠI; VÀ SẼ
                                 KH&Ocirc;NG C&Oacute; BẤT KỲ QUYỀN KHIẾU NẠI NÀO KH&Ocirc;NG ĐƯỢC XÁC NHẬN TRONG KHOẢNG THỜI GIAN Đ&Oacute;. KỲ HẠN 1 NĂM NÀY
                                 BAO GỒM THỦ TỤC GIẢI QUYẾT TRANH CHẤP NỘI BỘ ĐƯỢC THIẾT LẬP TRONG KHOẢN 1 CỦA MỤC NÀY. Nếu luật hiện hành cấm thời hạn một năm
                                 để xác nhận các khiếu nại, thì bất kỳ khiếu nại nào cũng phải được xác nhận trong khoảng thời gian ngắn nhất được luật hiện hành
                                 cho phép.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Quá trình</Strong>; Lưu ý: Bên có ý định tìm kiếm trọng tài sau khi kết thúc Thời hạn Giải quyết Tranh chấp được quy
                                 định tại khoản 1 ở trên, phải gửi yêu cầu đến ICC theo Quy tắc của ICC. Nếu chúng tôi yêu cầu phân xử đối với bạn, chúng tôi sẽ
                                 thông báo cho bạn theo địa chỉ email hoặc địa chỉ gửi thư mà bạn đã cung cấp. Bạn đồng ý rằng bất kỳ thông báo nào được gửi đến
                                 email hoặc địa chỉ gửi thư này sẽ được coi là có hiệu lực cho mọi mục đích, bao gồm nhưng không giới hạn các quyết định về tính
                                 thích hợp của dịch vụ. Bạn có nghĩa vụ đảm bảo rằng địa chỉ email và / hoặc địa chỉ gửi thư trong hồ sơ với Nami.Exchange là cập
                                 nhật và chính xác.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Ghế của Trọng tài</Strong>: Vị trí ghế của trọng tài sẽ là Thụy Sĩ.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Địa điểm Điều trần</Strong>: Địa điểm của bất kỳ phiên điều trần trọng tài trực tiếp nào sẽ là Thụy Sĩ, trừ khi các bên
                                 có thỏa thuận khác.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Luật điều chỉnh / Quyền tài phán</Strong>: Luật điều chỉnh của trọng tài sẽ được xác định theo Quy tắc của ICC.&nbsp;
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>Bảo mật.</Strong> Các bên đồng ý rằng trọng tài sẽ được giữ bí mật. Sự tồn tại của trọng tài, bất kỳ thông tin không
                                 công khai nào được cung cấp trong trọng tài và bất kỳ đệ trình, lệnh hoặc phán quyết nào được đưa ra trong trọng tài (gọi chung
                                 là &ldquo;Thông tin bí mật&rdquo;) sẽ không được tiết lộ cho bất kỳ bên nào ngoại trừ hội đồng trọng tài, ICC, các bên, cố vấn
@@ -2095,8 +2106,8 @@ const Terms = () => {
                                 tiết lộ có thể được yêu cầu để thực hiện nghĩa vụ pháp lý, bảo vệ hoặc theo đuổi quyền hợp pháp, thực thi hoặc kháng cáo khoản
                                 bồi thường trong các thủ tục pháp lý trung thực. Điều khoản bảo mật này sẽ vẫn còn hiệu lực ngay cả khi chấm dứt các Thỏa thuận
                                 này và bất kỳ phán quyết trọng tài nào được đưa ra theo các thỏa thuận này.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>3. Bãi bỏ Hành động Tập thể. </Strong>Bạn và Nami.Exchange đồng ý rằng bất cứ xác nhận nào liên quan đến các Thỏa thuận
                                 này hoặc mối quan hệ của bạn với Nami.Exchange với vai trò là một người dùng của Nami.Exchange (cho dù dựa trên hợp đồng, vi
                                 phạm, quy chế, gian lận, xuyên tạc hoặc bất kỳ lý thuyết pháp lý nào khác, và cho dù các xác nhận trước hay sau khi kết thúc
@@ -2105,8 +2116,8 @@ const Terms = () => {
                                 ra, xét xử hoặc phân xử với tư cách là một hành động tập thể, tập thể, đại diện hoặc luật sư tư nhân, trong phạm vi luật hiện
                                 hành cho phép. Không được phép kết hợp hoặc hợp nhất các khiếu nại trọng tài riêng lẻ thành một khiếu nại trọng tài duy nhất mà
                                 không có sự đồng ý của tất cả các bên, bao gồm cả Nami.Exchange.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong>4. Các sửa đổi. </Strong>Nami.Exchange có quyền cập nhật, sửa đổi, chỉnh sửa, tạm ngừng hoặc thực hiện bất kỳ thay đổi
                                 nào trong tương lai đối với Phần X liên quan đến Thỏa thuận Trọng tài của các bên, tuân theo luật hiện hành. Bạn đồng ý và đồng
                                 ý rằng bạn có trách nhiệm đảm bảo rằng sự hiểu biết của bạn về Phần này được cập nhật. Theo luật hiện hành, việc bạn tiếp tục sử
@@ -2114,13 +2125,13 @@ const Terms = () => {
                                 của các bên. Bạn đồng ý rằng nếu bạn phản đối các sửa đổi đối với Phần X, Nami.Exchange có thể chặn quyền truy cập vào tài khoản
                                 của bạn trong khi tài khoản của bạn bị đáng. Trong những trường hợp như vậy, Điều khoản Sử dụng trước khi sửa đổi sẽ vẫn có hiệu
                                 lực đầy đủ trong khi tài khoản của bạn bị đáng.
-                            </p>
-                            <p className="mt-8">
+                            </Paragraph>
+                            <Paragraph>
                                 <Strong> Tính hiệu lực từng phần. </Strong>Nếu bất kỳ phần nào của các Điều khoản này được coi là không hợp lệ hoặc không thể
                                 thi hành vì bất kỳ lý do gì hoặc ở bất kỳ mức độ nào, phần còn lại của các Điều khoản này sẽ vẫn có hiệu lực và có thể thi hành
                                 được và phần không hợp lệ hoặc không thể thi hành sẽ có hiệu lực trong phạm vi cao nhất được pháp luật cho phép với tài khoản
                                 đang chờ đáng của bạn.
-                            </p>
+                            </Paragraph>
                             <Title1>
                                 <Strong>XI. Điều khoản khác</Strong>
                             </Title1>
@@ -2192,7 +2203,7 @@ const Terms = () => {
                     )}
                 </div>
             </div>
-        </MaldivesLayout>
+        </div>
     );
 };
 
