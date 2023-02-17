@@ -46,35 +46,9 @@ const HomeIntroduce = ({ parentState }) => {
     const animRef = useRef();
 
     const BannerGraphic = useCallback(() => {
-        return width > 1440 ? (
-            <div className={`homepage-introduce___wrapper__right`}>
-                <div ref={animRef} className="homepage-introduce___graphics">
-                    <div className="homepage-introduce___graphics__anim__wrapper">
-                        <img className="h-[534px]" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
-                        {/* <img src={getS3Url('/images/screen/homepage/banner_graphics.png')} alt="Nami Exchange" /> */}
-                    </div>
-                </div>
-                {/*{width >= 1024 &&*/}
-                {/*<div className="homepage-introduce___graphics__backward">*/}
-                {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
-                {/*</div>}*/}
-            </div>
-        ) : width > 1024 ? (
-            <img className="h-[534px] absolute right-0 bottom-0" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
-        ) : (
-            <div className={`homepage-introduce___wrapper__right`}>
-                <div ref={animRef} className="homepage-introduce___graphics">
-                    <div className="homepage-introduce___graphics__anim__wrapper">
-                        <img className="h-[534px]" src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
-                        {/* <img src={getS3Url('/images/screen/homepage/banner_graphics.png')} alt="Nami Exchange" /> */}
-                    </div>
-                </div>
-                {/*{width >= 1024 &&*/}
-                {/*<div className="homepage-introduce___graphics__backward">*/}
-                {/*    <img src={getS3Url("/images/screen/homepage/electric_pattern.png")} alt="Nami Exchange"/>*/}
-                {/*</div>}*/}
-            </div>
-        );
+        return <div className={`homepage-introduce___wrapper__right`}>
+            <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+        </div>
     }, [width]);
 
     const renderIntroduce = useCallback(() => {
