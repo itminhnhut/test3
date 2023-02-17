@@ -1,9 +1,7 @@
 import AssetLogo from 'src/components/wallet/AssetLogo';
 import colors from 'styles/colors';
-import Axios from 'axios';
 
-import { useCallback, useEffect, useState } from 'react';
-import { API_GET_TRENDING } from 'redux/actions/apis';
+import { useCallback, useState } from 'react';
 import { useWindowSize } from 'utils/customHooks';
 import { useSelector } from 'react-redux';
 import { formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils';
@@ -54,7 +52,7 @@ const types = [
         }
     }
 ];
-const HomeMarketTrend = ({trendData}) => {
+const HomeMarketTrend = ({ trendData }) => {
     // * Initial State
     const [type, setType] = useState(types[0]);
     const [state, set] = useState({
@@ -69,7 +67,6 @@ const HomeMarketTrend = ({trendData}) => {
     const { t } = useTranslation();
 
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
-
 
     // * Render Handler
     const renderTrendTab = useCallback(() => {
@@ -117,50 +114,43 @@ const HomeMarketTrend = ({trendData}) => {
         types,
         lang
     }) => {
-        if(width >= 992 ){
-            return <div className="flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar">
-                {types.map((e, index) =>
-                    <div key={e.id}
-                         className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
-                             'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                         })}
-                         onClick={() => {
-                             setType(e);
-                             setState({marketTabIndex: index})
-                         }}
-                    >
-                        {e?.content[lang]}
-                    </div>
-                )}
-            </div>;
-        } else {
-            return <div className="flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar">
-                {types.map(e =>
-                    <div key={e.id}
-                         className={classNames('flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
-                             'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                         })}
-                         onClick={() => {
-                             setType(e);
-                             setState({marketTabIndex: index})
-                         }}
-                    >
-                        {e?.content[lang]}
-                    </div>
-                )}
-            </div>;
-        }
+        const isMobile = width < 992;
+        return <div className={
+            isMobile
+                ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar'
+                : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'
+        }>
+            {types.map((e, index) =>
+                <div key={e.id}
+                     className={
 
+                         isMobile ? classNames('flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
+                                 'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                             })
+                             :
+                             classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
+                                 'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                             })}
+                     onClick={() => {
+                         setType(e);
+                         setState({ marketTabIndex: index });
+                     }}
+                >
+                    {e?.content[lang]}
+                </div>
+            )}
+        </div>;
 
     };
 
     const renderMarketBody = useCallback(() => {
-        const tabMap = [ 'topView',
+        const tabMap = ['topView',
             'newListings',
             'topGainers',
             'topLosers',
-            ]
-        const pairs = trendData  ? trendData?.[tabMap[state.marketTabIndex]] : null;
+        ];
+        const pairs = trendData ? trendData?.[tabMap[state.marketTabIndex]] : null;
+        if (!pairs) return null;
         return pairs.map(pair => {
             let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair);
@@ -172,9 +162,10 @@ const HomeMarketTrend = ({trendData}) => {
             }
             const sparkLine = sparkLineBuilder(_?.symbol, sparkLineColor);
 
-            if(width >= 992 ){
+            if (width >= 992) {
                 return (
-                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row"
+                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}
+                       className="homepage-markettrend__market_table__row"
                        key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
@@ -193,7 +184,8 @@ const HomeMarketTrend = ({trendData}) => {
                             </div>
                         </div>
                         <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
-                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                            <div
+                                className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                                 {render24hChange(pair, false, '!text-base')}
                             </div>
                         </div>
@@ -204,9 +196,10 @@ const HomeMarketTrend = ({trendData}) => {
                         </div>
                     </a>
                 );
-            }else{
+            } else {
                 return (
-                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="homepage-markettrend__market_table__row"
+                    <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}
+                       className="homepage-markettrend__market_table__row"
                        key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}>
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
@@ -228,7 +221,8 @@ const HomeMarketTrend = ({trendData}) => {
                             <div className={`homepage-markettrend__market_table__price text-sm`}>
                                 {formatPrice(_?.lastPrice)}
                             </div>
-                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                            <div
+                                className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                                 {render24hChange(pair, false, '!text-sm')}
                             </div>
                         </div>
