@@ -323,7 +323,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
-                        containerClassName={`${className} mr-5`}
+                        containerClassName={`${className} mr-6`}
                         value={value}
                         icon={icon}
                     />
@@ -424,14 +424,22 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             setActivePairList(false);
         };
 
-        const renderInformation = (data) => {
+        const renderInformation = (data, isLeft) => {
             return data.map(({ title, tooltip, leftPercent }, index) => (
                 <div key={'title' + title} className="py-[8px] flex  w-full w-100">
-                    <Tooltip id={title} place="right" effect="solid" isV3>
-                        <div>
-                            <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
-                            <div className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
-                        </div>
+                    <Tooltip
+                        id={title}
+                        place="top"
+                        effect="solid"
+                        isV3
+                        overridePosition={(e) => ({
+                            left: isLeft ? 0 : e.left,
+                            top: e.top
+                        })}
+                        className="max-w-[300px]"
+                    >
+                        {/* <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label> */}
+                        <div className="text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                     </Tooltip>
                     {/* Each row */}
                     <div className="flex items-center justify-between w-full">
@@ -498,7 +506,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 </div>
 
                 <div className="mt-8 flex w-full">
-                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
+                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS, true)}</div>
                     <div className="flex flex-1 flex-col pl-4">{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
                 </div>
 
