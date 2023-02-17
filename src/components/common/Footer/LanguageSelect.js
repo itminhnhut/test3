@@ -19,7 +19,7 @@ const LanguageSelect = ({ t, language, currentTheme }) => {
                 <SvgIcon
                     name="chevron_down"
                     size={16}
-                    className="chevron__down !pl-1"
+                    className="group-hover:rotate-[360deg]"
                     color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                 />
             </div>
