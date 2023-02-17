@@ -148,7 +148,7 @@ const Support = () => {
 
     return (
         <MaldivesLayout>
-            <div className='bg-shadow'>
+            <div className='bg-white dark:bg-shadow'>
                 <SearchSection t={t} width={width} />
                 <div className='container pt-6 max-w-[1440px]'>
                     <div className='pb-[120px] px-4 sm:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>

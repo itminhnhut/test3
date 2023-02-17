@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import Link from 'next/link';
 
 const HrefButton = ({ className = '', disabled = false, href = '/', children, variants = 'primary', target }) => {
+    console.log(href)
     return (
         <Link href={href} prefetch={false}>
             <a
