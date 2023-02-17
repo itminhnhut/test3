@@ -9,7 +9,7 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import InfoSlider from 'components/markets/InfoSlider';
 import colors from 'styles/colors';
 import axios from 'axios';
-import Star from 'components/svg/Star';
+import { BxsStarIcon } from 'components/svg/SvgIcon';
 
 const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     const [loading, setLoading] = useState(false);
@@ -52,11 +52,11 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
 
     return (
         <div className="h-full flex items-center pr-3">
-            <div className="flex items-center pl-5 pr-[10px] h-full dragHandleArea">
-                <Star size={16} fill={colors.yellow} />
+            <div className="flex items-center pl-6 h-full dragHandleArea">
+                <BxsStarIcon size={16} fill={colors.yellow[1]} />
             </div>
             {loading ? (
-                <div>Loading...</div>
+                <div className="pl-3">Loading...</div>
             ) : (
                 <InfoSlider gutter={18} forceUpdateState={favoritePairLayout?.h} containerClassName="h-full">
                     {renderPairItems()}

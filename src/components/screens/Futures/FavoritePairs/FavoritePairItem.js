@@ -13,7 +13,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
     const negative = pair?.priceChangePercent < 0;
     return (
         <div
-            className="flex flex-col items-center justify-center font-semibold px-[18px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
+            className="flex flex-col items-center justify-center font-semibold first:pl-0 pl-[22px] pr-[22px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
             onClick={() => !active && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pair?.symbol}`)}
         >
             <div className="text-sm mb-[2px]">
@@ -25,7 +25,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
                     'text-dominant': !negative
                 })}
             >
-                <ChevronDown color={negative ? colors.red : colors.teal} className={negative ? '' : 'rotate-0'} />
+                <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} />
                 {formatNumber(roundTo(pair?.priceChangePercent * 100, 2), 2, 2, true)}%
             </div>
         </div>

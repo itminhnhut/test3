@@ -4,124 +4,92 @@ import classNames from 'classnames';
 
 const DIRECTION = {
     PREV: 'prev',
-    NEXT: 'next',
-}
+    NEXT: 'next'
+};
 
-const InfoSlider = ({
-    forceUpdateState,
-    children,
-    gutter = 12,
-    className,
-    containerClassName,
-    gradientColor,
-}) => {
-    const [rightControllable, setRightControllable] = useState(false)
-    const [leftControllable, setLeftControllable] = useState(false)
+const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, containerClassName, gradientColor }) => {
+    const [rightControllable, setRightControllable] = useState(false);
+    const [leftControllable, setLeftControllable] = useState(false);
 
-    let scrollStepSize = 80
-    const containerRef = useRef()
-    const ref = useRef()
+    let scrollStepSize = 80;
+    const containerRef = useRef();
+    const ref = useRef();
 
     // Action
     const onScroll = (scrollStep) =>
         ref?.current?.scrollTo({
             left: ref.current?.scrollLeft + scrollStep,
-            behavior: 'smooth',
-        })
+            behavior: 'smooth'
+        });
 
     // Helper
     const watchingScrollPosition = () => {
-        const position = ref.current?.scrollLeft || 0
-        position <= 0 ? setLeftControllable(false) : setLeftControllable(true)
+        const position = ref.current?.scrollLeft || 0;
+        position <= 0 ? setLeftControllable(false) : setLeftControllable(true);
 
-        ref?.current?.offsetWidth + position >= ref.current?.scrollWidth &&
-        position >= gutter
-            ? setRightControllable(false)
-            : setRightControllable(true)
-    }
+        ref?.current?.offsetWidth + position >= ref.current?.scrollWidth && position >= gutter ? setRightControllable(false) : setRightControllable(true);
+    };
 
     useEffect(() => {
-        const position = ref.current?.scrollLeft || 0
-        const childNodes = ref.current?.childNodes
+        const position = ref.current?.scrollLeft || 0;
+        const childNodes = ref.current?.childNodes;
 
         // Init right controllable state
-        if (
-            !(
-                ref?.current?.offsetWidth + position >=
-                    ref.current?.scrollWidth && position >= gutter
-            )
-        ) {
-            setRightControllable(true)
+        if (!(ref?.current?.offsetWidth + position >= ref.current?.scrollWidth && position >= gutter)) {
+            setRightControllable(true);
         }
 
         if (childNodes?.length && ref.current?.scrollWidth !== undefined) {
             // Create scroll step size
-            scrollStepSize = ref.current?.scrollWidth / childNodes.length
+            scrollStepSize = ref.current?.scrollWidth / childNodes.length;
         }
 
         // On scroll handling
-        ref?.current?.addEventListener('scroll', watchingScrollPosition)
+        ref?.current?.addEventListener('scroll', watchingScrollPosition);
 
-        return () =>
-            ref?.current?.removeEventListener('scroll', watchingScrollPosition)
-    }, [])
+        return () => ref?.current?.removeEventListener('scroll', watchingScrollPosition);
+    }, []);
 
     useEffect(() => {
         if (ref?.current?.scrollWidth) {
-            if (
-                ref.current.scrollWidth <=
-                containerRef?.current?.clientWidth - gutter
-            ) {
-                setRightControllable(false)
+            if (ref.current.scrollWidth <= containerRef?.current?.clientWidth - gutter) {
+                setRightControllable(false);
             } else {
-                setRightControllable(true)
+                setRightControllable(true);
             }
         }
-    }, [forceUpdateState, gutter])
+    }, [forceUpdateState, gutter]);
 
     return (
-        <div
-            ref={containerRef}
-            className={classNames(
-                'flex items-center overflow-hidden h-full',
-                className
-            )}
-        >
+        <div ref={containerRef} className={classNames('flex items-center overflow-hidden h-full px-2', className)}>
             <div
                 onClick={() => onScroll(-scrollStepSize)}
-                style={{
-                    background: `linear-gradient(to right, ${gradientColor} 42.24%, transparent 95.69%)`,
-                }}
-                className={classNames(
-                    'min-w-[24px] h-full min-h-[45px] flex items-center justify-center invisible cursor-pointer pointer-events-none hover:text-dominant',
-                    { '!visible !pointer-events-auto': leftControllable }
-                )}
+                // style={{
+                //     background: `linear-gradient(to right, ${gradientColor} 42.24%, transparent 95.69%)`
+                // }}
+                className={`pr-[2px] h-full items-center justify-center flex pointer-events-auto cursor-pointer hover:text-dominant 
+                    ${!leftControllable && 'invisible pointer-events-none'}`}
             >
-                <ChevronLeft size={14} />
+                <ChevronLeft color="#8694B3" size={16} />
             </div>
-            <div
-                ref={ref}
-                className={classNames(
-                    'flex items-center overflow-x-auto no-scrollbar',
-                    containerClassName
-                )}
-            >
+            <div ref={ref} className={classNames('flex items-center overflow-x-auto no-scrollbar', containerClassName)}>
                 {children}
             </div>
             <div
                 onClick={() => onScroll(scrollStepSize)}
-                style={{
-                    background: `linear-gradient(to left, ${gradientColor} 42.24%, transparent 95.69%)`,
-                }}
-                className={classNames(
-                    'min-w-[24px] h-full min-h-[45px] flex items-center justify-center invisible cursor-pointer pointer-events-none hover:text-dominant',
-                    { '!visible !pointer-events-auto': rightControllable }
-                )}
+                // style={{
+                //     background: `linear-gradient(to left, ${gradientColor} 42.24%, transparent 95.69%)`
+                // }}
+                // className={classNames('min-w-[24px] h-full flex items-center justify-center invisible cursor-pointer pointer-events-none hover:text-dominant', {
+                //     '!visible !pointer-events-auto': rightControllable
+                // })}
+                className={`min-w-[24px] h-full items-center justify-center flex pointer-events-auto cursor-pointer hover:text-dominant 
+                    ${!rightControllable && 'invisible pointer-events-none'}`}
             >
-                <ChevronRight size={14} />
+                <ChevronRight color="#8694B3" size={16} />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default InfoSlider
+export default InfoSlider;

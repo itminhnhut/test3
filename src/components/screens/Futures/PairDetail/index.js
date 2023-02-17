@@ -80,7 +80,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, config || []);
 
-        // console.log('quantityMarketFilter: ', quantityMarketFilter);
         return {
             config,
             priceFilter,
@@ -103,13 +102,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
-                : 'font-bold text-left text-sm text-dominant dragHandleArea tracking-wide';
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right tracking-normal'
+                : 'text-left text-base font-semibold text-dominant dragHandleArea tracking-normal';
             return (
                 <div
                     ref={lastPriceRef}
                     // style={{ minWidth: lastPriceMinW }}
-                    style={{ minWidth: 82 }}
+                    // style={{ minWidth: 82 }}
                     className={classNames(className, {
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
@@ -122,7 +121,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         )}
                     </div>
                     {!isShownOnModal && (
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-normal">
                             <RefCurrency price={pairPrice?.lastPrice} quoteAsset={pairPrice?.quoteAsset} />
                         </span>
                     )}
@@ -318,7 +317,10 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             }
 
             return (
-                <div key={`pairPrice_items_${key}`} style={{ minWidth: minWidth || 0 }}>
+                <div
+                    key={`pairPrice_items_${key}`}
+                    // style={{ minWidth: minWidth || 0 }}
+                >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
                         containerClassName={`${className} mr-5`}
@@ -553,7 +555,9 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             {renderLastPrice()}
 
             {/* Details */}
-            <InfoSlider forceUpdateState={forceUpdateState}>{renderPairPriceItems()}</InfoSlider>
+            <InfoSlider forceUpdateState={forceUpdateState} className="!pl-[14px]">
+                {renderPairPriceItems()}
+            </InfoSlider>
         </div>
     );
 };
