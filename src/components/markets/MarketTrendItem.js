@@ -96,7 +96,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                         <div className="w-[95px] xl:w-[65px]">
                             {(!pair) ?
                                 <Skeletor width={60} height={28} />
-                                : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red.DEFAULT)}
+                                : <img src={sparkLineBuilder(_?.symbol, _?.up ? colors.teal : colors.red2)}
                                     alt="Nami Exchange" />
                             }
                         </div>
