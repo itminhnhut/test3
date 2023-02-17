@@ -107,7 +107,7 @@ const TradingInput = ({
                                 </div>
                                 <div
                                     className={classNames('w-[8px] h-[6px] dark:bg-hover-dark', {
-                                        'dark:!bg-darkBlue': !onusMode,
+                                        'bg-darkBlue text-white dark:text-gray-4': !onusMode,
                                         'bg-gray-3': onusMode
                                     })}
                                     style={{

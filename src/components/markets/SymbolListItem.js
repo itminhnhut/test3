@@ -75,13 +75,13 @@ const SymbolListItem = (props) => {
             </div>
             <Link href={`/trade/${base}-${quote}`} prefetch={false} shallow>
                 <div className="flex items-center w-full">
-                    <div className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs font-medium leading-table flex items-center truncate min-w-0">
+                    <div className="text-txtPrimary dark:text-txtPrimary-dark flex-1 text-xs leading-table flex items-center truncate min-w-0">
                         {base}/{quote}
                     </div>
-                    <div className={`flex-1 text-xs font-medium leading-table text-right mr-4 ${!up ? 'text-teal' : 'text-red'}`}>
+                    <div className={`flex-1 text-xs leading-table text-right mr-4 ${!up ? 'text-teal' : 'text-red'}`}>
                         {formatPrice(+symbolTicker?.p, exchangeConfig, quote)}
                     </div>
-                    <div className="flex-1 text-teal font-medium text-xs leading-table flex justify-end">{render24hChange(symbolTicker)}</div>
+                    <div className="flex-1 text-teal text-xs leading-table flex justify-end">{render24hChange(symbolTicker)}</div>
                 </div>
             </Link>
         </div>
