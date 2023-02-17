@@ -1699,7 +1699,9 @@
 
       .homepage-community___channel__group___item {
         @apply w-1/2 flex flex-col items-center relative;
+        margin-top: 24px;
         padding-top: 88px;
+        padding-bottom: 24px;
         border-radius: 12px;
         transition: all .3s ease;
         min-height: 110px;
