@@ -1027,7 +1027,7 @@ input:-webkit-autofill {
     width: max-content;
     animation: 30s slideAnimation linear infinite;
     animation-direction:normal;
-    &:hover {
-        animation-play-state: paused;
-    }
+    // &:hover {
+    //     animation-play-state: paused;
+    // }
   }
