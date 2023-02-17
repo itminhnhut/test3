@@ -421,7 +421,7 @@ const RefDetail = ({
                     isDesktop
                 />
             )}
-            <div className='overflow-y-auto min-h-0 flex-1 my-8 -mr-4 pr-4'>
+            <div className='overflow-y-auto min-h-min my-8 -mr-4 pr-4'>
                 {loading ? (
                     <IconLoading color={colors.teal} />
                 ) : !refs.length ? (

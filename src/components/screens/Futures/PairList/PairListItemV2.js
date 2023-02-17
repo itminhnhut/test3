@@ -11,7 +11,7 @@ import Emitter from 'redux/actions/emitter';
 import { usePrevious } from 'react-use';
 import { formatNumber } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
-import Star from 'components/svg/Star';
+import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'redux/actions/const';
@@ -66,11 +66,10 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
         >
             <div style={{ flex: '1 1 0%' }} className="flex items-center">
                 {isAuth && (
-                    <Star
-                        onClick={handleSetFavorite}
-                        size={16}
-                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.grey2}
+                    <BxsStarIcon
                         className="cursor-pointer mr-[10px]"
+                        onClick={handleSetFavorite}
+                        fill={isFavorite ? colors.yellow[1] : isDark ? colors.darkBlue5 : colors.gray[2]}
                     />
                 )}
                 {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
