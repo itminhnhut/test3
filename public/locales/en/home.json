@@ -10,21 +10,22 @@
   },
   "markettrend": {
     "title": "Market Trend",
-    "top_gainer": "Top Gainer",
-    "top_loser": "Top Loser",
+    "top_gainer": "Gainer",
+    "top_loser": "Loser",
     "top_vol": "Hot 24h",
-    "explore_market": "Explore Market"
+    "new_listing": "New Listing",
+    "explore_market": "More"
   },
   "first_award": {
     "title": "Join Nami Exchange now!",
     "title_1": "Own The First {{value}} In",
     "title_2": "Your Account Immediately",
-    "rule_1": "1. Simple operation",
-    "rule_2": "2. Ability to process <0>40,000+</0> transactions/second",
-    "rule_3": "3. <0>700+</0> trading pairs",
-    "rule_4": "4. Futures leverage up to <0>125x</0>",
-    "rule_5": "5. Transaction fees only from <0>0,06%</0>",
-    "rule_6": "6. <0>24/7</0> supporting",
+    "rule_1": "Simple operation",
+    "rule_2": "Ability to process <0>40,000+</0> transactions/second",
+    "rule_3": "<0>400+</0> trading pairs",
+    "rule_4": "Futures leverage up to <0>125x</0>",
+    "rule_5": "Transaction fees only from <0>0,06%</0>",
+    "rule_6": "<0>24/7</0> supporting",
     "following_at": "Follow Us At",
     "join_nami_by": "Register an account with"
   },
@@ -43,8 +44,7 @@
     "reason_4_description": "Nami Explained - The place to answer questions about the Crypto market"
   },
   "intro_app": {
-    "title_1": "Trade Anytime Anywhere With",
-    "title_2": "Nami Exchange application",
+    "title":"Trade Anytime Anywhere With Nami Exchange application",
     "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps"
   },
   "trade3step": {

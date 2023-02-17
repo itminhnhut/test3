@@ -176,7 +176,7 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className={`progress-container my-[1px] cursor-pointer hover:bg-hover dark:hover:bg-darkBlue-3 ${isPro ? 'pr-4' : 'pr-3'}`}
+                className={`progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${isPro ? 'pr-4' : 'pr-3'}`}
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >

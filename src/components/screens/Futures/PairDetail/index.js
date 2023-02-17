@@ -80,7 +80,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, config || []);
 
-        // console.log('quantityMarketFilter: ', quantityMarketFilter);
         return {
             config,
             priceFilter,
@@ -103,13 +102,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
-                : 'font-bold text-left text-sm text-dominant dragHandleArea tracking-wide';
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right tracking-normal'
+                : 'text-left text-base font-semibold text-dominant dragHandleArea tracking-normal';
             return (
                 <div
                     ref={lastPriceRef}
                     // style={{ minWidth: lastPriceMinW }}
-                    style={{ minWidth: 82 }}
+                    // style={{ minWidth: 82 }}
                     className={classNames(className, {
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
@@ -122,7 +121,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         )}
                     </div>
                     {!isShownOnModal && (
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-normal">
                             <RefCurrency price={pairPrice?.lastPrice} quoteAsset={pairPrice?.quoteAsset} />
                         </span>
                     )}
@@ -318,10 +317,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             }
 
             return (
-                <div key={`pairPrice_items_${key}`} style={{ minWidth: minWidth || 0 }}>
+                <div
+                    key={`pairPrice_items_${key}`}
+                    // style={{ minWidth: minWidth || 0 }}
+                >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
-                        containerClassName={`${className} mr-5`}
+                        containerClassName={`${className} mr-6`}
                         value={value}
                         icon={icon}
                     />
@@ -422,14 +424,22 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             setActivePairList(false);
         };
 
-        const renderInformation = (data) => {
+        const renderInformation = (data, isLeft) => {
             return data.map(({ title, tooltip, leftPercent }, index) => (
                 <div key={'title' + title} className="py-[8px] flex  w-full w-100">
-                    <Tooltip id={title} place="right" effect="solid" isV3>
-                        <div>
-                            <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
-                            <div className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
-                        </div>
+                    <Tooltip
+                        id={title}
+                        place="top"
+                        effect="solid"
+                        isV3
+                        overridePosition={(e) => ({
+                            left: isLeft ? 0 : e.left,
+                            top: e.top
+                        })}
+                        className="max-w-[300px]"
+                    >
+                        {/* <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label> */}
+                        <div className="text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                     </Tooltip>
                     {/* Each row */}
                     <div className="flex items-center justify-between w-full">
@@ -496,7 +506,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 </div>
 
                 <div className="mt-8 flex w-full">
-                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
+                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS, true)}</div>
                     <div className="flex flex-1 flex-col pl-4">{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
                 </div>
 
@@ -553,7 +563,9 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             {renderLastPrice()}
 
             {/* Details */}
-            <InfoSlider forceUpdateState={forceUpdateState}>{renderPairPriceItems()}</InfoSlider>
+            <InfoSlider forceUpdateState={forceUpdateState} className="!pl-[14px]">
+                {renderPairPriceItems()}
+            </InfoSlider>
         </div>
     );
 };
