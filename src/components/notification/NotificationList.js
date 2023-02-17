@@ -12,7 +12,7 @@ import colors from 'styles/colors';
 import { useClickAway, useToggle } from 'react-use';
 import Bell from 'components/svg/Bell';
 import { BxsBellIcon } from '../svg/SvgIcon';
-import TextButton from 'src/components/common/V2/ButtonV2/TextButton';
+import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
@@ -111,12 +111,12 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     {/* { mix.map(notification => this._renderNotificationItem(notification)) } */}
                     {mix.map((notification) => (
                         <div
-                            className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group hover:bg-hover cursor-pointer ${
+                            className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
                                 notification?.status === NotificationStatus.READ ? '' : 'bg-black-5'
                             }`}
                             key={notification?.id || notification?.created_at}
                         >
-                            <div className="mr-3 p-4 bg-dark-2 rounded-full">
+                            <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full">
                                 <IconBell color={colors.teal} />
                                 {/* <Notification /> */}
                             </div>
@@ -152,7 +152,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
                     }}
                 >
-                    <div className={`${isPopover ? 'text-dominant ' : 'text-gray-7 '} relative`}>
+                    <div className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtSecondary-dark '} relative`}>
                         <BxsBellIcon size={20} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
                     </div>
@@ -175,7 +175,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <TextButton className="w-[fit-content] text-sm font-semibold">Xoá tất cả</TextButton>
+                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold">Xoá tất cả</ButtonV2>
                             {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}

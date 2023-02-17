@@ -35,7 +35,6 @@ import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import HrefButton from 'src/components/common/V2/ButtonV2/HrefButton';
-import TextButton from '../V2/ButtonV2/TextButton';
 import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS } from 'redux/actions/const';
 import Copy from 'components/svg/Copy';
@@ -45,6 +44,7 @@ import { ChevronRight } from 'react-feather';
 import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
+import Button from '../V2/ButtonV2/Button';
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -184,7 +184,7 @@ const NavBar = ({
                                 </div>
                                 <SvgIcon
                                     name="chevron_down"
-                                    size={15}
+                                    size={16}
                                     style={{
                                         paddingTop: 4,
                                         marginLeft: 8
@@ -314,7 +314,7 @@ const NavBar = ({
 
                                 {shouldDot !== -1 && shouldDot >= 0 && <div className="mal-dot__newest" />}
                             </div>
-                            <SvgIcon name="chevron_down" size={15} className="chevron__down !ml-1" color={colors.gray[7]} style={{ marginLeft: 4 }} />
+                            <SvgIcon name="chevron_down" size={16} className="chevron__down !ml-1" color={colors.gray[7]} style={{ marginLeft: 4 }} />
                             <div
                                 className={`mal-navbar__link__group___item___childen__lv1
                                            ${useDropdownWithIcon ? 'mal-navbar__link__group___item___childen__lv1__w__icon' : ''}
@@ -440,9 +440,9 @@ const NavBar = ({
                         )}
                     </div>
                     {isNotVerified && (
-                        <HrefButton className="mb-6 !text-txtPrimary-dark" href={PATHS.ACCOUNT.IDENTIFICATION}>
+                        <Button onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
                             {t('navbar:verify_account')}
-                        </HrefButton>
+                        </Button>
                     )}
 
                     <hr className="border-divider-dark mb-6" />
@@ -457,9 +457,9 @@ const NavBar = ({
                             </div>
                             <div className="flex items-center ">
                                 <div className=" ">
-                                {t('navbar:use')} <span className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
+                                    {t('navbar:use')} <span className="text-dominant uppercase">NAMI</span> - {t('navbar:get_discount')}
                                 </div>
-                                <ChevronRight className="!mr-0 ml-3" size={16} />
+                                <ChevronRight className="!mr-0 ml-1" size={16} />
                             </div>
                         </div>
                     </Link>
@@ -471,7 +471,7 @@ const NavBar = ({
 
                     <Link href={buildLogoutUrl()}>
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
-                            <div className="flex items-center text-txtPrimary-dark">
+                            <div className="flex items-center ">
                                 {getUserControlSvg('logout')} {t('navbar:menu.user.logout')}
                             </div>
                             <ChevronRight className="!mr-0" size={16} />
@@ -625,32 +625,8 @@ const NavBar = ({
                     <div className="mal-navbar__hamburger">
                         {!auth && (
                             <div className="flex flex-row items-center">
-                            <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1090} />
-
+                                <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1090} />
                             </div>
-                            // <div className="flex flex-row items-center">
-                            //     {width >= 1366 && (
-                            //         <TextButton
-                            //             className="px-0 w-auto hover:opacity-80"
-                            //             onClick={() => {
-                            //                 window.open(getLoginUrl('sso', 'login'), '_self');
-                            //             }}
-                            //         >
-                            //             {t('common:sign_in')}
-                            //         </TextButton>
-                            //         // <a
-                            //         //     href={getLoginUrl('sso', 'login')}
-                            //         //     className={`text-sm font-medium ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
-                            //         // >
-                            //         //     <span>{t('common:sign_in')}</span>
-                            //         // </a>
-                            //     )}
-                            //     {width >= 1090 && (
-                            //         <HrefButton href={getLoginUrl('sso', 'register')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
-                            //             {t('common:sign_up')}
-                            //         </HrefButton>
-                            //     )}
-                            // </div>
                         )}
                         {auth && (
                             <>
@@ -660,7 +636,7 @@ const NavBar = ({
 
                                         <SvgIcon
                                             name="chevron_down"
-                                            size={15}
+                                            size={16}
                                             color={colors.gray[7]}
                                             className="chevron__down ml-2"
                                             style={{ marginLeft: 7 }}
@@ -670,7 +646,7 @@ const NavBar = ({
                                 )}
                                 <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                     {width >= 992 && (
-                                        <div className="text-gray-7 hover:text-dominant">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant">
                                             <BxsUserIcon className="user__svg" size={24} />
                                         </div>
                                         // <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />

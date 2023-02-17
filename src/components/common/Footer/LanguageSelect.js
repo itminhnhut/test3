@@ -24,7 +24,7 @@ const LanguageSelect = ({ t, language, currentTheme }) => {
                 />
             </div>
 
-            <div className="absolute group-hover:block hidden bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-0 rounded-xl  ">
+            <div className="absolute group-hover:block hidden bg-white dark:bg-bgTabInactive-dark py-2 border dark:border-divider-dark !min-w-[216px] top-full right-0 rounded-xl  ">
                 {Object.values(LANGUAGE_TAG).map((lang) => (
                     <button
                         key={lang}
@@ -33,7 +33,7 @@ const LanguageSelect = ({ t, language, currentTheme }) => {
                         className=" w-full cursor-pointer items-center text-textPrimary px-4 flex justify-between dark:hover:bg-hover-dark hover:bg-hover first:mb-3 disabled:cursor-default"
                     >
                         {(lang === LANGUAGE_TAG.EN && 'English') || (lang === LANGUAGE_TAG.VI && 'Tiếng Việt')}
-                        {currentLocale === lang && <CheckCircleIcon color={colors.gray[4]} size={16} />}
+                        {currentLocale === lang && <CheckCircleIcon color="currentColor" size={16} />}
                     </button>
                 ))}
             </div>

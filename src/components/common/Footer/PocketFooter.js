@@ -7,7 +7,7 @@ import SocialsLink from './SocialsLink';
 import ScanQr from './ScanQr';
 import { useSelector } from 'react-redux';
 import HrefButton from '../V2/ButtonV2/HrefButton';
-import TextButton from '../V2/ButtonV2/TextButton';
+import ButtonV2 from '../V2/ButtonV2/Button';
 import SvgIcon from 'src/components/svg';
 import colors from 'styles/colors';
 import { THEME_MODE } from 'hooks/useDarkMode';
@@ -32,13 +32,16 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
                             <div className="font-semibold text-3xl lg:text-2xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
-                                <HrefButton href={getLoginUrl('sso', 'register')} className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm">
+                                <ButtonV2
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'))}
+                                    className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm"
+                                >
                                     {t('common:create_account')}
-                                </HrefButton>
+                                </ButtonV2>
                                 {width < 1200 && (
-                                    <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
+                                    <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
                                         {t('common:sign_in')}
-                                    </TextButton>
+                                    </ButtonV2>
                                 )}
                             </div>
 
