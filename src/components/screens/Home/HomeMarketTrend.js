@@ -77,7 +77,7 @@ const HomeMarketTrend = ({ trendData }) => {
                 }} types={types} lang={'vi'}/>
                 {width >= 992 &&
                     <span className="flex flex-row items-center text-base font-semibold">
-                        <a href="/markets" className="!text-teal mr-3">
+                        <a href="/market" className="!text-teal mr-3">
                 {t('home:markettrend.explore_market')}
                     </a>
                     <ArrowRightIcon size={16}/>
@@ -259,7 +259,7 @@ const HomeMarketTrend = ({ trendData }) => {
                     </div>
                     {width < 992 &&
                         <span className="flex flex-row items-center justify-center text-sm font-semibold pt-6">
-                        <a href="/markets" className="!text-teal mr-3">
+                        <a href="/market" className="!text-teal mr-3">
                             {t('home:markettrend.explore_market')}
                         </a>
                         <ArrowRightIcon size={14}/>
