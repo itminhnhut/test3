@@ -210,7 +210,7 @@ const HomeAdditional = ({ parentState }) => {
                 </div>
             </section> */}
 
-            <HomeFirstAward t={t} language={language} />
+            <HomeFirstAward theme={theme} t={t} language={language} />
             <HomeCommunity t={t} language={language} width={width} />
         </>
     );

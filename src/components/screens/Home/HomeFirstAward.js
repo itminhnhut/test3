@@ -6,10 +6,11 @@ import { CheckedDoubleIcon } from '../../svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { Eye, EyeOff } from 'react-feather';
 import { getLoginUrl } from 'redux/actions/utils';
+import { THEME_MODE } from 'hooks/useDarkMode';
 
 import CheckBox from 'components/common/CheckBox';
 
-const HomeFirstAward = ({ t, language }) => {
+const HomeFirstAward = ({ t, language, theme }) => {
     const [state, set] = useState({
         focus: null,
         checkedTermAndPolicy: false,
@@ -18,7 +19,7 @@ const HomeFirstAward = ({ t, language }) => {
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     return (
-        <section className="homepage-first_award relative">
+        <section className="homepage-first_award relative" style={{ backgroundImage: `url("/images/screen/homepage/bg_first_award_${theme}.png")` }}>
             {/* <img src="/images/screen/homepage/half-circle.png" alt="half-circle" className="absolute z-[-1] w-full left-1/2 -translate-x-1/2 top-0 max-h-full" /> */}
             {/* <img src="/images/screen/homepage/form_splash.png" alt="form_splash" className="absolute z-[-1] w-1/2 left-0 bottom-0 h-[505px] max-h-full" /> */}
 
@@ -75,8 +76,19 @@ const HomeFirstAward = ({ t, language }) => {
                     </div>
                 </div>
                 <div className="homepage-first_award___form relative">
-                    <img src="/images/screen/homepage/first_award_corner.png" className=" absolute left-[-24px] top-[-24px] z-[-10]" />
-                    <img src="/images/screen/homepage/first_award_corner.png" className="rotate-180 absolute right-[-24px] bottom-[-24px] z-[-10]" />
+                    <img
+                        src="/images/screen/homepage/first_award_corner.png"
+                        className={` ${
+                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px] ' : 'right-[-48px] top-[-12px] rotate-90'
+                        } absolute  z-[-10] w-[228px]`}
+                    />
+                    <img
+                        src="/images/screen/homepage/first_award_corner.png"
+                        className={`
+                 ${
+                     theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
+                 }    absolute z-[-10] w-[228px]`}
+                    />
                     <div className="homepage-first_award___form___input_group">
                         <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                             Email

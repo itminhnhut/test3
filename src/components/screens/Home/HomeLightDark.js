@@ -135,7 +135,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             )} */}
                         </div>
                     </div>
-                    <div className="text-center md:text-right   p-3">
+                    <div className="text-left md:text-right   p-3">
                         <div className="text-txtPrimary md:w-[610px] dark:text-txtPrimary-dark text-[32px] leading-[38px] font-semibold mb-4">
                             {t('home:intro_app.title')}
                         </div>
