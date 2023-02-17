@@ -656,10 +656,10 @@
     }
 
     .homepage-news___lastest___news {
-      @apply flex items-center justify-between lg:px-0 px-4;
+        @apply flex items-center justify-between lg:px-0 px-4 md:mb-[44px] mt-6;
 
 
-      margin-bottom: 44px;
+
 
       div.homepage-news___lastest___news____left {
         @apply w-5/6 flex flex-nowrap items-center;
@@ -762,21 +762,23 @@
 
 }
 
-.homepage-first_award {
-  @apply dark:bg-dark-dark relative z-10 flex items-end;
 
-  // background-color: #FEFDFD;
+.homepage-first_award {
+  @apply relative z-10 flex items-end pt-[48px] pb-[84px] px-4 md:py-[120px];
+
+  // background:url('/images/screen/homepage/bg_first_award_dark.png');
+  background-position:center;
+  background-size: cover;
+  background-repeat:no-repeat;
 
 
   .homepage-first_award__wrapper {
     @apply flex flex-col h-full my-0 px-4 pb-20 md:pb-28 w-full;
-    padding: 52px 16px;
 
     .homepage-first_award__title {
-      @apply text-txtPrimary dark:text-txtPrimary-dark;
+      @apply text-txtPrimary dark:text-txtPrimary-dark text-3xl md:text-[32px];
 
       font-weight: 600;
-      font-size: 32px;
       line-height: 38px;
 
       span {
@@ -816,7 +818,7 @@
       @media (min-width: 768px) {
         @apply w-1/2;
 
-        padding-right: 12px;
+        // padding-right: 12px;
       }
 
       @media (min-width: 1280px) {
@@ -831,7 +833,7 @@
     .homepage-first_award___form {
       @apply w-full dark:shadow-none rounded-xl bg-white dark:bg-darkBlue-3 dark:border dark:border-divider-dark;
 
-      margin-top: 40px;
+      margin-top: 68px;
       padding: 48px;
       box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
 

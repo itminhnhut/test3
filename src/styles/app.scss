@@ -1002,3 +1002,32 @@ input:-webkit-autofill {
     border-left-color:transparent !important;
 }
 
+@keyframes slideAnimation {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .looper {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .looper__innerList {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+  }
+  
+  .looper__listInstance {
+    display: flex;
+    width: max-content;
+    animation: 30s slideAnimation linear infinite;
+    animation-direction:normal;
+    // &:hover {
+    //     animation-play-state: paused;
+    // }
+  }
