@@ -15,7 +15,7 @@ const types = {
 const typeStyles = {
     [types.DEFAULT]: {
         backgroundColor: 'rgba(34,41,64,0.5)',
-        color: colors.gray[4]
+        color: colors.teal
     },
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',
@@ -33,23 +33,21 @@ const typeStyles = {
     }
 };
 
-function TagV2({
-    type = types.DEFAULT,
-    children,
-    className = ''
-}) {
+function TagV2({ type = types.DEFAULT, children, className = '' }) {
     const style = typeStyles[type];
 
-    return <span
-        style={{
-            backgroundColor: style.backgroundColor,
-            color: style.color
-        }}
-        className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
-    >
-        {style.icon && React.createElement(style.icon, { className: 'mr-2' })}
-        <span>{children}</span>
-    </span>;
+    return (
+        <span
+            style={{
+                backgroundColor: style.backgroundColor,
+                color: style.color
+            }}
+            className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
+        >
+            {style.icon && React.createElement(style.icon, { className: 'mr-2' })}
+            <span>{children}</span>
+        </span>
+    );
 }
 
 TagV2.propTypes = {
