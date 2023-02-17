@@ -32,7 +32,6 @@ const TrendingSlide = ({ trending }) => {
 
         [trending]
     );
-
     return (
         <div
             onMouseEnter={() => {

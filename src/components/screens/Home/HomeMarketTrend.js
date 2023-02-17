@@ -33,17 +33,17 @@ const types = [
         }
     },
     {
-        id: 'TOP_GAINER',
-        content: {
-            vi: 'Tăng giá',
-            en: 'Top gainer'
-        }
-    },
-    {
         id: 'NEW_LISTING',
         content: {
             vi: 'Mới niêm yết',
             en: 'New Listing'
+        }
+    },
+    {
+        id: 'TOP_GAINER',
+        content: {
+            vi: 'Tăng giá',
+            en: 'Top gainer'
         }
     },
     {
@@ -54,14 +54,13 @@ const types = [
         }
     }
 ];
-const HomeMarketTrend = () => {
+const HomeMarketTrend = ({trendData}) => {
     // * Initial State
     const [type, setType] = useState(types[0]);
     const [state, set] = useState({
         marketTabIndex: 0,
         trending: null,
         loadingTrend: false,
-        publicSocketStatus: false,
     });
     const setState = (state) => set(prevState => ({ ...prevState, ...state }));
 
@@ -71,20 +70,6 @@ const HomeMarketTrend = () => {
 
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
 
-    // * Helper
-    const getTrending = async () => {
-        setState({ loadingTrend: true });
-        try {
-            const { data } = await Axios.get(API_GET_TRENDING);
-            if (data && data.status === 'ok') {
-                setState({ trending: data?.data });
-            }
-        } catch (e) {
-            console.log('Cant get top trending data: ', e);
-        } finally {
-            setState(({ loadingTrend: false }));
-        }
-    };
 
     // * Render Handler
     const renderTrendTab = useCallback(() => {
@@ -134,13 +119,14 @@ const HomeMarketTrend = () => {
     }) => {
         if(width >= 992 ){
             return <div className="flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar">
-                {types.map(e =>
+                {types.map((e, index) =>
                     <div key={e.id}
                          className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary', {
                              'border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
                          })}
                          onClick={() => {
                              setType(e);
+                             setState({marketTabIndex: index})
                          }}
                     >
                         {e?.content[lang]}
@@ -168,10 +154,12 @@ const HomeMarketTrend = () => {
     };
 
     const renderMarketBody = useCallback(() => {
-        const data = state.trending && state.trending.length ? state.trending[state.marketTabIndex] : null;
-        if (!data) return;
-        const { pairs } = data;
-
+        const tabMap = [ 'topView',
+            'newListings',
+            'topGainers',
+            'topLosers',
+            ]
+        const pairs = trendData  ? trendData?.[tabMap[state.marketTabIndex]] : null;
         return pairs.map(pair => {
             let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair);
@@ -236,7 +224,7 @@ const HomeMarketTrend = () => {
                             </div>
                         </div>
                         <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
-                            <div className="homepage-markettrend__market_table__price text-sm">
+                            <div className={`homepage-markettrend__market_table__price text-sm`}>
                                 {formatPrice(_?.lastPrice)}
                             </div>
                             <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
@@ -248,13 +236,7 @@ const HomeMarketTrend = () => {
             }
 
         });
-    }, [width, state.trending, state.marketTabIndex, exchangeConfig]);
-
-    useEffect(() => {
-        getTrending();
-        const inverval = setInterval(() => getTrending(), 60000);
-        return () => inverval && clearInterval(inverval);
-    }, []);
+    }, [width, trendData, state.marketTabIndex, exchangeConfig]);
 
     return (
         <section className="homepage-markettrend">

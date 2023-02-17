@@ -111,6 +111,25 @@ export async function getMarketWatch(symbol = null) {
     }
 }
 
+export async function getHomeData() {
+    try {
+        const opts = {
+            url: API_GET_MARKET_WATCH,
+            options: {
+                method: 'GET'
+            }
+        };
+        const res = await fetchAPI(opts);
+        const { status, data } = res;
+        console.log('__ chekc ré', data);
+        if (status === ApiStatus.SUCCESS) {
+            return data;
+        }
+    } catch (e) {
+        return [];
+    }
+}
+
 export async function getSwapEstimatePrice(params) {
     try {
         const opts = {

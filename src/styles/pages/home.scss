@@ -5,7 +5,7 @@
 .homepage-introduce {
   @apply bg-[#000] relative md:pb-[100px]; // bg-homepageBg dark:bg-[#000];
 
-  
+
 
   position: relative;
   z-index: 1;
@@ -13,7 +13,7 @@
   .homepage-introduce___wrapper {
     @apply flex flex-col md:mt-14 mt-10;
 
-   
+
 
     .homepage-introduce___wrapper__left {
       @apply relative z-20 px-4 w-full md:w-[60%] lg:w-[45%];
@@ -394,6 +394,11 @@
         .homepage-markettrend__market_table__row {
           @apply flex flex-row items-center;
 
+          @media (min-width: 992px) {
+            padding-right: 1rem;
+            padding-left: 1rem;
+          }
+
           div {
             text-overflow: ellipsis;
             overflow: hidden;
@@ -431,8 +436,7 @@
             }
           }
 
-            padding-right: 1rem;
-            padding-left: 1rem;
+
         }
 
         .homepage-markettrend__market_table__header {
@@ -795,7 +799,7 @@ line-height: 38px;
           line-height: 26px;
           margin-top: 8px;
 
-         
+
 
           @media (min-width: 992px) {
             a {
@@ -980,7 +984,7 @@ line-height: 38px;
         @apply flex flex-wrap;
 
         .homepage-journey__group_content___left__item {
-          
+
           @apply flex items-center w-full md:w-1/2;
 
          padding: 24px;
@@ -1318,7 +1322,7 @@ line-height: 38px;
             font-weight: 600;
             font-size: 16px;
             line-height: 26px;
-           
+
           }
         }
 
@@ -1380,7 +1384,7 @@ line-height: 38px;
           .homepage-trade3step___step___item__sublabel {
             margin-top:24px;
           }
-      
+
 
           &:nth-child(2) {
             .homepage-trade3step___step___item___inner {
@@ -1398,7 +1402,7 @@ line-height: 38px;
 
       @media (min-width: 992px) {
         @apply flex-row;
-      
+
       }
     }
 
@@ -1423,7 +1427,7 @@ line-height: 38px;
       }
     }
 
-   
+
   }
 }
 

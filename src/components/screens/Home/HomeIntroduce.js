@@ -33,6 +33,7 @@ const HomeIntroduce = ({ parentState }) => {
         setState({ loadingTrend: true });
         try {
             const { data } = await axios.get(API_GET_TRENDING);
+            console.log('__ data', data);
             if (data && data.status === 'ok') {
                 setState({ trending: data?.data });
             }
@@ -56,7 +57,7 @@ const HomeIntroduce = ({ parentState }) => {
                                 <>{t('home:introduce.title_mobile')}</>
                             ) : (
                                 <>
-                                   
+
                                 </>
                             )} */}
                             {t('home:introduce.title_desktop1')}
