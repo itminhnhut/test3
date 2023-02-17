@@ -67,7 +67,7 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
                     <BxsStarIcon
                         className="cursor-pointer mr-[10px]"
                         onClick={handleSetFavorite}
-                        fill={isFavorite ? colors.yellow[1] : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={isFavorite ? colors.yellow[2] : isDark ? colors.darkBlue5 : colors.gray[2]}
                     />
                 )}
                 {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}

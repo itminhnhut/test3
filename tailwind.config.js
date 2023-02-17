@@ -210,15 +210,27 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
-                1: commonColors.green1
+                1: commonColors.green[1],
+                2: commonColors.green[2],
+                3: commonColors.green[3],
+                4: commonColors.green[4],
+                5: commonColors.green[5]
             },
             yellow: {
                 DEFAULT: '#FFD965',
-                100: '#FFC632'
+                100: '#FFC632',
+                1: commonColors.yellow[1],
+                2: commonColors.yellow[2],
+                3: commonColors.yellow[3],
+                4: commonColors.yellow[4]
             },
             red: {
                 DEFAULT: commonColors.red2,
-                lightRed: '#E5544B19'
+                lightRed: '#E5544B19',
+                1: commonColors.red[1],
+                2: commonColors.red[2],
+                3: commonColors.red[3],
+                4: commonColors.red[4]
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
