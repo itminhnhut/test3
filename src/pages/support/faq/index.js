@@ -133,7 +133,7 @@ const SupportAnnouncement = () => {
                         {article.title}
                         {' '}<span
                         className="text-[10px] lg:text-xs text-txtSecondary whitespace-nowrap">
-                        {formatTime(article.created_at, 'dd-MM-yyyy')}
+                        {formatTime(article.created_at, 'dd/MM/yyyy')}
                     </span>
                     </a>
                 </Link>

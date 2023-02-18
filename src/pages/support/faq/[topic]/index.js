@@ -157,7 +157,7 @@ const FaqTopics = (props) => {
                             {article?.title}{' '}
                         </div>
                         <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
-                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                            {formatTime(article.created_at, 'dd/MM/yyyy')}
                         </div>
                     </div>
                 </a>
@@ -189,7 +189,7 @@ const FaqTopics = (props) => {
                             {article?.title}{' '}
                         </div>
                         <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
-                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                            {formatTime(article.created_at, 'dd/MM/yyyy')}
                         </div>
                     </div>
                 </a>
