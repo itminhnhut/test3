@@ -210,7 +210,8 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
-                1: commonColors.green1
+                1: commonColors.green1,
+                2: '#19a65b',
             },
             yellow: {
                 DEFAULT: '#FFD965',
