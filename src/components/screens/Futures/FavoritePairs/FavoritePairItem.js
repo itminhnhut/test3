@@ -26,7 +26,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
                 })}
             >
                 <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} />
-                {formatNumber(roundTo(pair?.priceChangePercent * 100, 2), 2, 2, true)}%
+                {formatNumber(roundTo(Math.abs(pair?.priceChangePercent) * 100, 2), 2, 2, true)}%
             </div>
         </div>
     );

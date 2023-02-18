@@ -26,76 +26,76 @@ const HomeCommunity = ({
                 </div>
                 <div className="homepage-community___channel__group">
                     <Link href="https://www.facebook.com/namifutures">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_facebook_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Facebook</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Facebook</div>
                         </a>
                     </Link>
                     <Link href="https://www.facebook.com/groups/nami.exchange">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_facebook_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Facebook Group</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Facebook Group</div>
                         </a>
                     </Link>
                     <Link href="https://t.me/namitrade">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_telegram_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Telegram Global</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Telegram Global</div>
                         </a>
                     </Link>
                     <Link href="https://t.me/namitradevn">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_telegram_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Telegram</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Telegram</div>
                         </a>
                     </Link>
                     <Link href="https://twitter.com/NamiTrade">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_twitter_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Twitter</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Twitter</div>
                         </a>
                     </Link>
                     <Link href="https://www.reddit.com/r/NAMIcoin">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_reddit_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Reddit</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Reddit</div>
                         </a>
                     </Link>
                     <Link href="https://nami.io">
-                        <a className="homepage-community___channel__group___item" target="_blank">
+                        <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_globe_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">Blog</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">Blog</div>
                         </a>
                     </Link>
                     <Link
                         href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
-                        <a className="homepage-community___channel__group___item">
+                        <a className="group homepage-community___channel__group___item">
                             <div className="homepage-community___channel__group___item__icon">
                                 <img src={getS3Url('/images/icon/ic_coingecko_v3.png')} width="50" height="50"/>
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label">CoinGecko</div>
+                            <div className="homepage-community___channel__group___item__label group-hover:underline">CoinGecko</div>
                         </a>
                     </Link>
                 </div>

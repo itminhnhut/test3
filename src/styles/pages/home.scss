@@ -712,7 +712,7 @@
       }
 
       div.homepage-news___lastest___news____right {
-        @apply w-1/6 flex justify-end items-center text-dominant cursor-pointer hover:underline;
+        @apply w-1/6 flex justify-end items-center text-dominant cursor-pointer underline;
 
         font-weight: 600;
 
@@ -1743,6 +1743,7 @@
         .homepage-community___channel__group___item__label {
           @apply dark:text-txtPrimary-dark md:text-base text-sm;
           font-weight: 600;
+          text-underline-offset: 8px;
         }
       }
 

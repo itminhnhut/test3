@@ -22,6 +22,7 @@ import { KYC_STATUS } from 'redux/actions/const';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import HrefButton from '../V2/ButtonV2/HrefButton';
+import ButtonV2 from '../V2/ButtonV2/Button';
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
@@ -58,11 +59,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     itemsLevel1.push(
                         <Link href={item.url} key={`${item.key}_${item.title}`}>
                             <a
-                                className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover !px-12"
+                                className="mal-pocket-navbar__drawer__navlink__group___item__lv1__item mal-pocket-nabar__item___hover  !px-12"
                                 onClick={() => onClose()}
                             >
                                 {Icon ? <Icon size={24} /> : getIcon(localized)}
-                                <span className="ml-3 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
+                                <span className="ml-3 font-medium text-sm text-txtPrimary  dark:text-txtPrimary-dark">
                                     {t(`navbar:submenu.${item.localized}`)}
                                 </span>
                             </a>
@@ -87,7 +88,13 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 {t(`navbar:menu.${localized}`)} {isNew && <span className="mal-dot__newest" />}
                             </div>
                             <div className={`transition duration-200 ease-in-out ${state.navActiveLv1[`${title}_${key}`] ? 'rotate-180' : ''}`}>
-                                <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} />
+                                <SvgIcon
+                                    name="chevron_down"
+                                    size={16}
+                                    className="group-hover:rotate-[360deg]"
+                                    color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.darkBlue}
+                                />
+                                {/* <ChevronDown size={16} color={currentTheme !== THEME_MODE.LIGHT ? colors.gray[4] : colors.darkBlue} /> */}
                             </div>
                         </div>
                         <div
@@ -133,7 +140,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                 </Link>
             );
         });
-    }, [auth, state.navActiveLv1]);
+    }, [auth, state.navActiveLv1, currentTheme]);
 
     return (
         <>
@@ -204,10 +211,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </a>
                         </Link>
                     )}
+                    {auth && <hr className="border-divider dark:border-divider-dark mx-4 my-6 " />}
 
-                    <hr className="border-divider-dark h-[1px] mx-4 my-6 " />
-
-                    <div className="flex items-center px-4">
+                    <div className="flex items-center px-4 mb-4">
                         <SuccessfulTransactionIcon size={24} />
                         <div className="text-dominant font-semibold ml-2">
                             {loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${vipLevel || '0'}`}
@@ -215,6 +221,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     </div>
 
                     {width < 992 && <div className="mal-pocket-navbar__drawer__navlink__group">{renderNavItem()}</div>}
+                    <hr className="border-divider dark:border-divider-dark my-6" />
                     <div>
                         {page === 'futures' ? (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant">
@@ -248,8 +255,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         </a>
                         <div className="flex flex-row items-center gap-4 px-4">
                             <Link href="https://apps.apple.com/app/id1480302334">
-                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider-dark">
-                                    <AppleIcon />
+                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark">
+                                    <AppleIcon color="currentColor" />
 
                                     <div className="ml-4">
                                         <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
@@ -266,7 +273,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
-                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider-dark ">
+                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark ">
                                     <GooglePlayIcon />
 
                                     <div className="ml-4">
@@ -286,9 +293,12 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         </div>
                         {auth && (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item mt-8">
-                                <HrefButton variants="secondary" href={buildLogoutUrl()}>
+                                <ButtonV2 color="dark" className="bg-gray-10 font-semibold text-txtPrimary">
                                     {t('navbar:menu.user.logout')}
-                                </HrefButton>
+                                </ButtonV2>
+                                {/* <HrefButton variants="secondary" href={buildLogoutUrl()}>
+                                    {t('navbar:menu.user.logout')}
+                                </HrefButton> */}
                                 {/* <a
                                     href={buildLogoutUrl()}
                                     className="w-full text-center mt-4 bg-red py-3 rounded-xl text-white hover:text-white hover:opacity-60"

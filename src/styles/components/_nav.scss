@@ -202,7 +202,7 @@
           @apply text-txtPrimary #{!important};
 
           &:hover {
-            @apply bg-teal-50 #{!important};
+            @apply bg-hover dark:bg-hover-dark #{!important};
           }
         }
       }
@@ -237,8 +237,8 @@
 //}
 
 .mal-navbar__wrapper {
-  @apply relative z-30 w-full flex flex-row items-center justify-between border-b border-divider-dark;
-  @apply bg-dark;
+  @apply relative z-30 dark:bg-dark bg-white w-full flex flex-row items-center justify-between border-b border-divider dark:border-divider-dark;
+
 
   height: $MOBILE_NAV_HEIGHT;
   padding: 0 16px;
@@ -274,6 +274,9 @@
     :hover {
       svg {
         transform:rotate(360deg) ;
+        // path: {
+        //   stroke:currentColor;
+        // }
       }
     }
     span {
@@ -356,13 +359,22 @@
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-normal text-txtPrimary-dark
+      @apply flex items-center h-full text-sm font-semibold dark:font-normal text-txtPrimary dark:text-txtPrimary-dark
       relative;
       letter-spacing: normal;
       cursor: pointer;
       margin-left: 44px;
       
+      .chevron__down {
+       
+        
+        @apply text-txtSecondary;
 
+        path {
+          stroke: currentColor;
+          fill:currentColor;
+        }
+      }
       &:hover {
         @apply text-dominant;
 
@@ -380,9 +392,9 @@
           
           
 
-          path {
-            // stroke: #00c8bc !important;
-          }
+          // path {
+          //   stroke: #00c8bc !important;
+          // }
         }
       }
 
@@ -412,7 +424,7 @@
         border-radius: 12px;
 
         &:hover {
-          @apply bg-teal-50 dark:bg-hover;
+          @apply bg-hover-1 dark:bg-hover-dark;
         }
 
         .mal-navbar__link__group___item___childen__lv1___item2__icon {
@@ -527,7 +539,7 @@
       }
 
       svg path {
-        stroke: #47cc85;
+        // stroke: #47cc85;
       }
     }
   }
@@ -541,9 +553,9 @@
         transform: rotate(360deg);
        
 
-        path {
-          stroke: #00c8bc;
-        }
+        // path {
+        //   stroke: #00c8bc;
+        // }
       }
     }
 
@@ -595,7 +607,7 @@
           }
 
           &:hover {
-            @apply bg-teal-50 dark:bg-hover;
+            @apply bg-hover-1 dark:bg-hover-dark;
           }
         }
       }
@@ -630,7 +642,7 @@
   }
 
   .mal-pocket-navbar__drawer__navlink__group {
-    @apply border-b border-divider dark:border-divider-dark my-3;
+    // @apply border-b border-divider dark:border-divider-dark my-3;
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item {
@@ -654,7 +666,7 @@
     min-width: 0;
 
     .mal-pocket-navbar__drawer__navlink__group___item__lv1__item {
-      @apply block flex flex-row items-center;
+      @apply  flex flex-row items-center;
 
       padding: 16px;
     }
@@ -666,7 +678,7 @@
 
   .mal-pocket-nabar__item___hover {
     &:hover {
-      @apply bg-listItemSelected dark:bg-hover;
+      @apply bg-hover dark:bg-hover-dark;
 
       span {
         @apply text-dominant;

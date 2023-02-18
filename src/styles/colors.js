@@ -45,7 +45,29 @@ const colors = {
 
     green1: '#7ee5ae',
     yellow: {
-        1: '#ffc632'
+        1: '#ffb700',
+        2: '#ffc632',
+        3: '#ffd670',
+        4: '#ffebb7'
+    },
+    green: {
+        1: '#7ee5ae',
+        2: '#47cc85',
+        3: '#30bf73',
+        4: '#19a65b',
+        5: '#e6faef'
+    },
+    red: {
+        1: '#cc1f1f',
+        2: '#f93636',
+        3: '#fb8791',
+        4: '#ffcdd2'
+    },
+    blue: {
+        1: '#316ebd',
+        2: '#4f95f0',
+        3: '#87b9fa',
+        4: '#d9e9ff'
     },
 
     onus: {

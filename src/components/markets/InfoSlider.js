@@ -83,7 +83,7 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
                 // className={classNames('min-w-[24px] h-full flex items-center justify-center invisible cursor-pointer pointer-events-none hover:text-dominant', {
                 //     '!visible !pointer-events-auto': rightControllable
                 // })}
-                className={`min-w-[24px] h-full items-center justify-center flex pointer-events-auto cursor-pointer hover:text-dominant 
+                className={`pl-[2px] h-full items-center justify-end flex pointer-events-auto cursor-pointer hover:text-dominant 
                     ${!rightControllable && 'invisible pointer-events-none'}`}
             >
                 <ChevronRight color="#8694B3" size={16} />

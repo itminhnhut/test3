@@ -93,7 +93,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 {isAuth && (
                     <BxsStarIcon
                         onClick={() => onHandleMode('Starred')}
-                        fill={mode === 'Starred' ? colors.yellow[1] : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.darkBlue5 : colors.gray[2]}
                         className="cursor-pointer"
                     />
                 )}
