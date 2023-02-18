@@ -4,7 +4,7 @@ import Link from 'next/link';
 const TabItem = ({ title, href = '/', target = '_self', active, onClick, addClass = '', indicatorStyle = '', component = TabItemComponent.Link }) => {
 
     const renderItem = useCallback(() => {
-        const originClass = 'inline-flex flex-col items-center justify-center mr-7 text-sm cursor-pointer select-none xl:text-[16px] font-bold' + addClass
+        const originClass = 'inline-flex flex-col items-center justify-center mr-7 text-sm cursor-pointer select-none xl:text-[16px] font-bold ' + addClass
         let className = originClass
 
         if (!active) className = originClass + 'text-txtSecondary dark:text-txtSecondary-dark !font-normal'

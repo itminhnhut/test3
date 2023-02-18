@@ -8,7 +8,12 @@ const TabV2 = ({ activeTabKey, tabs, onChangeTab, isOverflow }) => {
             {tabs.map((tab) => {
                 const isActive = tab.key === activeTabKey;
                 return (
-                    <Tab onClick={isActive ? undefined : () => onChangeTab(tab.key)} key={tab.key} active={isActive}>
+                    <Tab
+                        className={`border ${isActive ? 'border-teal ' : 'border-divider dark:border-divider-dark '}`}
+                        onClick={isActive ? undefined : () => onChangeTab(tab.key)}
+                        key={tab.key}
+                        active={isActive}
+                    >
                         {tab.children}
                     </Tab>
                 );
@@ -28,11 +33,11 @@ const TabWrapper = styled.div.attrs({ className: 'flex gap-4 items-center' })`
 
 const Tab = styled.div`
     color: ${({ active }) => (active ? colors.teal : colors.darkBlue5)};
-    border: 1px solid ${({ active }) => (active ? colors.teal : colors.divider.dark)};
     padding: 8px 16px;
     border-radius: 10000px;
     background: ${({ active }) => (active ? `${colors.teal}10` : 'transparent')};
     cursor: ${({ active }) => (active ? 'default' : 'pointer')};
+    font-weight: ${({ active }) => (active ? 600 : 400)};
     min-width: fit-content;
 `;
 

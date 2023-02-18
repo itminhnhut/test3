@@ -976,7 +976,7 @@ input:-webkit-autofill {
         height: 3px;
         left: 0.5rem;
         top: 50%;
-        @apply bg-white rounded-full;
+        @apply bg-black dark:bg-white rounded-full;
     }
 }
 
