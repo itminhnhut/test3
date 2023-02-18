@@ -48,36 +48,6 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
 
     return (
         <div className='flex space-x-4'>
-            {/* <div
-                className={classNames(
-                    'flex space-x-2 items-center bg-dark-2 p-3 rounded-md  w-[368px]',
-                    containerClassNames,
-                    {
-                        '!w-full': simpleMode
-                    }
-                )}
-                style={{ letterSpacing: '0.005em;' }}
-            >
-                <Search
-                    strokeWidth={2}
-                    className="text-gray-1 w-4 h-4"
-                />
-                <input
-                    id="my-custom-input"
-                    className="flex-grow text-gray-4"
-                    placeholder={t('support-center:search_articles')}
-                    style={{ outline: 'none' }}
-                    value={searchKey}
-                    onChange={({ target: { value } }) => setSearchKey(value)}
-                    onFocus={() => setFocus(true)}
-                    onBlur={() => setFocus(false)}
-                    onKeyPress={(e) =>
-                        focus && e.nativeEvent.code === 'Enter' && onSearch(type, searchKey)
-                    }
-                />
-
-            </div> */}
-
             <InputV2
                 className={classNames('w-[368px] tracking-[0.005em] pb-0', 
                 {
@@ -91,6 +61,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
                 value={searchKey}
                 onChange={(value) => setSearchKey(value)}
                 onHitEnterButton={(value) => onSearch(value)}
+                placeholder={t('support-center:search_placeholder')}
             />
 
             {!simpleMode && (

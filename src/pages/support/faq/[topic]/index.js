@@ -71,11 +71,11 @@ const FaqTopics = (props) => {
                     <div
                         key={item.id}
                         title={item.title}
-                        className={classNames('w-full h-[52px] sm:h-[76px] bg-darkBlue-3 rounded-md flex items-center cursor-pointer', {
-                            '!bg-hover': item.displaySlug === router?.query?.group
+                        className={classNames('text-txtPrimary dark:text-gray-4 w-full h-[52px] sm:h-[76px] bg-gray-13 dark:bg-darkBlue-3 rounded-md flex items-center cursor-pointer', {
+                            '!text-txtTextBtn dark:!text-txtPrimary-dark dark:!bg-hover-dark': item.displaySlug === router?.query?.group
                         })}
                     >
-                        <a className='truncate block text-gray-4 font-normal text-sm sm:font-medium sm:text-xl px-6'>
+                        <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-[22px] px-6'>
                             {item?.title}
                         </a>
                     </div>
@@ -139,14 +139,14 @@ const FaqTopics = (props) => {
                     }`
                 }
                 key={article.uuid}
-                className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:!text-dominant'
+                className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:text-txtTextBtn dark:hover:text-teal'
             >
                 <a className='w-full'>
                     <div>
-                        <div className='text-gray-4 font-normal text-base hover:text-teal'>
+                        <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
                             {article?.title}{' '}
                         </div>
-                        <div className='mt-2 text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                        <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
                             {formatTime(article.created_at, 'dd-MM-yyyy')}
                         </div>
                     </div>
@@ -175,10 +175,10 @@ const FaqTopics = (props) => {
             >
                 <a className='w-full'>
                     <div>
-                        <div className='text-gray-4 font-normal text-base hover:text-teal'>
+                        <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
                             {article?.title}{' '}
                         </div>
-                        <div className='mt-2 text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                        <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
                             {formatTime(article.created_at, 'dd-MM-yyyy')}
                         </div>
                     </div>
@@ -210,7 +210,7 @@ const FaqTopics = (props) => {
                 mode='faq'
                 faqCurrentGroup={currentGroup}
             >
-                <div className='text-gray-4 font-semibold text-base sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-8 cursor-pointer'>
+                <div className='text-txtPrimary dark:text-gray-4 font-semibold text-base sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-8 cursor-pointer'>
                     <Link href='/support/faq/account-functions'>
                         <a>
                             {SupportCategories.faq[language]?.find(
@@ -229,12 +229,12 @@ const FaqTopics = (props) => {
                 >
                     {renderGroup()}
                 </div> : null}
-                {(currentGroup && articles && articles.length) ? <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
+                {(currentGroup && articles && articles.length) ? <div className='text-txtPrimary dark:text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
                     {t('common:related_posts')}
                 </div> : null}
                 <div className=''>{renderGroupArticles}</div>
                 {!!cats.length && !!articles?.length && !!!currentGroup && (
-                    <div className='text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
+                    <div className='text-txtPrimary dark:text-gray-4 font-semibold text-[32px] leading-[38px] mb-6 sm:mb-8'>
                         {t('support-center:lasted_articles')}
                     </div>
                 )}

@@ -90,16 +90,16 @@ const AnnouncementTopics = (props) => {
                 }
                 key={item.uuid}
             >
-                <a className="block mb-6 hover:text-teal">
+                <a className="block mb-6 hover:text-txtTextBtn dark:hover:text-teal">
                     <div className='flex w-full gap-6 items-center'>
                         <img className='rounded-xl h-[70px] sm:h-[130px]' src={item?.feature_image} style={{
                             aspectRatio: isMobile ? '2/1' : '25/13'
                         }} />
                         <div className='h-full gap-6 flex flex-col justify-center'>
-                            <div className='line-clamp-2 sm:line-clamp-4 text-gray-4 font-semibold text-sm sm:font-medium sm:text-xl'>
+                            <div className='line-clamp-2 sm:line-clamp-4 text-textPrimary dark:text-gray-4 font-semibold text-2xl'>
                                 {item?.title}{' '}
                             </div>
-                            {isMobile ? null : <div className='line-clamp-2 text-darkBlue-5 font-semibold text-sm sm:font-normal sm:text-sm'>
+                            {isMobile ? null : <div className='line-clamp-2 text-txtSecondary dark:text-darkBlue-5 text-sm font-normal'>
                                 {item?.excerpt}
                             </div>}
                         </div>
