@@ -1020,6 +1020,11 @@ input:-webkit-autofill {
     display: flex;
     justify-content: center;
     width: fit-content;
+    &:hover {
+       .looper__listInstance {
+        animation-play-state: paused;
+       } 
+    }
   }
   
   .looper__listInstance {
@@ -1027,7 +1032,4 @@ input:-webkit-autofill {
     width: max-content;
     animation: 30s slideAnimation linear infinite;
     animation-direction:normal;
-    // &:hover {
-    //     animation-play-state: paused;
-    // }
   }

@@ -21,7 +21,7 @@ const HomeCurrentActivity = () => {
     // Inital Keen Slider
     const [sliderRef, slider] = useKeenSlider({
         slidesPerView:5 ,
-        // centered: true,
+        centered: true,
         vertical: false,
         loop: true
 
@@ -31,7 +31,6 @@ const HomeCurrentActivity = () => {
     const timer = useRef();
 
     const phake = useRef(makeData(35)).current;
-    console.log('phake:', phake);
 
     // Render Handler
     const renderActivityItem = () => {
