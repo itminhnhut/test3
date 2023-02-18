@@ -461,7 +461,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     let tradeButton = null;
     const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
     hover:text-txtTabHover dark:hover:text-txtTextBtn-dark 
-    hover:bg-hover-1 dark:hover:bg-hover-dark
+    hover:bg-gray-13 dark:hover:bg-hover-dark
     `;
     const cssPopover = () => {
         if (isStickyColOperation) {
