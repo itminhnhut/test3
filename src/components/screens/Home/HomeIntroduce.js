@@ -60,7 +60,7 @@ const HomeIntroduce = ({ parentState }) => {
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
-                            {t('home:introduce.title_desktop1')}
+                            {t('home:introduce.title_desktop1')} <br/>
                             {t('home:introduce.title_desktop2')}
                         </div>
                         {/* <div className="homepage-introduce___description">

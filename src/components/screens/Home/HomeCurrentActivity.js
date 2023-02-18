@@ -1,12 +1,9 @@
-import { useKeenSlider } from 'keen-slider/react';
-import { useEffect, useRef, useState } from 'react';
-import { useWindowSize } from 'utils/customHooks';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 
 import 'keen-slider/keen-slider.min.css';
 import { formatTime, formatWallet } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatNumberToText } from 'redux/actions/utils';
 import numeral from 'numeral';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -16,14 +13,8 @@ import { Autoplay } from 'swiper';
 
 const HomeCurrentActivity = () => {
     // Initial State
-    const [state, set] = useState({
-        autoplay: true,
-        phake: null
-    });
-    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     const { t } = useTranslation(['home', 'common']);
-
     // Inital Keen Slider
 
     const phake = useRef(makeData(35)).current;
@@ -58,74 +49,17 @@ const HomeCurrentActivity = () => {
                             </div>
                         </div>
                     </SwiperSlide>
-                    {/* <div key={`homepage_user_activity_${phake.token}_${i}`} className="keen-slider__slide homepage-activity__slide__item1">
-                        <div className="homepage-activity__item___wrapper">
-                            <div className="homepage-activity__item__inner">
-                                <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
-                            </div>
-
-                            <div className="homepage-activity__item__inner">
-                                <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
-                                <div className="homepage-activity__item__inner___label">{phake.time}</div>
-                            </div>
-                            <div className="homepage-activity__item__inner specific__case">
-                                <div className="homepage-activity__item__inner___text ">
-                                    {phake.type === 'DEP' ? '+' : '-'}
-                                    {phake.amount} {phake.symbol.toUpperCase()}
-                                </div>
-                                <div className="homepage-activity__item__inner___label text-right">
-                                    {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
-                                </div>
-                            </div>
-                            {/* <div className="homepage-activity__item__inner">
-                            <div className="homepage-activity__item__inner___text text-dominant">{t('common:success')}</div>
-                            <div className="homepage-activity__item__inner___label">{t('home:user_activity.status')}</div>
-                        </div>
-                        <div className="homepage-activity__item__inner">
-                            <div className="homepage-activity__item__inner___text text-dominant">
-                                <span className="uppercase">{phake.symbol}</span> Token
-                            </div>
-                            <div className="homepage-activity__item__inner___label">{t('home:user_activity.token_name')}</div>
-                        </div>
-                        <div className="homepage-activity__item__inner">
-                            <div className="homepage-activity__item__inner___text text-dominant">{phake.amount}</div>
-                            <div className="homepage-activity__item__inner___label">{t('home:user_activity.quantity')}</div>
-                        </div>
-                        <div className="homepage-activity__item__inner">
-                            <div className="homepage-activity__item__inner___text text-dominant">{phake.time}</div>
-                            <div className="homepage-activity__item__inner___label">{t('home:user_activity.time')}</div>
-                        </div> 
-                        </div>
-                    </div> */}
                 </>
             );
         });
     };
-
-    // useEffect(() => {
-    //     sliderRef.current.addEventListener('mouseover', () => {
-    //         setState({ autoplay: false });
-    //     });
-    //     sliderRef.current.addEventListener('mouseout', () => {
-    //         setState({ autoplay: true });
-    //     });
-    // }, [sliderRef]);
-
-    // useEffect(() => {
-    //     timer.current = setInterval(() => state.autoplay && slider && slider.next(), 5000);
-    //     return () => clearInterval(timer.current);
-    // }, [state.autoplay, slider]);
-
-    // useEffect(() => {
-    //     width && slider && slider.resize();
-    // }, [width, slider]);
 
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
                 <Swiper
                     modules={[Autoplay]}
-                    // autoplay={{ delay: 2000 }}
+                    autoplay={{ delay: 2800 }}
                     spaceBetween={10}
                     slidesPerView={1.5}
                     centeredSlides
@@ -148,7 +82,6 @@ const HomeCurrentActivity = () => {
                 >
                     {renderActivityItem()}
                 </Swiper>
-              
             </div>
         </section>
     );
