@@ -52,12 +52,14 @@ const SwapHistory = ({ width }) => {
     const onChangePagination = (delta) => {
         setState({ page: state.page + delta });
     };
+
     return (
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
                 <div className="mt-8 pt-4 bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl">
                     <TableV2
+                        loading={state.loading}
                         useRowHover
                         data={state.histories || []}
                         columns={columns}
@@ -101,7 +103,7 @@ const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
-    { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 120, fixed: 'left', align: 'left' },
+    { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 140, fixed: 'left', align: 'left' },
     {
         key: 'swap_pair',
         dataIndex: 'swap_pair',
@@ -134,7 +136,7 @@ const columns = [
         key: 'toQty',
         dataIndex: 'toQty',
         title: 'To Quantity',
-        width: 244,
+        width: 220,
         align: 'left',
         render: (v, item) => (
             <span>
@@ -146,7 +148,7 @@ const columns = [
         key: 'rate',
         dataIndex: 'rate',
         title: 'Rate',
-        width: 280,
+        width: 306,
         align: 'left',
         render: (v, item) => {
             console.log('item: ', item);
@@ -158,7 +160,7 @@ const columns = [
             );
         }
     },
-    { key: 'createdAt', dataIndex: 'createdAt', title: 'Time', width: 150, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
+    { key: 'createdAt', dataIndex: 'createdAt', title: 'Time', width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
 ];
 
 const dataHandler = (data, loading) => {

@@ -64,18 +64,23 @@ const CheckCircleIcon = ({ className = '', color, size }) => (
     </svg>
 );
 
-const SwapIcon = ({ className = '', color = '#E2E8F0', size = 16 }) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#8slfkmybya)" fill={color}>
-            <path d="M14.667 5.334 12 2.667v2H2V6h10v2l2.667-2.666zM1.333 10.667 4 13.333v-2h10V10H4V8l-2.667 2.667z" />
-        </g>
-        <defs>
-            <clipPath id="8slfkmybya">
-                <path fill="#fff" d="M0 0h16v16H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+const SwapIcon = ({ className = '', color, size = 16 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
+
+    return (
+        <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#8slfkmybya)" fill={color || defaultColor}>
+                <path d="M14.667 5.334 12 2.667v2H2V6h10v2l2.667-2.666zM1.333 10.667 4 13.333v-2h10V10H4V8l-2.667 2.667z" />
+            </g>
+            <defs>
+                <clipPath id="8slfkmybya">
+                    <path fill="#fff" d="M0 0h16v16H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
 const CloseIcon = ({ className, onClick, color, size }) => {
     const [currentTheme] = useDarkMode();
