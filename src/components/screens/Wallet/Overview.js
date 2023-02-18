@@ -268,10 +268,11 @@ const OverviewWallet = (props) => {
                                 onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
                                 className="px-6"
                                 color="dark"
+                                variants="none"
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark">
+                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>

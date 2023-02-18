@@ -192,7 +192,6 @@ const Wallet = () => {
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
-                                V2
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
                                 className={`text-left !px-0 !text-base`}
