@@ -3,7 +3,8 @@ import { API_FUTURES_LEVERAGE } from 'redux/actions/apis';
 import { Minus, Plus, X } from 'react-feather';
 import { ScaleLoader } from 'react-spinners';
 import SvgWarning from 'components/svg/SvgWarning';
-import Button from 'components/common/Button';
+// import Button from 'components/common/Button';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import axios from 'axios';
@@ -12,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
+import InputV2 from 'components/common/V2/InputV2';
 
 const FuturesLeverageSettings = ({
     pair,
@@ -82,17 +84,15 @@ const FuturesLeverageSettings = ({
 
     const renderConfirmButton = useCallback(
         () => (
-            <Button
-                title={loading ? <ScaleLoader color={colors.white} width={2} height={12} /> : t('futures:leverage:confirm')}
-                onusMode={onusMode}
-                componentType="button"
+            <ButtonV2
+                disabled={loading || getValidator?.isError}
+                onClick={() => !loading && onSetLeverage(pair, _leverage)}
                 className={`${onusMode ? '!text-[16px] !font-semibold !h-[48px]' : '!h-[48px]'} ${
                     !onusMode && getValidator?.isError ? '!bg-gray-3 dark:!bg-darkBlue-4 text-gray-1 dark:text-darkBlue-2 cursor-not-allowed' : ''
                 }`}
-                type="primary"
-                disabled={loading || getValidator?.isError}
-                onClick={() => !loading && onSetLeverage(pair, _leverage)}
-            />
+            >
+                {loading ? <ScaleLoader color={colors.white} width={2} height={12} /> : t('futures:leverage:confirm')}
+            </ButtonV2>
         ),
         [_leverage, pair, loading, onusMode]
     );
@@ -145,25 +145,26 @@ const FuturesLeverageSettings = ({
                 {t('futures:leverage:leverage')}
             </div>
             <div
-                className={`px-2 flex items-center ${
-                    onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px]' : 'bg-gray-4 dark:bg-dark-2 mb-4 h-[48px]'
+                className={`px-2 flex items-center relative ${
+                    onusMode ? 'bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px]' : 'bg-gray-10 dark:bg-dark-2 mb-4 h-[48px] px-0 '
                 } rounded-[4px]`}
             >
-                <div className={changeClass}>
+                {/* <div className={`${changeClass} absolute left-2`}>
                     <Minus
                         size={onusMode ? 20 : 17}
                         className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() => _leverage > 1 && _setLeverage((prevState) => Number(prevState) - 1)}
                     />
-                </div>
+                </div> */}
+
                 <TradingInput
                     onusMode={onusMode}
                     label=" "
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none  ${
-                        onusMode ? '!bg-onus-bg2 h-[44px]' : '!bg-transparent h-[48px]'
+                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium  ${
+                        onusMode ? '!bg-onus-bg2 h-[44px]' : '!bg-transparent h-[48px] w-full'
                     }`}
                     inputClassName="!text-center !text-base"
                     onValueChange={({ value }) => _setLeverage(value)}
@@ -171,14 +172,29 @@ const FuturesLeverageSettings = ({
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
                     onFocus={onusMode && scrollFocusInput}
+                    clearAble
+                    renderTail={
+                        <Plus
+                            size={onusMode ? 20 : 17}
+                            className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
+                            onClick={() => _leverage < pairConfig?.leverageConfig?.max && _setLeverage((prevState) => Number(prevState) + 1)}
+                        />
+                    }
+                    renderHead={
+                        <Minus
+                            size={onusMode ? 20 : 17}
+                            className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
+                            onClick={() => _leverage > 1 && _setLeverage((prevState) => Number(prevState) - 1)}
+                        />
+                    }
                 />
-                <div className={changeClass}>
+                {/* <div className={`${changeClass} absolute right-2`}>
                     <Plus
                         size={onusMode ? 20 : 17}
                         className={`${onusMode ? 'text-onus-white w-5' : 'text-txtSecondary dark:text-txtSecondary-dark'} cursor-pointer`}
                         onClick={() => _leverage < pairConfig?.leverageConfig?.max && _setLeverage((prevState) => Number(prevState) + 1)}
                     />
-                </div>
+                </div> */}
             </div>
             <div className={`${onusMode ? 'mb-6' : 'mb-6'}`}>
                 <Slider
@@ -212,30 +228,30 @@ const FuturesLeverageSettings = ({
                     <span className="block mb-1 font-medium text-xs text-dominant">{t('futures:leverage:check_leverage')}</span>
                 </>
             )}
-            {isAuth && (
-                <>
-                    {!isVndcFutures && <span className="block mb-1 font-medium text-xs text-dominant">{t('futures:leverage:position_limit_enlarge')}</span>}
-                    <div className="mt-2.5 flex items-center dark:bg-darkBlue-3 px-6 py-4 rounded-md">
-                        <div className="pt-1">
-                            {onusMode ? (
-                                <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
-                            ) : (
-                                <SvgWarning size={24} fill={colors.darkBlue5} fillInside={colors.darkBlue3} />
-                            )}
-                        </div>
-                        <div className={`pl-4 font-medium text-sm ${onusMode ? 'text-onus-orange' : 'text-txtSecondary'} `}>
-                            {t('futures:leverage:description')}
-                        </div>
+            {/* {isAuth && ( */}
+            <>
+                {!isVndcFutures && <span className="block mb-1 font-medium text-xs text-dominant">{t('futures:leverage:position_limit_enlarge')}</span>}
+                <div className="mt-2.5 flex items-center bg-hover-1 dark:bg-darkBlue-3 px-6 py-4 rounded-md">
+                    <div className="pt-1">
+                        {onusMode ? (
+                            <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
+                        ) : (
+                            <SvgWarning size={24} fill={colors.darkBlue5} fillInside={'currentColor'} />
+                        )}
                     </div>
-                </>
-            )}
+                    <div className={`pl-4 font-medium text-sm ${onusMode ? 'text-onus-orange' : 'text-txtSecondary'} `}>
+                        {t('futures:leverage:description')}
+                    </div>
+                </div>
+            </>
+            {/* // )} */}
             {isAuth ? (
                 <div className={`${onusMode ? 'mt-8' : 'mt-10 mb-2'}`}>{renderConfirmButton()}</div>
             ) : (
-                <div className={`${onusMode ? 'mt-8' : 'mt-5 h-full'} mb-2 cursor-pointer flex items-center justify-center `}>
+                <div className={`${onusMode ? 'mt-8' : 'mt-10 h-full'} mb-2 cursor-pointer flex items-center justify-center `}>
                     <div
                         className={`w-[200px] ${
-                            onusMode ? 'bg-onus-base' : 'bg-dominant font-medium '
+                            onusMode ? 'bg-onus-base' : 'bg-dominant font-medium !w-full'
                         } text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
                         onClick={onLogin}
                     >

@@ -68,7 +68,7 @@ const SocialsLink = ({ language }) => {
                                 : `${social.href}/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`
                         }
                     >
-                        <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark">
+                        <a target="_blank" className="!flex items-center w-[32px] h-[32px] text-txtPrimary dark:text-txtPrimary-dark ">
                             <div className="border p-2 rounded-full border-[#1e1e1e] dark:border-divider">
                                 {ImageIcon}
                                 {/* <img src={getS3Url(imageURI)} alt="" width="16" height="16" /> */}
