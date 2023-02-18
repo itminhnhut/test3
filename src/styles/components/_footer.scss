@@ -65,7 +65,8 @@ padding-block:48px;
 
             ~ .socials_link  {
             @apply px-4;
-            }
+            
+          }
 
             font-weight: 600;
             font-size: 14px;
@@ -73,9 +74,7 @@ padding-block:48px;
             cursor: pointer;
             white-space: nowrap;
 
-            svg {
-              @apply text-white;
-            }
+           
           }
 
           .mal-footer___pocket__links___group__item__links {
@@ -89,7 +88,7 @@ padding-block:48px;
 
 
             a {
-              @apply text-sm py-3 block;
+              @apply text-sm text-txtPrimary dark:text-txtPrimary-dark py-3 block;
                   padding-left:48px;
 
 

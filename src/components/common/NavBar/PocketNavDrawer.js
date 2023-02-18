@@ -262,39 +262,23 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         </a>
                         <div className="flex flex-row items-center gap-4 px-4">
                             <Link href="https://apps.apple.com/app/id1480302334">
-                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark">
+                                <a className="py-[6px] text-txtPrimary dark:text-txtPrimary-dark flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark">
                                     <AppleIcon color="currentColor" />
 
                                     <div className="ml-4">
                                         <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
                                         <div className="text-sm font-semibold ">App Store</div>
                                     </div>
-                                    {/* <img
-                                        style={{
-                                            height: 37,
-                                            width: 'auto'
-                                        }}
-                                        src={getS3Url('/images/download_app_store.png')}
-                                        alt="Nami Exchange"
-                                    /> */}
                                 </a>
                             </Link>
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
-                                <a className="py-[6px] flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark ">
+                                <a className="py-[6px] text-txtPrimary dark:text-txtPrimary-dark flex items-center justify-center w-1/2 border rounded-md border-divider dark:border-divider-dark ">
                                     <GooglePlayIcon />
 
                                     <div className="ml-4">
                                         <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
                                         <div className="text-sm font-semibold ">CH Play</div>
                                     </div>
-                                    {/* <img
-                                        style={{
-                                            height: 37,
-                                            width: 'auto'
-                                        }}
-                                        src={getS3Url('/images/download_play_store.png')}
-                                        alt="Nami Exchange"
-                                    /> */}
                                 </a>
                             </Link>
                         </div>
@@ -303,15 +287,6 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 <ButtonV2 color="dark" className="bg-gray-10 font-semibold text-txtPrimary">
                                     {t('navbar:menu.user.logout')}
                                 </ButtonV2>
-                                {/* <HrefButton variants="secondary" href={buildLogoutUrl()}>
-                                    {t('navbar:menu.user.logout')}
-                                </HrefButton> */}
-                                {/* <a
-                                    href={buildLogoutUrl()}
-                                    className="w-full text-center mt-4 bg-red py-3 rounded-xl text-white hover:text-white hover:opacity-60"
-                                >
-                                    {t('navbar:menu.user.logout')}
-                                </a> */}
                             </div>
                         )}
                     </div>
