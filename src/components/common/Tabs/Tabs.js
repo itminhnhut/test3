@@ -8,7 +8,7 @@ import { sumBy } from 'lodash';
 
 let currentKeyTab = 0;
 let isClick = true;
-const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', noScroll = false }, ref) => {
+const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScroll = false }, ref) => {
     const TabRef = useRef(null);
     const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
@@ -24,7 +24,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', noScr
     }));
 
     const startDragging = (e) => {
-        if (noScroll) return;
+        if (!isScroll) return;
         TabRef.current.classList.add('cursor-grabbing');
         mouseDown.current = true;
         startX.current = e.pageX - TabRef.current.offsetLeft;
@@ -137,11 +137,15 @@ const Tab = styled.div.attrs(({ className }) => ({
 `;
 
 export const TabItems = styled.div.attrs(({ value, className = '', isMobile = false, V2 = false }) => ({
-    className: classnames('text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12', className, {
-        'text-gray-1': !isMobile,
-        'text-darkBlue-5': isMobile,
-        'dark:hover:text-txtTabHover-dark': V2
-    }),
+    className: classnames(
+        'text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12',
+        className,
+        {
+            'text-gray-1': !isMobile,
+            'text-darkBlue-5': isMobile,
+            'dark:hover:text-txtTabHover-dark': V2
+        }
+    ),
     id: `tab-item-${value}`
 }))``;
 
