@@ -10,9 +10,9 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
                 {
                     'bg-bgBtnV2 dark:bg-bgBtnV2-dark hover:bg-bgBtnV2-pressed dark:hover:bg-bgBtnV2-dark_pressed  text-white': variants === 'primary',
                     '!bg-red': color === 'red' && !disabled,
-                    'text-txtTextBtn-tonal dark:text-txtTextBtn-tonal_dark bg-bgBtnV2-tonal hover:bg-bgBtnV2-tonal_pressed  dark:bg-bgBtnV2-tonal_dark dark:hover:bg-bgBtnV2-tonal_dark_pressed ':
+                    'text-gray-9 dark:text-gray-7 bg-bgBtnV2-tonal hover:bg-bgBtnV2-tonal_pressed  dark:bg-dark-2 dark:hover:bg-dark':
                         color === 'dark' && !disabled,
-                    '!font-semibold px-0 !text-sm text-txtTextBtn hover:text-txtTextBtn-pressed active:text-txtTextBtn-pressed dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed':
+                    '!font-semibold px-0 !text-sm text-txtTextBtn hover:text-txtTextBtn-pressed active:text-txtTextBtn-pressed dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed':
                         variants === 'text',
                     '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark': disabled
                 },
