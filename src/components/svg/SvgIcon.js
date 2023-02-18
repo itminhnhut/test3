@@ -430,17 +430,17 @@ const SuccessfulTransactionIcon = ({
     </svg>
 );
 
-const AddCircleIcon = () => (
-    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+const AddCircleIcon = ({ color = '#768394', ...props }) => (
+    <svg {...props} width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#p8h6ijxpna)">
             <path
                 d="M8.4 1.678a6.67 6.67 0 0 0-6.668 6.666A6.67 6.67 0 0 0 8.4 15.011a6.67 6.67 0 0 0 6.667-6.667 6.67 6.67 0 0 0-6.667-6.666zm3.332 7.333H9.066v2.667H7.732V9.01H5.066V7.678h2.666V5.01h1.334v2.667h2.666V9.01z"
-                fill="#8694B3"
+                fill={color}
             />
         </g>
         <defs>
             <clipPath id="p8h6ijxpna">
-                <path fill="#fff" transform="translate(.398 .344)" d="M0 0h16v16H0z"/>
+                <path fill="#fff" transform="translate(.398 .344)" d="M0 0h16v16H0z" />
             </clipPath>
         </defs>
     </svg>

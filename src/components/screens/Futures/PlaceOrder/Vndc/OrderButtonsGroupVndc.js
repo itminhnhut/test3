@@ -132,9 +132,9 @@ const FuturesOrderButtonsGroupVndc = ({
             />
             <ModalV2 className="max-w-[448px] text-base" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
                 <div className="text-2xl mb-6 font-semibold">{t('futures:preferences:order_confirm')}</div>
-                <div className="p-4 mb-6 rounded-md border border-divider-dark divide-y divide-divider-dark space-y-3">
+                <div className="p-4 mb-6 rounded-md border border-divider dark:border-divider-dark divide-y divide-divider dark:divide-divider-dark space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-txtSecondary-dark">{t('futures:mobile:leverage_v2')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:leverage_v2')}</span>
                         <div className="font-semibold space-x-1">
                             <span>
                                 {VndcFutureOrderType.Side.BUY === side ? 'Long' : 'Short'} {pairConfig?.baseAsset}/{pairConfig?.quoteAsset}
@@ -143,32 +143,32 @@ const FuturesOrderButtonsGroupVndc = ({
                         </div>
                     </div>
                     <div className="flex items-center justify-between pt-3">
-                        <span className="text-txtSecondary-dark">{t('common:type')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:type')}</span>
                         <span className="font-semibold">
                             <TypeTable type="type" data={{ type: type }} />
                         </span>
                     </div>
                     {!isMarket && (
                         <div className="flex items-center justify-between pt-3">
-                            <span className="text-txtSecondary-dark">{t('common:price')}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</span>
                             <span className="font-semibold">{formatNumber(price, decimals.price)}</span>
                         </div>
                     )}
                     <div className="flex items-center justify-between pt-3">
-                        <span className="text-txtSecondary-dark">{t('futures:margin')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:margin')}</span>
                         <span className="font-semibold">
                             {formatNumber(margin, decimals.symbol)} {pairConfig?.quoteAsset}
                         </span>
                     </div>
                     {orderSlTp.sl && (
                         <div className="flex items-center justify-between pt-3">
-                            <span className="text-txtSecondary-dark">{t('futures:stop_loss')}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:stop_loss')}</span>
                             <span className="font-semibold text-red">{formatNumber(orderSlTp.sl, decimals.price)}</span>
                         </div>
                     )}
                     {orderSlTp.tp && (
                         <div className="flex items-center justify-between pt-3">
-                            <span className="text-txtSecondary-dark">{t('futures:take_profit')}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:take_profit')}</span>
                             <span className="font-semibold text-teal">{formatNumber(orderSlTp.tp, decimals.price)}</span>
                         </div>
                     )}
@@ -205,7 +205,8 @@ const FuturesOrderButtonsGroupVndc = ({
                     <ButtonV2
                         onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
                         disabled={isError}
-                        className={`flex flex-col !h-[60px] ${isBuy ? '' : '!bg-red'}`}
+                        className={`flex flex-col !h-[60px]`}
+                        color={isBuy ? '' : 'red'}
                     >
                         <span>{(isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</span>
                         <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>

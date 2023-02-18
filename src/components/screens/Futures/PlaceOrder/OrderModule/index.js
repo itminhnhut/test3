@@ -13,8 +13,11 @@ import usePrevious from 'hooks/usePrevious';
 import floor from 'lodash/floor';
 import { useDispatch } from 'react-redux';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const ask = pairPrice?.ask ?? 0;
@@ -319,7 +322,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 onValueChange={({ value }) => setPrice(value)}
                 decimalScale={decimals.price}
                 validator={inputValidator('price')}
-                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
                 clearAble
             />
@@ -332,7 +335,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 decimalScale={decimals.qty}
                 containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
-                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
                 clearAble
             />
@@ -377,6 +380,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 leverage={leverage}
                 isAuth={isAuth}
                 quoteQty={quoteQty}
+                isDark={isDark}
             />
 
             {renderAvail()}
