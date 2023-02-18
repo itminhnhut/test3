@@ -213,10 +213,14 @@ export default function FundingHistory({ currency, active }) {
     }, [dataTable, currency, currentPage]);
 
     return (
-        <div className={classNames('mt-2 sm:mt-12 sm:border border-divider-dark rounded-xl', { hidden: !active })}>
+        <div className={classNames('mt-2 sm:mt-12 sm:border border-divider dark:border-divider-dark rounded-xl', { hidden: !active })}>
             <Tooltip id={'funding'} place="top" effect="solid" isV3 className="max-w-[300px]" />
-            <div className={classNames('sm:px-6 py-4 sm:border-b border-divider-dark sm:flex items-center justify-between', { 'space-y-6 pb-2': isMobile })}>
-                <div className={classNames('text-txtSecondary-dark text-xs sm:text-sm space-x-1')}>
+            <div
+                className={classNames('sm:px-6 py-4 sm:border-b border-divider dark:border-divider-dark sm:flex items-center justify-between', {
+                    'space-y-6 pb-2': isMobile
+                })}
+            >
+                <div className={classNames('text-txtSecondary dark:text-txtSecondary-dark text-xs sm:text-sm space-x-1')}>
                     <span>Funding Rates =</span>
                     <span
                         data-tip={`${t('futures:funding_history_tab:vol_position')} = ${t('futures:order_table:mark_price')} x ${t(

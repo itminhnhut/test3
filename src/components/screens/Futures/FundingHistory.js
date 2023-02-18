@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import useApp from 'hooks/useApp';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 export const CURRENCIES = [
     {
@@ -29,7 +30,7 @@ export default function FundingHistory(props) {
     } = useTranslation();
     const isApp = useApp();
 
-    const [selectedTab, setSelectedTab] = useState(0);
+    const [selectedTab, setSelectedTab] = useState(SCREEN_TAB_SERIES[0].key);
     const [selectedCurrency, setSelectedCurrency] = useState(CURRENCIES[0].value);
 
     useEffect(() => {
@@ -44,11 +45,12 @@ export default function FundingHistory(props) {
     const renderTabContent = () => {
         return (
             <>
-                <FundingTab currency={selectedCurrency} active={selectedTab === 0} />
-                <FundingHistoryTable currency={selectedCurrency} active={selectedTab === 1} />
+                <FundingTab currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[0].key} />
+                <FundingHistoryTable isDark={currentTheme === THEME_MODE.DARK} currency={selectedCurrency} active={selectedTab === SCREEN_TAB_SERIES[1].key} />
             </>
         );
     };
+
     return (
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
@@ -69,20 +71,22 @@ export default function FundingHistory(props) {
                         </a>
                     </div>
                     <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
-                        <Tab
-                            series={SCREEN_TAB_SERIES}
-                            currentIndex={selectedTab}
-                            onChangeTab={(screenIndex) => {
-                                setSelectedTab(screenIndex);
-                            }}
-                            className="flex items-center justify-center w-full sm:w-max sm:justify-start"
-                        />
+                        <Tabs tab={selectedTab} className="gap-8 border-b border-divider dark:border-divider-dark sm:w-max">
+                            {SCREEN_TAB_SERIES?.map((rs) => (
+                                <TabItem V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
+                                    {t(rs.localized)}
+                                </TabItem>
+                            ))}
+                        </Tabs>
                         <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
                             {CURRENCIES.map((rs) => (
                                 <div
-                                    className={classNames('text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer', {
-                                        '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
-                                    })}
+                                    className={classNames(
+                                        'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
+                                        {
+                                            '!border-teal !text-teal font-semibold bg-teal/[0.1]': selectedCurrency === rs.value
+                                        }
+                                    )}
                                     onClick={() => setSelectedCurrency(rs.value)}
                                 >
                                     {rs.name}
@@ -98,16 +102,16 @@ export default function FundingHistory(props) {
 }
 
 const Background = styled.div.attrs({ className: 'w-full h-full px-4 pt-10 sm:pt-20 pb-20 sm:pb-[7.5rem] max-w-screen-v3 m-auto' })`
-    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#F8F9FA')};
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
 const SCREEN_TAB_SERIES = [
     {
-        key: 0,
+        key: 'funding_rate',
         localized: 'futures:funding_history_tab:tab_ratio_realtime'
     },
     {
-        key: 1,
+        key: 'funding_history',
         localized: 'futures:funding_history_tab:tab_history'
     }
 ];
