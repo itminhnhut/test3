@@ -213,7 +213,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full p-4 bg-teal-lightTeal dark:bg-teal-5 h-full flex items-center justify-center">
+                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
                     <SvgWalletFutures size={32} />
                 </div>
                 <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
@@ -275,7 +275,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
                 <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
                         <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
