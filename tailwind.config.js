@@ -400,7 +400,6 @@ module.exports = {
                 rank: "url('/images/contest/bg_rank.png')",
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
-                dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
                 'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')",
                 'gradient-button-dark':

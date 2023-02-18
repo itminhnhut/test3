@@ -104,17 +104,17 @@ const NoDataLightIcon = () => (
         <path d="M99.445 25.29H81.69v.517h17.755v-.518zM94.103 27.53H81.69v.517h12.413v-.518zM94.103 29.797H81.69v.517h12.413v-.517z" fill="#fff" />
         <defs>
             <linearGradient id="vkvonmtuaa" x1="61.421" y1="78.919" x2="107.328" y2="22.297" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stop-color="#C6CEDE" />
-                <stop offset=".22" stop-color="#D1D8E4" />
-                <stop offset=".315" stop-color="#D8DEE8" />
-                <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
-                <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
+                <stop offset=".008" stopColor="#C6CEDE" />
+                <stop offset=".22" stopColor="#D1D8E4" />
+                <stop offset=".315" stopColor="#D8DEE8" />
+                <stop offset=".852" stopColor="#F7F8FA" stopOpacity=".513" />
+                <stop offset=".977" stopColor="#fff" stopOpacity=".4" />
             </linearGradient>
             <linearGradient id="3p2js4giyb" x1="76.703" y1="41.531" x2="108.881" y2="35.569" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stop-color="#C6CEDE" />
-                <stop offset=".017" stop-color="#C7CFDE" />
-                <stop offset=".65" stop-color="#EFF2F6" />
-                <stop offset=".977" stop-color="#fff" />
+                <stop offset=".008" stopColor="#C6CEDE" />
+                <stop offset=".017" stopColor="#C7CFDE" />
+                <stop offset=".65" stopColor="#EFF2F6" />
+                <stop offset=".977" stopColor="#fff" />
             </linearGradient>
         </defs>
     </svg>
@@ -179,19 +179,19 @@ const NotFoundLightIcon = () => (
         />
         <defs>
             <linearGradient id="y413son5ja" x1="22.261" y1="65.079" x2="53.663" y2="61.591" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stop-color="#C6CEDE" />
-                <stop offset=".209" stop-color="#D1D8E4" />
-                <stop offset=".299" stop-color="#D8DEE8" />
-                <stop offset=".505" stop-color="#DEE3EC" stop-opacity=".816" />
-                <stop offset=".787" stop-color="#F0F2F6" stop-opacity=".562" />
-                <stop offset=".967" stop-color="#fff" stop-opacity=".4" />
+                <stop offset=".008" stopColor="#C6CEDE" />
+                <stop offset=".209" stopColor="#D1D8E4" />
+                <stop offset=".299" stopColor="#D8DEE8" />
+                <stop offset=".505" stopColor="#DEE3EC" stopOpacity=".816" />
+                <stop offset=".787" stopColor="#F0F2F6" stopOpacity=".562" />
+                <stop offset=".967" stopColor="#fff" stopOpacity=".4" />
             </linearGradient>
             <linearGradient id="fd0c64skgb" x1="51.232" y1="62.741" x2="2.649" y2="59.866" gradientUnits="userSpaceOnUse">
-                <stop offset=".385" stop-color="#C6CEDE" />
-                <stop offset=".525" stop-color="#CCD3E2" stop-opacity=".759" />
-                <stop offset=".719" stop-color="#DEE3EC" stop-opacity=".427" />
-                <stop offset=".943" stop-color="#FBFCFD" stop-opacity=".041" />
-                <stop offset=".967" stop-color="#fff" stop-opacity="0" />
+                <stop offset=".385" stopColor="#C6CEDE" />
+                <stop offset=".525" stopColor="#CCD3E2" stopOpacity=".759" />
+                <stop offset=".719" stopColor="#DEE3EC" stopOpacity=".427" />
+                <stop offset=".943" stopColor="#FBFCFD" stopOpacity=".041" />
+                <stop offset=".967" stopColor="#fff" stopOpacity="0" />
             </linearGradient>
         </defs>
     </svg>

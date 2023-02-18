@@ -36,9 +36,9 @@ const SupportSection = ({
                 </div>
             }
             {children && <div
-                className={classNames('flex flex-col sm:grid justify-between gap-4 sm:gap-6', contentContainerClassName)}
+                className={classNames('flex flex-col sm:grid justify-between gap-4', contentContainerClassName)}
                 style={{
-                    gridTemplateColumns: isMobile ? "repeat(auto-fill, 170px)" : "repeat(auto-fill, 286px)",
+                    gridTemplateColumns: isMobile ? "" : "repeat(auto-fill, 236px)",
                 }}
             >
                 {children}

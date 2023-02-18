@@ -3,7 +3,7 @@ import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+import { SeeIcon, HideIcon, PartnersIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -214,7 +214,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
         return (
             <div className="flex items-center mt-12">
                 <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
-                    <SvgWalletFutures size={32} />
+                    <PartnersIcon size={32} />
                 </div>
                 <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
                     <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">

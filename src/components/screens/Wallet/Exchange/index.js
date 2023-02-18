@@ -212,7 +212,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'assetCode',
                 title: t('common:asset'),
                 align: 'left',
-                width: 170,
+                width: 210,
                 fixed: 'left',
                 render: (v, item) => (
                     <div className="flex items-center gap-4">
@@ -229,7 +229,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'value'],
                 title: t('common:total'),
                 align: 'right',
-                width: 210,
+                width: 200,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
                         {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
@@ -241,7 +241,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'available',
                 title: t('common:available_balance'),
                 align: 'right',
-                width: 210,
+                width: 200,
                 render: (v, item) => (state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
             },
             {
@@ -249,7 +249,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'locked_value'],
                 title: t('common:in_order'),
                 align: 'right',
-                width: 231,
+                width: 200,
                 render: (v, item) => {
                     let lockedValue = formatWallet(v, item?.assetDigit);
                     if (lockedValue === 'NaN') {
@@ -275,7 +275,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'value'],
                 title: t('common:btc_value'),
                 align: 'right',
-                width: 231,
+                width: 200,
                 render: (v, item) => {
                     const assetUsdRate = usdRate?.[item?.id] || 0;
                     const btcUsdRate = usdRate?.['9'] || 0;
@@ -404,10 +404,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
                                 className="px-6"
                                 color="dark"
+                                variants="none"
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark">
+                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>

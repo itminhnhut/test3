@@ -28,11 +28,11 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // import SVG
 import SvgAddCircle from 'components/svg/SvgAddCircle';
-import SvgDropDown from 'components/svg/SvgDropdown';
 import SwapWarning from 'components/svg/SwapWarning';
-import { CheckCircleIcon, CloseIcon, SyncAltIcon } from 'components/svg/SvgIcon';
+import { CheckCircleIcon, CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import NoData from 'components/common/V2/TableV2/NoData';
+import styled from 'styled-components';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -342,9 +342,8 @@ const SwapModule = ({ width, pair }) => {
                     >
                         <AssetLogo assetCode={state.fromAsset} size={24} />
                         <span className="mx-2 uppercase">{state.fromAsset}</span>
-                        <span className={state.openAssetList?.from ? 'rotate-180' : ''}>
-                            {/* <SvgIcon name="chevron_down" size={15} /> */}
-                            <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#8694B3'} />
+                        <span className={state.openAssetList?.from ? 'transition-transform duration-50 rotate-180' : ''}>
+                            <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
                 </div>
@@ -451,9 +450,8 @@ const SwapModule = ({ width, pair }) => {
                 >
                     <AssetLogo assetCode={state.toAsset} size={24} />
                     <span className="mx-2 uppercase text-txtPrimary dark:text-txtPrimary-dark">{state.toAsset}</span>
-                    <span className={state.openAssetList?.to ? 'rotate-180' : ''}>
-                        {/* <SvgIcon name="chevron_down" size={15} /> */}
-                        <SvgDropDown size={16} fill={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#8694B3'} />
+                    <span className={state.openAssetList?.to ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <ArrowDropDownIcon size={16} />
                     </span>
                 </div>
             </div>
@@ -868,17 +866,14 @@ const SwapModule = ({ width, pair }) => {
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative min-w-[350px] rounded-xl bg-white dark:p-0 p-4 dark:bg-dark">
+                <div className="relative min-w-[350px] rounded-xl">
                     <div className="flex flex-col justify-center items-center">
                         <span className="text-4xl font-bold leading-[1.19]">{t('navbar:submenu.swap')}</span>
                     </div>
-                    <div className="mt-8 p-6 rounded-xl border dark:border-divider-dark">
+                    <div className="mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
                         {/*INPUT WRAPPER*/}
                         <div className="relative">
-                            <div
-                                className={`py-6 px-4 rounded-xl relative bg-bgInput dark:bg-bgInput-dark border dark:border-listItemSelected-dark
-                                ${state.inputHighlighted === 'from' && 'dark:border-dominant'} `}
-                            >
+                            <Input isFocus={state.inputHighlighted === 'from'}>
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:from')}</span>
                                     <div className="flex gap-2 items-center">
@@ -898,22 +893,16 @@ const SwapModule = ({ width, pair }) => {
                                 </div>
                                 {renderFromInput()}
                                 {renderFromAssetList()}
-                            </div>
+                            </Input>
                             {renderHelperTextFrom()}
 
                             <div className="flex justify-center items-center py-4">
-                                <button
-                                    className={`p-1.5 dark:bg-hover-dark shadow-swapicon rounded-full ${state.openAssetList?.from && 'invisible'}`}
-                                    onClick={onReverse}
-                                >
+                                <button className={`p-1.5 dark:bg-hover-dark rounded-full ${state.openAssetList?.from && 'invisible'}`} onClick={onReverse}>
                                     <SyncAltIcon size={width < 640 && 24} />
                                 </button>
                             </div>
 
-                            <div
-                                className={`py-6 px-4 rounded-xl relative bg-bgInput dark:bg-bgInput-dark border dark:border-listItemSelected-dark
-                                                            ${state.inputHighlighted === 'to' && 'dark:border-dominant'} `}
-                            >
+                            <Input isFocus={state.inputHighlighted === 'to'}>
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:to')}</span>
                                     <span>
@@ -922,7 +911,7 @@ const SwapModule = ({ width, pair }) => {
                                 </div>
                                 {renderToInput()}
                                 {renderToAssetList()}
-                            </div>
+                            </Input>
                             {renderHelperTextTo()}
                         </div>
                         {/*END:INPUT WRAPPER*/}
@@ -972,5 +961,9 @@ const SwapModule = ({ width, pair }) => {
         </>
     );
 };
+
+const Input = styled.div.attrs(({ isFocus }) => ({
+    className: `py-6 px-4 rounded-xl relative bg-gray-13 dark:bg-dark-2 border ${isFocus ? 'border-green-2' : 'border-transparent'}`
+}))``;
 
 export default SwapModule;
