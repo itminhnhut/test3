@@ -92,7 +92,10 @@ const CloseIcon = ({ className, onClick, color, size }) => {
             xmlns="http://www.w3.org/2000/svg"
         >
             <g clipPath="url(#l6hcoftsra)">
-                <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill={color ?? defaultColor} />
+                <path
+                    d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z"
+                    fill={color ?? defaultColor}
+                />
             </g>
             <defs>
                 <clipPath id="l6hcoftsra">
@@ -100,7 +103,7 @@ const CloseIcon = ({ className, onClick, color, size }) => {
                 </clipPath>
             </defs>
         </svg>
-    )
+    );
 };
 
 const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }) => {
@@ -441,19 +444,21 @@ const BxChevronDown = ({ size = 24, color, ...props }) => {
     );
 };
 
-const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
-    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#0dcfa1hmna)">
-            <path fill={bgColor} d="M0 24V0h24v24z" />
-            <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color ? color : '#47CC85'} />
-        </g>
-        <defs>
-            <clipPath id="0dcfa1hmna">
-                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+const SyncAltIcon = ({ size, color, bgColor }) => {
+    return (
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#0dcfa1hmna)">
+                <path fill={bgColor || 'undefined'} d="M0 24V0h24v24z" />
+                <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color || '#47CC85'} />
+            </g>
+            <defs>
+                <clipPath id="0dcfa1hmna">
+                    <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
 const ArrowRightIcon = ({ color, size }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 8" fill="none">

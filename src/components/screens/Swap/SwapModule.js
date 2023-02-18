@@ -33,6 +33,7 @@ import { CheckCircleIcon, CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'comp
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -362,17 +363,7 @@ const SwapModule = ({ width, pair }) => {
             const { fromAsset, available } = data?.[i];
             const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
             assetItems.push(
-                <li
-                    key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-                    px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
-
-                    ${state.fromAsset === fromAsset && 'bg-hover dark:bg-hover-dark'}
-                    `}
-                    // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
-                    onClick={() => onClickFromAsset(fromAsset)}
-                >
+                <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
                     <div className={`flex items-center  `}>
                         <div className={`${!available && 'opacity-20'}`}>
                             <AssetLogo assetCode={fromAsset} size={20} />
@@ -383,34 +374,21 @@ const SwapModule = ({ width, pair }) => {
                         </p>
                     </div>
                     <div>{available ? formatWallet(available) : '0.0000'}</div>
-                    {/* {state.fromAsset === fromAsset && <CheckCircleIcon color="white" size={16} />} */}
-                </li>
+                </AssetItem>
             );
         }
 
         return (
-            <div
-                className="from_asset__list absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl border
-                            border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-                            dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)]"
-                ref={fromAssetListRef}
-            >
+            <AssetList ref={fromAssetListRef}>
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
-                        <Search size={16} />
-                        <input
-                            autoFocus
-                            className="px-2 py-1 w-full text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                            value={state.search}
-                            placeholder={t('wallet:search_asset')}
-                            onChange={(e) => setState({ search: e.target?.value })}
-                        />
-                        <CloseIcon
-                            onClick={() => !!state.search && setState({ search: '' })}
-                            size={width >= 768 ? 20 : 16}
-                            className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
-                        />{' '}
-                    </div>
+                    <SearchBoxV2
+                        value={state.search}
+                        placeholder={t('wallet:search_asset')}
+                        onChange={(value) => {
+                            setState({ search: value });
+                        }}
+                        width
+                    />
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
                     {assetItems?.length ? (
@@ -421,7 +399,7 @@ const SwapModule = ({ width, pair }) => {
                         </div>
                     )}
                 </ul>
-            </div>
+            </AssetList>
         );
     }, [state.fromAsset, state.fromAssetList, state.openAssetList, state.search, language]);
 
@@ -468,16 +446,7 @@ const SwapModule = ({ width, pair }) => {
             const assetName = find(assetConfig, { assetCode: toAsset })?.assetName;
 
             assetItems.push(
-                <li
-                    key={`asset_item___${i}`}
-                    className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-                    px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
-
-                    ${state.toAsset === toAsset && 'dark:bg-hover-dark bg-hover'}
-                    `}
-                    onClick={() => onClickToAsset(toAsset)}
-                >
+                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)}>
                     <div className={`flex items-center  `}>
                         <div className={`${!available && 'opacity-20'}`}>
                             <AssetLogo assetCode={toAsset} size={20} />
@@ -488,33 +457,21 @@ const SwapModule = ({ width, pair }) => {
                         </p>
                     </div>
                     <div>{available ? formatWallet(available) : '0.0000'}</div>
-                </li>
+                </AssetItem>
             );
         }
 
         return (
-            <div
-                className="from_asset__list absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl border
-                border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-                dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)]"
-                ref={toAssetListRef}
-            >
+            <AssetList ref={toAssetListRef}>
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
-                        <Search size={16} />
-                        <input
-                            autoFocus
-                            className="px-2 py-1 w-full text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                            value={state.search}
-                            placeholder={t('wallet:search_asset')}
-                            onChange={(e) => setState({ search: e.target?.value })}
-                        />
-                        <CloseIcon
-                            onClick={() => !!state.search && setState({ search: '' })}
-                            size={width >= 768 ? 20 : 16}
-                            className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
-                        />
-                    </div>
+                    <SearchBoxV2
+                        value={state.search}
+                        placeholder={t('wallet:search_asset')}
+                        onChange={(value) => {
+                            setState({ search: value });
+                        }}
+                        width
+                    />
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
                     {assetItems?.length ? (
@@ -525,7 +482,7 @@ const SwapModule = ({ width, pair }) => {
                         </div>
                     )}
                 </ul>
-            </div>
+            </AssetList>
         );
     }, [state.toAsset, state.toAssetList, state.openAssetList, state.search, language]);
 
@@ -897,7 +854,10 @@ const SwapModule = ({ width, pair }) => {
                             {renderHelperTextFrom()}
 
                             <div className="flex justify-center items-center py-4">
-                                <button className={`p-1.5 dark:bg-hover-dark rounded-full ${state.openAssetList?.from && 'invisible'}`} onClick={onReverse}>
+                                <button
+                                    className={`p-1.5 bg-gray-10 dark:bg-dark-2 rounded-full ${state.openAssetList?.from && 'invisible'}`}
+                                    onClick={onReverse}
+                                >
                                     <SyncAltIcon size={width < 640 && 24} />
                                 </button>
                             </div>
@@ -964,6 +924,22 @@ const SwapModule = ({ width, pair }) => {
 
 const Input = styled.div.attrs(({ isFocus }) => ({
     className: `py-6 px-4 rounded-xl relative bg-gray-13 dark:bg-dark-2 border ${isFocus ? 'border-green-2' : 'border-transparent'}`
+}))``;
+
+const AssetList = styled.div.attrs(({ AssetListRef }) => ({
+    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl 
+    border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
+    shadow-card_light dark:shadow-popover`,
+    ref: AssetListRef
+}))``;
+
+const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
+    className: `text-txtSecondary dark:text-txtSecondary-dark text-left text-base
+    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3 
+    hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
+    ${isChoosed && 'bg-hover dark:bg-hover-dark'} ${className}`,
+    key: key,
+    onClick: onClick
 }))``;
 
 export default SwapModule;

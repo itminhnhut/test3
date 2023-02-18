@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search, X } from 'react-feather';
 import { useTranslation } from 'next-i18next';
+import { CloseIcon } from 'components/svg/SvgIcon';
 
 const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChange, onFocus, width }) => {
     const { t } = useTranslation();
@@ -25,7 +26,11 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
                 placeholder={t('common:search')}
                 onFocus={onFocus}
             />
-            {value && <X size={width ? (width >= 768 ? 20 : 16) : 20} className="cursor-pointer" color="#8694b2" onClick={() => onChange('')} />}
+            <CloseIcon
+                size={width ? (width >= 768 ? 20 : 16) : 20}
+                className={`cursor-pointer ${value ? 'visible' : 'invisible'}`}
+                onClick={() => onChange('')}
+            />
         </div>
     );
 };
