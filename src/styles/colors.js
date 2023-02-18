@@ -13,7 +13,8 @@ const colors = {
         dark: '#0c0e14',
         1: '#2e333d',
         2: '#1c232e',
-        3: '#1f2f46'
+        3: '#1f2f46',
+        4: '#141921'
     },
 
     divider: {
@@ -34,7 +35,9 @@ const colors = {
         10: '#f5f5f5',
         11: '#e1e2e3',
         12: '#eeeff0',
-        13: '#f2f4f5'
+        13: '#f2f4f5',
+        14: '#acbde5',
+        15: '#1e1e1e'
     },
 
     white: 'white',

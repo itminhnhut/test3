@@ -1,14 +1,14 @@
-// @font-face {
-//     font-family: 'SF-Pro';
-//     font-weight: 400;
-//     src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Light.otf') format('opentype');
-// }
+@font-face {
+    font-family: 'SF-Pro';
+    font-weight: 300;
+    src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Light.otf') format('opentype');
+}
+
 @font-face {
     font-family: 'SF-Pro';
     font-weight: 400;
     src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Regular.otf') format('opentype');
 }
-
 @font-face {
     font-family: 'SF-Pro';
     font-weight: 500;
