@@ -5,7 +5,7 @@ import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrders }) => {
     const { t } = useTranslation()
     return (
-        <div className='flex items-center flex-grow font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+        <div className='flex items-center flex-grow font-normal text-sm text-txtSecondary dark:text-txtSecondary-dark'>
             <Tabs tab={tabActive} className='gap-6'>
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab, index) => (
                     <TabItem

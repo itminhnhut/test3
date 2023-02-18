@@ -8,7 +8,7 @@ import { sumBy } from 'lodash';
 
 let currentKeyTab = 0;
 let isClick = true;
-const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', noScroll = false }, ref) => {
+const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScroll = false }, ref) => {
     const TabRef = useRef(null);
     const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
@@ -24,7 +24,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', noScr
     }));
 
     const startDragging = (e) => {
-        if (noScroll) return;
+        if (!isScroll) return;
         TabRef.current.classList.add('cursor-grabbing');
         mouseDown.current = true;
         startX.current = e.pageX - TabRef.current.offsetLeft;

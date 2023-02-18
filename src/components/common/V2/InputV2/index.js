@@ -47,14 +47,14 @@ const InputV2 = ({
 
     return <div className={classNames('relative pb-6', className)}>
         {label ? <p className='text-txtSecondary pb-2'>{label}</p> : null}
-        <div className={classNames('bg-dark-2 border rounded-md flex p-3 focus-within:border-teal items-center gap-2', {
-            'border-dark-2': !error,
+        <div className={classNames('bg-gray-10 dark:bg-dark-2 border rounded-md flex p-3 focus-within:border-teal items-center gap-2', {
+            'dark:border-dark-2': !error,
             'border-red': !!error,
         })}>
             {prefix ? prefix : null}
             <input
                 ref={inputRef}
-                className='flex-1 !placeholder-darkBlue-5 text-txtPrimary-dark'
+                className='flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
                 type='text'
                 placeholder={placeholder}
                 value={value}

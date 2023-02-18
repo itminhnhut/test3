@@ -76,7 +76,7 @@ const Support = () => {
 
     const renderFaqCategories = () => {
         return (
-            <div className='grid justify-between w-full gap-4 sm:bg-darkBlue-3 rounded-xl sm:p-6' style={{
+            <div className='grid justify-between w-full gap-4 sm:dark:bg-darkBlue-3 rounded-xl sm:p-6 dark:shadow-none shadow-card_light' style={{
                 gridTemplateColumns: "repeat(auto-fill, 280px)",
             }}>
                 {SupportCategories.faq[language].map((faq) => (
@@ -84,7 +84,7 @@ const Support = () => {
                         PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
                     }>
-                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover-dark rounded-xl text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
+                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
                             <div className='h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10'>
                                 <Image
                                     src={getSupportCategoryIcons(faq.id)}
@@ -110,7 +110,7 @@ const Support = () => {
                     }
                     className={classNames({ 'w-full': isMobile })}
                 >
-                    <div key={announcement.id} className={classNames('w-[170px] h-[140px] sm:w-[286px] sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-darkBlue-3 truncate text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] hover:!bg-hover-dark', {
+                    <div key={announcement.id} className={classNames('w-[170px] h-[140px] sm:w-[286px] sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none', {
                         '!w-full': isMobile
                     })}>
                         <Image
@@ -148,7 +148,7 @@ const Support = () => {
 
     return (
         <MaldivesLayout>
-            <div className='bg-shadow'>
+            <div className='bg-white dark:bg-shadow'>
                 <SearchSection t={t} width={width} />
                 <div className='container pt-6 max-w-[1440px]'>
                     <div className='pb-[120px] px-4 sm:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>
@@ -234,7 +234,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
     }
 
     return (
-        <div className={classNames('w-full sm:bg-darkBlue-3 rounded-xl sm:p-6 flex flex-col gap-8', containerClassName)}>
+        <div className={classNames('w-full sm:dark:bg-darkBlue-3 rounded-xl sm:p-6 flex flex-col gap-8 dark:shadow-none shadow-card_light', containerClassName)}>
             {lastedArticles.map((article, index) => {
                 let mode, topic, ownedTags, _tagsLib, categories
                 const isNoti = !!article?.tags?.find((o) =>
@@ -271,7 +271,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                     <div>
                         {isMobile && index === 0 ? <div className='ml-4 mb-3 w-fit text-gray-1 font-normal text-xs leading-4 bg-divider-dark bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</div> : null}
                         <div className={'flex items-center gap-3 sm:gap-6 w-full'} key={article.id}>
-                            <span className='rounded-full bg-gray-4 h-2 w-2'>
+                            <span className='rounded-full bg-gray-1 dark:bg-gray-4 h-2 w-2'>
                             </span>
                             <div>
                                 <a href={
@@ -280,11 +280,11 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                                     }`
                                 }>
                                     <div className='flex flex-col grap-2'>
-                                        <div className='mr-2 text-gray-4 text-sm sm:text-base font-normal hover:text-teal active:text-teal'>
+                                        <div className='mr-2 text-txtPrimary dark:text-gray-4 text-sm sm:text-base font-normal hover:text-txtTextBtn active:text-txtTextBtn dark:hover:text-teal dark:active:text-teal'>
                                             {article.title}
-                                            {!isMobile && index === 0 ? <span className='ml-9 text-gray-1 font-normal text-xs leading-4 bg-divider-dark bg-opacity-50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
+                                            {!isMobile && index === 0 ? <span className='ml-9 text-txtSecondary dark:text-gray-1 font-normal text-xs leading-4 bg-hover-1/70 dark:bg-divider-dark/50 px-3 py-1 rounded-[80px]'>{t('support-center:highlight_articles')}</span> : null}
                                         </div>
-                                        <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-darkBlue-5 whitespace-nowrap'>
+                                        <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-txtSecondary dark:text-darkBlue-5 whitespace-nowrap'>
                                             {formatTime(article.created_at, 'dd/MM/yyyy')}
                                         </div>
                                     </div>

@@ -45,7 +45,6 @@ const colors = {
 
     red2: '#f93636',
 
-    green1: '#7ee5ae',
     yellow: {
         1: '#ffb700',
         2: '#ffc632',
