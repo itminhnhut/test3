@@ -345,6 +345,7 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
                                     onChangeSymbol={onChangeSymbol}
                                     symbol={filter}
                                     currency={currency}
+                                    isDark={isDark}
                                 />
                             </div>
                         </div>
@@ -449,7 +450,7 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
     );
 }
 
-const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, symbol }) => {
+const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, symbol, isDark }) => {
     const { t } = useTranslation();
     const [keyword, setKeyWord] = useState('');
 
@@ -465,7 +466,7 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                 <div
                     onClick={() => onChangeSymbol(pair)}
                     key={indx}
-                    className={classNames('flex items-center justify-between px-4 py-2 sm:py-3 hover:bg-hover-dark')}
+                    className={classNames('flex items-center justify-between px-4 py-2 sm:py-3 hover:bg-gray-13 dark:hover:bg-hover-dark')}
                 >
                     <div className="space-x-2 flex items-center text-sm sm:text-base">
                         <AssetLogo assetId={pair?.baseAssetId} size={24} />
@@ -474,7 +475,7 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                             <span className="text-gray-1">/{pair?.quoteAsset}</span>
                         </div>
                     </div>
-                    {symbol?.symbol === pair?.baseAsset + pair?.quoteAsset && <CheckedIcon />}
+                    {symbol?.symbol === pair?.baseAsset + pair?.quoteAsset && <CheckedIcon color={isDark ? '#E2E8F0' : '#1e1e1e'} />}
                 </div>
             );
         });
@@ -494,17 +495,17 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                     <SearchInput placeholder={t('futures:funding_history_tab:find_pair')} parentState={setKeyWord} />
                 </div>
 
-                <div className="flex-grow overflow-y-auto w-full space-y-3 divide-y divide-divider dark:divide-darkBlue-3">{renderPairListItems()}</div>
+                <div className="flex-grow overflow-y-auto w-full space-y-3 ">{renderPairListItems()}</div>
             </div>
         </div>
     );
 });
 
-const CheckedIcon = () => (
+const CheckedIcon = ({ color = '#E2E8F0' }) => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M8 1.333A6.674 6.674 0 0 0 1.333 8 6.674 6.674 0 0 0 8 14.667 6.674 6.674 0 0 0 14.667 8 6.674 6.674 0 0 0 8 1.333zm-1.333 9.609-2.475-2.47.941-.944 1.533 1.53 3.53-3.53.942.943-4.47 4.47z"
-            fill="#E2E8F0"
+            fill={color}
         />
     </svg>
 );
