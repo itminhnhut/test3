@@ -7,6 +7,7 @@ import useApp from 'hooks/useApp';
 import { useRouter } from 'next/router';
 import { appUrlHandler } from 'constants/faqHelper';
 import InputV2 from 'components/common/V2/InputV2'
+import { CloseIcon } from 'components/svg/SvgIcon';
 
 const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetPage }) => {
     const [type, setType] = useState(0);
@@ -18,6 +19,12 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
     const router = useRouter();
 
     const onSearch = (searchKey) => {
+        if(!searchKey.length) {
+            router.push({
+                pathname: PATHS.SUPPORT.DEFAULT,
+            });
+            return
+        }
         resetPage && resetPage();
         router.push({
             pathname: PATHS.SUPPORT.SEARCH,
@@ -49,11 +56,9 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
     return (
         <div className='flex space-x-4'>
             <InputV2
-                className={classNames('w-[368px] tracking-[0.005em] pb-0', 
-                {
+                className={classNames('w-[368px] tracking-[0.005em] pb-0', {
                     '!w-full': simpleMode
-                }, 
-                containerClassNames)}
+                }, containerClassNames)}
                 prefix={(<Search
                     strokeWidth={2}
                     className="text-gray-1 w-4 h-4"
@@ -62,6 +67,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
                 onChange={(value) => setSearchKey(value)}
                 onHitEnterButton={(value) => onSearch(value)}
                 placeholder={t('support-center:search_placeholder')}
+                suffix={searchKey?.length ? <CloseIcon size={16} onClick={() => setSearchKey("")} className='cursor-pointer' /> : null}
             />
 
             {!simpleMode && (

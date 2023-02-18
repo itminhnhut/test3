@@ -77,26 +77,31 @@ const SwapIcon = ({ className = '', color = '#E2E8F0', size = 16 }) => (
     </svg>
 );
 
-const CloseIcon = ({ className, onClick, color, size }) => (
-    <svg
-        className={className || ''}
-        onClick={onClick}
-        width={size || 24}
-        height={size || 24}
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <g clipPath="url(#l6hcoftsra)">
-            <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill={color || '#8593a6'} />
-        </g>
-        <defs>
-            <clipPath id="l6hcoftsra">
-                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+const CloseIcon = ({ className, onClick, color, size }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    return (
+        <svg
+            className={className || ''}
+            onClick={onClick}
+            width={size || 24}
+            height={size || 24}
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g clipPath="url(#l6hcoftsra)">
+                <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill={color ?? defaultColor} />
+            </g>
+            <defs>
+                <clipPath id="l6hcoftsra">
+                    <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    )
+};
 
 const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }) => {
     const [currentTheme] = useDarkMode();

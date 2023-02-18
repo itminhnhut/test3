@@ -84,7 +84,7 @@ const Support = () => {
                         PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
                     }>
-                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-2 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
+                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
                             <div className='h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10'>
                                 <Image
                                     src={getSupportCategoryIcons(faq.id)}
@@ -278,7 +278,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                                     }`
                                 }>
                                     <div className='flex flex-col grap-2'>
-                                        <div className='mr-2 text-txtPrimary dark:text-gray-4 text-sm sm:text-base font-semibold hover:text-txtTextBtn active:text-txtTextBtn dark:hover:text-teal dark:active:text-teal'>
+                                        <div className='mr-2 text-txtPrimary dark:text-gray-4 text-sm sm:text-base font-normal hover:text-txtTextBtn active:text-txtTextBtn dark:hover:text-teal dark:active:text-teal'>
                                             {article.title}
                                             {!isMobile && index === 0 ?
                                                 <HighlightArticle t={t} className='ml-9' />

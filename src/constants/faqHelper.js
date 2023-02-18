@@ -509,7 +509,7 @@ export const getSupportCategoryIcons = (id) => {
         case CatsKey.Others:
             return '/images/screen/support/v2/ic_other.png'
         case CatsKey.BusinessPartner:
-            return '/images/screen/support/v2/ic_other.png'
+            return '/images/screen/support/v2/ic_partner.png'
     }
 }
 

@@ -9,7 +9,7 @@ import useApp from 'hooks/useApp';
 import { ChevronLeft } from 'react-feather';
 import { useTranslation } from 'next-i18next';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 // import RePagination from 'components/common/ReTable/RePagination';
 import dynamic from 'next/dynamic';
 import useWindowSize from 'hooks/useWindowSize';
@@ -26,6 +26,7 @@ const AnnouncementTopics = (props) => {
     } = useTranslation();
     const [page, setPage] = useState(1);
     const [data, setData] = useState([]);
+    const [limit, setLimit] = useState(25);
     const [pagination, setPagination] = useState({
         limit: 25,
         next: null,
@@ -51,7 +52,7 @@ const AnnouncementTopics = (props) => {
     useEffect(() => {
         getLastedArticles(
             `noti-${language}-${router?.query?.topic}`,
-            25,
+            limit,
             page,
             language
         )
@@ -59,22 +60,25 @@ const AnnouncementTopics = (props) => {
                 setData(articles);
                 setPagination(articles.meta?.pagination)
             });
-    }, [page, router?.query?.topic, language]);
+    }, [page, router?.query?.topic, language, limit]);
 
-    const renderPagination = useCallback(() => {
+    const renderPagination = useMemo(() => {
         if (!data.length) return null;
-        return (
+        return page === 1 && !pagination?.next ? null : (
             <div className="flex items-center justify-center mt-8">
-                <RePagination
-                    isNamiV2
-                    current={page}
-                    pageSize={25}
-                    name="market_table___list"
-                    pagingPrevNext={{ language, page: page - 1, hasNext: !!pagination.next, onChangeNextPrev: (change) => setPage(page + change)}}
-                />
+                <div className='sm:hidden font-semibold text-base dark:text-teal text-txtTextBtn cursor-pointer' onClick={() => setLimit(limit + 15)}>{t('common:read_more')}</div>
+                <div className='sm:block hidden'>
+                    <RePagination
+                        isNamiV2
+                        current={page}
+                        pageSize={25}
+                        name="market_table___list"
+                        pagingPrevNext={{ language, page: page - 1, hasNext: !!pagination?.next, onChangeNextPrev: (change) => setPage(page + change) }}
+                    />
+                </div>
             </div>
         );
-    }, [page, data]);
+    }, [page, data, pagination, limit]);
 
     const renderTopics = () => {
         if (!data || !data?.length) {
@@ -96,7 +100,7 @@ const AnnouncementTopics = (props) => {
                             aspectRatio: isMobile ? '2/1' : '25/13'
                         }} />
                         <div className='h-full gap-6 flex flex-col justify-center'>
-                            <div className='line-clamp-2 sm:line-clamp-4 text-textPrimary dark:text-gray-4 font-semibold text-2xl'>
+                            <div className='line-clamp-2 sm:line-clamp-4 text-textPrimary dark:text-gray-4 font-semibold text-sm sm:text-2xl'>
                                 {item?.title}{' '}
                             </div>
                             {isMobile ? null : <div className='line-clamp-2 text-txtSecondary dark:text-darkBlue-5 text-sm font-normal'>
@@ -135,7 +139,7 @@ const AnnouncementTopics = (props) => {
                 mode="announcement"
             >
                 {renderTopics()}
-                {renderPagination()}
+                {renderPagination}
             </TopicsLayout>
         </>
     );
