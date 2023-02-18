@@ -11,22 +11,22 @@ const TimeCircle = ({
             viewBox="0 0 12 12"
             fill="none"
             className={className}
-            
+
             xmlns="http://www.w3.org/2000/svg"
         >
             <path
                 d="M1 1L11 11"
                 stroke="#DC1F4E"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
             <path
                 d="M1 11L11 1"
                 stroke="#DC1F4E"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
             />
         </svg>
     );

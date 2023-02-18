@@ -9,7 +9,7 @@ import TableV2 from '../common/V2/TableV2';
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
-
+    const [currentPage, setCurrentPage] = useState(1);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const spotWallet = useSelector((state) => state?.wallet?.SPOT) || null;
     const [wallet, setWallet] = useState([]);
@@ -45,6 +45,14 @@ const TradeHistory = (props) => {
             </div>
         );
     };
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [filterByCurrentPair]);
+
+    const dataFilter = useMemo(() => {
+        return filterByCurrentPair ? wallet.filter((hist) => String(currentPair).toLowerCase().indexOf(String(hist?.assetCode).toLowerCase()) !== -1) : wallet;
+    }, [wallet, currentPair, filterByCurrentPair]);
 
     const columns = useMemo(
         () => [
@@ -94,15 +102,12 @@ const TradeHistory = (props) => {
                 align: 'left',
                 fixed: 'right',
                 preventSort: true,
+                visible: dataFilter.length > 0,
                 render: (v) => renderActions()
             }
         ],
         [exchangeConfig, isPro, dataFilter]
     );
-
-    const dataFilter = useMemo(() => {
-        return filterByCurrentPair ? wallet.filter((hist) => String(currentPair).toLowerCase().indexOf(String(hist?.assetCode).toLowerCase()) !== -1) : wallet;
-    }, [wallet, currentPair, filterByCurrentPair]);
 
     return (
         <TableV2
@@ -115,6 +120,9 @@ const TradeHistory = (props) => {
             scroll={{ x: true }}
             limit={6}
             skip={0}
+            onChangePage={setCurrentPage}
+            page={currentPage}
+            noBorder={!isPro || !dataFilter.length}
         />
     );
 };

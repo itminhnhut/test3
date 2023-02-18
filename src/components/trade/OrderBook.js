@@ -1,11 +1,10 @@
 import { IconLoading } from 'src/components/common/Icons';
 import { reverse } from 'lodash';
-import { Popover, Transition } from '@headlessui/react';
 import maxBy from 'lodash/maxBy';
 import orderBy from 'lodash/orderBy';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsync } from 'react-use';
 import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
@@ -22,6 +21,7 @@ import SvgChevronDown from 'src/components/svg/ChevronDown';
 import { getDecimalScale } from 'redux/actions/utils';
 import { handleTickSize } from 'utils/MarketDepthMerger';
 import classNames from 'classnames';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -37,6 +37,7 @@ const OrderBook = (props) => {
     };
     const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
     const router = useRouter();
+    const popover = useRef(null);
 
     const symbolString = useMemo(() => {
         return base + quote;
@@ -175,7 +176,7 @@ const OrderBook = (props) => {
         const percentage = (q / maxQuote) * 100;
         return (
             <div
-                className={`progress-container my-[1px] cursor-pointer hover:bg-teal-50 dark:hover:bg-darkBlue-3 ${isPro ? 'pr-4' : 'pr-3'}`}
+                className={`progress-container my-[1px] cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${isPro ? 'pr-4' : 'pr-3'}`}
                 key={index}
                 onClick={() => setSelectedOrder({ price: +p, quantity: +q })}
             >
@@ -232,56 +233,38 @@ const OrderBook = (props) => {
 
     const renderTickSizeOptions = () => {
         return (
-            <Popover className="relative">
-                {({ open, close }) => (
-                    <>
-                        <Popover.Button
-                            className={`flex min-w-[63px] justify-between items-center h-6 rounded bg-bgInput dark:bg-dark-2 pl-2 pr-1 ${
-                                open ? '' : 'text-opacity-90'
-                            } `}
-                        >
-                            <span className="text-xxs font-semibold text-txtSecondary dark:text-txtSecondary-dark mr-2">{tickSize}</span>
-                            <SvgChevronDown className={`${open ? 'rotate-0' : ''}`} size={16} />
-                        </Popover.Button>
-                        <Transition
-                            as={Fragment}
-                            enter="transition ease-out duration-200"
-                            enterFrom="opacity-0 translate-y-1"
-                            enterTo="opacity-100 translate-y-0"
-                            leave="transition ease-in duration-150"
-                            leaveFrom="opacity-100 translate-y-0"
-                            leaveTo="opacity-0 translate-y-1"
-                        >
-                            <Popover.Panel className="absolute right-0 z-10 mt-2 w-full">
-                                <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3">
-                                    <div className="relative py-2">
-                                        {tickSizeOptions.map((item, index) => {
-                                            const isActive = tickSize === item;
-                                            return (
-                                                <div
-                                                    onClick={() => {
-                                                        setTickSize(item);
-                                                        close();
-                                                    }}
-                                                    key={index}
-                                                    className={`h-8 leading-8 px-4 cursor-pointer w-full font-medium text-xs text-center rounded-sm
-                                                                 dark:text-txtSecondary-dark
-                                                                hover:text-teal
-                                                                dark:hover:bg-hover-dark
-                                                                ${isActive ? 'bg-opacity-10 dark:bg-opacity-10 text-teal dark:text-white font-semibold' : ''}
-                                                                `}
-                                                >
-                                                    {item}
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </Popover.Panel>
-                        </Transition>
-                    </>
+            <PopoverV2
+                ref={popover}
+                label={(open) => (
+                    <div className="flex min-w-[63px] justify-between items-center h-6 rounded-[3px] bg-gray-10 dark:bg-dark-2 pl-2 pr-1 ">
+                        <span className="text-xs font-semibold text-txtPrimary dark:text-txtSecondary-dark mr-2 ">{tickSize}</span>
+                        <SvgChevronDown className={`${open ? 'rotate-0' : ''}`} size={16} />
+                    </div>
                 )}
-            </Popover>
+            >
+                <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3">
+                    <div className="relative py-2">
+                        {tickSizeOptions.map((item, index) => {
+                            const isActive = tickSize === item;
+                            return (
+                                <div
+                                    onClick={() => {
+                                        setTickSize(item);
+                                        popover.current.close();
+                                    }}
+                                    key={index}
+                                    className={classNames(
+                                        'h-8 leading-8 px-4 cursor-pointer w-full text-xs text-center text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover-1 dark:hover:bg-hover-dark',
+                                        { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
+                                    )}
+                                >
+                                    {item}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </PopoverV2>
         );
     };
 

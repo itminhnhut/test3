@@ -75,8 +75,8 @@ function Activity({ t }) {
             console.log(`Can't revoke device ${revokeId} `, e);
         } finally {
             getActivities();
-            setRevoking(false);
             setRevokeDevice(null);
+            closeRevokeModal();
         }
     };
 
@@ -92,10 +92,10 @@ function Activity({ t }) {
                 onClose={closeRevokeModal}
                 type='warning'
                 title={t('profile:revoke_title')}
-                message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice.device_title }) : t('profile:revoke_question_all')}
+                message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice?.device_title }) : t('profile:revoke_question_all')}
                 textButton={t('common:confirm')}
                 onConfirm={() => {
-                    onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice.this_device);
+                    onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice?.this_device);
                 }}
                 className='w-96'
             />

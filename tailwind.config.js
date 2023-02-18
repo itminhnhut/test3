@@ -138,6 +138,7 @@ module.exports = {
             },
 
             hover: {
+                ...commonColors.hover,
                 DEFAULT: commonColors.hover.DEFAULT,
                 dark: commonColors.hover.dark
             },
@@ -172,7 +173,7 @@ module.exports = {
                 crayola: '#1e77eb'
             },
             darkBlue: {
-                DEFAULT: '#223050',
+                DEFAULT: commonColors.darkBlue,
                 1: commonColors.darkBlue1,
                 2: commonColors.darkBlue2,
                 3: commonColors.darkBlue3,
@@ -209,15 +210,27 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
-                1: commonColors.green1
+                1: commonColors.green[1],
+                2: commonColors.green[2],
+                3: commonColors.green[3],
+                4: commonColors.green[4],
+                5: commonColors.green[5]
             },
             yellow: {
                 DEFAULT: '#FFD965',
-                100: '#FFC632'
+                100: '#FFC632',
+                1: commonColors.yellow[1],
+                2: commonColors.yellow[2],
+                3: commonColors.yellow[3],
+                4: commonColors.yellow[4]
             },
             red: {
                 DEFAULT: commonColors.red2,
-                lightRed: '#E5544B19'
+                lightRed: '#E5544B19',
+                1: commonColors.red[1],
+                2: commonColors.red[2],
+                3: commonColors.red[3],
+                4: commonColors.red[4]
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
@@ -304,14 +317,16 @@ module.exports = {
                     disabled: '#b5c0c9',
                     dark: '#47cc85',
                     dark_pressed: '#19a65b',
-                    dark_disabled: '#454c5c'
+                    dark_disabled: '#454c5c',
+                    tonal: '#8593a6',
+                    tonal_dark: '#8694b2'
                 },
                 txtDisabled: {
                     DEFAULT: '#b5c0c9',
                     dark: '#3e4351'
                 },
                 txtTabHover: {
-                    DEFAULT: '#acbde5',
+                    DEFAULT: '#1e1e1e',
                     dark: '#acbde5'
                 }
             },
@@ -354,7 +369,7 @@ module.exports = {
                     dark: commonColors.darkBlue
                 },
                 bgInput: {
-                    DEFAULT: commonColors.gray[5],
+                    DEFAULT: commonColors.gray[10],
                     dark: commonColors.darkBlue3
                 },
                 bgHover: {
@@ -371,12 +386,24 @@ module.exports = {
                 },
                 bgNaoStart: 'rgba(9, 61, 209, 0.5)',
                 bgBtnV2: {
+                    // Filled button light mode: https://app.zeplin.io/project/634cdbdac32a57166e77de3c/screen/63abbb11c737c2054d136381
                     DEFAULT: '#30bf73',
                     pressed: '#19a65b',
                     disabled: '#b5c0c9',
+                    // Filled button dark mode
                     dark: '#47cc85',
                     dark_pressed: '#19a65b',
-                    dark_disabled: '#454c5c'
+                    dark_disabled: '#454c5c',
+                    // Fill tonal button light mode
+                    tonal: '#ebeced',
+                    tonal_pressed: '#ddddde',
+                    tonal_disabled: '#ebeced',
+                    tonal_loading: '#ebeced',
+                    // Fill tonal button dark mode
+                    tonal_dark: '#1c232e',
+                    tonal_dark_pressed: '#262b34',
+                    tonal_dark_disabled: '#1c232e',
+                    tonal_dark_loading: '#1c232e'
                 }
             },
             backgroundImage: {
@@ -385,6 +412,7 @@ module.exports = {
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
                 dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
+                'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')",
                 'gradient-button-dark':
                     'linear-gradient(95deg, rgba(62, 166, 111, 0.49) -2%, rgba(55, 220, 131, 0.54) 26%, rgba(50, 222, 133, 0.66) 37%, rgba(40, 226, 137, 0.7) 50%, rgba(48, 220, 137, 0.7) 61%, rgba(57, 212, 138, 0.63) 71%, rgba(60, 210, 134, 0.37) 86%, rgba(63, 207, 130, 0.15) 101%)',
                 'gradient-button':
@@ -406,7 +434,8 @@ module.exports = {
                 funding: '0px -4px 10px rgba(0, 0, 0, 0.05)',
                 rank_id: '0px 0.204414px 0.204414px rgba(0, 0, 0, 0.25)',
                 ref: '0 4px 15px 0 rgba(0, 0, 0, 0.15)',
-                popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)'
+                popover: '0 -4px 20px 0 rgba(31, 47, 70, 0.1)',
+                card_light: '0 6px 20px 0 rgba(31, 47, 70, 0.1)'
             },
             cursor: {
                 grabbing: 'grabbing'

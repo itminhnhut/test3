@@ -6,7 +6,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TelegramFilled from '../../svg/TelegramFilled';
 import TwitterFilled from '../../svg/TwitterFilled';
 import FacebookFilled from '../../svg/FacebookFilled';
-import RedditFilled from '../../svg/RedditFilled';
+import { FooterRedditFileld } from '../../svg/RedditFilled';
 import MediumFilled from '../../svg/MediumFilled';
 import CoingeckoFilled from '../../svg/CoingeckoFilled';
 import GlobeFilled from '../../svg/GlobeFilled';
@@ -16,35 +16,40 @@ const getSocialImage = (socialType) => {
     let imageURI;
     switch (socialType) {
         case 'facebook':
-            // Icon = () => <FacebookFilled size={16} />; 
-            imageURI = '/images/icon/ic_footer_fb.png';
+            Icon = () => <FacebookFilled color="currentColor" size={16} />;
+            // imageURI = '/images/icon/ic_footer_fb.png';
             break;
         case 'telegram':
-            // Icon = () => <TelegramFilled size={16} />;
-            imageURI = '/images/icon/ic_footer_telegram.png';
+            Icon = () => <TelegramFilled color="currentColor" size={16} />;
+            // imageURI = '/images/icon/ic_footer_telegram.png';
             break;
         case 'blog':
-            // Icon = () => <GlobeFilled size={16} />;
-            imageURI = '/images/icon/ic_footer_globe.png';
+            Icon = () => <GlobeFilled color="currentColor" size={16} />;
+            // imageURI = '/images/icon/ic_footer_globe.png';
             break;
         case 'reddit':
-            // Icon = () => <RedditFilled size={16} />;
-            imageURI = '/images/icon/ic_footer_reddit.png';
+            Icon = () => <FooterRedditFileld color="currentColor" size={16} />;
+            // imageURI = '/images/icon/ic_footer_reddit.png';
             break;
         case 'coingecko':
-            // Icon = () => <CoingeckoFilled size={16} />;
-            imageURI = '/images/icon/ic_footer_coingecko.png';
+            Icon = () => <CoingeckoFilled color="currentColor" size={16} />;
+            // imageURI = '/images/icon/ic_footer_coingecko.png';
             break;
         case 'twitter':
-            Icon = () => <TwitterFilled size={16} />;
+            Icon = () => <TwitterFilled color="currentColor" size={16} />;
 
-            imageURI = '/images/icon/ic_footer_twitter.png';
+            // imageURI = '/images/icon/ic_footer_twitter.png';
+            break;
+        case 'medium':
+            Icon = () => <MediumFilled color="currentColor" size={16} />;
+
+            // imageURI = '/images/icon/ic_footer_twitter.png';
             break;
 
         default:
             break;
     }
-    return imageURI; // <Icon />;
+    return <Icon />; //imageURI; ;
 };
 
 const SocialsLink = ({ language }) => {
@@ -53,7 +58,7 @@ const SocialsLink = ({ language }) => {
             {/* <div className="border p-2 rounded-full border-divider">{/* <CoingeckoFilled size={16} /> </div> */}
 
             {SOCIALS_HREF.map((social) => {
-                const imageURI = getSocialImage(social.name);
+                const ImageIcon = getSocialImage(social.name);
                 return (
                     <Link
                         key={social.key}
@@ -64,9 +69,9 @@ const SocialsLink = ({ language }) => {
                         }
                     >
                         <a target="_blank" className="!flex items-center w-[32px] h-[32px]">
-                            <div className="border p-2 rounded-full border-divider">
-                                {/* {getSocialImage(social.name)} */}
-                                <img src={getS3Url(imageURI)} alt="" width="16" height="16" />
+                            <div className="border p-2 rounded-full border-[#1e1e1e] dark:border-divider">
+                                {ImageIcon}
+                                {/* <img src={getS3Url(imageURI)} alt="" width="16" height="16" /> */}
                             </div>
                         </a>
                     </Link>

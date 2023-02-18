@@ -34,7 +34,7 @@ const colors = {
         10: '#f5f5f5',
         11: '#e1e2e3',
         12: '#eeeff0',
-
+        13: '#f2f4f5'
     },
 
     white: 'white',
@@ -44,6 +44,31 @@ const colors = {
     red2: '#f93636',
 
     green1: '#7ee5ae',
+    yellow: {
+        1: '#ffb700',
+        2: '#ffc632',
+        3: '#ffd670',
+        4: '#ffebb7'
+    },
+    green: {
+        1: '#7ee5ae',
+        2: '#47cc85',
+        3: '#30bf73',
+        4: '#19a65b',
+        5: '#e6faef'
+    },
+    red: {
+        1: '#cc1f1f',
+        2: '#f93636',
+        3: '#fb8791',
+        4: '#ffcdd2'
+    },
+    blue: {
+        1: '#316ebd',
+        2: '#4f95f0',
+        3: '#87b9fa',
+        4: '#d9e9ff'
+    },
 
     onus: {
         bg: '#1B222D',
@@ -94,7 +119,8 @@ const colors = {
     },
     hover: {
         DEFAULT: '#e9e9e9',
-        dark: '#262b34'
+        dark: '#262b34',
+        1: '#f2f4f5'
     }
 };
 module.exports = colors;

@@ -14,8 +14,8 @@ export default function AnnouncementPopup() {
     useEffect(() => {
         const now = new Date().valueOf();
         const expireAt = new Date(+(localStorage.getItem(expireKey) || 0)).valueOf();
-        const endAt = new Date('2022-12-07T17:00:00.000Z').valueOf();
-        if (router?.query?.pair && router?.query?.pair.includes('CTSI') && now > expireAt && now < endAt) {
+        const endAt = new Date('2023-02-11T04:00:00.000Z').valueOf();
+        if (router?.query?.pair && router?.query?.pair.includes('BNX') && now > expireAt && now < endAt) {
             setOpen(true);
         }
     }, []);
@@ -27,8 +27,8 @@ export default function AnnouncementPopup() {
 
     const onClick = () => {
         const link = {
-            [LANGUAGE_TAG.VI]: 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-thong-tin-giao-dich-futures-voi-ctsi',
-            [LANGUAGE_TAG.EN]: 'https://nami.exchange/en/support/announcement/announcement/update-futures-trading-rules-with-ctsi',
+            [LANGUAGE_TAG.VI]: 'https://nami.exchange/vi/support/announcement/token-moi-niem-yet/nami-exchange-ho-tro-chuyen-doi-bnx',
+            [LANGUAGE_TAG.EN]: 'https://nami.exchange/en/support/announcement/new-cryptocurrency-listing/nami-exchange-supports-converting-bnx',
         }[language]
         window.open(link)
     }

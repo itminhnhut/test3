@@ -23,6 +23,7 @@ import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -93,7 +94,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                 )
             },
             {
-                key: 'wallet',
+                key: 'wallet.value',
                 dataIndex: ['wallet', 'value'],
                 title: t('common:total'),
                 align: 'right',
@@ -275,16 +276,16 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
                 <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
-                        <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                        <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
                             </div>
                         </div>
                         {renderEstWallet()}
@@ -317,7 +318,15 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         isHide={state.hideSmallAsset}
                         className="mr-8"
                     />
-                    <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                    <SearchBoxV2
+                        value={state.search}
+                        onChange={(value) => {
+                            setState({ search: value });
+                        }}
+                        onFocus={() => setState({ currentPage: 1 })}
+                        width
+                    />
+                    {/* <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
@@ -329,7 +338,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                         {state.search && (
                             <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
                         )}
-                    </div>
+                    </div> */}
                 </div>
             </div>
 

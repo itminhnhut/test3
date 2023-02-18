@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { getLoginUrl } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
+import { VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 
 const FuturesTradeRecord = ({
     isVndcFutures,
@@ -88,13 +89,13 @@ const FuturesTradeRecord = ({
     };
 
     return (
-        <div ref={tableRef} className="flex flex-col h-full overflow-y-hidden">
+        <div ref={tableRef} className="flex flex-col overflow-y-hidden">
             <div className="min-h-[52px] px-5 flex items-center border-b border-divider dark:border-divider-dark">
                 <FuturesRecordTableTab
                     tabActive={tabActive}
                     onChangeTab={onChangeTab}
                     isVndcFutures={isVndcFutures}
-                    countOrders={ordersList.length}
+                    countOrders={[ordersList.filter(e => e.status === VndcFutureOrderType.Status.ACTIVE).length, ordersList.filter(e => e.status === VndcFutureOrderType.Status.PENDING).length]}
                 />
                 <div
                     className="flex items-center text-sm font-medium cursor-pointer select-none gap-3"
@@ -108,7 +109,7 @@ const FuturesTradeRecord = ({
             </div>
             <div className="flex-grow">
                 <div className="h-full overflow-auto custom_trading_record">
-                    {tabActive === FUTURES_RECORD_CODE.position && (
+                    {tabActive === FUTURES_RECORD_CODE.position ?
                         <FuturesOpenOrdersVndc
                             pairConfig={pairConfig}
                             onForceUpdate={onForceUpdate}
@@ -116,9 +117,10 @@ const FuturesTradeRecord = ({
                             isAuth={isAuth}
                             onLogin={onLogin}
                             pair={pair}
+                            status={VndcFutureOrderType.Status.ACTIVE}
                         />
-                    )}
-                    {tabActive === FUTURES_RECORD_CODE.openOrders &&
+                        : null}
+                    {tabActive === FUTURES_RECORD_CODE.openOrders ?
                         <FuturesOpenOrdersVndc
                             pairConfig={pairConfig}
                             onForceUpdate={onForceUpdate}
@@ -126,11 +128,11 @@ const FuturesTradeRecord = ({
                             isAuth={isAuth}
                             onLogin={onLogin}
                             pair={pair}
-
+                            status={VndcFutureOrderType.Status.PENDING}
                         />
-                    }
+                        : null}
 
-                    {tabActive === FUTURES_RECORD_CODE.orderHistory &&
+                    {tabActive === FUTURES_RECORD_CODE.orderHistory ?
                         <FuturesOrderHistoryVndc
                             onForceUpdate={onForceUpdate}
                             pairConfig={pairConfig}
@@ -145,7 +147,8 @@ const FuturesTradeRecord = ({
                             isAuth={isAuth}
                             onLogin={onLogin}
                             pair={pair}
-                        />}
+                        />
+                        : null}
                     {tabActive === FUTURES_RECORD_CODE.tradingHistory && !isVndcFutures && (
                         <FuturesTradeHistory
                             pairConfig={pairConfig}

@@ -19,7 +19,7 @@ const PriceChangePercent = ({ priceChangePercent, className, ...props }) => (
             <ArrowDropDownIcon color={priceChangePercent > 0 ? colors.teal : colors.red2} size={16} className={`${priceChangePercent > 0 && 'rotate-180'}`} />
         )}
 
-        {priceChangePercent ? formatNumber(roundTo(priceChangePercent * 100, 2), 2, 2, true) + '%' : '--'}
+        {priceChangePercent ? formatNumber(roundTo(Math.abs(priceChangePercent) * 100, 2), 2, 2, true) + '%' : '--'}
     </div>
 );
 

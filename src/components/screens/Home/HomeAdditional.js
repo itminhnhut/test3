@@ -47,10 +47,10 @@ const HomeAdditional = ({ parentState }) => {
     return (
         <>
             <div className="relative">
-                <div className="absolute z-0 right-0 top-20">
+                <div className="absolute z-0 right-0 top-20 pointer-events-none">
                     <img src="/images/screen/homepage/right_up.png" className="" />
                 </div>
-                <div className="absolute z-0 bottom-0 left-0">
+                <div className="absolute z-0 bottom-0 left-0 pointer-events-none">
                     <img src="/images/screen/homepage/left_down.png" className="-mb-20" />
                     <img src="/images/screen/homepage/ghost_down.png" className="" />
                 </div>

@@ -13,7 +13,7 @@ import Modal from 'src/components/common/SwapReModal';
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
-import { find, orderBy, uniqBy } from 'lodash';
+import { divide, find, orderBy, uniqBy } from 'lodash';
 import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { Search, X, XCircle } from 'react-feather';
@@ -367,9 +367,9 @@ const SwapModule = ({ width, pair }) => {
                     key={`asset_item___${i}`}
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
 
-                    ${state.fromAsset === fromAsset && 'dark:bg-hover'}
+                    ${state.fromAsset === fromAsset && 'bg-hover dark:bg-hover-dark'}
                     `}
                     // onClick={() => setState({ fromAsset, search: '', openAssetList: {} })}
                     onClick={() => onClickFromAsset(fromAsset)}
@@ -397,7 +397,7 @@ const SwapModule = ({ width, pair }) => {
                 ref={fromAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
                         <Search size={16} />
                         <input
                             autoFocus
@@ -474,9 +474,9 @@ const SwapModule = ({ width, pair }) => {
                     key={`asset_item___${i}`}
                     className={`text-txtSecondary dark:text-txtSecondary-dark text-left text-base
                     px-4 py-4 flex items-center justify-between cursor-pointer font-normal
-                    first:mt-0 mt-3 dark:hover:bg-hover dark:focus:bg-hover
+                    first:mt-0 mt-3 hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
 
-                    ${state.toAsset === toAsset && 'dark:bg-hover'}
+                    ${state.toAsset === toAsset && 'dark:bg-hover-dark bg-hover'}
                     `}
                     onClick={() => onClickToAsset(toAsset)}
                 >
@@ -502,7 +502,7 @@ const SwapModule = ({ width, pair }) => {
                 ref={toAssetListRef}
             >
                 <div className="px-4">
-                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex items-center bg-gray-4 dark:bg-bgButtonDisabled-dark w-full py-2 px-3 rounded-md justify-start text-base text-txtSecondary dark:text-txtSecondary-dark border border-transparent focus-within:border-teal">
                         <Search size={16} />
                         <input
                             autoFocus
@@ -515,7 +515,7 @@ const SwapModule = ({ width, pair }) => {
                             onClick={() => !!state.search && setState({ search: '' })}
                             size={width >= 768 ? 20 : 16}
                             className={`cursor-pointer ${!!state.search ? 'visible' : 'invisible'}`}
-                        />{' '}
+                        />
                     </div>
                 </div>
                 <ul className="mt-6 max-h-[332px] overflow-y-auto">
@@ -841,7 +841,7 @@ const SwapModule = ({ width, pair }) => {
             }
         },
         DEBOUNCE_TIMEOUT,
-        [state.fromAmount, state.fromAmount, state.focus, config, availabelAsset]
+        [state.fromAmount, state.focus, config, availabelAsset]
     );
 
     useDebounce(
@@ -851,7 +851,7 @@ const SwapModule = ({ width, pair }) => {
             }
         },
         DEBOUNCE_TIMEOUT,
-        [`${state.fromAsset}_${state.toAsset}`]
+        [state.fromAsset, state.toAsset]
     );
 
     useDebounce(

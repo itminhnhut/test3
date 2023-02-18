@@ -6,7 +6,8 @@
         "description": "Với nền tảng đầu tư và giao dịch tiền điện tử hiệu quả nhất",
         "total_order_paid": "Khối lượng giao dịch 24h",
         "total_user": "Tổng lượng người dùng",
-        "total_pairs": "Tổng số cặp giao dịch"
+        "total_pairs": "Tổng số cặp giao dịch",
+        "download_app":"Tải ứng dụng"
     },
     "markettrend": {
         "title": "Xếp hạng thị trường",

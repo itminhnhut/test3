@@ -420,7 +420,7 @@ export class TVChartContainer extends React.PureComponent {
         return {
             'mainSeriesProperties.priceAxisProperties.autoScale': true,
             'scalesProperties.lineColor': isDark ? colors.dark.dark : colors.white,
-            'scalesProperties.textColor': isDark ? colors.darkBlue5 : colors.primary,
+            'scalesProperties.textColor': isDark ? colors.darkBlue5 : colors.gray[1],
             'scalesProperties.fontSize': 10,
             'paneProperties.background': isDark ? colors.dark.dark : colors.white,
             'paneProperties.vertGridProperties.color': isDark ? colors.dark.dark : colors.white,
@@ -465,7 +465,7 @@ export class TVChartContainer extends React.PureComponent {
             user_id: this.props.userId,
             // fullscreen: this.state.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: this.props.theme === 'dark' ? colors.dark : '#fff' },
+            loading_screen: { backgroundColor: this.props.theme === 'dark' ? colors.dark.dark : '#fff' },
             studies_overrides: {
                 'volume.volume.color.1': colors.teal,
                 'volume.volume.color.0': colors.red2,
@@ -476,7 +476,7 @@ export class TVChartContainer extends React.PureComponent {
             timezone: getTradingViewTimezone(),
             overrides: {
                 'scalesProperties.fontSize': 10,
-                editorFontsList: ['Barlow', 'Sans'],
+                editorFontsList: ['SF-Pro'],
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
                 volumePaneSize: 'small',
                 'mainSeriesProperties.candleStyle.borderUpColor': colors.teal,
@@ -544,7 +544,7 @@ export class TVChartContainer extends React.PureComponent {
                             this.state.chartStatus === ChartStatus.LOADED ? 'hidden' : ''
                         }`}
                     >
-                        <Spiner isDark />
+                        <Spiner isDark={this.props.theme === 'dark'} />
                     </div>
                     <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea ${isPro ? 'pl-6' : ''}`}>
                         {this.state.chartStatus === ChartStatus.LOADED && (

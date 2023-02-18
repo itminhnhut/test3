@@ -13,7 +13,7 @@ import {
 } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
-import { ChevronDown, X } from 'react-feather';
+// import { ChevronDown, X } from 'react-feather';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
@@ -22,7 +22,7 @@ import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import Tooltip from 'components/common/Tooltip';
-import Modal from 'components/common/ReModal';
+// import Modal from 'components/common/ReModal';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -65,7 +65,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const pairListModalRef = useRef();
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
-    const [currentTheme] = useDarkMode();
+    // const [currentTheme] = useDarkMode();
 
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
@@ -80,7 +80,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
         const percentPriceFilter = getFilter(ExchangeOrderEnum.Filter.PERCENT_PRICE, config || []);
 
-        // console.log('quantityMarketFilter: ', quantityMarketFilter);
         return {
             config,
             priceFilter,
@@ -103,13 +102,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
-                : 'font-bold text-left text-sm text-dominant dragHandleArea tracking-wide';
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right tracking-normal'
+                : 'text-left text-base font-semibold text-dominant dragHandleArea tracking-normal';
             return (
                 <div
                     ref={lastPriceRef}
                     // style={{ minWidth: lastPriceMinW }}
-                    style={{ minWidth: 82 }}
+                    // style={{ minWidth: 82 }}
                     className={classNames(className, {
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
@@ -122,7 +121,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         )}
                     </div>
                     {!isShownOnModal && (
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-normal">
                             <RefCurrency price={pairPrice?.lastPrice} quoteAsset={pairPrice?.quoteAsset} />
                         </span>
                     )}
@@ -211,10 +210,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <div style={{ minWidth: minWidth || 0 }}>
                 <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <div className="border-b border-darkBlue-5 border-dashed pb-0.5">
-                        <span onClick={onClickFunding} className="cursor-pointer">
-                            Funding / {t('futures:countdown')}
-                        </span>
+                    <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                        <span>Funding / {t('futures:countdown')}</span>
                     </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
@@ -270,7 +267,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     value = formatNumber(roundTo(pairPrice?.lowPrice || 0, pricePrecision), pricePrecision);
                     break;
                 case '24hChange':
-                    const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
+                    // const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div
@@ -278,7 +275,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 '!text-red': pairPrice?.priceChangePercent < 0
                             })}
                         >
-                            <span> {formatNumber(roundTo(priceFromMarketWatch?.priceChange || 0, 2), 2, 2, true)}</span>
+                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 2, 2, true)}</span>
                             <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
@@ -320,10 +317,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             }
 
             return (
-                <div key={`pairPrice_items_${key}`} style={{ minWidth: minWidth || 0 }}>
+                <div
+                    key={`pairPrice_items_${key}`}
+                    // style={{ minWidth: minWidth || 0 }}
+                >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
-                        containerClassName={`${className} mr-5`}
+                        containerClassName={`${className} mr-6`}
                         value={value}
                         icon={icon}
                     />
@@ -340,10 +340,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderFunding = () => {
         return (
             <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
-                <div className=" border-b border-darkBlue-5 border-dashed pb-[2px]">
-                    <span onClick={onClickFunding} className=" cursor-pointer">
-                        Funding / {t('futures:countdown')}
-                    </span>
+                <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                    <span>Funding / {t('futures:countdown')}</span>
                 </div>
             </div>
         );
@@ -426,14 +424,22 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             setActivePairList(false);
         };
 
-        const renderInformation = (data) => {
+        const renderInformation = (data, isLeft) => {
             return data.map(({ title, tooltip, leftPercent }, index) => (
                 <div key={'title' + title} className="py-[8px] flex  w-full w-100">
-                    <Tooltip id={title} place="right" effect="solid" isV3>
-                        <div>
-                            <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
-                            <div className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
-                        </div>
+                    <Tooltip
+                        id={title}
+                        place="top"
+                        effect="solid"
+                        isV3
+                        overridePosition={(e) => ({
+                            left: isLeft ? 0 : e.left,
+                            top: e.top
+                        })}
+                        className="max-w-[300px]"
+                    >
+                        {/* <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label> */}
+                        <div className="text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                     </Tooltip>
                     {/* Each row */}
                     <div className="flex items-center justify-between w-full">
@@ -458,7 +464,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <ModalV2 className="!max-w-[800px]" isVisible={isShowModalInfo} onBackdropCb={() => setIsShowModalInfo(false)}>
                 <div className="mt-4 text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('futures:trading_rules')}</div>
-
                 <div className="mt-6 gap-6 flex">
                     <div className="w-full rounded-md border dark:border-divider-dark p-4 dark:bg-bgInput-dark flex justify-between">
                         <div
@@ -501,7 +506,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 </div>
 
                 <div className="mt-8 flex w-full">
-                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
+                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS, true)}</div>
                     <div className="flex flex-1 flex-col pl-4">{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
                 </div>
 
@@ -558,7 +563,9 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             {renderLastPrice()}
 
             {/* Details */}
-            <InfoSlider forceUpdateState={forceUpdateState}>{renderPairPriceItems()}</InfoSlider>
+            <InfoSlider forceUpdateState={forceUpdateState} className="!pl-[14px]">
+                {renderPairPriceItems()}
+            </InfoSlider>
         </div>
     );
 };

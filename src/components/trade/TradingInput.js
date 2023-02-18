@@ -97,11 +97,19 @@ const TradingInput = ({
                     >
                         {validator?.msg && (
                             <>
-                                <div className="px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md bg-gray-3 dark:bg-hover-dark text-xs sm:text-sm">
+                                <div
+                                    className={classNames('px-2 py-1.5 sm:px-6 sm:py-[10px] rounded-md  dark:bg-hover-dark text-xs sm:text-sm', {
+                                        'bg-darkBlue text-white dark:text-gray-4': !onusMode,
+                                        'bg-gray-3': onusMode
+                                    })}
+                                >
                                     {validator?.msg}
                                 </div>
                                 <div
-                                    className="w-[8px] h-[6px] bg-gray-3 dark:bg-hover-dark"
+                                    className={classNames('w-[8px] h-[6px] dark:bg-hover-dark', {
+                                        'bg-darkBlue text-white dark:text-gray-4': !onusMode,
+                                        'bg-gray-3': onusMode
+                                    })}
                                     style={{
                                         clipPath: 'polygon(50% 100%, 0 0, 100% 0)'
                                     }}

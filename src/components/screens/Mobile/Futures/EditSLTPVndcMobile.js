@@ -190,7 +190,7 @@ const EditSLTPVndcMobile = ({
         });
     };
 
-    console.log(' order',  order)
+    // console.log(' order',  order)
 
     const [slError, setSlError] = useState({
         isValid: true,

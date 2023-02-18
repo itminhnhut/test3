@@ -6,7 +6,8 @@
     "description": "With the most effective cryptocurrency trading<br/>and investment platform",
     "total_order_paid": "24h Volume",
     "total_user": "Total Number Of Users",
-    "total_pairs": "Total Trading Pairs"
+    "total_pairs": "Total Trading Pairs",
+    "download_app":"Download App"
   },
   "markettrend": {
     "title": "Market Trend",

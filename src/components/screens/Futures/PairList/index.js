@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import FuturesPairListItems from './PairListItems';
 import FuturesPairListItemV2 from './PairListItemV2';
 import Star from 'components/svg/Star';
+import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -90,10 +91,9 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         () => (
             <div className="px-4 flex items-center">
                 {isAuth && (
-                    <Star
+                    <BxsStarIcon
                         onClick={() => onHandleMode('Starred')}
-                        size={14}
-                        fill={mode === 'Starred' ? colors.yellow : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.darkBlue5 : colors.gray[2]}
                         className="cursor-pointer"
                     />
                 )}
@@ -126,7 +126,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         >
             <div className="max-h-[352px] flex flex-col">
                 <div className="px-4 mb-7">
-                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2  border border-transparent focus-within:border-teal">
+                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"

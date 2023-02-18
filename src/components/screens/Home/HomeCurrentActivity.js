@@ -6,6 +6,13 @@ import { useTranslation } from 'next-i18next';
 import 'keen-slider/keen-slider.min.css';
 import { formatTime, formatWallet } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
+import { formatNumberToText } from 'redux/actions/utils';
+import numeral from 'numeral';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import { Autoplay } from 'swiper';
 
 const HomeCurrentActivity = () => {
     // Initial State
@@ -15,20 +22,9 @@ const HomeCurrentActivity = () => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const { width } = useWindowSize();
     const { t } = useTranslation(['home', 'common']);
 
     // Inital Keen Slider
-    const [sliderRef, slider] = useKeenSlider({
-        slidesPerView:5 ,
-        centered: true,
-        vertical: false,
-        loop: true
-
-        // dragStart: () => setState({autoplay: false}),
-        // dragEnd: () => setState({autoplay: true})
-    });
-    const timer = useRef();
 
     const phake = useRef(makeData(35)).current;
 
@@ -40,26 +36,48 @@ const HomeCurrentActivity = () => {
             const phake = item;
 
             return (
-                <div key={`homepage_user_activity_${phake.token}_${i}`} className="keen-slider__slide homepage-activity__slide__item1">
-                    <div className="homepage-activity__item___wrapper">
-                        <div className="homepage-activity__item__inner">
-                            <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
-                        </div>
+                <>
+                    <SwiperSlide key={`homepage_user_activity_${phake.token}_${i}`} className="homepage-activity__slide__item1">
+                        <div className="homepage-activity__item___wrapper">
+                            <div className="homepage-activity__item__inner pr-4">
+                                <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
+                            </div>
 
-                        <div className="homepage-activity__item__inner">
-                            <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
-                            <div className="homepage-activity__item__inner___label">{phake.time}</div>
-                        </div>
-                        <div className="homepage-activity__item__inner specific__case">
-                            <div className="homepage-activity__item__inner___text ">
-                                {phake.type === 'DEP' ? '+' : '-'}
-                                {phake.amount} {phake.symbol.toUpperCase()}
+                            <div className="homepage-activity__item__inner">
+                                <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
+                                <div className="homepage-activity__item__inner___label">{phake.time}</div>
                             </div>
-                            <div className="homepage-activity__item__inner___label ">
-                                {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
+                            <div className="homepage-activity__item__inner specific__case">
+                                <div className="homepage-activity__item__inner___text g">
+                                    {phake.type === 'DEP' ? '+' : '-'}
+                                    {numeral(phake.amount).format('0.000a')} {phake.symbol.toUpperCase()}
+                                </div>
+                                <div className="homepage-activity__item__inner___label">
+                                    {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
+                                </div>
                             </div>
                         </div>
-                        {/* <div className="homepage-activity__item__inner">
+                    </SwiperSlide>
+                    {/* <div key={`homepage_user_activity_${phake.token}_${i}`} className="keen-slider__slide homepage-activity__slide__item1">
+                        <div className="homepage-activity__item___wrapper">
+                            <div className="homepage-activity__item__inner">
+                                <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
+                            </div>
+
+                            <div className="homepage-activity__item__inner">
+                                <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
+                                <div className="homepage-activity__item__inner___label">{phake.time}</div>
+                            </div>
+                            <div className="homepage-activity__item__inner specific__case">
+                                <div className="homepage-activity__item__inner___text ">
+                                    {phake.type === 'DEP' ? '+' : '-'}
+                                    {phake.amount} {phake.symbol.toUpperCase()}
+                                </div>
+                                <div className="homepage-activity__item__inner___label text-right">
+                                    {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
+                                </div>
+                            </div>
+                            {/* <div className="homepage-activity__item__inner">
                             <div className="homepage-activity__item__inner___text text-dominant">{t('common:success')}</div>
                             <div className="homepage-activity__item__inner___label">{t('home:user_activity.status')}</div>
                         </div>
@@ -76,37 +94,61 @@ const HomeCurrentActivity = () => {
                         <div className="homepage-activity__item__inner">
                             <div className="homepage-activity__item__inner___text text-dominant">{phake.time}</div>
                             <div className="homepage-activity__item__inner___label">{t('home:user_activity.time')}</div>
-                        </div> */}
-                    </div>
-                </div>
+                        </div> 
+                        </div>
+                    </div> */}
+                </>
             );
         });
     };
 
-    useEffect(() => {
-        sliderRef.current.addEventListener('mouseover', () => {
-            setState({ autoplay: false });
-        });
-        sliderRef.current.addEventListener('mouseout', () => {
-            setState({ autoplay: true });
-        });
-    }, [sliderRef]);
+    // useEffect(() => {
+    //     sliderRef.current.addEventListener('mouseover', () => {
+    //         setState({ autoplay: false });
+    //     });
+    //     sliderRef.current.addEventListener('mouseout', () => {
+    //         setState({ autoplay: true });
+    //     });
+    // }, [sliderRef]);
 
-    useEffect(() => {
-        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 5000)
-        return () => clearInterval(timer.current)
-    }, [state.autoplay, slider])
+    // useEffect(() => {
+    //     timer.current = setInterval(() => state.autoplay && slider && slider.next(), 5000);
+    //     return () => clearInterval(timer.current);
+    // }, [state.autoplay, slider]);
 
-    useEffect(() => {
-        width && slider && slider.resize();
-    }, [width, slider]);
+    // useEffect(() => {
+    //     width && slider && slider.resize();
+    // }, [width, slider]);
 
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
-                <div ref={sliderRef} className="keen-slider">
+                <Swiper
+                    modules={[Autoplay]}
+                    // autoplay={{ delay: 2000 }}
+                    spaceBetween={10}
+                    slidesPerView={1.5}
+                    centeredSlides
+                    loop
+                    breakpoints={{
+                        768: {
+                            slidesPerView: 3
+                        },
+
+                        1440: {
+                            slidesPerView: 4,
+                            spaceBetween: 40
+                        }
+                    }}
+                    navigation
+                    pagination={{ clickable: true }}
+                    scrollbar={{ draggable: true }}
+                    onSwiper={(swiper) => console.log(swiper)}
+                    onSlideChange={() => console.log('slide change')}
+                >
                     {renderActivityItem()}
-                </div>
+                </Swiper>
+              
             </div>
         </section>
     );
@@ -154,9 +196,9 @@ function makeCode(lengthArr = [3, 3, 3]) {
     result += '****';
     // }
 
-    for (let i = 0; i < lengthArr[2]; i++) {
-        result += number.charAt(Math.floor(Math.random() * number.length));
-    }
+    // for (let i = 0; i < lengthArr[2]; i++) {
+    //     result += number.charAt(Math.floor(Math.random() * number.length));
+    // }
 
     return result;
 }

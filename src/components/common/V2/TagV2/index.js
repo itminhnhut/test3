@@ -8,18 +8,23 @@ import PropTypes from 'prop-types';
 const types = {
     DEFAULT: 'default',
     SUCCESS: 'success',
-    WARNING: 'warning'
+    WARNING: 'warning',
+    FAILED: 'failed'
 };
 
 const typeStyles = {
     [types.DEFAULT]: {
         backgroundColor: 'rgba(34,41,64,0.5)',
-        color: colors.gray[4]
+        color: colors.teal
     },
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',
         color: colors.teal,
         icon: CheckCircle
+    },
+    [types.FAILED]: {
+        backgroundColor: 'rgba(249,54,54 0.1)',
+        color: '#F93636'
     },
     [types.WARNING]: {
         backgroundColor: 'rgba(255,198,50,0.15)',
@@ -28,29 +33,27 @@ const typeStyles = {
     }
 };
 
-function TagV2({
-    type = types.DEFAULT,
-    children,
-    className = ''
-}) {
+function TagV2({ type = types.DEFAULT, children, className = '' }) {
     const style = typeStyles[type];
 
-    return <span
-        style={{
-            backgroundColor: style.backgroundColor,
-            color: style.color
-        }}
-        className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
-    >
-        {style.icon && React.createElement(style.icon, {className: 'mr-2'})}
-        <span>{children}</span>
-    </span>;
+    return (
+        <span
+            style={{
+                backgroundColor: style.backgroundColor,
+                color: style.color
+            }}
+            className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
+        >
+            {style.icon && React.createElement(style.icon, { className: 'mr-2' })}
+            <span>{children}</span>
+        </span>
+    );
 }
 
 TagV2.propTypes = {
     type: PropTypes.oneOf(Object.values(types)),
     children: PropTypes.node.isRequired,
     className: PropTypes.string
-}
+};
 
 export default TagV2;

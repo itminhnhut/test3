@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { formatNumber, getS3Url } from 'redux/actions/utils';
-import { Trans, useTranslation } from 'next-i18next';
+import { formatNumber } from 'redux/actions/utils';
+import { useTranslation } from 'next-i18next';
 import { getMarketWatch } from 'redux/actions/market';
 import { useRefWindowSize } from 'src/hooks/useWindowSize';
 import { PulseLoader } from 'react-spinners';
@@ -9,7 +9,6 @@ import { API_GET_TRENDING } from 'redux/actions/apis';
 
 import colors from 'styles/colors';
 import CountUp from 'react-countup';
-import Link from 'next/link';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
 import TrendingSlide from './TrendingSlide';
@@ -46,9 +45,11 @@ const HomeIntroduce = ({ parentState }) => {
     const animRef = useRef();
 
     const BannerGraphic = useCallback(() => {
-        return <div className={`homepage-introduce___wrapper__right`}>
-            <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
-        </div>
+        return (
+            <div className={`homepage-introduce___wrapper__right`}>
+                <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+            </div>
+        );
     }, [width]);
 
     const renderIntroduce = useCallback(() => {
@@ -136,7 +137,7 @@ const HomeIntroduce = ({ parentState }) => {
 
                         <div className="homepage-introduce___download">
                             <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
-                                Tải ứng dụng
+                                {t('home:introduce.download_app')}
                             </GradientButton>
                         </div>
                     </div>
