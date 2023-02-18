@@ -222,7 +222,7 @@ const DepositWithdrawFee = () => {
     const renderSearchBox = useCallback(() => {
         return (
             <SearchBox
-                wrapperStyles="!dark:bg-dark-2 !px-3 !py-3 !rounded-md"
+                wrapperStyles="!dark:bg-dark-2 bg-gray-10 !px-3 !py-3 !rounded-md"
                 inputStyles="!text-base pl-2 placeholder:placeholder-txtSecondary-dark"
                 useClearBtn={!!state.search}
                 onClear={() => setState({ search: '' })}
@@ -272,7 +272,7 @@ const DepositWithdrawFee = () => {
 
             <div className="w-full lg:max-w-[23rem] mt-7 lg:mt-20">{renderSearchBox()}</div>
             {width > BREAK_POINTS.lg ? (
-                <div className="mt-8 overflow-hidden border border-divider-dark rounded-xl ">{renderTable()}</div>
+                <div className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">{renderTable()}</div>
             ) : (
                 <WithdrawDepositList t={t} paymentConfigs={paymentConfigs} search={state.search} configs={state.configs} />
             )}
