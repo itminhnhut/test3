@@ -26,7 +26,15 @@ const AnnouncementTopics = (props) => {
     } = useTranslation();
     const [page, setPage] = useState(1);
     const [data, setData] = useState([]);
-    const [total, setTotal] = useState(0);
+    const [pagination, setPagination] = useState({
+        limit: 25,
+        next: null,
+        page: 1,
+        pages: 0,
+        prev: null,
+        total: 0,
+    })
+
 
     const { width } = useWindowSize()
     const isMobile = width < 640
@@ -49,24 +57,24 @@ const AnnouncementTopics = (props) => {
         )
             .then((articles) => {
                 setData(articles);
-                setTotal(articles.meta?.pagination?.total);
+                setPagination(articles.meta?.pagination)
             });
     }, [page, router?.query?.topic, language]);
 
     const renderPagination = useCallback(() => {
-        if (!total) return null;
+        if (!data.length) return null;
         return (
             <div className="flex items-center justify-center mt-8">
                 <RePagination
-                    total={total}
+                    isNamiV2
                     current={page}
                     pageSize={25}
-                    showTitle={false}
-                    onChange={(currentPage) => setPage(currentPage)}
+                    name="market_table___list"
+                    pagingPrevNext={{ language, page: page - 1, hasNext: !!pagination.next, onChangeNextPrev: (change) => setPage(page + change)}}
                 />
             </div>
         );
-    }, [page, data, total]);
+    }, [page, data]);
 
     const renderTopics = () => {
         if (!data || !data?.length) {

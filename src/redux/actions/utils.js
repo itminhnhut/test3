@@ -147,14 +147,17 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
             utm_medium: 'direct',
             utm_campaign: 'nami.exchange',
             utm_content: LoginButtonPosition.WEB_HEADER,
-            mobile_web: false
+            mobile_web: false,
         });
 
         const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
+        const theme = localStorage?.getItem("theme") ?? 'light'
+
         params = {
             ..._options,
-            referral
+            referral,
+            theme
         };
         params = defaults(params, { redirect: process.env.APP_URL });
 

@@ -83,7 +83,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
             return i;
         });
         const value = ((+order_value * (_x ? _x : x)) / 100).toFixed(decimals.symbol);
-        setVolume(value);
+        setVolume(+value || '');
         setPercent(_x ? _x : x);
     };
 
@@ -119,7 +119,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                 return validator('price', price, String(type).toUpperCase(), side, _lastPrice, pairConfig, decimals.symbol, t);
             case 'quoteQty':
                 return {
-                    isValid: !(volume < +minQuoteQty || volume > +maxQuoteQty),
+                    isValid: !(volume && (volume < +minQuoteQty || volume > +maxQuoteQty)),
                     msg:
                         volume < +minQuoteQty
                             ? `${t('futures:minimum_qty')}: ${formatNumber(minQuoteQty, decimals.symbol)}`
@@ -193,6 +193,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md`;
     const isError =
+        !volume ||
         (available && !_validator('quoteQty')?.isValid) ||
         leverage > pairConfig?.leverageConfig.max ||
         leverage < pairConfig?.leverageConfig.min ||
@@ -203,15 +204,15 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
             <div className="grid grid-cols-2 gap-6">
                 <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6 pr-6">
                     <div>
-                        <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
+                        <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-white dark:bg-bgSpotContainer-dark">
                             {order?.symbol} {order?.leverage}x
                         </div>
-                        <div className="border border-divider-dark p-4 rounded-md">
+                        <div className="border border-divider dark:border-divider-dark p-4 rounded-md">
                             <div className="flex items-center justify-between">
                                 <span className="text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
                                 <span className="font-semibold">{formatNumber(order?.open_price, decimals.price, 0, true)}</span>
                             </div>
-                            <div className="h-[1px] bg-divider-dark w-full my-3"></div>
+                            <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
                             <div className="flex items-center justify-between">
                                 <span className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
                                 <span className="font-semibold">{formatNumber(order?.order_value, decimals.symbol, 0, true)}</span>
@@ -219,16 +220,16 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                         </div>
                     </div>
                     <div className="relative">
-                        <div className="text-sm text-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
+                        <div className="text-sm text-txtSecondary dark:Ltext-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
                         <div
-                            className={classNames('px-4 mb-3 flex items-center bg-dark-2 rounded-md', {
+                            className={classNames('px-4 mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md', {
                                 'ring-1 ring-red mx-[1px]': !_validator('quoteQty').isValid
                             })}
                         >
                             <div className={changeClass}>
                                 <Minus
-                                    size={15}
-                                    className="text-onus-white cursor-pointer"
+                                    size={16}
+                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
                                     onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
                                 />
                             </div>
@@ -237,7 +238,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 decimalScale={decimals.symbol}
                                 allowNegative={false}
                                 thousandSeparator={true}
-                                containerClassName="px-2.5 !bg-dark-2 w-full !border-none"
+                                containerClassName="px-2.5 dark:!bg-dark-2 w-full !border-none"
                                 inputClassName="!text-center"
                                 onValueChange={({ value }) => onChangeVolume(value)}
                                 disabled={!available}
@@ -248,8 +249,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                             />
                             <div className={changeClass}>
                                 <Plus
-                                    size={15}
-                                    className="text-onus-white cursor-pointer"
+                                    size={16}
+                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
                                     onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
                                 />
                             </div>
@@ -301,12 +302,12 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <div className="text-sm text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
-                                        <div className="px-4 flex items-center bg-dark-2 rounded-md">
+                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
+                                        <div className="px-4 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md">
                                             <div className={changeClass}>
                                                 <Minus
-                                                    size={15}
-                                                    className="text-onus-white cursor-pointer"
+                                                    size={16}
+                                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
                                                     onClick={() =>
                                                         leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
                                                     }
@@ -318,7 +319,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                                 allowNegative={false}
                                                 thousandSeparator={true}
                                                 inputClassName="!text-center w-full"
-                                                containerClassName="px-2.5 !bg-dark-2 w-full"
+                                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                                                 onValueChange={({ value }) => setLeverage(value)}
                                                 disabled={!available}
                                                 inputMode="decimal"
@@ -328,8 +329,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                             />
                                             <div className={changeClass}>
                                                 <Plus
-                                                    size={15}
-                                                    className="text-onus-white cursor-pointer"
+                                                    size={16}
+                                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
                                                     onClick={() =>
                                                         leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
                                                     }
@@ -339,19 +340,19 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                     </div>
                                 </div>
                                 <div className="space-y-2 mt-4">
-                                    <div className="text-sm text-txtSecondary-dark">{t('common:price')}</div>
+                                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
                                     <TradingInput
                                         label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
                                         value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
                                         decimalScale={decimals.price}
                                         allowNegative={false}
                                         thousandSeparator={true}
-                                        containerClassName="px-2.5 !bg-dark-2 w-full"
+                                        containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                                         inputClassName="!text-left !ml-0"
                                         onValueChange={({ value }) => setPrice(value)}
                                         disabled={type === VndcFutureOrderType.Type.MARKET}
                                         validator={_validator('price')}
-                                        renderTail={() => <span className={`text-txtSecondary-dark`}>{quoteAsset}</span>}
+                                        renderTail={() => <span className={`text-txtSecondary dark:text-txtSecondary-dark`}>{quoteAsset}</span>}
                                         allowedDecimalSeparators={[',', '.']}
                                         clearAble
                                     />
@@ -360,7 +361,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                         </CollapseV2>
                     </div>
                 </div>
-                <div className="p-4 rounded-xl bg-darkBlue-3 text-base">
+                <div className="p-4 rounded-xl bg-gray-13 dark:bg-darkBlue-3 text-base">
                     <div className="font-semibold mb-6">{t('futures:calulator:result')}</div>
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">

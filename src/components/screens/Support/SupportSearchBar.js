@@ -95,7 +95,7 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
 
             {!simpleMode && (
                 <button
-                    onClick={() => onSearch(type, searchKey)}
+                    onClick={() => onSearch(searchKey)}
                     className="px-6 py-3 bg-teal font-medium text-base rounded-md text-white"
                 >
                     {t('common:search')}

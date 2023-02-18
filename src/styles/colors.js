@@ -34,7 +34,9 @@ const colors = {
         10: '#f5f5f5',
         11: '#e1e2e3',
         12: '#eeeff0',
-        13: '#f2f4f5'
+        13: '#f2f4f5',
+        14: '#acbde5',
+        15: '#1e1e1e'
     },
 
     white: 'white',
@@ -43,7 +45,6 @@ const colors = {
 
     red2: '#f93636',
 
-    green1: '#7ee5ae',
     yellow: {
         1: '#ffb700',
         2: '#ffc632',

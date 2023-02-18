@@ -80,7 +80,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5 min-w-[60px] min-h-[60px] md:min-w-[64px] md:min-h-[64px] flex items-center justify-center">
+                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
                     <SvgWalletExchange size={32} />
                 </div>
                 <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary">
@@ -461,7 +461,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     let tradeButton = null;
     const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
     hover:text-txtTabHover dark:hover:text-txtTextBtn-dark 
-    hover:bg-hover-1 dark:hover:bg-hover-dark
+    hover:bg-gray-13 dark:hover:bg-hover-dark
     `;
     const cssPopover = () => {
         if (isStickyColOperation) {

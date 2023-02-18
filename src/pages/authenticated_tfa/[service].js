@@ -1,7 +1,7 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'react-input-range/lib/css/index.css';
 import OtpModal from 'components/common/OtpModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import axios from 'axios';
 import { API_AUTH_USER_OTP } from 'redux/actions/apis';
@@ -22,6 +22,11 @@ const ExternalWithdrawal = (props) => {
         t,
         i18n: { language },
     } = useTranslation()
+    useEffect(() => {
+        const root = window.document.documentElement;
+        root.classList.remove('light')
+        root.classList.add('dark')
+    }, [])
     const {
         service,
     } = router.query;
@@ -88,8 +93,8 @@ const ExternalWithdrawal = (props) => {
                 pathnameAndSearch = redirectTo;
             }
             window.location.href = pathnameAndSearch;
-        }else{
-            setState({message: t('common:otp_verify_expired')})
+        } else {
+            setState({ message: t('common:otp_verify_expired') })
         }
     };
 
@@ -105,7 +110,7 @@ const ExternalWithdrawal = (props) => {
         <>
             <div className={`mal-layouts mal-layouts___light`}>
                 <div className="flex flex-1 justify-center items-center h-full">
-                    <div id={`${PORTAL_MODAL_ID}`}/>
+                    <div id={`${PORTAL_MODAL_ID}`} />
                     <OtpModal
                         label={t('common:otp_verify')}
                         isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
@@ -115,7 +120,7 @@ const ExternalWithdrawal = (props) => {
 
                             ? <div className="text-red text-center text-sm">{state.message}</div>
                             : <div className="text-red text-center text-sm">&nbsp;</div>
-                    }
+                        }
                     />
                 </div>
             </div>

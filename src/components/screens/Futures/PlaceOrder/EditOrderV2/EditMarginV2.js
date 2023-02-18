@@ -99,8 +99,8 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
     }, [adjustType, amount, maxRemovable, minMarginRatio]);
 
     const onChangePercent = (x) => {
-        const _amount = floor((x * available) / 100, decimals.symbol);
-        setAmount(_amount);
+        const _amount = +floor((x * available) / 100, decimals.symbol);
+        setAmount(_amount || '');
     };
 
     const validator = () => {
@@ -167,20 +167,23 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                         <div className="text-txtSecondary-dark text-sm mb-3">{t('futures:mobile:adjust_margin:adjustment_type')}</div>
                         <div className="flex items-center">
                             <div
-                                className={classNames('w-full flex items-center justify-center py-3 rounded-l border border-divider-dark cursor-pointer', {
-                                    'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.ADD,
-                                    'text-txtSecondary-dark': adjustType !== ADJUST_TYPE.ADD
-                                })}
+                                className={classNames(
+                                    'w-full flex items-center justify-center py-3 rounded-l border border-divider dark:border-divider-dark cursor-pointer',
+                                    {
+                                        'bg-gray-10 dark:bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.ADD,
+                                        'text-txtSecondary dark:text-txtSecondary-dark': adjustType !== ADJUST_TYPE.ADD
+                                    }
+                                )}
                                 onClick={() => setAdjustType(ADJUST_TYPE.ADD)}
                             >
                                 {t('futures:mobile:adjust_margin:add')} {t('futures:margin').toLowerCase()}
                             </div>
                             <div
                                 className={classNames(
-                                    'w-full flex items-center justify-center py-3 rounded-r border border-l-0 border-divider-dark cursor-pointer',
+                                    'w-full flex items-center justify-center py-3 rounded-r border border-l-0 border-divider dark:border-divider-dark cursor-pointer',
                                     {
-                                        'bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.REMOVE,
-                                        'text-txtSecondary-dark': adjustType !== ADJUST_TYPE.REMOVE
+                                        'bg-gray-10 dark:bg-dark-2 font-semibold': adjustType === ADJUST_TYPE.REMOVE,
+                                        'text-txtSecondary dark:text-txtSecondary-dark': adjustType !== ADJUST_TYPE.REMOVE
                                     }
                                 )}
                                 onClick={() => setAdjustType(ADJUST_TYPE.REMOVE)}
@@ -189,20 +192,20 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                             </div>
                         </div>
                         <div className="mt-6">
-                            <div className="text-txtSecondary-dark text-sm mb-2">{t('common:amount')}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2">{t('common:amount')}</div>
                             <TradingInput
                                 value={amount}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
                                 decimalScale={decimals.symbol}
                                 allowNegative={false}
                                 thousandSeparator={true}
-                                containerClassName="px-2.5 !bg-dark-2 w-full"
+                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                                 inputClassName="!text-left !ml-0"
                                 onValueChange={({ value }) => setAmount(value)}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                                 validator={validator()}
-                                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
+                                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                                 renderTail={() => quoteAsset}
                                 clearAble
                             />
@@ -222,19 +225,19 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                         </div>
                     </div>
                 </div>
-                <div className="p-4 rounded-xl bg-darkBlue-3 text-base">
+                <div className="p-4 rounded-xl bg-gray-13 dark:bg-darkBlue-3 text-base">
                     <div className="font-semibold mb-6">{t('futures:calulator:result')}</div>
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:assigned_margin')}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:assigned_margin')}</div>
                             <div className="font-semibold">{formatNumber(margin, decimals.symbol)}</div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:available')}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:available')}</div>
                             <div className="font-semibold">{formatNumber(available, decimals.symbol)}</div>
                         </div>
                         <div className="flex items-center justify-between">
-                            <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
                             <div className="font-semibold">
                                 {formatNumber(newLiqPrice, decimals.price)}
                                 <span className="ml-1">{quoteAsset}</span>

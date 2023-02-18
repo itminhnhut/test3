@@ -11,7 +11,7 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
         <Popover className="relative w-full">
             {({ open, close }) => (
                 <>
-                    <Popover.Button className={`w-full h-11 sm:h-12 bg-dark-2 rounded-md px-3 ${className}`}>
+                    <Popover.Button className={`w-full h-11 sm:h-12 bg-gray-10 dark:bg-dark-2 rounded-md px-3 ${className}`}>
                         <div className="flex items-center justify-between">
                             <div className="w-full text-left whitespace-nowrap">{title}</div>
                             <ChevronDown className={`${open ? 'rotate-0' : ''} transition-all`} />
@@ -29,14 +29,14 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
                         <Popover.Panel
                             className={classNames('absolute right-0 z-[99] w-full', { 'top-0 mt-2': position === 'bottom', 'bottom-full mb-2': position === 'top' })}
                         >
-                            <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3">
+                            <div className="overflow-hidden rounded-md shadow-card_light border-[0.5px] border-divider dark:border-divider-dark bg-white dark:bg-darkBlue-3">
                                 <div className="relative py-2">
                                     {options.map((item, index) => {
                                         return (
                                             <div
                                                 key={index}
-                                                className={classNames('px-4 py-2 dark:hover:bg-hover-dark text-txtSecondary-dark cursor-pointer', {
-                                                    '!text-white font-semibold': value === item?.[keyExpr]
+                                                className={classNames('px-4 py-2 hover:bg-hover dark:hover:bg-hover-dark text-txtSecondary dark:text-txtSecondary-dark cursor-pointer', {
+                                                    '!text-txtPrimary dark:!text-white font-semibold': value === item?.[keyExpr]
                                                 })}
                                                 onClick={() => {
                                                     onChange(item?.[keyExpr], item);

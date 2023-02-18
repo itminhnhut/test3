@@ -75,7 +75,7 @@ const TopicsLayout = ({
                 )}
             >
                 {!isMobile && router?.query?.topic === item?.displaySlug ?
-                    <div className='h-8 w-1 bg-teal rounded-[10px]'></div>
+                    <div className='h-8 w-1 bg-bgBtnV2 dark:bg-teal rounded-[10px]'></div>
                     :
                     null
                 }
@@ -90,8 +90,8 @@ const TopicsLayout = ({
                     }}
                 >
                     <a className={classNames(
-                        'px-4 sm:px-6 flex flex-grow items-center text-gray-4 font-normal text-sm sm:font-semibold sm:text-base cursor-pointer', {
-                        'sm:!px-5': !isFaq && router?.query?.topic === item?.displaySlug
+                        'px-4 sm:px-6 flex flex-grow items-center text-txtPrimary dark:text-gray-4 font-normal text-base cursor-pointer', {
+                        'sm:!px-5 !font-semibold': !isFaq && router?.query?.topic === item?.displaySlug
                     })}>
                         <div className="h-6 w-6 mr-3 sm:mr-6">
                             <Image
@@ -184,24 +184,15 @@ const TopicsLayout = ({
 
     return (
         <MaldivesLayout>
-            <div className="bg-[#F2F4F6] dark:bg-dark pt-0">
-                {/* <SupportBanner
-                    title={
-                        mode === 'announcement'
-                            ? t('support-center:announcement')
-                            : t('support-center:faq')
-                    }
-                    href={baseHref}
-                    containerClassNames="hidden lg:block"
-                /> */}
+            <div className="bg-bgPrimary dark:bg-dark pt-0">
                 <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png')`} />
-                <div className="bg-bgPrimary dark:bg-dark rounded-t-[20px] lg:mt-0">
+                <div className="bg-transparent rounded-t-[20px] lg:mt-0">
                     <div className="block sm:flex min-h-[500px] relative">
                         <div
                             style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
                             className="pt-16 sm:py-20 border-r border-divider dark:border-divider-dark"
                         >
-                            <div className='hidden sm:block text-white font-medium text-xl px-6 mb-8'>
+                            <div className='hidden sm:block text-txtPrimary dark:text-white font-semibold text-2xl px-6 mb-8'>
                                 {t('navbar:menu_grid.category')}
                             </div>
                             {isMobile ?
@@ -251,7 +242,7 @@ const TopicsLayout = ({
                                 'absolute w-full h-full bg-dark bg-opacity-80': isMobile && toggleMenu,
                                 'hidden h-0': isMobile && !toggleMenu
                             })}>
-                                <div className='bg-dark'>
+                                <div className='bg-bgPrimary dark:bg-dark'>
                                     {renderTopics}
                                 </div>
                                 <div className='h-[calc(100%-600px)] min-h-[150px] w-full bg-dark bg-opacity-80 sm:hidden' onClick={() => setToggleMenu(false)}></div>

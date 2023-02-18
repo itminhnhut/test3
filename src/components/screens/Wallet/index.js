@@ -193,16 +193,9 @@ const Wallet = () => {
                         return (
                             <TabItem
                                 V2
+                                isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left !px-0 !text-base ${
-                                    currentTheme === THEME_MODE.DARK
-                                        ? e?.key === state.screenIndex
-                                            ? ' text-txtPrimary-dark dark:hover:text-txtPrimary-dark '
-                                            : ' '
-                                        : e?.key === state.screenIndex
-                                        ? ' hover:text-txtPrimary text-txtSecondary'
-                                        : '  '
-                                }`}
+                                className={`text-left !px-0 !text-base`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
