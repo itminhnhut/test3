@@ -1,21 +1,21 @@
 @font-face {
     font-family: 'SF-Pro';
-    font-weight: 400;
+    font-weight: 300;
     src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Light.otf') format('opentype');
 }
 @font-face {
     font-family: 'SF-Pro';
-    font-weight: 500;
+    font-weight: 400;
     src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Regular.otf') format('opentype');
 }
 
 @font-face {
     font-family: 'SF-Pro';
-    font-weight: 600;
+    font-weight: 500;
     src: local('SF-Pro'), url('./fonts/SFPro/SF-Pro-Text-Medium.otf') format('opentype');
 }
-// @font-face {
-//     font-family: 'SF-Pro';
-//     font-weight: 600;
-//     src: local('SF-Pro'), url("./fonts/SFPro/SF-Pro-Text-Semibold.otf") format('opentype');
-// }
+@font-face {
+    font-family: 'SF-Pro';
+    font-weight: 600;
+    src: local('SF-Pro'), url("./fonts/SFPro/SF-Pro-Text-Semibold.otf") format('opentype');
+}

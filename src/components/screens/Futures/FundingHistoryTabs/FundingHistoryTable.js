@@ -99,7 +99,7 @@ const days = [
 ];
 const limit = 10;
 
-export default function FundingHistoryTable({ currency, active }) {
+export default function FundingHistoryTable({ currency, active, isDark }) {
     const router = useRouter();
     const {
         t,
@@ -169,7 +169,9 @@ export default function FundingHistoryTable({ currency, active }) {
     useEffect(() => {
         setCurrentPage(1);
         if (active) {
-            setFlag(true);
+            setTimeout(() => {
+                setFlag(true);
+            }, 500);
         }
     }, [isMobile, active]);
 
@@ -227,7 +229,7 @@ export default function FundingHistoryTable({ currency, active }) {
             }
         },
         pointBackgroundColor: colors.teal,
-        pointBorderColor: '#001219',
+        pointBorderColor: isDark ? '#001219' : colors.gray[13],
         pointBorderWidth: isMobile ? 1.5 : 2,
         elements: {
             point: {
@@ -237,7 +239,7 @@ export default function FundingHistoryTable({ currency, active }) {
         scales: {
             y: {
                 ticks: {
-                    color: colors.darkBlue5,
+                    color: isDark ? colors.darkBlue5 : colors.gray[1],
                     font: {
                         size: isMobile ? 10 : 12
                     },
@@ -247,8 +249,8 @@ export default function FundingHistoryTable({ currency, active }) {
                 },
                 display: true,
                 grid: {
-                    borderColor: colors.divider.dark,
-                    color: colors.divider.dark,
+                    borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT,
                     borderDash: [1, 0, 1],
                     drawBorder: true,
                     display: true
@@ -256,7 +258,7 @@ export default function FundingHistoryTable({ currency, active }) {
             },
             x: {
                 ticks: {
-                    color: colors.darkBlue5,
+                    color: isDark ? colors.darkBlue5 : colors.gray[1],
                     font: {
                         size: isMobile ? 10 : 12
                     },
@@ -267,7 +269,7 @@ export default function FundingHistoryTable({ currency, active }) {
                     }
                 },
                 grid: {
-                    borderColor: colors.divider.dark,
+                    borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
                     drawBorder: true,
                     display: false
                 }
@@ -304,7 +306,7 @@ export default function FundingHistoryTable({ currency, active }) {
                 }
             ]
         };
-    }, [data]);
+    }, [data, flag, active, isDark]);
 
     const onChangeSymbol = (pair) => {
         const symbol = pair?.baseAsset + pair?.quoteAsset;
@@ -324,7 +326,7 @@ export default function FundingHistoryTable({ currency, active }) {
 
     return (
         <div className={classNames('mt-6 sm:mt-12', { hidden: !active })}>
-            <div className="bg-darkBlue-3 p-4 sm:p-8 rounded-xl mb-12">
+            <div className="dark:bg-darkBlue-3 p-4 border border-divider dark:border-0 sm:p-8 rounded-xl mb-12">
                 <div className="h-full flex items-center justify-between mb-8">
                     <div className="sm:flex items-center relative cursor-pointer sm:space-x-8">
                         <div
@@ -359,9 +361,12 @@ export default function FundingHistoryTable({ currency, active }) {
                                 <div
                                     key={day.id}
                                     onClick={() => setFilter({ ...filter, pageSize: day.value })}
-                                    className={classNames('text-txtSecondary-dark px-4 py-3 border border-divider-dark rounded-full cursor-pointer', {
-                                        '!border-teal !text-teal font-medium bg-teal/[0.1]': filter.pageSize === day.value
-                                    })}
+                                    className={classNames(
+                                        'text-txtSecondary dark:text-txtSecondary-dark px-4 py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
+                                        {
+                                            'font-semibold !border-teal !text-teal bg-teal/[0.1]': filter.pageSize === day.value
+                                        }
+                                    )}
                                 >
                                     {day[language]}
                                 </div>
@@ -370,15 +375,13 @@ export default function FundingHistoryTable({ currency, active }) {
                     </div>
                 </div>
                 <div className="flex w-full items-center justify-center ">
-                    {flag && (
-                        <Line
-                            ref={chart}
-                            options={options}
-                            data={dataLine}
-                            className={isMobile ? `max-h-[228px]` : `max-h-[420px]`}
-                            height={isMobile ? 228 : 420}
-                        />
-                    )}
+                    <Line
+                        ref={chart}
+                        options={options}
+                        data={dataLine}
+                        className={isMobile ? `max-h-[228px]` : `max-h-[420px]`}
+                        height={isMobile ? 228 : 420}
+                    />
                 </div>
             </div>
             <>
@@ -398,7 +401,7 @@ export default function FundingHistoryTable({ currency, active }) {
                             page={currentPage}
                             onChangePage={setCurrentPage}
                             pagingClassName="border-none"
-                            className="border border-divider-dark rounded-xl"
+                            className="border border-divider dark:border-divider-dark rounded-xl"
                         />
                     </div>
                 ) : (
