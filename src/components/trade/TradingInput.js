@@ -17,7 +17,9 @@ const TradingInput = ({
     labelClassName,
     inputClassName,
     renderTail = null,
+    renderHead = null,
     tailContainerClassName,
+    headContainerClassName,
     validator = {},
     onusMode = false,
     disabled = false,
@@ -118,6 +120,10 @@ const TradingInput = ({
                         )}
                     </div>
                 ) : null}
+                {/* head  */}
+                <div className={classNames('border-r pr-2 dark:border-divider-dark border-divider', headContainerClassName)}>
+                    {renderHead && isFunction(renderHead) ? renderHead() : renderHead}
+                </div>
 
                 {/* Input  */}
                 {disabled ? (

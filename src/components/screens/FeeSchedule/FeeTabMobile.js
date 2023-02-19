@@ -58,9 +58,9 @@ const FeeTabMobile = ({ tabIndex, translate, futuresFeeConfig, loadingFuturesFee
 };
 
 const ExchangeTabColumn = ({ fee, translate }) => (
-    <div className="pb-4 border-b border-divider-dark pt-4 last:border-b-0">
+    <div className="pb-4 border-b border-divider dark:border-divider-dark pt-4 last:border-b-0">
         <div className="mb-6">
-            <div className="flex text-txtSecondary-dark justify-between items-center text-xs mb-2">
+            <div className="flex text-txtSecondary dark:text-txtSecondary-dark justify-between items-center text-xs mb-2">
                 <div className="">{translate('common:fee_level')}</div>
                 <div>NAMI</div>
             </div>
@@ -73,11 +73,11 @@ const ExchangeTabColumn = ({ fee, translate }) => (
         </div>
         <div className="mb-4">
             <div className="flex  justify-between items-center text-sm mb-3">
-                <div className="text-txtSecondary-dark">Maker/Taker</div>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark">Maker/Taker</div>
                 <div>{fee.maker_taker}</div>
             </div>
             <div className="flex  justify-between items-center text-sm">
-                <div className="text-txtSecondary-dark ">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark ">
                     <div>Maker/Taker</div>
                     <div className="text-dominant">
                         (
@@ -95,9 +95,9 @@ const ExchangeTabColumn = ({ fee, translate }) => (
 );
 
 const FuturesTabColumn = ({ fee, translate, lastIndex }) => (
-    <div className={`pb-4 ${!lastIndex ? 'border-b border-divider-dark ' : ' '} pt-4`}>
+    <div className={`pb-4 ${!lastIndex ? 'border-b border-divider dark:border-divider-dark ' : ' '} pt-4`}>
         <div className="mb-6">
-            <div className="flex text-txtSecondary-dark justify-between items-center text-xs mb-2">
+            <div className="flex text-txtSecondary dark:text-txtSecondary-dark justify-between items-center text-xs mb-2">
                 <div className="">{translate('common:pair')}</div>
                 <div>{translate('common:max_leverage')}</div>
             </div>
@@ -108,7 +108,7 @@ const FuturesTabColumn = ({ fee, translate, lastIndex }) => (
         </div>
         <div className="mb-4">
             <div className="flex  justify-between items-center text-sm mb-3">
-                <div className="text-txtSecondary-dark">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark">
                     {translate('common:fee')} ({translate('common:open')}/{translate('common:close')})
                 </div>
                 <div>
@@ -116,7 +116,7 @@ const FuturesTabColumn = ({ fee, translate, lastIndex }) => (
                 </div>
             </div>
             <div className="flex  justify-between items-center text-sm">
-                <div className="text-txtSecondary-dark">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark">
                     {translate('common:fee')} NAMI ({translate('common:open')}/{translate('common:close')})
                 </div>
                 <div>

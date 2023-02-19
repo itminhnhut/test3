@@ -210,15 +210,17 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
-                1: commonColors.green1
+                ...commonColors.green
             },
             yellow: {
                 DEFAULT: '#FFD965',
-                100: '#FFC632'
+                100: '#FFC632',
+                ...commonColors.yellow
             },
             red: {
                 DEFAULT: commonColors.red2,
-                lightRed: '#E5544B19'
+                lightRed: '#E5544B19',
+                ...commonColors.red
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
@@ -398,9 +400,14 @@ module.exports = {
                 rank: "url('/images/contest/bg_rank.png')",
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
-                dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
-                'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')"
+                'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')",
+                'gradient-button-dark':
+                    'linear-gradient(95deg, rgba(62, 166, 111, 0.49) -2%, rgba(55, 220, 131, 0.54) 26%, rgba(50, 222, 133, 0.66) 37%, rgba(40, 226, 137, 0.7) 50%, rgba(48, 220, 137, 0.7) 61%, rgba(57, 212, 138, 0.63) 71%, rgba(60, 210, 134, 0.37) 86%, rgba(63, 207, 130, 0.15) 101%)',
+                'gradient-button':
+                    'linear-gradient(280deg, rgba(98, 255, 104, 0.24) 98%, rgba(50, 244, 110, 0.59) 63%, rgba(45, 225, 96, 0.53) 35%, #3be29c 7%)',
+                'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
+                'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

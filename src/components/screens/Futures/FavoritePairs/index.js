@@ -53,7 +53,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     return (
         <div className="h-full flex items-center pr-3">
             <div className="flex items-center pl-6 h-full dragHandleArea">
-                <BxsStarIcon size={16} fill={colors.yellow[1]} />
+                <BxsStarIcon size={16} fill={colors.yellow[2]} />
             </div>
             {loading ? (
                 <div className="pl-3">Loading...</div>

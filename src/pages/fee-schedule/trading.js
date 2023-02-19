@@ -28,6 +28,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Crown from 'components/svg/Crown';
 import TabV2 from 'components/common/V2/TabV2';
 import Tag from 'components/common/Tag';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -63,6 +64,7 @@ const TradingFee = () => {
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
+    const [currentTheme] = useDarkMode();
 
     const handleHideScrollBar = () => {
         const malLayout = document.querySelector('.mal-layouts');
@@ -461,7 +463,7 @@ const TradingFee = () => {
     return (
         <>
             <div
-                className="flex flex-wrap relative justify-center text-center lg:text-left items-center pt-7 pb-[60px] lg:justify-between mt-10 rounded-xl lg:mt-20"
+                className="flex flex-wrap relative justify-center text-center lg:text-left items-center pt-7 lg:pt-0 lg:justify-between mt-10 rounded-xl lg:mt-20"
                 style={{
                     background: width > BREAK_POINTS.lg ? ' ' : 'linear-gradient(328deg, rgba(47,75,63,1) 0%, rgba(19,24,31,1) 50%, rgba(47,75,63,1) 100%)'
                 }}
@@ -476,7 +478,7 @@ const TradingFee = () => {
                             <span className="text-txtSecondary text-sm lg:text-base dark:text-txtSecondary-dark whitespace-nowrap">
                                 {t('common:available_balance')}:{' '}
                             </span>
-                            <span className="font-bold text-sm lg:text-base">{renderNamiAvailable()}</span>
+                            <span className="font-semibold text-sm lg:text-base">{renderNamiAvailable()}</span>
                         </span>
 
                         {namiWallets && (
@@ -486,7 +488,7 @@ const TradingFee = () => {
                                     toAsset: 'NAMI'
                                 })}
                             >
-                                <a className={'pl-4 text-teal font-bold whitespace-nowrap hover:!underline text-sm lg:text-base'}>{t('common:buy')} NAMI</a>
+                                <a className={'pl-4 text-teal font-semibold whitespace-nowrap hover:!underline text-sm lg:text-base'}>{t('common:buy')} NAMI</a>
                             </Link>
                         )}
                     </div>
@@ -500,12 +502,15 @@ const TradingFee = () => {
                     </ButtonV2>
                 </Link>
             </div>
-            <div className="relative mt-[60px] lg:mt-12 lg:px-7 p-6 bg-darkBlue-3 lg:py-8  rounded-xl">
+            <div
+                style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0 6px 20px 0 rgba(31, 47, 70, 0.1)' } : undefined}
+                className="relative mt-[60px] lg:mt-12 lg:px-7 p-6 bg-white dark:bg-darkBlue-3 lg:py-8 rounded-xl"
+            >
                 <div className="relative z-10 w-full grid grid-cols-1 lg:grid-cols-3 gap-16">
                     <TradingFeeColumn
                     //  className="border-b xl:border-b-0 xl:border-r border-divider-dark"
                     >
-                        <div className="mb-4 font-bold">
+                        <div className="mb-4 font-semibold">
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
 
@@ -530,7 +535,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="mb-4 font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span className="float-right">
@@ -552,7 +557,7 @@ const TradingFee = () => {
                         className=""
                         // className="border-b  xl:border-b-0  xl:border-r border-divider-dark"
                     >
-                        <div className="mb-4 font-bold">
+                        <div className="mb-4 font-semibold">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
 
@@ -569,7 +574,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="mb-4 font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span className="float-right">
@@ -580,7 +585,7 @@ const TradingFee = () => {
                     </TradingFeeColumn>
 
                     <div>
-                        <div className="mb-4 font-bold">
+                        <div className="mb-4 font-semibold">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                         </div>
 
@@ -597,7 +602,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className="mb-4 font-medium text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="font-medium text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="flex justify-between sm:block">
                                 <span className="inline-block min-w-[35px] mr-9">Taker</span>
                                 <span className="float-right">
@@ -612,8 +617,8 @@ const TradingFee = () => {
             <div className="mt-20 mb-[30px] text-[22px] font-semibold">{t('fee-structure:fee_rate')}</div>
             {width > BREAK_POINTS.lg ? (
                 <>
-                    <div className="flex items-center border border-b-0 border-divider-dark rounded-t-lg px-8 pt-8">{renderFeeTab()}</div>
-                    <div className="border border-divider-dark rounded-b-lg pb-8">
+                    <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-lg px-8 pt-8">{renderFeeTab()}</div>
+                    <div className="border border-divider dark:border-divider-dark rounded-b-lg pb-8">
                         {state.tabIndex === 0 && renderExchangeTableFee()}
                         {state.tabIndex !== 0 && renderFuturesTableFee()}
                     </div>
@@ -621,7 +626,12 @@ const TradingFee = () => {
             ) : (
                 <>
                     {renderFeeTab()}
-                    <FeeTabMobile tabIndex={state.tabIndex} translate={t} futuresFeeConfig={state.futuresFeeConfig} loadingFuturesFeeConfigs={state.loadingFuturesFeeConfigs} />
+                    <FeeTabMobile
+                        tabIndex={state.tabIndex}
+                        translate={t}
+                        futuresFeeConfig={state.futuresFeeConfig}
+                        loadingFuturesFeeConfigs={state.loadingFuturesFeeConfigs}
+                    />
                 </>
             )}
 

@@ -3,7 +3,7 @@ import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
+import { SeeIcon, HideIcon, PartnersIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -213,8 +213,8 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full p-4 bg-teal-lightTeal dark:bg-teal-5 h-full flex items-center justify-center">
-                    <SvgWalletFutures size={32} />
+                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
+                    <PartnersIcon size={32} />
                 </div>
                 <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
                     <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
@@ -275,7 +275,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
                 <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
                         <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">

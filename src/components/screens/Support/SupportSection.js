@@ -24,7 +24,7 @@ const SupportSection = ({
         <div className={classNames('', containerClassNames)}>
             {title &&
                 <div
-                    className="text-gray-4 text-base font-semibold sm:text-[32px] sm:leading-[38px] cursor-pointer">
+                    className="text-txtPrimary dark:text-txtPrimary-dark text-base font-semibold sm:text-[32px] sm:leading-[38px] cursor-pointer">
                     {href ? <Link href={href}>
                         <a className="">
                             {title}
@@ -36,9 +36,9 @@ const SupportSection = ({
                 </div>
             }
             {children && <div
-                className={classNames('flex flex-col sm:grid justify-between gap-4 sm:gap-6', contentContainerClassName)}
+                className={classNames('flex flex-col sm:grid justify-between gap-4', contentContainerClassName)}
                 style={{
-                    gridTemplateColumns: isMobile ? "repeat(auto-fill, 170px)" : "repeat(auto-fill, 286px)",
+                    gridTemplateColumns: isMobile ? "" : "repeat(auto-fill, 236px)",
                 }}
             >
                 {children}

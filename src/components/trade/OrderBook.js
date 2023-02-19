@@ -254,7 +254,7 @@ const OrderBook = (props) => {
                                     }}
                                     key={index}
                                     className={classNames(
-                                        'h-8 leading-8 px-4 cursor-pointer w-full text-xs text-center text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover-1 dark:hover:bg-hover-dark',
+                                        'h-8 leading-8 px-4 cursor-pointer w-full text-xs text-center text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
                                         { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
                                     )}
                                 >

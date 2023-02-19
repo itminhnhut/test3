@@ -22,10 +22,14 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent !important;
-
+    
+    a {
+        color:inherit;
+    }
     a:hover,
     a:active,
     a:focus {
+        color:inherit;
         text-decoration: none !important;
         outline: none !important;
     }
@@ -972,7 +976,7 @@ input:-webkit-autofill {
         height: 3px;
         left: 0.5rem;
         top: 50%;
-        @apply bg-white rounded-full;
+        @apply bg-black dark:bg-white rounded-full;
     }
 }
 
@@ -987,3 +991,54 @@ input:-webkit-autofill {
 .nami-light-shadow {
     box-shadow: 0 6px 20px 0 rgba(31, 47, 70, 0.1);
 }
+
+
+.tooltip-arrow-bottom {
+    @apply dark:bg-darkBlue-6 bg-gray-11 text-txtPrimary dark:text-txtPrimary-dark relative;
+}
+.tooltip-arrow-bottom:after {
+
+    @apply dark:border-darkBlue-6 border-black-300;
+    --size:8px;
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform:translateX(-50%);
+    bottom:calc(var(--size) * -1);
+    border-width:calc(var(--size) / 2 );
+    border-right-color:  transparent !important;
+    border-bottom-color:  transparent !important;
+    border-left-color:transparent !important;
+}
+
+@keyframes slideAnimation {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
+
+  .looper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .looper__innerList {
+    display: flex;
+    justify-content: center;
+    width: fit-content;
+    &:hover {
+       .looper__listInstance {
+        animation-play-state: paused;
+       } 
+    }
+  }
+
+  .looper__listInstance {
+    display: flex;
+    width: max-content;
+    animation: 30s slideAnimation linear infinite;
+    animation-direction:normal;
+  }

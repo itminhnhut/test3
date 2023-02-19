@@ -13,6 +13,7 @@
     "wallet_balance": "Số dư",
     "hide_small_balance": "Ẩn số dư nhỏ",
     "calculating": "đang tính toán",
+    "required_kyc": "Yêu cầu KYC",
     "not_kyc": "Để sử dụng chức năng rút tiền, vui lòng hoàn thành quá trình xác thực tài khoản (KYC)",
     "not_kyc_deposit_fiat": "Để sử dụng chức năng nạp tiền qua ngân hàng, vui lòng hoàn thành quá trình xác thực tài khoản (KYC)",
     "go_verification": "Đi đến cài đặt",

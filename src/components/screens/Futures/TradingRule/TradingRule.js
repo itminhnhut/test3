@@ -240,7 +240,7 @@ const TradingRules = () => {
                             {CURRENCIES.map((rs) => (
                                 <div
                                     className={classNames(
-                                        'text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider-dark rounded-full cursor-pointer',
+                                        'text-txtSecondary dark:text-txtSecondary-dark text-sm sm:text-base px-4 sm:px-5 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
                                         {
                                             '!border-teal !text-teal font-semibold bg-teal/[0.1]': currency === rs.value
                                         }
@@ -261,7 +261,7 @@ const TradingRules = () => {
                     {isMobile ? (
                         dataSource.length > 0 ? (
                             <>
-                                <div className="divide-y divide-divider-dark mt-6">
+                                <div className="divide-y border-divider dark:divide-divider-dark mt-6">
                                     {dataSource.map((item, index) => {
                                         const hidden = index + 1 > currentPage * limit;
                                         return (
@@ -305,7 +305,7 @@ const TradingRules = () => {
                             onChangePage={setCurrentPage}
                             page={currentPage}
                             isSearch={strSearch}
-                            className="border border-divider-dark rounded-xl"
+                            className="border border-divider dark:border-divider-dark rounded-xl"
                             pagingClassName="border-none"
                         />
                     )}
@@ -331,7 +331,7 @@ const GlossaryModal = ({ isVisible, onClose }) => {
     return (
         <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose} isMobile>
             <div className="text-xl mb-8">{t('futures:the_glossary')}</div>
-            <div className='divide-y divide-divider-dark'>
+            <div className="divide-y divide-divider-dark">
                 {initColumns.map((rs) => (
                     <div className="flex items-center justify-between text-sm space-x-7 w-full py-3">
                         <lable className="font-semibold min-w-[120px] max-w-[120px]">{t(`futures:${rs.title}`)}</lable>

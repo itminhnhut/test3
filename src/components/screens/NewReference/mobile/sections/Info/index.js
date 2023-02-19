@@ -57,7 +57,7 @@ const Info = ({ data, user }) => {
                     </div>
                     <div className='w-full bg-hover-dark flex'>
                         <Progressbar
-                            background={colors.green1}
+                            background={colors.green[1]}
                             percent={
                                 (data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100
                             }

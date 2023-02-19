@@ -13,6 +13,7 @@
     "wallet_balance": "Total",
     "hide_small_balance": "Hide small balance",
     "calculating": "calculating",
+    "required_kyc": "KYC Required",
     "not_kyc": "To use Withdraw function, please complete KYC process.",
     "not_kyc_deposit_fiat": "To use Deposit function, please complete KYC process.",
     "go_verification": "Go to Settings",

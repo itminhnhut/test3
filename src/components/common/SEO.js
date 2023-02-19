@@ -39,9 +39,9 @@ const SEO = (props) => {
     } = props;
     return <Head>
         <title>{title}</title>
-        <meta key="name" itemprop="name" content={title}/>
+        <meta key="name" itemProp="name" content={title}/>
         <meta key="description" name="description" content={description}/>
-        <meta key="image" itemprop="image" content={image}/>
+        <meta key="image" itemProp="image" content={image}/>
         {keywords && <meta key="keywords" name="keywords" content={keywords}/>}
         {socialTags(props).map(({name, content}) => {
             return <meta key={name} name={name} content={content}/>;

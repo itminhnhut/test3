@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState, useRef } from 'react';
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Trans, useTranslation } from 'next-i18next';
-import { Eye, EyeOff } from 'react-feather';
 import { SECRET_STRING } from 'utils';
 import { useDispatch, useSelector } from 'react-redux';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
@@ -9,18 +8,14 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import useWindowSize from 'hooks/useWindowSize';
 import AssetLogo from 'components/wallet/AssetLogo';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { WalletType } from 'redux/actions/const';
-import AssetName from 'components/wallet/AssetName';
 import { EXCHANGE_ACTION } from 'pages/wallet';
-import { PATHS } from 'constants/paths';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { HideIcon, SeeIcon } from '../../svg/SvgIcon';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import { HideIcon, SeeIcon, PartnersIcon } from 'components/svg/SvgIcon';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const INITIAL_STATE = {
@@ -270,19 +265,14 @@ const OverviewWallet = (props) => {
                                 {t('common:deposit')}
                             </ButtonV2>
                             <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6
-                                bg-gray-10 
-                                dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                                className="px-6"
+                                color="dark"
+                                variants="none"
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -360,7 +350,7 @@ const OverviewWallet = (props) => {
                     onClick={() => onHandleClick('details_partners')}
                     className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row hover:bg-gray-13 dark:hover:bg-hover-dark cursor-pointer rounded-b-xl group"
                 >
-                    <AssetBalance title="Partners" icon={<SvgWalletFutures />} renderEstBalance={renderPartnersEstBalance} />
+                    <AssetBalance title="Partners" icon={<PartnersIcon />} renderEstBalance={renderPartnersEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className="flex items-center mt-4 pr-4 lg:mt-0">
                             <Trans>{t('wallet:partners_overview')}</Trans>

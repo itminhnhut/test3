@@ -53,7 +53,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
-                <div className={isMobile ? 'text-sm font-semibold leading-[1.375rem]' : ''}>
+                <div className={isMobile ? 'text-sm font-semibold leading-[1.375rem]' : 'font-semibold'}>
                     {profit > 0 ? '+' : ''}
                     {formatNumber(profit, decimal, 0, true)}
                 </div>

@@ -64,61 +64,79 @@ const CheckCircleIcon = ({ className = '', color, size }) => (
     </svg>
 );
 
-const SwapIcon = ({ className = '', color = '#E2E8F0', size = 16 }) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#8slfkmybya)" fill={color}>
-            <path d="M14.667 5.334 12 2.667v2H2V6h10v2l2.667-2.666zM1.333 10.667 4 13.333v-2h10V10H4V8l-2.667 2.667z" />
-        </g>
-        <defs>
-            <clipPath id="8slfkmybya">
-                <path fill="#fff" d="M0 0h16v16H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+const SwapIcon = ({ className = '', color, size = 16 }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
 
-const CloseIcon = ({ className, onClick, color, size }) => (
-    <svg
-        className={className || ''}
-        onClick={onClick}
-        width={size || 24}
-        height={size || 24}
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <g clipPath="url(#l6hcoftsra)">
-            <path d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z" fill={color || '#8593a6'} />
-        </g>
-        <defs>
-            <clipPath id="l6hcoftsra">
-                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+    return (
+        <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#8slfkmybya)" fill={color || defaultColor}>
+                <path d="M14.667 5.334 12 2.667v2H2V6h10v2l2.667-2.666zM1.333 10.667 4 13.333v-2h10V10H4V8l-2.667 2.667z" />
+            </g>
+            <defs>
+                <clipPath id="8slfkmybya">
+                    <path fill="#fff" d="M0 0h16v16H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
-const ArrowDropDownIcon = ({ className = '', color = '#8694B3', size = 32, isFilled = true }) => (
-    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {isFilled ? (
-            <g clip-path="url(#ixety35iha)">
-                <path d="M4.666 6.667 7.999 10l3.334-3.333H4.666z" fill={color} />
+const CloseIcon = ({ className, onClick, color, size }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394';
+
+    return (
+        <svg
+            className={className || ''}
+            onClick={onClick}
+            width={size || 24}
+            height={size || 24}
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <g clipPath="url(#l6hcoftsra)">
+                <path
+                    d="M6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41 17.59 5 12 10.59 6.41 5z"
+                    fill={color ?? defaultColor}
+                />
             </g>
-        ) : (
-            <g clip-path="url(#evihhgi6wb)">
-                <path d="m18 10-1.41-1.41L12 13.17 7.41 8.59 6 10l6 6 6-6z" fill={color} />
-            </g>
-        )}
-        <defs>
-            <clipPath id="n2w0qfepha">
-                <path fill="#fff" transform="translate(48)" d="M0 0h24v24H0z" />
-            </clipPath>
-            <clipPath id="evihhgi6wb">
-                <path fill="#fff" transform="rotate(90 12 12)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
-    </svg>
-);
+            <defs>
+                <clipPath id="l6hcoftsra">
+                    <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }) => {
+    const [currentTheme] = useDarkMode();
+    const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
+
+    return (
+        <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {isFilled ? (
+                <g clip-path="url(#ixety35iha)">
+                    <path d="M4.666 6.667 7.999 10l3.334-3.333H4.666z" fill={color || defaultColor} />
+                </g>
+            ) : (
+                <g clip-path="url(#evihhgi6wb)">
+                    <path d="m18 10-1.41-1.41L12 13.17 7.41 8.59 6 10l6 6 6-6z" fill={color || defaultColor} />
+                </g>
+            )}
+            <defs>
+                <clipPath id="n2w0qfepha">
+                    <path fill="#fff" transform="translate(48)" d="M0 0h24v24H0z" />
+                </clipPath>
+                <clipPath id="evihhgi6wb">
+                    <path fill="#fff" transform="rotate(90 12 12)" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
 
 const BxsUserIcon = ({ size = 24, className, color }) => (
     <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -334,12 +352,12 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
     </svg>
 );
 
-const AddCircleIcon = () => (
-    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+const AddCircleIcon = ({ color = '#768394', ...props }) => (
+    <svg {...props} width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#p8h6ijxpna)">
             <path
                 d="M8.4 1.678a6.67 6.67 0 0 0-6.668 6.666A6.67 6.67 0 0 0 8.4 15.011a6.67 6.67 0 0 0 6.667-6.667 6.67 6.67 0 0 0-6.667-6.666zm3.332 7.333H9.066v2.667H7.732V9.01H5.066V7.678h2.666V5.01h1.334v2.667h2.666V9.01z"
-                fill="#8694B3"
+                fill={color}
             />
         </g>
         <defs>
@@ -363,17 +381,17 @@ const AddCircleColorIcon = (props) => (
     </svg>
 );
 
-const AppleIcon = ({ size = 24, ...props }) => (
+const AppleIcon = ({ size = 24, color, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
         <g clip-path="url(#ik9gb490da)">
             <path
                 d="M22.292 18.703c-.363.839-.793 1.61-1.29 2.32-.679.968-1.234 1.637-1.662 2.01-.664.61-1.375.922-2.137.94-.546 0-1.206-.156-1.973-.471-.77-.314-1.478-.47-2.124-.47-.679 0-1.407.156-2.185.47-.78.315-1.407.48-1.888.496-.73.031-1.458-.29-2.184-.966-.464-.404-1.044-1.098-1.739-2.08-.745-1.049-1.358-2.265-1.838-3.652-.514-1.497-.772-2.948-.772-4.352 0-1.608.348-2.995 1.044-4.158A6.122 6.122 0 0 1 5.73 6.58a5.88 5.88 0 0 1 2.955-.835c.58 0 1.34.18 2.285.532.943.354 1.548.533 1.813.533.199 0 .871-.21 2.01-.628 1.078-.388 1.988-.548 2.733-.485 2.02.163 3.536.96 4.545 2.393-1.806 1.094-2.699 2.627-2.681 4.593.016 1.531.572 2.806 1.663 3.817.495.47 1.048.833 1.663 1.09-.134.387-.274.758-.424 1.113zM17.661.48c0 1.2-.439 2.321-1.313 3.358-1.054 1.234-2.33 1.946-3.714 1.834a3.742 3.742 0 0 1-.027-.455c0-1.152.501-2.386 1.392-3.394.445-.51 1.01-.935 1.696-1.273.685-.334 1.332-.518 1.94-.55.019.16.026.32.026.48z"
-                fill="#fff"
+                fill={color || '#fff'}
             />
         </g>
         <defs>
             <clipPath id="ik9gb490da">
-                <path fill="#fff" transform="translate(.5)" d="M0 0h24v24H0z" />
+                <path fill={color || '#fff'} transform="translate(.5)" d="M0 0h24v24H0z" />
             </clipPath>
         </defs>
     </svg>
@@ -431,17 +449,34 @@ const BxChevronDown = ({ size = 24, color, ...props }) => {
     );
 };
 
-const SyncAltIcon = ({ size, color = '#47CC85', bgColor = 'undefined' }) => (
-    <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clipPath="url(#0dcfa1hmna)">
-            <path fill={bgColor} d="M0 24V0h24v24z" />
-            <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color ? color : '#47CC85'} />
-        </g>
-        <defs>
-            <clipPath id="0dcfa1hmna">
-                <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
-            </clipPath>
-        </defs>
+const SyncAltIcon = ({ size, color, bgColor }) => {
+    return (
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clipPath="url(#0dcfa1hmna)">
+                <path fill={bgColor || 'undefined'} d="M0 24V0h24v24z" />
+                <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color || '#47CC85'} />
+            </g>
+            <defs>
+                <clipPath id="0dcfa1hmna">
+                    <path fill="#fff" transform="rotate(-90 12 12)" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
+const ArrowRightIcon = ({ color, size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 8" fill="none">
+        <path d="M12.01 3L0 3L0 5L12.01 5L12.01 8L16 4L12.01 0V3Z" fill={color || '#47CC85'} />
+    </svg>
+);
+
+const CheckedDoubleIcon = ({ color, size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 20 11" fill="none">
+        <path
+            d="M0.394043 6.74204L5.13704 10.362L12.753 1.65804L11.247 0.342041L4.86304 7.63804L1.60604 5.15204L0.394043 6.74204ZM19.753 1.65804L18.247 0.342041L11.878 7.62104L11.125 7.01904L9.87504 8.58104L12.122 10.379L19.753 1.65804Z"
+            fill={color || '#47CC85'}
+        />
     </svg>
 );
 
@@ -481,6 +516,24 @@ const TuneIcon = ({ size = 16, color, ...props }) => (
     </svg>
 );
 
+const PartnersIcon = ({ size, color, ...props }) => {
+    return (
+        <svg {...props} width={size || 32} height={size || 32} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M23.707 22.587a2.571 2.571 0 0 1-1.582 2.381c-.312.13-.647.197-.984.197a2.564 2.564 0 0 1-1.596 2.38c-.314.128-.65.192-.989.188a3.615 3.615 0 0 1-5.133 0l-7.7-7.715 5.134-5.147a3.615 3.615 0 0 1 5.142 0l-3.85 3.853a3.613 3.613 0 0 0 5.133 0l1.274-1.284 5.151 5.147z"
+                fill="#9FF2C5"
+            />
+            <path d="m26.279 20.018-2.576 2.569-7.708-7.716a3.616 3.616 0 0 1 3.964-.795c.441.184.841.454 1.178.795l5.142 5.147z" fill="#5BD891" />
+            <path d="M10.015 14.817 5.316 19.52l-2.123-2.134 4.699-4.704 2.123 2.135z" fill="#9FF2C5" />
+            <path d="m7.892 12.691 2.123 2.126-4.699 4.703-2.123-2.134 4.699-4.695z" fill="#9FF2C5" />
+            <path d="m24.095 12.674-2.121 2.123 4.697 4.701 2.121-2.123-4.697-4.701z" fill="#5BD891" />
+            <path d="m18.557 17.44-1.284 1.284a3.615 3.615 0 0 1-5.132 0l3.85-3.853 2.566 2.569z" fill="#0D994E" />
+            <path d="m15.993 3.204-3.75 3.754 3.75 3.754 3.751-3.754-3.75-3.754z" fill="#5BD891" />
+            <path d="m8.249 5.689-1.26 1.26 1.26 1.26 1.259-1.26-1.26-1.26zM23.605 5.685l-1.259 1.26 1.26 1.26 1.258-1.26-1.259-1.26z" fill="#0D994E" />
+        </svg>
+    );
+};
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -510,7 +563,10 @@ export {
     LogoIcon,
     BxChevronDown,
     SyncAltIcon,
+    ArrowRightIcon,
+    CheckedDoubleIcon,
     BxsBookIcon,
     BxsStarIcon,
-    TuneIcon
+    TuneIcon,
+    PartnersIcon
 };
