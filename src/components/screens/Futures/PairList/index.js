@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { orderBy, pick } from 'lodash';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -59,7 +60,8 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
         // filter search
         if (search) {
-            const _search = search.replace('/', '').toLowerCase();
+            console.log("search: ", search);
+            const _search = search?.replace('/', '').toLowerCase();
             data = data?.filter((o) => o?.pair?.toLowerCase().includes(_search));
         }
 
@@ -90,27 +92,23 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
     const renderModes = useCallback(
         () => (
-            <div className="px-4 flex items-center">
+            <div className="px-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark hover:text-gray-15 dark:hover:text-gray-14 select-none">
                 {isAuth && (
                     <BxsStarIcon
                         onClick={() => onHandleMode('Starred')}
-                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.gray[7] : colors.gray[1]}
                         className="cursor-pointer"
                     />
                 )}
                 <div
                     onClick={() => onHandleMode('USDT')}
-                    className={classNames('ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant', {
-                        '!text-dominant': mode === 'USDT'
-                    })}
+                    className={mode === 'USDT' && 'text-green-3 font-semibold'}
                 >
                     USDT
                 </div>
                 <div
                     onClick={() => onHandleMode('VNDC')}
-                    className={classNames('ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant', {
-                        '!text-dominant': mode === 'VNDC'
-                    })}
+                    className={mode === 'VNDC' && 'text-green-3 font-semibold'}
                 >
                     VNDC
                 </div>
@@ -132,7 +130,14 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         >
             <div className="max-h-[352px] flex flex-col">
                 <div className="px-4 mb-7">
-                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                    <SearchBoxV2
+                        value={search}
+                        onChange={(value) => {
+                            setSearch(value);
+                        }}
+                        wrapperClassname='py-2'
+                    />
+                    {/* <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
@@ -141,7 +146,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                             placeholder={t('common:search')}
                         />
                         {search && <X size={16} className="cursor-pointer" color="#8694b2" onClick={() => setSearch('')} />}
-                    </div>
+                    </div> */}
                 </div>
 
                 {renderModes()}

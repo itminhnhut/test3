@@ -275,7 +275,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 '!text-red': pairPrice?.priceChangePercent < 0
                             })}
                         >
-                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 2, 2, true)}</span>
+                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 0, 0, true)}</span>
                             <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
@@ -447,7 +447,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                             data-tip=""
                             data-for={title}
                             id={tooltip}
-                            className="flex items-end text-base text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-darkBlue-5"
+                            className="flex items-end text-base text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-darkBlue-5 cursor-pointer"
                         >
                             {t('futures:' + title)}
                         </span>
@@ -465,7 +465,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             <ModalV2 className="!max-w-[800px]" isVisible={isShowModalInfo} onBackdropCb={() => setIsShowModalInfo(false)}>
                 <div className="mt-4 text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('futures:trading_rules')}</div>
                 <div className="mt-6 gap-6 flex">
-                    <div className="w-full rounded-md border dark:border-divider-dark p-4 dark:bg-bgInput-dark flex justify-between">
+                    <div className="w-full rounded-md border border-divider dark:border-divider-dark p-4 bg-gray-13 dark:bg-dark-4 flex justify-between">
                         <div
                             className="relative cursor-pointer group"
                             onMouseOver={() => setIsShowModalPriceList(true)}
@@ -610,10 +610,9 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
             </div> */}
             <ModalV2 className="!max-w-[342px]" isVisible={visible} onBackdropCb={onClose}>
                 {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
-                <div className="font-semibold">{isFunding ? 'Funding' : t('futures:countdown')}</div>
-                <div className="text-gray-4 text-sm pt-4">
-                    {' '}
-                    {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}
+                <div className="font-semibold text-2xl mt-4">{isFunding ? 'Funding' : t('futures:countdown')}</div>
+                <div className="text-gray-9 dark:text-gray-7 text-sm mt-4">
+                    {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}{' '}
                     {isFunding && (
                         <span onClick={onDetail} className="text-teal font-semibold cursor-pointer">
                             {t('common:read_more')}
@@ -621,12 +620,14 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
                     )}
                 </div>
                 {isFunding && (
-                    <div
-                        onClick={onRedirect}
-                        className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center"
-                    >
+                    <ButtonV2 onClick={onRedirect} className="mt-3 w-full">
                         {t('futures:funding_history')}
-                    </div>
+                    </ButtonV2>
+                    // <div
+                    //     onClick={onRedirect}
+                    //     className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center"
+                    // >
+                    // </div>
                 )}
             </ModalV2>
         </>

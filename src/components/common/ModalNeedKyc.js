@@ -13,7 +13,7 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb }) => {
             <img width={124} height={124} src={getS3Url('/images/screen/account/kyc_require.png')} className="mx-auto mt-4" />
 
             <div className="mb-4 mt-6 font-semibold text-2xl leading-[30px] text-center capitalize">{t('wallet:required_kyc')}</div>
-            <div className="text-center text-gray-16 text-base">{t('wallet:errors.invalid_kyc_status')}</div>
+            <div className="text-center text-gray-7 text-base">{t('wallet:errors.invalid_kyc_status')}</div>
             <HrefButton className="mt-10 mb-3" href="https://nami.exchange/account/identification" target="_blank">
                 {t('common:kyc_now')}
             </HrefButton>
