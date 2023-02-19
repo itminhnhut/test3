@@ -15,7 +15,7 @@ import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { HideIcon, SeeIcon, PartnersIcon, FuturePortfolioIcon, PortfolioIcon } from 'components/svg/SvgIcon';
+import { HideIcon, SeeIcon, PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import styled from 'styled-components';
 
@@ -58,7 +58,10 @@ const OverviewWallet = (props) => {
         return limit;
     }, [width]);
 
-    const isSmallScreen = width < WIDTH_MD;
+    // const isSmallScreen = width < WIDTH_MD;
+    const isSmallScreen = useMemo(() => {
+        return width < WIDTH_MD;
+    }, [width]);
 
     // Render Handler
     const renderExchangeAsset = useCallback(() => {
@@ -107,7 +110,7 @@ const OverviewWallet = (props) => {
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
@@ -117,7 +120,7 @@ const OverviewWallet = (props) => {
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
@@ -127,7 +130,7 @@ const OverviewWallet = (props) => {
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
@@ -293,11 +296,16 @@ const OverviewWallet = (props) => {
 
             {/* Số dư tài sản */}
             <div className="mt-12 md:mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-8 !p-0 bg-trans bg-white !dark:bg-dark">
+            <MCard addClass="mt-8 !p-0 bg-white dark:bg-dark-dark">
                 {/* mark1 */}
                 {/* Exchange */}
-                <CardWallet onClick={() => onHandleClick('details_exchange')} isSmallScreen>
-                    <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
+                <CardWallet onClick={() => onHandleClick('details_exchange')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="Exchange"
+                        icon={<FutureExchangeIcon size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderExchangeEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
@@ -333,7 +341,7 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                 </CardWallet>
-                <CardWallet onClick={() => onHandleClick('details_futures')} isSmallScreen>
+                <CardWallet onClick={() => onHandleClick('details_futures')} isSmallScreen={isSmallScreen}>
                     <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className="flex items-center mt-4 pr-4 lg:mt-0">
@@ -346,7 +354,7 @@ const OverviewWallet = (props) => {
                         </div>
                     </div>
                 </CardWallet>
-                <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen>
+                <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
                     <AssetBalance title="Partners" icon={<PartnersIcon />} renderEstBalance={renderPartnersEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className="flex items-center mt-4 pr-4 lg:mt-0">
@@ -479,7 +487,20 @@ const OverviewWallet = (props) => {
     );
 };
 
-const AssetBalance = ({ title, icon, renderEstBalance }) => {
+const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen }) => {
+    if (isSmallScreen) {
+        return (
+            <div>
+                <div className="w-full flex items-center justify-between">
+                    <div className="flex gap-3 items-center">
+                        {icon} <span className="text-sm font-normal text-gray-1 dark:text-gray-7">{title}</span>
+                    </div>
+                    <MoreHorizIcon onClick={() => console.log('hello')} />
+                </div>
+                <div className="mt-6">{renderEstBalance()}</div>
+            </div>
+        );
+    }
     return (
         <div className="min-w-[530px] max-w-[530px] flex items-center">
             <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-transparent dark:bg-dark-2">{icon}</div>
@@ -490,14 +511,15 @@ const AssetBalance = ({ title, icon, renderEstBalance }) => {
         </div>
     );
 };
-// className="p-4 md:p-8 rounded-xl md:rounded-none md:rounded-t-xl cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark"
 
 const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
-    className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark ${
-        isSmallScreen
-            ? 'p-4 rounded-xl first:mt-0 mt-4'
-            : 'p-8 first:rounded-t-xl last:rounded-b-xl border-x first:border-t last:border-b border-divider dark:border-transparent'
-    }`,
+    className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
+     ${
+         isSmallScreen
+             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
+             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
+     }
+     `,
     onClick: onClick
 }))``;
 
