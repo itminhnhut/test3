@@ -12,6 +12,7 @@ import useLanguage from 'hooks/useLanguage';
 import Toggle from 'src/components/common/input/Toggle';
 import { getS3Url } from 'redux/actions/utils';
 import RadioBox from '../../common/RadioBox';
+import Switch from 'components/common/V2/SwitchV2';
 
 const FuturesSetting = (props) => {
     const { spotState, onChangeSpotState, resetDefault, className } = props;
@@ -72,7 +73,7 @@ const FuturesSetting = (props) => {
         const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
         window.location = `${nextUrl}?layout=${_layout}`;
     };
-    const inActiveLabel = currentTheme === 'dark' ? colors.gray[4] : colors.darkBlue;
+    const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
     const onChangeFuturesComponent = (key, value) => {
         const _newSpotState = spotState;
@@ -105,11 +106,13 @@ const FuturesSetting = (props) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute right-0 z-10">
-                            <div className="w-80  rounded-lg shadow-md bg-bgPrimary dark:bg-darkBlue-2 divide-solid divide-divider dark:divide-divider-dark divide-y">
-                                <div className="px-5 py-3 flex justify-between">
-                                    <span className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold">{t('spot:setting.theme')}</span>
-                                    <span className="flex">
+                        <Popover.Panel className="absolute right-0 top-12 z-10">
+                            <div className="p-4 w-[295px] border border-t-0 dark:border-divider-dark rounded-b-lg shadow-md bg-bgPrimary dark:bg-darkBlue-3 divide-solid divide-divider dark:divide-divider-dark divide-y">
+                                <div className="mb-6 flex justify-between">
+                                    <span className="text-sm sm:text-base text-txtPrimary dark:text-txtPrimary-dark font-semibold">
+                                        {t('spot:setting.theme')}
+                                    </span>
+                                    <span className="flex space-x-4">
                                         <SvgMoon
                                             className="mr-2 cursor-pointer"
                                             size={20}
@@ -125,7 +128,7 @@ const FuturesSetting = (props) => {
                                     </span>
                                 </div>
 
-                                <div className="px-5 py-3">
+                                {/* <div className="px-5 py-3">
                                     <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-4">{t('spot:setting.layout')}</div>
 
                                     <div className="flex justify-around">
@@ -157,9 +160,9 @@ const FuturesSetting = (props) => {
                                             <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('futures:fullscreen')}</span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="px-5 py-3 text-center">
+                                <div className="py-6 text-center space-y-4">
                                     {FuturesComponents.map((item, index) => {
                                         const { value, key, visible } = item;
 
@@ -167,13 +170,13 @@ const FuturesSetting = (props) => {
                                         return (
                                             <div className="h-6 my-1 flex justify-between" key={key + index}>
                                                 <span className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{value}</span>
-                                                <Toggle checked={settingLayout?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
+                                                <Switch checked={settingLayout?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
                                             </div>
                                         );
                                     })}
                                 </div>
-                                <div className="px-5 py-3 text-center">
-                                    <span className="text-sm text-teal font-semibold cursor-pointer" onClick={() => resetDefault()}>
+                                <div className="pt-6 text-center">
+                                    <span className="text-sm sm:text-base text-teal font-semibold cursor-pointer py-[10px]" onClick={() => resetDefault()}>
                                         {t('spot:setting.reset_default_layout')}
                                     </span>
                                 </div>

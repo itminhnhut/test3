@@ -19,6 +19,7 @@ const index = ({
     isSearch,
     total,
     pagingPrevNext,
+    onRowClick,
     ...props
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -58,6 +59,7 @@ const index = ({
                 height={height}
                 loading={loading}
                 emptyText={<NoData loading={loading} isSearch={!!isSearch} className="" />}
+                onRowClick={onRowClick}
                 {...props}
             />
             {!pagingPrevNext ? (

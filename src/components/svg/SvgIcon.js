@@ -534,6 +534,19 @@ const PartnersIcon = ({ size, color, ...props }) => {
     );
 };
 
+const CopyIcon = (props) => (
+    <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#piv8lb9sya)">
+            <path d="M10.665.666H1.332v10.667h1.333V1.999h8V.666zM14 3.333h-10v12h10v-12zm-1.334 10.666H5.332V4.666h7.333v9.333z" fill="#8694B3" />
+        </g>
+        <defs>
+            <clipPath id="piv8lb9sya">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -568,5 +581,6 @@ export {
     BxsBookIcon,
     BxsStarIcon,
     TuneIcon,
-    PartnersIcon
+    PartnersIcon,
+    CopyIcon
 };

@@ -24,14 +24,14 @@ const initValue = {
     tp: 0
 };
 
-const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, pairTicker }) => {
+const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, onConfirm, marketWatch }) => {
     const { t } = useTranslation();
     const symbol = order?.symbol;
     const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
     const pairConfig = find(futuresConfigs, { symbol });
     const [currentTheme] = useDarkMode();
-    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
+    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
+    const quoteAsset = marketWatch ? marketWatch[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const [autoType, setAutoType] = useState(false);
     const [data, setData] = useState(initValue);
     const [show, setShow] = useState({ tp: +order?.tp > 0, sl: +order?.sl > 0 });
@@ -378,7 +378,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     </div>
                     <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
                     <div className="flex items-center justify-between">
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:last_price')}</span>
                         <span className="font-semibold">{formatNumber(_lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
