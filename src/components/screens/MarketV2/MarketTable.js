@@ -112,7 +112,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        'relative mr-6 pb-4 capitalize select-none font-normal text-tiny sm:text-base text-darkBlue-5 cursor-pointer flex items-center',
                         { '!text-gray-4 !font-semibold': restProps.tabIndex === index }
                     )}
                 >
@@ -129,11 +129,9 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             return (
                 <div key={item.key}
                     onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-                    className={
-                        restProps.subTabIndex === index
-                            ? 'text-base font-semibold px-4 py-3 bg-dark-2 text-gray-4 cursor-pointer select-none'
-                            : 'text-base font-semibold px-4 py-3 bg-shadow text-darkBlue-5 cursor-pointer select-none'
-                    }
+                    className={classNames('h-[44px] flex items-center text-tiny sm:text-base font-normal px-4 bg-shadow text-darkBlue-5 cursor-pointer select-none', {
+                        '!font-semibold !bg-dark-2 !text-gray-4': restProps.subTabIndex === index
+                    })}
                 >
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
                 </div>
@@ -293,8 +291,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
         if (tab[restProps.tabIndex]?.key === 'favorite') {
-            if (!restProps.auth) {
-                tableStatus = <NoData />
+            if (!auth) {
+                return <NoData className='my-20' />
             } else {
                 if (!dataSource.length) {
                     return renderSuggested
@@ -321,14 +319,6 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
                 noBorder
-                // onRow={(record) => ({
-                //     onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
-                //         record?.sortByValue?.tradingMode,
-                //         {
-                //             baseAsset: record?.sortByValue?.baseAsset,
-                //             quoteAsset: record?.sortByValue?.quoteAsset
-                //         }))
-                // })}
                 tableStyle={{
                     tableStyle: { minWidth: '888px !important' },
                     headerStyle: {},
@@ -407,32 +397,37 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     }, [restProps.favoriteList])
 
     return (
-        <div className="px-4 lg:px-0 text-darkBlue-5">
-            <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center mb-8">
-                <div className="text-2xl text-gray-4 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
+        <div className="px-4 sm:px-0 text-darkBlue-5">
+            <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
+                <div className="text-gray-4 font-semibold text-xl sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-0">
                     {t('common:market')}
                 </div>
-                <div className='flex items-center space-x-4'>
+                <div className='flex flex-row-reverse sm:flex-row items-center sm:space-x-4 justify-between sm:justify-end'>
                     <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <InputV2
-                        value={restProps.search}
-                        onChange={(value) => parentState({ search: value })}
-                        placeholder={t('common:search')}
-                        prefix={(<Search color={colors.darkBlue5} size={16} />)}
-                        className='pb-0 w-[100px] sm:w-[368px]'
-                        suffix={(<X color={colors.gray[10]} size={16} />)}
-                    />
+                    <div className='w-[calc(100vw-196px)] sm:w-[368px]'>
+                        <InputV2
+                            value={restProps.search}
+                            onChange={(value) => parentState({ search: value })}
+                            placeholder={t('common:search')}
+                            prefix={(<Search color={colors.darkBlue5} size={16} />)}
+                            className='pb-0 w-full'
+                            suffix={(<X color={colors.gray[10]} size={16} />)}
+                        />
+                    </div>
                 </div>
             </div>
             <div className="bg-shadow">
                 <div id="market_table___list"
-                    className="py-4 h-full rounded-xl border-[1px] border-divider-dark">
-                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-divider-dark">
+                    className="py-4 h-full rounded-xl sm:border-[1px] border-divider-dark">
+                    <div className="mt-[20px] flex items-center overflow-auto sm:px-8 border-b-[1px] border-divider-dark">
                         {renderTab()}
                     </div>
-                    <div className={classNames('my-4 sm:my-0 h-24 border-divider-dark flex items-center px-8 justify-between flex-wrap space-y-3', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
+                    {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
+                        'py-8 sm:py-6 border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
+                        { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
+                    }>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
                             <TokenTypes type={restProps.favType} setType={(index) => { parentState({ favType: index }) }} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
@@ -443,7 +438,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                             }} types={types} lang={language} />}
 
                         {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
-                            <div className='h-10 px-4 sm:h-12 sm:px-6 flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'
+                            <div className='h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'
                                 onClick={() => addTokensToFav({
                                     symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
                                     lang: language,
@@ -456,11 +451,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                             :
                             null}
 
-                    </div>
+                    </div> : null}
                     <div className="">
                         {renderTable()}
                     </div>
-                    <div className='px-8'>
+                    <div className='sm:px-8'>
                         {renderPagination()}
                     </div>
                 </div>
@@ -695,9 +690,9 @@ const renderTradeLink = (b, q, lang, mode) => {
 }
 
 const TokenTypes = ({ type, setType, types, lang }) => {
-    return <div className='flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'>
+    return <div className='flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar'>
         {types.map(e =>
-            <div key={e.id} className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
+            <div key={e.id} className={classNames('flex items-center h-full px-4 text-sm sm:text-base font-normal rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
                 'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
             })}
                 onClick={() => setType(e.id)}
