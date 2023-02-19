@@ -106,7 +106,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
             w_before: TabRef.current.offsetWidth > width ? '100%' : `${width}px`
         };
     }, [tab, mount, width]);
-
+    console.log(offset);
     return (
         <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} active={active} className={className}>
             {children}

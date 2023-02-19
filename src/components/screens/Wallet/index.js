@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { find, orderBy, sumBy } from 'lodash';
@@ -27,6 +27,7 @@ import NeedLoginV2 from 'components/common/NeedLoginV2';
 import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import useWindowSize from 'hooks/useWindowSize';
 
 const INITIAL_STATE = {
     screen: null,
@@ -184,6 +185,12 @@ const Wallet = () => {
         usdRate && setState({ usdRate });
     };
 
+    const { width } = useWindowSize();
+    const limitExchangeAsset = useMemo(() => {
+        let limit = 5;
+        if (width >= 1280) limit = 7;
+        return limit;
+    }, [width]);
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
@@ -209,7 +216,8 @@ const Wallet = () => {
                         );
                     })}
                 </Tabs>
-                <div className="absolute right-0">
+                <div className="absolute right-0 hidden md:block">
+                    <div />
                     <HrefButton variants="blank" className="w-auto !text-base" href={`${PATHS.WALLET.DEFAULT}/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
                         {t('common:transaction_history')}
                     </HrefButton>
@@ -428,7 +436,7 @@ const Wallet = () => {
                         {t('common:my_wallet')}
                     </div>
                     {renderScreenTab()}
-                    <div className="mt-8 text-txtPrimary dark:text-txtPrimary-dark">
+                    <div className="mt-8 px-4 md:px-0 text-txtPrimary dark:text-txtPrimary-dark">
                         {state.screen === WALLET_SCREENS.OVERVIEW && (
                             <OverviewWallet
                                 allAssets={state.allAssets}

@@ -180,7 +180,8 @@ body {
     }
 
     .t-common-v2 {
-        @apply font-semibold text-[32px] leading-[38px]
+        @apply font-semibold md:text-[32px] md:leading-[38px]
+        text-[20px] leading-[28px]
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
