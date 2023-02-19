@@ -243,37 +243,37 @@ const Profile = () => {
     const nextLevel = FEE_TABLE.find(e => e?.level === state.level + 1);
     const currentPercent = state.namiBalance ? state.namiBalance * 100 / nextLevel?.nami_holding : '--';
 
-    return (<AccountLayout>
+    return <AccountLayout>
         <ModalChangeReferee
             t={t}
             open={state.showSetReferrerModal}
             onClose={() => setState({ showSetReferrerModal: false })}
         />
-        <div className='p-6 rounded-xl bg-darkBlue-3 mt-12'>
+        <div className='p-6 rounded-xl bg-white dark:bg-darkBlue-3 mt-12'>
             <div className='flex'>
                 <div className='flex-1 space-y-4'>
                     <div>
-                        <span className='text-txtSecondary'>{t('profile:name')}</span>
-                        <span className='font-bold text-right float-right'>{user?.name}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:name')}</span>
+                        <span className='font-semibold text-right float-right'>{user?.name}</span>
                     </div>
 
                     <div>
-                        <span className='text-txtSecondary'>{t('profile:username')}</span>
-                        <span className='font-bold text-right float-right'>{user?.username}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:username')}</span>
+                        <span className='font-semibold text-right float-right'>{user?.username}</span>
                     </div>
 
                     <div>
-                        <span className='text-txtSecondary'>Nami ID</span>
-                        <TextCopyable className='font-bold text-right float-right' text={user?.code} />
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>Nami ID</span>
+                        <TextCopyable className='font-semibold text-right float-right' text={user?.code} />
                     </div>
 
                     <div>
-                        <span className='text-txtSecondary'>Email</span>
-                        <span className='font-bold text-right float-right'>{user?.email}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>Email</span>
+                        <span className='font-semibold text-right float-right'>{user?.email}</span>
                     </div>
 
                     <div>
-                        <span className='text-txtSecondary'>Người giới thiệu</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:referrer')}</span>
                         <div
                             className='flex items-end float-right cursor-pointer'
                             onClick={() => setState({ showSetReferrerModal: true })}
@@ -290,19 +290,19 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className='w-[1px] bg-divider-dark mx-10' />
+                <div className='w-[1px] bg-divider dark:bg-divider-dark mx-10' />
                 <div className='flex-1 flex flex-col justify-between'>
                     <div className='space-y-3'>
                         <span
-                            className='text-txtSecondary'>{t('fee-structure:your_fee_level')} VIP {state.level}</span>
+                            className='text-txtSecondary dark:text-txtSecondary-dark'>{t('fee-structure:your_fee_level')} VIP {state.level}</span>
                         <div>
-                            <span className='text-txtSecondary mr-2'>Marker</span>
-                            <span className='text-xl font-semibold'>0.075%</span>
+                            <span className='text-txtSecondary dark:text-txtSecondary-dark mr-2'>Marker</span>
+                            <span className='text-2xl font-semibold'>0.075%</span>
                         </div>
 
                         <div>
-                            <span className='text-txtSecondary mr-2'>Trader</span>
-                            <span className='text-xl font-semibold'>0.075%</span>
+                            <span className='text-txtSecondary dark:text-txtSecondary-dark mr-2'>Trader</span>
+                            <span className='text-2xl font-semibold'>0.075%</span>
                         </div>
                     </div>
                     <SwitchUseNamiFee t={t} />
@@ -323,7 +323,7 @@ const Profile = () => {
                     </span>
                 </div>
                 <div
-                    className='my-4 relative w-full h-[4px] xl:h-[4px] rounded-xl bg-dark-2 overflow-hidden'>
+                    className='my-4 relative w-full h-[4px] xl:h-[4px] rounded-xl bg-gray-11 dark:bg-dark-2 overflow-hidden'>
                     <div
                         style={{ width: `${currentPercent}%` }}
                         className='absolute left-0 top-0 bg-dominant h-full rounded-xl transition-all duration-700 ease-in'
@@ -389,7 +389,7 @@ const Profile = () => {
             <Activity t={t} />
             <Announcement />
         </div>
-    </AccountLayout>);
+    </AccountLayout>;
 };
 
 export const getStaticProps = async ({ locale }) => ({

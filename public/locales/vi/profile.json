@@ -103,6 +103,8 @@
     "drag_image": "Kéo thả hình ảnh hoặc click để duyệt",
     "support_image_type": "Hỗ trợ định dạng JPG, PNG",
     "confirm_new_avatar": "Bấm “Xác nhận” để đổi hình đại diện mới",
+    "reselect": "Chọn lại",
+    "change_avatar_success": "Đổi ảnh đại diện thành công.",
     "updated_avatar": "Đã cập nhật ảnh đại diện, bạn có thể đóng cửa sổ này.",
     "last_logged_in": "Đăng nhập lần cuối {{duration}} trước",
     "referrer": "Người giới thiệu",
