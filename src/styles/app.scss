@@ -22,7 +22,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent !important;
-    
+
     a {
         color:inherit;
     }
@@ -62,7 +62,7 @@ body {
 //}
 
 body {
-    @apply text-txtPrimary dark:text-txtPrimary-dark font-normal;
+    @apply text-txtPrimary dark:text-txtPrimary-dark;
 
     display: flex;
     flex-direction: column;
@@ -1032,7 +1032,7 @@ input:-webkit-autofill {
     &:hover {
        .looper__listInstance {
         animation-play-state: paused;
-       } 
+       }
     }
   }
 

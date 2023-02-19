@@ -152,7 +152,6 @@ const Overview = ({
                     </div>
                     <div
                         className='font-normal text-gray-6 mt-6 tracking-wide max-w-[800px] mr-[300px]'>
-                        {/* TODO: text-color */}
                         <p>{t('reference:referral.introduce3')}</p>
                         <p className='mt-1'>{t('reference:referral.readmore')}:</p>
                     </div>
