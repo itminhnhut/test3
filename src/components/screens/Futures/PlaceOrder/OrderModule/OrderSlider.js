@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
 import Slider from 'components/trade/InputSlider';
 const initPercent = 0;
-const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty }) => {
+const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty, pair }) => {
     const [percent, setPercent] = useState(isAuth && initPercent);
 
     const arrDot = useMemo(() => {
@@ -12,6 +12,11 @@ const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty,
         }
         return arr;
     }, []);
+
+    useEffect(() => {
+        setPercent(0);
+        onChange('');
+    }, [pair]);
 
     useEffect(() => {
         const _percent = quoteQty ? (quoteQty * 100) / maxQuoteQty : 0;
@@ -29,8 +34,8 @@ const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty,
                 }
                 return i;
             });
-            const value = ((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(decimals?.symbol);
-            onChange(value);
+            const value = +((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(decimals?.symbol);
+            onChange(value || '');
             setPercent(_x ? _x : x);
         }
     };

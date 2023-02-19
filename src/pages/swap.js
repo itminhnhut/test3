@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import colors from 'styles/colors';
 
 import SwapIntroduce from 'src/components/screens/Swap/SwapIntroduce';
-import SwapModule from 'src/components/screens/Swap/SwapModule';
+import SwapModule from 'components/screens/Swap/SwapModule';
 import useWindowSize from 'hooks/useWindowSize';
 import SwapHistory from 'src/components/screens/Swap/SwapHistory';
 import { isMobile } from 'react-device-detect';
@@ -37,7 +37,7 @@ const Swap = () => {
                 <div>
                     <img src={'/images/screen/swap/swap-banner.png'} alt="" className="mx-auto h-[180px] w-full" />
                 </div>
-                <div className="bg-gray-4 dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark px-4 flex justify-center">
+                <div className="bg-gray-13 dark:bg-dark text-txtPrimary dark:text-txtPrimary-dark px-4 flex justify-center">
                     <div className={`max-w-screen-v3 w-full h-full pt-20 pb-[120px]`}>
                         <div className="m-auto flex justify-center">
                             {/* {width >= 1024 && <SwapIntroduce />} */}

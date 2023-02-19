@@ -27,6 +27,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import HrefButton from '../../../common/V2/ButtonV2/HrefButton';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -78,7 +80,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
     const renderEstWallet = useCallback(() => {
         return (
             <div className="flex items-center mt-12">
-                <div className="rounded-full bg-teal-lightTeal dark:bg-teal-5 min-w-[60px] min-h-[60px] md:min-w-[64px] md:min-h-[64px] flex items-center justify-center">
+                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
                     <SvgWalletExchange size={32} />
                 </div>
                 <div className="ml-3 md:ml-6 dark:text-txtPrimary-dark text-txtPrimary">
@@ -210,7 +212,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'assetCode',
                 title: t('common:asset'),
                 align: 'left',
-                width: 170,
+                width: 210,
                 fixed: 'left',
                 render: (v, item) => (
                     <div className="flex items-center gap-4">
@@ -227,7 +229,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'value'],
                 title: t('common:total'),
                 align: 'right',
-                width: 210,
+                width: 200,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
                         {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
@@ -239,7 +241,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: 'available',
                 title: t('common:available_balance'),
                 align: 'right',
-                width: 210,
+                width: 200,
                 render: (v, item) => (state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000')
             },
             {
@@ -247,7 +249,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'locked_value'],
                 title: t('common:in_order'),
                 align: 'right',
-                width: 231,
+                width: 200,
                 render: (v, item) => {
                     let lockedValue = formatWallet(v, item?.assetDigit);
                     if (lockedValue === 'NaN') {
@@ -273,7 +275,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                 dataIndex: ['wallet', 'value'],
                 title: t('common:btc_value'),
                 align: 'right',
-                width: 231,
+                width: 200,
                 render: (v, item) => {
                     const assetUsdRate = usdRate?.[item?.id] || 0;
                     const btcUsdRate = usdRate?.['9'] || 0;
@@ -376,16 +378,16 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
 
     return (
         <>
-            <MCard addClass="mt-5 !p-6 xl:!p-8 dark:!bg-bgTabInactive-dark !dark:bg-namiV2 rounded-xl border border-divider dark:border-none">
+            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
-                        <div className="flex items-center font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-2">{t('wallet:est_balance')}</div>
+                        <div className="flex items-center font-normal text-base text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <HideIcon size={16} className="mr-[4px]" /> : <SeeIcon size={16} className="mr-[4px]" />}
+                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
                             </div>
                         </div>
                         {renderEstWallet()}
@@ -399,23 +401,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                                 {t('common:deposit')}
                             </ButtonV2>
                             <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
                                 onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                                className="px-6"
+                                color="dark"
+                                variants="none"
                             >
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            {/* <HrefButton href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                {t('common:deposit')}
-                            </HrefButton>
-                            <HrefButton variants="secondary" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                                {t('common:withdraw')}
-                            </HrefButton> */}
-                            <ButtonV2
-                                variants="none"
-                                className="whitespace-nowrap rounded-md !font-semibold !text-base px-6 dark:bg-dark-2 dark:hover:bg-hover-dark dark:active:bg-hover-dark dark:text-txtSecondary-dark"
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
+                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -427,13 +420,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
             <div className="mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2">Exchange</div>
                 <div className="flex items-end justify-between pt-8">
-                    <div className="bg-dark-2 flex items-center justify-between text-white gap-3 rounded-md px-4 py-3 cursor-pointer">
-                        <LogoIcon />
-                        <a href="/" className="text-sm dark:text-txtPrimary-dark flex items-center gap-3">
-                            {width >= 640 ? t('wallet:convert_small', { asset: 'NAMI' }) : t('wallet:convert_small_mobile', { asset: 'NAMI' })}
-                            <BxChevronDown size={24} />
-                        </a>
-                    </div>
+                    <TransferSmallBalanceToNami width={width} />
 
                     <div className="mt-2 lg:flex">
                         <HideSmallBalance
@@ -445,31 +432,17 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch }) => 
                             isHide={state.hideSmallAsset}
                             className="mr-8"
                         />
-                        <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
-                            <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
-                            <input
-                                className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                                value={state.search}
-                                onChange={(e) => {
-                                    setState({ search: e?.target?.value });
-                                }}
-                                onFocus={() => setState({ currentPage: 1 })}
-                                placeholder={t('common:search')}
-                            />
-                            {state.search && (
-                                <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
-                            )}
-                        </div>
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            width
+                        />
                     </div>
                 </div>
             </div>
-
-            {/* <MCard
-                getRef={(ref) => (tableRef.current = ref)}
-                style={currentTheme === THEME_MODE.LIGHT ? { boxShadow: '0px 7px 23px rgba(0, 0, 0, 0.05)' } : {}}
-                addClass="relative mt-5 pt-0 pb-0 px-0 overflow-hidden"
-            >
-            </MCard> */}
             {renderAssetTable()}
 
             {/* {renderPagination()} */}
@@ -487,23 +460,15 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     const noMarket = !markets?.length;
 
     let tradeButton = null;
-    const cssLi = `text-txtPrimary dark:text-txtPrimary-dark text-left text-sm w-full
-    px-4 py-2 flex items-center justify-center   cursor-pointer font-normal
-    dark:hover:text-dominant bg-teal-lightTeal dark:bg-listItemSelected-dark hover:bg-teal-lightTeal dark:hover:bg-hover
+    const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
+    hover:text-txtTabHover dark:hover:text-txtTextBtn-dark 
+    hover:bg-gray-13 dark:hover:bg-hover-dark
     `;
     const cssPopover = () => {
         if (isStickyColOperation) {
-            return `absolute ${
-                idx >= 0 && idx < ASSET_ROW_LIMIT - 4 ? 'top-full mt-2' : 'bottom-full mb-2'
-            } right-full py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
-            border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-            dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+            return `absolute ${idx >= 0 && idx < ASSET_ROW_LIMIT - 3 ? 'top-2/3 mt-2' : 'bottom-2/3 mb-2'} right-full`;
         } else {
-            return `absolute ${
-                ASSET_ROW_LIMIT - idx < 4 ? 'bottom-full' : 'top-full'
-            } right-1/2 py-2 mt-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl border
-        border-divider dark:border-divider-dark bg-bgContainer dark:bg-listItemSelected-dark drop-shadow-onlyLight
-        dark:drop-shadow-none dark:shadow-[0_-4px_20px_rgba(31,47,70,0.1)] ${isShow ? 'block' : 'hidden'} `;
+            return `absolute ${ASSET_ROW_LIMIT - idx < 4 ? 'bottom-2/3 mb-2' : 'top-2/3 mt-2'} right-1/2`;
         }
     };
 
@@ -546,7 +511,14 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <SvgMoreHoriz />
             </button>
             {/* Popover */}
-            <ul ref={isShow ? popover : null} className={cssPopover()}>
+            <ul
+                ref={isShow ? popover : null}
+                className={`py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl 
+                border-[0.5px] border-divider dark:border-divider-dark
+                bg-white dark:bg-listItemSelected-dark
+                text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
+                ${isShow ? 'block' : 'hidden'} ${cssPopover()}`}
+            >
                 <li className={cssLi}>
                     <a
                         href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
@@ -565,9 +537,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     }
                 >
                     {utils?.translator('common:deposit')}
-                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}>
-                        {utils?.translator('common:deposit')}
-                    </a> */}
                 </li>
                 <li
                     className={cssLi}
@@ -576,9 +545,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     }
                 >
                     {utils?.translator('common:withdraw')}
-                    {/* <a href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}>
-                        {utils?.translator('common:withdraw')}
-                    </a> */}
                 </li>
                 {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
                     <li
@@ -598,94 +564,6 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                     </li>
                 )}
             </ul>
-        </div>
-    );
-};
-
-const renderOperationLink = (assetName, utils) => {
-    const markets = utils?.marketAvailable;
-    const noMarket = !markets?.length;
-
-    let tradeButton = null;
-    if (Array.isArray(markets) && markets?.length) {
-        if (markets?.length === 1) {
-            const pair = initMarketWatchItem(markets?.[0]);
-            // console.log('namidev-DEBUG: => ', pair)
-            tradeButton = (
-                <Link
-                    href={PATHS.EXCHANGE?.TRADE?.getPair(undefined, {
-                        pair: `${assetName}-${pair?.quoteAsset}`
-                    })}
-                    prefetch={false}
-                >
-                    <a
-                        className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    >
-                        {utils?.translator('common:trade')}
-                    </a>
-                </Link>
-            );
-        } else {
-            tradeButton = (
-                <div
-                    className="relative select-none py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center
-                                text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    onClick={(e) => {
-                        utils?.setState({
-                            currentMarketList: utils?.marketAvailable
-                        });
-                        setTimeout(() => utils?.show(e), 200);
-                    }}
-                >
-                    {utils?.translator('common:trade')}
-                </div>
-            );
-        }
-    }
-
-    return (
-        <div className="relative flex pl-12">
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={PATHS.EXCHANGE?.SWAP?.getSwapPair({
-                    fromAsset: 'USDT',
-                    toAsset: assetName
-                })}
-            >
-                {/*`/wallet/exchange/deposit?type=crypto&asset=${assetName}`*/}
-                {utils?.translator('common:buy')}
-            </a>
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: assetName })}
-            >
-                {utils?.translator('common:deposit')}
-            </a>
-            <a
-                className="py-1.5 mr-3 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: assetName })}
-            >
-                {utils?.translator('common:withdraw')}
-            </a>
-            {!noMarket && tradeButton}
-            {ALLOWED_FUTURES_TRANSFER.includes(assetName) && (
-                <div
-                    className="py-1.5 min-w-[90px] w-[90px] flex items-center justify-center text-xs lg:text-sm text-dominant rounded-md border border-dominant hover:bg-dominant hover:text-white"
-                    onClick={() =>
-                        utils?.dispatch(
-                            setTransferModal({
-                                isVisible: true,
-                                fromWallet: WalletType.SPOT,
-                                toWallet: WalletType.FUTURES,
-                                asset: assetName
-                            })
-                        )
-                    }
-                >
-                    {utils?.translator('common:transfer')}
-                </div>
-            )}
         </div>
     );
 };

@@ -22,6 +22,7 @@ import Spinner from 'components/svg/Spinner';
 import axios from 'axios';
 import WarningCircle from 'components/svg/WarningCircle';
 import toast from 'utils/toast';
+import colors from 'styles/colors';
 
 const UPLOAD_TIMEOUT = 4000;
 
@@ -91,11 +92,11 @@ const AccountAvatar = ({
 
             const toastObj = {
                 [DONE]: {
-                    text: 'Đổi ảnh đại diện thành công.',
+                    text: t('profile:change_avatar_success'),
                     type: 'success'
                 },
                 [FAILURE]: {
-                    text: 'Lỗi tải ảnh.',
+                    text: t('profile:change_avatar_failure'),
                     type: 'error'
                 }
             }[uploadStatus];
@@ -238,16 +239,19 @@ const AccountAvatar = ({
             {
                 uploadStatus === UPLOADING_STATUS.UPLOADING ?
                     <div
-                        className='flex items-center justify-center bg-darkBlue-3 rounded-full w-[8.75rem] h-[8.75rem]'>
-                        <Spinner />
+                        className='flex items-center justify-center bg-white dark:bg-darkBlue-3 rounded-full w-[8.75rem] h-[8.75rem]'>
+                        <Spinner color={colors.darkBlue5}/>
                     </div> :
-                    <img src={currentAvatar} className='rounded-full bg-darkBlue-3 w-[8.75rem] h-[8.75rem]'
+                    <img src={currentAvatar}
+                         className='rounded-full bg-white dark:bg-darkBlue-3 w-[8.75rem] h-[8.75rem]'
                          alt='Nami.Exchange' />
             }
             <div
                 onClick={() => setOpenModal(true)}
-                className='absolute bg-darkBlue-2 rounded-full p-[0.375rem] border-dark border-2 right-0 bottom-0 cursor-pointer'>
-                <Edit />
+                className={classnames(
+                    'absolute bg-gray-13 dark:bg-darkBlue-2 rounded-full p-[0.375rem] border-white dark:border-dark border-2 right-2 bottom-0 cursor-pointer'
+                )}>
+                <Edit/>
             </div>
         </div>
 
@@ -271,10 +275,9 @@ const AccountAvatar = ({
                     onClick={onConfirm}
                 >{t('common:confirm')}</ButtonV2>
                 <ButtonV2
-                    variants='default'
-                    className='bg-dark-2 text-txtSecondary'
+                    variants='secondary'
                     onClick={reselect}
-                >Chọn lại</ButtonV2>
+                >{t('profile:reselect')}</ButtonV2>
             </div>
         </ModalV2>
 
@@ -284,37 +287,38 @@ const AccountAvatar = ({
             className='w-[50rem] h-[42.5rem]'
             wrapClassName='flex flex-col'
         >
-            <p className='text-xl font-medium mb-8'>{t('profile:change_avatar')}</p>
+            <p className='text-2xl font-semibold mb-8'>{t('profile:change_avatar')}</p>
             <div className='flex pb-10 flex-1 min-h-0'>
                 <div
                     ref={avatarRef}
                     className='overflow-y-auto relative min-h-0 w-[25rem] pr-6'
                     onScroll={onScroll}
                 >
-                    <p className='font-medium mb-6'>{t('profile:choose_in_collection')}</p>
-                    <div className='flex gap-2 my-3 py-3 overflow-x-auto sticky top-0 bg-dark no-scrollbar'>
+                    <p className='font-semibold mb-6'>{t('profile:choose_in_collection')}</p>
+                    <div className='flex gap-2 my-3 py-3 overflow-x-auto sticky top-0 bg-white dark:bg-dark no-scrollbar'>
                         {categories.map((category) => {
                             return <div
                                 key={category.id}
                                 onClick={(event) => scrollToCategory(event, category.id)}
                                 className={classnames(
-                                    'px-5 py-3 border rounded-full whitespace-nowrap cursor-pointer',
+                                    'px-5 py-3 border rounded-full font-semibold whitespace-nowrap cursor-pointer',
                                     'transition duration-100', {
-                                        'border-teal bg-teal/[.1]': currentCategoryId === category.id, 'border-divider-dark': currentCategoryId !== category.id
+                                        'border-teal bg-teal/[.1] text-teal': currentCategoryId === category.id,
+                                        'border-divider text-txtSecondary dark:text-txtSecondary-dark dark:border-divider-dark': currentCategoryId !== category.id
                                     })
                                 }
                             >{category.name[language]}</div>;
                         })}
                     </div>
-                    <div>
+                    <div className='space-y-6'>
                         {avatarSets.map(avatarSet => {
                             return <div
                                 id={`category_${avatarSet.category.id}`}
                                 data-id={avatarSet.category.id}
                                 key={avatarSet.category.id}
                             >
-                                <div className='bg-darkBlue-3 p-4 rounded-xl'>
-                                    <p className='text-darkBlue-5 mb-4'>{avatarSet.category.name[language]}</p>
+                                <div className='bg-white dark:bg-darkBlue-3 border p-4 rounded-xl'>
+                                    <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{avatarSet.category.name[language]}</p>
                                     <div className='grid grid-cols-4 gap-4'>
                                         {avatarSet.images.map((image, index) => {
                                             const isSelected = avatar?.type === AVATAR_TYPE.PRESET && image === avatar?.src;
@@ -339,7 +343,7 @@ const AccountAvatar = ({
                     </div>
                 </div>
                 <div className='h-full flex flex-col flex-grow pl-8'>
-                    <p className='font-medium mb-6'>{t('profile:or_upload_image')}</p>
+                    <p className='font-semibold mb-6'>{t('profile:or_upload_image')}</p>
                     <DashBorder className='flex-1' check={1}>
                         <Dropzone onDrop={onDropCustomAvatar}
                                   validator={onValidatingAvatarSize}
@@ -357,12 +361,12 @@ const AccountAvatar = ({
                                 })}>
                                     <input {...getInputProps()} />
                                     <Upload size={32} />
-                                    <p className='mt-2 font-medium mb-1'>{t('profile:drag_image')}</p>
-                                    <span className='text-darkBlue-5'>{t('profile:support_image_type')}</span>
+                                    <p className='mt-2 font-semibold mb-1'>{t('profile:drag_image')}</p>
+                                    <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:support_image_type')}</span>
                                     {
                                         avatarIssues && <div className='flex items-center mt-2'>
                                             <WarningCircle />
-                                            <span className='text-onus-orange text-sm ml-2'>{avatarIssues}</span>
+                                            <span className='text-yellow-100 text-sm ml-2'>{avatarIssues}</span>
                                         </div>
                                     }
                                 </div>

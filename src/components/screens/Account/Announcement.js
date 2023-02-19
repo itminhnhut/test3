@@ -29,10 +29,10 @@ function Announcement() {
 
     return <div>
         <div className='mb-8'>
-            <span className='font-medium text-xl'>{t('profile:announcements')}</span>
+            <span className='font-semibold text-2xl'>{t('profile:announcements')}</span>
         </div>
-        <div className='bg-darkBlue-3 rounded-xl p-1'>
-            <div className='h-[33.625rem] overflow-y-auto p-5 space-y-6'>
+        <div className='bg-white dark:bg-darkBlue-3 rounded-xl px-1 py-6'>
+            <div className='h-[33.625rem] overflow-y-auto px-5 space-y-6'>
                 {
                     // Skeleton
                     (fetching && !data?.length) &&
@@ -40,8 +40,8 @@ function Announcement() {
                         .map((e) => {
                             return (
                                 <div key={e} className='animate-pulse space-y-2'>
-                                    <div className='h-6 w-full bg-dark-2 rounded' />
-                                    <div className='h-4 w-36 bg-dark-2 rounded' />
+                                    <div className='h-6 w-full bg-gray-4 dark:bg-dark-2 rounded' />
+                                    <div className='h-4 w-36 bg-gray-4 dark:bg-dark-2 rounded' />
                                 </div>
                             );
                         })
@@ -86,10 +86,10 @@ function Announcement() {
                     const href = PATHS.SUPPORT.DEFAULT + `/${mode}/${topic}/${item.slug.toString()}${isApp ? '?source=app' : ''}`;
 
                     return <div key={item.id}>
-                        <a className='device font-bold hover:text-dominant hover:!underline' href={href} target='_blank'>
+                        <a className='device font-semibold hover:text-dominant hover:!underline' href={href} target='_blank'>
                             {item.title}
                         </a>
-                        <div className='location mt-2 text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='location text-xs mt-2 text-txtSecondary dark:text-txtSecondary-dark'>
                             {formatTime(item.created_at, 'dd-MM-yyyy HH:mm')}
                         </div>
                     </div>;

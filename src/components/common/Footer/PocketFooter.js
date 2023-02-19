@@ -1,4 +1,3 @@
-import { ChevronDown, ChevronUp } from 'react-feather';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
@@ -8,18 +7,26 @@ import SocialsLink from './SocialsLink';
 import ScanQr from './ScanQr';
 import { useSelector } from 'react-redux';
 import HrefButton from '../V2/ButtonV2/HrefButton';
-import TextButton from '../V2/ButtonV2/TextButton';
+import ButtonV2 from '../V2/ButtonV2/Button';
+import SvgIcon from 'src/components/svg';
+import colors from 'styles/colors';
+import { THEME_MODE } from 'hooks/useDarkMode';
 
-const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
+const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
     return (
         <>
             <div className="mal-footer___pocket">
-                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px]' : ''} `}>
+                <div className={`mal-footer___pocket___company ${width >= 1200 ? '!w-[255px] tracking-normal' : ''} `}>
                     {auth ? (
                         width >= 1200 && (
                             <>
                                 <div className="mal-footer___pocket__logo mb-6">
-                                    <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="188" alt="Nami Exchange" />
+                                    <img
+                                        // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                        width="188"
+                                        alt="Nami Exchange"
+                                    />
                                 </div>
                                 <div className="w-[188px]">
                                     <SocialsLink language={language} />
@@ -28,15 +35,18 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                         )
                     ) : (
                         <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
-                            <div className="font-medium text-xl mb-6">{t('navbar:footer_title')}</div>
+                            <div className="font-semibold text-3xl lg:text-2xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
-                                <HrefButton href={getLoginUrl('sso', 'register')} className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm">
+                                <ButtonV2
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'))}
+                                    className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm"
+                                >
                                     {t('common:create_account')}
-                                </HrefButton>
+                                </ButtonV2>
                                 {width < 1200 && (
-                                    <TextButton onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
+                                    <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
                                         {t('common:sign_in')}
-                                    </TextButton>
+                                    </ButtonV2>
                                 )}
                             </div>
 
@@ -49,7 +59,13 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                     <div className="mal-footer___pocket__links___group__item">
                         <div className="mal-footer___pocket__links___group__item__expander" onClick={() => parentState({ active: { about: !active.about } })}>
                             {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp'}
-                            {active?.about ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+
+                            <SvgIcon
+                                name="chevron_down"
+                                size={16}
+                                className={`${active?.about ? '!rotate-0 ' : ' '}`}
+                                color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
+                            />
                         </div>
                         <div
                             className={`mal-footer___pocket__links___group__item__links
@@ -94,7 +110,12 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             onClick={() => parentState({ active: { product: !active.product } })}
                         >
                             {t('navbar:menu.product')}
-                            {active?.product ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                            <SvgIcon
+                                name="chevron_down"
+                                size={16}
+                                className={`${active?.product ? '!rotate-0 ' : ' '}`}
+                                color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
+                            />
                         </div>
                         <div
                             className={`mal-footer___pocket__links___group__item__links
@@ -106,7 +127,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             <Link href="/futures">
                                 <a>{t('navbar:menu.futures')}</a>
                             </Link>
-                            <Link href={getV1Url('/futures')}>
+                            {/* <Link href="https://launchpad.nami.exchange/">
                                 <a>Launchpad</a>
                             </Link>
                             <Link href="/">
@@ -117,7 +138,7 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             </Link>
                             <Link href={getV1Url('/staking')}>
                                 <a>Staking</a>
-                            </Link>
+                            </Link> */}
                             <Link href={getV1Url('/reference')}>
                                 <a>{t('navbar:submenu.referral')}</a>
                             </Link>
@@ -193,11 +214,18 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                             onClick={() => parentState({ active: { support: !active.support } })}
                         >
                             {t('navbar:menu.support')}
-                            {active?.support ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                            <SvgIcon
+                                name="chevron_down"
+                                size={16}
+                                className={`${active?.support ? '!rotate-0 ' : ' '}`}
+                                color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
+                            />
+
+                            {/* {active?.support ? <ChevronUp size={16} /> : <ChevronDown size={16} />} */}
                         </div>
                         <div
                             className={`mal-footer___pocket__links___group__item__links
-                                     ${active.support ? 'mal-footer___pocket__links___group__item__links__active' : ''} text-txtSecondary-dark`}
+                                     ${active.support ? 'mal-footer___pocket__links___group__item__links__active' : ''} `}
                         >
                             <Link href="/support/announcement" className="cursor-pointer">
                                 {language === LANGUAGE_TAG.VI ? 'Thông báo' : 'Announcements'}
@@ -224,18 +252,18 @@ const PocketFooter = ({ active, parentState, auth, width, t, language }) => {
                                 {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
                             </a>
                             {/*</Link>*/}
-                            <Link href="/">
+                            {/* <Link href="/">
                                 <a className="invisible">{language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : "Nami's Handbook"}</a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
 
-                    <div className="mal-footer___pocket__links___group__item mb-6">
+                    <div className="mal-footer___pocket__links___group__item  mb-6">
                         {width >= 1200 ? (
                             <ScanQr t={t} />
                         ) : (
                             <div>
-                                <div className="mal-footer___pocket__links___group__item__expander mb-3">
+                                <div className="mal-footer___pocket__links___group__item__expander item_community  mb-3">
                                     {language === LANGUAGE_TAG.VI ? 'Cộng đồng' : 'Community'}
                                 </div>
                                 <SocialsLink language={language} />

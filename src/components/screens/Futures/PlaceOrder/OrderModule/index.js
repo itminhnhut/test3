@@ -13,8 +13,11 @@ import usePrevious from 'hooks/usePrevious';
 import floor from 'lodash/floor';
 import { useDispatch } from 'react-redux';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndcFutures, isAuth, side, decimals, pairPrice, pair }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const { t } = useTranslation();
     const dispatch = useDispatch();
     const ask = pairPrice?.ask ?? 0;
@@ -28,7 +31,6 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         sl: '',
         tp: ''
     });
-    const sideChanged = useRef(false);
 
     useEffect(() => {
         mount.current = false;
@@ -77,8 +79,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
 
     const maxQuoteQty = useMemo(() => {
         const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
-        const max = Math.min(leverage * availableAsset, _maxQuoteQty);
-        return floor(max, decimals?.symbol);
+        return floor(_maxQuoteQty, decimals?.symbol);
     }, [price, type, side, leverage, availableAsset, pairPrice, pairConfig]);
 
     const minQuoteQty = useMemo(() => {
@@ -321,7 +322,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 onValueChange={({ value }) => setPrice(value)}
                 decimalScale={decimals.price}
                 validator={inputValidator('price')}
-                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
                 clearAble
             />
@@ -334,13 +335,13 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 decimalScale={decimals.qty}
                 containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
-                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-xs select-none"
+                tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
                 clearAble
             />
 
             {/* Slider */}
-            <div className="mt-4 px-2">
+            <div className="mt-4">
                 <FuturesOrderSlider
                     availableAsset={availableAsset}
                     quoteQty={quoteQty}
@@ -358,6 +359,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     inputValidator={inputValidator}
                     minQuoteQty={minQuoteQty}
                     maxQuoteQty={maxQuoteQty}
+                    pair={pair}
                 />
             </div>
 
@@ -378,10 +380,11 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 leverage={leverage}
                 isAuth={isAuth}
                 quoteQty={quoteQty}
+                isDark={isDark}
             />
 
             {renderAvail()}
-            {maxQuoteQty < minQuoteQty && (
+            {maxQuoteQty < minQuoteQty && mount.current && (
                 <div className="text-red text-xs flex items-center space-x-1">
                     <ErrorTriggersIcon />
                     <span>{t('futures:mobile:balance_insufficient')}</span>

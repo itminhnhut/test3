@@ -75,8 +75,8 @@ function Activity({ t }) {
             console.log(`Can't revoke device ${revokeId} `, e);
         } finally {
             getActivities();
-            setRevoking(false);
             setRevokeDevice(null);
+            closeRevokeModal();
         }
     };
 
@@ -92,22 +92,22 @@ function Activity({ t }) {
                 onClose={closeRevokeModal}
                 type='warning'
                 title={t('profile:revoke_title')}
-                message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice.device_title }) : t('profile:revoke_question_all')}
+                message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice?.device_title }) : t('profile:revoke_question_all')}
                 textButton={t('common:confirm')}
                 onConfirm={() => {
-                    onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice.this_device);
+                    onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice?.this_device);
                 }}
                 className='w-96'
             />
-            <div className='flex justify-between mb-8'>
-                <span className='font-medium text-xl'>{t('profile:activity')}</span>
+            <div className='flex items-center justify-between mb-8'>
+                <span className='font-semibold text-2xl'>{t('profile:activity')}</span>
                 <span onClick={() => setOpenRevokeModal(true)}
                       className='font-medium text-teal cursor-pointer hover:underline'>
           {t('profile:revoke_all_devices')}
         </span>
             </div>
-            <div className='bg-darkBlue-3 p-1 rounded-xl'>
-                <div className='h-[33.625rem] overflow-y-auto p-5 space-y-6'>
+            <div className='bg-white dark:bg-darkBlue-3 rounded-xl px-1 py-6'>
+                <div className='h-[33.625rem] overflow-y-auto px-5 space-y-6'>
                     {
                         // Skeleton
                         (fetching && !data?.length) &&
@@ -115,13 +115,13 @@ function Activity({ t }) {
                             .map((e) => {
                                 return (
                                     <div key={e} className='animate-pulse flex items-center justify-between'>
-                                        <div className='rounded-full bg-dark-2 h-6 w-6' />
+                                        <div className='rounded-full bg-gray-4 dark:bg-dark-2 h-6 w-6' />
                                         <div className='flex-1 space-y-2'>
-                                            <div className='mx-4 h-4 w-72 bg-dark-2 rounded' />
-                                            <div className='mx-4 h-12 w-56 bg-dark-2 rounded' />
-                                            <div className='mx-4 h-4 w-24 bg-dark-2 rounded' />
+                                            <div className='mx-4 h-4 w-72 bg-gray-4 dark:bg-dark-2 rounded' />
+                                            <div className='mx-4 h-12 w-56 bg-gray-4 dark:bg-dark-2 rounded' />
+                                            <div className='mx-4 h-4 w-24 bg-gray-4 dark:bg-dark-2 rounded' />
                                         </div>
-                                        <div className='w-10 h-10 bg-dark-2 rounded-full' />
+                                        <div className='w-10 h-10 bg-gray-4 dark:bg-dark-2 rounded-full' />
                                     </div>
                                 );
                             })
@@ -147,13 +147,13 @@ function Activity({ t }) {
                                 <div className='flex-1 ml-6 min-w-0 overflow-y-hidden'>
                                     <p className='font-semibold mb-2'>{item.device_title}</p>
                                     <span
-                                        className='text-sm text-gray-1 block'>{item.last_ip_address} - {item.last_location}</span>
+                                        className='text-sm text-txtSecondary dark:text-txtSecondary block'>{item.last_ip_address} - {item.last_location}</span>
                                     <span
-                                        className='text-sm text-gray-1'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
+                                        className='text-sm text-txtSecondary dark:text-txtSecondary'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
                                     {statusInner}
                                 </div>
                                 <div onClick={() => setRevokeDevice(item)}
-                                     className='w-10 h-10 bg-dark-2 rounded-full relative cursor-pointer'>
+                                     className='w-10 h-10 bg-gray-10 dark:bg-dark-2 rounded-full relative cursor-pointer'>
                                     <Delete className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
                                 </div>
                             </div>

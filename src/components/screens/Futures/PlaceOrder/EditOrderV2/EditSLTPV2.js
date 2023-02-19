@@ -9,7 +9,7 @@ import Button from 'components/common/V2/ButtonV2/Button';
 import TradingInput from 'components/trade/TradingInput';
 import { isNumeric } from 'utils';
 // import { SwapIcon } from '../../../../svg/SvgIcon';
-// import colors from 'styles/colors';
+import colors from 'styles/colors';
 import Slider from 'components/trade/InputSlider';
 import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import { ceil, find } from 'lodash';
@@ -234,6 +234,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
             const label = [];
             const size = 100 / dotStep.current;
             const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
+            const _bgColorDot = isDark ? colors.dark[2] : colors.gray[11];
             for (let i = 0; i <= dotStep.current; ++i) {
                 // console.log(Number(i * size) ,Number(data[key] > 0 ? percent[key] : 50))
                 const index = (postion * dotStep.current) / 100;
@@ -243,8 +244,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                 if ((a >= b && b >= 0) || (a <= b && b <= 0)) {
                     active = true;
                 }
-
-                dot.push(<Dot key={`inputSlider_dot_${i}`} active={active} percentage={i * size} isDark={isDark} />);
+                dot.push(<Dot key={`inputSlider_dot_${i}`} active={active} percentage={i * size} isDark={isDark} bgColorDot={_bgColorDot} />);
             }
             return {
                 dot,
@@ -257,7 +257,13 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const customPercentLabel = useCallback((pos) => {
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         return (
-            <ThumbLabel isZero={pos.left === 0} isDark={isDark} className={`left-1/2 translate-x-[-50%] w-max !text-white`}>
+            <ThumbLabel
+                min={pos.left === 0}
+                max={pos.left === 100}
+                isZero={pos.left === 0}
+                isDark={isDark}
+                className={`left-1/2 translate-x-[-50%] w-max !text-txtPrimary dark:!text-white`}
+            >
                 {ceil(postion, 0)}%
             </ThumbLabel>
         );
@@ -276,7 +282,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     };
 
     const textColor = (value) => {
-        return value === 0 ? 'text-white' : value > 0 ? 'text-teal' : 'text-red';
+        return value === 0 ? 'dark:text-white' : value > 0 ? 'text-teal' : 'text-red';
     };
 
     const inputValidator = (type) => {
@@ -359,24 +365,31 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
     const isError = !inputValidator('stop_loss').isValid || !inputValidator('take_profit').isValid;
 
     return (
-        <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+        <ModalV2 className="!max-w-[488px] text-base" isVisible={isVisible} onBackdropCb={onClose}>
             <div>
                 <div className="text-2xl leading-[30px] font-semibold mb-3">{t('futures:mobile:modify_tpsl_title')}</div>
-                <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-bgSpotContainer-dark">
+                <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-white dark:bg-bgSpotContainer-dark">
                     {order?.symbol} {order?.leverage}x
                 </div>
-                <div className="border border-divider-dark p-4 rounded-md mb-6">
+                <div className="border border-divider dark:border-divider-dark p-4 rounded-md mb-6">
                     <div className="flex items-center justify-between">
-                        <span className="text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
                         <span className="font-semibold">{formatNumber(data.price, 2, 0, true)}</span>
                     </div>
-                    <div className="h-[1px] bg-divider-dark w-full my-3"></div>
+                    <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
                     <div className="flex items-center justify-between">
-                        <span className="text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</span>
                         <span className="font-semibold">{formatNumber(_lastPrice, 2, 0, true)}</span>
                     </div>
                 </div>
-                <CheckBox isV3 onChange={onChangeAutoType} active={autoType} className="h-full" label={t('futures:mobile:auto_type_sltp')} />
+                <CheckBox
+                    isV3
+                    onChange={onChangeAutoType}
+                    active={autoType}
+                    className="h-full"
+                    labelClassName="!text-base"
+                    label={t('futures:mobile:auto_type_sltp')}
+                />
                 <div className="mt-8 space-y-6">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between space-x-2">
@@ -386,7 +399,9 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                             </div>
                             {show.sl && (
                                 <div className="text-xs flex items-center ">
-                                    <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>
+                                    <div className="font-normal text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">
+                                        {t('futures:mobile:pnl_estimate')}:
+                                    </div>
                                     &nbsp;
                                     <div className={`font-medium text-right ${textColor(profit.current.sl)}`}>
                                         {formatNumber(profit.current.sl, decimals.symbol, 0, true) + ' ' + quoteAsset}
@@ -410,13 +425,13 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('sl')}
-                                        className="flex items-center p-3 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
+                                        className="flex items-center p-3 bg-gray-10 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
                                     >
                                         <span className="min-w-[3rem] text-center">{mode.sl === 'profit' ? quoteAsset : '%'}</span>
                                         {/* <SwapIcon color={colors.teal} /> */}
                                     </div>
                                 </div>
-                                <div className={`mt-2 ${!show.sl ? 'hidden' : ''}`}>
+                                <div className={`mt-2`}>
                                     <Slider
                                         useLabel
                                         labelSuffix="%"
@@ -441,7 +456,9 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                             </div>
                             {show.tp && (
                                 <div className="text-xs flex items-center ">
-                                    <div className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:</div>
+                                    <div className="font-normal text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">
+                                        {t('futures:mobile:pnl_estimate')}:
+                                    </div>
                                     &nbsp;
                                     <div className={`font-medium text-right ${textColor(profit.current.tp)}`}>
                                         {formatNumber(profit.current.tp, decimals.symbol, 0, true) + ' ' + quoteAsset}
@@ -465,7 +482,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                     />
                                     <div
                                         // onClick={() => onHandleSwap('tp')}
-                                        className="flex items-center p-3 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
+                                        className="flex items-center p-3 bg-gray-10 dark:bg-dark-2 space-x-2 text-teal font-semibold rounded-md h-11 sm:h-12 cursor-pointer select-none"
                                     >
                                         <span className="min-w-[3rem] text-center">{mode.tp === 'profit' ? quoteAsset : '%'}</span>
                                         {/* <SwapIcon color={colors.teal} /> */}

@@ -12,10 +12,11 @@ import { usePrevious } from 'react-use';
 import { formatNumber } from 'redux/actions/utils';
 import { roundTo } from 'round-to';
 import Star from 'components/svg/Star';
+import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'redux/actions/const';
-import { getFuturesFavoritePairs } from '../../../../redux/actions/futures';
+import { getFuturesFavoritePairs } from 'redux/actions/futures';
 
 const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite, isAuth, onSelectPair = null }) => {
     const [pairTicker, setPairTicker] = useState(null);
@@ -45,11 +46,11 @@ const FuturesPairListItems = ({ pairConfig, changePercent24h, isDark, isFavorite
                     <Star
                         onClick={handleSetFavorite}
                         size={14}
-                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.grey2}
+                        fill={isFavorite ? colors.yellow : isDark ? colors.darkBlue5 : colors.gray[2]}
                         className="cursor-pointer mr-[10px]"
                     />
                 )}
-                <div></div> {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
+                {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
         );
     }, [pairConfig?.pair, isFavorite]);

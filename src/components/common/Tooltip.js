@@ -10,8 +10,8 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
     const ref = useRef();
 
     const arrow = useMemo(() => {
-        return arrowColor ? arrowColor : currentTheme === THEME_MODE.DARK ? colors.hover.dark : colors.grey3;
-    }, [arrowColor, isV3]);
+        return arrowColor ? arrowColor : currentTheme === THEME_MODE.DARK ? colors.dark[1] : colors.darkBlue;
+    }, [arrowColor, isV3, currentTheme]);
 
     return (
         <TooltipWrapper isDark={currentTheme === THEME_MODE.DARK}>
@@ -20,7 +20,7 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
                 className={classNames(
                     'text-sm',
                     {
-                        '!px-6 !py-[11px] !bg-hover-dark !opacity-100 !rounded-lg': isV3,
+                        '!px-6 !py-[11px] !bg-dark dark:!bg-dark-1 text-white dark:text-gray-4 !opacity-100 !rounded-lg': isV3,
                         '!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100': !isV3
                     },
                     className
@@ -40,14 +40,14 @@ const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restPr
 const TooltipWrapper = styled.div`
     // .place-left {
     //   ::after {
-    //     border-left-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.grey3)} !important;
+    //     border-left-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.gray[3])} !important;
     //     border-top-color: transparent !important;
     //   }
     // }
     //
     // .__react_component_tooltip {
     //   ::after {
-    //     border-top-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.grey3)} !important;
+    //     border-top-color: ${({ isDark }) => (isDark ? colors.darkBlue4 : colors.gray[3])} !important;
     //   }
     // }
 `;

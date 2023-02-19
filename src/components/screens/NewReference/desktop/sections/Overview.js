@@ -152,7 +152,6 @@ const Overview = ({
                     </div>
                     <div
                         className='font-normal text-gray-6 mt-6 tracking-wide max-w-[800px] mr-[300px]'>
-                        {/* TODO: text-color */}
                         <p>{t('reference:referral.introduce3')}</p>
                         <p className='mt-1'>{t('reference:referral.readmore')}:</p>
                     </div>
@@ -421,7 +420,7 @@ const RefDetail = ({
                     isDesktop
                 />
             )}
-            <div className='overflow-y-auto min-h-0 flex-1 my-8 -mr-4 pr-4'>
+            <div className='overflow-y-auto min-h-min my-8 -mr-4 pr-4'>
                 {loading ? (
                     <IconLoading color={colors.teal} />
                 ) : !refs.length ? (

@@ -2,23 +2,23 @@ import React from 'react';
 import classNames from 'classnames';
 import Spinner from 'components/svg/Spinner';
 
-const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, color }) => {
+const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, color, ...props }) => {
     return (
         <button
             className={classNames(
-                'flex items-center justify-center rounded-lg px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3',
+                'flex items-center justify-center rounded-md px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-3',
                 {
-                    'dark:bg-bgBtnV2 dark:hover:bg-bgBtnV2-dark_pressed dark:active:bg-bgBtnV2-pressed dark:disabled:bg-bgBtnV2-dark_disabled text-white':
-                        variants === 'primary',
-                    '!font-semibold px-0 !text-sm dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed':
-                        variants === 'text',
-                    'bg-gray-2 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark': !loading && disabled,
-                    'dark:!bg-dark-2 dark:hover:!bg-hover-dark dark:active:!bg-hover-dark dark:!text-txtSecondary-dark': color === 'dark'
+                    'bg-green-3 hover:bg-green-4 dark:bg-green-2 dark:hover:bg-green-4 text-white': variants === 'primary',
+                    '!font-semibold px-0 !text-sm text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4': variants === 'text',
+                    '!bg-gray-12 dark:!bg-dark-2 !text-txtDisabled dark:!text-txtDisabled-dark': !loading && disabled,
+                    'whitespace-nowrap text-gray-15 dark:text-gray-7 bg-gray-10 dark:bg-dark-2 hover:bg-gray-6 dark:hover:bg-dark-5 ': color === 'dark',
+                    'text-darkBlue dark:text-txtSecondary-dark bg-gray-10 dark:bg-dark-2': variants === 'secondary'
                 },
                 className
             )}
             onClick={loading || disabled ? null : onClick}
             disabled={loading || disabled}
+            {...props}
         >
             {loading ? <Spinner /> : children}
         </button>

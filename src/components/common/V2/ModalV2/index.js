@@ -82,7 +82,7 @@ const ModalV2 = ({
                     <div
                         ref={wrapperRef}
                         className={classnames(
-                            'w-full absolute overflow-auto max-h-[90%] border border-divider-dark',
+                            'w-full absolute overflow-auto max-h-[90%] border border-divider dark:border-divider-dark',
                             {
                                 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[90%] min-w-[390px]':
                                     !isMobile || (width && width >= 820),
@@ -91,7 +91,7 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-white dark:bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()
@@ -99,11 +99,11 @@ const ModalV2 = ({
                                           <div
                                               className={classnames(
                                                   'flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2',
-                                                  { '-mt-6': !isMobile, 'bg-dark': isMobile },
+                                                  { '-mt-6': !isMobile, 'bg-white dark:bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}
                                           >
-                                              <X size={18} onClick={handleOutside} className="cursor-pointer" />
+                                              <X size={24} onClick={handleOutside} className="cursor-pointer" />
                                           </div>
                                       )}
                                 {children}

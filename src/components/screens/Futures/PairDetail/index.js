@@ -13,7 +13,7 @@ import {
 } from 'redux/actions/utils';
 import Countdown from 'react-countdown-now';
 import { usePrevious } from 'react-use';
-import { ChevronDown, X } from 'react-feather';
+// import { ChevronDown, X } from 'react-feather';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
@@ -22,7 +22,7 @@ import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
 import Tooltip from 'components/common/Tooltip';
-import Modal from 'components/common/ReModal';
+// import Modal from 'components/common/ReModal';
 import { ExchangeOrderEnum } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
@@ -30,6 +30,7 @@ import useDarkMode from 'hooks/useDarkMode';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import PriceChangePercent from 'components/common/PriceChangePercent';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -64,7 +65,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const pairListModalRef = useRef();
     const prevLastPrice = usePrevious(pairPrice?.lastPrice);
     const prevLastPriceModal = usePrevious(priceFromMarketWatch?.lastPrice);
-    const [currentTheme] = useDarkMode();
+    // const [currentTheme] = useDarkMode();
 
     const currentExchangeConfig = useMemo(() => {
         if (!currentSelectedPair && !currentSelectedPair?.symbol) return;
@@ -73,6 +74,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 
         const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, config || []);
         const quantityFilter = getFilter(ExchangeOrderEnum.Filter.LOT_SIZE, config || []);
+        const quantityMarketFilter = getFilter(ExchangeOrderEnum.Filter.MARKET_LOT_SIZE, config || []);
         const minNotionalFilter = getFilter(ExchangeOrderEnum.Filter.MIN_NOTIONAL, config || []);
         const maxNumberVolumeFilter = getFilter(ExchangeOrderEnum.Filter.MAX_TOTAL_VOLUME, config || []);
         const maxNumOrderFilter = getFilter(ExchangeOrderEnum.Filter.MAX_NUM_ORDERS, config || []);
@@ -81,6 +83,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return {
             config,
             priceFilter,
+            quantityMarketFilter,
             quantityFilter,
             minNotionalFilter,
             maxNumOrderFilter,
@@ -99,13 +102,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderLastPrice = useCallback(
         (isShownOnModal = false) => {
             const className = isShownOnModal
-                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right'
-                : 'font-bold text-left text-sm text-dominant dragHandleArea tracking-wide';
+                ? 'text-[22px] leading-[30px] text-teal font-semibold text-right tracking-normal'
+                : 'text-left text-base font-semibold text-dominant dragHandleArea tracking-normal';
             return (
                 <div
                     ref={lastPriceRef}
                     // style={{ minWidth: lastPriceMinW }}
-                    style={{ minWidth: 82 }}
+                    // style={{ minWidth: 82 }}
                     className={classNames(className, {
                         '!text-red': !isShownOnModal ? pairPrice?.lastPrice < prevLastPrice : priceFromMarketWatch?.lastPrice < prevLastPriceModal
                     })}
@@ -118,7 +121,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                         )}
                     </div>
                     {!isShownOnModal && (
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm font-normal">
                             <RefCurrency price={pairPrice?.lastPrice} quoteAsset={pairPrice?.quoteAsset} />
                         </span>
                     )}
@@ -207,10 +210,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <div style={{ minWidth: minWidth || 0 }}>
                 <div className="flex items-center space-x-1 text-base text-txtSecondary dark:text-txtSecondary-dark">
-                    <div className="border-b border-darkBlue-5 border-dashed pb-0.5">
-                        <span onClick={onClickFunding} className="cursor-pointer">
-                            Funding / {t('futures:countdown')}
-                        </span>
+                    <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                        <span>Funding / {t('futures:countdown')}</span>
                     </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
@@ -266,7 +267,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     value = formatNumber(roundTo(pairPrice?.lowPrice || 0, pricePrecision), pricePrecision);
                     break;
                 case '24hChange':
-                    const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
+                    // const changeWidth = pairPrice?.priceChange?.toString()?.length + pricePrecision * TEXT_XS_WIDTH_PER_LETTER || 0;
                     const _priceChangeVndc = pairPrice?.lastPrice - pairPrice?.priceChange;
                     value = (
                         <div
@@ -274,15 +275,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                 '!text-red': pairPrice?.priceChangePercent < 0
                             })}
                         >
-                            <span> {formatNumber(roundTo(priceFromMarketWatch?.priceChange || 0, 2), 2, 2, true)}</span>
-                            <div className="ml-1 flex items-center">
-                                <ArrowDropDownIcon
-                                    color={pairPrice?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
-                                    size={16}
-                                    className={`${pairPrice?.priceChangePercent > 0 && 'rotate-180'}`}
-                                />
-                                {formatNumber(roundTo(pairPrice?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
-                            </div>
+                            <span> {formatNumber(roundTo(_priceChangeVndc || 0, 2), 0, 0, true)}</span>
+                            <PriceChangePercent priceChangePercent={pairPrice?.priceChangePercent} className="ml-1" />
                         </div>
                     );
                     minWidth = itemsPriceMinW + 36;
@@ -323,10 +317,13 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             }
 
             return (
-                <div key={`pairPrice_items_${key}`} style={{ minWidth: minWidth || 0 }}>
+                <div
+                    key={`pairPrice_items_${key}`}
+                    // style={{ minWidth: minWidth || 0 }}
+                >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
-                        containerClassName={`${className} mr-5`}
+                        containerClassName={`${className} mr-6`}
                         value={value}
                         icon={icon}
                     />
@@ -343,10 +340,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const renderFunding = () => {
         return (
             <div className="flex items-center space-x-1 text-xs leading-[16px] font-normal text-txtSecondary dark:text-txtSecondary-dark">
-                <div className=" border-b border-darkBlue-5 border-dashed pb-[2px]">
-                    <span onClick={onClickFunding} className=" cursor-pointer">
-                        Funding / {t('futures:countdown')}
-                    </span>
+                <div onClick={onClickFunding} className="cursor-pointer border-b border-darkBlue-5 border-dashed pb-0.5">
+                    <span>Funding / {t('futures:countdown')}</span>
                 </div>
             </div>
         );
@@ -372,15 +367,18 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     const RenderInfoModal = () => {
         const renderContent = (title) => {
             if (!currentExchangeConfig?.config) return '-';
-            const exchange = allPairConfigs.find((e) => e.symbol === currentExchangeConfig?.config?.symbol);
+            // const exchange = allPairConfigs.find((e) => e.symbol === currentExchangeConfig?.config?.symbol);
             const quoteAsset = currentExchangeConfig?.config?.quoteAsset || '';
             const currentAssetConfig = assetConfig?.find((item) => item.assetCode === quoteAsset);
             switch (title) {
                 case 'min_order_size': {
                     return formatPrice(currentExchangeConfig?.minNotionalFilter?.notional) + ' ' + quoteAsset;
                 }
-                case 'max_order_size': {
+                case 'max_order_size_limit': {
                     return formatPrice(currentExchangeConfig?.quantityFilter?.maxQuoteQty || 0) + ' ' + quoteAsset;
+                }
+                case 'max_order_size_market': {
+                    return formatPrice(currentExchangeConfig?.quantityMarketFilter?.maxQuoteQty || 0) + ' ' + quoteAsset;
                 }
                 case 'total_max_trading_volumn':
                     return formatPrice(currentExchangeConfig?.maxNumberVolumeFilter?.notional || 0) + ' ' + quoteAsset;
@@ -426,14 +424,22 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             setActivePairList(false);
         };
 
-        const renderInformation = (data) => {
+        const renderInformation = (data, isLeft) => {
             return data.map(({ title, tooltip, leftPercent }, index) => (
                 <div key={'title' + title} className="py-[8px] flex  w-full w-100">
-                    <Tooltip id={title} place="right" effect="solid" isV3>
-                        <div>
-                            <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label>
-                            <div className="mt-3 text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
-                        </div>
+                    <Tooltip
+                        id={title}
+                        place="top"
+                        effect="solid"
+                        isV3
+                        overridePosition={(e) => ({
+                            left: isLeft ? 0 : e.left,
+                            top: e.top
+                        })}
+                        className="max-w-[300px]"
+                    >
+                        {/* <label className="font-medium text-white text-sm leading-[18px]">{t('futures:' + title)}</label> */}
+                        <div className="text-3 font-normal text-white leading-[18px]">{t('futures:' + tooltip)}</div>
                     </Tooltip>
                     {/* Each row */}
                     <div className="flex items-center justify-between w-full">
@@ -441,7 +447,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                             data-tip=""
                             data-for={title}
                             id={tooltip}
-                            className="flex items-end text-base text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-darkBlue-5"
+                            className="flex items-end text-base text-txtSecondary dark:text-txtSecondary-dark border-b border-dashed border-darkBlue-5 cursor-pointer"
                         >
                             {t('futures:' + title)}
                         </span>
@@ -458,9 +464,8 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         return (
             <ModalV2 className="!max-w-[800px]" isVisible={isShowModalInfo} onBackdropCb={() => setIsShowModalInfo(false)}>
                 <div className="mt-4 text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('futures:trading_rules')}</div>
-
                 <div className="mt-6 gap-6 flex">
-                    <div className="w-full rounded-md border dark:border-divider-dark p-4 dark:bg-bgInput-dark flex justify-between">
+                    <div className="w-full rounded-md border border-divider dark:border-divider-dark p-4 bg-gray-13 dark:bg-dark-4 flex justify-between">
                         <div
                             className="relative cursor-pointer group"
                             onMouseOver={() => setIsShowModalPriceList(true)}
@@ -479,34 +484,21 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                                         'rotate-180': isShowModalPriceList
                                     })}
                                 />
+                                <div className="absolute left-0 z-50 hidden group-hover:block top-full mt-2" ref={pairListModalRef}>
+                                    <FuturesPairList
+                                        mode={pairListMode}
+                                        setMode={setPairListMode}
+                                        isAuth={isAuth}
+                                        activePairList={isShowModalPriceList}
+                                        onSelectPair={onSelectPair}
+                                    />
+                                </div>
                             </div>
-                            <div className="relative z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">
-                                {t('futures:tp_sl:perpetual')}
-                            </div>
-                            <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListModalRef}>
-                                <FuturesPairList
-                                    mode={pairListMode}
-                                    setMode={setPairListMode}
-                                    isAuth={isAuth}
-                                    activePairList={isShowModalPriceList}
-                                    onSelectPair={onSelectPair}
-                                />
-                            </div>
+                            <div className="z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">{t('futures:tp_sl:perpetual')}</div>
                         </div>
                         <div className="flex flex-col items-end justify-end flex-1">
                             {renderLastPrice(true)}
-                            <div
-                                className={classNames('text-teal text-sm mt-2 flex items-center', {
-                                    '!text-red': priceFromMarketWatch?.priceChangePercent < 0
-                                })}
-                            >
-                                <ArrowDropDownIcon
-                                    color={priceFromMarketWatch?.priceChangePercent > 0 ? '#47cc85' : '#F93636'}
-                                    size={16}
-                                    className={`${priceFromMarketWatch?.priceChangePercent > 0 && 'rotate-180'}`}
-                                />
-                                {formatNumber(roundTo(priceFromMarketWatch?.priceChangePercent * 100 || 0, 2), 2, 2, true)}%
-                            </div>
+                            <PriceChangePercent priceChangePercent={priceFromMarketWatch?.priceChangePercent} className="mt-2 text-sm" />
                         </div>
                     </div>
                     {/* Funding fee */}
@@ -514,7 +506,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                 </div>
 
                 <div className="mt-8 flex w-full">
-                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS)}</div>
+                    <div className="flex flex-1 flex-col pr-4">{renderInformation(ITEMS_WITH_TOOLTIPS, true)}</div>
                     <div className="flex flex-1 flex-col pl-4">{renderInformation(RIGHT_ITEMS_WITH_TOOLTIPS)}</div>
                 </div>
 
@@ -548,7 +540,7 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
                     <ArrowDropDownIcon
                         isFilled
                         size={16}
-                        className={classNames(' transition-transform duration-75', {
+                        className={classNames(' transition-transform duration-200', {
                             'rotate-180': activePairList
                         })}
                     />
@@ -571,7 +563,9 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
             {renderLastPrice()}
 
             {/* Details */}
-            <InfoSlider forceUpdateState={forceUpdateState}>{renderPairPriceItems()}</InfoSlider>
+            <InfoSlider forceUpdateState={forceUpdateState} className="!pl-[14px]">
+                {renderPairPriceItems()}
+            </InfoSlider>
         </div>
     );
 };
@@ -616,10 +610,9 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
             </div> */}
             <ModalV2 className="!max-w-[342px]" isVisible={visible} onBackdropCb={onClose}>
                 {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
-                <div className="font-semibold">{isFunding ? 'Funding' : t('futures:countdown')}</div>
-                <div className="text-gray4 text-sm pt-4">
-                    {' '}
-                    {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}
+                <div className="font-semibold text-2xl mt-4">{isFunding ? 'Funding' : t('futures:countdown')}</div>
+                <div className="text-gray-9 dark:text-gray-7 text-sm mt-4">
+                    {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}{' '}
                     {isFunding && (
                         <span onClick={onDetail} className="text-teal font-semibold cursor-pointer">
                             {t('common:read_more')}
@@ -627,12 +620,14 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
                     )}
                 </div>
                 {isFunding && (
-                    <div
-                        onClick={onRedirect}
-                        className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center"
-                    >
+                    <ButtonV2 onClick={onRedirect} className="mt-3 w-full">
                         {t('futures:funding_history')}
-                    </div>
+                    </ButtonV2>
+                    // <div
+                    //     onClick={onRedirect}
+                    //     className="bg-teal pd-[10px] text-white text-center w-full text-sm font-semibold cursor-pointer rounded-md mt-4 h-11 flex items-center justify-center"
+                    // >
+                    // </div>
                 )}
             </ModalV2>
         </>
@@ -680,8 +675,13 @@ const ITEMS_WITH_TOOLTIPS = [
         leftPercent: 40
     },
     {
-        title: 'max_order_size',
-        tooltip: 'max_order_size_tooltips',
+        title: 'max_order_size_limit',
+        tooltip: 'max_order_size_limit_tooltip',
+        leftPercent: 40
+    },
+    {
+        title: 'max_order_size_market',
+        tooltip: 'max_order_size_market_tooltip',
         leftPercent: 40
     },
     {
@@ -693,15 +693,15 @@ const ITEMS_WITH_TOOLTIPS = [
         title: 'max_number_order',
         tooltip: 'max_number_order_tooltips',
         leftPercent: 70
-    },
-    {
-        title: 'min_limit_order_price',
-        tooltip: 'min_limit_order_price_tooltips',
-        leftPercent: 40
     }
 ];
 
 const RIGHT_ITEMS_WITH_TOOLTIPS = [
+    {
+        title: 'min_limit_order_price',
+        tooltip: 'min_limit_order_price_tooltips',
+        leftPercent: 40
+    },
     {
         title: 'max_limit_order_price',
         tooltip: 'max_limit_order_price_tooltips',

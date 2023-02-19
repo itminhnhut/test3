@@ -187,18 +187,14 @@ const Wallet = () => {
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
-            <div className="relative flex">
-                <Tabs tab={state.screenIndex} className="gap-6 border-b border-divider-dark">
+            <div className="relative flex tracking-normal">
+                <Tabs tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
-                                V2
+                                isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left !px-0 !text-base ${
-                                    e?.key === state.screenIndex
-                                        ? ' text-txtPrimary-dark font-semibold dark:font-semibold dark:hover:text-txtPrimary-dark '
-                                        : ' !font-normal '
-                                }`}
+                                className={`text-left !px-0 !text-base`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);

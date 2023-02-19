@@ -110,13 +110,16 @@ export function refreshToken() {
         }
     };
 }
-export function getMe() {
+export function getMe(resetCache = false) {
     return async (dispatch) => {
         try {
             const { status, data } = await fetchAPI({
                 url: API_GET_ME,
                 options: {
                     method: 'GET'
+                },
+                params: {
+                    resetCache
                 }
             });
             if (status === 'ok') {
@@ -192,22 +195,6 @@ export function getUserFuturesBalance() {
                 dispatch({
                     type: types.UPDATE_WALLET,
                     walletType: WalletType.FUTURES,
-                    payload: data.data
-                });
-            }
-        } catch (e) {}
-    };
-}
-
-export function getUserPartnersBalance() {
-    return async (dispatch) => {
-        try {
-            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 8 } }); // partners wallet type
-
-            if (data && data.status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.UPDATE_WALLET,
-                    walletType: WalletType.PARTNERS,
                     payload: data.data
                 });
             }
@@ -299,6 +286,22 @@ export function setQuoteAsset(asset) {
             type: types.SET_QUOTE_ASSET,
             payload: asset
         });
+    };
+}
+
+export function getUserPartnersBalance() {
+    return async (dispatch) => {
+        try {
+            const { data } = await Axios.get(API_GET_USER_BALANCE_V2, { params: { type: 8 } }); // partners wallet type
+
+            if (data && data.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.UPDATE_WALLET,
+                    walletType: WalletType.PARTNERS,
+                    payload: data.data
+                });
+            }
+        } catch (e) {}
     };
 }
 
