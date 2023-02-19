@@ -38,8 +38,7 @@ const colors = {
         12: '#eeeff0',
         13: '#f2f4f5',
         14: '#acbde5',
-        15: '#1e1e1e',
-        16: '#8694b2'
+        15: '#1e1e1e'
     },
 
     white: 'white',

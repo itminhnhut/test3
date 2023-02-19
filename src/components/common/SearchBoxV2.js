@@ -9,7 +9,7 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
     return (
         <div
             className={
-                'p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-10 dark:bg-dark-2 border border-transparent focus-within:border-teal' +
+                'p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-10 dark:bg-dark-2 border border-transparent focus-within:border-teal ' +
                 wrapperClassname
             }
         >
@@ -21,7 +21,7 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
                 }
                 value={value}
                 onChange={(e) => {
-                    onChange(e?.target?.value);
+                    onChange(e?.target?.value?.trim());
                 }}
                 placeholder={t('common:search')}
                 onFocus={onFocus}
