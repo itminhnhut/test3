@@ -466,22 +466,14 @@ export const USER_CP = [
         url: '/',
         child_lv1: []
     },
-    {
-        key: 6,
-        title: 'APIManagement',
-        localized: 'api_mng',
-        // hide: true,
-        isNew: true,
-        url: getV1Url('/settings/api-management'),
-        child_lv1: []
-    }
     // {
-    //     key: 7,
-    //     title: 'LogOut',
-    //     localized: 'logout',
+    //     key: 6,
+    //     title: 'APIManagement',
+    //     localized: 'api_mng',
     //     // hide: true,
     //     isNew: true,
-    //     url: '/',
-    //     child_lv1: [],
-    // },
+    //     url: getV1Url('/settings/api-management'),
+    //     child_lv1: []
+    // }
+    
 ];

@@ -1,9 +1,6 @@
-import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { useWindowSize } from 'react-use';
-import { getS3Url } from 'redux/actions/utils';
 
-const HomeJourney = ({ t, width }) => {
+const HomeJourney = ({ t, width, currentTheme }) => {
     return (
         <section className="homepage-journey z-10">
             {/* <img src="/images/screen/homepage/journey_background.png" className="absolute w-full z-0 left-0" /> */}
@@ -64,8 +61,7 @@ const HomeJourney = ({ t, width }) => {
                         <div className="homepage-journey__group_content___left__item">
                             <div className="homepage-journey__group_content___left__item___icon">
                                 <img
-                                    // src={getS3Url('/images/screen/homepage/token_saving_cost.png')}
-                                    src={'/images/screen/homepage/token_saving_cost_1.png'}
+                                    src={`/images/screen/homepage/token_saving_cost_1_${currentTheme}.png`}
                                     width={width >= 1366 ? '52' : '44'}
                                     height={width >= 1366 ? '52' : '44'}
                                 />
