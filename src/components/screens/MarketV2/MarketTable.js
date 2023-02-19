@@ -309,7 +309,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         return (
             <ReTable
                 // @ts-ignore
-                sort
+                // sort
                 defaultSort={{ key: 'pair', direction: 'asc' }}
                 useRowHover
                 data={dataSource}
@@ -318,7 +318,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 loading={loading}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
-                noBorder
+                noBorder={width < 640}
                 tableStyle={{
                     tableStyle: { minWidth: '888px !important' },
                     headerStyle: {},
@@ -370,13 +370,16 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         if (total <= MARKET_ROW_LIMIT) return null
 
         return (
-            <div className="my-4 flex items-center justify-center">
-                <RePagination total={total}
+            <div className="my-3 sm:my-5 flex items-center justify-center">
+                <RePagination 
+                    // total={total}
                     isNamiV2
-                    current={restProps.currentPage}
-                    pageSize={MARKET_ROW_LIMIT}
-                    onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list" fromZero={undefined} />
+                    // current={restProps.currentPage}
+                    // pageSize={MARKET_ROW_LIMIT}
+                    // onChange={(currentPage) => parentState({ currentPage })}
+                    name="market_table___list" fromZero={undefined} 
+                    pagingPrevNext={{ language, page: restProps.currentPage - 1, hasNext: (restProps.currentPage * MARKET_ROW_LIMIT) < total, onChangeNextPrev:(change) => parentState({ currentPage: restProps.currentPage +  change}) }}
+                />
             </div>
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex])
@@ -536,6 +539,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
             })
         }
     })
+
 
     return result
 }
