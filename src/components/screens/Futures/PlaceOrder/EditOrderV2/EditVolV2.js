@@ -362,7 +362,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 <div className="space-y-2 mt-4">
                                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
                                     <TradingInput
-                                        labelClassName={'dark:!text-white'}
+                                        labelClassName={'dark:!text-white !text-base'}
                                         label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
                                         value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
                                         decimalScale={decimals.price}

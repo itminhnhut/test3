@@ -1,11 +1,13 @@
 import CheckBox from 'components/common/CheckBox';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { ChevronRight } from 'react-feather';
 import Button from 'components/common/V2/ButtonV2/Button';
 import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
 
 const FuturesTermsModal = () => {
+    const isAuth = useSelector((state) => state.auth?.user) || null;
     const {
         t,
         i18n: { language }
@@ -18,23 +20,30 @@ const FuturesTermsModal = () => {
 
     useEffect(() => {
         const accepted = localStorage.getItem('ACCEPTED_FUTURES');
-        setVisible(!accepted);
-    }, []);
+        if (isAuth) setVisible(!accepted);
+    }, [isAuth]);
 
     const onContinue = () => {
         localStorage.setItem('ACCEPTED_FUTURES', true);
         setVisible(false);
     };
 
+    const flag = useRef(false);
     const onHandleClick = (key) => {
         switch (key) {
             case 'detail_service':
+                flag.current = true;
                 window.open(`https://nami.exchange/${language}/terms-of-service`, '_blank');
                 break;
             case 'detail_futures':
+                flag.current = true;
                 window.open(`https://nami.exchange/${language}/terms-of-futures`, '_blank');
                 break;
             default:
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
                 setState({ ...state, [key]: !state[key] });
                 break;
         }
@@ -52,7 +61,7 @@ const FuturesTermsModal = () => {
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:service')}</span>
                             <div className="text-teal font-semibold flex items-center space-x-2">
-                                <span onClick={() => onHandleClick('detail_terms')}>{t('common:details')}</span>
+                                <span onClick={() => onHandleClick('detail_service')}>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
                         </div>
@@ -65,7 +74,7 @@ const FuturesTermsModal = () => {
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:futures')}</span>
                             <div className="text-teal font-semibold flex items-center space-x-2">
-                                <span onClick={() => onHandleClick('detail_trade')}>{t('common:details')}</span>
+                                <span onClick={() => onHandleClick('detail_futures')}>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
                         </div>
