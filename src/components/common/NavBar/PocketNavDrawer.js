@@ -79,7 +79,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     <div key={`${title}_${key}`}>
                         <div
                             className={`relative mal-pocket-navbar__drawer__navlink__group___item
-                                    ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover' : ''}`}
+                                    ${!state.navActiveLv1[`${title}_${key}`] ? 'mal-pocket-nabar__item___hover ' : 'bg-hover dark:bg-hover-dark'}`}
                             onClick={() =>
                                 setState({
                                     navActiveLv1: {
