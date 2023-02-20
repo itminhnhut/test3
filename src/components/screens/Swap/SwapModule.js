@@ -9,12 +9,14 @@ import * as Error from '../../../redux/actions/apiError';
 import Skeletor from 'src/components/common/Skeletor';
 import useOutsideClick from 'hooks/useOutsideClick';
 import Modal from 'src/components/common/SwapReModal';
+import { WalletType } from 'redux/actions/const';
+import { EXCHANGE_ACTION } from 'pages/wallet';
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
 import { divide, find, orderBy, uniqBy } from 'lodash';
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, safeToFixed } from 'redux/actions/utils';
+import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { Search, X, XCircle } from 'react-feather';
 import { ApiStatus } from 'redux/actions/const';
@@ -24,13 +26,13 @@ import Button from 'components/common/Button';
 import router from 'next/router';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 // import SVG
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import SwapWarning from 'components/svg/SwapWarning';
 import { CheckCircleIcon, CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIcon';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
@@ -137,7 +139,6 @@ const SwapModule = ({ width, pair }) => {
 
         const { status, data } = result;
         data && setState({ estRate: data });
-        console.log('status: ', status);
         if (status === ApiStatus.SUCCESS && updateQty) {
             if (requestAsset === state.fromAsset) {
                 setState({ toAmount: +roundToDown(requestQty * data?.price, 10) });
@@ -306,9 +307,16 @@ const SwapModule = ({ width, pair }) => {
 
     // Render Handler
     const handleDepositIconBtn = useCallback(() => {
-        if (!auth) router.push(getLoginUrl('sso', 'login'));
-        if (!state.fromAsset) return null;
-        router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
+        if (!auth) {
+            console.log('not auth: ', auth);
+            router.push(getLoginUrl('sso', 'login'));
+        } else {
+            console.log('auth: ', auth);
+            // if (!state.fromAsset) return null;
+            // router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
+            // router.push(`/wallet/exchange/deposit?type=crypto&asset=${state.fromAsset}`);
+            router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
+        }
     }, [state.fromAsset]);
 
     const renderFromInput = useCallback(() => {
@@ -328,7 +336,7 @@ const SwapModule = ({ width, pair }) => {
                         decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
                     />
 
-                    <button className={`border-r border-r-divider dark:border-r-divider-dark mr-2 pr-2 ${!!state.fromAmount ? 'visible' : 'invisible'}`}>
+                    <button className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${!!state.fromAmount ? 'visible' : 'invisible'}`}>
                         <CloseIcon onClick={() => setState({ fromAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
                     </button>
                 </div>
@@ -336,7 +344,7 @@ const SwapModule = ({ width, pair }) => {
                     <div className="uppercase cursor-pointer hover:opacity-50 text-teal" onClick={() => onMaximumQty('from', availabelAsset?.fromAsset)}>
                         max
                     </div>
-                    <div className="ml-3 mr-[11px] w-[1px] bg-divider dark:bg-divider-dark h-6" />
+                    <div className="mx-3 w-[1px] bg-divider dark:bg-divider-dark h-6" />
                     <div
                         className="flex items-center cursor-pointer select-none"
                         onClick={() => setState({ openAssetList: { from: !state.openAssetList?.from } })}
@@ -360,7 +368,7 @@ const SwapModule = ({ width, pair }) => {
         const data = state.fromAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { fromAsset, available } = data?.[i];
+            const { fromAsset, available, filters } = data?.[i];
             const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
             assetItems.push(
                 <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
@@ -373,7 +381,7 @@ const SwapModule = ({ width, pair }) => {
                             <span className="text-xs leading-4 text-left">{assetName}</span>
                         </p>
                     </div>
-                    <div>{available ? formatWallet(available) : '0.0000'}</div>
+                    <div>{available ? formatWallet(available, (filters?.[0]?.stepSize + '').replace('0.', '').length) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -418,14 +426,14 @@ const SwapModule = ({ width, pair }) => {
                         onValueChange={({ value }) => setState({ toAmount: value })}
                         placeholder="0.0000"
                     />
-                    <button className={`border-r border-r-divider dark:border-r-divider-dark mr-2 pr-2 ${!!state.toAmount ? 'visible' : 'invisible'}`}>
-                        <CloseIcon onClick={() => setState({ toAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
-                    </button>
                 </div>
                 <div
                     className="mt-1 flex items-center cursor-pointer select-none"
                     onClick={() => setState({ openAssetList: { to: !state.openAssetList?.to } })}
                 >
+                    <button className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${!!state.toAmount ? 'visible' : 'invisible'}`}>
+                        <CloseIcon onClick={() => setState({ toAmount: '' })} size={width >= 768 ? 20 : 16} className="cursor-pointer" />
+                    </button>
                     <AssetLogo assetCode={state.toAsset} size={24} />
                     <span className="mx-2 uppercase text-txtPrimary dark:text-txtPrimary-dark">{state.toAsset}</span>
                     <span className={state.openAssetList?.to ? 'transition-transform duration-50 rotate-180' : ''}>
@@ -442,7 +450,7 @@ const SwapModule = ({ width, pair }) => {
         const data = state.toAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { toAsset, available } = data?.[i];
+            const { toAsset, available, filters } = data?.[i];
             const assetName = find(assetConfig, { assetCode: toAsset })?.assetName;
 
             assetItems.push(
@@ -456,7 +464,7 @@ const SwapModule = ({ width, pair }) => {
                             <span className="text-xs leading-4 text-left">{assetName}</span>
                         </p>
                     </div>
-                    <div>{available ? formatWallet(available) : '0.0000'}</div>
+                    <div>{available ? formatWallet(available, (filters?.[0]?.stepSize + '').replace('0.', '').length) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -525,9 +533,9 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <ButtonV2 className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
-                </ButtonV2>
+                </HrefButton>
             );
         }
 
@@ -825,7 +833,7 @@ const SwapModule = ({ width, pair }) => {
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
                 <div className="relative min-w-[350px] rounded-xl">
                     <div className="flex flex-col justify-center items-center">
-                        <span className="text-4xl font-bold leading-[1.19]">{t('navbar:submenu.swap')}</span>
+                        <span className="text-[32px] leading-[38px] font-semibold">{t('navbar:submenu.swap')}</span>
                     </div>
                     <div className="mt-8 p-6 rounded-xl shadow-card_light dark:border dark:border-divider-dark dark:bg-dark bg-white">
                         {/*INPUT WRAPPER*/}
@@ -903,7 +911,7 @@ const SwapModule = ({ width, pair }) => {
                         {renderSwapBtn()}
                         {/*END:SWAP BUTTON*/}
 
-                        <div className="mt-4 text-center text-sm active: text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="mt-4 text-center text-sm text-gray-7 dark:text-gray-7">
                             <Trans i18nKey="common:term_swap">
                                 <HrefButton className="!inline !p-0" href={PATHS.TERM_OF_SERVICES.SWAP} variants="blank" />
                             </Trans>

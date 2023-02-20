@@ -38,6 +38,8 @@ import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
 import TagV2 from 'components/common/V2/TagV2';
+import useDarkMode from 'hooks/useDarkMode';
+import { useRouter } from 'next/router';
 
 const TextCopyable = ({
     text = '',
@@ -67,7 +69,8 @@ const TextCopyable = ({
 };
 
 const SwitchUseNamiFee = ({
-    t
+    t,
+    className = ''
 }) => {
     const [checked, setChecked] = useState(false);
 
@@ -99,7 +102,7 @@ const SwitchUseNamiFee = ({
         setAssetFee(checked ? 1 : 0);
     }, [checked]);
 
-    return <div className='flex items-center'>
+    return <div className={'flex items-center ' + className}>
         <SwitchV2
             onChange={() => {
                 setChecked(!checked);
@@ -176,16 +179,17 @@ const ModalChangeReferee = ({
     };
 
     const handleRefCodeChange = (code = '') => {
-        code = code.trim().toUpperCase();
+        code = code.trim()
+            .toUpperCase();
         setRefCode(code);
         if (code) checkRef(code);
     };
 
     const suffixInput = useMemo(() => {
-        if (checking) return <Spinner size={20} />
-        if (!referrer) return <span className='text-txtSecondary'>{referrer?.username}</span>
-        return null
-    }, [referrer, checking])
+        if (checking) return <Spinner size={20} />;
+        if (!referrer) return <span className='text-txtSecondary'>{referrer?.username}</span>;
+        return null;
+    }, [referrer, checking]);
 
     return <ModalV2 isVisible={open} onBackdropCb={onClose} className='w-[30rem]'>
         <p className='text-xl font-medium py-6'>{t('profile:referrer')}</p>
@@ -202,8 +206,97 @@ const ModalChangeReferee = ({
             onClick={setInvite}
             disabled={!refCode || !referrer}
             className='mt-4'>{t('common:confirm')
-            }</ButtonV2>
+        }</ButtonV2>
     </ModalV2>;
+};
+
+const UserInformation = ({
+    t,
+    user
+}) => {
+    const [showSetReferrerModal, setShowSetReferrerModal] = useState(false);
+    return <>
+        <ModalChangeReferee
+            t={t}
+            open={showSetReferrerModal}
+            onClose={() => setShowSetReferrerModal(false)}
+        />
+        <div>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:name')}</span>
+            <span className='font-semibold text-right float-right'>{user?.name}</span>
+        </div>
+
+        <div>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:username')}</span>
+            <span className='font-semibold text-right float-right'>{user?.username}</span>
+        </div>
+
+        <div>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>Nami ID</span>
+            <TextCopyable className='font-semibold text-right float-right' text={user?.code} />
+        </div>
+
+        <div>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>Email</span>
+            <span className='font-semibold text-right float-right'>{user?.email}</span>
+        </div>
+
+        <div>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:referrer')}</span>
+            <div
+                className='flex items-end float-right cursor-pointer'
+                onClick={() => setShowSetReferrerModal(true)}
+            >
+                {
+                    !user?.referal_id ?
+                        <>
+                            <div className='w-[10px] h-[1px] bg-white mr-[10px]' />
+                            <Edit className='' size={16} />
+                        </>
+                        : <span className='font-semibold'>{user?.referral_username}</span>
+                }
+
+            </div>
+        </div>
+    </>;
+};
+
+const UserLevelSlice = ({
+    t,
+    className,
+    level,
+    namiBalance,
+    currentPercent,
+    namiNextLevel
+}) => {
+    return <div className={'mt-6 ' + className}>
+        <div>
+            <span className='text-txtSecondary'>{t('fee-structure:current_fee_level')}: VIP {level}</span>
+            <span className='text-right float-right text-teal font-medium'>
+                <Link
+                    href={PATHS.EXCHANGE.SWAP.getSwapPair({
+                        fromAsset: 'VNDC',
+                        toAsset: ROOT_TOKEN
+                    })}>
+                    <a className='text-dominant hover:!underline'>{t('common:buy')} NAMI</a>
+                </Link>
+            </span>
+        </div>
+        <div
+            className='my-4 relative w-full h-[4px] xl:h-[4px] rounded-xl bg-gray-11 dark:bg-dark-2 overflow-hidden'>
+            <div
+                style={{ width: `${currentPercent}%` }}
+                className='absolute left-0 top-0 bg-dominant h-full rounded-xl transition-all duration-700 ease-in'
+            />
+        </div>
+
+        <div>
+            <span
+                className='text-teal text-sm'>VIP {level}: {formatNumber(namiBalance)} {ROOT_TOKEN} / {formatNumber(currentPercent)} %</span>
+            <span
+                className='text-right float-right text-teal text-sm'>VIP {level}: {formatNumber(namiNextLevel, 0)} {ROOT_TOKEN}</span>
+        </div>
+    </div>;
 };
 
 const Profile = () => {
@@ -216,6 +309,9 @@ const Profile = () => {
 
     const user = useSelector((state) => state.auth?.user);
     const { t } = useTranslation();
+    const [currentTheme] = useDarkMode();
+
+    const router = useRouter();
 
     const setState = obj => set(prevState => ({ ...prevState, ...obj }));
 
@@ -244,54 +340,15 @@ const Profile = () => {
     const currentPercent = state.namiBalance ? state.namiBalance * 100 / nextLevel?.nami_holding : '--';
 
     return <AccountLayout>
-        <ModalChangeReferee
-            t={t}
-            open={state.showSetReferrerModal}
-            onClose={() => setState({ showSetReferrerModal: false })}
-        />
-        <div className='p-6 rounded-xl bg-white dark:bg-darkBlue-3 mt-12'>
-            <div className='flex'>
-                <div className='flex-1 space-y-4'>
-                    <div>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:name')}</span>
-                        <span className='font-semibold text-right float-right'>{user?.name}</span>
-                    </div>
-
-                    <div>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:username')}</span>
-                        <span className='font-semibold text-right float-right'>{user?.username}</span>
-                    </div>
-
-                    <div>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>Nami ID</span>
-                        <TextCopyable className='font-semibold text-right float-right' text={user?.code} />
-                    </div>
-
-                    <div>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>Email</span>
-                        <span className='font-semibold text-right float-right'>{user?.email}</span>
-                    </div>
-
-                    <div>
-                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:referrer')}</span>
-                        <div
-                            className='flex items-end float-right cursor-pointer'
-                            onClick={() => setState({ showSetReferrerModal: true })}
-                        >
-                            {
-                                !user?.referal_id ?
-                                    <>
-                                        <div className='w-[10px] h-[1px] bg-white mr-[10px]' />
-                                        <Edit className='' size={16} />
-                                    </>
-                                    : <span className='font-semibold'>{user?.referral_username}</span>
-                            }
-
-                        </div>
-                    </div>
+        <div className='rounded-xl md:p-6 md:bg-white md:dark:bg-darkBlue-3 mt-12'>
+            <div
+                className='flex flex-col md:flex-row space-y-6 md:space-y-0 md:divide-x md:divide-divider md:dark:divide-divider-dark'>
+                <div
+                    className='flex-1 p-6 md:p-0 md:pr-10 rounded-md md:rounded-none space-y-6 md:space-y-4 bg-white dark:bg-darkBlue-3 md:bg-transparent'>
+                    <UserInformation user={user} t={t} />
                 </div>
-                <div className='w-[1px] bg-divider dark:bg-divider-dark mx-10' />
-                <div className='flex-1 flex flex-col justify-between'>
+                <div
+                    className='flex-1 p-6 md:p-0 md:pl-10 rounded-md md:rounded-none bg-white dark:bg-darkBlue-3 md:bg-transparent flex flex-col justify-between'>
                     <div className='space-y-3'>
                         <span
                             className='text-txtSecondary dark:text-txtSecondary-dark'>{t('fee-structure:your_fee_level')} VIP {state.level}</span>
@@ -305,87 +362,95 @@ const Profile = () => {
                             <span className='text-2xl font-semibold'>0.075%</span>
                         </div>
                     </div>
-                    <SwitchUseNamiFee t={t} />
+                    <SwitchUseNamiFee t={t} className='mt-6 md:mt-0' />
+                    <div className='md:hidden divide-y md:divide-0 divide-divider dark:divide-divider-dark'>
+                        <UserLevelSlice
+                            t={t}
+                            className='mt-6 pb-6'
+                            level={state.level}
+                            namiBalance={state.namiBalance}
+                            currentPercent={currentPercent}
+                            namiNextLevel={nextLevel?.nami_holding}
+                        />
+                        <div
+                            onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
+                            className='pt-7 pb-3 text-center cursor-pointer font-medium'
+                        >
+                            <span
+                                className='text-teal font-semibold text-sm'>{t('fee-structure:see_fee_structures')}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div className='mt-6'>
-                <div>
-                    <span
-                        className='text-txtSecondary'>{t('fee-structure:current_fee_level')}: VIP {state.level}</span>
-                    <span className='text-right float-right text-teal font-medium'>
-                        <Link href={PATHS.EXCHANGE.SWAP.getSwapPair({
-                            fromAsset: 'VNDC',
-                            toAsset: ROOT_TOKEN
-                        })}>
-                            <a className='text-dominant hover:!underline'>{t('common:buy')} NAMI</a>
-                        </Link>
-                    </span>
-                </div>
-                <div
-                    className='my-4 relative w-full h-[4px] xl:h-[4px] rounded-xl bg-gray-11 dark:bg-dark-2 overflow-hidden'>
-                    <div
-                        style={{ width: `${currentPercent}%` }}
-                        className='absolute left-0 top-0 bg-dominant h-full rounded-xl transition-all duration-700 ease-in'
-                    />
-                </div>
-
-                <div>
-                    <span
-                        className='text-teal text-sm'>VIP {state.level}: {formatNumber(state.namiBalance)} {ROOT_TOKEN} / {formatNumber(currentPercent)} %</span>
-                    <span
-                        className='text-right float-right text-teal text-sm'>VIP {state.level}: {formatNumber(nextLevel?.nami_holding, 0)} {ROOT_TOKEN}</span>
-                </div>
-            </div>
+            <UserLevelSlice
+                t={t}
+                className='hidden md:block p-4'
+                level={state.level}
+                namiBalance={state.namiBalance}
+                currentPercent={currentPercent}
+                namiNextLevel={nextLevel?.nami_holding}
+            />
         </div>
 
         <div
-            className={classnames('border border-divider-dark rounded-xl p-6 mt-12 hidden', {
+            className={classnames('border md:dark:border md:border-0 border-divider dark:border-divider-dark rounded-xl p-6 mt-12 hidden', {
                 '!block': user?.kyc_status === KYC_STATUS.APPROVED
             })}
             style={{
-                backgroundImage: `url(${getS3Url('/images/screen/account/bg-banner-2.png')})`,
-                backgroundSize: 'cover'
+                backgroundImage: `url(/images/screen/account/bg_transfer_onchain_${currentTheme}.png)`,
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center'
             }}
         >
             <div>
-                <p className='font-medium mb-2'>{t('profile:deposit_banner:title')}</p>
-                <span className='text-txtSecondary'>{t('profile:deposit_banner:description')}</span>
+                <p className='text-lg font-semibold mb-2'>{t('profile:deposit_banner:title')}</p>
+                {/* <span */}
+                {/*     className='text-txtSecondary text-sm dark:text-txtSecondary-dark'>{t('profile:deposit_banner:description')}</span> */}
             </div>
-            <div className='grid grid-cols-2 gap-16 mt-9'>
-                <div className='flex items-center justify-between'>
-                    <Image width={58} height={58} src='/images/screen/profile/ic_transfer.png' />
-                    <div className='ml-4 flex-1'>
-                        <div className='flex items-center mb-2'>
-                            <span>{t('profile:deposit_banner:transfer')}</span>
-                            <div className='flex items-center ml-2 cursor-pointer hover:underline'>
-                                <HelpCircle />
-                                <span className='text-teal ml-2'>{t('profile:deposit_banner:instruction')}</span>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-16 mt-9'>
+                {[
+                    {
+                        key: 1,
+                        image: '/images/screen/account/ic_deposit.png',
+                        title: t('profile:deposit_banner:transfer'),
+                        description: t('profile:deposit_banner:transfer_description'),
+                        textBtn: t('profile:deposit_banner:deposit_btn')
+                    },
+                    {
+                        key: 2,
+                        image: '/images/screen/account/ic_swap_v2.png',
+                        title: t('profile:deposit_banner:swap'),
+                        description: t('profile:deposit_banner:swap_description'),
+                        textBtn: t('profile:deposit_banner:swap_btn')
+                    }
+                ].map(item => {
+                    return <div key={item.key} className='flex flex-col md:flex-row md:items-center justify-between'>
+                        <div className='flex items-center justify-between mb-6 md:mb-0'>
+                            <div className='rounded-full h-14 flex-none dark:bg-dark-2 p-3'>
+                                <Image width={32} height={32} src={item.image} />
+                            </div>
+                            <div className='ml-4 flex-1'>
+                                <div className='flex items-center mb-2'>
+                                    <span
+                                        className='font-semibold text-sm'>{item.title}</span>
+                                    <div className='flex items-center ml-2 cursor-pointer hover:underline'>
+                                        <HelpCircle />
+                                        <span
+                                            className='text-teal ml-2 hidden md:inline'>{t('profile:deposit_banner:instruction')}</span>
+                                    </div>
+                                </div>
+                                <span
+                                    className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{item.description}</span>
                             </div>
                         </div>
-                        <span
-                            className='text-txtSecondary'>{t('profile:deposit_banner:transfer_description')}</span>
-                    </div>
-                    <Button className='w-auto px-6'>{t('profile:deposit_banner:deposit')}</Button>
-                </div>
-                <div className='flex items-center justify-between'>
-                    <Image width={58} height={58} src='/images/screen/profile/ic_swap.png' />
-                    <div className='ml-4 flex-1'>
-                        <div className='flex items-center mb-2'>
-                            <span>{t('profile:deposit_banner:swap')}</span>
-                            <div className='flex items-center ml-2 cursor-pointer hover:underline'>
-                                <HelpCircle />
-                                <span className='text-teal ml-2'>{t('profile:deposit_banner:instruction')}</span>
-                            </div>
-                        </div>
-                        <span className='text-txtSecondary'>{t('profile:deposit_banner:swap_description')}</span>
-                    </div>
-                    <Button className='w-auto px-6'>{t('profile:deposit_banner:deposit')}</Button>
-                </div>
+                        <Button className='md:w-auto px-6'>{item.textBtn}</Button>
+                    </div>;
+                })}
             </div>
         </div>
 
-        <div className='grid grid-cols-2 gap-8 mt-14'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mt-14'>
             <Activity t={t} />
             <Announcement />
         </div>

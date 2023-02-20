@@ -365,7 +365,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                     <div className="font-semibold mb-6">{t('futures:calulator:result')}</div>
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <div className="text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</div>
+                            <div className="text-txtSecondary-dark">{t('common:last_price')}</div>
                             <div className="font-semibold">
                                 {formatNumber(_lastPrice, decimals.symbol, 0, true)} {quoteAsset}
                             </div>

@@ -36,7 +36,7 @@
         font-size: 40px;
 
         @media (min-width: 350px) {
-          font-size: 44px;
+          font-size: 36px;
         }
 
         @media (min-width: 576px) {
@@ -46,8 +46,7 @@
 
         @media (min-width: 1366px) {
           @apply mt-4;
-          // font-size: 64px;
-          // line-height: 70px;
+         
           font-size: 54px;
           line-height: 68px;
         }
@@ -134,7 +133,8 @@
     }
 
     .homepage-introduce___wrapper__right {
-      @apply relative z-10 flex justify-end mt-14 md:w-[100%] lg:w-[55%];
+      @apply relative z-10 flex justify-end items-end md:w-[100%] lg:absolute;
+      max-height:556px;
       img {
         @apply block;
         width: auto;
@@ -679,10 +679,8 @@
         }
 
         .homepage-news___lasted_slider {
-          //background-color: red;
           height: 20px;
-          //max-width: 500px;
-          max-width: calc(100% - 20px);
+          max-width: calc(100% - 100px);
 
           .keen-slider {
             height: 100%;
@@ -712,7 +710,7 @@
       }
 
       div.homepage-news___lastest___news____right {
-        @apply w-1/6 flex justify-end items-center text-dominant cursor-pointer underline;
+        @apply w-1/6 flex justify-end items-center text-dominant cursor-pointer;
 
         font-weight: 600;
 
@@ -863,14 +861,7 @@
             @apply text-txtSecondary dark:text-txtSecondary-dark;
           }
 
-          svg:first-child {
-            margin-right: 16px;
-          }
-
-          svg:last-child {
-            margin-left: 16px;
-          }
-
+         
           .homepage-first_award___form___input {
             @apply w-full text-txtPrimary dark:text-txtPrimary-dark;
 
@@ -961,7 +952,7 @@
 
         .homepage-journey__group_content___left__item {
 
-          @apply mb-4 md:mb-0 last:mb-0 border border-divider rounded-md dark:border-divider-dark md:border-0 block md:flex items-center w-full md:w-1/2;
+          @apply mb-4 md:mb-0 last:mb-0 border border-divider rounded-md dark:border-divider-dark md:border-0 block md:flex items-center ;
 
           padding: 24px;
 
@@ -1047,18 +1038,20 @@
         .homepage-journey__group_content___left {
 
           .homepage-journey__group_content___left__item {
-            padding: 16px;
+            @apply border border-transparent dark:border-transparent;
+           
             border-radius: 12px;
             transition: all .3s ease;
             cursor: pointer;
 
             &:hover {
-              @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
+              @apply border-divider dark:border-divider-dark dark:shadow-none;
               box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
 
               .homepage-journey__group_content___left__item___content__viewmore {
                 opacity: 1;
               }
+          
             }
           }
         }
@@ -1523,10 +1516,17 @@
 .homepage-activity {
   @apply relative bg-[#f2f4f5] dark:bg-darkBlue-3;
   // background: linear-gradient(97.34deg, #233074 -29.34%, #223050 73.72%);
-
+  .homepage-activity__slide__item {
+    @apply relative;
+    // &::after {
+    //   content:'';
+    //   @apply absolute bg-gray-11 dark:bg-dark-1 w-2 h-2 rounded-full right-0 lg:right-4;
+    // }
+  }
   .homepage-activity___wrapper {
     // height: 380px;
-
+    max-width:1660px;
+    margin:0 auto;
    
     [class^="homepage-activity__slide__item"],
     [class*=" homepage-activity__slide__item"] {
@@ -1538,6 +1538,7 @@
       color: #fff;
       font-weight: 500;
       max-height: 100vh;
+      
 
       .homepage-activity__item___wrapper {
         @apply flex flex-row items-center py-4;
@@ -1681,10 +1682,10 @@
         @media (min-width: 992px) {
           @apply w-1/4;
           padding-top: 98px;
-          &:hover {
-            @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
-            box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
-          }
+          //&:hover {
+          //  @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
+          //  box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
+          //}
         }
 
         .homepage-community___channel__group___item__icon {
@@ -1692,6 +1693,14 @@
           top: 28px;
           min-width: 44px;
           min-height: 44px;
+          img {
+            height: 44px;
+            width: auto;
+          }
+          .telegram-global{
+            height: 45px!important;
+          }
+
         }
 
         .homepage-community___channel__group___item__bg {

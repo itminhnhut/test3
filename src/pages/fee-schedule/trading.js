@@ -143,7 +143,7 @@ const ExchangeMobileList = ({ t }) => {
 };
 
 const INITIAL_STATE = {
-    tabIndex: 1,
+    tabIndex: 0,
     loading: false,
     vipLevel: null,
     futuresFeeConfig: null,
@@ -547,7 +547,9 @@ const TradingFee = () => {
                 className='md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm'
                 style={{
                     backgroundImage: `url(/images/screen/account/bg_transfer_onchain_${currentTheme}.png)`,
-                    backgroundSize: 'cover'
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
                 }}
             >
                 <span className='text-xl font-semibold'>

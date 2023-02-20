@@ -67,6 +67,7 @@ const ReTable = memo(
         isNamiV2,
         height,
         reference,
+        onRowClick,
         ...restProps
     }) => {
         // * Init State
@@ -117,6 +118,17 @@ const ReTable = memo(
                 onResize: handleResize(index)
             })
         }));
+
+        const onRow = (item, i, a) => {
+            return {
+                onClick: (e) => onRowClick && onRowClick({ ...item, rowIdx: i }, e), // click row
+                onDoubleClick: (e) => {}, // double click row
+                onContextMenu: (e) => {}, // right button click row
+                onMouseEnter: (e) => {}, // mouse enter row
+                onMouseLeave: (e) => {} // mouse leave row
+            };
+        };
+
         const renderTable = useCallback(() => {
             let defaultSort =
                 sort && restProps?.defaultSort ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`]) : data;
@@ -142,7 +154,16 @@ const ReTable = memo(
             // console.log('namidev-DEBUG: Paged ', _)
             // console.log('namidev-DEBUG: Origin ', data)
 
-            return <RcTable data={_} columns={resizable ? _columns : ownColumns} components={resizable && components} emptyText={emptyText} {...restProps} />;
+            return (
+                <RcTable
+                    onRow={onRow}
+                    data={_}
+                    columns={resizable ? _columns : ownColumns}
+                    components={resizable && components}
+                    emptyText={emptyText}
+                    {...restProps}
+                />
+            );
         }, [data, resizable, emptyText, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
