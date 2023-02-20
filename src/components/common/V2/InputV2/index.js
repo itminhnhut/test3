@@ -53,7 +53,7 @@ const InputV2 = ({
             {prefix ? prefix : null}
             <input
                 ref={inputRef}
-                className='flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
+                className='h-5 flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
                 type='text'
                 placeholder={placeholder}
                 value={value}

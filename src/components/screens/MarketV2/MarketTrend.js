@@ -62,7 +62,7 @@ const MarketTrend = memo(({ loading, data }) => {
     }, [width])
 
     return (
-        <div className="py-20 px-4 lg:px-0">
+        <div className="py-10 sm:py-20 px-4 sm:px-0">
             {!data ? renderSkeleton()
                 : <Swiper
                     loop
@@ -70,24 +70,28 @@ const MarketTrend = memo(({ loading, data }) => {
                     grabCursor
                     direction="horizontal"
                     className="mySwiper"
-                    slidesPerView={1}
-                    spaceBetween={10}
+                    slidesPerView={1.4}
+                    centeredSlides={true}
+                    spaceBetween={16}
                     autoplay={{
                         'delay': 3200,
                         'disableOnInteraction': true
                     }}
                     breakpoints={{
-                        '576': {
+                        '640': {
                             'slidesPerView': 2,
-                            'spaceBetween': 20
+                            'spaceBetween': 16,
+                            'centeredSlides': false
                         },
                         '768': {
                             'slidesPerView': 3,
-                            'spaceBetween': 20
+                            'spaceBetween': 16,
+                            'centeredSlides': false
                         },
                         '1280': {
                             'slidesPerView': 4,
-                            'spaceBetween': 20
+                            'spaceBetween': 16,
+                            'centeredSlides': false
                         }
                     }}>
                     {renderCard()}
