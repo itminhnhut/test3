@@ -365,7 +365,7 @@ const Market = () => {
 
     const renderContent = () => {
         return (
-            <div className="w-full h-full bg-shadow pb-[120px]">
+            <div className="w-full h-full pb-[120px]">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend} />
                     {renderMarketTable()}
