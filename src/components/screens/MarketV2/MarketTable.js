@@ -934,7 +934,7 @@ const renderTradeLink = (b, q, lang, mode) => {
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark"
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark !text-sm sm:!text-base"
                     target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
