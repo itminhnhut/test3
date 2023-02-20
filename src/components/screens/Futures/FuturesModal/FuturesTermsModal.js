@@ -33,11 +33,11 @@ const FuturesTermsModal = () => {
         switch (key) {
             case 'detail_service':
                 flag.current = true;
-                window.open(`${process.env.NEXT_PUBLIC_APP_URL}/${language}/terms-of-service`, '_blank');
+                window.open(`/${language}/terms-of-service`, '_blank');
                 break;
             case 'detail_futures':
                 flag.current = true;
-                window.open(`${process.env.NEXT_PUBLIC_APP_URL}/${language}/terms-of-futures`, '_blank');
+                window.open(`/${language}/terms-of-futures`, '_blank');
                 break;
             default:
                 if (flag.current) {
