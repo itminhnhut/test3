@@ -435,6 +435,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         };
     }, [showEditSLTP, showOrderDetail, showEditVol, showShareModal, showCloseModal]);
 
+    const pairConfigDetail = useMemo(() => {
+        return allPairConfigs.find((rs) => rs.symbol === rowData.current?.symbol);
+    }, [showEditSLTP, showOrderDetail, showEditVol, showShareModal, showCloseModal, allPairConfigs]);
+
     if (!isAuth)
         return (
             <div className="cursor-pointer flex items-center justify-center h-full">
@@ -463,7 +467,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}
                 decimals={decimals}
-                // pairTicker={marketWatch}
+                marketWatch={marketWatch}
             />
             <FututesShareModal
                 order={rowData.current}
@@ -485,7 +489,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 onClose={() => setShowEditSLTP(false)}
                 status={rowData.current?.status}
                 onConfirm={onConfirmEdit}
-                pairConfig={pairConfig}
+                pairConfig={pairConfigDetail}
                 decimals={decimals}
                 marketWatch={marketWatch}
             />
@@ -493,7 +497,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showEditVol}
                 order={rowData.current}
                 onClose={() => setShowEditVol(false)}
-                pairConfig={pairConfig}
+                pairConfig={pairConfigDetail}
                 decimals={decimals}
                 marketWatch={marketWatch}
             />

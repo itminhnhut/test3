@@ -15,7 +15,8 @@ import { useWindowSize } from 'react-use';
 const {
     LOGGED_OUT,
     REVOKED,
-    BANNED
+    BANNED,
+    NORMAL
 } = USER_DEVICE_STATUS;
 
 const DEVICE_TYPE = {
@@ -80,6 +81,7 @@ function Activity({ t }) {
         } catch (e) {
             console.log(`Can't revoke device ${revokeId} `, e);
         } finally {
+            setRevoking(false);
             getActivities();
             setRevokeDevice(null);
             closeRevokeModal();
@@ -106,7 +108,7 @@ function Activity({ t }) {
                 className='w-96'
             />
             <div className='flex items-center justify-between mb-8'>
-                <span className='font-semibold text-2xl'>{t('profile:activity')}</span>
+                <span className='font-semibold text-xl md:text-2xl'>{t('profile:activity')}</span>
                 <div onClick={() => setOpenRevokeModal(true)}
                      className='font-medium text-teal cursor-pointer hover:underline'>
                     {t('profile:revoke_all_devices')}
@@ -156,16 +158,19 @@ function Activity({ t }) {
                                     <div className='flex-1 ml-6 min-w-0 overflow-y-hidden'>
                                         <p className='font-semibold mb-2'>{item.device_title}</p>
                                         <span
-                                            className='text-sm text-txtSecondary dark:text-txtSecondary block break-all'>{item.last_ip_address} - {item.last_location}</span>
+                                            className='text-xs md:text-sm text-txtSecondary dark:text-txtSecondary block break-all'>{item.last_ip_address} - {item.last_location}</span>
                                         <span
-                                            className='text-sm text-txtSecondary dark:text-txtSecondary'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
+                                            className='text-xs md:text-sm text-txtSecondary dark:text-txtSecondary'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
                                         {statusInner}
                                     </div>
-                                    <div onClick={() => setRevokeDevice(item)}
-                                         className='w-10 h-10 bg-gray-10 dark:bg-dark-2 rounded-full relative cursor-pointer'>
-                                        <Delete
-                                            className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
-                                    </div>
+                                    {
+                                        NORMAL === item.status &&
+                                        <div onClick={() => setRevokeDevice(item)}
+                                             className='w-10 h-10 bg-gray-10 dark:bg-dark-2 rounded-full relative cursor-pointer'>
+                                            <Delete
+                                                className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
+                                        </div>
+                                    }
                                 </div>
                             );
                         })}
