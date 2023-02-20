@@ -29,7 +29,7 @@ const SwitchTheme = ({ currentTheme, changeTheme }) => {
                     active ? ` left-1` : `left-[calc(100%-4px)] -translate-x-full`
                 }`}
             >
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.darkBlue3} /> : <SvgSun size={20} color={colors.gray[11]} />}
+                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.gray[1]} /> : <SvgSun size={20} color={colors.gray[11]} />}
             </div>
         </div>
     );

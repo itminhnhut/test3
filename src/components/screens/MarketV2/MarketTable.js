@@ -140,15 +140,18 @@ const MarketTable = ({
                         })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-sm sm:text-base text-darkBlue-5 cursor-pointer flex items-center',
-                        { '!text-gray-4 !font-semibold': restProps.tabIndex === index }
+                        'relative mr-6 pb-4 capitalize select-none font-semibold text-tiny sm:text-base cursor-pointer flex items-center',
+                        {
+                            'text-txtPrimary dark:text-txtPrimary-dark': restProps.tabIndex === index,
+                            'text-txtSecondary dark:text-txtSecondary-dark': restProps.tabIndex !== index,
+                        }
                     )}
                 >
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>
                         {item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}
                     </span>
                     {restProps.tabIndex === index &&
-                        <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
+                        <div className="absolute left-1/2 bottom-0 w-[40px] h-[2px] bg-dominant -translate-x-1/2" />}
                 </div>);
         });
     }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount]);
@@ -188,12 +191,12 @@ const MarketTable = ({
                     const symbolLeverageConfig = tradingMode === TRADING_MODE.FUTURES ? restProps?.futuresConfigs?.find(e => e?.pair == symbol?.s)?.leverageConfig : null;
                     const leverage = symbolLeverageConfig ? (symbolLeverageConfig?.max ?? 0) : null;
                     return (
-                        <div className="w-full p-3 text-darkBlue-5 bg-darkBlue-3 rounded-md" key={symbol.s}>
+                        <div className="w-full p-3  bg-[#F2F4F5] dark:bg-bgContainer-dark  rounded-md" key={symbol.s}>
                             <div className="flex justify-between w-full">
                                 <div className="">
                                     <div className="flex space-x-3 items-center">
                                         <div className="font-medium text-base">
-                                            <span className="text-gray-4">{symbol?.b}</span>/{symbol?.q}
+                                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{symbol?.b}</span><span className="text-txtSecondary dark:text-txtSecondary-dark">/{symbol?.q}</span>
                                         </div>
                                         {leverage ? <div
                                             className="px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4">
@@ -589,79 +592,76 @@ const MarketTable = ({
                     </div>
                 </div>
             </div>
-            <div className="bg-shadow">
-                <div id="market_table___list"
-                    className="py-4 h-full rounded-xl sm:border-[1px] border-divider-dark">
-                    <div
-                        className="mt-[20px] flex items-center overflow-auto sm:px-8 border-b-[1px] border-divider-dark">
-                        {renderTab()}
-                    </div>
-                    {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
-                        'py-8 sm:py-6 border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
-                        { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
-                    }>
-                        {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <TokenTypes type={restProps.favType} setType={(index) => {
-                                parentState({ favType: index });
-                            }} types={[{
-                                id: 0,
-                                content: {
-                                    vi: 'Exchange',
-                                    en: 'Exchange'
-                                }
-                            }, {
-                                id: 1,
-                                content: {
-                                    vi: 'Futures',
-                                    en: 'Futures'
-                                }
-                            }]} lang={language} />
-                            :
-                            isMobile ?
-                                <div className='space-y-4 w-full'>
-                                    <TokenTypes type={type} setType={(index) => {
-                                        parentState({
-                                            type: index
-                                        })
-                                    }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
-                                    <TokenTypes type={type} setType={(index) => {
-                                        parentState({
-                                            type: index
-                                        })
-                                    }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
-                                </div>
-                                :
+            <div id="market_table___list" className="py-4 h-full rounded-xl sm:border-[1px] border-divider dark:border-divider-dark">
+                <div
+                    className="mt-[20px] flex items-center overflow-auto sm:px-8 border-b-[1px] border-divider dark:border-divider-dark">
+                    {renderTab()}
+                </div>
+                {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
+                    'py-8 sm:py-6 border-divider dark:border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
+                    { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
+                }>
+                    {tab[restProps.tabIndex]?.key === 'favorite' ?
+                        <TokenTypes type={restProps.favType} setType={(index) => {
+                            parentState({ favType: index });
+                        }} types={[{
+                            id: 0,
+                            content: {
+                                vi: 'Exchange',
+                                en: 'Exchange'
+                            }
+                        }, {
+                            id: 1,
+                            content: {
+                                vi: 'Futures',
+                                en: 'Futures'
+                            }
+                        }]} lang={language} />
+                        :
+                        isMobile ?
+                            <div className='space-y-4 w-full'>
                                 <TokenTypes type={type} setType={(index) => {
                                     parentState({
                                         type: index
                                     })
-                                }} types={types} lang={language} />}
-
-                        {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
-                            <div
-                                className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
-                                onClick={() => addTokensToFav({
-                                    symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
-                                    lang: language,
-                                    mode: restProps?.favType + 1,
-                                    favoriteRefresher: restProps.favoriteRefresher
-                                })}
-                            >
-                                {{
-                                    en: 'Add all',
-                                    vi: 'Thêm tất cả'
-                                }[language]}
+                                }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
+                                <TokenTypes type={type} setType={(index) => {
+                                    parentState({
+                                        type: index
+                                    })
+                                }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
                             </div>
                             :
-                            null}
+                            <TokenTypes type={type} setType={(index) => {
+                                parentState({
+                                    type: index
+                                })
+                            }} types={types} lang={language} />}
 
-                    </div> : null}
-                    <div className="">
-                        {renderTable()}
-                    </div>
-                    <div className="sm:px-8">
-                        {renderPagination()}
-                    </div>
+                    {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
+                        <div
+                            className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
+                            onClick={() => addTokensToFav({
+                                symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
+                                lang: language,
+                                mode: restProps?.favType + 1,
+                                favoriteRefresher: restProps.favoriteRefresher
+                            })}
+                        >
+                            {{
+                                en: 'Add all',
+                                vi: 'Thêm tất cả'
+                            }[language]}
+                        </div>
+                        :
+                        null}
+
+                </div> : null}
+                <div className="">
+                    {renderTable()}
+                </div>
+                <div className="sm:px-8">
+                    {renderPagination()}
                 </div>
             </div>
         </div>
@@ -823,10 +823,10 @@ const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
             <div className="flex items-center font-semibold text-base">
                 {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
                 <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
-                    <span className="text-gray-4">{b}</span>
-                    <span className="text-darkBlue-5">/{q}</span>
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{b}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">/{q}</span>
                 </div>
-                {leverage ? <div className="px-1 py-[2px] bg-dark dark:bg-dark-2 rounded-[3px] font-semibold text-xs leading-4 ml-2 dark:text-gray-4">
+                {leverage ? <div className="px-1 py-[2px] bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtPrimary dark:text-txtPrimary-dark rounded-[3px] font-semibold text-xs leading-4 ml-2">
                     {leverage}x
                 </div> : <MarketLabel labelType={lbl} />}
             </div>
@@ -930,7 +930,7 @@ const renderTradeLink = (b, q, lang, mode) => {
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark !text-sm sm:!text-base"
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark"
                     target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
@@ -942,8 +942,9 @@ const renderTradeLink = (b, q, lang, mode) => {
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return <div className={classNames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
         {types.map(e =>
-            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base font-normal rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
-                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
+            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap', {
+                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
+                'border-divider dark:border-divider-dark': e.id !== type,
             })}
                 onClick={() => setType(e.id)}
             >

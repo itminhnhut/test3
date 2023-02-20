@@ -346,8 +346,12 @@ const NavBar = ({
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
         return (
             <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant" onClick={onThemeSwitch}>
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
-            </div>
+                {currentTheme !== THEME_MODE.LIGHT ? (
+                    <SvgSun size={20} />
+                ) : (
+                    <SvgMoon size={20} />
+                )}
+            </a>
         );
     }, [name, currentTheme, navTheme.color]);
 

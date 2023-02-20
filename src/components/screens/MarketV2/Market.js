@@ -303,33 +303,35 @@ const Market = () => {
         }
 
         if (tab[state.tabIndex].key !== 'favorite') {
-            switch (state.type) {
-                case 0:
-                    break;
-                case 'MOST_TRADED':
-                    watch = watch.sort((a, b) => {
-                        const diff = b.vq - a.vq
-                        if (diff === 0) return 0
-                        return diff > 0 ? 1 : -1
-                    })
-                    break;
-                case 'TOP_GAINER':
-                    watch = watch.sort((a, b) => {
-                        const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
-                        if (diff === 0) return 0
-                        return diff > 0 ? 1 : -1
-                    })
-                    break;
-                case 'TOP_LOSER':
-                    watch = watch.sort((a, b) => {
-                        const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
-                        if (diff === 0) return 0
-                        return (diff > 0) ? -1 : 1
-                    })
-                    break;
-                default:
-                    watch = watch?.filter(e => categories[state.type]?.includes(e.s))
-                    break;
+            if(watch && watch.length){
+                switch (state.type) {
+                    case 0:
+                        break;
+                    case 'MOST_TRADED':
+                        watch = watch.sort((a, b) => {
+                            const diff = b.vq - a.vq
+                            if (diff === 0) return 0
+                            return diff > 0 ? 1 : -1
+                        })
+                        break;
+                    case 'TOP_GAINER':
+                        watch = watch.sort((a, b) => {
+                            const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
+                            if (diff === 0) return 0
+                            return diff > 0 ? 1 : -1
+                        })
+                        break;
+                    case 'TOP_LOSER':
+                        watch = watch.sort((a, b) => {
+                            const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
+                            if (diff === 0) return 0
+                            return (diff > 0) ? -1 : 1
+                        })
+                        break;
+                    default:
+                        watch = watch?.filter(e => categories[state.type]?.includes(e.s))
+                        break;
+                }
             }
         }
 
