@@ -1,6 +1,5 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-
 import 'keen-slider/keen-slider.min.css';
 import { formatTime, formatWallet } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
@@ -27,29 +26,27 @@ const HomeCurrentActivity = () => {
             const phake = item;
 
             return (
-                <>
-                    <SwiperSlide key={`homepage_user_activity_${phake.token}_${i}`} className="homepage-activity__slide__item1">
-                        <div className="homepage-activity__item___wrapper">
-                            <div className="homepage-activity__item__inner pr-4">
-                                <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
-                            </div>
+                <SwiperSlide key={`homepage_user_activity_${phake.token}_${i}`} className="homepage-activity__slide__item">
+                    <div className="homepage-activity__item___wrapper">
+                        <div className="homepage-activity__item__inner pr-4">
+                            <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
+                        </div>
 
-                            <div className="homepage-activity__item__inner">
-                                <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
-                                <div className="homepage-activity__item__inner___label">{phake.time}</div>
+                        <div className="homepage-activity__item__inner">
+                            <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
+                            <div className="homepage-activity__item__inner___label">{phake.time}</div>
+                        </div>
+                        <div className="homepage-activity__item__inner specific__case">
+                            <div className="homepage-activity__item__inner___text g">
+                                {phake.type === 'DEP' ? '+' : '-'}
+                                {numeral(phake.amount).format('0.000a')} {phake.symbol.toUpperCase()}
                             </div>
-                            <div className="homepage-activity__item__inner specific__case">
-                                <div className="homepage-activity__item__inner___text g">
-                                    {phake.type === 'DEP' ? '+' : '-'}
-                                    {numeral(phake.amount).format('0.000a')} {phake.symbol.toUpperCase()}
-                                </div>
-                                <div className="homepage-activity__item__inner___label">
-                                    {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
-                                </div>
+                            <div className="homepage-activity__item__inner___label">
+                                {phake.type === 'DEP' ? t('common:deposit') : t('common:withdraw')} Crypto
                             </div>
                         </div>
-                    </SwiperSlide>
-                </>
+                    </div>
+                </SwiperSlide>
             );
         });
     };
@@ -58,9 +55,8 @@ const HomeCurrentActivity = () => {
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
                 <Swiper
-                    modules={[Autoplay]}
-                    autoplay={{ delay: 2800 }}
-                    spaceBetween={10}
+                   
+                    spaceBetween={20}
                     slidesPerView={1.5}
                     centeredSlides
                     loop
@@ -70,8 +66,8 @@ const HomeCurrentActivity = () => {
                         },
 
                         1440: {
-                            slidesPerView: 4,
-                            spaceBetween: 40
+                            slidesPerView: 4
+                            // spaceBetween: 40
                         }
                     }}
                     navigation
@@ -107,7 +103,7 @@ const makeData = (length) => {
             status,
             symbol,
             amount: formatWallet(amount, 0),
-            time: formatTime(time, 'HH:mm dd-MM-yyyy')
+            time: formatTime(time, 'HH:mm dd/MM/yyyy')
         });
     }
 

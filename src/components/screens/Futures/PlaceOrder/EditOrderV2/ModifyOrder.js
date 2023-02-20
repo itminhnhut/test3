@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import EditVolV2 from './EditVolV2';
 import EditMarginV2 from './EditMarginV2';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const tabs = [
     { label: 'futures:mobile:adjust_margin:add_volume', value: 'vol' },
@@ -22,13 +23,15 @@ const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, p
     const _avlb = wallet?.[params.assetId];
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
-const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicker }) => {
+const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWatch }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const { t } = useTranslation();
     const [tab, setTab] = useState('vol');
     const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
     const available = useSelector((state) => getAvailable(state, { assetId: pairConfig?.quoteAssetId }));
-    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
+    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
+    const quoteAsset = marketWatch ? marketWatch[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const order_value = order?.order_value ?? 0;
     const side = order?.side;
     const margin = order?.margin ?? 0;
@@ -82,7 +85,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicke
                         <EditVolV2
                             order={order}
                             pairConfig={pairConfig}
-                            pairTicker={pairTicker}
+                            pairTicker={marketWatch[order?.symbol]}
                             available={available}
                             _lastPrice={_lastPrice}
                             quoteAsset={quoteAsset}
@@ -93,6 +96,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicke
                             decimals={decimals}
                             fee={fee}
                             onConfirm={_onConfirm}
+                            isDark={isDark}
                         />
                     )}
                     {tab === 'margin' && (
@@ -108,6 +112,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicke
                             decimals={decimals}
                             fee={fee}
                             onConfirm={_onConfirm}
+                            isDark={isDark}
                         />
                     )}
                 </div>

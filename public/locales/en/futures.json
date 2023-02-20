@@ -513,5 +513,16 @@
     "max_order_size_market_tooltip": "Maximum trading volume required to place an Market or Stop Market order.",
     "view_all_trading_rule": "View all trading rules.",
     "the_glossary": "Glossary",
-    "order_canceled": "Order Canceled"
+    "order_canceled": "Order Canceled",
+    "share": {
+        "title": "Share",
+        "download": "Download",
+        "ref_id": "Referrer ID"
+    },
+    "terms": {
+        "title": "Terms and Agreements",
+        "desc": "To continue, please accept all of the followings",
+        "service": "I Accept Nami's Term Of Services.",
+        "futures": "I Accept Nami's Term Of Futures Trading."
+    }
 }

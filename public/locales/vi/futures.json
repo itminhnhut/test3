@@ -515,5 +515,16 @@
     "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market.",
     "view_all_trading_rule": "Xem tất cả quy tắc giao dịch.",
     "the_glossary": "Bảng chú giải thuật ngữ",
-    "order_canceled": "Lệnh huỷ"
+    "order_canceled": "Lệnh huỷ",
+    "share": {
+        "title": "Chia sẻ vị thế",
+        "download": "Tải xuống",
+        "ref_id": "ID người giới thiệu"
+    },
+    "terms": {
+        "title": "Điều khoản sử dụng",
+        "desc": "Để tiếp tục, vui lòng đồng ý với điều khoản của Nami",
+        "service": "Đồng ý thoả thuận sử dụng của Nami.",
+        "futures": "Đồng ý thoả thuận giao dịch tại Nami Futures."
+    }
 }

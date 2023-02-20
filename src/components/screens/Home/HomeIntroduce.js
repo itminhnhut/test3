@@ -13,6 +13,7 @@ import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
 import TrendingSlide from './TrendingSlide';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
+import Link from 'next/link';
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
@@ -46,21 +47,21 @@ const HomeIntroduce = ({ parentState }) => {
 
     const BannerGraphic = useCallback(() => {
         return (
-            <div className={`homepage-introduce___wrapper__right`}>
-                <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+            <div className="homepage-introduce___wrapper__right">
+                <video src="/images/screen/homepage/banner_graphics.mp4" loop muted autoPlay className="pointer-events-none h-full" />
             </div>
         );
-    }, [width]);
+    }, []);
 
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
                 <TrendingSlide trending={state.trending} />
-                <div className="homepage-introduce___wrapper mal-container">
+                <div className="homepage-introduce___wrapper mal-container relative">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
-                            {t('home:introduce.title_desktop1')} <br/>
+                            {t('home:introduce.title_desktop1')} <br />
                             {t('home:introduce.title_desktop2')}
                         </div>
                         {/* <div className="homepage-introduce___description">
@@ -136,9 +137,11 @@ const HomeIntroduce = ({ parentState }) => {
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
-                                {t('home:introduce.download_app')}
-                            </GradientButton>
+                            <Link href="#download_section">
+                                <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
+                                    {t('home:introduce.download_app')}
+                                </GradientButton>
+                            </Link>
                         </div>
                     </div>
                     <BannerGraphic />

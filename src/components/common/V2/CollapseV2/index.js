@@ -25,6 +25,7 @@ const index = ({ children, className, label, isCustom, active }) => {
     }, [active]);
 
     const handleOpen = () => {
+        if (isCustom) return;
         clearTimeout(timer.current);
         wraper.current.style.height = !open ? list.current.clientHeight + 'px' : 0;
         timer.current = setTimeout(

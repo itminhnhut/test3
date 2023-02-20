@@ -45,6 +45,7 @@ import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, Futur
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
+import TextCopyable from 'components/screens/Account/TextCopyable';
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -344,16 +345,9 @@ const NavBar = ({
     const renderThemeButton = useCallback(() => {
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
         return (
-            <a href="#" className="mal-navbar__svg_dominant" onClick={onThemeSwitch}>
-                {currentTheme !== THEME_MODE.LIGHT ? (
-                    <SvgMoon
-                        size={20}
-                        //  color={'#f2f4f6'}
-                    />
-                ) : (
-                    <SvgSun size={20} color={isHomePage ? '#718096' : '#223050'} />
-                )}
-            </a>
+            <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant" onClick={onThemeSwitch}>
+                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
+            </div>
         );
     }, [name, currentTheme, navTheme.color]);
 
@@ -376,36 +370,41 @@ const NavBar = ({
             color = currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue;
         }
 
-        const getUserControlSvg = (localized) => {
-            switch (localized) {
-                case 'profile':
-                    return <SvgUser type={2} color={color} />;
-                case 'identify':
-                    return <SvgIdentifyCard color={color} />;
-                case 'referral':
-                    return <SvgUserPlus color={color} />;
-                case 'reward_center':
-                    return <SvgReward color={color} />;
-                case 'task_center':
-                    return <SvgDocument color={color} />;
-                case 'logout':
-                    return <SvgExit color={color} />;
-                case 'api_mng':
-                    return <SvgLayout color={color} />;
-                case 'security':
-                    return <SvgLock color={color} />;
-                default:
-                    return null;
-            }
-        };
+        // const getUserControlSvg = (localized) => {
+        //     switch (localized) {
+        //         case 'profile':
+        //             return <SvgUser type={2} color={color} />;
+        //         case 'identify':
+        //             return <SvgIdentifyCard color={color} />;
+        //         case 'referral':
+        //             return <SvgUserPlus color={color} />;
+        //         case 'reward_center':
+        //             return <SvgReward color={color} />;
+        //         case 'task_center':
+        //             return <SvgDocument color={color} />;
+        //         case 'logout':
+        //             return <SvgExit color={color} />;
+        //         case 'api_mng':
+        //             return <SvgLayout color={color} />;
+        //         case 'security':
+        //             return <SvgLock color={color} />;
+        //         default:
+        //             return null;
+        //     }
+        // };
 
         USER_CP.map((item) => {
             if (item.hide) return null;
+            const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
                     <a className="mal-navbar__dropdown___item rounded-xl justify-between !text-base">
-                        <div className="flex items-center">
-                            {getUserControlSvg(item.localized)} {t(`navbar:menu.user.${item.localized}`)}
+                        <div className="flex items-center font-normal">
+                            <div className="dark:text-txtSecondary-dark text-txtSecondary">
+                                <Icon color="currentColor" size={24} />
+                            </div>
+
+                            {t(`navbar:menu.user.${item.localized}`)}
                         </div>
                         <ChevronRight className="!mr-0" size={16} />
                     </a>
@@ -424,10 +423,7 @@ const NavBar = ({
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username">{!isVerified ? 'GUEST' : username || 'GUEST'}</div>
                                 <div className="text-txtSecondary items-center flex">
-                                    <span className="pr-1">{code}</span>
-                                    <CopyToClipboard text={code}>
-                                        <Copy />
-                                    </CopyToClipboard>
+                                    <TextCopyable text={code} />
                                 </div>
                             </div>
                         </div>
@@ -471,10 +467,12 @@ const NavBar = ({
 
                     <Link href={buildLogoutUrl()}>
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
-                            <div className="flex items-center ">
-                                {getUserControlSvg('logout')} {t('navbar:menu.user.logout')}
+                            <div className="flex items-center font-normal ">
+                                <div className="dark:text-txtSecondary-dark text-txtSecondary">
+                                    {NavbarIcons?.['logout']({ size: 24, color: 'currentColor' })}
+                                </div>
+                                {t('navbar:menu.user.logout')}
                             </div>
-                            <ChevronRight className="!mr-0" size={16} />
                         </a>
                     </Link>
                 </div>
@@ -603,7 +601,7 @@ const NavBar = ({
                     <Link href="/">
                         <a className="block mal-navbar__logo">
                             <img
-                            // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                                // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                 src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
                                 width="94"
                                 height="30"
@@ -641,19 +639,13 @@ const NavBar = ({
                                     <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
-                                        <SvgIcon
-                                            name="chevron_down"
-                                            size={16}
-                                            color={colors.gray[7]}
-                                            className="chevron__down"
-                                            // style={{ marginLeft: 7 }}
-                                        />
+                                        <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
                                         {renderWallet()}
                                     </div>
                                 )}
                                 <div className="mal-navbar__user___avatar mal-navbar__with__dropdown mal-navbar__hamburger__spacing">
                                     {width >= 992 && (
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant">
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant">
                                             <BxsUserIcon className="user__svg" size={24} />
                                         </div>
                                         // <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />
@@ -665,13 +657,6 @@ const NavBar = ({
                         {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} />}
                         {width >= 1366 && (
                             <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
-                                {/* <a
-                                    className={`text-sm font-medium uppercase cursor-pointer flex items-center
-                                       ${navTheme.text} whitespace-nowrap hover:!text-dominant`}
-                                    onClick={onChangeLang}
-                                >
-                                    {currentLocale}
-                                </a> */}
                                 {page === 'spot' ? (
                                     <SpotSetting
                                         changeLayoutCb={changeLayoutCb}
@@ -732,7 +717,7 @@ const getIcon = (localized) => {
         case 'futures':
             return '/images/icon/ic_futures.png';
         case 'swap':
-            return '/images/icon/ic_swap.png';
+            return '/images/icon/ic_swap_v2.png';
         case 'copytrade':
             return '/images/icon/ic_copytrade.png';
         case 'staking':

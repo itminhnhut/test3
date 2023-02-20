@@ -33,6 +33,7 @@ import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
+import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -147,12 +148,12 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
             utm_medium: 'direct',
             utm_campaign: 'nami.exchange',
             utm_content: LoginButtonPosition.WEB_HEADER,
-            mobile_web: false,
+            mobile_web: false
         });
 
         const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
-        const theme = localStorage?.getItem("theme") ?? 'light'
+        const theme = localStorage?.getItem('theme') ?? 'light';
 
         params = {
             ..._options,
@@ -1067,3 +1068,40 @@ export const getType = (type) => {
 export function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
+
+export const copy = (text, cb) => {
+    if (navigator.clipboard && navigator.permissions) {
+        navigator.clipboard.writeText(text).then(cb);
+    } else if (document.queryCommandSupported('copy')) {
+        const ele = document.createElement('textarea');
+        ele.value = text;
+        document.body.appendChild(ele);
+        ele.select();
+        document.execCommand('copy');
+        document.body.removeChild(ele);
+        if (cb) cb();
+    }
+};
+
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label }) => {
+    const [copied, setCopied] = useState(false);
+    const title = label ?? text;
+    useEffect(() => {
+        if (value) setCopied(value === text);
+    }, [value]);
+
+    return (
+        <div
+            className={`flex items-center space-x-2 cursor-pointer ${className}`}
+            onClick={() =>
+                copy(text, () => {
+                    setCopied(true);
+                    if (setText) setText(text);
+                })
+            }
+        >
+            <span>{title}</span>
+            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} />}
+        </div>
+    );
+});

@@ -91,7 +91,7 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`p-8 h-full bg-white dark:bg-dark`, { 'p-6': isMobile }, wrapClassName)}>
+                        <div className={classnames(`p-8 h-full bg-white dark:bg-dark text-base`, { 'p-6': isMobile }, wrapClassName)}>
                             <>
                                 {customHeader
                                     ? customHeader()

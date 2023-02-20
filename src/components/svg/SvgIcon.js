@@ -534,6 +534,111 @@ const PartnersIcon = ({ size, color, ...props }) => {
     );
 };
 
+const BxsDonateHeart = ({ size, color }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path
+            d="M17.726 13.02 14 16H9v-1h4.065a.5.5 0 0 0 .416-.777l-.888-1.332A1.995 1.995 0 0 0 10.93 12H3a1 1 0 0 0-1 1v6a2 2 0 0 0 2 2h9.639a3 3 0 0 0 2.258-1.024L22 13l-1.452-.484a2.998 2.998 0 0 0-2.822.504zm1.532-5.63c.451-.465.73-1.108.73-1.818s-.279-1.353-.73-1.818A2.447 2.447 0 0 0 17.494 3S16.25 2.997 15 4.286C13.75 2.997 12.506 3 12.506 3a2.45 2.45 0 0 0-1.764.753 2.606 2.606 0 0 0-.73 1.818c0 .71.279 1.354.73 1.818L15 12l4.258-4.61z"
+            fill={color || '#768394'}
+        />
+    </svg>
+);
+
+const BxsGift = ({ size, color }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path
+            d="M5 12H4v8a2 2 0 0 0 2 2h5V12H5zm13 0h-5v10h5a2 2 0 0 0 2-2v-8h-2zm.791-5A4.92 4.92 0 0 0 19 5.5C19 3.57 17.43 2 15.5 2c-1.622 0-2.705 1.482-3.404 3.085C11.407 3.57 10.269 2 8.5 2 6.57 2 5 3.57 5 5.5c0 .596.079 1.089.209 1.5H2v4h9V9h2v2h9V7h-3.209zM7 5.5C7 4.673 7.673 4 8.5 4c.888 0 1.714 1.525 2.198 3H8c-.374 0-1 0-1-1.5zM15.5 4c.827 0 1.5.673 1.5 1.5C17 7 16.374 7 16 7h-2.477c.51-1.576 1.251-3 1.977-3z"
+            fill={color || '#768394'}
+        />
+    </svg>
+);
+
+const BxsLogoutCircle = ({ size, color }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <path d="m2 12 5 4v-3h9v-2H7V8l-5 4z" fill={color || '#768394'} />
+        <path
+            d="M13 3a8.938 8.938 0 0 0-6.363 2.637L8.05 7.051A6.955 6.955 0 0 1 13 5c1.87 0 3.628.729 4.95 2.051a6.955 6.955 0 0 1 2.05 4.95c0 1.87-.728 3.628-2.05 4.95A6.955 6.955 0 0 1 13 19.002a6.955 6.955 0 0 1-4.95-2.051l-1.414 1.414A8.938 8.938 0 0 0 13 21.002a8.938 8.938 0 0 0 6.364-2.637 8.938 8.938 0 0 0 2.637-6.364 8.938 8.938 0 0 0-2.637-6.364A8.938 8.938 0 0 0 13 3z"
+            fill={color || '#768394'}
+        />
+    </svg>
+);
+
+const CopyIcon = (props) => (
+    <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#piv8lb9sya)">
+            <path d="M10.665.666H1.332v10.667h1.333V1.999h8V.666zM14 3.333h-10v12h10v-12zm-1.334 10.666H5.332V4.666h7.333v9.333z" fill="#8694B3" />
+        </g>
+        <defs>
+            <clipPath id="piv8lb9sya">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const CheckedIcon = ({ size = 24, color = '#8694B3', ...props }) => {
+    return (
+        <svg {...props} width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.99997 15.586L6.70697 12.293L5.29297 13.707L9.99997 18.414L19.707 8.70697L18.293 7.29297L9.99997 15.586Z" fill={color} />
+        </svg>
+    );
+};
+
+const PortfolioIcon = ({ className, size }) => (
+    <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#qj2barczia)">
+            <path
+                d="M23.565 11.137h-6.24a.432.432 0 0 1-.42-.333 5.024 5.024 0 0 0-3.727-3.712.432.432 0 0 1-.334-.42V.431c0-.257.224-.457.48-.43a11.945 11.945 0 0 1 7.218 3.456 11.944 11.944 0 0 1 3.453 7.198.433.433 0 0 1-.43.481z"
+                fill="#2D9CDB"
+            />
+            <path
+                opacity=".1"
+                d="M12.844 6.672V5.387a6.648 6.648 0 0 1 5.768 5.75h-1.288a.432.432 0 0 1-.42-.332 5.024 5.024 0 0 0-3.726-3.713.432.432 0 0 1-.334-.42z"
+                fill="#223050"
+            />
+            <path
+                d="M24 13.24a11.916 11.916 0 0 1-2.585 6.264.433.433 0 0 1-.644.037l-3.494-3.495-.92-.919a.433.433 0 0 1-.06-.534c.281-.456.492-.96.616-1.497a.433.433 0 0 1 .42-.336h6.237c.257 0 .456.223.43.48z"
+                fill="#FFD912"
+            />
+            <path
+                d="M18.62 12.76a6.607 6.607 0 0 1-1.343 3.286l-.92-.919a.433.433 0 0 1-.06-.534c.281-.456.492-.96.616-1.497a.433.433 0 0 1 .42-.336h1.287z"
+                fill="#FFC846"
+            />
+            <path
+                d="M19.627 20.688a.433.433 0 0 1-.035.643A11.942 11.942 0 0 1 12.032 24a11.957 11.957 0 0 1-8.509-3.524A11.953 11.953 0 0 1 0 12.022a12.047 12.047 0 0 1 3.525-8.564A11.941 11.941 0 0 1 10.743.002a.433.433 0 0 1 .48.43v6.24c0 .2-.14.374-.336.42a5.016 5.016 0 0 0-3.862 4.875 5.014 5.014 0 0 0 5.008 5.008c.97 0 1.878-.278 2.646-.758a.433.433 0 0 1 .536.06l4.412 4.41z"
+                fill="#47CC85"
+            />
+            <path
+                opacity=".1"
+                d="m15.215 16.277.922.921a6.62 6.62 0 0 1-4.116 1.428 6.622 6.622 0 0 1-6.646-6.627 6.646 6.646 0 0 1 5.847-6.615v1.288c0 .201-.139.375-.335.42a5.016 5.016 0 0 0-3.862 4.876 5.014 5.014 0 0 0 5.008 5.008c.97 0 1.878-.278 2.646-.758a.433.433 0 0 1 .536.059z"
+                fill="#223050"
+            />
+        </g>
+        <defs>
+            <clipPath id="qj2barczia">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const MoreHorizIcon = ({ size, color, onClick }) => {
+    return (
+        <svg onClick={onClick} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#xn8eyetpua)">
+                <path
+                    d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                    fill={color || '#8694B3'}
+                />
+            </g>
+            <defs>
+                <clipPath id="xn8eyetpua">
+                    <path fill="#fff" d="M0 0h24v24H0z" />
+                </clipPath>
+            </defs>
+        </svg>
+    );
+};
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -568,5 +673,12 @@ export {
     BxsBookIcon,
     BxsStarIcon,
     TuneIcon,
-    PartnersIcon
+    PartnersIcon,
+    PortfolioIcon,
+    MoreHorizIcon,
+    BxsDonateHeart,
+    BxsGift,
+    BxsLogoutCircle,
+    CopyIcon,
+    CheckedIcon
 };

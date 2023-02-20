@@ -22,14 +22,13 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent !important;
-    
+
     a {
         color:inherit;
     }
     a:hover,
     a:active,
     a:focus {
-        color:inherit;
         text-decoration: none !important;
         outline: none !important;
     }
@@ -62,7 +61,7 @@ body {
 //}
 
 body {
-    @apply text-txtPrimary dark:text-txtPrimary-dark font-normal;
+    @apply text-txtPrimary dark:text-txtPrimary-dark;
 
     display: flex;
     flex-direction: column;
@@ -180,7 +179,8 @@ body {
     }
 
     .t-common-v2 {
-        @apply font-semibold text-[32px] leading-[38px]
+        @apply font-semibold md:text-[32px] md:leading-[38px]
+        text-[20px] leading-[28px]
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
@@ -1029,11 +1029,15 @@ input:-webkit-autofill {
     display: flex;
     justify-content: center;
     width: fit-content;
-    &:hover {
-       .looper__listInstance {
-        animation-play-state: paused;
-       } 
-    }
+
+    @media screen and (min-width:768px) {
+        &:hover {
+            .looper__listInstance {
+                animation-play-state: paused;
+               }
+            }
+    }   
+    
   }
 
   .looper__listInstance {

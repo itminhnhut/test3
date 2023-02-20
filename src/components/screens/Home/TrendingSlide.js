@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { render24hChange } from 'redux/actions/utils';
 import { initMarketWatchItem } from 'src/utils';
 import { shuffle } from 'lodash';
+import Link from 'next/link';
 
 const TrendingSlide = ({ trending }) => {
     const [listTrending, setListTrending] = useState([]);
@@ -22,13 +23,15 @@ const TrendingSlide = ({ trending }) => {
                         {listTrending.map((pair) => {
                             const _ = initMarketWatchItem(pair);
                             return (
-                                <a href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} className="text-txtPrimary-dark text-xs font-semibold flex px-4 py-3">
-                                    <div>
-                                        <span>{_?.baseAsset}</span>
-                                        <span>/{_?.quoteAsset}</span>
-                                    </div>
-                                    {render24hChange(pair)}
-                                </a>
+                                <Link href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}>
+                                    <a className="!text-txtPrimary-dark hover:opacity-80 text-xs font-semibold flex mx-4 py-3">
+                                        <div>
+                                            <span>{_?.baseAsset}</span>
+                                            <span>/{_?.quoteAsset}</span>
+                                        </div>
+                                        {render24hChange(pair)}
+                                    </a>
+                                </Link>
                             );
                         })}
                     </div>

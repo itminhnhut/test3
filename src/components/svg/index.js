@@ -3,7 +3,7 @@ import { memo } from 'react';
 import SvgActivity from 'src/components/svg/Activity';
 import SvgChevronDown from 'src/components/svg/ChevronDown';
 import SvgContract from 'src/components/svg/Contract';
-import SvgCreditCard from 'src/components/svg/CreditCard';
+import CreditCard from 'src/components/svg/CreditCard';
 import SvgCross from 'src/components/svg/Cross';
 import SvgExchange from 'src/components/svg/Exchange';
 import SvgGlobe from 'src/components/svg/Globe';
@@ -26,7 +26,7 @@ const SvgIcon = memo((props) => {
         case 'contract':
             return <SvgContract {...props} />
         case 'credit_card':
-            return <SvgCreditCard {...props}/>
+            return <CreditCard {...props}/>
         case 'cross':
             return <SvgCross {...props}/>
         case 'exchange':
