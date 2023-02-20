@@ -25,7 +25,6 @@ const SwapHistory = ({ width }) => {
         i18n: { language }
     } = useTranslation(['convert', 'common']);
 
-    // const data = dataHandler(state.histories, state.loading);
     useAsync(async () => {
         if (!auth) return;
         setState({ loading: true, histories: null });
@@ -77,17 +76,17 @@ const SwapHistory = ({ width }) => {
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <p className="!text-base dark:text-txtSecondary-dark mt-3">
+                    <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
                         <a
                             href={getLoginUrl('sso', 'login')}
-                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
+                            className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
                         <a
                             href={getLoginUrl('sso', 'register')}
-                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
+                            className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
                             {t('common:sign_up')}{' '}
                         </a>
@@ -100,7 +99,6 @@ const SwapHistory = ({ width }) => {
 };
 
 const LIMIT_ROW = 5;
-const KEY = 'swap_history__item_';
 
 const columns = [
     { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 140, fixed: 'left', align: 'left' },
@@ -151,7 +149,6 @@ const columns = [
         width: 306,
         align: 'left',
         render: (v, item) => {
-            console.log('item: ', item);
             const { fromAsset, toAsset, displayingPrice, displayingPriceAsset } = item;
             return (
                 <span>
@@ -162,70 +159,5 @@ const columns = [
     },
     { key: 'createdAt', dataIndex: 'createdAt', title: 'Time', width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
 ];
-
-const dataHandler = (data, loading) => {
-    if (loading) {
-        const skeleton = [];
-        for (let i = 0; i < LIMIT_ROW; ++i) {
-            skeleton.push({ ...ROW_LOADING_SKELETON, key: `${KEY}${i}` });
-        }
-        return skeleton;
-    }
-
-    if (!Array.isArray(data) || !data || !data.length) return [];
-
-    const result = [];
-    data.forEach((item) => {
-        const { displayingId, displayingPrice, displayingPriceAsset, feeMetadata: fee, fromAsset, toAsset, fromQty, toQty, createdAt } = item;
-
-        result.push({
-            key: `${KEY}${displayingId}`,
-            id: <div className="text-left">{displayingId}</div>,
-            swap_pair: (
-                <div className="text-left flex items-center">
-                    {fromAsset}
-                    <SwapIcon className="mx-2" />
-                    {toAsset}
-                </div>
-            ),
-            from_qty: (
-                <span>
-                    {formatPrice(+fromQty)} {fromAsset}
-                </span>
-            ),
-            to_qty: (
-                <span>
-                    {formatPrice(+toQty)} {toAsset}
-                </span>
-            ),
-            rate: (
-                <div className="">
-                    1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
-                </div>
-            ),
-            time: <span>{formatTime(createdAt, 'dd/MM/yyyy')}</span>,
-            // time: <div className="text-right">{formatTime(createdAt, 'HH:mm dd-MM-yyyy')}</div>,
-            [RETABLE_SORTBY]: {
-                id: +displayingId,
-                swap_pair: `${fromAsset}${toAsset}`,
-                from_qty: +fromQty,
-                to_qty: +toQty,
-                rate: +displayingPrice,
-                time: createdAt
-            }
-        });
-    });
-
-    return result;
-};
-
-const ROW_LOADING_SKELETON = {
-    id: <Skeletor width={65} />,
-    swap_pair: <Skeletor width={65} />,
-    from_qty: <Skeletor width={65} />,
-    to_qty: <Skeletor width={65} />,
-    rate: <Skeletor width={65} />,
-    time: <Skeletor width={65} />
-};
 
 export default SwapHistory;

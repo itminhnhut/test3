@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon, LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
+import { SeeIcon, HideIcon, MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -20,7 +20,6 @@ import Skeletor from 'components/common/Skeletor';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
-import SvgMoreHoriz from 'components/svg/SvgMoreHoriz';
 import useOutsideClick from 'hooks/useOutsideClick';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -508,7 +507,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
     return (
         <div className=" h-full flex items-center justify-between" id={item.id} onMouseOut={onMouseOut}>
             <button onClick={() => onClick(item)} className="relative w-full flex items-center justify-center px-0 z-30">
-                <SvgMoreHoriz />
+                <MoreHorizIcon />
             </button>
             {/* Popover */}
             <ul
