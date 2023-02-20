@@ -13,7 +13,8 @@ const Chart = (props) => {
         initTimeFrame,
         extendsIndicators,
         clearExtendsIndicators,
-        isPro
+        isPro,
+        chartKey
     } = props;
     const { t } = useTranslation();
     if (!symbol) return null;
@@ -34,6 +35,7 @@ const Chart = (props) => {
                     favorite={favorite}
                     parentCallback={parentCallback}
                     isPro={isPro}
+                    chartKey={chartKey}
                 />
             </div>
         </div>

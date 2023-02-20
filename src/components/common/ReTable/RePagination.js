@@ -10,11 +10,15 @@ import Pagination from 'rc-pagination';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import styled from 'styled-components';
 import colors from 'styles/colors';
+import * as _ from 'lodash';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 import 'rc-pagination/assets/index.css';
 import React from 'react';
+import { ChevronLeft, ChevronRight } from 'react-feather';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, ...restProps }) => {
     const [currentTheme] = useDarkMode();
 
     useEffect(() => {
@@ -22,6 +26,24 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
     }, [current, name]);
 
     const Wapper = NamiV2PaginationWrapper;
+    if (!_.isEmpty(pagingPrevNext)) {
+        const { language, page, hasNext, onChangeNextPrev } = pagingPrevNext;
+
+        return (
+            <Wapper isDark>
+                <div className="w-full flex items-center justify-center select-none gap-8">
+                    <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
+                        <ChevronLeft size={16} />
+                        {language === LANGUAGE_TAG.VI ? 'Trước' : 'Prev'}
+                    </TextButton>
+                    <TextButton disabled={!hasNext} className={`!text-base gap-2`} onClick={() => hasNext && onChangeNextPrev(+1)}>
+                        {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
+                        <ChevronRight size={16} />
+                    </TextButton>
+                </div>
+            </Wapper>
+        );
+    }
 
     return (
         <Wapper isDark={currentTheme === THEME_MODE.DARK}>
@@ -51,11 +73,14 @@ const NamiV2PaginationWrapper = styled.div`
     }
 
     .rc-pagination-item a {
-        color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
     }
 
     .rc-pagination-item-active {
         background-color: ${colors?.teal};
+        a {
+            color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.white)} !important;
+        }
     }
 
     .rc-pagination-item-active a {
@@ -80,11 +105,15 @@ const NamiV2PaginationWrapper = styled.div`
     .rc-pagination-options {
         display: none;
     }
+    .rc-pagination-item:focus a,
+    .rc-pagination-item:hover a {
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+    }
 
     .rc-pagination-prev button,
     .rc-pagination-next button {
-        color: ${colors?.gray4};
-        background-color: ${({ isDark }) => (isDark ? colors?.dark?.[2] : colors.grey3)};
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+        background-color: ${({ isDark }) => (isDark ? colors.dark[2] : colors.gray[11])};
     }
 
     .rc-pagination-next button:after {
@@ -104,7 +133,7 @@ const NamiV2PaginationWrapper = styled.div`
 
     .rc-pagination-prev button:hover,
     .rc-pagination-next button:hover {
-        color: ${colors?.gray4};
+        color: ${colors?.gray[4]};
     }
 
     .rc-pagination-disabled button:after {
@@ -115,13 +144,21 @@ const NamiV2PaginationWrapper = styled.div`
         align-items: end;
         color: #454c5c;
     }
-
+    .rc-pagination-disabled .rc-pagination-item-link,
+    .rc-pagination-disabled:hover .rc-pagination-item-link,
+    .rc-pagination-disabled:focus .rc-pagination-item-link {
+        background-color: ${({ isDark }) => (isDark ? '' : colors.gray[11])} !important;
+        &:after {
+            /* color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.gray[4])} !important; */
+            opacity: 0.2;
+        }
+    }
     .rc-pagination-prev:focus .rc-pagination-item-link,
     .rc-pagination-next:focus .rc-pagination-item-link,
     .rc-pagination-prev:hover .rc-pagination-item-link,
     .rc-pagination-next:hover .rc-pagination-item-link {
-        color: ${colors.grey4};
-        border-color: ${colors.grey4};
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+        border-color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
     }
 `;
 

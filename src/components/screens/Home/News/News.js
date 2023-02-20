@@ -17,7 +17,7 @@ const News = ({ data, lang }) => {
     const [refNews, slider] = useKeenSlider({
         initial: 0,
         slidesPerView: 1,
-        spacing: 12,
+        spacing: 32,
         loop: true,
         dot: true,
         slideChanged: slide => setState({ currentSlide: slide.details().relativeSlide }),
@@ -56,14 +56,14 @@ const News = ({ data, lang }) => {
         if (!slider || width < 768) return null
         return (
             <div className="keen-slider__slide__control__wrapper mal-container">
-                <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
+                {/* <div className="keen-slider__slide__control__item keen-slider__slide__control__prev"
                     onClick={() => slider.prev()}>
                     <ChevronLeft size={width >= 1024 ? 26 : 18} />
                 </div>
                 <div className="keen-slider__slide__control__item keen-slider__slide__control__next"
                     onClick={() => slider.next()}>
                     <ChevronRight size={width >= 1024 ? 26 : 18} />
-                </div>
+                </div> */}
             </div>
         )
     }, [slider, width])
@@ -90,7 +90,7 @@ const News = ({ data, lang }) => {
     }, [refNews])
 
     useEffect(() => {
-        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 2300)
+        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000)
         return () => clearInterval(timer.current)
     }, [state.autoplay, slider])
 

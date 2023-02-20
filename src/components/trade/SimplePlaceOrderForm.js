@@ -27,6 +27,7 @@ import TradingInput from 'components/trade/TradingInput';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { roundToDown } from 'round-to';
+import Link from 'next/link';
 
 let initPrice = '';
 
@@ -413,7 +414,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     useEffect(() => {
         if (isFocus.current !== 'qty') return;
-        const per = ceil((+sellQuantity / balance.token) * 100, 0);
+        const per = sellQuantity ? ceil((+sellQuantity / balance.token) * 100, 0) : 0;
         const quoteQty = floor(+sellQuantity * sellPrice, 2);
         setSellPercentage(Math.min(per, 100));
         setSellQuoteQty(quoteQty);
@@ -426,7 +427,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         if (isMarket) {
             price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
         }
-        const per = ceil(((+buyQuantity * price) / balance.stable) * 100, 0);
+        const per = buyQuantity ? ceil(((+buyQuantity * price) / balance.stable) * 100, 0) : 0;
         const quoteQty = floor(+buyQuantity * price, 2);
         setBuyPercentage(Math.min(per, 100));
         setBuyQuoteQty(quoteQty);
@@ -610,7 +611,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             case 'quote':
                 if (isFocus.current !== key) return;
                 qty = floor((value / price) * 1, decimals.qty);
-                const per = ceil(((+qty * price) / _balance) * 100, 0);
+                const per = qty ? ceil(((+qty * price) / _balance) * 100, 0) : 0;
                 if (isBuy) {
                     setBuyQuantity(qty);
                     setBuyQuoteQty(value);
@@ -646,6 +647,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{quote}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -743,6 +745,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{quote}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -766,6 +769,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{base}</span>}
+                    clearAble
                 />
             </div>
         );
@@ -779,11 +783,11 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             (!isMarket && !validator('price', _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice))?.isValid;
         const disabled = placing || currentExchangeConfig?.status === 'MAINTAIN' || isErorr;
         return !user ? (
-            <a
-                href={getLoginUrl('sso')}
-                className="btn w-full capitalize button-common block text-center"
-                dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}
-            ></a>
+            <Link href={getLoginUrl('sso')}>
+                <a className="w-full">
+                    <ButtonV2 disabled dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></ButtonV2>
+                </a>
+            </Link>
         ) : (
             <ButtonV2
                 onClick={() => !disabled && confirmModal(_orderSide)}

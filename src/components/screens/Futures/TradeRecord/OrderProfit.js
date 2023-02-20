@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { getProfitVndc, VndcFutureOrderType } from '../PlaceOrder/Vndc/VndcFutureOrderType';
 import { formatNumber, getPriceColor } from 'redux/actions/utils';
-import { Share2 } from 'react-feather';
+import ChevronDown from 'src/components/svg/ChevronDown';
 import { IconArrowOnus } from "components/common/Icons";
 import colors from 'styles/colors'
 import Emitter from 'redux/actions/emitter';
 import { PublicSocketEvent } from 'redux/actions/const';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 
-const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0,mode }) => {
+const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '', isMobile, isTabHistory, onusMode = false, decimal = 0, mode }) => {
     const [pairPrice, setPairPrice] = useState(null);
     const [lastSymbol, setLastSymbol] = useState(null);
     const _pairPrice = pairPrice || initPairPrice
-    const {symbol} = order
+    const { symbol } = order
     useEffect(() => {
         if (order?.symbol !== lastSymbol) {
             setLastSymbol(order?.symbol);
@@ -41,7 +41,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     if (isTabHistory) {
         profit = order?.profit
     } else {
-        if(order.symbol !== _pairPrice.symbol) return '-'
+        if (order.symbol !== _pairPrice.symbol) return '-'
         if (order && _pairPrice) {
             profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? _pairPrice?.bid : _pairPrice?.ask, true);
         }
@@ -53,18 +53,18 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     return <div className='flex items-center w-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
-                <div className={isMobile ? 'text-[1rem] font-semibold leading-[1.375rem]' : ''}>
+                <div className={isMobile ? 'text-sm font-semibold leading-[1.375rem]' : 'font-semibold'}>
                     {profit > 0 ? '+' : ''}
-                    {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
+                    {formatNumber(profit, decimal, 0, true)}
                 </div>
-                <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : ''}>
+                <div className={isMobile ? 'flex items-center justify-end leading-[1.125rem] font-medium' : 'text-xs font-normal w-full flex justify-end'}>
                     {onusMode ?
                         <>
                             <IconArrowOnus className={`w-[7px] mr-[2px] ${profit > 0 ? '' : 'rotate-180'}`} color={profit > 0 ? colors.onus.green : colors.onus.red} />
                             {percent + '%'}
                         </>
                         :
-                        <> ({percent + '%'}) </>
+                        <><ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={percent < 0 ? '' : 'rotate-0'} />{percent + '%'}</>
                     }
                 </div>
             </>
@@ -72,8 +72,8 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
                 '-'
             }
         </div>
-        {order?.status !== VndcFutureOrderType.Status.PENDING && setShareOrderModal &&
-            <Share2 size={16} onClick={setShareOrderModal} className='ml-1 cursor-pointer hover:opacity-60' />}
+        {/* {order?.status !== VndcFutureOrderType.Status.PENDING && setShareOrderModal &&
+            <Share2 size={16} onClick={setShareOrderModal} className='ml-1 cursor-pointer hover:opacity-60' />} */}
     </div>
 };
 

@@ -116,8 +116,8 @@ const SupportAnnouncement = () => {
                     <a className="w-full md:w-1/2 text-sm lg:text-[16px] font-medium hover:text-dominant mb-5 lg:mb-8">
                         {article.title}
                         {' '}<span
-                            className="text-[10px] lg:text-xs text-txtSecondary text-txtSecondary-dark whitespace-nowrap">
-                            {formatTime(article.created_at, 'dd-MM-yyyy')}
+                            className="text-[10px] lg:text-xs text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">
+                            {formatTime(article.created_at, 'dd/MM/yyyy')}
                         </span>
                     </a>
                 </Link>

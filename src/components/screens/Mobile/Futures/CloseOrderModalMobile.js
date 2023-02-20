@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
-import { checkInFundingTime, checkLargeVolume, countDecimals, formatNumber, getS3Url } from 'redux/actions/utils';
+import { checkInFundingTime, checkLargeVolume, countDecimals, formatNumber, getS3Url, getType } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import Switcher from 'components/common/Switcher';
 import TradingInput from 'components/trade/TradingInput';
@@ -18,7 +18,6 @@ import {
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
-import { getType } from 'components/screens/Futures/PlaceOrder/Vndc/OrderButtonsGroupVndc';
 import { IconLoading } from 'components/common/Icons';
 import { API_GET_FUTURES_ORDER, API_PARTIAL_CLOSE_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';

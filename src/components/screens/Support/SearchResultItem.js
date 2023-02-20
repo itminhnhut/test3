@@ -64,13 +64,13 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
         <div className="mb-8 sm:mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                 <Link href={buildArticleUrl()}>
-                    <a target='_blank' className="text-gray-4 font-semibold text-base sm:font-medium sm:text-[20px] sm:leading-7 cursor-pointer">
+                    <a target='_blank' className="text-txtPrimary dark:text-gray-4 font-semibold text-base cursor-pointer hover:text-txtTextBtn dark:hover:text-teal">
                         {loading ?
                             <div className="!min-w-[200px] lg:!w-[500px] xl:!w-[800px]"><Skeletor className="!w-full" />
                             </div> : getHighlightedText(article?.title, keyword)}
                     </a>
                 </Link>
-                <div className="font-bold text-[10px] text-txtSecondary dark:text-txtSecondary-dark">
+                <div className="font-normal text-xs sm:text-sm text-txtSecondary dark:text-txtSecondary-dark">
                     {loading ?
                         <div className="hidden md:block md:!w-[100px]"><Skeletor className="!w-full" height={15} />
                         </div> : formatTime(article?.raw_data?.created_at, 'dd-MM-yyyy')}

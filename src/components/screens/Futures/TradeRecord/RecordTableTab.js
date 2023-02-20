@@ -1,22 +1,23 @@
 import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrders }) => {
     const { t } = useTranslation()
     return (
-        <div className='flex items-center flex-grow font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark'>
-            {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab) => (
-                <div
-                    key={tab.code}
-                    onClick={() => onChangeTab(tab.code)}
-                    className={classNames(
-                        'mr-[28px] hover:text-dominant cursor-pointer select-none last:mr-2.5',
-                        { 'text-dominant': tabActive === tab.code }
-                    )}
-                >
-                    {isVndcFutures ? t(tab.title) : tab.title}&nbsp;{isVndcFutures && tab.code === FUTURES_RECORD_CODE.openOrders && ' (' + countOrders + ')'}
-                </div>
-            ))}
+        <div className='flex items-center flex-grow font-normal text-sm text-txtSecondary dark:text-txtSecondary-dark'>
+            <Tabs tab={tabActive} className='gap-6'>
+                {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab, index) => (
+                    <TabItem
+                        className='!text-left !px-0' value={tab.code}
+                        onClick={() => onChangeTab(tab.code)}
+                        isMobile
+                    >
+                        {isVndcFutures ? t(tab.title) : tab.title}&nbsp;{isVndcFutures && [FUTURES_RECORD_CODE.openOrders, FUTURES_RECORD_CODE.position].includes(tab.code) && ' (' + countOrders[index] + ')'}
+                    </TabItem>
+
+                ))}
+            </Tabs>
             <div className='h-full flex-grow dragHandleArea opacity-0 select-none'>
                 dragHandleArea
             </div>
@@ -37,6 +38,12 @@ export const FUTURES_RECORD_CODE = {
 }
 
 export const RECORD_TAB_VNDC = [
+    {
+        key: 1,
+        code: FUTURES_RECORD_CODE.position,
+        title: 'futures:positions',
+        localized: null,
+    },
     {
         key: 1,
         code: FUTURES_RECORD_CODE.openOrders,

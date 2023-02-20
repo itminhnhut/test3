@@ -1,4 +1,5 @@
 {
+    "vip_upgrade": "Vip Upgrade",
     "title": "Fee structure",
     "trading_fee": "Normal account trading fee",
     "trading_fee_desc": "per each matching order",
@@ -29,10 +30,15 @@
     "current_fee_level": "Current level",
     "your_fee_level": "Your fee level",
     "upgrade_level_suggest": "How to upgrade level?",
+    "upgrade_level":"Upgrade level",
     "fee_rate": "Fee Rate",
     "maker_taker_description": "\"Taker\" is an order that trades at a market price.",
     "maker_taker_description_2": "\"Maker\" is an order that trades at a limited price.",
     "swap_fee_description": "For every opening futures order, Nami Exchange applies a swap fee of 0.0015% of order’s volume minus margin for every maintaining hour.",
     "referral_description_value": "Refer friends to earn trading fees {{ value }} kickback.",
-    "used_fee_deduction": "You are enjoying preferential fees from {{ token }}."
+    "used_fee_deduction": "You are enjoying preferential fees from {{ token }}.",
+    "fee_open_close": "Fee (Open/Close)",
+    "fee_nami_open_close": "Fee NAMI (Open/Close)",
+    "show_more": "Show more",
+    "show_less": "Show less"
 }

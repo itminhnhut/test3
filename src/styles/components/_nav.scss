@@ -21,7 +21,11 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
+    
   }
 
   .mal-navbar__link__group___item___childen__lv1 {
@@ -83,6 +87,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -157,6 +164,9 @@
 
     &:hover {
       @apply text-dominant #{!important};
+      svg {
+        transform: rotate(-180deg);
+      }
     }
   }
 
@@ -192,7 +202,7 @@
           @apply text-txtPrimary #{!important};
 
           &:hover {
-            @apply bg-teal-50 #{!important};
+            @apply bg-hover dark:bg-hover-dark #{!important};
           }
         }
       }
@@ -227,8 +237,8 @@
 //}
 
 .mal-navbar__wrapper {
-  @apply relative z-30 w-full flex flex-row items-center justify-between border-b border-divider-dark;
-  @apply bg-dark;
+  @apply relative z-30 dark:bg-dark bg-white w-full flex flex-row items-center justify-between border-b border-divider dark:border-divider-dark;
+
 
   height: $MOBILE_NAV_HEIGHT;
   padding: 0 16px;
@@ -261,7 +271,14 @@
   .mal-navbar__user___wallet {
     @apply flex items-center cursor-pointer;
     font-size: 14px;
-
+    :hover {
+      svg {
+        transform:rotate(360deg) ;
+        // path: {
+        //   stroke:currentColor;
+        // }
+      }
+    }
     span {
       @apply text-txtPrimary dark:text-txtPrimary-dark;
     }
@@ -342,13 +359,22 @@
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-normal text-txtPrimary-dark
+      @apply flex items-center h-full text-sm font-semibold dark:font-normal text-txtPrimary dark:text-txtPrimary-dark
       relative;
-
+      letter-spacing: normal;
       cursor: pointer;
       margin-left: 44px;
       
+      .chevron__down {
+       
+        
+        @apply text-txtSecondary;
 
+        path {
+          stroke: currentColor;
+          fill:currentColor;
+        }
+      }
       &:hover {
         @apply text-dominant;
 
@@ -359,14 +385,16 @@
         .mal-navbar__link__group___item___childen__lv1__w__icon {
           @apply flex #{!important};
         }
+        
 
         .chevron__down {
-          transform: rotate(-180deg);
+          transform: rotate(360deg);
+          
           
 
-          path {
-            // stroke: #00c8bc !important;
-          }
+          // path {
+          //   stroke: #00c8bc !important;
+          // }
         }
       }
 
@@ -396,20 +424,20 @@
         border-radius: 12px;
 
         &:hover {
-          @apply bg-teal-50 dark:bg-hover;
+          @apply bg-hover-1 dark:bg-hover-dark;
         }
 
         .mal-navbar__link__group___item___childen__lv1___item2__icon {
-          min-width: 32px;
-          min-height: 32px;
+          // min-width: 32px;
+          // min-height: 32px;
 
-          @media (min-width: 2560px) {
-            min-width: 38px;
-            min-height: 38px;
-          }
+          // @media (min-width: 2560px) {
+          //   min-width: 38px;
+          //   min-height: 38px;
+          // }
         }
         .mal-navbar__link__group___item___childen__lv1___item2___c {
-          padding-left: 12px;
+          padding-left: 16px;
 
           .mal-navbar__link__group___item___childen__lv1___item2___c__title {
             @apply text-txtPrimary dark:text-txtPrimary-dark;
@@ -437,8 +465,8 @@
     }
 
     .mal-navbar__link__group___item___childen__lv1 {
-      @apply absolute hidden left-0 z-50 bg-bgPrimary dark:bg-darkBlue-3
-      border-l border-r border-b dark:border-divider-dark;
+      @apply absolute hidden left-0 z-50 bg-white dark:bg-darkBlue-3
+      border border-t-0 shadow-card_light dark:shadow-none  border-divider dark:border-divider-dark;
 
       top: 100%;
       margin-top: 1px;
@@ -448,7 +476,6 @@
       transition: max-height 0.3s ease;
       padding-right: 16px;
       padding-left: 16px;
-      border-color: transparent;
     }
 
     .mal-navbar__link__group___item___childen__lv1___item {
@@ -511,7 +538,7 @@
       }
 
       svg path {
-        stroke: #47cc85;
+        // stroke: #47cc85;
       }
     }
   }
@@ -522,11 +549,12 @@
 
     &:hover {
       .chevron__down {
-        transform: rotate(180deg);
+        transform: rotate(360deg);
+       
 
-        path {
-          stroke: #00c8bc;
-        }
+        // path {
+        //   stroke: #00c8bc;
+        // }
       }
     }
 
@@ -578,7 +606,7 @@
           }
 
           &:hover {
-            @apply bg-teal-50 dark:bg-hover;
+            @apply bg-hover-1 dark:bg-hover-dark;
           }
         }
       }
@@ -594,7 +622,7 @@
   height: 100%;
   transition: all 0.1s ease;
   transform: translateX(100%);
-  padding-top: 13px;
+  padding-top: 20px;
   padding-bottom: 76px;
   overflow-y: scroll;
   user-select: none;
@@ -604,7 +632,7 @@
     .user__button {
       padding-left: 16px;
       padding-right: 16px;
-      margin-top: 20px;
+      margin-top: 16px;
 
       div {
         width: calc(97% / 2);
@@ -613,15 +641,19 @@
   }
 
   .mal-pocket-navbar__drawer__navlink__group {
-    @apply border-b border-divider dark:border-divider-dark my-3;
+    // @apply border-b border-divider dark:border-divider-dark my-3;
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item {
-    @apply flex flex-row flex-wrap items-center justify-between text-sm;
+    @apply dark:text-txtPrimary-dark text-txtPrimary flex flex-row flex-wrap items-center justify-between text-sm mb-2;
 
     font-weight: 600;
-    padding: 16px;
+    padding: 12px 16px;
+   
     cursor: pointer;
+    &:last-child {
+    margin-bottom:0;
+    }
   }
 
   .mal-pocket-navbar__drawer__navlink__group___item__lv1 {
@@ -633,7 +665,7 @@
     min-width: 0;
 
     .mal-pocket-navbar__drawer__navlink__group___item__lv1__item {
-      @apply block flex flex-row items-center;
+      @apply  flex flex-row items-center;
 
       padding: 16px;
     }
@@ -645,7 +677,7 @@
 
   .mal-pocket-nabar__item___hover {
     &:hover {
-      @apply bg-listItemSelected dark:bg-listItemSelected-dark;
+      @apply bg-hover dark:bg-hover-dark;
 
       span {
         @apply text-dominant;

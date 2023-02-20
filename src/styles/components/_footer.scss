@@ -1,18 +1,23 @@
 .mal-footer {
-  @apply bg-dark-2;
+  @apply bg-white dark:bg-dark-dark;
 
   .mal-footer__wrapper {
-    padding: 52px 16px;
 
+padding-block:48px;
+@media screen and (min-width:1024px) {
+  padding-inline:16px;
+  padding-bottom: 80px;
+  padding-top:60px;
 
+}
     .mal-footer___pocket {
-
+      @apply justify-between;
       .mal-footer___pocket___company {
         .mal-footer___pocket__logo {
-          img {
-            width: 150px;
-            height: auto;
-          }
+          // img {
+          //   width: 150px;
+          //   height: auto;
+          // }
         }
 
         .mal-footer___pocket__slogan {
@@ -31,35 +36,66 @@
 
 
       .mal-footer___pocket__links___group {
+
         margin-top: 32px;
+
 
         .mal-footer___pocket__links___group__item {
           margin-bottom: 16px;
 
-          .mal-footer___pocket__links___group__item__expander {
-            @apply text-white flex flex-row justify-between;
 
-            font-weight: 500;
+          canvas {
+            border-radius:6px;
+          }
+          .mal-footer___pocket__links___group__item__expander {
+            @apply dark:text-txtPrimary-dark text-txtPrimary flex flex-row items-center justify-between px-4 py-3;
+           @media screen and (min-width:1200px) {
+            @apply px-0;
+           }
+          
+            &:hover {
+              @apply bg-hover dark:bg-hover-dark;
+            }
+            &.item_community {
+              @apply cursor-default;
+              &:hover {
+                @apply bg-transparent ;
+              }
+            }
+
+            ~ .socials_link  {
+            @apply px-4;
+            
+          }
+
+            font-weight: 600;
             font-size: 14px;
             line-height: 24px;
             cursor: pointer;
             white-space: nowrap;
 
-            svg {
-              @apply text-white;
-            }
+           
           }
 
           .mal-footer___pocket__links___group__item__links {
-            @apply flex flex-row flex-wrap;
+            // @apply flex flex-row flex-wrap;
 
-            margin-top: 8px;
+            // margin-top: 8px;
             max-height: 0;
             overflow: hidden;
             transition: max-height .3s ease;
 
+
+
             a {
-              @apply block w-1/2 text-gray-2;
+              @apply text-sm  py-3 block;
+                  padding-left:48px;
+
+
+              @media screen and (min-width:1200px) {
+                @apply  py-0 pl-0;
+
+                }
 
               margin-top: 8px;
               font-weight: 500;
@@ -73,7 +109,10 @@
           }
 
           .mal-footer___pocket__links___group__item__links__active {
+            // @apply text-txtPrimary-dark ;
             max-height: 40em;
+
+
           }
         }
       }
@@ -82,9 +121,12 @@
 
 
   .mal-footer___desktop {
-    .mal-footer___pocket .mal-footer___pocket___company .mal-footer___pocket__logo img {
+    .mal-footer___pocket .mal-footer___pocket___company .create__account {
       //width: 210px !important;
+
+
     }
+
 
     .mal-footer___pocket {
       @apply flex flex-row;
@@ -101,23 +143,22 @@
           @apply block text-gray-2;
 
           margin-top: 47px;
-          font-weight: 500;
           font-size: 14px;
           line-height: 24px;
         }
       }
 
       .mal-footer___pocket__links___group {
-        @apply w-2/3 flex flex-row justify-end;
+        @apply w-3/4 flex flex-row justify-between;
 
         margin-top: 0;
 
         .mal-footer___pocket__links___group__item {
 
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-dominant;
-            font-size: 12px;
-            text-transform: uppercase;
+            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize text-sm font-semibold;
+
+
             pointer-events: none;
 
             svg {
@@ -126,10 +167,12 @@
           }
 
           .mal-footer___pocket__links___group__item__links {
+            @apply text-txtSecondary dark:text-txtSecondary-dark;
             max-height: 40em !important;
 
             a {
-              @apply w-full;
+              // @apply w-full;
+          display:block;
 
               font-size: 14px;
               margin-top: 14px;

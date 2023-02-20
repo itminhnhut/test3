@@ -59,7 +59,7 @@ const SpotSetting = (props) => {
         const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
         window.location = `${nextUrl}?layout=${_layout}`;
     };
-    const inActiveLabel = currentTheme === 'dark' ? colors.gray4 : colors.darkBlue;
+    const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
     const onChangeSpotComponent = (key, value) => {
         const _newSpotState = spotState;
@@ -100,13 +100,13 @@ const SpotSetting = (props) => {
                                     <span className="flex space-x-4">
                                         <SvgMoon
                                             className="cursor-pointer"
-                                            size={20}
+                                            size={24}
                                             color={currentTheme === 'dark' ? colors.teal : inActiveLabel}
                                             onClick={currentTheme === 'light' ? onThemeSwitch : undefined}
                                         />
                                         <SvgSun
                                             className="cursor-pointer"
-                                            size={20}
+                                            size={24}
                                             onClick={currentTheme === 'dark' ? onThemeSwitch : undefined}
                                             color={currentTheme === 'light' ? colors.teal : inActiveLabel}
                                         />
@@ -123,7 +123,7 @@ const SpotSetting = (props) => {
                                             return (
                                                 <div className="flex flex-col justify-center space-y-2">
                                                     <div
-                                                        className={classnames('p-1 bg-dark-2 cursor-pointer rounded-[3px]', {
+                                                        className={classnames('p-1 bg-gray-10 dark:bg-dark-2 cursor-pointer rounded-[3px]', {
                                                             'border border-teal': isActive
                                                         })}
                                                     >
@@ -156,7 +156,7 @@ const SpotSetting = (props) => {
                                     })}
                                 </div>
                                 <div className="pt-6 text-center">
-                                    <span className="text-sm sm:text-base text-teal font-medium cursor-pointer py-[10px]" onClick={() => resetDefault()}>
+                                    <span className="text-sm sm:text-base text-teal font-semibold cursor-pointer py-[10px]" onClick={() => resetDefault()}>
                                         {t('spot:setting.reset_default_layout')}
                                     </span>
                                 </div>

@@ -10,5 +10,6 @@
   "search_result_count": "Keyword '{{key}}' has {{count}} results",
   "search_no_result": "No search results",
   "search_faq": "Search our FAQ",
-  "no_articles": "There are no articles yet"
+  "no_articles": "There are no articles yet",
+  "search_placeholder": "Please enter your problem"
 }

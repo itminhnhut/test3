@@ -32,9 +32,9 @@ const NamiCircle = ({
         <defs>
             <linearGradient id='lv96ep4eua' x1='16.219' y1='4.285' x2='-.289' y2='13.186'
                             gradientUnits='userSpaceOnUse'>
-                <stop offset='.018' stop-color='#36C87A' />
-                <stop offset='.826' stop-color='#61E19D' />
-                <stop offset='1' stop-color='#8FE7B8' />
+                <stop offset='.018' stopColor='#36C87A' />
+                <stop offset='.826' stopColor='#61E19D' />
+                <stop offset='1' stopColor='#8FE7B8' />
             </linearGradient>
         </defs>
     </svg>;

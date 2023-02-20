@@ -15,40 +15,47 @@ import Link from 'next/link';
 import AccountAvatar from 'components/screens/Account/AccountAvatar';
 import { PATHS } from 'constants/paths';
 import { getS3Url } from 'redux/actions/utils';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const KYCPendingTag = ({ t }) => <TagV2 className='ml-3' type='warning'>{t('profile:kyc_wait')}</TagV2>;
 
 const KYCVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='success'>{t('profile:kyc_verified')}</TagV2>;
 
 export default function AccountLayout({ children }) {
-    const router = useRouter();
-    const isApp = useApp();
-
-    const { t } = useTranslation();
-
     const user = useSelector((state) => state.auth?.user);
 
-    return <MaldivesLayout hideInApp={isApp}>
+    const router = useRouter();
+    const isApp = useApp();
+    const { t } = useTranslation();
+    const [currentTheme] = useDarkMode();
+
+    return <MaldivesLayout
+        dark={currentTheme === THEME_MODE.DARK}
+        light={currentTheme === THEME_MODE.LIGHT}
+        hideInApp={isApp}
+    >
         <div
-            className='bg-black-800 h-44'
-            style={{
-                backgroundImage: `url(${getS3Url('/images/screen/account/banner_2.png')})`,
+            className='bg-black-800 h-24 md:h-44'
+            style={{ // TODO: image s3
+                backgroundImage: `url(/images/screen/account/banner_2.png)`,
                 backgroundSize: 'auto 100%',
                 backgroundPosition: 'center'
             }}
         />
         <Container className='mal-container px-4 h-full'>
-            <div className='flex items-end justify-between'>
+            <div className='flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between'>
                 <AccountAvatar currentAvatar={user?.avatar} />
-                <div className='ml-4 flex-1'>
-                    <div className='flex mb-3'>
-                        <span className='text-xl leading-7 font-medium'>{user?.name}</span>
-                        {{
-                            [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
-                        }[user?.kyc_status] || null}
+                <div className='mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row items-center md:items-start'>
+                    <div className='mb-3 md:mb-0'>
+                        <div className='text-xl md:text-2xl leading-7 mb-2 font-semibold'>{user?.name}</div>
+                        <TextCopyable text={user?.code}
+                                      className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start' />
                     </div>
-                    <TextCopyable text={user?.code} className='text-gray-1' />
+
+                    {{
+                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
+                    }[KYC_STATUS.PENDING_APPROVAL] || null}
                 </div>
                 {
                     user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE &&
@@ -61,7 +68,7 @@ export default function AccountLayout({ children }) {
                 }
             </div>
 
-            <div className='flex justify-between items-center border-b border-divider-dark mt-12'>
+            <div className='flex justify-between items-center border-b border-divider dark:border-divider-dark mt-12'>
                 <div className='flex space-x-6'>
                     {[{
                         label: t('navbar:menu.user.profile'),
@@ -77,9 +84,9 @@ export default function AccountLayout({ children }) {
                         return (
                             <Link scroll={false} href={item.link} key={index}>
                                 <div
-                                    className={classnames('py-4 text-gray-1 border-b-2 mb-[-1px] cursor-pointer', {
-                                        'text-gray-4 font-bold border-teal': isActive,
-                                        'border-transparent': !isActive
+                                    className={classnames('py-4 font-semibold border-b-2 mb-[-1px] cursor-pointer', {
+                                        'border-transparent text-txtSecondary dark:text-txtSecondary-dark': !isActive,
+                                        'border-teal text-txtPrimary dark:text-teal': isActive
                                     })}
                                 >
                                     {item.label}
@@ -90,7 +97,7 @@ export default function AccountLayout({ children }) {
                 </div>
                 <span
                     onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
-                    className='text-teal cursor-pointer font-medium hover:underline'>
+                    className='hidden md:inline text-teal cursor-pointer font-medium hover:underline'>
                     {t('fee-structure:see_fee_structures')}
                 </span>
             </div>

@@ -22,6 +22,7 @@ const socialTags = (props) => {
         {name: 'og:title', content: title},
         {name: 'og:url', content: APP_URL + url},
         {name: 'og:image', content: image},
+        {name: 'og:image:alt', content: 'Nami Exchange'},
         {name: 'og:site_name', content: 'Nami Exchange'},
         {name: 'og:description', content: description},
         {name: 'og:published_time', content: createdAt},
@@ -38,9 +39,9 @@ const SEO = (props) => {
     } = props;
     return <Head>
         <title>{title}</title>
-        <meta key="name" itemprop="name" content={title}/>
+        <meta key="name" itemProp="name" content={title}/>
         <meta key="description" name="description" content={description}/>
-        <meta key="image" itemprop="image" content={image}/>
+        <meta key="image" itemProp="image" content={image}/>
         {keywords && <meta key="keywords" name="keywords" content={keywords}/>}
         {socialTags(props).map(({name, content}) => {
             return <meta key={name} name={name} content={content}/>;

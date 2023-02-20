@@ -14,9 +14,9 @@ const Skeletor = (props) => {
             case THEME_MODE.DARK:
                 return { base: colors.darkBlue3, highlight: colors.darkBlue4 };
             case THEME_MODE.LIGHT:
-                return { base: colors.grey4, highlight: '#FCFCFC' };
+                return { base: colors.gray[4], highlight: '#FCFCFC' };
             default:
-                return { base: colors.grey4, highlight: '#FCFCFC' };
+                return { base: colors.gray[4], highlight: '#FCFCFC' };
         }
     }, [currentTheme]);
 

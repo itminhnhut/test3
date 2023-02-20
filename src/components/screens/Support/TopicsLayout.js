@@ -64,18 +64,18 @@ const TopicsLayout = ({
     }, [isFaq, router]);
 
     const renderTopics = useMemo(() => topics?.map((item) => (
-        <div key={item.id}>
+        <div key={item?.id}>
             <div
                 className={classNames(
                     'h-14 mb-3 flex items-center hover:bg-hover dark:hover:bg-hover-dark cursor-pointer',
                     {
-                        'bg-hover dark:bg-hover-dark': router?.query?.topic === item.displaySlug,
-                        // 'hidden': isMobile && router?.query?.topic !== item.displaySlug,
+                        'bg-hover dark:bg-hover-dark': router?.query?.topic === item?.displaySlug,
+                        // 'hidden': isMobile && router?.query?.topic !== item?.displaySlug,
                     }
                 )}
             >
-                {!isMobile && router?.query?.topic === item.displaySlug ?
-                    <div className='h-8 w-1 bg-teal rounded-[10px]'></div>
+                {!isMobile && router?.query?.topic === item?.displaySlug ?
+                    <div className='h-8 w-1 bg-bgBtnV2 dark:bg-teal rounded-[10px]'></div>
                     :
                     null
                 }
@@ -84,18 +84,18 @@ const TopicsLayout = ({
                         pathname:
                             PATHS.SUPPORT.DEFAULT + `/${mode}/[topic]`,
                         query: appUrlHandler(
-                            { topic: item.displaySlug },
+                            { topic: item?.displaySlug },
                             isApp
                         )
                     }}
                 >
                     <a className={classNames(
-                        'px-4 sm:px-6 flex flex-grow items-center text-gray-4 font-normal text-sm sm:font-semibold sm:text-base cursor-pointer', {
-                        'sm:!px-5': !isFaq && router?.query?.topic === item.displaySlug
+                        'px-4 sm:px-6 flex flex-grow items-center text-txtPrimary dark:text-gray-4 font-normal text-base cursor-pointer', {
+                        'sm:!px-5 !font-semibold': !isFaq && router?.query?.topic === item?.displaySlug
                     })}>
                         <div className="h-6 w-6 mr-3 sm:mr-6">
                             <Image
-                                src={getSupportCategoryIcons(item.id)}
+                                src={getSupportCategoryIcons(item?.id)}
                                 layout="responsive"
                                 width={24}
                                 height={24}
@@ -104,18 +104,18 @@ const TopicsLayout = ({
                         <span className="flex-grow"> {item?.title}</span>
                     </a>
                 </Link>
-                {isFaq && !!item.subCats?.length && (
+                {isFaq && !!item?.subCats?.length && (
                     <span
-                        className="hover:text-teal cursor-pointer pr-4"
+                        className="hover:text-txtTextBtn dark:hover:text-teal cursor-pointer pr-4"
                         onClick={() =>
                             setShowDropdown((prevState) => ({
                                 ...prevState,
-                                [item.displaySlug]:
-                                    !showDropdown?.[item.displaySlug]
+                                [item?.displaySlug]:
+                                    !showDropdown?.[item?.displaySlug]
                             }))
                         }
                     >
-                        {!!showDropdown?.[item.displaySlug] ? (
+                        {!!showDropdown?.[item?.displaySlug] ? (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#kstei7ehqa)">
                                     <path d="M4.667 9.333 8 6l3.333 3.333H4.667z" fill="#8694B3" />
@@ -142,22 +142,22 @@ const TopicsLayout = ({
                     </span>
                 )}
             </div>
-            {isFaq && !!item.subCats?.length && (
+            {isFaq && !!item?.subCats?.length && (
                 <div
                     className={classNames('hidden mb-3', {
-                        '!flex flex-col gap-4': !!showDropdown?.[item.displaySlug]
+                        '!flex flex-col gap-4': !!showDropdown?.[item?.displaySlug]
                     })}
                 >
-                    {item.subCats?.map((subCats, index) => (
+                    {item?.subCats?.map((subCats, index) => (
                         <Link
                             key={index}
                             href={{
                                 pathname:
                                     PATHS.SUPPORT.FAQ +
-                                    `/${item.displaySlug}`,
+                                    `/${item?.displaySlug}`,
                                 query: appUrlHandler(
                                     {
-                                        group: subCats.displaySlug
+                                        group: subCats?.displaySlug
                                     },
                                     isApp
                                 )
@@ -165,15 +165,15 @@ const TopicsLayout = ({
                         >
                             <a
                                 className={classNames(
-                                    'block pl-[72px] text-sm font-semibold sm:text-base sm:font-normal cursor-pointer text-darkBlue-5 ',
+                                    'block pl-[72px] text-sm font-semibold sm:text-base sm:font-normal cursor-pointer text-txtSecondary dark:text-darkBlue-5',
                                     {
-                                        '!font-semibold !text-gray-4 leading-6':
-                                            subCats.displaySlug ===
+                                        '!font-semibold !text-txtPrimary dark:!text-gray-4 leading-6':
+                                            subCats?.displaySlug ===
                                             faqCurrentGroup
                                     }
                                 )}
                             >
-                                {subCats.title}
+                                {subCats?.title}
                             </a>
                         </Link>
                     ))}
@@ -184,16 +184,7 @@ const TopicsLayout = ({
 
     return (
         <MaldivesLayout>
-            <div className="bg-[#F2F4F6] dark:bg-dark pt-0">
-                {/* <SupportBanner
-                    title={
-                        mode === 'announcement'
-                            ? t('support-center:announcement')
-                            : t('support-center:faq')
-                    }
-                    href={baseHref}
-                    containerClassNames="hidden lg:block"
-                /> */}
+            <div className="bg-bgPrimary dark:bg-dark pt-0">
                 <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png')`} />
                 <div className="bg-bgPrimary dark:bg-dark rounded-t-[20px] lg:mt-0">
                     <div className="block sm:flex min-h-[500px] relative">
@@ -201,24 +192,24 @@ const TopicsLayout = ({
                             style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
                             className="pt-16 sm:py-20 border-r border-divider dark:border-divider-dark"
                         >
-                            <div className='hidden sm:block text-white font-medium text-xl px-6 mb-8'>
+                            <div className='hidden sm:block text-txtPrimary dark:text-white font-semibold text-2xl px-6 mb-8'>
                                 {t('navbar:menu_grid.category')}
                             </div>
                             {isMobile ?
                                 <div
                                     className={classNames(
-                                        'h-[52px] px-4 flex flex-grow items-center cursor-pointer border-b-[1px] border-divider-dark'
+                                        'h-[52px] px-4 flex flex-grow items-center cursor-pointer border-b-[1px] border-divider dark:border-divider-dark'
                                     )}
                                 >
                                     <div className="w-6 h-6 mr-3">
                                         <Image
-                                            src={getSupportCategoryIcons(mainTopic.id)}
+                                            src={getSupportCategoryIcons(mainTopic?.id)}
                                             width={24}
                                             height={24}
                                         />
                                     </div>
                                     <div className='flex justify-between w-full' onClick={() => setToggleMenu(!toggleMenu)}>
-                                        <div className="flex-grow text-gray-4 font-semibold text-sm"> {subTopics ? subTopics?.title : mainTopic.title}</div>
+                                        <div className="flex-grow text-txtPrimary dark:text-gray-4 font-semibold text-sm"> {subTopics ? subTopics?.title : mainTopic?.title}</div>
                                         <div>
                                             {toggleMenu ?
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -247,11 +238,11 @@ const TopicsLayout = ({
                                     </div>
                                 </div>
                                 : null}
-                            <div className={classNames('pt-3 sm:pt-0', {
-                                'absolute w-full h-full bg-dark bg-opacity-80': isMobile && toggleMenu,
+                            <div className={classNames('', {
+                                'absolute w-full h-full bg-black/60 dark:bg-dark/80': isMobile && toggleMenu,
                                 'hidden h-0': isMobile && !toggleMenu
                             })}>
-                                <div className='bg-dark'>
+                                <div className='bg-bgPrimary dark:bg-dark pt-3 sm:pt-0'>
                                     {renderTopics}
                                 </div>
                                 <div className='h-[calc(100%-600px)] min-h-[150px] w-full bg-dark bg-opacity-80 sm:hidden' onClick={() => setToggleMenu(false)}></div>
@@ -259,14 +250,14 @@ const TopicsLayout = ({
                         </div>
 
                         <div className='w-full'>
-                            <div className="flex-grow w-full px-4 py-4 sm:px-[112px] sm:py-20">
+                            <div className="flex-grow w-full px-4 py-4 pb-12 sm:px-[112px] sm:py-20">
                                 {children}
                             </div>
 
-                            {lastedArticles && Array.isArray(lastedArticles) && lastedArticles.length && (
-                                <div className='px-[112px] pb-24'>
-                                    <div className='text-gray-4 text-xl font-medium mb-2'>{t('support-center:lasted_articles')}</div>
-                                    <LastedArticles lastedArticles={lastedArticles} language={language} isApp={isApp} t={t} containerClassName="!bg-transparent px-0" />
+                            {lastedArticles && Array.isArray(lastedArticles) && lastedArticles?.length && (
+                                <div className='px-4 sm:px-[112px] pb-24'>
+                                    <div className='text-txtPrimary dark:text-gray-4 text-2xl font-semibold mb-6 sm:mb-2'>{t('support-center:lasted_articles')}</div>
+                                    <LastedArticles isMobile={isMobile} lastedArticles={lastedArticles} language={language} isApp={isApp} t={t} containerClassName="!bg-transparent px-0 !shadow-none" />
                                 </div>
                             )}
                         </div>

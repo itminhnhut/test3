@@ -86,7 +86,8 @@
         "transfer": "Cryptocurrency deposit",
         "transfer_description": "Deposit crypto directly, no fees.",
         "swap": "Cryptocurrency exchange",
-        "deposit": "Deposit",
+        "deposit_btn": "Deposit",
+        "swap_btn": "Swap",
         "swap_description": "Diverse conversion list, low fees.",
         "instruction": "See the instructions"
     },
@@ -104,6 +105,7 @@
     "drag_image": "Drag your image here, or click to browse",
     "support_image_type": "Support JPG, PNG",
     "confirm_new_avatar": "Click “Confirm” to change the new avatar",
+    "reselect": "Reselect",
     "updated_avatar": "Updated avatar, you can close this window now.",
     "last_logged_in": "Last logged in {{duration}} ago",
     "referrer": "Referrer",
@@ -114,5 +116,10 @@
         "SELF_INVITE": "SELF_INVITE",
         "REFERRAL_CODE_NOT_FOUND": "Referral code does not exist.",
         "failed": "Add referral code failed."
-    }
+    },
+    "ref_title": "Set Referral",
+    "ref_placeholder": "Enter referral code",
+    "ref_success": "Congrats, you inserted referral code {{value}} successfully",
+    "ref_error": "Invalid referral code",
+    "ref_error_format": "The Referral ID is incorrectly formatted"
 }

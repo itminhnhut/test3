@@ -12,21 +12,30 @@ const ErrorTriangle = ({ size = 16 }) => {
 };
 
 const InputV2 = ({
+    className,
     label,
     value,
     onChange,
     placeholder,
     canPaste = false,
+    prefix,
     suffix,
-    error = 'Check'
+    error,
+    onHitEnterButton
 }) => {
     const { t } = useTranslation();
 
     const inputRef = useRef(null);
 
     const onInputChange = (e) => {
-        if (onChange) onChange(e.target.value);
+        if (onChange) onChange(e?.target?.value);
     };
+
+    const handleHitEnterButton = (e) => {
+        if (e?.nativeEvent?.code === 'Enter')
+            if (onHitEnterButton) onHitEnterButton(e?.target?.value)
+    }
+
     const paste = () => {
         navigator.clipboard.readText()
             .then(text => {
@@ -36,34 +45,36 @@ const InputV2 = ({
             });
     };
 
-    return <div className='relative pb-6'>
-        {label && <p className='text-txtSecondary pb-2'>{label}</p>}
-        <div className={classNames('bg-dark-2 border rounded-md flex p-3', {
-            'border-dark-2': !error,
-            'border-red': !!error
+    return <div className={classNames('relative pb-6', className)}>
+        {label ? <p className='text-txtSecondary pb-2'>{label}</p> : null}
+        <div className={classNames('bg-gray-10 dark:bg-dark-2 border rounded-md flex p-3 dark:focus-within:border-teal focus-within:border-green-3 items-center gap-2 dark:border-dark-2', {
+            'border-red': !!error,
         })}>
+            {prefix ? prefix : null}
             <input
                 ref={inputRef}
-                className='flex-1 !placeholder-darkBlue-5'
+                className='flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
                 type='text'
                 placeholder={placeholder}
                 value={value}
                 onChange={onInputChange}
+                onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
             />
             {
-                canPaste &&
-                <span
-                    onClick={paste}
-                    className='text-teal font-semibold cursor-pointer select-none'
-                >{t('common:paste')}</span>
+                canPaste ?
+                    <span
+                        onClick={paste}
+                        className='text-teal font-semibold cursor-pointer select-none'
+                    >{t('common:paste')}</span>
+                    : null
             }
-            {suffix && suffix}
+            {suffix ? suffix : null}
         </div>
         <div className={classNames(
             'flex items-center h-4 mt-2 absolute bottom-0 inset-x', {
-                'opacity-0': !error,
-                'opacity-1': !!error
-            })
+            'opacity-0': !error,
+            'opacity-1': !!error
+        })
         }>
             <ErrorTriangle size={12} />
             <span className='text-red text-xs ml-1'>{error}</span>

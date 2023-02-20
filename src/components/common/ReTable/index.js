@@ -62,11 +62,12 @@ const ReTable = memo(
         pagination,
         paginationProps,
         tableStyle,
-        tableStatus,
+        emptyText,
         useRowHover,
         isNamiV2,
         height,
         reference,
+        onRowClick,
         ...restProps
     }) => {
         // * Init State
@@ -117,6 +118,17 @@ const ReTable = memo(
                 onResize: handleResize(index)
             })
         }));
+
+        const onRow = (item, i, a) => {
+            return {
+                onClick: (e) => onRowClick && onRowClick({ ...item, rowIdx: i }, e), // click row
+                onDoubleClick: (e) => {}, // double click row
+                onContextMenu: (e) => {}, // right button click row
+                onMouseEnter: (e) => {}, // mouse enter row
+                onMouseLeave: (e) => {} // mouse leave row
+            };
+        };
+
         const renderTable = useCallback(() => {
             let defaultSort =
                 sort && restProps?.defaultSort ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`]) : data;
@@ -142,8 +154,17 @@ const ReTable = memo(
             // console.log('namidev-DEBUG: Paged ', _)
             // console.log('namidev-DEBUG: Origin ', data)
 
-            return <RcTable data={_} columns={resizable ? _columns : ownColumns} components={resizable && components} emptyText={tableStatus} {...restProps} />;
-        }, [data, resizable, tableStatus, restProps, paginationProps, sort, sorter, current, pageSize]);
+            return (
+                <RcTable
+                    onRow={onRow}
+                    data={_}
+                    columns={resizable ? _columns : ownColumns}
+                    components={resizable && components}
+                    emptyText={emptyText}
+                    {...restProps}
+                />
+            );
+        }, [data, resizable, emptyText, restProps, paginationProps, sort, sorter, current, pageSize]);
 
         const renderPagination = useCallback(() => {
             if (!paginationProps || paginationProps?.hide) return null;
@@ -238,14 +259,16 @@ const ReTable = memo(
         // useEffect(() => {
         //     console.log('namidev-DEBUG: reTable => ', current, data)
         // }, [data, current])
+        // console.log('here', restProps?.noBorder);
         return (
             <ReTableWrapperV2
                 ref={reference}
-                loading={loading || data.length <= 0}
-                empty={data.length <= 0}
+                loading={loading}
+                empty={loading || data.length <= 0}
                 isDark={currentTheme === THEME_MODE.DARK}
                 useRowHover={useRowHover}
                 height={height}
+                noBorder={restProps.noBorder}
                 {...tableStyle}
             >
                 {renderTable()}
@@ -296,7 +319,7 @@ const ReTableWrapperV2 = styled.div`
         }
     }
     .rc-table {
-        color: ${colors.gray4};
+        color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
         /* margin-top: 20px; */
         .re_table__link {
             font-size: 14px;
@@ -324,17 +347,17 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table th {
-        color: ${colors.darkBlue5};
-        font-weight: 400;
+        color: ${({ isDark }) => (isDark ? colors.darkBlue5 : colors.gray[1])};
         padding: 24px 16px;
+        max-height: 68px;
+        font-weight: 400 !important;
     }
 
     .rc-table td {
-        font-weight: 400;
         padding: 0 16px;
+        padding: ${({ padding }) => (padding ? padding : '0 16px')};
         height: 52px;
         max-height: 52px;
-        color: ${({ isDark }) => (isDark ? colors.grey4 : colors.primary)};
     }
 
     .rc-table thead td,
@@ -371,7 +394,7 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${() => `1px solid ${colors.divider.dark}`};
+            border-left: ${({ noBorder, isDark }) => (noBorder ? 'none' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
             z-index: 10;
             width: 1px;
             visibility: visible;
@@ -405,12 +428,17 @@ const ReTableWrapperV2 = styled.div`
         }
     }
 
+    .rc-table-ping-right .rc-table-cell-fix-right-first::after,
+    .rc-table-ping-right .rc-table-cell-fix-right-last::after {
+        box-shadow: none !important;
+    }
+
     table {
         width: 100% !important;
         ${({ tableStyle }) => (tableStyle ? { ...tableStyle } : '')};
 
         tbody tr td {
-            font-size: !16px;
+            font-size: 16px;
         }
         thead tr,
         tbody tr {
@@ -420,7 +448,8 @@ const ReTableWrapperV2 = styled.div`
 
         tbody tr {
             &:hover td {
-                background: ${({ useRowHover, isDark, empty }) => !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.grey5) : undefined)} !important;
+                background: ${({ useRowHover, isDark, empty }) =>
+                    !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
                 .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
                     border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};

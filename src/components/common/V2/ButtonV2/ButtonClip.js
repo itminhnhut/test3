@@ -21,7 +21,7 @@ export default ButtonClip;
 const ClipPath = styled.div.attrs(({ mode, active, buy, sell }) => ({
     className: classNames(
         'h-9 text-sm flex items-center justify-center py-1 font-semibold',
-        'w-full text-txtSecondary-dark bg-darkBlue-3 cursor-pointer relative',
+        'w-full text-txtPrimary dark:text-txtSecondary-dark bg-gray-13 dark:bg-darkBlue-3 cursor-pointer relative',
         {
             'rounded-l-md mr-[-5px]': mode === buy,
             '!bg-teal !text-white': mode === buy && active,

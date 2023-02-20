@@ -7,15 +7,15 @@ import 'public/css/font.css';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { useAsync } from 'react-use';
-import { getFuturesConfigs, } from 'redux/actions/futures';
-import { getAssetConfig, getExchangeConfig, getUsdRate, } from 'redux/actions/market';
+import { getFuturesConfigs } from 'redux/actions/futures';
+import { getAssetConfig, getExchangeConfig, getUsdRate } from 'redux/actions/market';
 import { getPaymentConfigs } from 'redux/actions/payment';
 import { SET_LOADING_USER, SET_USD_RATE } from 'redux/actions/types';
 import { getWallet, setTheme } from 'redux/actions/user';
 import Head from 'src/components/common/Head';
 import Tracking from 'src/components/common/Tracking';
 import initPublicSocket from 'src/redux/actions/publicSocket';
-import { getMe, getUserFuturesBalance, getVip } from 'src/redux/actions/user';
+import { getMe, getUserFuturesBalance, getVip, getUserPartnersBalance } from 'src/redux/actions/user';
 import initUserSocket from 'src/redux/actions/userSocket';
 import { useStore } from 'src/redux/store';
 import 'src/styles/app.scss';
@@ -64,19 +64,16 @@ const ignoreConfigUrls = [
     '/support/faq/[topic]',
     '/support/faq/[topic]/[articles]',
     '/support/search',
-    '/terms-of-service',
+    '/terms-of-service'
 ];
 let lastUserId = null;
 const lastToken = null;
 let initConfig = false;
-const App = ({
-    Component,
-    pageProps
-}) => {
+const App = ({ Component, pageProps }) => {
     const store = useStore(pageProps.initialReduxState);
     const router = useRouter();
     const {
-        i18n: { language },
+        i18n: { language }
     } = useTranslation();
 
     const [mount, setMount] = useState(false);
@@ -107,9 +104,8 @@ const App = ({
         await store.dispatch(getMe());
         store.dispatch({
             type: SET_LOADING_USER,
-            payload: false,
+            payload: false
         });
-
     }, []);
 
     useEffect(async () => {
@@ -122,74 +118,59 @@ const App = ({
             // Get config
             store.dispatch(getAssetConfig());
             store.dispatch(getExchangeConfig());
-            store.dispatch(getFuturesConfigs())
+            store.dispatch(getFuturesConfigs());
             store.dispatch(getPaymentConfigs());
             initConfig = true;
             store.dispatch({
                 type: SET_USD_RATE,
-                payload: await getUsdRate(),
+                payload: await getUsdRate()
             });
-
 
             //
         }
     }, []);
 
     useEffect(() => {
-        if(!router.pathname.includes('mobile')){
+        if (!router.pathname.includes('mobile')) {
             indexingArticles(language);
         }
     }, [language]);
 
     useEffect(() => {
-        if (!isMobile) {
+        if (
+            !router.pathname.includes('mobile') &&
+            !router.pathname.includes('nao') &&
+            !router.pathname.includes('contest') &&
+            !router.pathname.includes('stake') &&
+            !router.pathname.includes('terms-of-service') &&
+            !router.pathname.includes('luckydraw') &&
+            !router.pathname.includes('fee-schedule') &&
+            !router.pathname.includes('support') && 
+            !isMobile
+        ) {
             function initFreshChat() {
                 window.fcWidget?.init({
-                    token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
-                    host: "https://wchat.freshchat.com",
-                    locale: language,
-                    // config: {
-                    //     // showFAQOnOpen: true,
-                    //     // hideFAQ: false,
-                    //     content: {
-                    //         actions: {
-
-                    //             tab_faq: 'Solutions',
-
-                    //           },
-                    //         headers: {
-                    //             chat: currentLocale === 'en' ? 'Message us': 'Liên hệ với chúng tôi',
-                    //             faq: currentLocale === 'en' ? 'FAQs': 'Hướng dẫn',
-                    //             faq_see_more: currentLocale === 'en' ? 'Show more categories': 'Xem nhiều danh mục hơn',
-                    //         }
-                    //     }
-                    // }
+                    token: 'b3aa7848-6b0c-4d20-856d-8585973b1d7c',
+                    host: 'https://wchat.freshchat.com',
+                    locale: language
                 });
             }
-            function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
-        }
-    }, [language])
-
-    useEffect(() => {
-        if(!router.pathname.includes('mobile')
-            && !router.pathname.includes('nao')
-            && !router.pathname.includes('contest')
-            && !router.pathname.includes('stake')
-            && !router.pathname.includes('terms-of-service')
-            && !router.pathname.includes('luckydraw')
-            && !router.pathname.includes('fee-schedule')
-            && !router.pathname.includes('support')
-        ){
-            function initFreshChat() {
-                window.fcWidget?.init({
-                    token: "b3aa7848-6b0c-4d20-856d-8585973b1d7c",
-                    host: "https://wchat.freshchat.com",
-                    locale: language,
-                });
+            function initialize(i, t) {
+                var e;
+                i.getElementById(t)
+                    ? initFreshChat()
+                    : (((e = i.createElement('script')).id = t),
+                      (e.async = !0),
+                      (e.src = 'https://wchat.freshchat.com/js/widget.js'),
+                      (e.onload = initFreshChat),
+                      i.head.appendChild(e));
             }
-            function initialize(i, t) { var e; i.getElementById(t) ? initFreshChat() : ((e = i.createElement("script")).id = t, e.async = !0, e.src = "https://wchat.freshchat.com/js/widget.js", e.onload = initFreshChat, i.head.appendChild(e)) } function initiateCall() { initialize(document, "freshchat-js-sdk") } window.addEventListener ? window.addEventListener("load", initiateCall, !1) : window.attachEvent("load", initiateCall, !1);
+            function initiateCall() {
+                initialize(document, 'freshchat-js-sdk');
+            }
+            window.addEventListener ? window.addEventListener('load', initiateCall, !1) : window.attachEvent('load', initiateCall, !1);
         }
-    }, [language])
+    }, [language]);
 
     store.subscribe(() => {
         if (!ignoreAuthUrls.includes(router.pathname)) {
@@ -198,18 +179,19 @@ const App = ({
             if (!!newUserId && newUserId !== lastUserId) {
                 lastUserId = newUserId;
                 store.dispatch(initUserSocket());
-                if(!router.pathname.includes('mobile')){
+                if (!router.pathname.includes('mobile')) {
                     store.dispatch(getVip());
                     store.dispatch(getWallet());
                 }
                 store.dispatch(getUserFuturesBalance());
+                store.dispatch(getUserPartnersBalance());
             }
         }
     });
     if (!mount && isMobile) return null;
     return (
         <>
-            <Head language={language}/>
+            <Head language={language} />
             <Provider store={store}>
                 <Tracking>
                     <Component {...pageProps} />

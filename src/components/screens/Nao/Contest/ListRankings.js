@@ -128,7 +128,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                     empty()
                 )}
                 <div className="mt-6 text-xs text-nao-grey font-medium">
-                    {t('nao:contest:last_updated_time')}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             </>
         );
@@ -137,7 +137,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const renderLastUpdate = () => {
         return (
             <div className="mt-4 lg:mt-6 text-xs text-nao-grey font-medium">
-                {t('nao:contest:last_updated_time')}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
+                {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
             </div>
         );
     };
@@ -213,7 +213,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                                     className="!rounded-full"
                                                     width="44px"
                                                     height="44px"
-                                                    src={`${item.avatar ? item.avatar : '/images/contest/ic_avatar_mb.png'}`}
+                                                    src={`${item.avatar ? item.avatar : getS3Url('/images/nao/ic_nao_large.png')}`}
                                                 />
                                             </div>
                                             <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">

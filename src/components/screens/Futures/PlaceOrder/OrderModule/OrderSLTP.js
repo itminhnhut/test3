@@ -1,45 +1,44 @@
 import TradingInput from 'components/trade/TradingInput';
-import { SET_FUTURES_PRELOADED_FORM } from 'redux/actions/types';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useMemo, useRef, useState } from 'react';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
-import Tooltip from 'components/common/Tooltip';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AddCircleIcon } from 'components/svg/SvgIcon';
+import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
+import colors from 'styles/colors';
 
-const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig, price, lastPrice, ask, bid, type, leverage, isAuth, inputValidator }) => {
-    const useSltp = useSelector((state) => state.futures.preloadedState?.useSltp) || false;
-
-    const dispatch = useDispatch();
+const FuturesOrderSLTP = ({
+    orderSlTp,
+    setOrderSlTp,
+    decimals,
+    side,
+    pairConfig,
+    price,
+    lastPrice,
+    ask,
+    bid,
+    type,
+    leverage,
+    isAuth,
+    inputValidator,
+    quoteQty,
+    isDark
+}) => {
     const { t } = useTranslation();
     const [showEditSLTP, setShowEditSLTP] = useState(false);
     const rowData = useRef(null);
     const _price = type === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) : price;
 
     const canShowChangeTpSL = useMemo(() => {
-        if (!isAuth) return false;
         const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
-        if (!inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid) {
-            return false;
-        }
-        return true;
-    }, [isAuth, type, pairConfig, price, side, leverage]);
-
-    // const setSLTP = (status) => {
-    //     dispatch({
-    //         type: SET_FUTURES_PRELOADED_FORM,
-    //         payload: { useSltp: !status }
-    //     });
-    // };
+        return !(!quoteQty || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid || !isAuth);
+    }, [isAuth, type, pairConfig, price, side, leverage, quoteQty]);
 
     const onChangeTpSL = (key) => {
-        // if (canShowChangeTpSL) return;
         rowData.current = {
             fee: 0,
             side: side,
-            quantity: +Number(String(size).replace(/,/g, '')),
+            quantity: quoteQty / lastPrice,
             status: 0,
             price: _price,
             quoteAsset: pairConfig.quoteAsset,
@@ -56,23 +55,24 @@ const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig,
             sl: data.sl
         });
         setShowEditSLTP(false);
+        // setShowAlert(true);
     };
 
     return (
         <div className="space-y-4 mt-4">
-            {showEditSLTP && (
-                <FuturesEditSLTPVndc
-                    isVisible={showEditSLTP}
-                    order={rowData.current}
-                    onClose={() => setShowEditSLTP(false)}
-                    status={rowData.current.status}
-                    onConfirm={onConfirm}
-                    lastPrice={lastPrice}
-                />
-            )}
+            <EditSLTPV2
+                isVisible={showEditSLTP}
+                order={rowData.current}
+                onClose={() => setShowEditSLTP(false)}
+                status={rowData.current?.status}
+                onConfirm={onConfirm}
+                lastPrice={lastPrice}
+                decimals={decimals}
+            />
 
             <TradingInput
                 label={t('futures:take_profit')}
+                clearAble
                 allowNegative={false}
                 value={orderSlTp.tp}
                 decimalScale={decimals.price}
@@ -81,15 +81,12 @@ const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig,
                 labelClassName="whitespace-nowrap"
                 containerClassName="w-full dark:bg-dark-2"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() => (
-                    <div data-tip="" data-for="tooltipTPSL" className=" flex items-center cursor-pointer" onClick={() => onChangeTpSL('tp')}>
-                        <AddCircleIcon />
-                    </div>
-                )}
+                renderTail={canShowChangeTpSL && <AddCircleIcon color={isDark ? colors.gray[1] : colors.gray[7]} />}
             />
 
             <TradingInput
                 containerClassName="w-full dark:bg-dark-2"
+                clearAble
                 label={t('futures:stop_loss')}
                 allowNegative={false}
                 value={orderSlTp.sl}
@@ -98,11 +95,7 @@ const FuturesOrderSLTP = ({ orderSlTp, setOrderSlTp, decimals, side, pairConfig,
                 onValueChange={({ value }) => setOrderSlTp({ ...orderSlTp, sl: value })}
                 labelClassName="whitespace-nowrap"
                 tailContainerClassName="flex items-center font-medium text-xs select-none"
-                renderTail={() => (
-                    <div data-tip="" data-for="tooltipTPSL" className="flex items-center cursor-pointer" onClick={() => onChangeTpSL('sl')}>
-                        <AddCircleIcon />
-                    </div>
-                )}
+                renderTail={canShowChangeTpSL && <AddCircleIcon color={isDark ? colors.gray[1] : colors.gray[7]} onClick={() => onChangeTpSL('sl')} />}
             />
         </div>
     );

@@ -55,7 +55,7 @@ const layoutSimple = [
         x: 0,
         y: 4,
         w: 3.5,
-        h: 37,
+        h: 39,
         isDraggable: false,
         isResizable: false
     },
@@ -73,7 +73,7 @@ const layoutSimple = [
         x: 3.5,
         y: 6,
         w: 9,
-        h: 16,
+        h: 18,
         isDraggable: false,
         isResizable: false
     },
@@ -91,7 +91,7 @@ const layoutSimple = [
         x: 12.5,
         y: 17,
         w: 3.5,
-        h: 21,
+        h: 23,
         minW: 10,
         isDraggable: false,
         isResizable: false
@@ -143,7 +143,7 @@ const layoutPro = [
         x: 9,
         y: 0,
         w: 3.5,
-        h: 27,
+        h: 28,
         isDraggable: false,
         isResizable: false,
         isDroppable: false
@@ -261,8 +261,6 @@ const SpotComp = () => {
         setTradesLayout(_tradesLayout);
     }, []);
 
-    // Spot Socket
-
     const subscribeExchangeSocket = (s) => {
         if (!publicSocket) {
             setPublicSocketStatus(!!publicSocket);
@@ -372,11 +370,13 @@ const SpotComp = () => {
                                 hidden: !state.isShowChart
                             })}
                         >
-                            <Chart symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
+                            <Chart chartKey="spot_containter_chart" symbol={symbol} initTimeFrame={initTimeFrame} isPro={isPro} />
                         </div>
                         <div
                             key="symbolDetail"
-                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, { hidden: !state.isShowSymbolDetail || fullScreen })}
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
+                                hidden: !state.isShowSymbolDetail || fullScreen
+                            })}
                         >
                             <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
                         </div>
@@ -392,7 +392,7 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="placeOrderForm"
-                            className={classNames(`border-t border-b border-r border-divider dark:border-divider-dark`, {
+                            className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowPlaceOrderForm || fullScreen,
                                 'border-b-0': isPro
                             })}
@@ -416,9 +416,9 @@ const SpotComp = () => {
                         </div>
                         <div
                             key="orderbook"
-                            className={classNames(`border-r border-b border-t border-divider dark:border-divider-dark`, {
+                            className={classNames(`border-r border-t border-b border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowOrderBook || fullScreen,
-                                'border-l': isPro
+                                'border-l !border-t-0': isPro
                             })}
                         >
                             <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />

@@ -282,7 +282,7 @@ const MarketScreen = () => {
                                                                 themeMode ===
                                                                 THEME_MODE.DARK
                                                                     ? colors.darkBlue5
-                                                                    : colors.grey1
+                                                                    : colors.gray[1]
                                                             }
                                                         />
                                                     </>

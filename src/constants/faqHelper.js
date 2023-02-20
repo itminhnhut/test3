@@ -501,15 +501,16 @@ export const getSupportCategoryIcons = (id) => {
         case CatsKey.FuturesTrading:
             return '/images/screen/support/v2/ic_trend.png'
         case CatsKey.Swap:
-        case CatsKey.NewTokenListing:
             return '/images/screen/support/v2/ic_dou_dollar.png'
+        case CatsKey.NewTokenListing:
+            return '/images/screen/support/v2/ic_coin.png'
         case CatsKey.Finance:
         case CatsKey.DailyStaking:
             return '/images/screen/support/v2/ic_wallet.png'
         case CatsKey.Others:
             return '/images/screen/support/v2/ic_other.png'
         case CatsKey.BusinessPartner:
-            return '/images/screen/support/v2/ic_other.png'
+            return '/images/screen/support/v2/ic_partner.png'
     }
 }
 

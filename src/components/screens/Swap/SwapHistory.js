@@ -1,29 +1,20 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAsync } from 'react-use';
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis';
-import { Trans, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
 import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
-import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { ChevronLeft, ChevronRight } from 'react-feather';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-
-import ReTable, { RETABLE_SORTBY } from 'src/components/common/ReTable';
+import { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
-import MCard from 'src/components/common/MCard';
 import Skeletor from 'src/components/common/Skeletor';
-import Empty from 'src/components/common/Empty';
 import { useSelector } from 'react-redux';
-import SvgEmptyHistory from 'components/svg/SvgEmptyHistory';
 import TableV2 from 'components/common/V2/TableV2';
-
-import { PATHS } from 'constants/paths';
-import { SwapIcon } from '../../svg/SvgIcon';
+import { SwapIcon } from 'components/svg/SvgIcon';
 
 const SwapHistory = ({ width }) => {
     const [state, set] = useState({
         page: 0,
-        pageSize: 5,
+        pageSize: LIMIT_ROW,
         loading: false,
         histories: null
     });
@@ -34,8 +25,7 @@ const SwapHistory = ({ width }) => {
         i18n: { language }
     } = useTranslation(['convert', 'common']);
 
-    const data = dataHandler(state.histories, state.loading);
-
+    // const data = dataHandler(state.histories, state.loading);
     useAsync(async () => {
         if (!auth) return;
         setState({ loading: true, histories: null });
@@ -58,26 +48,20 @@ const SwapHistory = ({ width }) => {
             setState({ loading: false });
         }
     }, [state.page, state.pageSize, auth]);
+
+    const onChangePagination = (delta) => {
+        setState({ page: state.page + delta });
+    };
+
     return (
         <div className="m-auto mt-20">
             <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
             {auth ? (
-                // <TableV2
-                //     useRowHover
-                //     data={data}
-                //     columns={columns}
-                //     rowKey={(item) => `${item?.displayingId}`}
-                //     loading={state.loading}
-                //     scroll={{ x: true }}
-                //     limit={LIMIT_ROW}
-                //     skip={0}
-                // />
-                <div className="mt-8 pt-4 pb-4 border border-divider-dark dark:border-divider-dark rounded-xl">
+                <div className="mt-8 pt-4 bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl">
                     <TableV2
-                        sort
-                        defaultSort={{ key: 'btc_value', direction: 'desc' }}
+                        loading={state.loading}
                         useRowHover
-                        data={data || []}
+                        data={state.histories || []}
                         columns={columns}
                         rowKey={(item) => `${item?.displayingId}`}
                         scroll={{ x: true }}
@@ -86,22 +70,25 @@ const SwapHistory = ({ width }) => {
                         isSearch={!!state.search}
                         pagingClassName="border-none"
                         height={350}
-                        // page={state.currentPage}
-                        // onChangePage={(currentPage) => setState({ currentPage })}
+                        pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
+                        tableStyle={{ fontSize: '16px', padding: '16px' }}
                     />
                 </div>
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
                     <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
-                    <p className="text-base text-darkBlue-5 mt-3">
+                    <p className="!text-base dark:text-txtSecondary-dark mt-3">
                         <a
                             href={getLoginUrl('sso', 'login')}
-                            className="text-txtTextBtn dark:text-txtTextBtn-dark focus:text-txtTextBtn-pressed dark:focus:text-txtTextBtn-dark_pressed font-semibold leading-6"
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
                         >
                             {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
-                        <a href={getLoginUrl('sso', 'register')} className="text-teal font-semibold leading-6">
+                        <a
+                            href={getLoginUrl('sso', 'register')}
+                            className="font-semibold dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed"
+                        >
                             {t('common:sign_up')}{' '}
                         </a>
                         {t('common:swap_history')}
@@ -116,30 +103,67 @@ const LIMIT_ROW = 5;
 const KEY = 'swap_history__item_';
 
 const columns = [
-    { key: 'id', dataIndex: 'id', title: 'ID', width: 120, fixed: 'left', align: 'left' },
-    { key: 'swap_pair', dataIndex: 'swap_pair', title: 'Swap Pair', width: 180, align: 'left' },
-    { key: 'from_qty', dataIndex: 'from_qty', title: 'From Quantity', width: 220, align: 'left' },
-    { key: 'to_qty', dataIndex: 'to_qty', title: 'To Quantity', width: 244, align: 'left' },
-    { key: 'rate', dataIndex: 'rate', title: 'Rate', width: 280, align: 'left' },
-    { key: 'time', dataIndex: 'time', title: 'Time', width: 150, align: 'left' }
+    { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 140, fixed: 'left', align: 'left' },
+    {
+        key: 'swap_pair',
+        dataIndex: 'swap_pair',
+        title: 'Swap Pair',
+        width: 180,
+        align: 'left',
+        render: (v, item) => {
+            return (
+                <div className="text-left flex items-center">
+                    {item.fromAsset}
+                    <SwapIcon className="mx-2" />
+                    {item.toAsset}
+                </div>
+            );
+        }
+    },
+    {
+        key: 'fromQty',
+        dataIndex: 'fromQty',
+        title: 'From Quantity',
+        width: 220,
+        align: 'left',
+        render: (v, item) => (
+            <span>
+                {formatPrice(+v)} {item?.fromAsset}
+            </span>
+        )
+    },
+    {
+        key: 'toQty',
+        dataIndex: 'toQty',
+        title: 'To Quantity',
+        width: 220,
+        align: 'left',
+        render: (v, item) => (
+            <span>
+                {formatPrice(+v)} {item?.toAsset}
+            </span>
+        )
+    },
+    {
+        key: 'rate',
+        dataIndex: 'rate',
+        title: 'Rate',
+        width: 306,
+        align: 'left',
+        render: (v, item) => {
+            console.log('item: ', item);
+            const { fromAsset, toAsset, displayingPrice, displayingPriceAsset } = item;
+            return (
+                <span>
+                    1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
+                </span>
+            );
+        }
+    },
+    { key: 'createdAt', dataIndex: 'createdAt', title: 'Time', width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
 ];
 
 const dataHandler = (data, loading) => {
-    // loading = false;
-    // data = Array.from({ length: 12 }, (x, i) => {
-    //     return {
-    //         displayingId: 10000 + i,
-    //         displayingPrice: 12455,
-    //         displayingPriceAsset: 235124,
-    //         feeMetadata: 0.2,
-    //         fromAsset: 'BTC',
-    //         toAsset: 'USDT',
-    //         fromQty: 1,
-    //         toQty: 890234789598,
-    //         createdAt: Date.now()
-    //     };
-    //     // return { id: i, fromAsset: 'BTC', toAsset: 'USDT', from_qty: 12, to_qty: 12000, rate: 1.2, time: Date.now() };
-    // });
     if (loading) {
         const skeleton = [];
         for (let i = 0; i < LIMIT_ROW; ++i) {
@@ -153,21 +177,6 @@ const dataHandler = (data, loading) => {
     const result = [];
     data.forEach((item) => {
         const { displayingId, displayingPrice, displayingPriceAsset, feeMetadata: fee, fromAsset, toAsset, fromQty, toQty, createdAt } = item;
-        // createdAt: "2021-11-15T08:18:23.162Z"
-        // displayingId: "259"
-        // displayingPrice: 644
-        // displayingPriceAsset: "USDT"
-        // feeMetadata: {value: 9.27, asset: 'USDT', assetId: 22}
-        // fromAsset: "BNB"
-        // fromAssetId: 40
-        // fromQty: 12
-        // price: 643.98
-        // toAsset: "USDT"
-        // toAssetId: 22
-        // toQty: 7727.76
-        // updatedAt: "2021-11-15T08:18:23.162Z"
-        // userId: 888
-        // _id: "619217cfd3297c78ea07fcba"
 
         result.push({
             key: `${KEY}${displayingId}`,
@@ -177,7 +186,6 @@ const dataHandler = (data, loading) => {
                     {fromAsset}
                     <SwapIcon className="mx-2" />
                     {toAsset}
-                    {/* {fromAsset} <span className="inline-block mx-1">&#8652;</span> {toAsset} */}
                 </div>
             ),
             from_qty: (

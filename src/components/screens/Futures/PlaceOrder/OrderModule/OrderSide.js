@@ -7,7 +7,7 @@ import LeverageSettings from 'components/screens/Futures/LeverageSettings';
 const OrderSide = ({ side, setSide, leverage, setLeverage, pair, pairConfig, isAuth }) => {
     const { t } = useTranslation();
     const [showLeverage, setShowLeverage] = useState(false);
-   
+
     return (
         <>
             <LeverageSettings
@@ -43,7 +43,7 @@ const OrderSide = ({ side, setSide, leverage, setLeverage, pair, pairConfig, isA
                 </div>
                 <div
                     onClick={() => setShowLeverage(true)}
-                    className="px-4 py-2 text-sm text-txtSecondary-dark bg-darkBlue-3 rounded-md cursor-pointer font-semibold"
+                    className="px-4 py-2 text-sm dark:text-txtSecondary-dark bg-gray-13 dark:bg-darkBlue-3 rounded-md cursor-pointer font-semibold"
                 >
                     {leverage}x
                 </div>

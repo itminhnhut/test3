@@ -229,7 +229,7 @@ function KLineChart({ symbolInfo, resolution = ms('1m'), mainIndicator = '',
     return (
         <div id={chartId} className={`kline-chart flex flex-1 h-full min-h-[300px] ${className}`}>
             <div className="cheat-watermark">
-                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue4} />
+                <NamiExchangeSvg color={themeMode === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue4} />
             </div>
         </div>
     )

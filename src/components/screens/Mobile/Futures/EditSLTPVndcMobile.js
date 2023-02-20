@@ -190,7 +190,7 @@ const EditSLTPVndcMobile = ({
         });
     };
 
-    console.log(' order',  order)
+    // console.log(' order',  order)
 
     const [slError, setSlError] = useState({
         isValid: true,
@@ -408,11 +408,7 @@ const EditSLTPVndcMobile = ({
         // if (hidden) return;
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         return (
-            <ThumbLabel isZero={pos.left === 0}
-                isDark
-                onusMode
-                className={`left-1/2 translate-x-[-50%] w-max`}
-            >
+            <ThumbLabel isZero={pos.left === 0} isDark onusMode bgColorActive={colors.onus.white} className={`left-1/2 translate-x-[-50%] w-max`}>
                 {ceil(postion, 0)}%
             </ThumbLabel>
         );
