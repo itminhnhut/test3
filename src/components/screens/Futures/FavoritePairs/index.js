@@ -11,6 +11,9 @@ import colors from 'styles/colors';
 import axios from 'axios';
 import { BxsStarIcon } from 'components/svg/SvgIcon';
 
+import 'react-loading-skeleton/dist/skeleton.css';
+import Skeletor from 'components/common/Skeletor';
+
 const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
     const [loading, setLoading] = useState(false);
     const [refreshMarketWatch, setRefreshMarketWatch] = useState(null);
@@ -55,13 +58,22 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
             <div className="flex items-center pl-6 h-full dragHandleArea">
                 <BxsStarIcon size={16} fill={colors.yellow[2]} />
             </div>
-            {loading ? (
-                <div className="pl-3">Loading...</div>
-            ) : (
-                <InfoSlider gutter={18} forceUpdateState={favoritePairLayout?.h} containerClassName="h-full">
-                    {renderPairItems()}
-                </InfoSlider>
-            )}
+            <InfoSlider gutter={18} forceUpdateState={favoritePairLayout?.h} containerClassName="h-full">
+                {loading ? (
+                    <div className="flex gap-11">
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                        <Skeletor width={120} />
+                    </div>
+                ) : (
+                    renderPairItems()
+                )}
+            </InfoSlider>
         </div>
     );
 });
