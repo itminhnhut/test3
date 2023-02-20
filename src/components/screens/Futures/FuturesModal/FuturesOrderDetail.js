@@ -24,20 +24,13 @@ const getAllAssets = createSelector([(state) => state.utils, (utils, params) => 
         return assets;
     }, {});
 });
-const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) => {
+const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice, marketWatch }) => {
     const { t } = useTranslation();
     const allAssets = useSelector((state) => getAllAssets(state));
-    const marketWatch = useSelector((state) => state.futures.marketWatch);
     const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
     const status = order?.status;
 
-    const price = useMemo(() => {
-        return +(status === VndcFutureOrderType.Status.PENDING
-            ? order?.price
-            : status === VndcFutureOrderType.Status.ACTIVE
-            ? order?.open_price
-            : order?.close_price);
-    }, [order]);
+    const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY ? (
@@ -189,16 +182,6 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
     );
 };
 
-const Row = styled.div.attrs({
-    className: `flex items-center justify-between`
-})``;
-
-const Item = styled.div.attrs(({ tooltip }) => ({
-    className: `first:text-txtSecondary dark:first:text-txtSecondary-dark last:font-semibold my-2 ${
-        tooltip ? 'border-b border-dashed border-divider dark:border-divider-dark' : ''
-    }`
-}))``;
-
 const FeeMeta = ({ order, mode = 'open_fee', allAssets, t }) => {
     const [visible, setVisible] = useState(false);
 
@@ -258,5 +241,15 @@ const FeeMeta = ({ order, mode = 'open_fee', allAssets, t }) => {
         </>
     );
 };
+
+const Row = styled.div.attrs({
+    className: `flex items-center justify-between`
+})``;
+
+const Item = styled.div.attrs(({ tooltip }) => ({
+    className: `first:text-txtSecondary dark:first:text-txtSecondary-dark last:font-semibold my-2 ${
+        tooltip ? 'border-b border-dashed border-divider dark:border-divider-dark' : ''
+    }`
+}))``;
 
 export default FuturesOrderDetail;
