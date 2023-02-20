@@ -86,7 +86,8 @@
         "transfer": "Cryptocurrency deposit",
         "transfer_description": "Deposit crypto directly, no fees.",
         "swap": "Cryptocurrency exchange",
-        "deposit": "Deposit",
+        "deposit_btn": "Deposit",
+        "swap_btn": "Swap",
         "swap_description": "Diverse conversion list, low fees.",
         "instruction": "See the instructions"
     },

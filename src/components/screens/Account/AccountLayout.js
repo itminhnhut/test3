@@ -35,7 +35,7 @@ export default function AccountLayout({ children }) {
         hideInApp={isApp}
     >
         <div
-            className='bg-black-800 h-44'
+            className='bg-black-800 h-24 md:h-44'
             style={{ // TODO: image s3
                 backgroundImage: `url(/images/screen/account/banner_2.png)`,
                 backgroundSize: 'auto 100%',
@@ -43,17 +43,19 @@ export default function AccountLayout({ children }) {
             }}
         />
         <Container className='mal-container px-4 h-full'>
-            <div className='flex items-end justify-between'>
+            <div className='flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between'>
                 <AccountAvatar currentAvatar={user?.avatar} />
-                <div className='ml-4 flex-1'>
-                    <div className='flex mb-2'>
-                        <span className='text-2xl font-semibold'>{user?.name}</span>
-                        {{
-                            [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                            [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
-                        }[user?.kyc_status] || null}
+                <div className='mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row items-center md:items-start'>
+                    <div className='mb-3 md:mb-0'>
+                        <div className='text-xl md:text-2xl leading-7 mb-2 font-semibold'>{user?.name}</div>
+                        <TextCopyable text={user?.code}
+                                      className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start' />
                     </div>
-                    <TextCopyable text={user?.code} className='text-txtSecondary dark:text-txtSecondary-dark' />
+
+                    {{
+                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
+                    }[KYC_STATUS.PENDING_APPROVAL] || null}
                 </div>
                 {
                     user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE &&
@@ -95,7 +97,7 @@ export default function AccountLayout({ children }) {
                 </div>
                 <span
                     onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
-                    className='text-teal cursor-pointer font-medium hover:underline'>
+                    className='hidden md:inline text-teal cursor-pointer font-medium hover:underline'>
                     {t('fee-structure:see_fee_structures')}
                 </span>
             </div>

@@ -732,7 +732,7 @@ const getIcon = (localized) => {
         case 'futures':
             return '/images/icon/ic_futures.png';
         case 'swap':
-            return '/images/icon/ic_swap.png';
+            return '/images/icon/ic_swap_v2.png';
         case 'copytrade':
             return '/images/icon/ic_copytrade.png';
         case 'staking':
