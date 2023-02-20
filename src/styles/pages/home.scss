@@ -1682,10 +1682,10 @@
         @media (min-width: 992px) {
           @apply w-1/4;
           padding-top: 98px;
-          &:hover {
-            @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
-            box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
-          }
+          //&:hover {
+          //  @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
+          //  box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
+          //}
         }
 
         .homepage-community___channel__group___item__icon {
@@ -1693,6 +1693,14 @@
           top: 28px;
           min-width: 44px;
           min-height: 44px;
+          img {
+            height: 44px;
+            width: auto;
+          }
+          .telegram-global{
+            height: 45px!important;
+          }
+
         }
 
         .homepage-community___channel__group___item__bg {
