@@ -440,6 +440,7 @@ const MarketTable = ({
             }
         }
 
+
         return (
             <ReTable
                 // @ts-ignore
@@ -454,7 +455,7 @@ const MarketTable = ({
                 rowKey={item => `${rowKey}___${item?.key}`}
                 loading={loading}
                 scroll={{ x: true }}
-                tableStatus={tableStatus}
+                emptyText={tableStatus}
                 noBorder={width < 640}
                 tableStyle={{
                     minWidth: '888px !important',
