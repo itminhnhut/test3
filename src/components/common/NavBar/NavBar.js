@@ -309,7 +309,7 @@ const NavBar = ({
 
                 return (
                     <div className="h-full flex items-center" key={`${title}_${key}__withchild`}>
-                        <div className="mal-navbar__link__group___item">
+                        <div className="mal-navbar__link__group___item !mr-0 pr-10">
                             <div className="flex items-center">
                                 {t(`navbar:menu.${localized}`)}
 
@@ -580,7 +580,7 @@ const NavBar = ({
                             ${navTheme.wrapper}
                  `}
                 >
-                    <a className="block mal-navbar__logo" onClick={() => router.back()}>
+                    <a className="block mal-navbar__logo " onClick={() => router.back()}>
                         <img src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
                     </a>
                 </div>
@@ -599,7 +599,7 @@ const NavBar = ({
                  `}
                 >
                     <Link href="/">
-                        <a className="block mal-navbar__logo">
+                        <a className="block mal-navbar__logo mr-10">
                             <img
                                 // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                 src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}

@@ -177,9 +177,9 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
 
     useEffect(() => {
         if (content.current) {
-            if (content.current.scrollLeft >= content.current.scrollWidth - content.current.offsetWidth - 24) {
-                btnRight.current.classList.add('invisible');
-            }
+            const hidden = content.current.scrollLeft >= content.current.scrollWidth - content.current.offsetWidth - 24;
+            btnLeft.current.classList[content.current.scrollLeft > 5 ? 'remove' : 'add']('invisible');
+            btnRight.current.classList[hidden ? 'add' : 'remove']('invisible');
             content.current.addEventListener('mousemove', onDrag);
             content.current.addEventListener('mousedown', startDragging, false);
             content.current.addEventListener('mouseup', stopDragging, false);
@@ -213,7 +213,7 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
             <div
                 ref={btnLeft}
                 onClick={() => onScroll('left')}
-                className="bg-darkBlue-3 min-w-[24px] h-full flex items-center justify-center cursor-pointer sticky left-0 z-10 invisible"
+                className="bg-gray-13 dark:bg-darkBlue-3 min-w-[24px] h-full flex items-center justify-center cursor-pointer sticky left-0 z-10 invisible"
             >
                 <ChevronLeft size={20} />
             </div>
@@ -248,7 +248,7 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
             <div
                 ref={btnRight}
                 onClick={() => onScroll('right')}
-                className="bg-darkBlue-3 w-6 h-full flex items-center justify-center cursor-pointer fixed right-0"
+                className="bg-gray-13 dark:bg-darkBlue-3 w-6 h-full flex items-center justify-center cursor-pointer fixed right-0"
             >
                 <ChevronLeft size={20} className="rotate-180" />
             </div>

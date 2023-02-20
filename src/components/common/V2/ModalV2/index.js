@@ -82,7 +82,7 @@ const ModalV2 = ({
                     <div
                         ref={wrapperRef}
                         className={classnames(
-                            'w-full absolute overflow-auto max-h-[90%] border border-divider dark:border-divider-dark',
+                            'w-full absolute overflow-auto max-h-[90%] border border-transparent dark:!border-divider-dark',
                             {
                                 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl max-w-[90%] min-w-[390px]':
                                     !isMobile || (width && width >= 820),
