@@ -518,5 +518,11 @@
         "title": "Share",
         "download": "Download",
         "ref_id": "Referrer ID"
+    },
+    "terms": {
+        "title": "Terms and Agreements",
+        "desc": "To continue, please accept all of the followings",
+        "service": "I Accept Nami's Term Of Services.",
+        "futures": "I Accept Nami's Term Of Futures Trading."
     }
 }
