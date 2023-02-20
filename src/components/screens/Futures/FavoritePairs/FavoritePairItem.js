@@ -13,7 +13,7 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
     const negative = pair?.priceChangePercent < 0;
     return (
         <div
-            className="flex flex-col items-center justify-center font-semibold first:pl-0 pl-[22px] pr-[22px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
+            className="flex flex-col items-center justify-center font-semibold pl-[22px] pr-[22px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
             onClick={() => !active && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pair?.symbol}`)}
         >
             <div className="text-sm mb-[2px]">
