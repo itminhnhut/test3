@@ -37,9 +37,21 @@ import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
-import TagV2 from 'components/common/V2/TagV2';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
+
+const instructionTransferLink = {
+    en: '/support/faq/crypto-deposit-withdrawal',
+    vi: '/vi/support/faq/nap-rut-tien-ma-hoa'
+};
+
+const instructionSwapLink = {
+    en: '/support/faq/swap',
+    vi: '/vi/support/faq/quy-doi'
+};
+
+const transferLink = PATHS.WALLET.EXCHANGE.DEPOSIT;
+const swapLink = PATHS.EXCHANGE.SWAP.DEFAULT;
 
 const TextCopyable = ({
     text = '',
@@ -272,7 +284,7 @@ const UserLevelSlice = ({
     return <div className={'mt-6 ' + className}>
         <div>
             <span className='text-txtSecondary'>{t('fee-structure:current_fee_level')}: VIP {level}</span>
-            <span className='text-right float-right text-teal font-medium'>
+            <span className='text-right float-right text-teal font-semibold'>
                 <Link
                     href={PATHS.EXCHANGE.SWAP.getSwapPair({
                         fromAsset: 'VNDC',
@@ -308,8 +320,11 @@ const Profile = () => {
     });
 
     const user = useSelector((state) => state.auth?.user);
-    const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
 
     const router = useRouter();
 
@@ -384,7 +399,7 @@ const Profile = () => {
             </div>
             <UserLevelSlice
                 t={t}
-                className='hidden md:block p-4'
+                className='hidden md:block py-4'
                 level={state.level}
                 namiBalance={state.namiBalance}
                 currentPercent={currentPercent}
@@ -397,14 +412,14 @@ const Profile = () => {
                 '!block': user?.kyc_status === KYC_STATUS.APPROVED
             })}
             style={{
-                backgroundImage: `url(/images/screen/account/bg_transfer_onchain_${currentTheme}.png)`,
+                backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center'
             }}
         >
             <div>
-                <p className='text-lg font-semibold mb-2'>{t('profile:deposit_banner:title')}</p>
+                <p className='text-lg md:text-2xl font-semibold mb-2'>{t('profile:deposit_banner:title')}</p>
                 {/* <span */}
                 {/*     className='text-txtSecondary text-sm dark:text-txtSecondary-dark'>{t('profile:deposit_banner:description')}</span> */}
             </div>
@@ -412,17 +427,21 @@ const Profile = () => {
                 {[
                     {
                         key: 1,
-                        image: '/images/screen/account/ic_deposit.png',
+                        image: getS3Url('/images/screen/account/ic_deposit.png'),
                         title: t('profile:deposit_banner:transfer'),
                         description: t('profile:deposit_banner:transfer_description'),
-                        textBtn: t('profile:deposit_banner:deposit_btn')
+                        textBtn: t('profile:deposit_banner:deposit_btn'),
+                        instructionLink: instructionTransferLink[language],
+                        btnLink: transferLink
                     },
                     {
                         key: 2,
-                        image: '/images/screen/account/ic_swap_v2.png',
+                        image: getS3Url('/images/screen/account/ic_swap_v2.png'),
                         title: t('profile:deposit_banner:swap'),
                         description: t('profile:deposit_banner:swap_description'),
-                        textBtn: t('profile:deposit_banner:swap_btn')
+                        textBtn: t('profile:deposit_banner:swap_btn'),
+                        instructionLink: instructionSwapLink[language],
+                        btnLink: swapLink
                     }
                 ].map(item => {
                     return <div key={item.key} className='flex flex-col md:flex-row md:items-center justify-between'>
@@ -433,18 +452,24 @@ const Profile = () => {
                             <div className='ml-4 flex-1'>
                                 <div className='flex items-center mb-2'>
                                     <span
-                                        className='font-semibold text-sm'>{item.title}</span>
-                                    <div className='flex items-center ml-2 cursor-pointer hover:underline'>
+                                        className='font-semibold text-sm md:text-base'>{item.title}</span>
+                                    <div
+                                        className='flex items-center ml-2 text-teal cursor-pointer hover:underline'
+                                        onClick={() => router.push(item.instructionLink)}
+                                    >
                                         <HelpCircle />
                                         <span
-                                            className='text-teal ml-2 hidden md:inline'>{t('profile:deposit_banner:instruction')}</span>
+                                            className='ml-2 hidden md:inline'>{t('profile:deposit_banner:instruction')}</span>
                                     </div>
                                 </div>
                                 <span
-                                    className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{item.description}</span>
+                                    className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{item.description}</span>
                             </div>
                         </div>
-                        <Button className='md:w-auto px-6'>{item.textBtn}</Button>
+                        <Button
+                            className='md:w-auto px-6 text-sm md:text-base'
+                            onClick={() => router.push(item.btnLink)}
+                        >{item.textBtn}</Button>
                     </div>;
                 })}
             </div>
