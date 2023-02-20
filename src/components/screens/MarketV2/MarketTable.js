@@ -942,8 +942,9 @@ const renderTradeLink = (b, q, lang, mode) => {
 const TokenTypes = ({ type, setType, types, lang, className }) => {
     return <div className={classNames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
         {types.map(e =>
-            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap', {
-                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
+            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap', {
+                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
+                'border-divider dark:border-divider-dark': e.id !== type,
             })}
                 onClick={() => setType(e.id)}
             >
