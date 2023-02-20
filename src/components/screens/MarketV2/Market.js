@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { getExchange24hPercentageChange } from 'redux/actions/utils';
 import { useCallback, useEffect, useState } from 'react';
-import { API_GET_TRENDING } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_TRENDING } from 'redux/actions/apis';
 import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'redux/actions/const';
@@ -16,6 +16,7 @@ import { isMobile } from 'react-device-detect';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
 import { useMemo } from 'react';
+import FetchApi from 'utils/fetch-api';
 
 const Market = () => {
     // * Initial State
@@ -57,7 +58,26 @@ const Market = () => {
         return data
     }, [exchangeConfig])
 
+    const [referencePrice, setReferencePrice] = useState([])
 
+    useEffect(() => {
+        // TODO: move this logic to redux store
+        FetchApi({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: { base: 'VNDC,USDT', quote: 'USD' },
+        })
+            .then(({ data = [] }) => {
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price,
+                        }
+                    }, {})
+                )
+            })
+            .catch((err) => console.error(err))
+    }, [])
 
     // * Use Hooks
     const focused = useWindowFocus()
@@ -168,6 +188,7 @@ const Market = () => {
                 suggestedSymbols={suggested}
                 favType={state.favType}
                 futuresConfigs={futuresConfigs}
+                referencePrice={referencePrice}
             />
         )
     }, [
@@ -198,13 +219,13 @@ const Market = () => {
     }, [state.tabIndex, state.subTabIndex, focused])
 
     useEffect(() => {
+        setState({ loading: true })
         let watch = []
         let convert = []
 
         const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
 
         if (state.exchangeMarket && state.futuresMarket) {
-            setState({ loading: true })
             convert = {
                 exchange: marketWatchToFavorite(state.favoriteList?.exchange, TRADING_MODE.EXCHANGE, state.exchangeMarket),
                 futures: marketWatchToFavorite(state.favoriteList?.futures, TRADING_MODE.FUTURES, state.futuresMarket, true)
@@ -214,11 +235,11 @@ const Market = () => {
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.favType]?.key === 'exchange') {
                 // log.d('Tab Favorite - Exchange')
-                watch = convert?.exchange?.filter(e => e.q === asset)
+                watch = convert?.exchange
             }
             if (favSubTab[state.favType]?.key === 'futures') {
                 // log.d('Tab Favorite - Futures')
-                watch = convert?.futures?.filter(e => e.q === asset)
+                watch = convert?.futures
             }
 
             if (subTab[state.subTabIndex].key === 'vndc') {
@@ -227,7 +248,7 @@ const Market = () => {
             } else if (subTab[state.subTabIndex].key === 'usdt') {
                 // log.d('Tab Exchange - USDT')
                 watch = watch.filter(e => e.q === 'USDT')
-            } 
+            }
         }
 
         // Exchange data handling
@@ -258,21 +279,6 @@ const Market = () => {
             }
         }
 
-        if (tab[state.tabIndex].key !== 'favorite')
-            switch (state.type) {
-                case 0:
-                    break;
-                case 'TOP_GAINER':
-                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) < 0 ? 1 : -1).slice(0,10)
-                    break;
-                case 'TOP_LOSER':
-                    watch = watch.sort((a, b) => (getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b)) > 0 ? 1 : -1).slice(0,10)
-                    break;
-                default:
-                    watch = watch.filter(e => categories[state.type]?.includes(e.s))
-                    break;
-            }
-
         // Search data handling
         if (state.search) {
             watch = filterer([...watch], state.search.toLowerCase())
@@ -284,7 +290,7 @@ const Market = () => {
             const favorite = filterer([...convert?.exchange, ...convert?.futures], state.search.toLowerCase())
             const exchange = filterer(state.exchangeMarket.filter(e => e.q === asset), state.search.toLowerCase())
             const futures = filterer(state.futuresMarket.filter(e => e.q === asset), state.search.toLowerCase())
-        
+
             setState({
                 tabLabelCount: {
                     favorite: favorite?.length,
@@ -296,21 +302,28 @@ const Market = () => {
             setState({ tabLabelCount: null })
         }
 
-        if(tab[state.tabIndex].key !== 'favorite') {
+        if (tab[state.tabIndex].key !== 'favorite') {
             switch (state.type) {
                 case 0:
                     break;
+                case 'MOST_TRADED':
+                    watch = watch.sort((a, b) => {
+                        const diff = b.vq - a.vq
+                        if (diff === 0) return 0
+                        return diff > 0 ? 1 : -1
+                    })
+                    break;
                 case 'TOP_GAINER':
                     watch = watch.sort((a, b) => {
-                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
-                        if(diff === 0) return 0
+                        const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
+                        if (diff === 0) return 0
                         return diff > 0 ? 1 : -1
                     })
                     break;
                 case 'TOP_LOSER':
                     watch = watch.sort((a, b) => {
-                        const diff = getExchange24hPercentageChange(a) - getExchange24hPercentageChange(b) 
-                        if(diff === 0) return 0
+                        const diff = getExchange24hPercentageChange(b) - getExchange24hPercentageChange(a)
+                        if (diff === 0) return 0
                         return (diff > 0) ? -1 : 1
                     })
                     break;
@@ -333,26 +346,9 @@ const Market = () => {
         state.favType
     ])
 
-    // useEffect(() => {
-    //     log.d('Display Data: ', state.watch)
-    // }, [state.watch])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching Favorite Change ', state.favoriteList)
-    // }, [state.favoriteList])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching ExchangeMarket ', state.exchangeMarket)
-    // }, [state.exchangeMarket])
-    //
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching ', tparentStateab[state.tabIndex].key,
-    //                 tab[state.tabIndex].key === 'favorite' ? favSubTab[state.subTabIndex].key : subTab[state.subTabIndex].key)
-    // }, [state.tabIndex, state.subTabIndex])
-
     const renderContent = () => {
         return (
-            <div className="w-full h-full bg-shadow pb-[120px]">
+            <div className="w-full h-full pb-[120px]">
                 <MarketWrapper>
                     <MarketTrend data={state.trending} loading={state.loadingTrend} />
                     {renderMarketTable()}
