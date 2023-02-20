@@ -7,25 +7,25 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { KYC_STATUS } from 'redux/actions/const';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useDarkMode from 'hooks/useDarkMode';
 import User from 'components/svg/User';
 import CreditCard from 'components/svg/CreditCard';
 import IDCard from 'components/svg/IDCard';
 import PlayFilled from 'components/svg/PlayFilled';
 import { createElement } from 'react';
 import colors from 'styles/colors';
+import { KYC_STATUS } from 'redux/actions/const';
 
 const NotKycCard = ({
     t,
     className
 }) => {
     return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_require.png')}
-             className='mx-auto' />
-        <p className='text-teal font-semibold text-2xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
+        <img className='mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]'
+             src={getS3Url('/images/screen/account/kyc_require.png')} />
+        <p className='text-teal font-semibold text-xl md:text-2xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
         <span
-            className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.not_verified_content')}</span>
+            className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.not_verified_content')}</span>
     </div>;
 };
 
@@ -35,11 +35,14 @@ const KYCStepCard = ({
 }) => {
     const [currentTheme] = useDarkMode();
 
-    return <div className={classnames(className, 'flex gap-4 bg-white dark:bg-darkBlue-3 py-14 rounded-xl px-6')}>
-        <div>
-            <p className='text-2xl font-semibold mb-6'>{t('identification:kyc_step:title')}</p>
+    return <div className={classnames(className,
+        'flex flex-col-reverse md:flex-row md:gap-4',
+        'bg-white dark:bg-darkBlue-3 py-14 rounded-xl px-6'
+    )}>
+        <div className='border-t md:border-none border-divider dark:border-divider-dark pt-6 md:pt-0'>
+            <p className='text-xl md:text-2xl font-semibold mb-6'>{t('identification:kyc_step:title')}</p>
             <span
-                className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:content')}</span>
+                className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:content')}</span>
             <div className='space-y-3 mt-4'>
                 {
                     [
@@ -69,26 +72,27 @@ const KYCStepCard = ({
                                 })}
                             </div>
                             <span
-                                className='text-txtSecondary dark:text-txtSecondary-dark ml-3'>{item.label}</span>
+                                className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark ml-3'>{item.label}</span>
                         </div>;
                     })
                 }
             </div>
         </div>
 
-        <div className=''>
-            <div className='p-3 border border-teal bg-white rounded-lg mx-auto w-fit'>
-                <QRCode value='account_verification' size={132} />
+        <div className='pb-6 md:pb-0'>
+            <div
+                className='p-[.625rem] md:p-3 w-[7.75rem] h-[7.75rem] md:w-40 md:h-40 border border-teal bg-white rounded-lg mx-auto'>
+                <QRCode value='account_verification' className='!w-full !h-full' />
             </div>
             <div className='text-center mt-5'>
                 <span
-                    className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:scan')}</span>
+                    className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:scan')}</span>
                 <div className='flex mt-6 justify-between gap-4 max-w-[290px] m-auto gap-4'>
                     <Link href='https://apps.apple.com/app/id1480302334'>
                         <a target='_blank' className='bg-gray-10 dark:bg-dark-2 rounded-md px-3 py-2'>
                             <img
                                 className='m-auto'
-                                src={`/images/download_applestore_${currentTheme}.png`}
+                                src={getS3Url(`/images/download_applestore_${currentTheme}.png`)}
                                 alt=''
                             />
                         </a>
@@ -97,7 +101,7 @@ const KYCStepCard = ({
                         <a target='_blank' className='bg-gray-10 dark:bg-dark-2 rounded-md px-3 py-2'>
                             <img
                                 className='m-auto'
-                                src={`/images/download_google_${currentTheme}.png`}
+                                src={getS3Url(`/images/download_google_${currentTheme}.png`)}
                                 alt=''
                             />
                         </a>
@@ -113,10 +117,11 @@ const ProcessKycCard = ({
     className
 }) => {
     return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_wait.png')} className='mx-auto' />
-        <p className='text-teal font-semibold text-2xl mb-1 mt-6'>{t('identification:account.process')}</p>
+        <img className='mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]'
+             src={getS3Url('/images/screen/account/kyc_wait.png')} />
+        <p className='text-teal font-semibold tetx-xl md:text-2xl mb-1 mt-6'>{t('identification:account.process')}</p>
         <span
-            className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.process_content')}</span>
+            className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.process_content')}</span>
     </div>;
 };
 
@@ -125,46 +130,47 @@ const CurrentFuturesCard = ({
     className
 }) => {
     return <div
-        className={classnames(className, 'flex flex-col justify-center col-span-3 bg-white dark:bg-darkBlue-3 rounded-xl px-6 py-auto')}>
+        className={classnames(className, 'flex flex-col justify-center p-6 bg-white dark:bg-darkBlue-3 rounded-xl px-6 py-auto')}>
         <div className='mb-8'>
-            <p className='font-semibold text-2xl'>{t('identification:current_futures:title')}</p>
+            <p className='font-semibold text-xl md:text-2xl'>{t('identification:current_futures:title')}</p>
         </div>
-        <div className='grid grid-cols-2 gap-y-9 gap-x-8'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-y-9 gap-x-8'>
             <div className='flex items-center'>
-                <img width={48} height={48} src={'/images/screen/account/ic_feature_1_v2.png'}
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_1_v2.png')}
                      alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-semibold'>{t('identification:current_futures:buy_sell')}</p>
+                    <p className='text-sm md:text-base font-semibold'>{t('identification:current_futures:buy_sell')}</p>
                     <span
-                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:price_daily')}</span>
+                        className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:price_daily')}</span>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src={'/images/screen/account/ic_feature_2_v2.png'}
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_2_v2.png')}
                      alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-semibold'>{t('identification:current_futures:deposit')}</p>
-                    <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
+                    <p className='text-sm md:text-base font-semibold'>{t('identification:current_futures:deposit')}</p>
+                    <span
+                        className='text-sm md:text-base text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src={'/images/screen/account/ic_feature_3_v2.png'}
+                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_3_v2.png')}
                      alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-semibold'>{t('identification:current_futures:withdrawal')}</p>
+                    <p className='text-sm md:text-base font-semibold'>{t('identification:current_futures:withdrawal')}</p>
                     <span
-                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:unlimited')}</span>
+                        className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:unlimited')}</span>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <Image width={48} height={48} src={'/images/screen/account/ic_feature_4_v2.png'} />
+                <Image width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_4_v2.png')} />
                 <div className='ml-4'>
-                    <p className='font-semibold'>{t('identification:current_futures:other')}</p>
+                    <p className='text-sm md:text-base font-semibold'>{t('identification:current_futures:other')}</p>
                     <span
-                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:reward')}</span>
+                        className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:reward')}</span>
                 </div>
             </div>
         </div>
@@ -175,10 +181,11 @@ const VerifiedKycCard = ({
     t,
     className
 }) => {
-    return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
-        <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_verified.png')} className='mx-auto' />
-        <p className='text-teal font-medium text-xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
-        <span className='text-teal font-medium text-xl '>{t('identification:account.verified')}</span>
+    return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 rounded-xl text-center px-10 py-12')}>
+        <img className='mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]'
+             src={getS3Url('/images/screen/account/kyc_verified.png')} />
+        <p className='text-teal font-medium text-xl md:text-2xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
+        <span className='text-teal font-medium text-xl md:text-2xl'>{t('identification:account.verified')}</span>
     </div>;
 };
 
@@ -190,23 +197,23 @@ function Identification() {
     return <AccountLayout>
         {
             user?.kyc_status === KYC_STATUS.NO_KYC &&
-            <div className='grid grid-cols-5 gap-8 my-12'>
-                <NotKycCard t={t} className='col-span-2' />
-                <KYCStepCard t={t} className='col-span-3' />
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <NotKycCard t={t} className='md:col-span-2' />
+                <KYCStepCard t={t} className='md:col-span-3' />
             </div>
         }
         {
             user?.kyc_status === KYC_STATUS.PENDING_APPROVAL &&
-            <div className='grid grid-cols-5 gap-8 my-12'>
-                <ProcessKycCard t={t} className='col-span-2' />
-                <KYCStepCard t={t} className='col-span-3' />
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <ProcessKycCard t={t} className='md:col-span-2' />
+                <KYCStepCard t={t} className='md:col-span-3' />
             </div>
         }
         {
             user?.kyc_status === KYC_STATUS.APPROVED &&
-            <div className='grid grid-cols-5 gap-8 my-12'>
-                <VerifiedKycCard t={t} className='col-span-2' />
-                <CurrentFuturesCard t={t} className='col-span-3' />
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <VerifiedKycCard t={t} className='md:col-span-2' />
+                <CurrentFuturesCard t={t} className='md:col-span-3' />
             </div>
         }
     </AccountLayout>;

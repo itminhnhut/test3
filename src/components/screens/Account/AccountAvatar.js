@@ -106,54 +106,12 @@ const AccountAvatar = ({
         i18n: { language }
     } = useTranslation();
 
-    useEffect(() => {
-        axios.get(API_GET_USER_AVATAR_PRESET, {
-            params: {
-                skip: 0,
-                limit: 999
-            }
-        })
-            .then(({ data: res }) => {
-                if (res.status === 'ok' && res.data) {
-                    setAvatarSets(res.data);
-                }
-            });
-    }, []);
+    const { width } = useWindowSize();
+    const isMobile = width <= 768;
 
     const categories = useMemo(() => {
         return avatarSets.map(a => a.category);
     }, [avatarSets]);
-
-    useEffect(() => {
-        const {
-            DONE,
-            FAILURE,
-            IDLE
-        } = UPLOADING_STATUS;
-        let timeoutId;
-        if ([DONE, FAILURE].includes(uploadStatus)) {
-            timeoutId = setTimeout(() => {
-                setUploadStatus(IDLE);
-            }, UPLOAD_TIMEOUT);
-
-            const toastObj = {
-                [DONE]: {
-                    text: t('profile:change_avatar_success'),
-                    type: 'success'
-                },
-                [FAILURE]: {
-                    text: t('profile:change_avatar_failure'),
-                    type: 'error'
-                }
-            }[uploadStatus];
-
-            toast(toastObj);
-        }
-
-        return () => {
-            if (timeoutId) clearTimeout(timeoutId);
-        };
-    }, [uploadStatus]);
 
     const setAvatarPreset = async (image) => {
         setUploadStatus(UPLOADING_STATUS.UPLOADING);
@@ -236,25 +194,25 @@ const AccountAvatar = ({
         setOpenModal(false);
     };
 
-    let refObserver = useRef(null);
-
     const scrollToCategory = (event, id) => {
-        setCurrentCategoryId(id);
-
         const element = document.getElementById(`category_${id}`);
 
         avatarRef.current?.scrollTo({
             top: element.offsetTop - 98,
             behavior: 'smooth'
         });
+    };
 
-        const targetWidth = event.target.getBoundingClientRect().width;
+    const scrollCategoryTab = (categoryId) => {
+        const element = document.getElementById(`category_tab_${categoryId}`)
+        if (!element) return;
+        const targetWidth = element.getBoundingClientRect().width;
 
-        event.target.parentElement.scrollTo({
-            left: event.target.offsetLeft - targetWidth / 2,
+        element.parentElement.scrollTo({
+            left: element.offsetLeft - targetWidth / 2,
             behavior: 'smooth'
         });
-    };
+    }
 
     const onScroll = throttle((event) => {
         const { offsetHeight } = event.target;
@@ -273,8 +231,55 @@ const AccountAvatar = ({
         trailing: true
     });
 
-    const { width } = useWindowSize();
-    const isMobile = width <= 768;
+    useEffect(() => {
+        const {
+            DONE,
+            FAILURE,
+            IDLE
+        } = UPLOADING_STATUS;
+        let timeoutId;
+        if ([DONE, FAILURE].includes(uploadStatus)) {
+            timeoutId = setTimeout(() => {
+                setUploadStatus(IDLE);
+            }, UPLOAD_TIMEOUT);
+
+            const toastObj = {
+                [DONE]: {
+                    text: t('profile:change_avatar_success'),
+                    type: 'success'
+                },
+                [FAILURE]: {
+                    text: t('profile:change_avatar_failure'),
+                    type: 'error'
+                }
+            }[uploadStatus];
+
+            toast(toastObj);
+        }
+
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+    }, [uploadStatus]);
+
+    useEffect(() => {
+        axios.get(API_GET_USER_AVATAR_PRESET, {
+            params: {
+                skip: 0,
+                limit: 999
+            }
+        })
+            .then(({ data: res }) => {
+                if (res.status === 'ok' && res.data) {
+                    setAvatarSets(res.data);
+                }
+            });
+    }, []);
+
+    useEffect(() => {
+        scrollCategoryTab(currentCategoryId)
+    }, [currentCategoryId])
+
 
     return <>
         <div className='relative w-[6.5rem] h-[6.5rem] md:w-[8.75rem] md:h-[8.75rem] -mt-14'>
@@ -315,7 +320,7 @@ const AccountAvatar = ({
                 alt='Nami Exchange'
             />
             <p className='text-lg mb-4'>{t('profile:change_avatar_2')}</p>
-            <span className='text-txtSecondary'>{t('profile:confirm_new_avatar')}</span>
+            <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:confirm_new_avatar')}</span>
             <div className='space-y-3 mt-8'>
                 <ButtonV2
                     onClick={onConfirm}
@@ -350,6 +355,7 @@ const AccountAvatar = ({
                             {categories.map((category) => {
                                 return <div
                                     key={category.id}
+                                    id={`category_tab_${category.id}`}
                                     onClick={(event) => scrollToCategory(event, category.id)}
                                     className={classnames(
                                         'px-5 py-3 border rounded-full font-semibold whitespace-nowrap cursor-pointer',

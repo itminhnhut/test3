@@ -8,7 +8,6 @@
         "step_4": "Ghi hình",
         "scan": "Quét mã này bằng ứng dụng di động Nami Exchange để bắt đầu quá trình KYC"
     },
-
     "current_futures": {
         "title": "Các tính năng hiện tại",
         "buy_sell": "Mua và bán tiền điện tử thông qua Partner Limit",
@@ -42,4 +41,4 @@
         "verified": "Tài khoản của bạn đã được xác minh thành công!"
     },
     "title_tab": "Nhận dạng"
-},
+}

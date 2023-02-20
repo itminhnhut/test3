@@ -4,6 +4,7 @@ import WarningTriangle from 'components/svg/WarningTriangle';
 import classnames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useWindowSize } from 'react-use';
 
 const types = {
     DEFAULT: 'default',
@@ -28,13 +29,20 @@ const typeStyles = {
     },
     [types.WARNING]: {
         backgroundColor: 'rgba(255,198,50,0.15)',
-        color: colors.yellow1,
+        color: colors.yellow['1'],
         icon: WarningTriangle
     }
 };
 
-function TagV2({ type = types.DEFAULT, children, className = '' }) {
+function TagV2({
+    type = types.DEFAULT,
+    children,
+    className = ''
+}) {
     const style = typeStyles[type];
+
+    const { width } = useWindowSize();
+    const isMobile = width < 768;
 
     return (
         <span
@@ -42,10 +50,13 @@ function TagV2({ type = types.DEFAULT, children, className = '' }) {
                 backgroundColor: style.backgroundColor,
                 color: style.color
             }}
-            className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-4')}
+            className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1')}
         >
-            {style.icon && React.createElement(style.icon, { className: 'mr-2' })}
-            <span>{children}</span>
+            {style.icon && React.createElement(style.icon, {
+                className: 'mr-2',
+                size: isMobile ? 12 : 16
+            })}
+            <span className='text-xs md:text-sm'>{children}</span>
         </span>
     );
 }
