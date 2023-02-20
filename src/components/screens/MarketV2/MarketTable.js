@@ -48,6 +48,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     const { width } = useWindowSize();
     const isMobile = width < 640
 
+    const [mobileLimit, setMobileLimit] = useState(15)
+
     const [type, setType] = useState(0);
     const types = [
         {
@@ -100,6 +102,10 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     useEffect(() => {
         setType(restProps.type);
     }, [restProps.type]);
+
+    useEffect(() => {
+        setMobileLimit(15)
+    }, [restProps?.tabIndex, restProps?.subTabIndex, restProps?.favType])
 
     // Render Handler
     const renderTab = useCallback(() => {
@@ -291,7 +297,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         let tableStatus
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
-        if (isMobile) return dataSource.map((e, index) => {
+        if (isMobile) return dataSource.slice(0, mobileLimit).map((e, index) => {
             const basedata = data?.[index]
             return (
                 <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
@@ -307,18 +313,22 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                     <div className='w-full flex flex-col justify-center items-end'>
                         {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
-                        <div className='flex h-[64px] items-center'>
-                            {e.last_price}
-                            ${formatPrice(basedata?.quoteAsset === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.quoteAsset}/USD`] * basedata?.p, 4)}
+                        <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
+                            <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
+                                {e.last_price}
+                            </div>
+                            <div>
+                                ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
+                            </div>
                         </div>
                     </div>
-                    <div className='w-full flex flex-col justify-center items-end'>
+                    <div className='w-[324px] flex flex-col justify-center items-end'>
                         {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
-                        <div className='flex h-[64px] items-center'>
-                            <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] px-2', {
+                        <div className='flex h-[64px] items-center w-full justify-end'>
+                            <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
                                 'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
                                 'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
-                                'border-none': !getExchange24hPercentageChange(basedata),
+                                'border-none !justify-end': !getExchange24hPercentageChange(basedata),
                             })}>
                                 {e.change_24h}
                             </div>
@@ -390,7 +400,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         restProps.subTabIndex,
         restProps.currentPage,
         restProps.auth,
-        isMobile
+        isMobile,
+        mobileLimit
     ])
 
     const renderPagination = useCallback(() => {
@@ -406,7 +417,17 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
         const total = dataHandler(data, language, width, tradingMode)?.length
 
-        if (total <= MARKET_ROW_LIMIT) return null
+        if (total <= MARKET_ROW_LIMIT || total <= mobileLimit) return null
+
+        if (isMobile) {
+            return (
+                <div className='text-txtTextBtn dark:text-teal font-semibold text-sm cursor-pointer w-full text-center mt-6'
+                    onClick={() => setMobileLimit(mobileLimit + 15)}
+                >
+                    {t('common:read_more')}
+                </div>
+            )
+        }
 
         return (
             <div className="my-3 sm:my-5 flex items-center justify-center">
@@ -421,7 +442,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 />
             </div>
         )
-    }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex])
+    }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
     useEffect(() => {
         if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
@@ -473,11 +494,25 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
                             <TokenTypes type={restProps.favType} setType={(index) => { parentState({ favType: index }) }} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
                             :
-                            <TokenTypes type={type} setType={(index) => {
-                                parentState({
-                                    type: index
-                                })
-                            }} types={types} lang={language} />}
+                            isMobile ?
+                                <div className='space-y-4 w-full'>
+                                    <TokenTypes type={type} setType={(index) => {
+                                        parentState({
+                                            type: index
+                                        })
+                                    }} types={types.slice(0,2)} lang={language} className='w-full !justify-between !flex-1' />
+                                    <TokenTypes type={type} setType={(index) => {
+                                        parentState({
+                                            type: index
+                                        })
+                                    }} types={types.slice(2,6)} lang={language} className='w-full !justify-between !flex-1'/>
+                                </div>
+                                :
+                                <TokenTypes type={type} setType={(index) => {
+                                    parentState({
+                                        type: index
+                                    })
+                                }} types={types} lang={language} />}
 
                         {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
                             <div className='h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'
@@ -732,10 +767,10 @@ const renderTradeLink = (b, q, lang, mode) => {
     )
 }
 
-const TokenTypes = ({ type, setType, types, lang }) => {
-    return <div className='flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar'>
+const TokenTypes = ({ type, setType, types, lang, className }) => {
+    return <div className={classNames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
         {types.map(e =>
-            <div key={e.id} className={classNames('flex items-center h-full px-4 text-sm sm:text-base font-normal rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
+            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base font-normal rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
                 'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
             })}
                 onClick={() => setType(e.id)}
