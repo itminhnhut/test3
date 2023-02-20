@@ -27,6 +27,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import ModifyOrder from 'components/screens/Futures/PlaceOrder/EditOrderV2/ModifyOrder';
 import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
+import FuturesCloseOrder from 'components/screens/Futures/FuturesModal/FuturesCloseOrder';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair, status }) => {
     const {
@@ -44,6 +45,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showEditVol, setShowEditVol] = useState(false);
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
+    const [showCloseModal, setShowCloseModal] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const message = useRef({
         status: '',
@@ -275,7 +277,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'center',
                 fixed: 'right',
                 width: 160,
-                render: (row) => <CloseButton onClick={() => onDelete(row)}>{t('common:close')}</CloseButton>
+                render: (row) => <CloseButton onClick={() => onHandleClick('delete', row)}>{t('common:close')}</CloseButton>
             }
         ],
         [marketWatch, pair, dataFilter]
@@ -360,6 +362,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 flag.current = true;
                 setShowShareModal(true);
                 break;
+            case 'delete':
+                flag.current = true;
+                setShowCloseModal(true);
+                break;
             case 'detail':
                 if (flag.current) {
                     flag.current = false;
@@ -427,7 +433,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             price: rowData.current?.decimalScalePrice || 0,
             symbol: rowData.current?.decimalSymbol || 0
         };
-    }, [showEditSLTP, showOrderDetail, showEditVol, showShareModal]);
+    }, [showEditSLTP, showOrderDetail, showEditVol, showShareModal, showCloseModal]);
 
     if (!isAuth)
         return (
@@ -450,7 +456,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 message={message.current.message}
                 className="max-w-[448px]"
             />
-            <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} />
+            {/* <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} /> */}
             {/* <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} /> */}
             <FuturesOrderDetail
                 order={rowData.current}
@@ -463,6 +469,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 order={rowData.current}
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
+                decimals={decimals}
+                marketWatch={marketWatch}
+            />
+            <FuturesCloseOrder
+                order={rowData.current}
+                isVisible={showCloseModal}
+                onClose={() => setShowCloseModal(false)}
                 decimals={decimals}
                 marketWatch={marketWatch}
             />
