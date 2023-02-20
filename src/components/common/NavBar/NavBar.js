@@ -351,7 +351,7 @@ const NavBar = ({
                 ) : (
                     <SvgMoon size={20} />
                 )}
-            </a>
+            </div>
         );
     }, [name, currentTheme, navTheme.color]);
 
