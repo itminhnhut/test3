@@ -46,6 +46,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     } = useTranslation(['common', 'table']);
     const [currentTheme] = useDarkMode();
     const { width } = useWindowSize();
+    const isMobile = width < 640
 
     const [type, setType] = useState(0);
     const types = [
@@ -290,6 +291,43 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         let tableStatus
         const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
+        if (isMobile) return dataSource.map((e, index) => {
+            const basedata = data?.[index]
+            return (
+                <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
+                    <div className='w-full flex flex-col justify-center items-start'>
+                        {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
+                        <div className='flex h-[64px] items-center gap-4'>
+                            {e.star}
+                            <div className='flex flex-col justify-center'>
+                                {e.pair}
+                                <span>{t('common:vol')} {e.volume_24h}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='w-full flex flex-col justify-center items-end'>
+                        {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
+                        <div className='flex h-[64px] items-center'>
+                            {e.last_price}
+                            ${formatPrice(basedata?.quoteAsset === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${item.quoteAsset}/USD`] * basedata?.p, 4)}
+                        </div>
+                    </div>
+                    <div className='w-full flex flex-col justify-center items-end'>
+                        {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
+                        <div className='flex h-[64px] items-center'>
+                            <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] px-2', {
+                                'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
+                                'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
+                                'border-none': !getExchange24hPercentageChange(basedata),
+                            })}>
+                                {e.change_24h}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )
+        })
+
         if (tab[restProps.tabIndex]?.key === 'favorite') {
             if (!auth) {
                 return <NoData className='my-20' />
@@ -351,7 +389,8 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         restProps.tabIndex,
         restProps.subTabIndex,
         restProps.currentPage,
-        restProps.auth
+        restProps.auth,
+        isMobile
     ])
 
     const renderPagination = useCallback(() => {
@@ -371,14 +410,14 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
 
         return (
             <div className="my-3 sm:my-5 flex items-center justify-center">
-                <RePagination 
+                <RePagination
                     // total={total}
                     isNamiV2
                     // current={restProps.currentPage}
                     // pageSize={MARKET_ROW_LIMIT}
                     // onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list" fromZero={undefined} 
-                    pagingPrevNext={{ language, page: restProps.currentPage - 1, hasNext: (restProps.currentPage * MARKET_ROW_LIMIT) < total, onChangeNextPrev:(change) => parentState({ currentPage: restProps.currentPage +  change}) }}
+                    name="market_table___list" fromZero={undefined}
+                    pagingPrevNext={{ language, page: restProps.currentPage - 1, hasNext: (restProps.currentPage * MARKET_ROW_LIMIT) < total, onChangeNextPrev: (change) => parentState({ currentPage: restProps.currentPage + change }) }}
                 />
             </div>
         )
@@ -429,7 +468,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                     </div>
                     {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
                         'py-8 sm:py-6 border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
-                        { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
+                        { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
                     }>
                         {tab[restProps.tabIndex]?.key === 'favorite' ?
                             <TokenTypes type={restProps.favType} setType={(index) => { parentState({ favType: index }) }} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />

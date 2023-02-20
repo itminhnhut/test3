@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import useWindowFocus from 'hooks/useWindowFocus';
 import { getExchange24hPercentageChange } from 'redux/actions/utils';
 import { useCallback, useEffect, useState } from 'react';
-import { API_GET_TRENDING } from 'redux/actions/apis';
+import { API_GET_REFERENCE_CURRENCY, API_GET_TRENDING } from 'redux/actions/apis';
 import { getFuturesMarketWatch, getMarketWatch } from 'redux/actions/market';
 import { favoriteAction } from 'redux/actions/user';
 import { TRADING_MODE } from 'redux/actions/const';
@@ -16,6 +16,7 @@ import { isMobile } from 'react-device-detect';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
 import { useMemo } from 'react';
+import FetchApi from 'utils/fetch-api';
 
 const Market = () => {
     // * Initial State
@@ -57,7 +58,26 @@ const Market = () => {
         return data
     }, [exchangeConfig])
 
+    const [referencePrice, setReferencePrice] = useState([])
 
+    useEffect(() => {
+        // TODO: move this logic to redux store
+        FetchApi({
+            url: API_GET_REFERENCE_CURRENCY,
+            params: { base: 'VNDC,USDT', quote: 'USD' },
+        })
+            .then(({ data = [] }) => {
+                setReferencePrice(
+                    data.reduce((acm, current) => {
+                        return {
+                            ...acm,
+                            [`${current.base}/${current.quote}`]: current.price,
+                        }
+                    }, {})
+                )
+            })
+            .catch((err) => console.error(err))
+    }, [])
 
     // * Use Hooks
     const focused = useWindowFocus()
@@ -168,6 +188,7 @@ const Market = () => {
                 suggestedSymbols={suggested}
                 favType={state.favType}
                 futuresConfigs={futuresConfigs}
+                referencePrice={referencePrice}
             />
         )
     }, [
