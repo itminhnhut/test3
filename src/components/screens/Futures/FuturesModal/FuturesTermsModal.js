@@ -33,11 +33,11 @@ const FuturesTermsModal = () => {
         switch (key) {
             case 'detail_service':
                 flag.current = true;
-                window.open(`https://nami.exchange/${language}/terms-of-service`, '_blank');
+                window.open(`${process.env.NEXT_PUBLIC_APP_URL}/${language}/terms-of-service`, '_blank');
                 break;
             case 'detail_futures':
                 flag.current = true;
-                window.open(`https://nami.exchange/${language}/terms-of-futures`, '_blank');
+                window.open(`${process.env.NEXT_PUBLIC_APP_URL}/${language}/terms-of-futures`, '_blank');
                 break;
             default:
                 if (flag.current) {
@@ -60,8 +60,8 @@ const FuturesTermsModal = () => {
                     label={
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:service')}</span>
-                            <div className="text-teal font-semibold flex items-center space-x-2">
-                                <span onClick={() => onHandleClick('detail_service')}>{t('common:details')}</span>
+                            <div onClick={() => onHandleClick('detail_service')} className="text-teal font-semibold flex items-center space-x-2 w-max">
+                                <span>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
                         </div>
@@ -73,8 +73,8 @@ const FuturesTermsModal = () => {
                     label={
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:futures')}</span>
-                            <div className="text-teal font-semibold flex items-center space-x-2">
-                                <span onClick={() => onHandleClick('detail_futures')}>{t('common:details')}</span>
+                            <div onClick={() => onHandleClick('detail_futures')} className="text-teal font-semibold flex items-center space-x-2 w-max">
+                                <span>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
                         </div>
