@@ -34,6 +34,7 @@ import InputV2 from 'components/common/V2/InputV2';
 import axios from 'axios';
 import { API_GET_FAVORITE } from 'redux/actions/apis';
 import toast from 'utils/toast';
+import Spinner from 'components/svg/Spinner';
 
 const MARKET_ROW_LIMIT = 20;
 
@@ -133,13 +134,13 @@ const MarketTable = ({
                     onClick={() =>
                         parentState({
                             tabIndex: index,
-                            subTabIndex: item.key === 'favorite' ? 0 : 1,
+                            // subTabIndex: item.key === 'favorite' ? 0 : 1,
                             currentPage: 1,
                             type: item.key === 'favorite' ? 1 : 0
                         })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-tiny sm:text-base text-darkBlue-5 cursor-pointer flex items-center',
+                        'relative mr-6 pb-4 capitalize select-none font-normal text-sm sm:text-base text-darkBlue-5 cursor-pointer flex items-center',
                         { '!text-gray-4 !font-semibold': restProps.tabIndex === index }
                     )}
                 >
@@ -160,8 +161,8 @@ const MarketTable = ({
                         subTabIndex: index,
                         currentPage: 1
                     })}
-                    className={classNames('h-[44px] flex items-center text-tiny sm:text-base  px-4  cursor-pointer select-none', {
-                        'font-semibold dark:text-txtPrimary-dark text-txtPrimary bg-bgSegmentActive dark:bg-bgSegmentActive-dark ': restProps.subTabIndex === index,
+                    className={classNames('h-[44px] flex items-center text-sm sm:text-base px-4 cursor-pointer select-none', {
+                        'font-semibold dark:text-txtPrimary-dark text-txtPrimary bg-bgSegmentActive dark:bg-bgSegmentActive-dark': restProps.subTabIndex === index,
                         'font-normal bg-bgSegmentInactive dark:bg-bgSegmentInactive-dark dark:text-txtSecondary-dark text-txtSecondary': restProps.subTabIndex !== index,
                         'border-r border-divider dark:border-divider-dark': index === 0
                     })}
@@ -174,10 +175,13 @@ const MarketTable = ({
 
     const renderSuggested = useMemo(() => {
         const tradingMode = restProps?.favType + 1;
-
+        const suggestionContent = {
+            vi: "Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.",
+            en: 'You have not added any favorite pair. Start by adding these popular pairs below.'
+        }
         return <div className="px-8 pb-4">
             <div className="text-base text-darkBlue-5 font-normal mb-6">
-                Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.
+                {suggestionContent[language]}
             </div>
             <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6">
                 {restProps?.suggestedSymbols?.map(symbol => {
@@ -369,8 +373,7 @@ const MarketTable = ({
         }
 
         // only show market cap col for exchange tab
-        if (tab[restProps.tabIndex]?.key === 'futures'
-            || (tab[restProps.tabIndex]?.key === 'favorite' && favSubTab[restProps.subTabIndex]?.key === 'futures')) {
+        if (tab[restProps.tabIndex]?.key === 'futures') {
             remove(modifyColumns, o => o.key === 'market_cap');
             tradingMode = TRADING_MODE.FUTURES;
         }
@@ -454,14 +457,13 @@ const MarketTable = ({
                 tableStatus={tableStatus}
                 noBorder={width < 640}
                 tableStyle={{
-                    tableStyle: { minWidth: '888px !important' },
-                    headerStyle: {},
-                    rowStyle: {},
-                    shadowWithFixedCol: width < 1366,
+                    minWidth: '888px !important',
+                    fontSize: '16px !important',
+                    // shadowWithFixedCol: width < 1366,
                     noDataStyle: {
                         minHeight: '480px'
                     },
-                    backgroundColor: '#0c0e14 !important'
+                    // backgroundColor: '#0c0e14 !important'
                 }}
                 paginationProps={{
                     hide: true,
@@ -558,7 +560,6 @@ const MarketTable = ({
 
     }, [restProps.favoriteList]);
 
-    console.log('__ res', restProps?.search?.length > 0, restProps?.search);
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
             <div
@@ -580,7 +581,7 @@ const MarketTable = ({
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
-                            suffix={restProps.search ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
+                            suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
                                 search: ''
                             })} />) : null}
                         />
@@ -709,7 +710,7 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
     if (isLoading) {
         const loadingSkeleton = [];
 
-        for (let i = 0; i < 20; ++i) {
+        for (let i = 0; i < 15; ++i) {
             loadingSkeleton.push({
                 ...ROW_LOADING_SKELETON,
                 key: `market_loading__skeleton_${i}`
@@ -754,9 +755,9 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                     lang={lang}
                     mode={mode} favoriteRefresher={favoriteRefresher}
                 /> : null,
-                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode === 1 ? TRADING_MODE.EXCHANGE : TRADING_MODE.FUTURES, lang, futuresConfigs),
+                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode, lang, futuresConfigs),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-                change_24h: render24hChange(item, false, 'justify-end'),
+                change_24h: render24hChange(item, false, 'justify-end !text-base !font-normal'),
                 market_cap: renderMarketCap(lastPrice, supply),
                 mini_chart: (
                     <div className="w-full flex justify-center items-center">
@@ -814,7 +815,7 @@ const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
     }
 
     const symbolLeverageConfig = hasLeverage ? futuresConfigs?.find(e => e?.pair == (b + q))?.leverageConfig : null;
-    const leverage = hasLeverage ? (symbolLeverageConfig?.max ?? 0) : null;
+    const leverage = (symbolLeverageConfig?.max ?? 0) ?? null;
 
     return (
         <a href={url} target="_blank" className="hover:underline">
@@ -824,7 +825,7 @@ const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
                     <span className="text-gray-4">{b}</span>
                     <span className="text-darkBlue-5">/{q}</span>
                 </div>
-                {leverage ? <div className="px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4 ml-2">
+                {leverage ? <div className="px-1 py-[2px] bg-dark dark:bg-dark-2 rounded-[3px] font-semibold text-xs leading-4 ml-2 dark:text-gray-4">
                     {leverage}x
                 </div> : <MarketLabel labelType={lbl} />}
             </div>
@@ -896,14 +897,14 @@ const FavActionButton = ({
                 list.futures.includes(pairKey) ? setAlready(true) : setAlready(false);
             }
         }
-    }, [list, pairKey]);
+    }, [list, pairKey, mode]);
 
     return (
         <div className="flex items-center"
             onClick={() => {
                 !loading && callback(already ? 'delete' : 'put', list);
             }}>
-            {already ? <IconStarFilled size={24} color="#FFC632" />
+            {loading ? <Spinner size={24}/> : already ? <IconStarFilled size={24} color="#FFC632" />
                 : <IconStarFilled size={24} color="#8694B3" />}
         </div>
     );
@@ -917,18 +918,18 @@ const renderTradeLink = (b, q, lang, mode) => {
     } else {
         url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
-        swapurl = `/swap`;
+        swapurl = `/swap?pair=${b + q}`;
     }
 
     return (
-        <div className="flex justify-end items-center font-medium text-base">
+        <div className="flex justify-end items-center font-semibold">
             <Link href={url} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center" target="_blank">
+                <a className="text-teal re_table__link px-3 flex items-center justify-center !text-sm sm:!text-base" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark"
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark !text-sm sm:!text-base"
                     target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
