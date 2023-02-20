@@ -10,6 +10,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
+import { useWindowSize } from 'react-use';
 
 const {
     LOGGED_OUT,
@@ -28,6 +29,11 @@ function Activity({ t }) {
     const [revoking, setRevoking] = useState(false);
     const [fetching, setFetching] = useState(false);
     const [openRevokeModal, setOpenRevokeModal] = useState(false);
+
+    const [isLoadMore, setIsLoadMore] = useState(false);
+
+    const { width } = useWindowSize();
+    const isMobile = width <= 768;
 
     const router = useRouter();
 
@@ -101,13 +107,13 @@ function Activity({ t }) {
             />
             <div className='flex items-center justify-between mb-8'>
                 <span className='font-semibold text-2xl'>{t('profile:activity')}</span>
-                <span onClick={() => setOpenRevokeModal(true)}
-                      className='font-medium text-teal cursor-pointer hover:underline'>
-          {t('profile:revoke_all_devices')}
-        </span>
+                <div onClick={() => setOpenRevokeModal(true)}
+                     className='font-medium text-teal cursor-pointer hover:underline'>
+                    {t('profile:revoke_all_devices')}
+                </div>
             </div>
-            <div className='bg-white dark:bg-darkBlue-3 rounded-xl px-1 py-6'>
-                <div className='h-[33.625rem] overflow-y-auto px-5 space-y-6'>
+            <div className='md:bg-white md:dark:bg-darkBlue-3 rounded-xl md:px-1 md:py-6'>
+                <div className='md:h-[33.625rem] overflow-y-auto md:px-5 space-y-6'>
                     {
                         // Skeleton
                         (fetching && !data?.length) &&
@@ -126,41 +132,52 @@ function Activity({ t }) {
                                 );
                             })
                     }
-                    {data?.map((item) => {
-                        let statusInner =
-                            {
-                                [LOGGED_OUT]: <p
-                                    className='text-red text-sm mt-2'>{t('profile:account_status.logged_out')}</p>,
-                                [REVOKED]: <p
-                                    className='text-yellow text-sm mt-2'>{t('profile:account_status.revoked')}</p>,
-                                [BANNED]: <p className='text-red text-sm mt-2'>{t('profile:account_status.banned')}</p>
-                            }[item.status] || null;
+                    {data?.slice(0, isLoadMore || !isMobile ? undefined : 5)
+                        ?.map((item) => {
+                            let statusInner =
+                                {
+                                    [LOGGED_OUT]: <p
+                                        className='text-red text-sm mt-2'>{t('profile:account_status.logged_out')}</p>,
+                                    [REVOKED]: <p
+                                        className='text-yellow text-sm mt-2'>{t('profile:account_status.revoked')}</p>,
+                                    [BANNED]: <p
+                                        className='text-red text-sm mt-2'>{t('profile:account_status.banned')}</p>
+                                }[item.status] || null;
 
-                        if (item.this_device) {
-                            statusInner = <p className='text-teal text-sm mt-2'>{t('profile:this_device')}</p>;
-                        }
+                            if (item.this_device) {
+                                statusInner = <p className='text-teal text-sm mt-2'>{t('profile:this_device')}</p>;
+                            }
 
-                        return (
-                            <div key={item.id} className='flex items-center justify-between'>
-                                {item.device_type === DEVICE_TYPE.WEB && <Laptop />}
-                                {item.device_type === DEVICE_TYPE.MOBILE && <PhoneMobile />}
-                                <div className='flex-1 ml-6 min-w-0 overflow-y-hidden'>
-                                    <p className='font-semibold mb-2'>{item.device_title}</p>
-                                    <span
-                                        className='text-sm text-txtSecondary dark:text-txtSecondary block'>{item.last_ip_address} - {item.last_location}</span>
-                                    <span
-                                        className='text-sm text-txtSecondary dark:text-txtSecondary'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
-                                    {statusInner}
+                            return (
+                                <div key={item.id}
+                                     className='md:bg-transparent bg-white dark:bg-darkBlue-3 p-4 md:p-0 flex items-center justify-between rounded-xl'>
+                                    {item.device_type === DEVICE_TYPE.WEB && <Laptop />}
+                                    {item.device_type === DEVICE_TYPE.MOBILE && <PhoneMobile />}
+                                    <div className='flex-1 ml-6 min-w-0 overflow-y-hidden'>
+                                        <p className='font-semibold mb-2'>{item.device_title}</p>
+                                        <span
+                                            className='text-sm text-txtSecondary dark:text-txtSecondary block break-all'>{item.last_ip_address} - {item.last_location}</span>
+                                        <span
+                                            className='text-sm text-txtSecondary dark:text-txtSecondary'>{lastLoggedIn(new Date(item.last_logged_in))}</span>
+                                        {statusInner}
+                                    </div>
+                                    <div onClick={() => setRevokeDevice(item)}
+                                         className='w-10 h-10 bg-gray-10 dark:bg-dark-2 rounded-full relative cursor-pointer'>
+                                        <Delete
+                                            className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
+                                    </div>
                                 </div>
-                                <div onClick={() => setRevokeDevice(item)}
-                                     className='w-10 h-10 bg-gray-10 dark:bg-dark-2 rounded-full relative cursor-pointer'>
-                                    <Delete className='absolute bottom-1/2 right-1/2 translate-x-1/2 translate-y-1/2' />
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })}
                 </div>
             </div>
+            {
+                !isLoadMore &&
+                <div className='text-center mt-6 cursor-pointer py-3 md:hidden'
+                     onClick={() => setIsLoadMore(!isLoadMore)}>
+                    <span className='text-teal font-semibold'>{t('common:read_more')}</span>
+                </div>
+            }
         </div>
     );
 }
