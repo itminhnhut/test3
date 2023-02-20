@@ -33,7 +33,7 @@ import colors from 'styles/colors';
 import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
-import { CopyIcon } from 'components/svg/SvgIcon';
+import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1071,7 +1071,7 @@ export function isFunction(functionToCheck) {
 
 export const copy = (text, cb) => {
     if (navigator.clipboard && navigator.permissions) {
-        navigator.clipboard.writeText(text)
+        navigator.clipboard.writeText(text).then(cb);
     } else if (document.queryCommandSupported('copy')) {
         const ele = document.createElement('textarea');
         ele.value = text;
@@ -1083,7 +1083,7 @@ export const copy = (text, cb) => {
     }
 };
 
-export const CopyText = ({ text = '', setText, value, className = '', size = 16, label }) => {
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label }) => {
     const [copied, setCopied] = useState(false);
     const title = label ?? text;
     useEffect(() => {
@@ -1101,7 +1101,7 @@ export const CopyText = ({ text = '', setText, value, className = '', size = 16,
             }
         >
             <span>{title}</span>
-            <CopyIcon size={size} />
+            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} />}
         </div>
     );
-};
+});
