@@ -10,7 +10,7 @@ const PriceChangePercent = ({ priceChangePercent, className, ...props }) => (
         className={classNames(
             'flex items-center justify-end text-right text-dominant text-xs leading-4', //text-darkBlue-5 dark:text-darkBlue-5
             {
-                '!text-red': priceChangePercent < 0
+                '!text-red-2': priceChangePercent < 0
             },
             className
         )}

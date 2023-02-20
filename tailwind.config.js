@@ -327,7 +327,7 @@ module.exports = {
                 },
                 bgTabActive: commonColors.teal,
                 bgPrimary: {
-                    DEFAULT: commonColors.gray['13'],
+                    DEFAULT: commonColors.white,
                     dark: commonColors.dark.dark
                 },
                 bgSecondary: {
