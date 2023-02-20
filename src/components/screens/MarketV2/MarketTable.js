@@ -5,7 +5,6 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import MarketLabel from 'components/common/MarketLabel';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
-import showNotification from 'utils/notificationService';
 import Skeletor from 'components/common/Skeletor';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
@@ -29,6 +28,7 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import InputV2 from 'components/common/V2/InputV2';
 import axios from 'axios';
 import { API_GET_FAVORITE } from 'redux/actions/apis';
+import toast from 'utils/toast';
 
 const MARKET_ROW_LIMIT = 20
 
@@ -106,6 +106,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
     useEffect(() => {
         setMobileLimit(15)
     }, [restProps?.tabIndex, restProps?.subTabIndex, restProps?.favType])
+
+    useEffect(() => {
+        if (!restProps.search?.length || restProps.tabIndex !== 0) return
+        parentState({ tabIndex: 1, type: 0 })
+    }, [restProps.search])
 
     // Render Handler
     const renderTab = useCallback(() => {
@@ -254,7 +259,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
             { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 138 },
             { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
             { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 132 },
-            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 180 }
+            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: restProps.tabIndex === 1 ? 224 : 164 }
         ]
 
         // Translate
@@ -476,7 +481,9 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
-                            suffix={(<X color={colors.gray[10]} size={16} />)}
+                            suffix={restProps.search ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
+                                search: ''
+                            })} />) : null}
                         />
                     </div>
                 </div>
@@ -500,12 +507,12 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                                         parentState({
                                             type: index
                                         })
-                                    }} types={types.slice(0,2)} lang={language} className='w-full !justify-between !flex-1' />
+                                    }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
                                     <TokenTypes type={type} setType={(index) => {
                                         parentState({
                                             type: index
                                         })
-                                    }} types={types.slice(2,6)} lang={language} className='w-full !justify-between !flex-1'/>
+                                    }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
                                 </div>
                                 :
                                 <TokenTypes type={type} setType={(index) => {
@@ -690,11 +697,8 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
 
             if (lang === LANGUAGE_TAG.VI) title = 'Thất bại'
             if (lang === LANGUAGE_TAG.EN) title = 'Failure'
-            showNotification(
-                { message: `FAV_ACTION_UNKNOWN_ERR`, title, type: 'failure' },
-                2500,
-                'top',
-                'top-right',
+            toast(
+                { text: `Unknown error`, type: 'error' },
             )
         } finally {
             setLoading(false)
@@ -708,11 +712,8 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
                 title = 'Success'
                 message = `${method === 'delete' ? `Deleted ${b?.b}/${q?.q} from` : `Added ${b?.b}/${q?.q} to`} favorites`
             }
-            showNotification(
-                { message, title, type: 'success' },
-                2500,
-                'top',
-                'top-right'
+            toast(
+                { text: message, type: 'success' },
             )
         }
     }, 300)
@@ -808,11 +809,8 @@ const addTokensToFav = _.debounce(async ({ symbols, mode, lang, favoriteRefreshe
             title = 'Success'
             message = `${method === 'delete' ? `Deleted ${symbols.join(', ').replace('_', '/')} from` : `Added ${symbols.join(', ').replace('_', '/')} to`} favorites`
         }
-        showNotification(
-            { message, title, type: 'success' },
-            2500,
-            'top',
-            'top-right'
+        toast(
+            { text: message, type: 'success' },
         )
     } catch (e) {
         console.log(`Can't execute this action `, e)
@@ -827,11 +825,6 @@ const addTokensToFav = _.debounce(async ({ symbols, mode, lang, favoriteRefreshe
             title = 'Failure'
             message = 'Add all symbols error, please try one by one'
         }
-        showNotification(
-            { message, title, type: 'failure' },
-            2500,
-            'top',
-            'top-right',
-        )
+        toast({ text: message, type: 'error' })
     }
 }, 1000)
