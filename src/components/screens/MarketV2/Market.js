@@ -219,13 +219,13 @@ const Market = () => {
     }, [state.tabIndex, state.subTabIndex, focused])
 
     useEffect(() => {
+        setState({ loading: true })
         let watch = []
         let convert = []
 
         const asset = subTab[state.subTabIndex].key === 'vndc' ? 'VNDC' : 'USDT'
 
         if (state.exchangeMarket && state.futuresMarket) {
-            setState({ loading: true })
             convert = {
                 exchange: marketWatchToFavorite(state.favoriteList?.exchange, TRADING_MODE.EXCHANGE, state.exchangeMarket),
                 futures: marketWatchToFavorite(state.favoriteList?.futures, TRADING_MODE.FUTURES, state.futuresMarket, true)
@@ -235,11 +235,11 @@ const Market = () => {
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.favType]?.key === 'exchange') {
                 // log.d('Tab Favorite - Exchange')
-                watch = convert?.exchange?.filter(e => e.q === asset)
+                watch = convert?.exchange
             }
             if (favSubTab[state.favType]?.key === 'futures') {
                 // log.d('Tab Favorite - Futures')
-                watch = convert?.futures?.filter(e => e.q === asset)
+                watch = convert?.futures
             }
 
             if (subTab[state.subTabIndex].key === 'vndc') {
@@ -347,23 +347,6 @@ const Market = () => {
         state.type,
         state.favType
     ])
-
-    // useEffect(() => {
-    //     log.d('Display Data: ', state.watch)
-    // }, [state.watch])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching Favorite Change ', state.favoriteList)
-    // }, [state.favoriteList])
-
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching ExchangeMarket ', state.exchangeMarket)
-    // }, [state.exchangeMarket])
-    //
-    // useEffect(() => {
-    //     console.log('namidev-DEBUG: Watching ', tparentStateab[state.tabIndex].key,
-    //                 tab[state.tabIndex].key === 'favorite' ? favSubTab[state.subTabIndex].key : subTab[state.subTabIndex].key)
-    // }, [state.tabIndex, state.subTabIndex])
 
     const renderContent = () => {
         return (
