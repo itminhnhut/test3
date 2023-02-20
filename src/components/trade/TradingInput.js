@@ -94,7 +94,7 @@ const TradingInput = ({
                 {isError && state?.isFocus && errorTooltip ? (
                     <div
                         className={classNames('absolute right-0 -top-1 -translate-y-full z-50 flex flex-col items-center', {
-                            '!left-1/2 !-translate-x-1/2 w-full': !onusMode
+                            '!left-1/2 !-translate-x-1/2 w-full min-w-[200px]': !onusMode
                         })}
                     >
                         {validator?.msg && (

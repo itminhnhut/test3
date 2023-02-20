@@ -8,20 +8,22 @@ import colors from 'styles/colors';
 const Tooltip = ({ children, arrowColor, isV3 = false, className = '', ...restProps }) => {
     const [currentTheme] = useDarkMode();
     const ref = useRef();
-
+    const isDark = currentTheme === THEME_MODE.DARK;
+    
     const arrow = useMemo(() => {
-        return arrowColor ? arrowColor : currentTheme === THEME_MODE.DARK ? colors.dark[1] : colors.darkBlue;
+        const color = isV3 ? (isDark ? colors.dark[1] : colors.darkBlue) : isDark ? colors.hover.dark : colors.gray[3];
+        return arrowColor ? arrowColor : color;
     }, [arrowColor, isV3, currentTheme]);
 
     return (
-        <TooltipWrapper isDark={currentTheme === THEME_MODE.DARK}>
+        <TooltipWrapper isDark={isDark}>
             <ReactTooltip
                 ref={ref}
                 className={classNames(
                     'text-sm',
                     {
                         '!px-6 !py-[11px] !bg-dark dark:!bg-dark-1 text-white dark:text-gray-4 !opacity-100 !rounded-lg': isV3,
-                        '!text-txtPrimary dark:!text-txtPrimary-dark !bg-gray-3 dark:!bg-darkBlue-4 !rounded-lg !opacity-100': !isV3
+                        '!text-onus-white !bg-gray-3 dark:!bg-onus-1 !rounded-lg !opacity-100': !isV3
                     },
                     className
                 )}

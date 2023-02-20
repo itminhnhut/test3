@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import EditVolV2 from './EditVolV2';
 import EditMarginV2 from './EditMarginV2';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const tabs = [
     { label: 'futures:mobile:adjust_margin:add_volume', value: 'vol' },
@@ -23,6 +24,8 @@ const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, p
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
 const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWatch }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const { t } = useTranslation();
     const [tab, setTab] = useState('vol');
     const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
@@ -93,6 +96,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWat
                             decimals={decimals}
                             fee={fee}
                             onConfirm={_onConfirm}
+                            isDark={isDark}
                         />
                     )}
                     {tab === 'margin' && (
@@ -108,6 +112,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWat
                             decimals={decimals}
                             fee={fee}
                             onConfirm={_onConfirm}
+                            isDark={isDark}
                         />
                     )}
                 </div>

@@ -230,15 +230,15 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:assigned_margin')}</div>
-                            <div className="font-semibold">{formatNumber(margin, decimals.symbol)}</div>
+                            <div className="font-semibold text-right">{formatNumber(margin, decimals.symbol)}</div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:available')}</div>
-                            <div className="font-semibold">{formatNumber(available, decimals.symbol)}</div>
+                            <div className="font-semibold text-right">{formatNumber(available, decimals.symbol)}</div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(newLiqPrice, decimals.price)}
                                 <span className="ml-1">{quoteAsset}</span>
                             </div>
@@ -246,7 +246,7 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:profit_ratio')}</div>
                             <div
-                                className={classNames('font-semibold', {
+                                className={classNames('font-semibold text-right', {
                                     'text-teal': ratioProfit >= 0,
                                     'text-red': ratioProfit < 0
                                 })}
