@@ -441,7 +441,7 @@ const NavBar = ({
                         </Button>
                     )}
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     {/* <UserVip loadingVipLevel={state.loadingVipLevel} vipLevel={state.vipLevel} t={t} /> */}
                     <Link href={PATHS.FEE_STRUCTURES.TRADING}>
                         <div className="flex items-center px-4 justify-between mb-6">
@@ -460,10 +460,10 @@ const NavBar = ({
                         </div>
                     </Link>
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     <div className="mb-6">{items}</div>
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
 
                     <Link href={buildLogoutUrl()}>
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
