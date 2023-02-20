@@ -685,12 +685,12 @@ const NavBar = ({
 
                         {width < 1366 && (
                             <div
-                                className="relative"
+                                className="relative text-txtSecondary dark:text-txtPrimary-dark"
                                 onClick={(e) => {
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
+                                <SvgMenu size={25} color="currentColor"  className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
                             </div>
                         )}
                     </div>

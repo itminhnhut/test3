@@ -57,7 +57,10 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
 
                 <div className="mal-footer___pocket__links___group">
                     <div className="mal-footer___pocket__links___group__item">
-                        <div className="mal-footer___pocket__links___group__item__expander" onClick={() => parentState({ active: { about: !active.about } })}>
+                        <div
+                            className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
+                            onClick={() => parentState({ active: { about: !active.about } })}
+                        >
                             {language === LANGUAGE_TAG.VI ? 'Về Nami Corporation' : 'About Nami Corp'}
 
                             <SvgIcon
@@ -106,7 +109,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
 
                     <div className="mal-footer___pocket__links___group__item">
                         <div
-                            className="mal-footer___pocket__links___group__item__expander"
+                            className={`mal-footer___pocket__links___group__item__expander ${active?.product ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { product: !active.product } })}
                         >
                             {t('navbar:menu.product')}
@@ -210,7 +213,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
 
                     <div className="mal-footer___pocket__links___group__item">
                         <div
-                            className="mal-footer___pocket__links___group__item__expander"
+                            className={`mal-footer___pocket__links___group__item__expander ${active?.support ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { support: !active.support } })}
                         >
                             {t('navbar:menu.support')}
