@@ -13,6 +13,7 @@ import useWindowSize from 'hooks/useWindowSize';
 import SearchBox from 'components/common/SearchBox';
 import Skeletor from 'components/common/Skeletor';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
+import TableV2 from 'components/common/V2/TableV2';
 import MCard from 'components/common/MCard';
 import Empty from 'components/common/Empty';
 import Axios from 'axios';
@@ -182,40 +183,42 @@ const DepositWithdrawFee = () => {
         }
 
         return (
-            <ReTable
-                sort
-                defaultSort={{ key: 'asset', direction: 'asc' }}
-                useRowHover
-                data={data}
-                columns={columns}
-                rowKey={(item) => item?.key}
-                tableStatus={tableStatus}
-                scroll={{ x: true }}
-                onRow={(record, index) => ({
-                    onClick: () =>
-                        router.push(
-                            walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                type: 'crypto',
-                                asset: record?.raw?.assetCode
-                            })
-                        )
-                })}
-                tableStyle={{
-                    paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
-                    tableStyle: { minWidth: '992px !important' },
-                    headerStyle: {},
-                    rowStyle: { padding: '16px !important' },
-                    shadowWithFixedCol: width <= BREAK_POINTS.lg,
-                    noDataStyle: {
-                        minHeight: '280px'
-                    }
-                }}
-                paginationProps={{
-                    current: state.currentPage,
-                    pageSize: ROW_LIMIT,
-                    onChange: (currentPage) => setState({ currentPage })
-                }}
-            />
+            <>
+                <ReTable
+                    sort
+                    defaultSort={{ key: 'asset', direction: 'asc' }}
+                    useRowHover
+                    data={data}
+                    emptyText={tableStatus}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    scroll={{ x: true }}
+                    onRow={(record, index) => ({
+                        onClick: () =>
+                            router.push(
+                                walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                    type: 'crypto',
+                                    asset: record?.raw?.assetCode
+                                })
+                            )
+                    })}
+                    tableStyle={{
+                        paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
+                        tableStyle: { minWidth: '992px !important' },
+                        headerStyle: {},
+                        rowStyle: { padding: '16px !important' },
+                        shadowWithFixedCol: width <= BREAK_POINTS.lg,
+                        noDataStyle: {
+                            minHeight: '280px'
+                        }
+                    }}
+                    paginationProps={{
+                        current: state.currentPage,
+                        pageSize: ROW_LIMIT,
+                        onChange: (currentPage) => setState({ currentPage })
+                    }}
+                />
+            </>
         );
     }, [paymentConfigs, state.search, state.configs, state.currentPage, state.loadingConfigs, width, router]);
 
