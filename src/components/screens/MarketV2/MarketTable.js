@@ -309,7 +309,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                         {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
                         <div className='flex h-[64px] items-center'>
                             {e.last_price}
-                            ${formatPrice(basedata?.quoteAsset === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${item.quoteAsset}/USD`] * basedata?.p, 4)}
+                            ${formatPrice(basedata?.quoteAsset === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.quoteAsset}/USD`] * basedata?.p, 4)}
                         </div>
                     </div>
                     <div className='w-full flex flex-col justify-center items-end'>
