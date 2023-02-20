@@ -58,7 +58,7 @@ const MarketTable = ({
     const isDark = currentTheme === THEME_MODE.DARK;
     const { width } = useWindowSize();
     const isMobile = width < 640;
-
+    const [isLoading, setIsLoading] = useState(false)
     const [mobileLimit, setMobileLimit] = useState(15)
 
     const [type, setType] = useState(0);
@@ -140,10 +140,10 @@ const MarketTable = ({
                         })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-semibold text-tiny sm:text-base cursor-pointer flex items-center',
+                        'relative mr-6 pb-4 capitalize select-none text-tiny sm:text-base cursor-pointer flex items-center',
                         {
-                            'text-txtPrimary dark:text-txtPrimary-dark': restProps.tabIndex === index,
-                            'text-txtSecondary dark:text-txtSecondary-dark': restProps.tabIndex !== index,
+                            'text-txtPrimary dark:text-txtPrimary-dark font-semibold': restProps.tabIndex === index,
+                            'text-txtSecondary dark:text-txtSecondary-dark font-normal': restProps.tabIndex !== index,
                         }
                     )}
                 >
@@ -341,7 +341,7 @@ const MarketTable = ({
                 dataIndex: 'operation',
                 title: '',
                 align: 'center',
-                width: restProps.tabIndex === 1 ? 224 : 164
+                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164
             }
         ];
 
@@ -540,29 +540,29 @@ const MarketTable = ({
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
-    useEffect(() => {
-        if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
-            parentState({
-                tabIndex: 0,
-                subTabIndex: 0
-            });
-        }
+    // useEffect(() => {
+    //     if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
+    //         parentState({
+    //             tabIndex: 0,
+    //             subTabIndex: 0
+    //         });
+    //     }
 
-        if (restProps.favoriteList?.exchange?.length && !restProps.favoriteList?.futures?.length) {
-            parentState({
-                tabIndex: 0,
-                subTabIndex: 0
-            });
-        }
+    //     if (restProps.favoriteList?.exchange?.length && !restProps.favoriteList?.futures?.length) {
+    //         parentState({
+    //             tabIndex: 0,
+    //             subTabIndex: 0
+    //         });
+    //     }
 
-        if (restProps.favoriteList?.futures?.length && !restProps.favoriteList?.exchange?.length) {
-            parentState({
-                tabIndex: 0,
-                subTabIndex: 1
-            });
-        }
+    //     if (restProps.favoriteList?.futures?.length && !restProps.favoriteList?.exchange?.length) {
+    //         parentState({
+    //             tabIndex: 0,
+    //             subTabIndex: 1
+    //         });
+    //     }
 
-    }, [restProps.favoriteList]);
+    // }, [restProps.favoriteList]);
 
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
@@ -641,14 +641,18 @@ const MarketTable = ({
                     {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
                         <div
                             className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
-                            onClick={() => addTokensToFav({
-                                symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
-                                lang: language,
-                                mode: restProps?.favType + 1,
-                                favoriteRefresher: restProps.favoriteRefresher
-                            })}
+                            onClick={async () => {
+                                if(isLoading) return
+                                await addTokensToFav({
+                                    symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
+                                    lang: language,
+                                    mode: restProps?.favType + 1,
+                                    favoriteRefresher: restProps.favoriteRefresher,
+                                    setIsLoading: setIsLoading
+                                })
+                            }}
                         >
-                            {{
+                            {isLoading ? <Spinner size={24} /> : {
                                 en: 'Add all',
                                 vi: 'Thêm tất cả'
                             }[language]}
@@ -886,7 +890,7 @@ const FavActionButton = ({
                 { text: message, type: 'success' },
             )
         }
-    }, 300);
+    }, 2000);
 
     useEffect(() => {
         if (list) {
@@ -905,7 +909,7 @@ const FavActionButton = ({
             onClick={() => {
                 !loading && callback(already ? 'delete' : 'put', list);
             }}>
-            {loading ? <Spinner size={24}/> : already ? <IconStarFilled size={24} color="#FFC632" />
+            {loading ? <Spinner size={24} /> : already ? <IconStarFilled size={24} color="#FFC632" />
                 : <IconStarFilled size={24} color="#8694B3" />}
         </div>
     );
@@ -919,7 +923,7 @@ const renderTradeLink = (b, q, lang, mode) => {
     } else {
         url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
-        swapurl = `/swap?pair=${b + q}`;
+        swapurl = `/swap?from=${b}&to=${q}`;
     }
 
     return (
@@ -970,9 +974,11 @@ const addTokensToFav = _.debounce(async ({
     symbols,
     mode,
     lang,
-    favoriteRefresher
+    favoriteRefresher,
+    setIsLoading
 }) => {
     // Helper
+    setIsLoading(true)
     let message = '';
     let title = '';
     const method = 'put';
@@ -1015,4 +1021,5 @@ const addTokensToFav = _.debounce(async ({
         }
         toast({ text: message, type: 'error' })
     }
-}, 1000)
+    setIsLoading(false)
+}, 2000)
