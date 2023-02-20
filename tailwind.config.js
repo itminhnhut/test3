@@ -210,27 +210,17 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
-                1: commonColors.green[1],
-                2: commonColors.green[2],
-                3: commonColors.green[3],
-                4: commonColors.green[4],
-                5: commonColors.green[5]
+                ...commonColors.green
             },
             yellow: {
                 DEFAULT: '#FFD965',
                 100: '#FFC632',
-                1: commonColors.yellow[1],
-                2: commonColors.yellow[2],
-                3: commonColors.yellow[3],
-                4: commonColors.yellow[4]
+                ...commonColors.yellow
             },
             red: {
                 DEFAULT: commonColors.red2,
                 lightRed: '#E5544B19',
-                1: commonColors.red[1],
-                2: commonColors.red[2],
-                3: commonColors.red[3],
-                4: commonColors.red[4]
+                ...commonColors.red
             },
             pink: { DEFAULT: '#E5544B' },
             mint: { DEFAULT: '#00C8BC' },
@@ -410,7 +400,6 @@ module.exports = {
                 rank: "url('/images/contest/bg_rank.png')",
                 'rank-header': 'linear-gradient(101.26deg, rgba(9, 61, 209, 0.5) -5.29%, rgba(73, 232, 213, 0.5) 113.82%)',
                 'rank-line': 'linear-gradient(99.4deg, rgba(73, 232, 213, 0) -5.31%, #093DD1 37.56%, rgba(73, 232, 213, 0) 85.14%)',
-                dark: commonColors.darkBlue3,
                 'namiv2-linear': "url('/images/screen/wallet/overview_background.png')",
                 'namiv2-linear-dark': "url('/images/screen/wallet/overview_background_dark.png')",
                 'gradient-button-dark':

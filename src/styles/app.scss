@@ -23,6 +23,9 @@ body {
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: transparent !important;
 
+    a {
+        color:inherit;
+    }
     a:hover,
     a:active,
     a:focus {
@@ -58,7 +61,7 @@ body {
 //}
 
 body {
-    @apply text-txtPrimary dark:text-txtPrimary-dark font-normal;
+    @apply text-txtPrimary dark:text-txtPrimary-dark;
 
     display: flex;
     flex-direction: column;
@@ -972,7 +975,7 @@ input:-webkit-autofill {
         height: 3px;
         left: 0.5rem;
         top: 50%;
-        @apply bg-white rounded-full;
+        @apply bg-black dark:bg-white rounded-full;
     }
 }
 
@@ -1025,6 +1028,15 @@ input:-webkit-autofill {
     display: flex;
     justify-content: center;
     width: fit-content;
+
+    @media screen and (min-width:768px) {
+        &:hover {
+            .looper__listInstance {
+                animation-play-state: paused;
+               }
+            }
+    }   
+    
   }
 
   .looper__listInstance {
@@ -1032,7 +1044,4 @@ input:-webkit-autofill {
     width: max-content;
     animation: 30s slideAnimation linear infinite;
     animation-direction:normal;
-    // &:hover {
-    //     animation-play-state: paused;
-    // }
   }

@@ -91,7 +91,7 @@ export default (props) => (WrappedComponent) => {
 };
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb-32 2xl:pb-44' })`
-    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#F8F9FA')};
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 
     @media (max-width: 1024px) {
         .fee-schedule {

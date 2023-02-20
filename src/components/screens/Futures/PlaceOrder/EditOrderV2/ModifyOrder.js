@@ -22,13 +22,13 @@ const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, p
     const _avlb = wallet?.[params.assetId];
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
-const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicker }) => {
+const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWatch }) => {
     const { t } = useTranslation();
     const [tab, setTab] = useState('vol');
     const pairConfig = useSelector((state) => getPairConfig(state, { pair: order?.symbol }));
     const available = useSelector((state) => getAvailable(state, { assetId: pairConfig?.quoteAssetId }));
-    const _lastPrice = pairTicker ? pairTicker[order?.symbol]?.lastPrice : lastPrice;
-    const quoteAsset = pairTicker ? pairTicker[order?.symbol]?.quoteAsset : order?.quoteAsset;
+    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
+    const quoteAsset = marketWatch ? marketWatch[order?.symbol]?.quoteAsset : order?.quoteAsset;
     const order_value = order?.order_value ?? 0;
     const side = order?.side;
     const margin = order?.margin ?? 0;
@@ -70,7 +70,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicke
             />
             <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-2xl font-semibold mb-2">{t('futures:mobile:modify_order')}</div>
-                <Tabs isDark tab={tab} className="gap-8 border-b border-divider-dark">
+                <Tabs isDark tab={tab} className="gap-8 border-b border-divider dark:border-divider-dark">
                     {tabs?.map((item) => (
                         <TabItem V2 className="!text-left !px-0 !text-base" value={item.value} onClick={(isClick) => isClick && setTab(item.value)}>
                             {t(item.label)}
@@ -82,7 +82,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, pairTicke
                         <EditVolV2
                             order={order}
                             pairConfig={pairConfig}
-                            pairTicker={pairTicker}
+                            pairTicker={marketWatch[order?.symbol]}
                             available={available}
                             _lastPrice={_lastPrice}
                             quoteAsset={quoteAsset}

@@ -1,4 +1,5 @@
 {
+    "vip_upgrade": "Nâng cấp VIP",
     "title": "Biểu phí",
     "trading_fee": "Phí giao dịch tài khoản thường",
     "trading_fee_desc": "trên mỗi giao dịch khớp lệnh",
@@ -35,5 +36,9 @@
     "maker_taker_description_2": "\"Maker\" là lệnh giao dịch ở giá giới hạn (limited price).",
     "referral_description_value": "Giới thiệu bạn bè cùng giao dịch để nhận hoa hồng {{ value }}.",
     "swap_fee_description": "Với mỗi lệnh Futures đang mở, Nami Exchange áp dụng mức phí duy trì lệnh là 0.0015% trên khối lượng giao dịch trừ đi ký quỹ với mỗi giờ duy trì lệnh.",
-    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}."
+    "used_fee_deduction": "Bạn đang được hưởng ưu đãi phí giao dịch từ {{ token }}.",
+    "fee_open_close": "Phí (Mở/Đóng)",
+    "fee_nami_open_close": "Phí NAMI (Mở/Đóng)",
+    "show_more": "Hiện thêm",
+    "show_less": "Hiện ít hơn"
 }

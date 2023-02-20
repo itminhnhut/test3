@@ -1,25 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo } from 'src/redux/actions/utils';
-import { IconBell, Notification } from '../common/Icons';
+import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
-import { useClickAway, useToggle } from 'react-use';
-import Bell from 'components/svg/Bell';
+import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
 import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
 
 const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const { t } = useTranslation(['navbar']);
     const dispatch = useDispatch();
-    const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
-    const btnDropdownRef = React.createRef();
-    const popoverDropdownRef = React.createRef();
 
     const ref = useRef(null);
 
@@ -82,21 +77,6 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
             setPopover(false);
         }
     };
-    // const handleClickOutside = (e) => {
-    //     if (popoverDropdownRef.current.contains(e.target)) {
-    //         return;
-    //     }
-    //     // outside click
-    //     closeDropdownPopover();
-    // };
-
-    // useEffect(() => {
-    //     document.addEventListener('mousedown', handleClickOutside);
-    //     return () => {
-    //         // Unbind the event listener on clean up
-    //         document.removeEventListener('mousedown', handleClickOutside);
-    //     };
-    // }, [popoverDropdownRef]);
 
     let content;
     const mix = notificationsMix;
@@ -107,8 +87,6 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
         if (mix.length) {
             content = (
                 <>
-                    {/* { this._renderNotificationHeader(<Translate id="noti_game.noti_status_unread"/>)} */}
-                    {/* { mix.map(notification => this._renderNotificationItem(notification)) } */}
                     {mix.map((notification) => (
                         <div
                             className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
@@ -142,7 +120,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     }
     return (
         <>
-            <div  ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
+            <div ref={ref} className="mal-navbar__hamburger__spacing h-full sm:relative">
                 <button
                     type="button"
                     className={`!h-full btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
@@ -152,7 +130,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
                     }}
                 >
-                    <div className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtSecondary-dark '} relative`}>
+                    <div className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtSecondary-dark '} hover:!text-dominant relative`}>
                         <BxsBellIcon size={20} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
                     </div>
@@ -165,7 +143,6 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                 </button>
 
                 <div
-                   
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
                         'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
@@ -175,7 +152,9 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold">Xoá tất cả</ButtonV2>
+                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold">
+                                {t('navbar:delete_noti')}
+                            </ButtonV2>
                             {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}

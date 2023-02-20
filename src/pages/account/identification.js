@@ -8,16 +8,24 @@ import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { KYC_STATUS } from 'redux/actions/const';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import User from 'components/svg/User';
+import CreditCard from 'components/svg/CreditCard';
+import IDCard from 'components/svg/IDCard';
+import PlayFilled from 'components/svg/PlayFilled';
+import { createElement } from 'react';
+import colors from 'styles/colors';
 
 const NotKycCard = ({
     t,
     className
 }) => {
-    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+    return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
         <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_require.png')}
              className='mx-auto' />
-        <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
-        <span className='text-txtSecondary'>{t('identification:account.not_verified_content')}</span>
+        <p className='text-teal font-semibold text-2xl mb-1 mt-6'>{t('identification:account.not_verified')}</p>
+        <span
+            className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.not_verified_content')}</span>
     </div>;
 };
 
@@ -25,57 +33,73 @@ const KYCStepCard = ({
     t,
     className
 }) => {
-    return <div className={classnames(className, 'flex gap-4 bg-darkBlue-3 py-14 rounded-xl px-6')}>
+    const [currentTheme] = useDarkMode();
+
+    return <div className={classnames(className, 'flex gap-4 bg-white dark:bg-darkBlue-3 py-14 rounded-xl px-6')}>
         <div>
-            <p className='text-xl mb-6'>{t('identification:kyc_step:title')}</p>
-            <span className='text-txtSecondary'>{t('identification:kyc_step:content')}</span>
+            <p className='text-2xl font-semibold mb-6'>{t('identification:kyc_step:title')}</p>
+            <span
+                className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:content')}</span>
             <div className='space-y-3 mt-4'>
-                <div className='flex items-center'>
-                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_user.png')} alt='Nami Exchange' />
-                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_1')}</span>
-                </div>
-
-                <div className='flex items-center'>
-                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_payment_type.png')}
-                         alt='Nami Exchange' />
-                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_2')}</span>
-                </div>
-
-                <div className='flex items-center'>
-                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_identity_card.png')}
-                         alt='Nami Exchange' />
-                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_3')}</span>
-                </div>
-
-                <div className='flex items-center'>
-                    <img width={32} height={32} src={getS3Url('/images/screen/account/ic_record.png')}
-                         alt='Nami Exchange' />
-                    <span className='text-txtSecondary ml-3'>{t('identification:kyc_step:step_4')}</span>
-                </div>
+                {
+                    [
+                        {
+                            icon: User,
+                            label: t('identification:kyc_step:step_1')
+                        },
+                        {
+                            icon: CreditCard,
+                            label: t('identification:kyc_step:step_2')
+                        },
+                        {
+                            icon: IDCard,
+                            label: t('identification:kyc_step:step_2')
+                        },
+                        {
+                            icon: PlayFilled,
+                            label: t('identification:kyc_step:step_4')
+                        }
+                    ].map((item, index) => {
+                        return <div key={index} className='flex items-center'>
+                            <div
+                                className='flex items-center justify-center w-8 h-8 bg-gray-10 dark:bg-dark-2 rounded-full'>
+                                {createElement(item.icon, {
+                                    size: 16,
+                                    color: colors.gray['1']
+                                })}
+                            </div>
+                            <span
+                                className='text-txtSecondary dark:text-txtSecondary-dark ml-3'>{item.label}</span>
+                        </div>;
+                    })
+                }
             </div>
         </div>
 
         <div className=''>
-            <div className='p-2 bg-white rounded-lg mx-auto w-fit'>
+            <div className='p-3 border border-teal bg-white rounded-lg mx-auto w-fit'>
                 <QRCode value='account_verification' size={132} />
             </div>
             <div className='text-center mt-5'>
-                <span className='text-txtSecondary'>{t('identification:kyc_step:scan')}</span>
-                <div className='flex mt-6 justify-between max-w-[290px] m-auto gap-4'>
+                <span
+                    className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:kyc_step:scan')}</span>
+                <div className='flex mt-6 justify-between gap-4 max-w-[290px] m-auto gap-4'>
                     <Link href='https://apps.apple.com/app/id1480302334'>
-                        <a target='_blank'>
+                        <a target='_blank' className='bg-gray-10 dark:bg-dark-2 rounded-md px-3 py-2'>
                             <img
-                                className='m-auto w-[135px] h-[40px] mr-[20px]'
-                                src={getS3Url('/images/screen/homepage/app_store_light.png')}
+                                className='m-auto'
+                                src={`/images/download_applestore_${currentTheme}.png`}
                                 alt=''
                             />
                         </a>
                     </Link>
                     <Link href='https://play.google.com/store/apps/details?id=com.namicorp.exchange'>
-                        <a target='_blank'>
-                            <img className='m-auto w-[135px] h-[40px]'
-                                 src={getS3Url('/images/screen/homepage/play_store_light.png')}
-                                 alt='' />
+                        <a target='_blank' className='bg-gray-10 dark:bg-dark-2 rounded-md px-3 py-2'>
+                            <img
+                                className='m-auto'
+                                src={`/images/download_google_${currentTheme}.png`}
+                                alt=''
+                            />
                         </a>
                     </Link>
                 </div>
@@ -88,10 +112,11 @@ const ProcessKycCard = ({
     t,
     className
 }) => {
-    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+    return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
         <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_wait.png')} className='mx-auto' />
-        <p className='text-teal font-medium text-xl mb-1 mt-6'>{t('identification:account.process')}</p>
-        <span className='text-txtSecondary'>{t('identification:account.process_content')}</span>
+        <p className='text-teal font-semibold text-2xl mb-1 mt-6'>{t('identification:account.process')}</p>
+        <span
+            className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:account.process_content')}</span>
     </div>;
 };
 
@@ -100,41 +125,46 @@ const CurrentFuturesCard = ({
     className
 }) => {
     return <div
-        className={classnames(className, 'flex flex-col justify-center col-span-3 bg-darkBlue-3 rounded-xl px-6 py-auto')}>
+        className={classnames(className, 'flex flex-col justify-center col-span-3 bg-white dark:bg-darkBlue-3 rounded-xl px-6 py-auto')}>
         <div className='mb-8'>
-            <p className='font-medium'>{t('identification:current_futures:title')}</p>
+            <p className='font-semibold text-2xl'>{t('identification:current_futures:title')}</p>
         </div>
         <div className='grid grid-cols-2 gap-y-9 gap-x-8'>
             <div className='flex items-center'>
-                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_1.png')} alt='Nami Exchange' />
+                <img width={48} height={48} src={'/images/screen/account/ic_feature_1_v2.png'}
+                     alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-bold'>{t('identification:current_futures:buy_sell')}</p>
+                    <p className='font-semibold'>{t('identification:current_futures:buy_sell')}</p>
                     <span
-                        className='text-txtSecondary'>{t('identification:current_futures:price_daily')}</span>
+                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:price_daily')}</span>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_2.png')} alt='Nami Exchange' />
+                <img width={48} height={48} src={'/images/screen/account/ic_feature_2_v2.png'}
+                     alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-bold'>{t('identification:current_futures:deposit')}</p>
+                    <p className='font-semibold'>{t('identification:current_futures:deposit')}</p>
                     <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
                 </div>
             </div>
 
             <div className='flex items-center'>
-                <img width={48} height={48} src={getS3Url('/images/screen/account/ic_feature_3.png')} alt='Nami Exchange' />
+                <img width={48} height={48} src={'/images/screen/account/ic_feature_3_v2.png'}
+                     alt='Nami Exchange' />
                 <div className='ml-4'>
-                    <p className='font-bold'>{t('identification:current_futures:withdrawal')}</p>
-                    <span className='text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
+                    <p className='font-semibold'>{t('identification:current_futures:withdrawal')}</p>
+                    <span
+                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:unlimited')}</span>
                 </div>
             </div>
 
-            <div className='flex'>
-                <Image width={48} height={48} src={getS3Url('/images/screen/profile/ic_feature_4.png')} />
+            <div className='flex items-center'>
+                <Image width={48} height={48} src={'/images/screen/account/ic_feature_4_v2.png'} />
                 <div className='ml-4'>
-                    <p className='font-bold'>{t('identification:current_futures:other')}</p>
-                    <span className='text-txtSecondary'>{t('identification:current_futures:reward')}</span>
+                    <p className='font-semibold'>{t('identification:current_futures:other')}</p>
+                    <span
+                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:reward')}</span>
                 </div>
             </div>
         </div>
@@ -145,7 +175,7 @@ const VerifiedKycCard = ({
     t,
     className
 }) => {
-    return <div className={classnames(className, 'bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
+    return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 py-12 rounded-xl text-center px-10')}>
         <img width={200} height={200} src={getS3Url('/images/screen/account/kyc_verified.png')} className='mx-auto' />
         <p className='text-teal font-medium text-xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
         <span className='text-teal font-medium text-xl '>{t('identification:account.verified')}</span>
@@ -169,7 +199,7 @@ function Identification() {
             user?.kyc_status === KYC_STATUS.PENDING_APPROVAL &&
             <div className='grid grid-cols-5 gap-8 my-12'>
                 <ProcessKycCard t={t} className='col-span-2' />
-                <CurrentFuturesCard t={t} className='col-span-3' />
+                <KYCStepCard t={t} className='col-span-3' />
             </div>
         }
         {

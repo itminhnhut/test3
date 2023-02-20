@@ -24,16 +24,17 @@ export const SOCIALS_HREF = [
         name: 'coingecko',
         href: 'https://www.coingecko.com'
     },
-    // {
-    //     key: 6,
-    //     name: 'medium',
-    //     href: 'https://www.facebook.com/namifutures'
-    // },
+    
     {
         key: 4,
         name: 'reddit',
         href: 'https://www.reddit.com/r/NAMIcoin'
     },
+    // {
+    //     key: 6,
+    //     name: 'medium',
+    //     href: '#'
+    // },
    
     
 ];

@@ -13,6 +13,7 @@ import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
 import TrendingSlide from './TrendingSlide';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
+import Link from 'next/link'
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
@@ -45,20 +46,22 @@ const HomeIntroduce = ({ parentState }) => {
     const animRef = useRef();
 
     const BannerGraphic = useCallback(() => {
-        return <div className={`homepage-introduce___wrapper__right`}>
-            <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange"/>
-        </div>;
+        return (
+            <div className={`homepage-introduce___wrapper__right`}>
+                <img src={'/images/screen/homepage/banner_graphics_1.png'} alt="Nami Exchange" />
+            </div>
+        );
     }, [width]);
 
     const renderIntroduce = useCallback(() => {
         return (
             <section className="homepage-introduce">
-                <TrendingSlide trending={state.trending}/>
+                <TrendingSlide trending={state.trending} />
                 <div className="homepage-introduce___wrapper mal-container">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
-                            {t('home:introduce.title_desktop1')}
+                            {t('home:introduce.title_desktop1')} <br />
                             {t('home:introduce.title_desktop2')}
                         </div>
                         {/* <div className="homepage-introduce___description">
@@ -70,7 +73,7 @@ const HomeIntroduce = ({ parentState }) => {
                                 <div className="homepage-introduce___statitics____item___value">
                                     {/* {renderCountUp} */}
                                     {state.loading && !state.makedData ? (
-                                        <PulseLoader size={5} color={colors.teal}/>
+                                        <PulseLoader size={5} color={colors.teal} />
                                     ) : (
                                         <>
                                             $
@@ -83,19 +86,18 @@ const HomeIntroduce = ({ parentState }) => {
                                                 delay={0}
                                                 useEasing
                                             >
-                                                {({ countUpRef }) => <span ref={countUpRef}/>}
+                                                {({ countUpRef }) => <span ref={countUpRef} />}
                                             </CountUp>
                                         </>
                                     )}
                                     {/* <div className="bott-line" /> */}
                                 </div>
-                                <div
-                                    className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
                             </div>
                             <div className="homepage-introduce___statitics____item">
                                 <div className="homepage-introduce___statitics____item___value">
                                     {state.loading && !state.makedData ? (
-                                        <PulseLoader size={5} color={colors.teal}/>
+                                        <PulseLoader size={5} color={colors.teal} />
                                     ) : (
                                         <CountUp
                                             start={0}
@@ -105,18 +107,17 @@ const HomeIntroduce = ({ parentState }) => {
                                             delay={0}
                                             useEasing
                                         >
-                                            {({ countUpRef }) => <span ref={countUpRef}/>}
+                                            {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
                                     )}{' '}
                                     +{/* <div className="bott-line" /> */}
                                 </div>
-                                <div
-                                    className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
                             </div>
                             <div className="homepage-introduce___statitics____item">
                                 <div className="homepage-introduce___statitics____item___value">
                                     {state.loading ? (
-                                        <PulseLoader size={5} color={colors.teal}/>
+                                        <PulseLoader size={5} color={colors.teal} />
                                     ) : (
                                         <CountUp
                                             start={0}
@@ -126,24 +127,24 @@ const HomeIntroduce = ({ parentState }) => {
                                             delay={0}
                                             useEasing
                                         >
-                                            {({ countUpRef }) => <span ref={countUpRef}/>}
+                                            {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
                                     )}
                                     {/* <div className="bott-line" /> */}
                                 </div>
-                                <div
-                                    className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
+                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
                             </div>
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <GradientButton
-                                className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
-                                Tải ứng dụng
-                            </GradientButton>
+                            <Link href="#download_section">
+                                <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
+                                    {t('home:introduce.download_app')}
+                                </GradientButton>
+                            </Link>
                         </div>
                     </div>
-                    <BannerGraphic/>
+                    <BannerGraphic />
                 </div>
             </section>
         );

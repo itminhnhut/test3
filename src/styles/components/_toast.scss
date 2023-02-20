@@ -1,20 +1,30 @@
 @import "react-toastify/dist/ReactToastify.css";
 
 .nami-toast {
-    width: auto;
-
     .Toastify__toast {
         min-height: auto;
         @apply p-3;
+
+        top: $MOBILE_NAV_HEIGHT + 4;
     }
 
-    // TODO: Implement style for theme light
     .Toastify__toast-theme--dark {
         @apply bg-dark-2 text-txtPrimary-dark;
+    }
+
+    .Toastify__toast-theme--light {
+        @apply bg-gray-10 text-txtPrimary;
     }
 
     .Toastify__toast-body {
         margin: 0;
         padding: 0;
+    }
+
+    @media (min-width: 480px) {
+        @apply w-auto;
+        .Toastify__toast {
+            top: auto;
+        }
     }
 }

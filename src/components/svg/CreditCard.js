@@ -1,16 +1,15 @@
-
-
-const SvgCreditCard = ({ color, size, fill, style, className, onClick }) => {
-    return (
-        <div style={style || {}} className={className || {}} onClick={() => onClick && onClick()}>
-            <svg xmlns="http://www.w3.org/2000/svg" width={size || '24'} height={size || '24'} viewBox="0 0 24 24" fill={fill || 'none'}>
-                <path
-                    d="M21 4H3C1.89543 4 1 4.89543 1 6V18C1 19.1046 1.89543 20 3 20H21C22.1046 20 23 19.1046 23 18V6C23 4.89543 22.1046 4 21 4Z"
-                    stroke={color || '#718096'} strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M1 10H23" stroke={color || '#718096'} strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-        </div>
-    );
+const CreditCard = ({
+    color = '#768394',
+    size = 16,
+    fill = 'none',
+    style,
+    className = ''
+}) => {
+    return <svg width={size} height={size} style={style} className={className} viewBox='0 0 16 16' fill={fill} xmlns='http://www.w3.org/2000/svg'>
+        <path
+            d='M13.3359 2.66797H2.66927C1.93394 2.66797 1.33594 3.26597 1.33594 4.0013V12.0013C1.33594 12.7366 1.93394 13.3346 2.66927 13.3346H13.3359C14.0713 13.3346 14.6693 12.7366 14.6693 12.0013V4.0013C14.6693 3.26597 14.0713 2.66797 13.3359 2.66797ZM8.33594 10.668C7.41527 10.668 6.66927 9.92197 6.66927 9.0013C6.66927 8.08064 7.41527 7.33464 8.33594 7.33464C8.7126 7.33464 9.0566 7.46397 9.33594 7.67597C8.93327 7.97997 8.66927 8.45797 8.66927 9.0013C8.66927 9.54464 8.93327 10.0226 9.33594 10.3266C9.0566 10.5386 8.7126 10.668 8.33594 10.668ZM11.0026 10.668C10.0819 10.668 9.33594 9.92197 9.33594 9.0013C9.33594 8.08064 10.0819 7.33464 11.0026 7.33464C11.9233 7.33464 12.6693 8.08064 12.6693 9.0013C12.6693 9.92197 11.9233 10.668 11.0026 10.668Z'
+            fill={color} />
+    </svg>;
 };
 
-export default SvgCreditCard;
+export default CreditCard;

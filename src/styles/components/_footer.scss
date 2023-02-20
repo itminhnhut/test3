@@ -64,9 +64,9 @@ padding-block:48px;
             }
 
             ~ .socials_link  {
-              padding-inline:16px;
-
-            }
+            @apply px-4;
+            
+          }
 
             font-weight: 600;
             font-size: 14px;
@@ -74,9 +74,7 @@ padding-block:48px;
             cursor: pointer;
             white-space: nowrap;
 
-            svg {
-              @apply text-white;
-            }
+           
           }
 
           .mal-footer___pocket__links___group__item__links {
@@ -90,7 +88,7 @@ padding-block:48px;
 
 
             a {
-              @apply text-sm py-3 block;
+              @apply text-sm  py-3 block;
                   padding-left:48px;
 
 
@@ -145,7 +143,6 @@ padding-block:48px;
           @apply block text-gray-2;
 
           margin-top: 47px;
-          font-weight: 500;
           font-size: 14px;
           line-height: 24px;
         }
@@ -170,7 +167,7 @@ padding-block:48px;
           }
 
           .mal-footer___pocket__links___group__item__links {
-            @apply text-txtSecondary dark:text-txtTextBtn-tonal_dark;
+            @apply text-txtSecondary dark:text-txtSecondary-dark;
             max-height: 40em !important;
 
             a {

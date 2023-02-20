@@ -6,7 +6,7 @@ import useApp from 'hooks/useApp';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import SocialsLink from './SocialsLink';
-import useDarkMode from 'hooks/useDarkMode';
+import useDarkMode,{THEME_MODE} from 'hooks/useDarkMode';
 
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'next-i18next';
@@ -28,14 +28,15 @@ const Footer = memo(() => {
     const isApp = useApp();
     const [currentTheme] = useDarkMode();
 
-
     if (isApp) return null;
     const MobileCopyright = useCallback(
         () => (
-            <div className='px-4'>
+            <div className="px-4">
                 <div className="flex justify-between items-center mb-8">
                     <div className="">
-                        <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="113" alt="Nami Exchange" />
+                        <img 
+                        // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`} width="113" alt="Nami Exchange" />
                     </div>
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
@@ -44,7 +45,7 @@ const Footer = memo(() => {
                 </div>
             </div>
         ),
-        [t, language,currentTheme]
+        [t, language, currentTheme]
     );
 
     const DesktopNotAuthSocial = useCallback(
@@ -52,16 +53,22 @@ const Footer = memo(() => {
             <>
                 <div className="flex justify-between items-center mb-6">
                     <div className="">
-                        <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="251" alt="Nami Exchange" />
+                        {/*  */}
+                        <img
+                            // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            width="251"
+                            alt="Nami Exchange"
+                        />
                     </div>
                     <SocialsLink language={language} />
-                    <LanguageSelect t={t} language={language}  currentTheme={currentTheme}/>
+                    <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
                 <hr className="border-divider dark:border-divider-dark mb-6" />
                 <div className="font-medium text-gray-2 mt-6 text-center text-sm">Copyright © 2020 Nami Corporation. All rights reserved.</div>
             </>
         ),
-        [t, language,currentTheme]
+        [t, language, currentTheme]
     );
 
     return (

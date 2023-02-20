@@ -24,6 +24,7 @@ import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import FuturesMarkPrice from 'models/FuturesMarkPrice';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
+import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -244,6 +245,7 @@ const Futures = () => {
 
     return (
         <>
+            <FuturesTermsModal />
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout

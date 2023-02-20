@@ -99,7 +99,7 @@ const days = [
 ];
 const limit = 10;
 
-export default function FundingHistoryTable({ currency, active }) {
+export default function FundingHistoryTable({ currency, active, isDark }) {
     const router = useRouter();
     const {
         t,
@@ -169,7 +169,9 @@ export default function FundingHistoryTable({ currency, active }) {
     useEffect(() => {
         setCurrentPage(1);
         if (active) {
-            setFlag(true);
+            setTimeout(() => {
+                setFlag(true);
+            }, 500);
         }
     }, [isMobile, active]);
 
@@ -227,7 +229,7 @@ export default function FundingHistoryTable({ currency, active }) {
             }
         },
         pointBackgroundColor: colors.teal,
-        pointBorderColor: '#001219',
+        pointBorderColor: isDark ? '#001219' : colors.gray[13],
         pointBorderWidth: isMobile ? 1.5 : 2,
         elements: {
             point: {
@@ -237,7 +239,7 @@ export default function FundingHistoryTable({ currency, active }) {
         scales: {
             y: {
                 ticks: {
-                    color: colors.darkBlue5,
+                    color: isDark ? colors.darkBlue5 : colors.gray[1],
                     font: {
                         size: isMobile ? 10 : 12
                     },
@@ -247,8 +249,8 @@ export default function FundingHistoryTable({ currency, active }) {
                 },
                 display: true,
                 grid: {
-                    borderColor: colors.divider.dark,
-                    color: colors.divider.dark,
+                    borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
+                    color: isDark ? colors.divider.dark : colors.divider.DEFAULT,
                     borderDash: [1, 0, 1],
                     drawBorder: true,
                     display: true
@@ -256,7 +258,7 @@ export default function FundingHistoryTable({ currency, active }) {
             },
             x: {
                 ticks: {
-                    color: colors.darkBlue5,
+                    color: isDark ? colors.darkBlue5 : colors.gray[1],
                     font: {
                         size: isMobile ? 10 : 12
                     },
@@ -267,7 +269,7 @@ export default function FundingHistoryTable({ currency, active }) {
                     }
                 },
                 grid: {
-                    borderColor: colors.divider.dark,
+                    borderColor: isDark ? colors.divider.dark : colors.divider.DEFAULT,
                     drawBorder: true,
                     display: false
                 }
@@ -304,7 +306,7 @@ export default function FundingHistoryTable({ currency, active }) {
                 }
             ]
         };
-    }, [data]);
+    }, [data, flag, active, isDark]);
 
     const onChangeSymbol = (pair) => {
         const symbol = pair?.baseAsset + pair?.quoteAsset;
@@ -324,7 +326,7 @@ export default function FundingHistoryTable({ currency, active }) {
 
     return (
         <div className={classNames('mt-6 sm:mt-12', { hidden: !active })}>
-            <div className="bg-darkBlue-3 p-4 sm:p-8 rounded-xl mb-12">
+            <div className="dark:bg-darkBlue-3 p-4 border border-divider dark:border-0 sm:p-8 rounded-xl mb-12">
                 <div className="h-full flex items-center justify-between mb-8">
                     <div className="sm:flex items-center relative cursor-pointer sm:space-x-8">
                         <div
@@ -343,6 +345,7 @@ export default function FundingHistoryTable({ currency, active }) {
                                     onChangeSymbol={onChangeSymbol}
                                     symbol={filter}
                                     currency={currency}
+                                    isDark={isDark}
                                 />
                             </div>
                         </div>
@@ -359,9 +362,12 @@ export default function FundingHistoryTable({ currency, active }) {
                                 <div
                                     key={day.id}
                                     onClick={() => setFilter({ ...filter, pageSize: day.value })}
-                                    className={classNames('text-txtSecondary-dark px-4 py-3 border border-divider-dark rounded-full cursor-pointer', {
-                                        '!border-teal !text-teal font-medium bg-teal/[0.1]': filter.pageSize === day.value
-                                    })}
+                                    className={classNames(
+                                        'text-txtSecondary dark:text-txtSecondary-dark px-4 py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
+                                        {
+                                            'font-semibold !border-teal !text-teal bg-teal/[0.1]': filter.pageSize === day.value
+                                        }
+                                    )}
                                 >
                                     {day[language]}
                                 </div>
@@ -370,15 +376,13 @@ export default function FundingHistoryTable({ currency, active }) {
                     </div>
                 </div>
                 <div className="flex w-full items-center justify-center ">
-                    {flag && (
-                        <Line
-                            ref={chart}
-                            options={options}
-                            data={dataLine}
-                            className={isMobile ? `max-h-[228px]` : `max-h-[420px]`}
-                            height={isMobile ? 228 : 420}
-                        />
-                    )}
+                    <Line
+                        ref={chart}
+                        options={options}
+                        data={dataLine}
+                        className={isMobile ? `max-h-[228px]` : `max-h-[420px]`}
+                        height={isMobile ? 228 : 420}
+                    />
                 </div>
             </div>
             <>
@@ -398,7 +402,7 @@ export default function FundingHistoryTable({ currency, active }) {
                             page={currentPage}
                             onChangePage={setCurrentPage}
                             pagingClassName="border-none"
-                            className="border border-divider-dark rounded-xl"
+                            className="border border-divider dark:border-divider-dark rounded-xl"
                         />
                     </div>
                 ) : (
@@ -446,7 +450,7 @@ export default function FundingHistoryTable({ currency, active }) {
     );
 }
 
-const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, symbol }) => {
+const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, symbol, isDark }) => {
     const { t } = useTranslation();
     const [keyword, setKeyWord] = useState('');
 
@@ -462,7 +466,7 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                 <div
                     onClick={() => onChangeSymbol(pair)}
                     key={indx}
-                    className={classNames('flex items-center justify-between px-4 py-2 sm:py-3 hover:bg-hover-dark')}
+                    className={classNames('flex items-center justify-between px-4 py-2 sm:py-3 hover:bg-gray-13 dark:hover:bg-hover-dark')}
                 >
                     <div className="space-x-2 flex items-center text-sm sm:text-base">
                         <AssetLogo assetId={pair?.baseAssetId} size={24} />
@@ -471,7 +475,7 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                             <span className="text-gray-1">/{pair?.quoteAsset}</span>
                         </div>
                     </div>
-                    {symbol?.symbol === pair?.baseAsset + pair?.quoteAsset && <CheckedIcon />}
+                    {symbol?.symbol === pair?.baseAsset + pair?.quoteAsset && <CheckedIcon color={isDark ? '#E2E8F0' : '#1e1e1e'} />}
                 </div>
             );
         });
@@ -491,17 +495,17 @@ const PairList = memo(({ activePairList, pairConfigs, onChangeSymbol, currency, 
                     <SearchInput placeholder={t('futures:funding_history_tab:find_pair')} parentState={setKeyWord} />
                 </div>
 
-                <div className="flex-grow overflow-y-auto w-full space-y-3 divide-y divide-divider dark:divide-darkBlue-3">{renderPairListItems()}</div>
+                <div className="flex-grow overflow-y-auto w-full space-y-3 ">{renderPairListItems()}</div>
             </div>
         </div>
     );
 });
 
-const CheckedIcon = () => (
+const CheckedIcon = ({ color = '#E2E8F0' }) => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M8 1.333A6.674 6.674 0 0 0 1.333 8 6.674 6.674 0 0 0 8 14.667 6.674 6.674 0 0 0 14.667 8 6.674 6.674 0 0 0 8 1.333zm-1.333 9.609-2.475-2.47.941-.944 1.533 1.53 3.53-3.53.942.943-4.47 4.47z"
-            fill="#E2E8F0"
+            fill={color}
         />
     </svg>
 );

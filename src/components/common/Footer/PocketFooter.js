@@ -21,7 +21,12 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         width >= 1200 && (
                             <>
                                 <div className="mal-footer___pocket__logo mb-6">
-                                    <img src={getS3Url('/images/logo/nami-logo-v2.png')} width="188" alt="Nami Exchange" />
+                                    <img
+                                        // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                        width="188"
+                                        alt="Nami Exchange"
+                                    />
                                 </div>
                                 <div className="w-[188px]">
                                     <SocialsLink language={language} />
@@ -122,7 +127,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link href="/futures">
                                 <a>{t('navbar:menu.futures')}</a>
                             </Link>
-                            <Link href="https://launchpad.nami.exchange/">
+                            {/* <Link href="https://launchpad.nami.exchange/">
                                 <a>Launchpad</a>
                             </Link>
                             <Link href="/">
@@ -133,7 +138,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             </Link>
                             <Link href={getV1Url('/staking')}>
                                 <a>Staking</a>
-                            </Link>
+                            </Link> */}
                             <Link href={getV1Url('/reference')}>
                                 <a>{t('navbar:submenu.referral')}</a>
                             </Link>
@@ -247,9 +252,9 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 {language === LANGUAGE_TAG.VI ? 'Gửi yêu cầu hỗ trợ' : 'Send Ticket'}
                             </a>
                             {/*</Link>*/}
-                            <Link href="/">
+                            {/* <Link href="/">
                                 <a className="invisible">{language === LANGUAGE_TAG.VI ? 'Cẩm nang Nami' : "Nami's Handbook"}</a>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
 

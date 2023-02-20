@@ -47,30 +47,21 @@ const HomeAdditional = ({ parentState }) => {
     return (
         <>
             <div className="relative">
-                <div className="absolute z-0 right-0 top-20">
+                <div className="absolute z-0 right-0 top-20 pointer-events-none">
                     <img src="/images/screen/homepage/right_up.png" className="" />
                 </div>
-                <div className="absolute z-0 bottom-0 left-0">
+                <div className="absolute z-0 bottom-0 left-0 pointer-events-none">
                     <img src="/images/screen/homepage/left_down.png" className="-mb-20" />
                     <img src="/images/screen/homepage/ghost_down.png" className="" />
                 </div>
-                <HomeJourney t={t} width={width} />
+                <HomeJourney t={t} width={width} currentTheme={theme} />
                 <section className="homepage-trade3step">
-                    {/* <div className="homepage-trade3step__bubble left-[0] bottom-0 absolute" /> */}
-
                     <div className="homepage-trade3step___wrapper relative mal-container">
                         <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    {/* <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 0 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    01
-                                </div> */}
-                                    <img src={`/images/screen/homepage/create_account_${theme !== THEME_MODE.LIGHT ? 'light' : 'dark'}.png`} width="48" />
+                                    <img src={`/images/screen/homepage/create_account_${theme}.png`} width="48" />
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
                                 </div>
                                 <div className="homepage-trade3step__vertial_dot_line" />
@@ -78,13 +69,6 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    {/* <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 1 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    02
-                                </div> */}
                                     <img src="/images/screen/homepage/fiat_crypto.png" width="48" />
 
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
@@ -94,24 +78,12 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    {/* <div
-                                    className={`homepage-trade3step___step___item__label ${
-                                        stepCount === 2 ? 'text-teal transition-all duration-300 ease-in-out' : ''
-                                    }`}
-                                >
-                                    03
-                                </div> */}
-                                    <img src={`/images/screen/homepage/start_trading_${theme !== THEME_MODE.LIGHT ? 'light' : 'dark'}.png`} width="48" />
+                                    <img src={`/images/screen/homepage/start_trading_${theme}.png`} width="48" />
 
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
                                 </div>
                             </div>
                         </div>
-
-                        {/* <div className="homepage-trade3step___create_account">
-                        <Button title={t('common:create_account')} type="primary" href={getLoginUrl('sso', 'register')} />
-                        <div className="homepage-trade3step___create_account___pr">{t('home:trade3step.chill_a_bit')}</div>
-                    </div> */}
                     </div>
                 </section>
             </div>

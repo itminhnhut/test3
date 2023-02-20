@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { orderBy, pick } from 'lodash';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -24,10 +25,9 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
 
     // Sort function:
-    const [sortBy, setSortBy] = useState({}); // null = default, 1 => desc, 2 => asc
-    const [pairTicker, setPairTicker] = useState(null);
+    const [sortBy, setSortBy] = useState({}); // undefined = default, true => desc, false => asc
+    // const [pairTicker, setPairTicker] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
-    // console.log('marketWatch', marketWatch);
     const [dataTable, setDataTable] = useState([]);
     useEffect(() => {
         let data =
@@ -47,18 +47,21 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 item?.priceChangePercent = pairTicker?.priceChangePercent
             }
         });
-
          // sort by field
          if (Object.keys(sortBy)?.length) {
             const _s = Object.entries(sortBy)[0];
-            data = orderBy(data, [( o) => {
-                const value =  o[`${_s[0]}`]
-                return value ? value : _s[1] ? 1000000 : -1000000} ], [`${_s[1] ? 'asc' : 'desc'}`]);
+            if(_s[1] !== undefined) {
+                data = orderBy(data, [(o) => {
+                    const value =  o[`${_s[0]}`]
+                    return value ? value : _s[1] ? 1000000 : -1000000} ], [`${_s[1] ? 'asc' : 'desc'}`]
+                );
+            }
         }
 
         // filter search
         if (search) {
-            const _search = search.replace('/', '').toLowerCase();
+            console.log("search: ", search);
+            const _search = search?.replace('/', '').toLowerCase();
             data = data?.filter((o) => o?.pair?.toLowerCase().includes(_search));
         }
 
@@ -89,27 +92,23 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
     const renderModes = useCallback(
         () => (
-            <div className="px-4 flex items-center">
+            <div className="px-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark hover:text-gray-15 dark:hover:text-gray-14 select-none">
                 {isAuth && (
                     <BxsStarIcon
                         onClick={() => onHandleMode('Starred')}
-                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.darkBlue5 : colors.gray[2]}
+                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.gray[7] : colors.gray[1]}
                         className="cursor-pointer"
                     />
                 )}
                 <div
                     onClick={() => onHandleMode('USDT')}
-                    className={classNames('ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant', {
-                        '!text-dominant': mode === 'USDT'
-                    })}
+                    className={mode === 'USDT' && 'text-green-3 font-semibold'}
                 >
                     USDT
                 </div>
                 <div
                     onClick={() => onHandleMode('VNDC')}
-                    className={classNames('ml-3 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant', {
-                        '!text-dominant': mode === 'VNDC'
-                    })}
+                    className={mode === 'VNDC' && 'text-green-3 font-semibold'}
                 >
                     VNDC
                 </div>
@@ -118,15 +117,27 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         [mode, isDark, isAuth]
     );
 
+    const setSorter = (key) => {
+        setSortBy(prev => prev?.[key] === undefined ? { [key]:true } : prev?.[key] ? { [key]:false } : { [key]:undefined })
+    }
+
     return (
         <div
             className={`${
                 !activePairList ? 'hidden' : ''
-            } py-4 min-w-[400px] bg-bgTabInactive dark:bg-bgTabInactive-dark dark:border border-divider dark:border-divider-dark drop-shadow-onlyLight rounded-md ${className}`}
+            } py-4 min-w-[400px] border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
+            shadow-card_light dark:shadow-popover rounded-md ${className}`}
         >
             <div className="max-h-[352px] flex flex-col">
                 <div className="px-4 mb-7">
-                    <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
+                    <SearchBoxV2
+                        value={search}
+                        onChange={(value) => {
+                            setSearch(value);
+                        }}
+                        wrapperClassname='py-2'
+                    />
+                    {/* <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
                         <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
                         <input
                             className="text-sm w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
@@ -135,7 +146,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                             placeholder={t('common:search')}
                         />
                         {search && <X size={16} className="cursor-pointer" color="#8694b2" onClick={() => setSearch('')} />}
-                    </div>
+                    </div> */}
                 </div>
 
                 {renderModes()}
@@ -146,15 +157,15 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     }}
                     className="px-4 mt-7 mb-4 flex items-center justify-between font-normal text-xs text-txtSecondary dark:text-txtSecondary-dark"
                 >
-                    <div onClick={() => setSortBy({ [`symbol`]: !sortBy?.[`symbol`] })} style={{ flex: '1 1 0%' }} className="flex justify-start items-center">
+                    <div onClick={() =>setSorter('symbol') } style={{ flex: '1 1 0%' }} className="flex justify-start items-center select-none">
                         {t('common:asset')}
                         <Sorter isUp={sortBy?.[`symbol`]} />
                     </div>
-                    <div onClick={() => setSortBy({ [`lastPrice`]: !sortBy?.[`lastPrice`] })} style={{ flex: '1 1 0%' }} className="flex justify-end items-center">
+                    <div onClick={() =>setSorter('lastPrice') } style={{ flex: '1 1 0%' }} className="flex justify-end items-center select-none">
                         {t('common:last_price')}
                         <Sorter isUp={sortBy?.[`lastPrice`]} />
                     </div>
-                    <div onClick={() => setSortBy({ [`priceChangePercent`]: !sortBy?.[`priceChangePercent`] })} style={{ flex: '1 1 0%' }} className="flex justify-end items-center">
+                    <div onClick={() => setSorter('priceChangePercent')} style={{ flex: '1 1 0%' }} className="flex justify-end items-center select-none">
                     {t('futures:24h_change')}
                         <Sorter isUp={sortBy?.[`priceChangePercent`]} />
                     </div>

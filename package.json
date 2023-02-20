@@ -54,6 +54,7 @@
     "classnames": "^2.3.1",
     "clevertap-web-sdk": "^1.0.0",
     "date-fns": "^2.21.3",
+    "dom-to-image": "^2.6.0",
     "dom-to-image-more": "^2.9.5",
     "dompurify": "^2.2.8",
     "dotenv": "^8.2.0",

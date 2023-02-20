@@ -6,7 +6,8 @@
     "description": "With the most effective cryptocurrency trading<br/>and investment platform",
     "total_order_paid": "24h Volume",
     "total_user": "Total Number Of Users",
-    "total_pairs": "Total Trading Pairs"
+    "total_pairs": "Total Trading Pairs",
+    "download_app":"Download App"
   },
   "markettrend": {
     "title": "Market Trend",
@@ -26,6 +27,7 @@
     "rule_4": "Futures leverage up to <0>125x</0>",
     "rule_5": "Transaction fees only from <0>0,06%</0>",
     "rule_6": "<0>24/7</0> supporting",
+    "terms_of_service":"I am agree with the <0>Terms and Conditions</0> of Nami Exchange",
     "following_at": "Follow Us At",
     "join_nami_by": "Register an account with"
   },

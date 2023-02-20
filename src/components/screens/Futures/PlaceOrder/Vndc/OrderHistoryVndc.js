@@ -22,6 +22,7 @@ import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/Symb
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel'
 import _ from 'lodash';
+import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -35,6 +36,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
     const hasNext = useRef(true);
+    const [showOrderDetail, setShowOrderDetail] = useState(false);
 
     const columns = useMemo(() => [
         {
@@ -246,12 +248,37 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         setShowDetail(!showDetail);
     }
 
+    const onHandleClick = (key, data) => {
+        rowData.current = data;
+        switch (key) {
+            case 'detail':
+                setShowOrderDetail(true);
+                break;
+            default:
+                break;
+        }
+    };
+
+    const decimals = useMemo(() => {
+        return {
+            price: rowData.current?.decimalScalePrice || 0,
+            symbol: rowData.current?.decimalSymbol || 0
+        };
+    }, [showOrderDetail]);
+
     return (
         <>
             {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
+            <FuturesOrderDetail
+                order={rowData.current}
+                isVisible={showOrderDetail}
+                onClose={() => setShowOrderDetail(false)}
+                decimals={decimals}
+            />
             <TableV2
                 data={loading ? [] : dataSource}
+                onRowClick={(e) => onHandleClick('detail', e)}
                 loading={loading}
                 columns={columns}
                 pagingPrevNext={{

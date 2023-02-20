@@ -39,8 +39,8 @@ const HomeLightDark = ({ onShowQr, t }) => {
     const [currentTheme, onThemeSwitch] = useDarkMode();
 
     return (
-        <div className="dark:bg-dark-dark bg-white relative py-[120px]">
-            <div className="mal-container px-4 relative">
+        <div  className="dark:bg-dark-dark bg-white m relative py-[120px]">
+            <div className="mal-container px-4 md:px-0 ax-w-[1216px] relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
                         <div className="text-sm tooltip-arrow-bottom mb-[30px] justify-center items-center py-3 px-6 inline-flex animate-bounce	 rounded-full">
@@ -59,11 +59,13 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         slidesPerView={1.5}
                         centeredSlides
                         loop
+                        allowTouchMove
                         breakpoints={{
                             768: {
                                 slidesPerView: 3,
                                 spaceBetween: 20,
-                                centeredSlides: false
+                                centeredSlides: false,
+                                allowTouchMove: true
                             },
 
                             1440: {
@@ -71,7 +73,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                                 centeredSlides: false,
                                 spaceBetween: 40,
                                 loop: false,
-                                draggable:false
+                                allowTouchMove: false
                             }
                         }}
                         navigation
@@ -83,24 +85,15 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
                                 <div className="relative  overflow-hidden w-full h-full">
-                                    <img src={`/images/screen/homepage/iphone_${index + 1}.png`} className="w-full p-1 h-full " alt="iphone" />
+                                    <img src={`/images/screen/homepage/iphone_${index + 1}_${currentTheme}.png`} className="w-full p-1 h-full " alt="iphone" />
                                 </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                    {/* <div
-                        className="absolute left-1/2 top-0 w-full z-[1000]"
-                        style={{
-                            // background: `linear-gradient(261.62deg, #1ED776 11.3%, rgba(70, 201, 132, 0.634684) 16.12%, rgba(70, 201, 132, 0) 63.76%)`,
-                            filter: ' blur(36.2056px)',
-                            background: 'red',
-                            transform: 'matrix(0.91, 0.4, -0.86, 0.5, 0, 0)'
-                        }}
-                    ></div> */}
                 </div>
 
-                <div className="flex px-4 justify-between -m-3 flex-col-reverse md:flex-row items-center pt-[90px]">
-                    <div className="flex flex-wrap justify-center md:justify-start flex-row items-center gap-4 w-full md:flex-1 p-3">
+                <div id="download_section" className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
+                    <div className="flex flex-wrap items-center gap-4 w-full md:flex-1 p-3">
                         <GradientButton className="text-left py-2 px-6 w-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
@@ -113,7 +106,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                                 </a>
                             </Link>
                         </GradientButton>
-                        <GradientButton className="text-left py-2 px-6 w-auto hover:from-white hover:to-white">
+                        <GradientButton className="text-left py-2 px-6 w-auto">
                             <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
                                     <GooglePlayIcon />
@@ -126,7 +119,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             </Link>
                         </GradientButton>
                         <div onClick={onShowQr} className="cursor-pointer flex-1">
-                            <img src={'/images/icon/ic_qr_1.png'} width="44" alt="Nami Exchange" />
+                            <img src={'/images/icon/ic_qr_1.png'} width="54" alt="Nami Exchange" />
 
                             {/* {currentTheme !== THEME_MODE.LIGHT ? (
                                 <img src={getS3Url('/images/icon/ic_qr.png')} width="44" alt="Nami Exchange" />
@@ -136,7 +129,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         </div>
                     </div>
                     <div className="text-left md:text-right   p-3">
-                        <div style={{letterSpacing:'normal'}} className="text-txtPrimary md:w-[610px] dark:text-txtPrimary-dark text-[32px] tracking-normal font-semibold mb-4">
+                        <div className="text-txtPrimary md:max-w-[610px] dark:text-txtPrimary-dark leading-[1.19] text-[32px] font-semibold mb-4">
                             {t('home:intro_app.title')}
                         </div>
                         <div className="dark:text-txtSecondary-dark text-gray-9">{t('home:intro_app.description')}</div>

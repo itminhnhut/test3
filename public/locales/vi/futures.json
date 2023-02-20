@@ -42,7 +42,7 @@
         "no_opening_order": "Không có lệnh đang mở",
         "no_history_order": "Không có lịch sử lệnh",
         "no_transaction_history": "Không có lịch sử giao dịch",
-        "login_to_continue": "Vui lòng đăng nhập để tiếp tục",
+        "login_to_continue": "Đăng nhập để tiếp tục",
         "loading": "Đang tải...",
         "mobile": {
             "order": "Lệnh"
@@ -515,5 +515,10 @@
     "max_order_size_market_tooltip": "Khối lượng giao dịch tối đa khi đặt lệnh thị trường và stop market.",
     "view_all_trading_rule": "Xem tất cả quy tắc giao dịch.",
     "the_glossary": "Bảng chú giải thuật ngữ",
-    "order_canceled": "Lệnh huỷ"
+    "order_canceled": "Lệnh huỷ",
+    "share": {
+        "title": "Chia sẻ vị thế",
+        "download": "Tải xuống",
+        "ref_id": "ID người giới thiệu"
+    }
 }
