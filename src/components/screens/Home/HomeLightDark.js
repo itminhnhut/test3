@@ -29,7 +29,7 @@ const SwitchTheme = ({ currentTheme, changeTheme }) => {
                     active ? ` left-1` : `left-[calc(100%-4px)] -translate-x-full`
                 }`}
             >
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.darkBlue3} /> : <SvgSun size={20} color={colors.gray[11]} />}
+                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.gray[1]} /> : <SvgSun size={20} color={colors.gray[11]} />}
             </div>
         </div>
     );
@@ -90,7 +90,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                  
+
                 </div>
 
                 <div className="flex px-4 justify-between -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
@@ -131,7 +131,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     </div>
                     <div className="text-left md:text-right   p-3">
                         <div
-                            
+
                             className="text-txtPrimary md:max-w-[610px] dark:text-txtPrimary-dark leading-[1.19] text-[32px] font-semibold mb-4"
                         >
                             {t('home:intro_app.title')}

@@ -346,12 +346,9 @@ const NavBar = ({
         return (
             <a href="#" className="mal-navbar__svg_dominant" onClick={onThemeSwitch}>
                 {currentTheme !== THEME_MODE.LIGHT ? (
-                    <SvgMoon
-                        size={20}
-                        //  color={'#f2f4f6'}
-                    />
+                    <SvgSun size={20} />
                 ) : (
-                    <SvgSun size={20} color={isHomePage ? '#718096' : '#223050'} />
+                    <SvgMoon size={20} />
                 )}
             </a>
         );
