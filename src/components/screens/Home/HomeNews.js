@@ -1,12 +1,16 @@
 import Axios from 'axios';
-
 import { useEffect, useState } from 'react';
-
 import { useTranslation } from 'next-i18next';
-
-import LastedNews from 'src/components/screens/Home/News/LastedNews';
-import News from 'src/components/screens/Home/News/News';
+import dynamic from 'next/dynamic';
 import { ghost } from 'utils';
+
+const LastedNews = dynamic(() => import('components/screens/Home/News/LastedNews'), {
+    ssr: false
+});
+
+const News = dynamic(() => import('components/screens/Home/News/News'), {
+    ssr: false
+});
 
 const HomeNews = () => {
     // Initial State
@@ -61,7 +65,6 @@ const HomeNews = () => {
                 {state.news && <LastedNews data={state.news} lang={language} />}
 
                 {state.news && <News data={state.news} lang={language} />}
-
             </div>
         </section>
     );

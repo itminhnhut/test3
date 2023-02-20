@@ -1,19 +1,24 @@
 import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
-import Button from 'src/components/common/Button';
-import colors from '../../../styles/colors';
+import dynamic from 'next/dynamic';
 
 import { useWindowSize } from 'utils/customHooks';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
-import { useToggle } from 'react-use';
-import HomeCommunity from './HomeCommunity';
-import HomeJourney from './HomeJourney';
-import HomeLightDark from './HomeLightDark';
-import { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
 
-import HomeFirstAward from './HomeFirstAward';
+const HomeCommunity = dynamic(() => import('./HomeCommunity'), {
+    ssr: false
+});
+const HomeJourney = dynamic(() => import('./HomeJourney'), {
+    ssr: false
+});
+const HomeLightDark = dynamic(() => import('./HomeLightDark'), {
+    ssr: false
+});
+const HomeFirstAward = dynamic(() => import('./HomeFirstAward'), {
+    ssr: false
+});
 
 const HomeAdditional = ({ parentState }) => {
     // * Initial State
@@ -48,11 +53,13 @@ const HomeAdditional = ({ parentState }) => {
         <>
             <div className="relative">
                 <div className="absolute z-0 right-0 top-20 pointer-events-none">
-                    <img src="/images/screen/homepage/right_up.png" className="" />
+                    <Image src="/images/screen/homepage/right_up.png" width="513px" height="313px" />
                 </div>
                 <div className="absolute z-0 bottom-0 left-0 pointer-events-none">
-                    <img src="/images/screen/homepage/left_down.png" className="-mb-20" />
-                    <img src="/images/screen/homepage/ghost_down.png" className="" />
+                    <div className="-mb-20">
+                        <Image src="/images/screen/homepage/left_down.png" width="511px" height="213px" />
+                    </div>
+                    <Image src="/images/screen/homepage/ghost_down.png" width="389px" height="482px" className="" />
                 </div>
                 <HomeJourney t={t} width={width} currentTheme={theme} />
                 <section className="homepage-trade3step">
@@ -61,7 +68,7 @@ const HomeAdditional = ({ parentState }) => {
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    <img src={`/images/screen/homepage/create_account_${theme}.png`} width="48" />
+                                    <Image src={`/images/screen/homepage/create_account_${theme}.png`} width="48px" height="48px" />
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
                                 </div>
                                 <div className="homepage-trade3step__vertial_dot_line" />
@@ -69,7 +76,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    <img src="/images/screen/homepage/fiat_crypto.png" width="48" />
+                                    <Image src="/images/screen/homepage/fiat_crypto.png" width="48px" height="48px" />
 
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
                                 </div>
@@ -78,7 +85,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    <img src={`/images/screen/homepage/start_trading_${theme}.png`} width="48" />
+                                    <Image src={`/images/screen/homepage/start_trading_${theme}.png`} width="48px" height="48px" />
 
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
                                 </div>

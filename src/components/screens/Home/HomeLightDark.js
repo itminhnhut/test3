@@ -9,6 +9,7 @@ import SvgSun from 'src/components/svg/Sun';
 import colors from '../../../styles/colors';
 import { useToggle } from 'react-use';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import Image from 'next/image';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -39,7 +40,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
     const [currentTheme, onThemeSwitch] = useDarkMode();
 
     return (
-        <div  className="dark:bg-dark-dark bg-white m relative py-[120px]">
+        <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
             <div className="mal-container px-4 md:px-0 ax-w-[1216px] relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
@@ -53,7 +54,9 @@ const HomeLightDark = ({ onShowQr, t }) => {
                 </div>
 
                 <div className="relative bg-transparent">
-                    <img src="/images/screen/homepage/splash_dark.png" className="w-full absolute left-[35%] top-1/2 -translate-x-1/2 -translate-y-1/2 " />
+                    <div className="absolute left-[35%] top-1/2 -translate-x-1/2 w-full h-full -translate-y-1/2 ">
+                        <Image src="/images/screen/homepage/splash_dark.png" layout="fill" />
+                    </div>
                     <Swiper
                         spaceBetween={10}
                         slidesPerView={1.5}
@@ -84,8 +87,8 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     >
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
-                                <div className="relative  overflow-hidden w-full h-full">
-                                    <img src={`/images/screen/homepage/iphone_${index + 1}_${currentTheme}.png`} className="w-full p-1 h-full " alt="iphone" />
+                                <div className="relative overflow-hidden w-full h-[550px] lg:h-[415px] ">
+                                    <Image src={`/images/screen/homepage/iphone_${index + 1}_${currentTheme}.png`} layout="fill" className="p-1" alt="iphone" />
                                 </div>
                             </SwiperSlide>
                         ))}
@@ -119,7 +122,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             </Link>
                         </GradientButton>
                         <div onClick={onShowQr} className="cursor-pointer flex-1">
-                            <img src={'/images/icon/ic_qr_1.png'} width="54" alt="Nami Exchange" />
+                            <Image src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
 
                             {/* {currentTheme !== THEME_MODE.LIGHT ? (
                                 <img src={getS3Url('/images/icon/ic_qr.png')} width="44" alt="Nami Exchange" />

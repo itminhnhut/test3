@@ -11,9 +11,12 @@ import colors from 'styles/colors';
 import CountUp from 'react-countup';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
-import TrendingSlide from './TrendingSlide';
-import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
+    ssr: false
+});
 
 const HomeIntroduce = ({ parentState }) => {
     const [state, set] = useState({
@@ -26,7 +29,6 @@ const HomeIntroduce = ({ parentState }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
-    const { width } = useRefWindowSize();
     const { t } = useTranslation(['home']);
 
     const getTrending = async () => {
@@ -43,15 +45,6 @@ const HomeIntroduce = ({ parentState }) => {
             setState({ loadingTrend: false });
         }
     };
-    const animRef = useRef();
-
-    const BannerGraphic = useCallback(() => {
-        return (
-            <div className="homepage-introduce___wrapper__right">
-                <video src="/images/screen/homepage/banner_graphics.mp4" loop muted autoPlay className="pointer-events-none h-full" />
-            </div>
-        );
-    }, []);
 
     const renderIntroduce = useCallback(() => {
         return (
@@ -90,7 +83,6 @@ const HomeIntroduce = ({ parentState }) => {
                                             </CountUp>
                                         </>
                                     )}
-                                    {/* <div className="bott-line" /> */}
                                 </div>
                                 <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
                             </div>
@@ -110,7 +102,6 @@ const HomeIntroduce = ({ parentState }) => {
                                             {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
                                     )}{' '}
-                                    +{/* <div className="bott-line" /> */}
                                 </div>
                                 <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
                             </div>
@@ -130,7 +121,6 @@ const HomeIntroduce = ({ parentState }) => {
                                             {({ countUpRef }) => <span ref={countUpRef} />}
                                         </CountUp>
                                     )}
-                                    {/* <div className="bott-line" /> */}
                                 </div>
                                 <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
                             </div>
@@ -144,7 +134,9 @@ const HomeIntroduce = ({ parentState }) => {
                             </Link>
                         </div>
                     </div>
-                    <BannerGraphic />
+                    <div className="homepage-introduce___wrapper__right">
+                        <video src="/images/screen/homepage/banner_graphics.mp4" loop muted autoPlay className="pointer-events-none h-full" />
+                    </div>
                 </div>
             </section>
         );

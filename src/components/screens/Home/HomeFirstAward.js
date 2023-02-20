@@ -7,6 +7,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { Eye, EyeOff } from 'react-feather';
 import { getLoginUrl } from 'redux/actions/utils';
 import { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
 
 import CheckBox from 'components/common/CheckBox';
 import { PATHS } from '../../../constants/paths';
@@ -91,19 +92,22 @@ const HomeFirstAward = ({ t, language, theme }) => {
                     </div>
                 </div>
                 <div className="homepage-first_award___form relative">
-                    <img
-                        src="/images/screen/homepage/first_award_corner.png"
+                    <div
                         className={` ${
-                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px] ' : 'right-[-48px] top-[-12px] rotate-90'
-                        } absolute  z-[-10] w-[228px]`}
-                    />
-                    <img
-                        src="/images/screen/homepage/first_award_corner.png"
+                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
+                        } absolute  z-[-10] w-[228px] `}
+                    >
+                        <img src="/images/screen/homepage/first_award_corner.png" />
+                    </div>
+                    <div
                         className={`
-                 ${
-                     theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
-                 }    absolute z-[-10] w-[228px]`}
-                    />
+                    ${
+                        theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
+                    }    absolute z-[-10] w-[228px] `}
+                    >
+                        <img src="/images/screen/homepage/first_award_corner.png" />
+                    </div>
+
                     <div className="homepage-first_award___form___input_group">
                         <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                             Email
