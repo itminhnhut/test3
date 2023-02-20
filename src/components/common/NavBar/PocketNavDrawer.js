@@ -33,7 +33,6 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
-    console.log('isNotVerified:', isNotVerified);
     const isVerifying = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
 
@@ -166,13 +165,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 height="36"
                             />
 
-                            <div
-                                style={{ background: 'linear-gradient(328deg, rgba(47,75,63,1) 0%, #fff 50% rgba(19,24,31,1) 50%, rgba(47,75,63,1) 100%)' }}
-                                className="flex flex-row justify-center items-center user__button py-4  mx-4 rounded-md"
-                                // style={{
-                                //     background: `-webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.01) 11%, rgba(169, 255, 209, 0.02) 14%, rgba(225, 255, 239, 0.24) 53%, rgba(227, 249, 244, 0.42) 87%, rgba(205, 248, 231, 0.21) 88%, rgba(255, 255, 255, 0) 89%)`
-                                // }}
-                            >
+                            <div className="flex flex-row justify-center items-center user__button py-4 mx-4 relative">
+                                <img
+                                    src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`}
+                                    className="rounded-md w-full h-full left-0 absolute z-[-1]"
+                                />
                                 <AuthButton t={t} />
                             </div>
 

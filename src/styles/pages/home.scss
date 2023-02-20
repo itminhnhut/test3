@@ -1518,10 +1518,10 @@
   // background: linear-gradient(97.34deg, #233074 -29.34%, #223050 73.72%);
   .homepage-activity__slide__item {
     @apply relative;
-    &::after {
-      content:'';
-      @apply absolute bg-gray-11 dark:bg-dark-1 w-2 h-2 rounded-full right-0 lg:right-4;
-    }
+    // &::after {
+    //   content:'';
+    //   @apply absolute bg-gray-11 dark:bg-dark-1 w-2 h-2 rounded-full right-0 lg:right-4;
+    // }
   }
   .homepage-activity___wrapper {
     // height: 380px;

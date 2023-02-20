@@ -39,7 +39,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
     const [currentTheme, onThemeSwitch] = useDarkMode();
 
     return (
-        <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
+        <div  className="dark:bg-dark-dark bg-white m relative py-[120px]">
             <div className="mal-container px-4 md:px-0 ax-w-[1216px] relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
@@ -92,7 +92,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     </Swiper>
                 </div>
 
-                <div className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
+                <div id="download_section" className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
                     <div className="flex flex-wrap items-center gap-4 w-full md:flex-1 p-3">
                         <GradientButton className="text-left py-2 px-6 w-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">

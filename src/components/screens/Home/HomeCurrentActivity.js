@@ -55,8 +55,7 @@ const HomeCurrentActivity = () => {
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
                 <Swiper
-                    // modules={[Autoplay]}
-                    // autoplay={{ delay: 2800 }}
+                   
                     spaceBetween={20}
                     slidesPerView={1.5}
                     centeredSlides
