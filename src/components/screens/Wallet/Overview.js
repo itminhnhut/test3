@@ -245,12 +245,11 @@ const OverviewWallet = (props) => {
                 <ButtonV2
                     onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
                     className="px-6"
-                    color="dark"
-                    variants="none"
+                    variants="secondary"
                 >
                     {t('common:withdraw')}
                 </ButtonV2>
-                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
+                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
                     {t('common:transfer')}
                 </ButtonV2>
             </div>
@@ -263,8 +262,8 @@ const OverviewWallet = (props) => {
                 addClass={`mt-8 p-4 md:p-8 bg-cover 
             ${
                 currentTheme === THEME_MODE.DARK
-                    ? 'bg-namiv2-linear-dark border border-divider-dark'
-                    : 'bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66]'
+                    ? ' bg-namiv2-linear-dark border border-divider-dark'
+                    : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
             }`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
@@ -296,7 +295,7 @@ const OverviewWallet = (props) => {
 
             {/* Số dư tài sản */}
             <div className="mt-12 md:mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-8 !p-0 bg-white dark:bg-dark-dark">
+            <MCard addClass="mt-8 !p-0 bg-white dark:bg-dark-dark border-none">
                 {/* mark1 */}
                 {/* Exchange */}
                 <CardWallet onClick={() => onHandleClick('details_exchange')} isSmallScreen={isSmallScreen}>
@@ -320,7 +319,7 @@ const OverviewWallet = (props) => {
                             </button>
                             {/* </Link> */}
                         </div>
-                        <div className="flex items-center mt-4 lg:mt-0">
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick('deposit_exchange')}>
                                 {t('common:deposit')}
                             </ButtonV2>
@@ -342,12 +341,19 @@ const OverviewWallet = (props) => {
                     </div>
                 </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_futures')} isSmallScreen={isSmallScreen}>
-                    <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
+                    <AssetBalance
+                        title="Futures"
+                        icon={<SvgWalletFutures size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderFuturesEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
-                        <div className="flex items-center mt-4 pr-4 lg:mt-0">
-                            <Trans>{t('wallet:futures_overview')}</Trans>
-                        </div>
-                        <div className="flex">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:futures_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" onClick={() => onHandleClick('transfer_futures')}>
                                 {t('common:transfer')}
                             </ButtonV2>
@@ -355,12 +361,19 @@ const OverviewWallet = (props) => {
                     </div>
                 </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
-                    <AssetBalance title="Partners" icon={<PartnersIcon />} renderEstBalance={renderPartnersEstBalance} />
+                    <AssetBalance
+                        title="Partners"
+                        icon={<PartnersIcon size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderPartnersEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
-                        <div className="flex items-center mt-4 pr-4 lg:mt-0">
-                            <Trans>{t('wallet:partners_overview')}</Trans>
-                        </div>
-                        <div className="flex">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:partners_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" onClick={() => onHandleClick('transfer_partners')}>
                                 {t('common:transfer')}
                             </ButtonV2>
@@ -504,8 +517,8 @@ const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen }) => {
     return (
         <div className="min-w-[530px] max-w-[530px] flex items-center">
             <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-transparent dark:bg-dark-2">{icon}</div>
-            <div className="ml-4 xl:ml-6 flex flex-col justify-between h-full">
-                <span className="mr-4 text-txtSecondary dark:text-txtSecondary-dark text-sm">{title}</span>
+            <div className="ml-6 flex flex-col ">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-3">{title}</div>
                 {renderEstBalance()}
             </div>
         </div>
