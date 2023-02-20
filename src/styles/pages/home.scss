@@ -36,7 +36,7 @@
         font-size: 40px;
 
         @media (min-width: 350px) {
-          font-size: 44px;
+          font-size: 36px;
         }
 
         @media (min-width: 576px) {
@@ -46,8 +46,7 @@
 
         @media (min-width: 1366px) {
           @apply mt-4;
-          // font-size: 64px;
-          // line-height: 70px;
+         
           font-size: 54px;
           line-height: 68px;
         }
@@ -134,7 +133,8 @@
     }
 
     .homepage-introduce___wrapper__right {
-      @apply relative z-10 flex justify-end mt-14 md:w-[100%] lg:w-[55%];
+      @apply relative z-10 flex justify-end items-end md:w-[100%] lg:absolute;
+      max-height:556px;
       img {
         @apply block;
         width: auto;

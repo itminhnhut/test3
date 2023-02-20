@@ -639,13 +639,7 @@ const NavBar = ({
                                     <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
-                                        <SvgIcon
-                                            name="chevron_down"
-                                            size={16}
-                                            color={colors.gray[7]}
-                                            className="chevron__down"
-                                            // style={{ marginLeft: 7 }}
-                                        />
+                                        <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
                                         {renderWallet()}
                                     </div>
                                 )}
