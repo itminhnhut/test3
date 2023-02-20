@@ -952,7 +952,7 @@
 
         .homepage-journey__group_content___left__item {
 
-          @apply mb-4 md:mb-0 last:mb-0 border border-divider rounded-md dark:border-divider-dark md:border-0 block md:flex items-center w-full md:w-1/2;
+          @apply mb-4 md:mb-0 last:mb-0 border border-divider rounded-md dark:border-divider-dark md:border-0 block md:flex items-center ;
 
           padding: 24px;
 
@@ -1039,7 +1039,7 @@
 
           .homepage-journey__group_content___left__item {
             @apply border border-transparent dark:border-transparent;
-            padding: 16px;
+           
             border-radius: 12px;
             transition: all .3s ease;
             cursor: pointer;

@@ -23,6 +23,7 @@ import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import HrefButton from '../V2/ButtonV2/HrefButton';
 import ButtonV2 from '../V2/ButtonV2/Button';
+import TagV2 from '../V2/TagV2';
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
@@ -31,7 +32,11 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     const { user: auth } = useSelector((state) => state.auth) || null;
-    const isVerified = useMemo(() => auth?.kyc_status >= KYC_STATUS.APPROVED, [auth]);
+    const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
+    console.log('isNotVerified:', isNotVerified);
+    const isVerifying = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
+    const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
+
     const { width } = useWindowSize();
     const {
         t,
@@ -149,11 +154,6 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
                     <div className="absolute right-4">
                         <X style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose} />
-                        {/* <SvgIcon
-                            name='cross'
-                            size={20}
-                           
-                        /> */}
                     </div>
 
                     {!auth ? (
@@ -167,38 +167,16 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             />
 
                             <div
-                                style={{ background: 'linear-gradient(328deg, rgba(47,75,63,1) 0%, rgba(19,24,31,1) 50%, rgba(47,75,63,1) 100%)' }}
+                                style={{ background: 'linear-gradient(328deg, rgba(47,75,63,1) 0%, #fff 50% rgba(19,24,31,1) 50%, rgba(47,75,63,1) 100%)' }}
                                 className="flex flex-row justify-center items-center user__button py-4  mx-4 rounded-md"
+                                // style={{
+                                //     background: `-webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.01) 11%, rgba(169, 255, 209, 0.02) 14%, rgba(225, 255, 239, 0.24) 53%, rgba(227, 249, 244, 0.42) 87%, rgba(205, 248, 231, 0.21) 88%, rgba(255, 255, 255, 0) 89%)`
+                                // }}
                             >
                                 <AuthButton t={t} />
                             </div>
-                            {/* <div className="flex flex-row justify-between user__button">
-                                <div>
-                                    <Button
-                                        title={t('common:sign_in')}
-                                        componentType="button"
-                                        onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')}
-                                        type="secondary"
-                                    />
-                                </div>
-                                <div>
-                                    <Button
-                                        title={t('common:sign_up')}
-                                        componentType="button"
-                                        onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
-                                        type="primary"
-                                    />
-                                </div>
-                            </div> */}
-                            <div
-                                className="border-b border-divider dark:border-divider-dark"
-                                style={{
-                                    paddingLeft: 16,
-                                    paddingRight: 16,
-                                    marginTop: 16,
-                                    marginBottom: 16
-                                }}
-                            />
+
+                            <div className="my-4" />
                         </>
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
@@ -218,14 +196,30 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </a>
                         </Link>
                     )}
-                    {auth && <hr className="border-divider dark:border-divider-dark mx-4 my-6 " />}
-
-                    <div className="flex items-center px-4 mb-4">
-                        <SuccessfulTransactionIcon size={24} />
-                        <div className="text-dominant font-semibold ml-2">
-                            {loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${vipLevel || '0'}`}
-                        </div>
-                    </div>
+                    {auth && (
+                        <>
+                            <hr className="border-divider dark:border-divider-dark mx-4 my-6 " />
+                            <div className="flex items-center justify-between px-4 mb-4">
+                                <div className="flex items-center ">
+                                    <SuccessfulTransactionIcon size={24} />
+                                    <div className="text-dominant font-semibold ml-2">
+                                        {loadingVipLevel ? <PulseLoader size={3} color={colors.teal} /> : `VIP ${vipLevel || '0'}`}
+                                    </div>
+                                </div>
+                                {!isNotVerified ? (
+                                    <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                                        <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
+                                            {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
+                                        </div>
+                                    </TagV2>
+                                ) : (
+                                    <ButtonV2 onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="max-w-[150px] !text-sm">
+                                        {t('navbar:verify_account')}
+                                    </ButtonV2>
+                                )}
+                            </div>
+                        </>
+                    )}
 
                     {width < 992 && <div className="mal-pocket-navbar__drawer__navlink__group">{renderNavItem()}</div>}
                     <hr className="border-divider dark:border-divider-dark my-6" />
@@ -284,7 +278,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         </div>
                         {auth && (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item mt-8">
-                                <ButtonV2 color="dark" className="bg-gray-10 font-semibold text-txtPrimary">
+                                <ButtonV2 variants="secondary" className=" font-semibold text-txtPrimary">
                                     {t('navbar:menu.user.logout')}
                                 </ButtonV2>
                             </div>
