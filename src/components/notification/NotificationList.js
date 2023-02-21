@@ -1,19 +1,31 @@
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
+import Image from 'next/image';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
-import { getTimeAgo } from 'src/redux/actions/utils';
+import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
 import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
 
-const NotificationList = ({ btnClass = '', navTheme = null }) => {
-    const { t } = useTranslation(['navbar']);
+const NOTI_READ = 2;
+
+const IconNoti = {
+    0: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: ALL
+    1: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: INDIVIDUAL
+    9: <Image src={'/images/screen/noti/ic_noti_exchange.png'} width={32} height={32} />, // NOTE: TRANSACTIONS
+    14: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: EVENTS
+    16: <Image src={'/images/screen/noti/ic_noti_system.png'} width={32} height={32} />, // NOTE: SYSTEM
+    17: <Image src={'/images/screen/noti/ic_noti_referral.png'} width={32} height={32} /> // NOTE: COMMISSION
+};
+
+const NotificationList = ({ btnClass, navTheme, auth }) => {
+    const { t, i18n } = useTranslation(['navbar']);
     const dispatch = useDispatch();
 
     const ref = useRef(null);
@@ -31,51 +43,45 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
     const unreadCount = useSelector((state) => state.notification.unreadCount);
+    const user = useSelector((state) => state.auth.user) || null;
 
     const [notificationLoading, setNotificationLoading] = useState(false);
 
-    const markAsRead = async () => {
-        try {
-            if (!notificationsMix) return;
-            const ids = notificationsMix.reduce((prev, curr) => {
-                if (curr.status === NotificationStatus.READ) return prev;
-
-                prev.push(curr.id);
-                return prev;
-            }, []);
-
-            dispatch(await markAllAsRead(ids));
-        } catch (er) {
-            // console.error(er);
-        }
+    console.log('hasNextNotification', hasNextNotification);
+    const markAsRead = async (ids) => {
+        dispatch(await markAllAsRead(ids));
     };
 
-    const fetchNotificationsOnOpen = _.throttle(() => dispatch(getNotifications()), 1000);
+    const fetchNotificationsOnOpen = _.throttle(() => dispatch(getNotifications({ lang: i18n.language })), 1000);
 
     const loadMoreNotification = () => {
         let prevId;
         if (notificationsMix && notificationsMix.length) {
-            prevId = notificationsMix[notificationsMix.length - 1].id;
+            prevId = notificationsMix[notificationsMix.length - 1]._id;
         }
         setNotificationLoading(true);
-        dispatch(getNotifications(prevId, () => setNotificationLoading(false)));
+        dispatch(getNotifications({ lang: i18n.language, prevId }, () => setNotificationLoading((prev) => !prev)));
     };
 
     const openDropdownPopover = () => {
-        // createPopper(btnDropdownRef.current, popoverDropdownRef.current, {
-        //     placement: 'bottom-start'
-        // });
-        // setDropdownPopoverShow(true);
         setPopover(true);
         fetchNotificationsOnOpen();
     };
 
     const closeDropdownPopover = () => {
         if (isPopover) {
-            markAsRead();
             truncateNotificationsDebounce();
             setPopover(false);
         }
+    };
+
+    const handleMarkRead = async (ids, status) => {
+        if (status === 2) return;
+        markAsRead(ids);
+    };
+
+    const handleMarkAllRead = async () => {
+        markAsRead();
     };
 
     let content;
@@ -90,25 +96,28 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     {mix.map((notification) => (
                         <div
                             className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
-                                notification?.status === NotificationStatus.READ ? '' : 'bg-black-5'
+                                notification?.status === NotificationStatus.READ ? '' : ''
                             }`}
-                            key={notification?.id || notification?.created_at}
+                            key={notification?._id || notification?.created_at}
+                            onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
-                            <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full">
-                                <IconBell color={colors.teal} />
-                                {/* <Notification /> */}
+                            <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full w-[58px] h-[58px]">
+                                {IconNoti?.[notification?.category] || <IconBell color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">{notification.content}</div>
+                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
+                                    {notification.title}
+                                </div>
+                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 line-clamp-2">{notification.content}</div>
                                 <div
-                                    className={`${
-                                        notification?.status === NotificationStatus.READ ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-dominant'
+                                    className={`text-xs ${
+                                        notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
                                     } `}
                                 >
-                                    {getTimeAgo(notification.created_at)}
+                                    {getTimeAgo(notification.createdAt)}
                                 </div>
                             </div>
-                            {notification?.status === NotificationStatus.EMITTED && <div className="ml-3 bg-dominant w-2 h-2 rounded-full" />}
+                            {notification?.status !== NOTI_READ && <div className="ml-3 bg-dominant w-2 h-2 rounded-full" />}
                         </div>
                     ))}
                 </>
@@ -126,7 +135,6 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                     className={`!h-full btn btn-clean btn-icon inline-flex items-center focus:outline-none relative mr-6 !p-0 ${btnClass}`}
                     aria-expanded="false"
                     onClick={() => {
-                        // eslint-disable-next-line no-unused-expressions
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
                     }}
                 >
@@ -152,7 +160,7 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold">
+                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold" onClick={handleMarkAllRead}>
                                 {t('navbar:delete_noti')}
                             </ButtonV2>
                             {/* {unreadCount > 0 && (
@@ -168,7 +176,9 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
                                 {hasNextNotification ? (
                                     <>
                                         {notificationLoading ? (
-                                            <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">{t('loading')}</span>
+                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                                {t('loading')}
+                                            </span>
                                         ) : (
                                             <span
                                                 onClick={loadMoreNotification}
@@ -190,6 +200,11 @@ const NotificationList = ({ btnClass = '', navTheme = null }) => {
             </div>
         </>
     );
+};
+
+NotificationList.defaultProps = {
+    btnClass: '',
+    navTheme: null
 };
 
 export default NotificationList;
