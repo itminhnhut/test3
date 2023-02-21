@@ -24,6 +24,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
+import EstBalance from 'components/common/EstBalance';
+import ModalV2 from 'components/common/V2/ModalV2';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -38,7 +40,7 @@ const INITIAL_STATE = {
 const AVAILBLE_KEY = 'partners_available';
 const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
 
-const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
+const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -217,11 +219,11 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                     <PartnersIcon size={32} />
                 </div>
                 <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
-                    <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
                         <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
                         <span>BTC</span>
                     </div>
-                    <div className="font-normal text-base mt-1">
+                    <div className="font-normal text-sm md:text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
@@ -278,7 +280,9 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
             <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
                 <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
                     <div>
-                        <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
+                        <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
+
+                        {/* <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
@@ -286,7 +290,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch }) => {
                             >
                                 {state.hideAsset ? <HideIcon /> : <SeeIcon />}
                             </div>
-                        </div>
+                        </div> */}
                         {renderEstWallet()}
                     </div>
 

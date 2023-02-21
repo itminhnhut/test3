@@ -20,9 +20,9 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
-const { TASK_CATEGORY } = Types;
+import EstBalance from 'components/common/EstBalance';
 
-const WIDTH_MD = 768;
+const { TASK_CATEGORY } = Types;
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -42,9 +42,9 @@ const OverviewWallet = (props) => {
         stakingEstBtc,
         stakingRefPrice,
         farmingEstBtc,
-        farmingRefPrice
+        farmingRefPrice,
+        isSmallScreen
     } = props;
-    console.log(TASK_CATEGORY);
 
     // Init State
     const [state, set] = useState(INITIAL_STATE);
@@ -60,11 +60,6 @@ const OverviewWallet = (props) => {
         let limit = 5;
         if (width >= 1280) limit = 7;
         return limit;
-    }, [width]);
-
-    // const isSmallScreen = width < WIDTH_MD;
-    const isSmallScreen = useMemo(() => {
-        return width < WIDTH_MD;
     }, [width]);
 
     // Render Handler
@@ -287,15 +282,7 @@ const OverviewWallet = (props) => {
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
                     <div>
-                        <div className="flex items-center text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-3">{t('wallet:est_balance')}</div>
-                            <div
-                                className="flex items-center cursor-pointer hover:opacity-80 select-none"
-                                onClick={() => setState({ hideAsset: !state.hideAsset })}
-                            >
-                                {state.hideAsset ? <HideIcon size={isSmallScreen ? 16 : 24} /> : <SeeIcon size={isSmallScreen ? 16 : 24} />}
-                            </div>
-                        </div>
+                        <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
                         <div className="mt-[52px] md:mt-12 flex items-center justify-between">
                             <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
                                 <SvgWalletOverview />
@@ -310,7 +297,7 @@ const OverviewWallet = (props) => {
                     </div>
                 </div>
             </MCard>
-            <ListButton className="mt-4 flex items-end justify-end h-full w-full gap-2 md:hidden" />
+            <ListButton className="mt-6 flex items-end justify-end h-full w-full gap-2 md:hidden" />
 
             {/* Số dư tài sản */}
             <div className="mt-12 md:mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
@@ -449,7 +436,7 @@ const OverviewWallet = (props) => {
                     </div>
                 </Link> */}
             </MCard>
-            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
+            <ModalNeedKyc isMobile={isSmallScreen} isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
             <ModalAction isShowAction={isShowAction} onBackdropCb={() => setIsShowAction({})} onHandleClick={onHandleClick} t={t} />
         </div>
     );
