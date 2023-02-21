@@ -424,7 +424,8 @@
             "position_list": "Danh sách lệnh",
             "orders": "lệnh",
             "order": "lệnh",
-            "preview": "Xem trước"
+            "preview": "Xem trước",
+            "close_orders_success": "Đặt lệnh đóng thành công"
         }
     },
     "orders_history": "Lịch sử lệnh",

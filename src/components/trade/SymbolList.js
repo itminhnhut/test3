@@ -351,7 +351,7 @@ const SymbolList = (props) => {
                         >
                             <IconStarFilled
                                 size={14}
-                                color={activeTab === 'favorite' ? colors.yellow : currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5}
+                                color={activeTab === 'favorite' ? colors.yellow[2] : currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5}
                             />
                         </div>
                     )}
