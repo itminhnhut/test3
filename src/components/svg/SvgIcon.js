@@ -639,6 +639,7 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
     );
 };
 
+
 const BxsInfoCircle = ({ size = 24 }) => (
     <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill="#768394" />

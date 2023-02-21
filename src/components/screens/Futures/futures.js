@@ -307,7 +307,7 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowOpenOrders && (
-                                    <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark !h-auto`}>
                                         <FuturesTradeRecord
                                             isVndcFutures={true}
                                             layoutConfig={state.tradeRecordLayout}
