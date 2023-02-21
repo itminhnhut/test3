@@ -421,7 +421,7 @@ const NavBar = ({
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img src={avatar} alt="" className="w-12 h-12 rounded-full" />
+                                <img src={avatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username">{!isVerified ? 'GUEST' : username || 'GUEST'}</div>
