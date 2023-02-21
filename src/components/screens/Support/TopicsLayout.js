@@ -117,7 +117,7 @@ const TopicsLayout = ({
                     >
                         {!!showDropdown?.[item?.displaySlug] ? (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#kstei7ehqa)">
+                                <g clipPath="url(#kstei7ehqa)">
                                     <path d="M4.667 9.333 8 6l3.333 3.333H4.667z" fill="#8694B3" />
                                 </g>
                                 <defs>
@@ -128,7 +128,7 @@ const TopicsLayout = ({
                             </svg>
                         ) : (
                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#v5enqzqcna)">
+                                <g clipPath="url(#v5enqzqcna)">
                                     <path d="M4.667 6.667 8 10l3.333-3.333H4.667z" fill="#8694B3" />
                                 </g>
                                 <defs>
@@ -213,7 +213,7 @@ const TopicsLayout = ({
                                         <div>
                                             {toggleMenu ?
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g clip-path="url(#kstei7ehqa)">
+                                                    <g clipPath="url(#kstei7ehqa)">
                                                         <path d="M4.667 9.333 8 6l3.333 3.333H4.667z" fill="#8694B3" />
                                                     </g>
                                                     <defs>
@@ -224,7 +224,7 @@ const TopicsLayout = ({
                                                 </svg>
                                                 :
                                                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <g clip-path="url(#v5enqzqcna)">
+                                                    <g clipPath="url(#v5enqzqcna)">
                                                         <path d="M4.667 6.667 8 10l3.333-3.333H4.667z" fill="#8694B3" />
                                                     </g>
                                                     <defs>
