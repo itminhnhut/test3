@@ -9,6 +9,7 @@ import 'keen-slider/keen-slider.min.css';
 import Link from 'next/link';
 import colors from 'styles/colors';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
+import { useRefWindowSize } from 'hooks/useWindowSize';
 
 const LastedNews = ({ data, lang }) => {
     const [state, set] = useState({
@@ -17,7 +18,7 @@ const LastedNews = ({ data, lang }) => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const { width } = useWindowSize();
+    const { width } = useRefWindowSize();
     const {
         i18n: { language }
     } = useTranslation();

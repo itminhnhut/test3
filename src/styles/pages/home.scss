@@ -33,11 +33,9 @@
         @apply text-txtPrimary-dark font-bold mt-5;
 
         line-height: 52px;
-        font-size: 40px;
+        font-size: 36px;
 
-        @media (min-width: 350px) {
-          font-size: 36px;
-        }
+       
 
         @media (min-width: 576px) {
           @apply mt-8;
@@ -1252,10 +1250,13 @@
 
     .homepage-trade3step___title {
       @apply text-center;
-
+      font-size:28px;
       font-weight: 600;
-      font-size: 32px;
-      line-height: 1.19;
+      @media (min-width: 768px) {
+
+        font-size: 32px;
+        line-height: 1.19;
+      }
     }
 
     .homepage-trade3step___step___wrapper {
@@ -1266,7 +1267,7 @@
         @apply flex flex-col items-center justify-center;
 
         .homepage-trade3step___step___item___inner {
-          @apply flex flex-col items-center justify-center;
+          @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
 
           .homepage-trade3step___step___item__label {
             font-weight: 600;
@@ -1301,7 +1302,7 @@
 
         @media (min-width: 992px) {
           @apply flex-row items-center;
-
+          
           &:first-child {
             .homepage-trade3step___step___item___inner {
               margin-right: 38px;
@@ -1358,7 +1359,7 @@
 
       @media (min-width: 992px) {
         @apply flex-row;
-
+       
       }
     }
 

@@ -257,7 +257,7 @@ const FuturesLeverageSettings = ({
             )}
         >
             <div className={`mb-6 text-sm font-bold`}>
-                <div className="text-[22px] dark:text-txtPrimary-dark font-semibold">{t('futures:leverage:title')}</div>
+                <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('futures:leverage:title')}</div>
             </div>
 
             <div className={`mb-1.5 font-medium text-txtSecondary dark:text-txtSecondary-dark text-sm`}>{t('futures:leverage:leverage')}</div>
@@ -322,7 +322,7 @@ const FuturesLeverageSettings = ({
                 </>
             )}
 
-            <div className="mt-2.5 flex items-center bg-hover-1 dark:bg-darkBlue-3 px-6 py-4 rounded-md">
+            <div className="mt-2.5 flex items-center bg-hover-1 dark:bg-darkBlue-3 text-txtPrimary px-6 py-4 rounded-md">
                 <div className="pt-1">
                     <SvgWarning size={24} fill={colors.darkBlue5} fillInside={'currentColor'} />
                 </div>

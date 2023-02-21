@@ -121,7 +121,7 @@ const TradingInput = ({
                     </div>
                 ) : null}
                 {/* head  */}
-                <div className={classNames('border-r pr-2 dark:border-divider-dark border-divider', headContainerClassName)}>
+                <div className={classNames('', headContainerClassName)}>
                     {renderHead && isFunction(renderHead) ? renderHead() : renderHead}
                 </div>
 

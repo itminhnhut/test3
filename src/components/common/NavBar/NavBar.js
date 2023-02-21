@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
-import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
+import dynamic from 'next/dynamic';
 import NotificationList from 'src/components/notification/NotificationList';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
@@ -34,11 +34,9 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
-import HrefButton from 'src/components/common/V2/ButtonV2/HrefButton';
 import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS } from 'redux/actions/const';
-import Copy from 'components/svg/Copy';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
 import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
@@ -46,6 +44,11 @@ import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
+import Image from 'next/image';
+
+const PocketNavDrawer = dynamic(() => import('src/components/common/NavBar/PocketNavDrawer'), {
+    ssr: false
+});
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -356,7 +359,6 @@ const NavBar = ({
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerifying = kyc_status === KYC_STATUS.PENDING_APPROVAL;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
-
         const items = [];
 
         let color;
@@ -581,7 +583,7 @@ const NavBar = ({
                  `}
                 >
                     <a className="block mal-navbar__logo " onClick={() => router.back()}>
-                        <img src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
+                        <Image src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
                     </a>
                 </div>
             )}
@@ -600,7 +602,7 @@ const NavBar = ({
                 >
                     <Link href="/">
                         <a className="block mal-navbar__logo mr-10">
-                            <img
+                            <Image
                                 // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                 src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
                                 width="94"
@@ -683,12 +685,12 @@ const NavBar = ({
 
                         {width < 1366 && (
                             <div
-                                className="relative"
+                                className="relative text-txtSecondary dark:text-txtPrimary-dark"
                                 onClick={(e) => {
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
+                                <SvgMenu size={25} color="currentColor"  className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
                             </div>
                         )}
                     </div>

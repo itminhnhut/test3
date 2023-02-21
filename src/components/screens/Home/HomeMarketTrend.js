@@ -11,6 +11,7 @@ import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
 
 import classNames from 'classnames';
+import { useRefWindowSize } from 'hooks/useWindowSize';
 
 const types = [
     {
@@ -63,8 +64,8 @@ const HomeMarketTrend = ({ trendData }) => {
     const setState = (state) => set(prevState => ({ ...prevState, ...state }));
 
     // * Use Hooks
-    const { width } = useWindowSize(['home', 'table']);
-    const { t } = useTranslation();
+    const { width } = useRefWindowSize();
+    const { t } = useTranslation(['home', 'table']);
 
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
 
