@@ -100,22 +100,14 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
         return (
-            <div className={`font-semibold  grid grid-cols-2 mt-5 text-sm md:flex md:justify-start md:mt-8 md:text-base'}`}>
+            <div className="txtPri-1 grid grid-cols-2 mt-5 md:flex md:justify-start md:mt-8">
                 <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
-                        {t('common:available_balance')}: &nbsp;
-                    </span>
-                    <span className="font-semibold mt-2 md:mt-0">
-                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC
-                    </span>
+                    <span className="txtSecond-1">{t('common:available_balance')}: &nbsp;</span>
+                    <span className="mt-2 md:mt-0">{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit)} BTC</span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
-                        {t('common:in_order')}: &nbsp;
-                    </div>
-                    <div className="font-semibold mt-2 md:mt-0">
-                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC
-                    </div>
+                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="mt-2 md:mt-0">{state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit)} BTC</div>
                 </div>
             </div>
         );
@@ -592,25 +584,27 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                         ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
                                     </span>
                                 </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="txtSecond-2">{t('common:available_balance')}</span>
-                                    <span className="txtPri-1">
-                                        {state.hideAsset
-                                            ? SECRET_STRING
-                                            : available
-                                            ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                            : '0.0000'}
-                                    </span>
-                                </div>
-                                <div className="flex items-center justify-between">
-                                    <span className="txtSecond-2">{t('common:in_order')}</span>
-                                    <span className="txtPri-1">
-                                        {state.hideAsset
-                                            ? SECRET_STRING
-                                            : wallet.locked_value
-                                            ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                            : '0.0000'}
-                                    </span>
+                                <div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="txtSecond-2">{t('common:available_balance')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : available
+                                                ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="txtSecond-2">{t('common:in_order')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : wallet.locked_value
+                                                ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         );

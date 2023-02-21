@@ -386,7 +386,7 @@ const OverviewWallet = (props) => {
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
-                            <ButtonV2 variants="text" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
+                            <ButtonV2 disabled variants="text" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -501,7 +501,7 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
             <div className="mt-2 text-left">
                 {listActions.map((item) => (
                     <div className="first:mt-0 mt-3">
-                        <ButtonV2 variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
+                        <ButtonV2 disabled={keys[0] === ActionType.PARTNERS} variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW
