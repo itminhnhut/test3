@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
+import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -11,12 +9,8 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
 import { orderBy } from 'lodash';
-import Skeletor from 'components/common/Skeletor';
-import Empty from 'components/common/Empty';
-import { ExchangeOrderEnum, WalletType } from 'redux/actions/const';
+import { WalletType } from 'redux/actions/const';
 import Link from 'next/link';
 import { PATHS } from 'constants/paths';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
@@ -25,7 +19,7 @@ import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
-import ModalV2 from 'components/common/V2/ModalV2';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -77,6 +71,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
+        if (isSmallScreen) return null;
         const columns = [
             {
                 key: 'assetCode',
@@ -220,22 +215,11 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                     <SvgWalletFutures size={32} />
                 </div>
                 <div>
-                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                        {state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC
-                    </div>
+                    <div className="t-common-v2">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
                     <div className="font-normal text-sm md:text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
-                {/* <div>
-                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                        {state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}
-                        BTC
-                    </div>
-                    <div className="font-normal text-sm md:text-base mt-1">
-                        {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
-                    </div>
-                </div> */}
             </div>
         );
     }, [state.hideAsset, currentTheme, estUsd, estBtc]);
@@ -243,39 +227,20 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
     // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
         return (
-            <div className={`font-semibold  grid grid-cols-2 mt-5 text-sm md:flex md:justify-start md:mt-8 md:text-base'}`}>
+            <div className="txtPri-1 grid grid-cols-2 mt-5 md:flex md:justify-start md:mt-8">
                 <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
-                        {t('common:available_balance')}: &nbsp;
-                    </span>
-                    <span className="font-semibold mt-2 md:mt-0">
+                    <span className="txtSecond-1">{t('common:available_balance')}: &nbsp;</span>
+                    <span className="mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
                     </span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
-                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
-                        {t('common:in_order')}: &nbsp;
-                    </div>
-                    <div className="font-semibold mt-2 md:mt-0">
+                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
                     </div>
                 </div>
             </div>
-
-            // <div className="flex pt-8 gap-12">
-            //     <div>
-            //         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>{' '}
-            //         <span className="font-semibold">
-            //             {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
-            //         </span>
-            //     </div>
-            //     <div>
-            //         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span>{' '}
-            //         <span className="font-semibold">
-            //             {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
-            //         </span>
-            //     </div>
-            // </div>
         );
     }, [estBtc, state.hideAsset, currentTheme]);
 
@@ -387,20 +352,71 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                 )}
             </div>
 
-            {renderAssetTable()}
+            <div className="hidden md:block">{renderAssetTable()}</div>
+            <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
+                {state?.tableData && state?.tableData?.length > 0 ? (
+                    state.tableData.map((item) => {
+                        const { assetCode, assetDigit, assetName, available, id, wallet } = item;
+                        const assetUsdRate = usdRate?.[id] || 0;
+                        const totalUsd = wallet.value * assetUsdRate;
+
+                        return (
+                            <div key={`CARD_ROW_${item?.assetCode}`} className="w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center">
+                                        <AssetLogo assetCode={assetCode} size={32} />
+                                        <span className="font-semibold mr-2 ml-3">{assetCode}</span>
+                                        <span className="txtSecond-1">{assetName}</span>
+                                    </div>
+                                    <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="txtPri-1 whitespace-nowrap">
+                                        {state.hideAsset
+                                            ? SECRET_STRING
+                                            : wallet.value
+                                            ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                            : '0.0000'}
+                                    </span>
+                                    &nbsp;
+                                    <span className="txtSecond-1  whitespace-nowrap">
+                                        ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="txtSecond-2">{t('common:available_balance')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : available
+                                                ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="txtSecond-2">{t('common:in_order')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : wallet.locked_value
+                                                ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <NoData className="mt-12" isSearch={!!state.search} />
+                )}
+            </div>
         </div>
     );
 };
 
 const ASSET_ROW_LIMIT = 8;
-
-const ROW_LOADING_SKELETON = {
-    asset: <Skeletor width={65} />,
-    total: <Skeletor width={65} />,
-    available: <Skeletor width={65} />,
-    in_order: <Skeletor width={65} />,
-    operation: <Skeletor width={125} />
-};
 
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
