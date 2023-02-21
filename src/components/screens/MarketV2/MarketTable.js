@@ -895,7 +895,7 @@ const renderTradeLink = (b, q, lang, mode) => {
     } else {
         url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
-        swapurl = `/swap?from=${b}&to=${q}`;
+        swapurl = `/swap?fromAsset=${b}&toAsset=${q}`;
     }
 
     return (

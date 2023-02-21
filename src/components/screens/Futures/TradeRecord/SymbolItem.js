@@ -2,20 +2,22 @@ import { useTranslation } from 'next-i18next';
 import { FuturesOrderEnum } from 'redux/actions/const';
 import { TypeTable } from 'redux/actions/utils';
 import FuturesLeverage from 'components/common/FuturesLeverage'
+import { ShareIcon } from 'components/svg/SvgIcon';
 
-const FuturesRecordSymbolItem = ({ symbol, leverage, type, side, onShareModal }) => {
+const FuturesRecordSymbolItem = ({ symbol, leverage, type, side, onShareModal, specialOrder, onSymbolClick, canShare = false}) => {
     const { t } = useTranslation();
+
     return (
-        <div className="flex flex-col justify-center whitespace-nowrap gap-1">
+        <div className="flex flex-col justify-center whitespace-nowrap gap-1 h-full">
             <div className="flex gap-3">
-                <div className="font-semibold text-sm">{symbol}</div>
+                <div className="font-semibold text-sm" onClick={onSymbolClick}>{symbol}</div>
                 <div className="flex gap-2">
                     {leverage && <FuturesLeverage value={leverage} />}
-                    <div onClick={onShareModal}>✿</div>
+                    {canShare ? <div onClick={onShareModal}><ShareIcon /></div> : null}
                 </div>
             </div>
             <div className={`${side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'} font-normal text-xs`}>
-                {side && <TypeTable type="side" data={{ side }} />}&nbsp;/&nbsp;{type && <TypeTable type="type" data={{ type }} />}
+                {specialOrder ? `${specialOrder} / ` : null}{side && <TypeTable type="side" data={{ side }} />}&nbsp;/&nbsp;{type && <TypeTable type="type" data={{ type }} />}
             </div>
         </div>
     );

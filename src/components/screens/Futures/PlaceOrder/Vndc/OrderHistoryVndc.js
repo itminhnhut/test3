@@ -40,21 +40,52 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
 
     const columns = useMemo(() => [
         {
+            key: 'id',
+            dataIndex: 'id',
+            title: 'ID / ' + t('common:time'),
+            align: 'left',
+            width: 192,
+            render: (_row, item) => (
+                <div className='text-gray-4 font-normal text-sm'>
+                    <div>{formatTime(item.closed_at, 'HH:mm:ss dd/MM/yyyy')}</div>
+                    <div>ID #{item.displaying_id}</div>
+                </div>
+            ),
+            sortable: true,
+        },
+        {
             key: 'pair',
             dataIndex: 'symbol',
             title: t('common:pair'),
             align: 'left',
-            width: 192,
-            render: (row, item) => (
-                pairConfig?.pair !== item?.symbol ?
-                    <Link href={`/futures/${item?.symbol}`}>
-                        <a className='dark:text-white text-darkBlue'>
-                            <FuturesRecordSymbolItem symbol={item?.symbol} leverage={item?.leverage} type={item?.type} side={item?.side} />
-                        </a>
-                    </Link>
-                    : <FuturesRecordSymbolItem symbol={item?.symbol} leverage={(item?.leverage)} type={item?.type} side={item?.side} />
-            ),
-            sortable: true,
+            width: 204,
+            render: (row, item) => {
+                let specialOrder
+                if (item?.metadata?.dca_order_metadata) {
+                    if (!item?.meta_data?.dca_order_metadata?.is_main_order) {
+                        specialOrder = t('futures:mobile:adjust_margin:added_volume')
+                    }
+                }
+                if (item?.metadata?.partial_close_metadata) {
+                    if (!item?.meta_data?.partial_close_metadata?.is_main_order) {
+                        specialOrder = t('futures:mobile:adjust_margin:close_partially')
+                    }
+                }
+
+                return (
+                    <FuturesRecordSymbolItem
+                        onShareModal={() => onHandleClick('share', item)}
+                        onSymbolClick={pairConfig?.pair !== item?.symbol ? () => onHandleClick('router', item) : undefined}
+                        symbol={item?.symbol}
+                        leverage={item?.leverage}
+                        type={item?.type}
+                        side={item?.side}
+                        specialOrder={specialOrder}
+                        canShare={true}
+                    />
+                )
+            },
+            sortable: true
         },
         {
             key: 'status',
@@ -62,7 +93,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('common:status'),
             align: 'center',
             width: 178,
-            render: (row) => <OrderStatusLabel type={row?.reason_close_code} t={t} />,
+            render: (_row, item) => <OrderStatusLabel type={item?.reason_close_code} t={t} />,
             sortable: true,
         },
         {
@@ -84,7 +115,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             key: 'pnl',
             title: 'PNL (ROE%)',
             align: 'right',
-            width: 118,
+            width: 148,
             render: (row) => {
                 const isVndc = row?.symbol.indexOf('VNDC') !== -1
                 return <OrderProfit
@@ -100,7 +131,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             dataIndex: 'order_value',
             title: t('futures:order_table:volume'),
             align: 'right',
-            width: 118,
+            width: 148,
             render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>,
             sortable: false,
         },
@@ -109,7 +140,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             dataIndex: 'open_price',
             title: t('futures:order_table:open_price'),
             align: 'right',
-            width: 118,
+            width: 148,
             render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>,
             sortable: false,
         },
@@ -118,7 +149,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             dataIndex: 'close_price',
             title: t('futures:order_table:close_price'),
             align: 'right',
-            width: 118,
+            width: 148,
             render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)}</div>,
             sortable: false,
         },
@@ -290,11 +321,12 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 scroll={{ x: true }}
                 height={'300px'}
                 tableStyle={{
-                    tableStyle: { paddingBottom: '24px !important' },
+                    headerFontStyle: {
+                        height: '68px !important',
+                        'padding-top': '0px !important',
+                        'padding-bottom': '0px !important',
+                    },
                     padding: '14px 16px',
-                    headerStyle: {
-                        padding: '0px'
-                    }
                 }}
             />
         </>

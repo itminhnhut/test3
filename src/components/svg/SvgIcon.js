@@ -639,6 +639,11 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
     );
 };
 
+
+const ShareIcon = ({ width = "21", height = "20", color = "#E2E8F0" }) => <svg width={width} height={height} viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.5658 15.0006V16.6673H4.23242V15.0006H17.5658ZM10.0658 6.65898V13.334H11.7324V6.65898H14.2324L10.8991 3.33398L7.56575 6.65898H10.0658Z" fill={color} />
+</svg>
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -680,5 +685,6 @@ export {
     BxsGift,
     BxsLogoutCircle,
     CopyIcon,
-    CheckedIcon
+    CheckedIcon,
+    ShareIcon
 };
