@@ -362,7 +362,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                                         <span className="font-semibold mr-2 ml-3">{assetCode}</span>
                                         <span className="txtSecond-1">{assetName}</span>
                                     </div>
-                                    {/* <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div> */}
+                                    <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div>
                                 </div>
                                 <div className="flex items-center">
                                     <span className="txtPri-1 whitespace-nowrap">

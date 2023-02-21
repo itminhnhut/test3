@@ -212,7 +212,7 @@ const Wallet = () => {
                             <TabItem
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left !px-0 !text-base`}
+                                className={`text-left px-4 !md:px-0 !text-base`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
