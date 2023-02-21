@@ -347,6 +347,7 @@
     "join_now": "Join Now",
     "close_order": "Close Order",
     "close_all_orders": "Close all orders",
+    "cancel_all_orders": "Cancel all orders",
     "close_all_message": "Do you want to close all your orders?",
     "close_all_success": "Close orders successfully",
     "close_all_failed": "Close Orders failed",

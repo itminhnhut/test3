@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { formatNumber, formatTime, getLoginUrl, countDecimals, formatPrice } from 'redux/actions/utils';
-import { Edit } from 'react-feather';
-
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
-import showNotification from 'utils/notificationService';
 import { getRatioProfit, renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 
@@ -15,8 +12,6 @@ import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import Big from 'big.js';
 import { isArray } from 'lodash';
-import FuturesEditSLTPVndc from 'components/screens/Futures/PlaceOrder/Vndc/EditSLTPVndc';
-import CloseAllOrders from 'components/screens/Futures/PlaceOrder/Vndc/CloseAllOrders';
 import Link from 'next/link';
 import OrderClose from './OrderClose';
 import TableV2 from 'components/common/V2/TableV2';
@@ -28,6 +23,10 @@ import ModifyOrder from 'components/screens/Futures/PlaceOrder/EditOrderV2/Modif
 import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 import FuturesCloseOrder from 'components/screens/Futures/FuturesModal/FuturesCloseOrder';
+import Edit from 'components/svg/Edit';
+import { useRouter } from 'next/router';
+import FuturesCloseAllOrder from 'components/screens/Futures/FuturesModal/FuturesCloseAllOrder';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair, status }) => {
     const {
@@ -46,6 +45,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [showCloseModal, setShowCloseModal] = useState(false);
+    const [showCloseAll, setShowCloseAll] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const message = useRef({
         status: '',
@@ -60,49 +60,131 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         status: '',
         side: ''
     });
+    const [closeType, setCloseType] = useState();
+    const btnCloseAll = useRef();
 
-    const TimeFilterRef = useRef(null);
-
-    const symbolOptions = useMemo(() => {
-        return allPairConfigs?.map((e) => ({ value: e.symbol, label: e.baseAsset + '/' + e.quoteAsset }));
-    }, [allPairConfigs]);
+    const router = useRouter()
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
+    const closeTypes = useMemo(() => {
+        return {
+            position: [
+                {
+                    type: 'ALL',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'PROFIT',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_profit', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'LOSS',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_loss', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'PAIR',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: pairConfig?.symbol })
+                }
+            ],
+            openOrders: [
+                {
+                    type: 'ALL_PENDING',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pending', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'ALL_PAIR_PENDING',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', { pair: pairConfig?.symbol })
+                }
+            ]
+        };
+    }, [pairConfig]);
+
+    const renderBtnCloseAll = () => {
+        return (
+            <PopoverV2
+                ref={btnCloseAll}
+                label={<CloseButton>{t(isPosition ? 'common:close_all_orders' : 'common:cancel_all_orders')}</CloseButton>}
+                className="w-max py-2 text-sm !mt-2 z-20 !left-0"
+            >
+                <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3 w-max">
+                    <div className="relative space-y-2">
+                        {closeTypes.position.map((item, index) => {
+                            const isActive = closeType?.type === item.type;
+                            return (
+                                <div
+                                    onClick={() => {
+                                        onHandleClick('delete_all', item);
+                                        btnCloseAll.current.close();
+                                    }}
+                                    key={index}
+                                    className={classNames(
+                                        'text-left py-2 px-4 cursor-pointer w-full text-sm text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
+                                        { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
+                                    )}
+                                >
+                                    {item.label}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </PopoverV2>
+        );
+    };
+
     // { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
     const columns = useMemo(
         () => [
+            {
+                key: 'id',
+                dataIndex: 'id',
+                title: 'ID / ' + t('common:time'),
+                align: 'left',
+                width: 192,
+                render: (_row, item) => (
+                    <div className='text-gray-4 font-normal text-sm h-full'>
+                        <div>{formatTime(item.opened_at, 'HH:mm:ss dd/MM/yyyy')}</div>
+                        <div>ID #{item.displaying_id}</div>
+                    </div>
+                ),
+                sortable: true,
+            },
             {
                 key: 'pair',
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 192,
-                render: (row, item) =>
-                    pairConfig?.pair !== item?.symbol ? (
-                        // <Link href={`/futures/${item?.symbol}`}>
-                        <a className="dark:text-white text-darkBlue">
-                            <FuturesRecordSymbolItem
-                                onShareModal={() => onHandleClick('share', item)}
-                                symbol={item?.symbol}
-                                leverage={item?.leverage}
-                                type={item?.type}
-                                side={item?.side}
-                            />
-                        </a>
-                    ) : (
-                        // </Link>
+                width: 204,
+                render: (row, item) => {
+                    let specialOrder
+                    if (item?.metadata?.dca_order_metadata) {
+                        if (!item?.meta_data?.dca_order_metadata?.is_main_order) {
+                            specialOrder = t('futures:mobile:adjust_margin:added_volume')
+                        }
+                    }
+                    if (item?.metadata?.partial_close_metadata) {
+                        if (!item?.meta_data?.partial_close_metadata?.is_main_order) {
+                            specialOrder = t('futures:mobile:adjust_margin:close_partially')
+                        }
+                    }
+
+                    return (
                         <FuturesRecordSymbolItem
                             onShareModal={() => onHandleClick('share', item)}
+                            onSymbolClick={pairConfig?.pair !== item?.symbol ? () => onHandleClick('router', item) : undefined}
                             symbol={item?.symbol}
                             leverage={item?.leverage}
                             type={item?.type}
                             side={item?.side}
+                            specialOrder={!isPosition ? specialOrder : null}
+                            canShare={isPosition}
                         />
-                    ),
+                    )
+                },
                 sortable: true
             },
             {
@@ -131,18 +213,21 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 key: 'volume_margin',
                 visible: isPosition,
                 dataIndex: 'order_value',
-                title: `${t('futures:order_table:volume')}/${t('futures:margin')}`,
+                title: `${t('futures:order_table:volume')} / ${t('futures:margin')}`,
                 align: 'left',
-                width: 184,
+                width: 204,
                 render: (row, item) =>
                     item?.order_value ? (
-                        <div onClick={() => onHandleClick('vol', item)} className="flex flex-col gap-1 font-normal text-sm text-darkBlue-5">
-                            <div>
-                                {t('futures:volume')}: <span className="text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
+                        <div onClick={() => onHandleClick('vol', item)} className="flex items-center gap-3 font-normal text-sm text-darkBlue-5">
+                            <div className='flex flex-col gap-1'>
+                                <div>
+                                    {t('common:vol')}: <span className="text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
+                                </div>
+                                <div>
+                                    {t('futures:margin')}: <span className="text-gray-4">{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
+                                </div>
                             </div>
-                            <div>
-                                {t('futures:margin')}: <span className="text-gray-4">{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
-                            </div>
+                            <Edit />
                         </div>
                     ) : (
                         '-'
@@ -175,20 +260,20 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 key: 'sltp',
                 title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
                 align: 'left',
-                width: 224,
+                width: 228,
                 render: (row) => (
-                    <div className="flex items-center">
+                    <div className="flex items-center w-full justify-between">
                         <div className="flex flex-col gap-1 font-normal text-sm text-darkBlue-5">
                             <div>
                                 SL:{' '}
                                 <span className="text-red">
-                                    {row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.sl, row)}%)` : '_'}
+                                    {row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.sl, row)}%)` : ''}` : '_'}
                                 </span>
                             </div>
                             <div>
                                 TP:{' '}
                                 <span className="text-teal">
-                                    {row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} (${getRatioProfit(row?.tp, row)}%)` : '_'}
+                                    {row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.tp, row)}%)` : ''}` : '_'}
                                 </span>
                             </div>
                         </div>
@@ -204,7 +289,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 visible: isPosition,
                 title: t('futures:order_table:open_price'),
                 align: 'right',
-                width: 118,
+                width: 138,
                 render: (row, item) => (
                     <div className="text-gray-4 text-sm font-normal">{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>
                 ),
@@ -215,7 +300,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 visible: isPosition,
                 title: t('futures:mobile.market_price'),
                 align: 'right',
-                width: 140,
+                width: 138,
                 render: (row, item) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
                 sortable: false
             },
@@ -224,7 +309,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 visible: !isPosition,
                 title: t('futures:order_table:volume'),
                 align: 'left',
-                width: 120,
+                width: 138,
                 render: (row, item) => (
                     <div className="text-gray-4 text-sm font-normal">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>
                 ),
@@ -234,7 +319,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 key: 'last_price',
                 title: t('futures:order_table:last_price'),
                 align: 'right',
-                width: 140,
+                width: 138,
                 render: (row) =>
                     marketWatch[row?.symbol] &&
                     formatNumber(marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true),
@@ -245,7 +330,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 visible: isPosition,
                 title: t('futures:calulator:liq_price'),
                 align: 'right',
-                width: 140,
+                width: 144,
                 render: (row) => renderLiqPrice(row, false),
                 sortable: true
             },
@@ -273,14 +358,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             },
             {
                 key: 'operator',
-                title: <CloseButton>{t('common:close_all_orders')}</CloseButton>,
+                title: isPosition ? renderBtnCloseAll() : null,
                 align: 'center',
                 fixed: 'right',
                 width: 160,
                 render: (row) => <CloseButton onClick={() => onHandleClick('delete', row)}>{t('common:close')}</CloseButton>
             }
         ],
-        [marketWatch, pair, dataFilter]
+        [marketWatch, pair, dataFilter, isPosition]
     );
 
     const fetchOrder = async (method = 'GET', params, cb) => {
@@ -348,11 +433,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const flag = useRef(false);
     const onHandleClick = (key, data) => {
-        rowData.current = data;
+        if (key !== 'delete_all') rowData.current = data;
         switch (key) {
             case 'vol':
                 flag.current = true;
                 setShowEditVol(true);
+                break;
+            case 'router':
+                flag.current = true;
+                router?.push('/futures/' + data.symbol)
                 break;
             case 'sltp':
                 flag.current = true;
@@ -365,6 +454,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             case 'delete':
                 flag.current = true;
                 setShowCloseModal(true);
+                break;
+            case 'delete_all':
+                flag.current = true;
+                setCloseType(data);
+                setShowCloseAll(true);
                 break;
             case 'detail':
                 if (flag.current) {
@@ -482,6 +576,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 onClose={() => setShowCloseModal(false)}
                 decimals={decimals}
                 marketWatch={marketWatch}
+                pairConfig={pairConfigDetail}
+            />
+            <FuturesCloseAllOrder
+                isVisible={showCloseAll}
+                onClose={() => setShowCloseAll(false)}
+                marketWatch={marketWatch}
+                pairConfig={pairConfig}
+                closeType={closeType}
             />
             <EditSLTPV2
                 isVisible={showEditSLTP}
@@ -504,20 +606,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             <TableV2
                 data={dataFilter}
                 onRowClick={(e) => onHandleClick('detail', e)}
-                columns={
-                    dataFilter?.length
-                        ? columns
-                        : columns.map((e) => {
-                              return { ...e, width: 100 };
-                          })
-                }
+                columns={columns}
                 scroll={{ x: true }}
-                height={'300px'}
+                height={400}
                 tableStyle={{
-                    tableStyle: { paddingBottom: '24px !important' },
                     padding: '14px 16px',
-                    headerStyle: {
-                        padding: '0px'
+                    headerFontStyle: {
+                        height: '68px !important',
+                        'padding-top': '0px !important',
+                        'padding-bottom': '0px !important',
                     }
                 }}
             />
@@ -525,14 +622,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     );
 };
 
-const CloseButton = ({ children, onClick }) => {
+const CloseButton = ({ children, onClick, disabled = false }) => {
     return (
-        <div
-            className="w-[112px] h-[36px] flex items-center justify-center font-semibold text-sm text-darkBlue-5 bg-dark-2 cursor-pointer rounded-md"
+        <button
+            className="w-[122px] h-[36px] flex items-center justify-center font-semibold text-sm text-txtPrimary dark:text-darkBlue-5 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark bg-dark dark:bg-dark-2 cursor-pointer rounded-md"
             onClick={onClick}
+            disabled={disabled}
         >
             {children}
-        </div>
+        </button>
     );
 };
 

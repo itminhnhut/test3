@@ -424,7 +424,8 @@
             "position_list": "Position List",
             "orders": "orders",
             "order": "order",
-            "preview": "Preview"
+            "preview": "Preview",
+            "close_orders_success": "Close orders successfully"
         }
     },
     "orders_history": "Order History",

@@ -121,10 +121,11 @@ const TradingInput = ({
                     </div>
                 ) : null}
                 {/* head  */}
-                <div className={classNames('', headContainerClassName)}>
-                    {renderHead && isFunction(renderHead) ? renderHead() : renderHead}
-                </div>
-
+                {renderHead && (
+                    <div className={classNames('border-r pr-2 dark:border-divider-dark border-divider', headContainerClassName)}>
+                        {renderHead && isFunction(renderHead) ? renderHead() : renderHead}
+                    </div>
+                )}
                 {/* Input  */}
                 {disabled ? (
                     <input
@@ -148,7 +149,7 @@ const TradingInput = ({
                 {!!inputProps?.value && !disabled && clearAble && (
                     <div
                         className={classNames('relative z-10', {
-                            'pr-2 mr-2 border-r border-divider dark:border-divider-dark': !!renderTail,
+                            'pr-2 mr-2 border-r border-divider dark:border-divider-dark': !!renderTail || isFunction(renderTail),
                             'pl-2': !renderTail
                         })}
                     >
