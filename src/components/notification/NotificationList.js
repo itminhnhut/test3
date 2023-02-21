@@ -16,12 +16,12 @@ import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
 const NOTI_READ = 2;
 
 const IconNoti = {
-    0: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: ALL
-    1: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: INDIVIDUAL
-    9: <Image src={'/images/screen/noti/ic_noti_exchange.png'} width={32} height={32} />, // NOTE: TRANSACTIONS
-    14: <Image src={'/images/screen/noti/ic_noti_events.png'} width={32} height={32} />, // NOTE: EVENTS
-    16: <Image src={'/images/screen/noti/ic_noti_system.png'} width={32} height={32} />, // NOTE: SYSTEM
-    17: <Image src={'/images/screen/noti/ic_noti_referral.png'} width={32} height={32} /> // NOTE: COMMISSION
+    0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
+    1: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: INDIVIDUAL
+    9: <Image src={getS3Url('/images/screen/noti/ic_noti_exchange.png')} width={32} height={32} />, // NOTE: TRANSACTIONS
+    14: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: EVENTS
+    16: <Image src={getS3Url('/images/screen/noti/ic_noti_system.png')} width={32} height={32} />, // NOTE: SYSTEM
+    17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} /> // NOTE: COMMISSION
 };
 
 const NotificationList = ({ btnClass, navTheme, auth }) => {
