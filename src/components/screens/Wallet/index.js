@@ -28,7 +28,7 @@ import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
-const WIDTH_MD = 768;
+export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
     screen: null,

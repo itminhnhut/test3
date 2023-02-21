@@ -7,8 +7,7 @@ import { reloadData } from 'redux/actions/heath';
 import { useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-
-const term = [];
+import { WIDTH_MD } from 'components/screens/Wallet';
 
 const Title1 = styled.div.attrs({
     className: 'text-sm sm:text-[22px] sm:leading-[30px] font-semibold mt-12 mb-6'
@@ -53,21 +52,17 @@ const Terms = () => {
             clearInterval(intervalReloadData);
         };
     }, []);
+
     const Content = () => {
         return (
             <div
-                className={`max-w-screen-v3 m-auto text-txtPrimary bg-white dark:bg-dark dark:text-txtPrimary-dark font-SF-Pro text-sm leading-7 sm:leading-6 sm:text-base font-normal text-left tracking-normal ${
-                    width <= 640 ? 'pb-20' : 'px-24 pb-[120px]'
+                className={`max-w-screen-v3 m-auto text-txtPrimary bg-white dark:bg-dark dark:text-txtPrimary-dark font-SF-Pro txtPri-2 text-left ${
+                    width < WIDTH_MD ? 'pb-20' : 'px-24 pb-[120px]'
                 }`}
             >
-                <div
-                    className={`px-4 w-full text-xl sm:text-[32px] sm:leading-[38px] font-semibold pb-8 sm:pb-12 bg-white dark:bg-dark ${
-                        width <= 640 ? 'sticky top-0 pt-6' : 'pt-20'
-                    }`}
-                >
+                <div className={`px-4 w-full txtPri-4 pb-8 sm:pb-12 bg-white dark:bg-dark ${width < WIDTH_MD ? 'sticky top-0 pt-6' : 'pt-20'}`}>
                     {t('common:terms_and_privacy')}
                 </div>
-                {/* <div className={`${width <= 640 ? 'term-mobile-view' : 'px-24'}`}></div> */}
                 <div className="px-4 ">
                     {language === 'en' && (
                         <div className="text-left">
@@ -2203,12 +2198,13 @@ const Terms = () => {
         );
     };
 
-    if (width <= 640) return <Content />;
-    return (
-        <MaldivesLayout hideFooter={width <= 640 ? true : false} hideNavBar={width <= 640 ? true : false} dark={true}>
-            <Content />
-        </MaldivesLayout>
-    );
+    if (width < WIDTH_MD) return <Content />;
+    else
+        return (
+            <MaldivesLayout hideFooter={width < WIDTH_MD ? true : false} hideNavBar={width < WIDTH_MD ? true : false} dark={true}>
+                <Content />
+            </MaldivesLayout>
+        );
 };
 
 export const getStaticProps = async ({ locale }) => ({
