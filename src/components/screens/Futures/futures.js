@@ -21,7 +21,6 @@ import Axios from 'axios';
 import 'react-grid-layout/css/styles.css';
 import { getOrdersList } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import FuturesMarkPrice from 'models/FuturesMarkPrice';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
@@ -37,7 +36,6 @@ const INITIAL_STATE = {
     prevPair: null,
     socketStatus: false,
     pairPrice: null,
-    markPrice: null,
     forceUpdateState: 1,
     favoritePairLayout: null,
     orderBookLayout: null,
@@ -75,23 +73,6 @@ const Futures = () => {
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
 
-    // Helper
-    const getPairMarkPrice = async (symbol) => {
-        if (!symbol) return;
-        setState({ loading: true });
-        try {
-            const { data } = await Axios.get(API_GET_FUTURES_MARK_PRICE, {
-                params: { symbol }
-            });
-            if (data?.status === ApiStatus.SUCCESS) {
-                setState({
-                    markPrice: FuturesMarkPrice.create(data?.data?.[0])
-                });
-            }
-        } catch (e) {
-            console.log(`Can't get ${symbol} marketWatch `, e);
-        }
-    };
 
     const subscribeFuturesSocket = (pair) => {
         if (!publicSocket) {
@@ -101,7 +82,6 @@ const Futures = () => {
                 publicSocket.emit('subscribe:futures:depth', pair);
                 publicSocket.emit('subscribe:futures:recent_trade', pair);
                 // publicSocket.emit('subscribe:futures:ticker', pair)
-                publicSocket.emit('subscribe:futures:mark_price', pair);
                 publicSocket.emit('subscribe:futures:ticker', pair);
                 // emit socket all
                 publicSocket.emit('subscribe:futures:mini_ticker', 'all');
@@ -118,7 +98,6 @@ const Futures = () => {
         publicSocket?.emit('unsubscribe:futures:depth', pair);
         publicSocket?.emit('unsubscribe:futures:recent_trade', pair);
         publicSocket?.emit('unsubscribe:futures:ticker', 'all');
-        publicSocket?.emit('unsubscribe:futures:mark_price', pair);
         // publicSocket?.emit('unsubscribe:futures:mini_ticker', 'all')
     };
 
@@ -156,7 +135,6 @@ const Futures = () => {
         });
     };
 
-    // ? Init Price and MarkPrice
     useEffect(() => {
         if (marketWatch?.[state.pair]) {
             setState({
@@ -165,11 +143,6 @@ const Futures = () => {
             });
         }
     }, [marketWatch, state.pair]);
-
-    useEffect(() => {
-        setState({ markPrice: null });
-        getPairMarkPrice(state.pair);
-    }, [state.pair]);
 
     useEffect(() => {
         // ? Hide global scroll
@@ -210,19 +183,10 @@ const Futures = () => {
             }
         });
 
-        // ? Get Mark Price
-        Emitter.on(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE + state.pair, async (data) => {
-            const markPrice = FuturesMarkPrice.create(data);
-            if (state.pair === markPrice?.symbol && !!markPrice?.markPrice) {
-                setState({ markPrice });
-            }
-        });
-
         // ? Unsubscribe publicSocket
         return () => {
             publicSocket && unsubscribeFuturesSocket(state.pair);
             Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig?.symbol);
-            Emitter.off(PublicSocketEvent.FUTURES_MARK_PRICE_UPDATE);
         };
     }, [publicSocket, state.pair]);
 
@@ -242,7 +206,7 @@ const Futures = () => {
             symbol: unitConfig?.assetDigit ?? 0
         };
     }, [unitConfig, pairConfig]);
-
+console.log(state.pairPrice)
     return (
         <>
             <FuturesTermsModal />
@@ -287,7 +251,6 @@ const Futures = () => {
                                     <div key={futuresGridKey.pairDetail} className={`relative z-20 border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
-                                            markPrice={state.markPrice}
                                             pairConfig={pairConfig}
                                             forceUpdateState={state.forceUpdateState}
                                             isVndcFutures={state.isVndcFutures}

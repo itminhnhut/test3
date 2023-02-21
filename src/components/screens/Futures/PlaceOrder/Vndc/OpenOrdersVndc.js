@@ -465,7 +465,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     flag.current = false;
                     return;
                 }
-                setShowOrderDetail(true);
+                router.push('/futures/order/' + data?.displaying_id);
+                // setShowOrderDetail(true);
                 break;
             default:
                 break;
