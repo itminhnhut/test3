@@ -1036,25 +1036,37 @@ input:-webkit-autofill {
     border-left-color:transparent !important;
 }
 
-@keyframes slideAnimation {
-    from {
-      transform: translateX(0%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
-  }
+
 
   .looper {
     @apply w-screen overflow-hidden max-w-full;
+    @keyframes slideAnimation {
+        from {
+          transform: translateX(0%);
+        }
+        to {
+          transform: translateX(-100%);
+        }
+      }
+    .looper__listInstance {
+        @apply flex items-center;
+        will-change: transform;
+        animation: 8s slideAnimation linear infinite;
+
+        @media screen and (min-width:768px) {
+            animation-duration: 12s;
+        }
+        @media screen and (min-width:1028px) {
+            animation-duration: 18s;
+        }
+        @media screen and (min-width:1440px) {
+            animation-duration: 25s;
+        }
+        &:hover {
+            animation-play-state: paused;
+        }
+      }
   }
 
-  .looper__listInstance {
-    @apply flex items-center;
-    will-change: transform;
-    animation: 30s slideAnimation linear infinite;
-    &:hover {
-        animation-play-state: paused;
-    }
-  }
+  
 
