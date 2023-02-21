@@ -13,6 +13,8 @@ import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
 import { useRouter } from 'next/router';
 
+import { useSelector } from 'react-redux'
+import { THEME_MODE } from 'hooks/useDarkMode';
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
@@ -20,8 +22,6 @@ const MadivesLayout = ({
     navStyle = {},
     navName,
     contentWrapperStyle = {},
-    light,
-    dark,
     children,
     hideNavBar,
     page,
@@ -40,7 +40,7 @@ const MadivesLayout = ({
     // Use Hooks
     const { width, height } = useWindowSize();
     const router = useRouter()
-
+    const theme = useSelector((state) => state.user.theme);
     const isApp = useApp();
 
     // NOTE: Apply this style for NavBar on this layout.
@@ -56,6 +56,8 @@ const MadivesLayout = ({
         store.dispatch(setTheme());
     }, []);
 
+    const dark = theme === THEME_MODE.DARK
+    const light = theme !== THEME_MODE.DARK
     return (
         <>
             <div
