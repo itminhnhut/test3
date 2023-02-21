@@ -44,7 +44,7 @@ const HideIcon = ({ className = '', color, size }) => {
         <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clipPath="url(#5aan4m2usa)" fill={color || defaultColor}>
                 <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-                <path fill-rule="evenodd" clipRule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
+                <path fillRule="evenodd" clipRule="evenodd" d="M23 2 2 23l-.884-.884 21-21L23 2z" />
             </g>
             <defs>
                 <clipPath id="5aan4m2usa">
@@ -118,11 +118,11 @@ const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }
     return (
         <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             {isFilled ? (
-                <g clip-path="url(#ixety35iha)">
+                <g clipPath="url(#ixety35iha)">
                     <path d="M4.666 6.667 7.999 10l3.334-3.333H4.666z" fill={color || defaultColor} />
                 </g>
             ) : (
-                <g clip-path="url(#evihhgi6wb)">
+                <g clipPath="url(#evihhgi6wb)">
                     <path d="m18 10-1.41-1.41L12 13.17 7.41 8.59 6 10l6 6 6-6z" fill={color || defaultColor} />
                 </g>
             )}
@@ -159,7 +159,7 @@ const BxsBellIcon = ({ size = 24, className, color }) => (
 const FutureWalletIcon = ({ size = 36, ...props }) => (
     <svg width={size} height={size} viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
         <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             clipRule="evenodd"
             d="M17.976 14.02h6.623a8.083 8.083 0 0 0-2.034-8.03 8.107 8.107 0 0 0-11.472-.025 8.111 8.111 0 0 0-2.06 8.055h6.624l1.153 1.154 1.166-1.154zM17.975 14l2.308-2.297-3.462-3.465-3.463 3.452 2.296 2.31 1.142 1.155 1.179-1.155z"
             fill="#9FF2C6"
@@ -237,7 +237,7 @@ const FutureReferralIcon = ({ size = 36, ...props }) => (
         <path d="m14.91 10.505-3.986 4.801-1.756-1.826 3.986-4.734 1.756 1.758z" fill="#0D994E" />
         <path d="m9.173 13.484 1.757 1.826-5.134 6.29H2.418l6.755-8.116zM21.597 2.4l-6.688 8.116-1.757-1.758L18.49 2.4h3.108z" fill="#5BD891" />
         <path
-            fill-rule="evenodd"
+            fillRule="evenodd"
             clipRule="evenodd"
             d="M21.594 18.482a3.11 3.11 0 0 1-3.108 3.111 3.11 3.11 0 0 1-3.107-3.11 3.11 3.11 0 0 1 3.107-3.112 3.11 3.11 0 0 1 3.108 3.111zm-2.097.006-1.014-1.15-1.013 1.15 1.014 1.218 1.013-1.218z"
             fill="#9FF2C5"
@@ -253,7 +253,7 @@ const FutureIcon = ({ size = 36, ...props }) => {
             <path d="M28.799 9.772h-2.594v9.603H28.8V9.772z" fill="#0D994E" />
             <path d="M20.059 9.754v2.854h8.74V9.754h-8.74z" fill="#5BD891" />
             <path
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 clipRule="evenodd"
                 d="M17.825 8.639a5.44 5.44 0 0 1-5.44 5.438 5.44 5.44 0 1 1 0-10.877 5.44 5.44 0 0 1 5.44 5.439zm-5.605 2.673v-.57a1.41 1.41 0 0 1-.685-.172 1.807 1.807 0 0 1-.606-.515l.452-.451c.11.156.248.29.407.397.131.082.28.131.434.145h.117a.903.903 0 0 0 .362-.055.389.389 0 0 0 .19-.099.47.47 0 0 0 .207-.406.56.56 0 0 0-.108-.353.842.842 0 0 0-.28-.208 2.775 2.775 0 0 0-.38-.153h-.1l-.316-.118a2.796 2.796 0 0 1-.397-.216 1.175 1.175 0 0 1-.271-.344 1.074 1.074 0 0 1-.109-.524c-.004-.22.06-.438.181-.623.124-.172.293-.306.488-.388.13-.069.27-.114.414-.136v-.542h.48v.542c.385.053.734.25.977.551l-.443.46a1.87 1.87 0 0 0-.37-.315.38.38 0 0 0-.163-.073.66.66 0 0 0-.226 0l-.253.01a.579.579 0 0 0-.262.108.416.416 0 0 0-.172.38.497.497 0 0 0 .1.306c.082.083.18.147.289.19l.343.127.136.054.289.1c.143.06.277.143.397.243a.902.902 0 0 1 .28.352c.102.165.164.35.181.542a1.11 1.11 0 0 1-.388.904 1.31 1.31 0 0 1-.687.28l-.029.003v.567h-.479z"
                 fill="#5BD891"
@@ -264,7 +264,7 @@ const FutureIcon = ({ size = 36, ...props }) => {
 
 const FutureLaunchpadIcon = ({ size = 36, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
-        <g clip-path="url(#tpw7y5yj6a)">
+        <g clipPath="url(#tpw7y5yj6a)">
             <path d="m6.654 12.285-1.682.994-1.234 5.963 6.168-2.76-3.252-4.197zM17.64 12.285l1.682.994 1.234 5.963-6.056-2.76 3.14-4.197z" fill="#9FF2C6" />
             <path d="m12.143 2.371 5.94 10.152-6.052 9.048-5.828-8.938 5.94-10.262zM8.11 19.383H6.988v1.104H8.11v-1.104z" fill="#5BD891" />
             <path d="M3.52 20.465H2.398v1.104H3.52v-1.104z" fill="#0D994E" />
@@ -354,7 +354,7 @@ const SuccessfulTransactionIcon = ({ size = 36, ...props }) => (
 
 const AddCircleIcon = ({ color = '#768394', ...props }) => (
     <svg {...props} width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#p8h6ijxpna)">
+        <g clipPath="url(#p8h6ijxpna)">
             <path
                 d="M8.4 1.678a6.67 6.67 0 0 0-6.668 6.666A6.67 6.67 0 0 0 8.4 15.011a6.67 6.67 0 0 0 6.667-6.667 6.67 6.67 0 0 0-6.667-6.666zm3.332 7.333H9.066v2.667H7.732V9.01H5.066V7.678h2.666V5.01h1.334v2.667h2.666V9.01z"
                 fill={color}
@@ -370,7 +370,7 @@ const AddCircleIcon = ({ color = '#768394', ...props }) => (
 
 const AddCircleColorIcon = (props) => (
     <svg {...props} width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#zfktez410a)">
+        <g clipPath="url(#zfktez410a)">
             <path d="M6 1C3.24 1 1 3.24 1 6s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zm2.5 5.5h-2v2h-1v-2h-2v-1h2v-2h1v2h2v1z" fill="#47CC85" />
         </g>
         <defs>
@@ -383,7 +383,7 @@ const AddCircleColorIcon = (props) => (
 
 const AppleIcon = ({ size = 24, color, ...props }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 25 24" fill="none" {...props}>
-        <g clip-path="url(#ik9gb490da)">
+        <g clipPath="url(#ik9gb490da)">
             <path
                 d="M22.292 18.703c-.363.839-.793 1.61-1.29 2.32-.679.968-1.234 1.637-1.662 2.01-.664.61-1.375.922-2.137.94-.546 0-1.206-.156-1.973-.471-.77-.314-1.478-.47-2.124-.47-.679 0-1.407.156-2.185.47-.78.315-1.407.48-1.888.496-.73.031-1.458-.29-2.184-.966-.464-.404-1.044-1.098-1.739-2.08-.745-1.049-1.358-2.265-1.838-3.652-.514-1.497-.772-2.948-.772-4.352 0-1.608.348-2.995 1.044-4.158A6.122 6.122 0 0 1 5.73 6.58a5.88 5.88 0 0 1 2.955-.835c.58 0 1.34.18 2.285.532.943.354 1.548.533 1.813.533.199 0 .871-.21 2.01-.628 1.078-.388 1.988-.548 2.733-.485 2.02.163 3.536.96 4.545 2.393-1.806 1.094-2.699 2.627-2.681 4.593.016 1.531.572 2.806 1.663 3.817.495.47 1.048.833 1.663 1.09-.134.387-.274.758-.424 1.113zM17.661.48c0 1.2-.439 2.321-1.313 3.358-1.054 1.234-2.33 1.946-3.714 1.834a3.742 3.742 0 0 1-.027-.455c0-1.152.501-2.386 1.392-3.394.445-.51 1.01-.935 1.696-1.273.685-.334 1.332-.518 1.94-.55.019.16.026.32.026.48z"
                 fill={color || '#fff'}
@@ -502,7 +502,7 @@ const BxsStarIcon = ({ size, fill, ...props }) => {
 
 const TuneIcon = ({ size = 16, color, ...props }) => (
     <svg {...props} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#11nt6htp3a)">
+        <g clipPath="url(#11nt6htp3a)">
             <path
                 d="M2 11.333v1.334h4v-1.334H2zm0-8v1.334h6.667V3.333H2zM8.667 14v-1.333H14v-1.334H8.667V10H7.333v4h1.334zm-4-8v1.333H2v1.334h2.667V10H6V6H4.667zM14 8.667V7.333H7.333v1.334H14zM10 6h1.333V4.667H14V3.333h-2.667V2H10v4z"
                 fill="#8694B3"
@@ -564,7 +564,7 @@ const BxsLogoutCircle = ({ size, color }) => (
 
 const CopyIcon = (props) => (
     <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#piv8lb9sya)">
+        <g clipPath="url(#piv8lb9sya)">
             <path d="M10.665.666H1.332v10.667h1.333V1.999h8V.666zM14 3.333h-10v12h10v-12zm-1.334 10.666H5.332V4.666h7.333v9.333z" fill="#8694B3" />
         </g>
         <defs>
@@ -585,7 +585,7 @@ const CheckedIcon = ({ size = 24, color = '#8694B3', ...props }) => {
 
 const PortfolioIcon = ({ className, size }) => (
     <svg className={className} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g clip-path="url(#qj2barczia)">
+        <g clipPath="url(#qj2barczia)">
             <path
                 d="M23.565 11.137h-6.24a.432.432 0 0 1-.42-.333 5.024 5.024 0 0 0-3.727-3.712.432.432 0 0 1-.334-.42V.431c0-.257.224-.457.48-.43a11.945 11.945 0 0 1 7.218 3.456 11.944 11.944 0 0 1 3.453 7.198.433.433 0 0 1-.43.481z"
                 fill="#2D9CDB"
@@ -624,7 +624,7 @@ const PortfolioIcon = ({ className, size }) => (
 const MoreHorizIcon = ({ size, color, onClick }) => {
     return (
         <svg onClick={onClick} width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <g clip-path="url(#xn8eyetpua)">
+            <g clipPath="url(#xn8eyetpua)">
                 <path
                     d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
                     fill={color || '#8694B3'}

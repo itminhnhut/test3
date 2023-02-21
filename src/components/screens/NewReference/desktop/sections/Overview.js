@@ -42,6 +42,8 @@ import domtoimage from 'dom-to-image-more';
 import { throttle } from 'lodash';
 import { getS3Url } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { useRouter } from 'next/router';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -57,19 +59,19 @@ const Overview = ({
     width,
     user
 }) => {
-    const {
-        i18n: { language }
-    } = useTranslation();
     const [showRef, setShowRef] = useState(false);
     const friendsGet = data?.defaultRefCode?.remunerationRate;
     const youGet = 100 - friendsGet;
-    const handleCompactLink = (address, first, last) => {
-        return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : '';
-    };
     const [showRegisterPartner, setShowRegisterPartner] = useState(false);
     const [kyc, setKyc] = useState(null);
     const [isPartner, setIsPartner] = useState(true);
     const [openShareModal, setOpenShareModal] = useState(false);
+
+    const {
+        i18n: { language }
+    } = useTranslation();
+    const [currentTheme] = useDarkMode();
+    const router = useRouter()
 
     useEffect(() => {
         fetchAPI({
@@ -124,14 +126,19 @@ const Overview = ({
             <div
                 className='w-full h-[27.5rem] bg-[#0C0C0C]'
                 style={{
-                    backgroundImage: `url('${getS3Url('/images/reference/background_desktop_2.png')}')`,
-                    backgroundSize: 'cover'
+                    backgroundImage: `url(/images/reference/background_desktop_2.png)`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
                 }}
             >
                 <div className='py-20 container h-full'
                 >
-                    <ModalShareRefCode t={t} code={data?.defaultRefCode?.code} open={openShareModal}
-                                       onClose={() => setOpenShareModal(false)} />
+                    <ModalShareRefCode
+                        t={t}
+                        code={data?.defaultRefCode?.code}
+                        open={openShareModal}
+                        onClose={() => setOpenShareModal(false)}
+                    />
                     {showRef &&
                         <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}
                                    defaultRef={data?.defaultRefCode?.code} />}
@@ -160,7 +167,9 @@ const Overview = ({
                         {
                             (isPartner || !user) &&
                             <div
-                                className='px-4 py-3 border border-teal bg-teal/[.1] rounded-md cursor-pointer font-bold'>
+                                className='px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'
+                                onClick={() => router.push(policyLink)}
+                            >
                                 <span>{t('reference:referral.referral_policy')}</span>
                             </div>
                         }
@@ -168,7 +177,7 @@ const Overview = ({
                             !isPartner &&
                             <div
                                 onClick={() => setShowRegisterPartner(true)}
-                                className='flex px-4 py-3 border border-teal bg-teal/[.1] rounded-md cursor-pointer font-bold'>
+                                className='flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'>
                                 <Partner /><span className='ml-2'>{t('reference:referral.partner.button')}</span>
                             </div>
                         }
@@ -176,22 +185,22 @@ const Overview = ({
                 </div>
             </div>
 
-            <div className='container bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-8'>
-                <div className='border-r border-divider-dark pr-8'>
+            <div className='container bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-8'>
+                <div className='border-r dark:border-divider-dark pr-8'>
                     <div className='w-full flex justify-between items-center'>
                         <div className='flex gap-4 items-center mb-10'>
                             <div className='flex relative items-center'>
                                 <img src={user?.avatar || '/images/default_avatar.png'}
-                                     className='h-full w-20 rounded-full' />
+                                     className='h-full w-20 h-20 rounded-full object-fit' />
                                 <div
                                     className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                             </div>
                             <div className='h-full flex flex-col'>
-                                <p className='font-bold text-[22px] leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
-                                <span className='text-txtSecondary leading-6'>
+                                <p className='font-semibold text-[22px] leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
+                                <span className='text-txtSecondary dark:text-txtSecondary-dark leading-6'>
                                     {t('reference:referral.ranking')}:{' '}
                                     <span
-                                        className='text-teal font-bold'>{rank[data?.rank?.toString() ?? '0']}</span>
+                                        className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
                                 </span>
                             </div>
                         </div>
@@ -233,7 +242,7 @@ const Overview = ({
                 </div>
                 <div className='pl-8 space-y-5'>
                     <div className='flex items-center justify-between py-3'>
-                        <p className='text-sm font-bold'>
+                        <p className='text-sm font-semibold'>
                             {t('reference:referral.rate', {
                                 value1: isNaN(youGet) ? '--' : youGet,
                                 value2: isNaN(friendsGet) ? '--' : friendsGet
@@ -248,16 +257,18 @@ const Overview = ({
                     </div>
                     <div className='flex'>
                         <div className='mr-6'>
-                            <p className='mb-2 text-sm text-txtSecondary'>{t('reference:referral.referral_code')}</p>
-                            <div className='flex items-center p-3 rounded-md bg-dark-2'>
-                                <span className='pr-4 font-bold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
+                            <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}</p>
+                            <div className='flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
+                                <span
+                                    className='pr-4 font-semibold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
                                 <CopyIcon data={data?.defaultRefCode?.code} size={14} className='cursor-pointer' />
                             </div>
                         </div>
                         <div className='flex-1 min-w-0'>
-                            <p className='mb-2 text-sm text-txtSecondary'>{t('reference:referral.referral_code')}</p>
-                            <div className='relative flex justify-between items-center p-3 rounded-md bg-dark-2'>
-                                <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-bold'>
+                            <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}</p>
+                            <div
+                                className='relative flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
+                                <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
                                     {refLink}
                                 </div>
                                 <CopyIcon data={refLink} size={14} className='cursor-pointer' />
@@ -265,9 +276,11 @@ const Overview = ({
                         </div>
                     </div>
                     <div className='grid grid-cols-5 gap-6'>
-                        <div className='flex justify-center bg-dark-2 rounded-md py-[10px] cursor-pointer'
-                             onClick={() => setOpenShareModal(true)}>
-                            <QRCodeScanFilled />
+                        <div
+                            className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
+                            onClick={() => setOpenShareModal(true)}>
+                            <QRCodeScanFilled
+                                color={currentTheme === THEME_MODE.DARK ? colors.gray['10'] : colors.darkBlue} />
                         </div>
                         {[
                             {
@@ -297,10 +310,13 @@ const Overview = ({
                         ].map(e => {
                             return <div
                                 key={e.name}
-                                className='flex justify-center bg-dark-2 rounded-md py-[10px] cursor-pointer'
+                                className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
                             >
                                 {React.createElement(e.btn, {
-                                    children: React.createElement(e.icon),
+                                    children: React.createElement(e.icon, {
+                                        color: currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray['10'],
+                                        color2: currentTheme === THEME_MODE.LIGHT ? colors.gray['10'] : colors.dark['2']
+                                    }),
                                     url: refLink
                                 })}
                             </div>;
@@ -394,7 +410,7 @@ const RefDetail = ({
             className='max-w-[884px] h-[90%]'
             wrapClassName='px-6 flex flex-col'
         >
-            <div className='text-center border-b border-divider-dark -mx-6 pb-5 pt-6 text-[22px] font-semibold'>
+            <div className='border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold'>
                 {t('reference:referral.referral_code_management')}
             </div>
             {showAddRef && (
@@ -420,7 +436,7 @@ const RefDetail = ({
                     isDesktop
                 />
             )}
-            <div className='overflow-y-auto min-h-min my-8 -mr-4 pr-4'>
+            <div className='overflow-y-auto flex-1 min-h-0 mb-8 py-6 px-6 -mx-6 bg-gray-10 dark:bg-transparent'>
                 {loading ? (
                     <IconLoading color={colors.teal} />
                 ) : !refs.length ? (
@@ -430,19 +446,20 @@ const RefDetail = ({
                         {refs.map((data, index) => (
                             <div
                                 key={data.code}
-                                className='p-4 bg-darkBlue-3 rounded-xl'
+                                className='p-4 bg-white dark:bg-darkBlue-3 rounded-xl'
                             >
                                 <div
-                                    className='flex w-full justify-between font-semibold text-sm leading-6 items-center'>
+                                    className='flex w-full justify-between leading-6 items-center'>
                                     <div className='flex gap-2 items-center font-semibold'>
                                         {data.code}
                                         <CopyIcon data={data.code} size={24} className='cursor-pointer' />
                                     </div>
-                                    <div onClick={data.status ? null : () => handleSetDefault(data.code)}>
+                                    <div onClick={data.status ? null : () => handleSetDefault(data.code)} className='text-sm'>
                                         {
                                             data.status ?
                                                 <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
-                                                : <div className='bg-dark-2 rounded-lg px-4 py-2 text-txtSecondary'>
+                                                : <div
+                                                    className='bg-gray-10 dark:bg-dark-2 font-semibold rounded-lg px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark'>
                                                     {t('reference:referral.set_default')}
                                                 </div>
                                         }
@@ -506,17 +523,10 @@ const RefDetail = ({
                 )}
             </div>
             <div className='z-20 w-full flex justify-center'>
-                <div
-                    className={classNames(
-                        'bg-teal rounded-md w-full py-3 text-center text-white font-semibold cursor-pointer select-none',
-                        {
-                            '!bg-gray-3': refs.length >= 20
-                        }
-                    )}
+                <ButtonV2
+                    disabled={refs.length >= 20}
                     onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}
-                >
-                    {t('reference:referral.add_ref_code')}
-                </div>
+                >{t('reference:referral.add_ref_code')}</ButtonV2>
             </div>
         </ModalV2>
     );
@@ -537,6 +547,8 @@ const ModalShareRefCode = ({
         setDownloading(true);
         const element = ReactDOM.findDOMNode(node);
 
+        console.log(element, 'element'.repeat(10))
+
         domtoimage.toPng(element)
             .then(function (uri) {
                 const link = document.createElement('a');
@@ -549,7 +561,7 @@ const ModalShareRefCode = ({
                 link.click();
                 document.body.removeChild(link);
             })
-            .catch(e => console.error(e))
+            .catch(e => console.error(e, 'CHECK'))
             .finally(() => setDownloading(false));
     };
 
@@ -563,12 +575,12 @@ const ModalShareRefCode = ({
             <div className='absolute inset-x-4'>
                 <img width={99} src={getS3Url('/images/logo/nami-logo-v2.png')} alt='Nami exchange' />
                 <div className='mt-12'>
-                    <p className='text-2xl text-teal font-bold mb-4'>{t('reference:referral.share.title_2')}</p>
+                    <p className='text-2xl text-teal font-semibold mb-4'>{t('reference:referral.share.title_2')}</p>
                     <p className='leading-4'>
-                        <span className='font-semibold' dangerouslySetInnerHTML={{
+                        <span className='font-semibold text-white' dangerouslySetInnerHTML={{
                             __html: t('reference:referral.share.content')
                         }} />
-                        <span className='font-bold text-3xl text-teal'> 40%</span>
+                        <span className='font-semibold text-3xl text-teal'> 40%</span>
                     </p>
                 </div>
             </div>
@@ -581,8 +593,8 @@ const ModalShareRefCode = ({
             >
                 <div className='flex-1'>
                     <div
-                        className='text-txtSecondary whitespace-nowrap'>{t('reference:referral.share.scan_and_join')}</div>
-                    <p className='text-lg font-semibold'>{t('reference:referral.share.id_referral')}: {code}</p>
+                        className='text-txtSecondary-dark whitespace-nowrap'>{t('reference:referral.share.scan_and_join')}</div>
+                    <p className='text-lg text-white font-semibold'>{t('reference:referral.share.id_referral')}: {code}</p>
                 </div>
                 <div className='p-[.375rem] bg-white rounded'>
                     <QRCode

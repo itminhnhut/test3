@@ -85,25 +85,27 @@ const Commission = ({ t, language, id }) => {
 
     const renderNewFriends = useMemo(() => {
         return !lastedFriends.length ? <><NoData className='my-20' text={t('reference:referral.no_friends')} /></> : lastedFriends.map(data =>
-            <div key={data.userId} className='p-4 bg-dark-2 rounded-xl'>
+            <div key={data.userId} className='p-4 bg-gray-13 dark:bg-dark-2 rounded-xl'>
                 <div className='flex gap-2 mb-6'>
                     <UserCircle/>
-                    <p className='font-bold'>
+                    <p className='font-semibold'>
                         {t('reference:referral.new_friend')}: {data.code}
                     </p>
                 </div>
                 <div className='space-y-3'>
                     <div>
-                        <span className='text-txtSecondary'>Nami ID</span>
-                        <span className='float-right text-teal font-bold'>{data.code}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+                            <span>Nami ID </span><span className='text-xs'>({t('reference:referral:referrer')})</span>
+                        </span>
+                        <span className='float-right text-teal font-semibold'>{data.code}</span>
                     </div>
                     <div>
-                        <span className='text-txtSecondary'>{t('reference:referral:level')}</span>
-                        <span className='float-right text-gray-4'>{data.level}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral:level')}</span>
+                        <span className='float-right'>{data.level}</span>
                     </div>
                     <div>
-                        <span className='text-txtSecondary'>{t('reference:referral:rank')}</span>
-                        <span className='float-right text-gray-4'>{tier[data.rank][language]}</span>
+                        <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral:rank')}</span>
+                        <span className='float-right'>{tier[data.rank][language]}</span>
                     </div>
                 </div>
             </div>
@@ -122,7 +124,7 @@ const Commission = ({ t, language, id }) => {
                             +{formatNumber(data.value, 2)} VNDC
                         </div>
                     </div>
-                    <div className='flex w-full justify-between items-center text-txtSecondary text-sm'>
+                    <div className='flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>
                         <div>
                             {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
                         </div>
