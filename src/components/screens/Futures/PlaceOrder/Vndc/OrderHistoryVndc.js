@@ -46,7 +46,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             align: 'left',
             width: 192,
             render: (_row, item) => (
-                <div className='text-gray-4 font-normal text-sm'>
+                <div className='text-txtPrimary dark:text-gray-4 font-normal text-sm h-full'>
                     <div>{formatTime(item.closed_at, 'HH:mm:ss dd/MM/yyyy')}</div>
                     <div>ID #{item.displaying_id}</div>
                 </div>
@@ -103,9 +103,9 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             width: 224,
             render: (row) => (
                 <div className='flex items-center'>
-                    <div className='flex flex-col gap-1 font-normal text-sm text-darkBlue-5'>
-                        <div>SL: <span className='text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
-                        <div>TP: <span className='text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
+                    <div className='flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5'>
+                        <div>SL: <span className='text-red-2 dark:text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
+                        <div>TP: <span className='text-green-3 dark:text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
                     </div>
                 </div>
             ),
@@ -132,7 +132,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:volume'),
             align: 'right',
             width: 148,
-            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>,
+            render: (row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {
@@ -141,7 +141,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:open_price'),
             align: 'right',
             width: 148,
-            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>,
+            render: (row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {
@@ -150,15 +150,15 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:close_price'),
             align: 'right',
             width: 148,
-            render: (row, item) => <div className='text-gray-4 text-sm font-normal'>{formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)}</div>,
+            render: (row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {
             key: 'reason_close',
             title: t('futures:mobile:reason_close'),
             align: 'right',
-            width: 118,
-            render: (row) => <div className='text-gray-4 text-sm font-normal'>{renderReasonClose(row)}</div>,
+            width: 148,
+            render: (_row, item) => renderReasonClose(item),
             sortable: false,
         },
     ], [loading, pair])
