@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
+import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon, PartnersIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -11,21 +10,14 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { RETABLE_SORTBY } from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
 import { orderBy } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
-import Empty from 'components/common/Empty';
-import { ExchangeOrderEnum, WalletType } from 'redux/actions/const';
-import Link from 'next/link';
-import { PATHS } from 'constants/paths';
-import SvgWalletFutures from 'components/svg/SvgWalletFutures';
+import { WalletType } from 'redux/actions/const';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
-import ModalV2 from 'components/common/V2/ModalV2';
 import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {

@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
-import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon, MoreHorizIcon } from 'components/svg/SvgIcon';
+import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import { getMarketAvailable, initMarketWatchItem, SECRET_STRING } from 'utils';
@@ -15,8 +14,6 @@ import { Menu, useContextMenu } from 'react-contexify';
 import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
-import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
-import Skeletor from 'components/common/Skeletor';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
@@ -24,7 +21,6 @@ import useOutsideClick from 'hooks/useOutsideClick';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
-import HrefButton from '../../../common/V2/ButtonV2/HrefButton';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
