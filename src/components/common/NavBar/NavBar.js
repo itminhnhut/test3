@@ -356,7 +356,7 @@ const NavBar = ({
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const { avatar, username, code, email, kyc_status } = auth;
+        const { avatar,  code,  kyc_status } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerifying = kyc_status === KYC_STATUS.PENDING_APPROVAL;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
@@ -424,7 +424,7 @@ const NavBar = ({
                                 <img src={avatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
-                                <div className="mal-navbar__dropdown__user__info__username">{!isVerified ? 'GUEST' : username || 'GUEST'}</div>
+                                <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
                                 <div className="text-txtSecondary items-center flex">
                                     <TextCopyable text={code} />
                                 </div>

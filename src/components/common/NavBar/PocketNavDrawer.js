@@ -146,6 +146,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
         });
     }, [auth, state.navActiveLv1, currentTheme]);
 
+    console.log('auth?.username:', auth);
+
     return (
         <>
             <div className={`mal-overlay ${isActive ? 'mal-overlay__active' : ''}`} onClick={onClose} />
@@ -181,7 +183,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 <img src={auth?.avatar} alt="avatar_user" className="w-[58px] h-[58px] rounded-full object-cover" />
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
-                                        {!isVerified ? 'GUEST' : auth?.username || 'GUEST'}
+                                        {auth?.username || auth?.name || auth?.email}
                                     </div>
 
                                     <div className="text-txtSecondary text-xs items-center flex">
