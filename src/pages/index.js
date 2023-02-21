@@ -1,9 +1,5 @@
 import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
-import Modal from 'src/components/common/ReModal';
-import ModalV2 from 'components/common/V2/ModalV2';
-import HomeIntroduce from 'components/screens/Home/HomeIntroduce';
-import HomeMarketTrend from 'components/screens/Home/HomeMarketTrend';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -18,6 +14,10 @@ const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
 const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
 const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), { ssr: false });
+const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: false });
+const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
+const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), { ssr: false });
+const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), { ssr: false });
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
 
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
