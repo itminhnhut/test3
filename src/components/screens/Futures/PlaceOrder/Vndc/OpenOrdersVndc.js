@@ -146,7 +146,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 192,
                 render: (_row, item) => (
-                    <div className='text-txtPrimary dark:text-gray-4 font-normal text-sm h-full'>
+                    <div className='text-txtPrimary dark:text-gray-4 font-normal text-sm h-full flex flex-col justify-between'>
                         <div>{formatTime(item.opened_at, 'HH:mm:ss dd/MM/yyyy')}</div>
                         <div>ID #{item.displaying_id}</div>
                     </div>
@@ -218,7 +218,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 204,
                 render: (row, item) =>
                     item?.order_value ? (
-                        <div onClick={() => onHandleClick('vol', item)} className="flex items-center gap-3 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
+                        <div onClick={() => onHandleClick('vol', item)} className="w-full flex justify-between items-center gap-3 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
                             <div className='flex flex-col gap-1'>
                                 <div>
                                     {t('common:vol')}: <span className="text-txtPrimary dark:text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>

@@ -15,10 +15,10 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
 
     return (
         <div className={`flex flex-col space-y-3 items-center justify-center ${className}`}>
-            {!user ? (
+            {!user && !isSearch ? (
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
-                    <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 font-semibold">
+                    <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 font-semibold truncate overflow-x-auto">
                         <a href={getLoginUrl('sso', 'login')}>
                             <span className="text-teal hover:underline cursor-pointer" dangerouslySetInnerHTML={{ __html: t('common:sign_in') }} />
                         </a>

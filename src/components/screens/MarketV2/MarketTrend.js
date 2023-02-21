@@ -70,7 +70,7 @@ const MarketTrend = memo(({ loading, data }) => {
                     grabCursor
                     direction="horizontal"
                     className="mySwiper"
-                    slidesPerView={1.4}
+                    slidesPerView={1.3}
                     centeredSlides={true}
                     spaceBetween={16}
                     autoplay={{
@@ -78,7 +78,7 @@ const MarketTrend = memo(({ loading, data }) => {
                         'disableOnInteraction': true
                     }}
                     breakpoints={{
-                        '640': {
+                        '620': {
                             'slidesPerView': 2,
                             'spaceBetween': 16,
                             'centeredSlides': false
