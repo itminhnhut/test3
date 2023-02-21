@@ -10,13 +10,13 @@ const FuturesRecordSymbolItem = ({ symbol, leverage, type, side, onShareModal, s
     return (
         <div className="flex flex-col justify-center whitespace-nowrap gap-1 h-full">
             <div className="flex gap-3">
-                <div className="font-semibold text-sm" onClick={onSymbolClick}>{symbol}</div>
+                <div className="font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark" onClick={onSymbolClick}>{symbol}</div>
                 <div className="flex gap-2">
                     {leverage && <FuturesLeverage value={leverage} />}
-                    {canShare ? <div onClick={onShareModal}><ShareIcon /></div> : null}
+                    {canShare ? <div onClick={onShareModal}><ShareIcon/></div> : null}
                 </div>
             </div>
-            <div className={`${side === FuturesOrderEnum.Side.BUY ? 'text-teal' : 'text-red'} font-normal text-xs`}>
+            <div className={`${side === FuturesOrderEnum.Side.BUY ? 'text-green-3 dark:text-teal' : 'text-red-2 dark:text-red'} font-normal text-xs`}>
                 {specialOrder ? `${specialOrder} / ` : null}{side && <TypeTable type="side" data={{ side }} />}&nbsp;/&nbsp;{type && <TypeTable type="type" data={{ type }} />}
             </div>
         </div>
