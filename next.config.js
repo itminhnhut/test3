@@ -78,7 +78,7 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
         includePaths: [path.join(__dirname, 'styles')],
     },
     images: {
-        domains: ['wallet.vndc.io', 'test.nami.exchange', 'static.namifutures.com', 'sgp1.digitaloceanspaces.com', 'nami.io', 'datav2.nami.exchange'],
+        domains: ['wallet.vndc.io', 'test.nami.exchange', 'static.namifutures.com', 'sgp1.digitaloceanspaces.com', 'nami.io', 'datav2.nami.exchange', 'blog.nami.today'],
     },
     distDir: process.env.BUILD_DIR || 'build',
 });
