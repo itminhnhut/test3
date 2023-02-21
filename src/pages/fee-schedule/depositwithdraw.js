@@ -11,6 +11,8 @@ import { EXCHANGE_ACTION } from 'pages/wallet';
 import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
 import useWindowSize from 'hooks/useWindowSize';
 import SearchBox from 'components/common/SearchBox';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
+
 import Skeletor from 'components/common/Skeletor';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import TableV2 from 'components/common/V2/TableV2';
@@ -77,7 +79,9 @@ const DepositWithdrawFee = () => {
                 title: 'Coin / Token',
                 width: 80,
                 fixed: 'left',
-                align: 'left'
+                align: 'left',
+                preventSort: true
+
             },
             // {
             //     key: 'fullName',
@@ -215,7 +219,13 @@ const DepositWithdrawFee = () => {
                     paginationProps={{
                         current: state.currentPage,
                         pageSize: ROW_LIMIT,
-                        onChange: (currentPage) => setState({ currentPage })
+                        onChange: (currentPage) => {
+                            window.document.getElementById('#deposit_withdraw_table').scrollIntoView({
+                                // behavior: 'smooth'
+                            });
+
+                            setState({ currentPage });
+                        }
                     }}
                 />
             </>
@@ -224,18 +234,13 @@ const DepositWithdrawFee = () => {
 
     const renderSearchBox = useCallback(() => {
         return (
-            <SearchBox
-                wrapperStyles="!dark:bg-dark-2 bg-gray-10 !px-3 !py-3 !rounded-md"
-                inputStyles="!text-base pl-2 placeholder:placeholder-txtSecondary-dark"
-                useClearBtn={!!state.search}
-                onClear={() => setState({ search: '' })}
-                inputProps={{
-                    value: state.search,
-                    onChange: (e) => setState({ search: e.target?.value }),
-
-                    placeholder: `${t('common:search')}...`
+            <SearchBoxV2
+                value={state.search}
+                placeholder={`${t('common:search')}...`}
+                onChange={(value) => {
+                    setState({ search: value });
                 }}
-                withFocusStyle
+                // width
             />
         );
     }, [state.search]);
@@ -275,7 +280,9 @@ const DepositWithdrawFee = () => {
 
             <div className="w-full lg:max-w-[23rem] mt-7 lg:mt-20">{renderSearchBox()}</div>
             {width > BREAK_POINTS.lg ? (
-                <div className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">{renderTable()}</div>
+                <div id="#deposit_withdraw_table" className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">
+                    {renderTable()}
+                </div>
             ) : (
                 <WithdrawDepositList t={t} paymentConfigs={paymentConfigs} search={state.search} configs={state.configs} />
             )}
