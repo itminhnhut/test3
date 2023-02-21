@@ -426,7 +426,7 @@ const MarketTable = ({
                                     {e.last_price}
                                 </div>
                                 <div>
-                                    ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
+                                    ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata?.q}/USD`] * basedata?.p, 4)}
                                 </div>
                             </div>
                         </div>
