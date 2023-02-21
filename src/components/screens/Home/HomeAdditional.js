@@ -1,10 +1,14 @@
 import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRefWindowSize } from 'hooks/useWindowSize';
+import { PATHS } from 'src/constants/paths';
+import { getLoginUrl } from 'redux/actions/utils';
+
 
 const HomeCommunity = dynamic(() => import('./HomeCommunity'), {
     ssr: false
@@ -19,7 +23,7 @@ const HomeFirstAward = dynamic(() => import('./HomeFirstAward'), {
     ssr: false
 });
 
-const HomeAdditional = ({ parentState,currentTheme }) => {
+const HomeAdditional = ({ parentState, currentTheme }) => {
     // * Initial State
     const [stepCount, setStepCount] = useState(0);
     const [state, set] = useState({
@@ -33,7 +37,6 @@ const HomeAdditional = ({ parentState,currentTheme }) => {
         t,
         i18n: { language }
     } = useTranslation(['home', 'input', 'common', 'navbar']);
-
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -65,28 +68,36 @@ const HomeAdditional = ({ parentState,currentTheme }) => {
                         <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <Image src={`/images/screen/homepage/create_account_${currentTheme}.png`} width="48px" height="48px" />
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
-                                </div>
+                                <Link href={getLoginUrl('sso', 'login')} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src={`/images/screen/homepage/create_account_${currentTheme}.png`} width="48px" height="48px" />
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
+                                    </div>
+                                </Link>
+
                                 <div className="homepage-trade3step__vertial_dot_line" />
                                 <div className="homepage-trade3step__horizontal_dot_line" />
                             </div>
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <Image src="/images/screen/homepage/fiat_crypto.png" width="48px" height="48px" />
+                                <Link href={PATHS.WALLET.EXCHANGE.DEPOSIT} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src="/images/screen/homepage/fiat_crypto.png" width="48px" height="48px" />
 
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
-                                </div>
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
+                                    </div>
+                                </Link>
+
                                 <div className="homepage-trade3step__vertial_dot_line" />
                                 <div className="homepage-trade3step__horizontal_dot_line" />
                             </div>
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <Image src={`/images/screen/homepage/start_trading_${currentTheme}.png`} width="48px" height="48px" />
+                                <Link href={PATHS.FUTURES_V2.DEFAULT} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src={`/images/screen/homepage/start_trading_${currentTheme}.png`} width="48px" height="48px" />
 
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
-                                </div>
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     </div>
