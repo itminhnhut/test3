@@ -1,6 +1,5 @@
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
-import dynamic from 'next/dynamic';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
