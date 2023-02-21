@@ -443,7 +443,7 @@ const Wallet = () => {
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             {auth ? (
                 <CustomContainer>
-                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden sm:block">
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden md:block">
                         {t('common:my_wallet')}
                     </div>
                     {renderScreenTab()}

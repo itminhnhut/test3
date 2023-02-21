@@ -215,19 +215,27 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
 
     const renderEstWallet = useCallback(() => {
         return (
-            <div className="flex items-center mt-12">
-                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
+            <div className="mt-[24px] md:mt-12 flex items-center justify-between">
+                <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
                     <SvgWalletFutures size={32} />
                 </div>
-                <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
+                <div>
                     <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                        <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
-                        <span>BTC</span>
+                        {state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC
                     </div>
                     <div className="font-normal text-sm md:text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
+                {/* <div>
+                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                        {state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}
+                        BTC
+                    </div>
+                    <div className="font-normal text-sm md:text-base mt-1">
+                        {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
+                    </div>
+                </div> */}
             </div>
         );
     }, [state.hideAsset, currentTheme, estUsd, estBtc]);
@@ -235,20 +243,39 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
     // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
         return (
-            <div className="flex pt-8 gap-12">
-                <div>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>{' '}
-                    <span className="font-semibold">
+            <div className={`font-semibold  grid grid-cols-2 mt-5 text-sm md:flex md:justify-start md:mt-8 md:text-base'}`}>
+                <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
+                        {t('common:available_balance')}: &nbsp;
+                    </span>
+                    <span className="font-semibold mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
                     </span>
                 </div>
-                <div>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span>{' '}
-                    <span className="font-semibold">
+                <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs leading-[16px] md:text-base font-normal">
+                        {t('common:in_order')}: &nbsp;
+                    </div>
+                    <div className="font-semibold mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
-                    </span>
+                    </div>
                 </div>
             </div>
+
+            // <div className="flex pt-8 gap-12">
+            //     <div>
+            //         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>{' '}
+            //         <span className="font-semibold">
+            //             {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
+            //         </span>
+            //     </div>
+            //     <div>
+            //         <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span>{' '}
+            //         <span className="font-semibold">
+            //             {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
+            //         </span>
+            //     </div>
+            // </div>
         );
     }, [estBtc, state.hideAsset, currentTheme]);
 
@@ -278,24 +305,17 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
-                <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
+            <MCard
+                addClass={`mt-5 !p-8 rounded-xl 
+             ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
+            >
+                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
                     <div>
                         <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
-
-                        {/* <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-3">{t('wallet:est_balance')}</div>
-                            <div
-                                className="flex items-center cursor-pointer hover:opacity-80 select-none"
-                                onClick={() => setState({ hideAsset: !state.hideAsset })}
-                            >
-                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
-                            </div>
-                        </div> */}
                         {renderEstWallet()}
                     </div>
 
-                    <div className="">
+                    <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full ">
                             <ButtonV2
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
@@ -309,41 +329,62 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                 </div>
                 {renderAvailableBalance()}
             </MCard>
+            <ButtonV2
+                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
+                className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
+            >
+                {t('common:transfer')}
+            </ButtonV2>
 
-            <div className="mt-16 sm:flex sm:items-end sm:justify-between">
-                <div className="t-common-v2">Futures</div>
-                <div className="flex items-center justify-between mt-4 sm:mt-0">
-                    <HideSmallBalance
-                        onClick={() =>
-                            setState({
-                                hideSmallAsset: !state.hideSmallAsset
-                            })
-                        }
-                        isHide={state.hideSmallAsset}
-                        className="mr-8"
-                    />
-                    <SearchBoxV2
-                        value={state.search}
-                        onChange={(value) => {
-                            setState({ search: value });
-                        }}
-                        onFocus={() => setState({ currentPage: 1 })}
-                        width
-                    />
-                    {/* <div className="p-3 mt-3 lg:mt-0 w-[368px] flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
-                        <Search size={width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
-                        <input
-                            className="text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
+            <div className="mt-12 md:mt-16 flex items-center justify-between">
+                <div className="t-common-v2 hidden md:block">Futures</div>
+                {isSmallScreen ? (
+                    <div className="w-full flex items-center justify-between">
+                        <SearchBoxV2
                             value={state.search}
-                            onChange={(e) => setState({ search: e?.target?.value })}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
                             onFocus={() => setState({ currentPage: 1 })}
-                            placeholder={t('common:search')}
+                            wrapperClassname="w-[180px]"
+                            placeholder={t('common:search_asset')}
+                            width={width}
                         />
-                        {state.search && (
-                            <X size={width >= 768 ? 20 : 16} className="cursor-pointer" color="#8694b2" onClick={() => setState({ search: '' })} />
-                        )}
-                    </div> */}
-                </div>
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="whitespace-nowrap"
+                            width={width}
+                        />
+                    </div>
+                ) : (
+                    <div className="flex items-center">
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="mr-8 whitespace-nowrap"
+                            width={width}
+                        />
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            width={width}
+                            placeholder={t('common:search_asset')}
+                        />
+                    </div>
+                )}
             </div>
 
             {renderAssetTable()}

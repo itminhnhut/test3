@@ -184,7 +184,7 @@ body {
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
-    .txtPri-1 {
+    .txtPri-1 { // [size, leading]: [14px, 20px] -> [16px, 24px],
         @apply font-semibold text-sm md:text-base
         text-gray-15 dark:text-gray-4;
     }
