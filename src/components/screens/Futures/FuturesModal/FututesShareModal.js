@@ -94,7 +94,7 @@ const FututesShareModal = ({ isVisible, onClose, order, marketWatch }) => {
                             <span className="font-semibold">{refCode}</span>
                         </div>
                         <div className="p-1 bg-white rounded-[3px]">
-                            <QRCode value={`${process.env.NEXT_PUBLIC_APP_URL}/ref/${refCode}`} size={44} />
+                            <QRCode value={`https://nami.exchange/ref/${refCode}`} size={44} />
                         </div>
                     </div>
                 </div>

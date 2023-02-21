@@ -1,64 +1,61 @@
 import compact from 'lodash/compact';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_NOTIFICATIONS, API_MARK_NOTIFICATIONS_READ } from './apis';
-import {
-    ADD_NOTIFICATION,
-    ADD_NOTIFICATION_UNREAD_COUNT,
-    NOTIFICATION_MARK_ALL_AS_READ,
-    SET_NOTIFICATION,
-} from './types';
+import { ADD_NOTIFICATION, ADD_NOTIFICATION_UNREAD_COUNT, NOTIFICATION_MARK_ALL_AS_READ, SET_NOTIFICATION } from './types';
 import { ApiStatus, NotificationCategory } from './const';
-// import { getSpinNotificationText, translateText } from './utils';
-// import Store from '../Store';
+import Axios from 'axios';
 
 function getSpinNotificationText() {
     return null;
 }
 
-export function getNotifications(prevId, cb) {
+export function getNotifications({ lang, limit = 10, prevId }, cb) {
     return async (dispatch) => {
         try {
-            const params = {};
-            if (prevId !== undefined) params.prevId = prevId;
+            const params = { limit };
+            if (prevId !== undefined) params.lastId = prevId;
             const { status, data } = await fetchAPI({
                 url: API_GET_NOTIFICATIONS,
                 options: {
                     method: 'GET',
+                    headers: {
+                        lang
+                    }
                 },
-                params,
+                params
             });
             if (status === ApiStatus.SUCCESS) {
                 if (!prevId) {
                     dispatch({
                         type: SET_NOTIFICATION,
-                        mix: data?.result,
-                        hasNext: data?.hasNext,
+                        mix: data?.results,
+                        hasNext: data?.hasNext
                     });
                 } else {
                     dispatch({
                         type: ADD_NOTIFICATION,
-                        mix: data?.result,
-                        hasNext: data?.hasNext > 0,
+                        mix: data?.results,
+                        hasNext: data?.hasNext
                     });
                 }
             } else {
                 dispatch({
                     type: SET_NOTIFICATION,
                     mix: false,
-                    hasNext: false,
+                    hasNext: false
                 });
             }
             if (cb) cb(data);
         } catch (err) {
             if (cb) {
                 cb({
-                    status: 'failed',
+                    status: 'failed'
                 });
             }
             dispatch({
                 type: SET_NOTIFICATION,
                 mix: false,
-                hasNext: false,
+                hasNext: false
             });
         }
     };
@@ -68,13 +65,11 @@ export function postProcessNotifications(notifications, needSound = false) {
     if (!Array.isArray(notifications)) return notifications;
 
     return compact(
-        notifications.map(notification => {
-            if (
-                notification.category === NotificationCategory.MARKET_EXCHANGE
-            ) {
+        notifications.map((notification) => {
+            if (notification.category === NotificationCategory.MARKET_EXCHANGE) {
                 return {
                     ...notification,
-                    content: getSpinNotificationText(notification.category, notification.metadata, true, needSound),
+                    content: getSpinNotificationText(notification.category, notification.metadata, true, needSound)
                 };
             }
             if (notification.category === NotificationCategory.DEPOSIT_ERC20) {
@@ -88,11 +83,11 @@ export function postProcessNotifications(notifications, needSound = false) {
                 }
                 return {
                     ...notification,
-                    content: '',
+                    content: ''
                 };
             }
             return null;
-        }),
+        })
     );
 }
 
@@ -112,37 +107,36 @@ export function postProcessNotifications(notifications, needSound = false) {
 export function increaseUnreadCount() {
     return (dispatch) => {
         dispatch({
-            type: ADD_NOTIFICATION_UNREAD_COUNT,
+            type: ADD_NOTIFICATION_UNREAD_COUNT
         });
     };
 }
 
 export const truncateNotifications = () => {
-    return dispatch => {
+    return (dispatch) => {
         dispatch({
             type: SET_NOTIFICATION,
             mix: null,
-            hasNext: false,
+            hasNext: false
         });
     };
 };
 
 export async function markAllAsRead(ids) {
     return async (dispatch) => {
-        const { status } = await fetchAPI({
-            url: API_MARK_NOTIFICATIONS_READ,
-            options: {
-                method: 'PUT',
-            },
-            params: {
-                ids,
-            },
-        });
-        if (status === ApiStatus.SUCCESS) {
+        await Axios.post(
+            API_MARK_NOTIFICATIONS_READ,
+            {},
+            {
+                params: {
+                    ...(ids && { _ids: [ids] })
+                }
+            }
+        ).then(() => {
             dispatch({
                 type: NOTIFICATION_MARK_ALL_AS_READ,
-                ids,
+                ids
             });
-        }
+        });
     };
 }

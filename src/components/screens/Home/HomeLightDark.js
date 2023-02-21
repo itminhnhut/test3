@@ -75,7 +75,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     </div>
                     <Swiper
                         spaceBetween={10}
-                        slidesPerView={1.5}
+                        slidesPerView={1.2}
                         centeredSlides
                         loop
                         allowTouchMove
@@ -103,7 +103,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     >
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
-                                <div className="relative overflow-hidden w-full h-[550px] lg:h-[415px] ">
+                                <div className="relative overflow-hidden w-full h-[630px] md:h-[550px] lg:h-[415px] ">
                                     <Image src={`/images/screen/homepage/iphone_${index + 1}_${currentTheme}.png`} layout="fill" className="p-1" alt="iphone" />
                                 </div>
                             </SwiperSlide>

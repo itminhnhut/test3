@@ -165,7 +165,8 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         <div className="flex items-center mt-6">
                             <div>
                                 <CheckBox
-                                    className="!w-auto"
+                                    className="!w-auto "
+                                    boxContainerClassName="min-w-[24px] min-h-[24px]"
                                     active={state.checkedTermAndPolicy}
                                     onChange={() => setState({ checkedTermAndPolicy: !state.checkedTermAndPolicy })}
                                     label={

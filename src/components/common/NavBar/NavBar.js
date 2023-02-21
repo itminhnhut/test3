@@ -1,7 +1,5 @@
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
-import dynamic from 'next/dynamic';
-import NotificationList from 'src/components/notification/NotificationList';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
@@ -44,8 +42,11 @@ import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 
+// ** Dynamic
+const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
 const PocketNavDrawer = dynamic(() => import('src/components/common/NavBar/PocketNavDrawer'), {
     ssr: false
 });
@@ -656,7 +657,7 @@ const NavBar = ({
                                 </div>
                             </>
                         )}
-                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} />}
+                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} auth={auth} />}
                         {width >= 1366 && (
                             <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
                                 {page === 'spot' ? (
@@ -690,7 +691,11 @@ const NavBar = ({
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu size={25} color="currentColor"  className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
+                                <SvgMenu
+                                    size={25}
+                                    color="currentColor"
+                                    className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`}
+                                />
                             </div>
                         )}
                     </div>

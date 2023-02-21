@@ -24,7 +24,7 @@ const TrendingSlide = ({ trending }) => {
                             const _ = initMarketWatchItem(pair);
                             return (
                                 <Link href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}>
-                                    <a className="!text-txtPrimary-dark hover:opacity-80 text-xs font-semibold flex mx-4 py-3">
+                                    <a className="!text-txtPrimary-dark md:hover:opacity-80 text-xs font-semibold flex mx-4 py-3">
                                         <div>
                                             <span>{_?.baseAsset}</span>
                                             <span>/{_?.quoteAsset}</span>

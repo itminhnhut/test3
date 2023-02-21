@@ -640,9 +640,20 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
 };
 
 
-const ShareIcon = ({ width = "21", height = "20", color = "#E2E8F0" }) => <svg width={width} height={height} viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.5658 15.0006V16.6673H4.23242V15.0006H17.5658ZM10.0658 6.65898V13.334H11.7324V6.65898H14.2324L10.8991 3.33398L7.56575 6.65898H10.0658Z" fill={color} />
-</svg>
+const BxsInfoCircle = ({ size = 24 }) => (
+    <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill="#768394" />
+    </svg>
+);
+
+const ShareIcon = ({ color = '#1E1E1E', size = 20, ...props }) => (
+    <svg {...props} width={size} height={size} viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M17.0658 15.3444V17.0111H3.73242V15.3444H17.0658ZM9.56575 7.00273V13.6777H11.2324V7.00273H13.7324L10.3991 3.67773L7.06575 7.00273H9.56575Z"
+            fill={color}
+        />
+    </svg>
+);
 
 export {
     ArrowDownIcon,
@@ -686,5 +697,6 @@ export {
     BxsLogoutCircle,
     CopyIcon,
     CheckedIcon,
+    BxsInfoCircle,
     ShareIcon
 };
