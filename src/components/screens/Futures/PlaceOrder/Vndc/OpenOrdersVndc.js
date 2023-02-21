@@ -28,6 +28,8 @@ import ModifyOrder from 'components/screens/Futures/PlaceOrder/EditOrderV2/Modif
 import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 import FuturesCloseOrder from 'components/screens/Futures/FuturesModal/FuturesCloseOrder';
+import FuturesCloseAllOrder from 'components/screens/Futures/FuturesModal/FuturesCloseAllOrder';
+import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, isVndcFutures, pair, status }) => {
     const {
@@ -46,6 +48,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
     const [showCloseModal, setShowCloseModal] = useState(false);
+    const [showCloseAll, setShowCloseAll] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const message = useRef({
         status: '',
@@ -60,6 +63,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         status: '',
         side: ''
     });
+    const [closeType, setCloseType] = useState();
+    const btnCloseAll = useRef();
 
     const TimeFilterRef = useRef(null);
 
@@ -70,6 +75,68 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
+    };
+
+    const closeTypes = useMemo(() => {
+        return {
+            position: [
+                {
+                    type: 'ALL',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'PROFIT',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_profit', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'LOSS',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_loss', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'PAIR',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: pairConfig?.symbol })
+                }
+            ],
+            openOrders: [
+                {
+                    type: 'ALL_PENDING',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pending', { pair: pairConfig?.quoteAsset })
+                },
+                {
+                    type: 'ALL_PAIR_PENDING',
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', { pair: pairConfig?.symbol })
+                }
+            ]
+        };
+    }, [pairConfig]);
+
+    const renderBtnCloseAll = () => {
+        return (
+            <PopoverV2 ref={btnCloseAll} label={<CloseButton>{t('common:close_all_orders')}</CloseButton>} className="w-max py-2 text-sm !mt-2 z-20 !left-0">
+                <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3 w-max">
+                    <div className="relative space-y-2">
+                        {closeTypes.position.map((item, index) => {
+                            const isActive = closeType?.type === item.type;
+                            return (
+                                <div
+                                    onClick={() => {
+                                        onHandleClick('delete_all', item);
+                                        btnCloseAll.current.close();
+                                    }}
+                                    key={index}
+                                    className={classNames(
+                                        'text-left py-2 px-4 cursor-pointer w-full text-sm text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
+                                        { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
+                                    )}
+                                >
+                                    {item.label}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </PopoverV2>
+        );
     };
 
     // { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
@@ -273,7 +340,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             },
             {
                 key: 'operator',
-                title: <CloseButton>{t('common:close_all_orders')}</CloseButton>,
+                title: renderBtnCloseAll(),
                 align: 'center',
                 fixed: 'right',
                 width: 160,
@@ -348,7 +415,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const flag = useRef(false);
     const onHandleClick = (key, data) => {
-        rowData.current = data;
+        if (key !== 'delete_all') rowData.current = data;
         switch (key) {
             case 'vol':
                 flag.current = true;
@@ -365,6 +432,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             case 'delete':
                 flag.current = true;
                 setShowCloseModal(true);
+                break;
+            case 'delete_all':
+                flag.current = true;
+                setCloseType(data);
+                setShowCloseAll(true);
                 break;
             case 'detail':
                 if (flag.current) {
@@ -482,6 +554,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 onClose={() => setShowCloseModal(false)}
                 decimals={decimals}
                 marketWatch={marketWatch}
+                pairConfig={pairConfigDetail}
+            />
+            <FuturesCloseAllOrder
+                isVisible={showCloseAll}
+                onClose={() => setShowCloseAll(false)}
+                marketWatch={marketWatch}
+                pairConfig={pairConfig}
+                closeType={closeType}
             />
             <EditSLTPV2
                 isVisible={showEditSLTP}

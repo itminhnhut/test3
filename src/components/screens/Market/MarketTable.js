@@ -60,7 +60,7 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                      onClick={() => parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1 })}
                      style={{ ...style }}
                      className="relative mr-12 pb-4 capitalize select-none font-medium cursor-pointer flex items-center">
-                    {item.key === 'favorite' && <IconStarFilled size={16} color={colors.yellow}/>}
+                    {item.key === 'favorite' && <IconStarFilled size={16} color={colors.yellow[2]}/>}
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>{item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}</span>
                     {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2"/>}
                 </div>)
@@ -498,7 +498,7 @@ const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
              onClick={() => {
                  !loading && callback(already ? 'delete' : 'put', list)
              }}>
-            {already ? <IconStarFilled size={16} color={colors.yellow}/>
+            {already ? <IconStarFilled size={16} color={colors.yellow[2]}/>
                 : <StarOutlined style={{ color: colors.gray[3] }} size={24}/>}
         </div>
     )

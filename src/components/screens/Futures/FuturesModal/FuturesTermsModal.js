@@ -60,7 +60,10 @@ const FuturesTermsModal = () => {
                     label={
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:service')}</span>
-                            <div onClick={() => onHandleClick('detail_service')} className="text-teal font-semibold flex items-center space-x-2 w-max">
+                            <div
+                                onClick={() => onHandleClick('detail_service')}
+                                className="text-teal font-semibold flex items-center space-x-2 w-max hover:underline"
+                            >
                                 <span>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
@@ -73,7 +76,10 @@ const FuturesTermsModal = () => {
                     label={
                         <div className="flex flex-col space-y-[6px]">
                             <span>{t('futures:terms:futures')}</span>
-                            <div onClick={() => onHandleClick('detail_futures')} className="text-teal font-semibold flex items-center space-x-2 w-max">
+                            <div
+                                onClick={() => onHandleClick('detail_futures')}
+                                className="text-teal font-semibold flex items-center space-x-2 w-max hover:underline"
+                            >
                                 <span>{t('common:details')}</span>
                                 <ChevronRight size={16} />
                             </div>
