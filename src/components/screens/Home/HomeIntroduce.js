@@ -128,7 +128,7 @@ const HomeIntroduce = ({ parentState }) => {
 
                         <div className="homepage-introduce___download">
                             <Link href="#download_section">
-                                <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
+                                <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
                                     {t('home:introduce.download_app')}
                                 </GradientButton>
                             </Link>
