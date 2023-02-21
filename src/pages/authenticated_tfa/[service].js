@@ -10,6 +10,7 @@ import _ from 'lodash';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import useWindowSize from 'hooks/useWindowSize';
 
 const INITIAL_STATE = {
     redirectTo: null,
@@ -27,6 +28,7 @@ const ExternalWithdrawal = (props) => {
         root.classList.remove('light')
         root.classList.add('dark')
     }, [])
+    const { width } = useWindowSize()
     const {
         service,
     } = router.query;
@@ -114,13 +116,12 @@ const ExternalWithdrawal = (props) => {
                     <OtpModal
                         label={t('common:otp_verify')}
                         isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
-                        renderUpper={() => <div className="font-bold text-lg"> {t('common:tfa_authentication')}</div>}
+                        renderUpper={() => <div className="font-bold text-xl sm:text-[22px] sm:leading-[30px]"> {t('common:tfa_authentication')}</div>}
                         renderLower={() => state.message
-
-
                             ? <div className="text-red text-center text-sm">{state.message}</div>
                             : <div className="text-red text-center text-sm">&nbsp;</div>
                         }
+                        isMobile={width < 640}
                     />
                 </div>
             </div>

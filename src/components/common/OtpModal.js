@@ -23,6 +23,7 @@ const OtpModal = ({
     renderUpper,
     renderLower,
     className,
+    isMobile = false
 }) => {
     const { t } = useTranslation()
 
@@ -31,8 +32,10 @@ const OtpModal = ({
         onChange(data.slice(0, 6))
     }
 
+    const Wrapper = isMobile ? DivComponent : ModalV2
+
     return (
-        <ModalV2
+        <Wrapper
             isVisible={isVisible}
             containerClassName={classNames(
                 'p-[32px] !translate-y-0 sm:min-w-[0px] !bg-[#000]',
@@ -52,7 +55,7 @@ const OtpModal = ({
                     ? renderUpper()
                     : renderUpper}
             </div>
-            {label && <div className='text-darkBlue-5 font-normal text-base max-w-lg'>{label}</div>}
+            {label && <div className='text-darkBlue-5 font-normal text-sm sm:text-base max-w-lg'>{label}</div>}
             <OtpInput
                 value={value}
                 onChange={(otp) => onChange(otp)}
@@ -60,7 +63,7 @@ const OtpModal = ({
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!h-[64px] !w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
+                inputStyle='!h-[40px] !w-[40px] xs:!h-[52px] xs:!w-[52px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
             />
             <div className='flex w-full justify-between items-center'>
                 <div className={classNames({ 'mt-4': !!renderLower })}>
@@ -85,8 +88,10 @@ const OtpModal = ({
                     {t('common:confirm')}
                 </Button>
             </div>
-        </ModalV2>
+        </Wrapper>
     )
 }
 
 export default OtpModal
+
+const DivComponent = ({ children }) => <div className='bg-shadow h-full w-full pt-[102px] px-4'>{children}</div>

@@ -359,7 +359,7 @@ const Market = () => {
         )
     }
 
-    return isMobile ? <LayoutMobile>{renderContent()}</LayoutMobile> : <MaldivesLayout>{renderContent()}</MaldivesLayout>
+    return <MaldivesLayout>{renderContent()}</MaldivesLayout>
 }
 
 const filterer = (data, keyWord) => {

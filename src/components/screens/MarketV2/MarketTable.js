@@ -14,7 +14,7 @@ import {
     getV1Url,
     render24hChange
 } from 'redux/actions/utils';
-import { initMarketWatchItem, sparkLineBuilder } from 'utils';
+import { initMarketWatchItem, log, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
 import { IconStarFilled } from 'components/common/Icons';
 import { Search, X } from 'react-feather';
@@ -35,12 +35,13 @@ import axios from 'axios';
 import { API_GET_FAVORITE } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import Spinner from 'components/svg/Spinner';
+import TableV2 from 'components/common/V2/TableV2';
 
 const MARKET_ROW_LIMIT = 20;
 
 const MarketTable = ({
     loading,
-    data,
+    data = [],
     parentState,
     ...restProps
 }) => {
@@ -127,7 +128,6 @@ const MarketTable = ({
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null;
-
             return (
                 <div
                     key={item.key}
@@ -281,88 +281,7 @@ const MarketTable = ({
 
         if (!data?.length) pairColumnsWidth = 128;
 
-        const starColumn = {
-            key: 'star',
-            dataIndex: 'star',
-            title: '',
-            fixed: 'left',
-            align: 'left',
-            width: starColumnWidth
-        };
-
-        const columns = [
-            {
-                key: 'pair',
-                dataIndex: 'pair',
-                title: 'Coin',
-                fixed: 'left',
-                align: 'left',
-                width: pairColumnsWidth
-            },
-            {
-                key: 'last_price',
-                dataIndex: 'last_price',
-                title: 'Last Price',
-                align: 'right',
-                width: 168
-            },
-            {
-                key: 'change_24h',
-                dataIndex: 'change_24h',
-                title: 'Change 24h',
-                align: 'right',
-                width: 128
-            },
-            // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
-            // { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'right', width: 168 },
-            {
-                key: 'volume_24h',
-                dataIndex: 'volume_24h',
-                title: 'Volume 24h',
-                align: 'right',
-                width: 138
-            },
-            {
-                key: '24h_high',
-                dataIndex: '24h_high',
-                title: '24h High',
-                align: 'right',
-                width: 128
-            },
-            {
-                key: '24h_low',
-                dataIndex: '24h_low',
-                title: '24h Low',
-                align: 'right',
-                width: 132
-            },
-            {
-                key: 'operation',
-                dataIndex: 'operation',
-                title: '',
-                align: 'center',
-                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164
-            }
-        ];
-
-        // Translate
-        columns.forEach(c => {
-            let item = c;
-            if (c.key !== 'star' && c.key !== 'operation') {
-                item = {
-                    ...c,
-                    title: translater(c.key)
-                };
-            }
-            modifyColumns.push(item);
-        });
-
         // Hide star button if user not found
-        if (auth) {
-            modifyColumns.unshift(starColumn);
-        } else {
-            modifyColumns = modifyColumns.filter(col => col?.key !== 'star');
-        }
 
         //
         let tradingMode = TRADING_MODE.EXCHANGE;
@@ -382,102 +301,180 @@ const MarketTable = ({
         }
 
         // PRE PROCESS DATA FOR TABLE
-        let rowKey = `${tab[restProps.tabIndex]?.key}_${tradingMode}__`
-        let tableStatus
-        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
-        if (isMobile) return dataSource.slice(0, mobileLimit).map((e, index) => {
-            const basedata = data?.[index]
-            return (
-                <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
-                    <div className='w-full flex flex-col justify-center items-start'>
-                        {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
-                        <div className='flex h-[64px] items-center gap-4'>
-                            {e.star}
-                            <div className='flex flex-col justify-center'>
-                                {e.pair}
-                                <span>{t('common:vol')} {e.volume_24h}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-full flex flex-col justify-center items-end'>
-                        {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
-                        <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
-                            <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
-                                {e.last_price}
-                            </div>
-                            <div>
-                                ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className='min-w-[94px] flex flex-col justify-center items-end'>
-                        {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
-                        <div className='flex h-[64px] items-center w-full justify-end'>
-                            <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
-                                'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
-                                'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
-                                'border-none !justify-end': !getExchange24hPercentageChange(basedata),
-                            })}>
-                                {e.change_24h}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )
-        });
-
-        if (tab[restProps.tabIndex]?.key === 'favorite') {
-            if (!auth) {
-                return <NoData className="my-20" />;
-            } else {
-                if (!dataSource.length) {
-                    return renderSuggested;
+        const columns = [
+            {
+                key: 'star',
+                fixed: 'left',
+                align: 'left',
+                width: starColumnWidth,
+                sortable: true,
+                visibile: auth,
+                render: (_row, item) => {
+                    const {
+                        baseAsset,
+                        baseAssetId,
+                        quoteAsset,
+                        quoteAssetId,
+                    } = initMarketWatchItem(item);
+                    return auth ? <FavActionButton
+                        b={{
+                            b: baseAsset,
+                            i: baseAssetId
+                        }}
+                        q={{
+                            q: quoteAsset,
+                            i: quoteAssetId
+                        }}
+                        list={restProps.favoriteList}
+                        lang={language}
+                        mode={tradingMode}
+                        favoriteRefresher={restProps.favoriteRefresher}
+                    /> : null
+                },
+            },
+            {
+                key: 's',
+                dataIndex: 's',
+                title: translater('pair'),
+                fixed: 'left',
+                align: 'left',
+                sortable: true,
+                width: pairColumnsWidth,
+                render: (_row, item) => {
+                    return renderPair(item.b, item.q, item.lbl, width, tradingMode, language, restProps.futuresConfigs)
+                },
+            },
+            {
+                key: 'p',
+                dataIndex: 'p',
+                title: translater('last_price'),
+                align: 'right',
+                width: 168,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row)}</span>
+            },
+            {
+                key: 'change_24h',
+                title: translater('change_24h'),
+                align: 'right',
+                width: 148,
+                sortable: false,
+                render: (_row, item) => render24hChange(item, false, 'justify-end !text-base !font-normal'),
+                sorter: (a, b) => {
+                    const change24hA = getExchange24hPercentageChange(a);
+                    const change24hB = getExchange24hPercentageChange(b);
+                    return change24hA - change24hB;
                 }
-            }
-        } else {
-            if (loading) {
-                tableStatus = <ScaleLoader color={colors.teal} size={12} />;
-            } else if (!dataSource.length) {
-                tableStatus = <NoData isSearch />;
-            }
+            },
+            {
+                key: 'vq',
+                dataIndex: 'vq',
+                title: translater('volume_24h'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatCurrency(row, 0)}</span>
+            },
+            {
+                key: 'h',
+                dataIndex: 'h',
+                title: translater('24h_high'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
+            },
+            {
+                key: 'l',
+                dataIndex: 'l',
+                title: translater('24h_low'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
+            },
+            {
+                key: 'operation',
+                dataIndex: 'operation',
+                align: 'center',
+                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164,
+                render: (_row, item) => renderTradeLink(item.b, item.q, language, tradingMode)
+            },
+        ];
+
+        if (isMobile) {
+            const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
+            return dataSource.slice(0, mobileLimit).map((e, index) => {
+                const basedata = data?.[index]
+                return (
+                    <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
+                        <div className='w-full flex flex-col justify-center items-start'>
+                            {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
+                            <div className='flex h-[64px] items-center gap-4'>
+                                {e.star}
+                                <div className='flex flex-col justify-center'>
+                                    {e.pair}
+                                    <span>{t('common:vol')} {e.volume_24h}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='w-full flex flex-col justify-center items-end'>
+                            {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
+                            <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
+                                <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
+                                    {e.last_price}
+                                </div>
+                                <div>
+                                    ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
+                                </div>
+                            </div>
+                        </div>
+                        <div className='min-w-[94px] flex flex-col justify-center items-end'>
+                            {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
+                            <div className='flex h-[64px] items-center w-full justify-end'>
+                                <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
+                                    'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
+                                    'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
+                                    'border-none !justify-end': !getExchange24hPercentageChange(basedata),
+                                })}>
+                                    {e.change_24h}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            });
         }
-
-
         return (
-            <ReTable
-                // @ts-ignore
-                // sort
-                defaultSort={{
-                    key: 'pair',
-                    direction: 'asc'
-                }}
-                useRowHover
-                data={dataSource}
-                columns={modifyColumns}
-                rowKey={item => `${rowKey}___${item?.key}`}
+            <TableV2
+                rowKey={(item) => `${item?.key}`}
+                defaultSort={{ key: 's', direction: 'desc' }}
+                data={loading ? [] : data?.map(e => {
+                    return {
+                        ...e,
+                        [RETABLE_SORTBY]: {
+                            change_24h: getExchange24hPercentageChange(e),
+                        }
+                    }
+                })}
+                sort
+                isSearch={restProps?.search?.length}
                 loading={loading}
+                columns={columns}
+                page={restProps.currentPage}
+                limit={MARKET_ROW_LIMIT}
+                total={data?.length ?? 0}
                 scroll={{ x: true }}
-                emptyText={tableStatus}
-                noBorder={width < 640}
+                height={'300px'}
                 tableStyle={{
-                    minWidth: '888px !important',
-                    fontSize: '16px !important',
-                    // shadowWithFixedCol: width < 1366,
-                    noDataStyle: {
-                        minHeight: '480px'
+                    padding: '14px 16px',
+                    headerStyle: {
+                        padding: '0px'
                     },
-                    // backgroundColor: '#0c0e14 !important'
+                    fontSize: '16px !important',
                 }}
-                paginationProps={{
-                    hide: true,
-                    current: restProps.currentPage,
-                    pageSize: MARKET_ROW_LIMIT,
-                    onChange: (currentPage) => parentState({ currentPage })
-                }}
-                isNamiV2
             />
-
         );
     }, [
         data,
@@ -540,34 +537,9 @@ const MarketTable = ({
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
-    // useEffect(() => {
-    //     if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
-    //         parentState({
-    //             tabIndex: 0,
-    //             subTabIndex: 0
-    //         });
-    //     }
-
-    //     if (restProps.favoriteList?.exchange?.length && !restProps.favoriteList?.futures?.length) {
-    //         parentState({
-    //             tabIndex: 0,
-    //             subTabIndex: 0
-    //         });
-    //     }
-
-    //     if (restProps.favoriteList?.futures?.length && !restProps.favoriteList?.exchange?.length) {
-    //         parentState({
-    //             tabIndex: 0,
-    //             subTabIndex: 1
-    //         });
-    //     }
-
-    // }, [restProps.favoriteList]);
-
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
-            <div
-                className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
+            <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
                 <div
                     className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xl sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-0">
                     {t('common:market')}
@@ -642,7 +614,7 @@ const MarketTable = ({
                         <div
                             className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
                             onClick={async () => {
-                                if(isLoading) return
+                                if (isLoading) return
                                 await addTokensToFav({
                                     symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
                                     lang: language,
@@ -934,7 +906,7 @@ const renderTradeLink = (b, q, lang, mode) => {
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark !text-sm sm:!text-base"
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark !text-sm sm:!text-base!text-sm sm:!text-base"
                     target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
