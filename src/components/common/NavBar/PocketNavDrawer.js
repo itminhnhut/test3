@@ -178,8 +178,8 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
                             <a className="flex items-center px-4 mb-6">
-                                <div className="w-[58px] h-[58px] rounded-full overflow-hidden">
-                                    <img src={auth?.avatar} alt="" />
+                                <div className="overflow-hidden">
+                                    <img src={auth?.avatar} alt="" className-="w-[58px] h-[58px] rounded-full" />
                                 </div>
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
