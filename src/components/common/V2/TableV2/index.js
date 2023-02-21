@@ -64,10 +64,10 @@ const index = ({
             />
             {!pagingPrevNext ? (
                 total > 0 ||
-                (data.length > 0 && (
+                (data?.length > 0 && (
                     <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                         <RePagination
-                            total={total ?? data.length}
+                            total={total ?? data?.length}
                             isNamiV2
                             current={currentPage}
                             pageSize={limit}
@@ -80,7 +80,7 @@ const index = ({
             ) : (
                 <div className={`pt-8 pb-8 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination
-                        total={total ?? data.length}
+                        total={total ?? data?.length}
                         isNamiV2
                         current={currentPage}
                         pageSize={limit}

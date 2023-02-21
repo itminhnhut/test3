@@ -9,6 +9,7 @@ import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
 import { fees, getTypesLabel, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import get from 'lodash/get';
+import Tooltip from 'components/common/Tooltip';
 
 const getAllAssets = createSelector([(state) => state.utils, (utils, params) => params], (utils, params) => {
     const assets = {};
@@ -23,20 +24,13 @@ const getAllAssets = createSelector([(state) => state.utils, (utils, params) => 
         return assets;
     }, {});
 });
-const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) => {
+const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice, marketWatch }) => {
     const { t } = useTranslation();
     const allAssets = useSelector((state) => getAllAssets(state));
-    const marketWatch = useSelector((state) => state.futures.marketWatch);
     const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
     const status = order?.status;
 
-    const price = useMemo(() => {
-        return +(status === VndcFutureOrderType.Status.PENDING
-            ? order?.price
-            : status === VndcFutureOrderType.Status.ACTIVE
-            ? order?.open_price
-            : order?.close_price);
-    }, [order]);
+    const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY ? (
@@ -89,6 +83,18 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
 
     return (
         <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
+            <Tooltip id={'funding_fee'} place="top" effect="solid" isV3 className="max-w-[300px]" />
+            <Tooltip
+                id={'liquidate_fee'}
+                place="top"
+                effect="solid"
+                isV3
+                className="max-w-[300px]"
+                overridePosition={(e) => ({
+                    left: 0,
+                    top: e.top
+                })}
+            />
             <div className="text-2xl font-semibold mb-8">{t('futures:mobile:order_detail')}</div>
             <div className="grid grid-cols-2 gap-8">
                 <div>
@@ -126,7 +132,9 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                     </Row>
                     <FeeMeta mode="open_fee" order={order} allAssets={allAssets} t={t} />
                     <Row>
-                        <Item>{t('futures:mobile:liquidate_fee')}</Item>
+                        <Item data-tip={t('futures:mobile:info_liquidate_fee')} data-for="liquidate_fee" tooltip>
+                            {t('futures:mobile:liquidate_fee')}
+                        </Item>
                         <Item>{renderFeeOther(order, 'liquidate_order')}</Item>
                     </Row>
                 </div>
@@ -161,7 +169,9 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                     </Row>
                     <FeeMeta mode="close_fee" order={order} allAssets={allAssets} t={t} />
                     <Row>
-                        <Item>{t('futures:funding_fee')}</Item>
+                        <Item data-tip={t('futures:funding_rate_des')} data-for="funding_fee" tooltip>
+                            {t('futures:funding_fee')}
+                        </Item>
                         <Item className={order?.funding_fee?.total && (order?.funding_fee?.total > 0 ? 'text-teal' : 'text-red')}>
                             {renderFeeOther(order, 'funding_fee.total', true)}
                         </Item>
@@ -171,14 +181,6 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
         </ModalV2>
     );
 };
-
-const Row = styled.div.attrs({
-    className: 'flex items-center justify-between'
-})``;
-
-const Item = styled.div.attrs({
-    className: 'first:text-txtSecondary dark:first:text-txtSecondary-dark last:font-semibold py-2'
-})``;
 
 const FeeMeta = ({ order, mode = 'open_fee', allAssets, t }) => {
     const [visible, setVisible] = useState(false);
@@ -239,5 +241,15 @@ const FeeMeta = ({ order, mode = 'open_fee', allAssets, t }) => {
         </>
     );
 };
+
+const Row = styled.div.attrs({
+    className: `flex items-center justify-between`
+})``;
+
+const Item = styled.div.attrs(({ tooltip }) => ({
+    className: `first:text-txtSecondary dark:first:text-txtSecondary-dark last:font-semibold my-2 ${
+        tooltip ? 'border-b border-dashed border-divider dark:border-divider-dark' : ''
+    }`
+}))``;
 
 export default FuturesOrderDetail;

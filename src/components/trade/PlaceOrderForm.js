@@ -680,7 +680,7 @@ const PlaceOrderForm = ({ symbol }) => {
                             </Link>
                             <Link href={getLoginUrl('sso', 'register')}>
                                 <a>
-                                    <ButtonV2 className="mt-3" color="dark">
+                                    <ButtonV2 className="mt-3" variants="secondary">
                                         {t('common:sign_in')}
                                     </ButtonV2>
                                 </a>

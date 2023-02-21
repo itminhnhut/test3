@@ -15,8 +15,11 @@ import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { HideIcon, SeeIcon, PartnersIcon } from 'components/svg/SvgIcon';
+import { HideIcon, SeeIcon, PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import styled from 'styled-components';
+
+const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -55,6 +58,11 @@ const OverviewWallet = (props) => {
         return limit;
     }, [width]);
 
+    // const isSmallScreen = width < WIDTH_MD;
+    const isSmallScreen = useMemo(() => {
+        return width < WIDTH_MD;
+    }, [width]);
+
     // Render Handler
     const renderExchangeAsset = useCallback(() => {
         if (!allAssets) return;
@@ -85,13 +93,13 @@ const OverviewWallet = (props) => {
     const renderOverviewEstBalance = useCallback(() => {
         return (
             <>
-                <div className="font-semibold text-[32px] leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
+                <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
                     {state.hideAsset
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
                 </div>
-                <div className="font-normal text-base mt-1">
+                <div className="font-normal text-sm md:text-base mt-1">
                     {state.hideAsset
                         ? SECRET_STRING
                         : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + partnersRefPrice?.totalValue, 2)}`}
@@ -102,7 +110,7 @@ const OverviewWallet = (props) => {
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
@@ -112,7 +120,7 @@ const OverviewWallet = (props) => {
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
@@ -122,7 +130,7 @@ const OverviewWallet = (props) => {
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
-            <span className="text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold mt-1 whitespace-nowrap leading-7">
+            <span className="whitespace-nowrap">
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
@@ -228,68 +236,75 @@ const OverviewWallet = (props) => {
 
     const [currentTheme] = useDarkMode();
 
+    const ListButton = ({ className }) => {
+        return (
+            <div className={className}>
+                <ButtonV2 className="px-6" onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                    {t('common:deposit')}
+                </ButtonV2>
+                <ButtonV2
+                    onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    className="px-6"
+                    variants="secondary"
+                >
+                    {t('common:withdraw')}
+                </ButtonV2>
+                <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
+                    {t('common:transfer')}
+                </ButtonV2>
+            </div>
+        );
+    };
+
     return (
         <div className="pb-32">
             <MCard
-                addClass={`mt-8 !p-8  bg-cover 
+                addClass={`mt-8 p-4 md:p-8 bg-cover 
             ${
                 currentTheme === THEME_MODE.DARK
-                    ? 'bg-namiv2-linear-dark border border-divider-dark'
-                    : 'bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66]'
+                    ? ' bg-namiv2-linear-dark border border-divider-dark'
+                    : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
             }`}
             >
-                <div className="flex flex-col md:flex-row md:items-end md:justify-between">
+                <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
                     <div>
-                        <div className="flex items-center font-medium text-base text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="flex items-center text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">
                             <div className="mr-3">{t('wallet:est_balance')}</div>
                             <div
                                 className="flex items-center cursor-pointer hover:opacity-80 select-none"
                                 onClick={() => setState({ hideAsset: !state.hideAsset })}
                             >
-                                {state.hideAsset ? <HideIcon size={24} /> : <SeeIcon size={24} />}
+                                {state.hideAsset ? <HideIcon size={isSmallScreen ? 16 : 24} /> : <SeeIcon size={isSmallScreen ? 16 : 24} />}
                             </div>
                         </div>
-                        <div className="mt-12 flex items-center">
-                            <div className="rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] flex items-center justify-center">
+                        <div className="mt-[52px] md:mt-12 flex items-center justify-between">
+                            <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
                                 <SvgWalletOverview />
                             </div>
-                            <div className="ml-6">{renderOverviewEstBalance()}</div>
+                            <div>{renderOverviewEstBalance()}</div>
+                            {/* <FuturePortfolioIcon size={24} /> */}
+                            <PortfolioIcon className="md:hidden" />
                         </div>
                     </div>
                     <div className="hidden md:block">
-                        <div className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3">
-                            <ButtonV2
-                                className="px-6"
-                                onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
-                            >
-                                {t('common:deposit')}
-                            </ButtonV2>
-                            <ButtonV2
-                                onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
-                                className="px-6"
-                                color="dark"
-                                variants="none"
-                            >
-                                {t('common:withdraw')}
-                            </ButtonV2>
-                            <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" color="dark" variants="none">
-                                {t('common:transfer')}
-                            </ButtonV2>
-                        </div>
+                        <ListButton className="flex items-end justify-end h-full w-full mt-3 sm:mt-0 sm:w-auto gap-3" />
                     </div>
                 </div>
             </MCard>
+            <ListButton className="mt-4 flex items-end justify-end h-full w-full gap-2 md:hidden" />
 
             {/* Số dư tài sản */}
-            <div className="mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
-            <MCard addClass="mt-8 !p-0 dark:bg-bgTabInactive-dark bg-namiV2 border border-divider dark:border-none">
+            <div className="mt-12 md:mt-20 t-common-v2">{t('wallet:asset_balance')}</div>
+            <MCard addClass="mt-8 !p-0 bg-white dark:bg-dark-dark border-none">
                 {/* mark1 */}
                 {/* Exchange */}
-                <div
-                    onClick={() => onHandleClick('details_exchange')}
-                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row rounded-t-xl cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark"
-                >
-                    <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
+                <CardWallet onClick={() => onHandleClick('details_exchange')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="Exchange"
+                        icon={<FutureExchangeIcon size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderExchangeEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className="flex items-center mt-4 lg:mt-0">
                             {renderExchangeAsset()}
@@ -304,7 +319,7 @@ const OverviewWallet = (props) => {
                             </button>
                             {/* </Link> */}
                         </div>
-                        <div className="flex items-center mt-4 lg:mt-0">
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick('deposit_exchange')}>
                                 {t('common:deposit')}
                             </ButtonV2>
@@ -324,12 +339,85 @@ const OverviewWallet = (props) => {
                             </ButtonV2>
                         </div>
                     </div>
-                </div>
+                </CardWallet>
+                <CardWallet onClick={() => onHandleClick('details_futures')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="Futures"
+                        icon={<SvgWalletFutures size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderFuturesEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:futures_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
+                            <ButtonV2 variants="text" onClick={() => onHandleClick('transfer_futures')}>
+                                {t('common:transfer')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </CardWallet>
+                <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
+                    <AssetBalance
+                        title="Partners"
+                        icon={<PartnersIcon size={isSmallScreen ? 24 : 32} />}
+                        renderEstBalance={renderPartnersEstBalance}
+                        isSmallScreen={isSmallScreen}
+                    />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        {!isSmallScreen && (
+                            <div className="flex items-center text-base font-normal text-gray-15 dark:text-gray-4 mr-3">
+                                <Trans>{t('wallet:partners_overview')}</Trans>
+                            </div>
+                        )}
+                        <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
+                            <ButtonV2 variants="text" onClick={() => onHandleClick('transfer_partners')}>
+                                {t('common:transfer')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </CardWallet>
+
+                {/* <div
+                    onClick={() => onHandleClick('details_exchange')}
+                    className="p-4 md:p-8 rounded-xl md:rounded-none md:rounded-t-xl cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark"
+                >
+                    <AssetBalance title="Exchange" icon={<SvgWalletExchange />} renderEstBalance={renderExchangeEstBalance} />
+                    <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            {renderExchangeAsset()}
+                            <button onClick={() => onHandleClick('deposit_exchange')} className="mr-3">
+                                <div
+                                    className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
+                                         bg-gray-10 group-hover:bg-white dark:group-hover:bg-bgButtonDisabled-dark dark:bg-bgButtonDisabled-dark text-txtSecondary dark:text-txtSecondary-dark "
+                                >
+                                    +6
+                                </div>
+                            </button>
+                        </div>
+                        <div className="flex items-center mt-4 lg:mt-0">
+                            <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick('deposit_exchange')}>
+                                {t('common:deposit')}
+                            </ButtonV2>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick('withdraw_exchange')}>
+                                {t('common:withdraw')}
+                            </ButtonV2>
+                            <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
+                            <ButtonV2 variants="text" onClick={() => onHandleClick('transfer_exchange')}>
+                                {t('common:transfer')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </div> */}
 
                 {/* Futures */}
-                <div
+                {/* <div
                     onClick={() => onHandleClick('details_futures')}
-                    className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row hover:bg-gray-13 dark:hover:bg-hover-dark cursor-pointer group"
+                    className="my-4 md:my-0 p-4 md:p-8 rounded-xl md:rounded-none flex flex-col lg:flex-row hover:bg-gray-13 dark:hover:bg-hover-dark cursor-pointer group"
                 >
                     <AssetBalance title="Futures" icon={<SvgWalletFutures />} renderEstBalance={renderFuturesEstBalance} />
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between sm:w-full lg:w-2/3 lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
@@ -342,11 +430,11 @@ const OverviewWallet = (props) => {
                             </ButtonV2>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Partners */}
                 {/* <Link href="/wallet/partners"> */}
-                <div
+                {/* <div
                     onClick={() => onHandleClick('details_partners')}
                     className="px-8 py-11 xl:px-10 xl:pl-6 xl:pr-5 flex flex-col lg:flex-row hover:bg-gray-13 dark:hover:bg-hover-dark cursor-pointer rounded-b-xl group"
                 >
@@ -361,7 +449,7 @@ const OverviewWallet = (props) => {
                             </ButtonV2>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 {/* </Link> */}
 
                 {/* Staking */}
@@ -412,16 +500,40 @@ const OverviewWallet = (props) => {
     );
 };
 
-const AssetBalance = ({ title, icon, renderEstBalance }) => {
+const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen }) => {
+    if (isSmallScreen) {
+        return (
+            <div>
+                <div className="w-full flex items-center justify-between">
+                    <div className="flex gap-3 items-center">
+                        {icon} <span className="text-sm font-normal text-gray-1 dark:text-gray-7">{title}</span>
+                    </div>
+                    <MoreHorizIcon onClick={() => console.log('hello')} />
+                </div>
+                <div className="mt-6">{renderEstBalance()}</div>
+            </div>
+        );
+    }
     return (
         <div className="min-w-[530px] max-w-[530px] flex items-center">
             <div className="min-w-[56px] min-h-[56px] max-w-[56px] max-h-[56px] p-3 rounded-full bg-transparent dark:bg-dark-2">{icon}</div>
-            <div className="ml-4 xl:ml-6 flex flex-col justify-between h-full">
-                <span className="mr-4 text-txtSecondary dark:text-txtSecondary-dark text-sm">{title}</span>
+            <div className="ml-6 flex flex-col ">
+                <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-3">{title}</div>
                 {renderEstBalance()}
             </div>
         </div>
     );
 };
+
+const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
+    className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
+     ${
+         isSmallScreen
+             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
+             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
+     }
+     `,
+    onClick: onClick
+}))``;
 
 export default OverviewWallet;

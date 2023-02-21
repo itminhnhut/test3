@@ -195,7 +195,7 @@ const FuturesOrderButtonsGroupVndc = ({
                         </Link>
                         <Link href={getLoginUrl('sso')}>
                             <a>
-                                <ButtonV2 className="mt-3" color="dark">
+                                <ButtonV2 className="mt-3" variants="secondary">
                                     {t('common:sign_in')}
                                 </ButtonV2>
                             </a>
@@ -206,7 +206,7 @@ const FuturesOrderButtonsGroupVndc = ({
                         onClick={() => onHandleClick(isBuy ? VndcFutureOrderType.Side.BUY : VndcFutureOrderType.Side.SELL)}
                         disabled={isError}
                         className={`flex flex-col !h-[60px]`}
-                        color={isBuy ? '' : 'red'}
+                        variants={isBuy ? 'primary' : 'red'}
                     >
                         <span>{(isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</span>
                         <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>

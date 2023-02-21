@@ -179,7 +179,8 @@ body {
     }
 
     .t-common-v2 {
-        @apply font-semibold text-[32px] leading-[38px]
+        @apply font-semibold md:text-[32px] md:leading-[38px]
+        text-[20px] leading-[28px]
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
@@ -1020,14 +1021,16 @@ input:-webkit-autofill {
   }
 
   .looper {
-    width: 100%;
+    width: 100vw;
+    max-width:100%;
     overflow: hidden;
   }
 
   .looper__innerList {
     display: flex;
     justify-content: center;
-    width: fit-content;
+    will-change: transform;
+    width:fit-content;
 
     @media screen and (min-width:768px) {
         &:hover {
@@ -1043,5 +1046,5 @@ input:-webkit-autofill {
     display: flex;
     width: max-content;
     animation: 30s slideAnimation linear infinite;
-    animation-direction:normal;
   }
+

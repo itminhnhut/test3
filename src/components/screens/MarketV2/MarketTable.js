@@ -1,15 +1,20 @@
-import useDarkMode from 'hooks/useDarkMode';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import Link from 'next/link';
 import AssetLogo from 'components/wallet/AssetLogo';
 import MarketLabel from 'components/common/MarketLabel';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
-import showNotification from 'utils/notificationService';
 import Skeletor from 'components/common/Skeletor';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { formatCurrency, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
-import { initMarketWatchItem, sparkLineBuilder } from 'utils';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+    formatCurrency,
+    formatPrice,
+    getExchange24hPercentageChange,
+    getV1Url,
+    render24hChange
+} from 'redux/actions/utils';
+import { initMarketWatchItem, log, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
 import { IconStarFilled } from 'components/common/Icons';
 import { Search, X } from 'react-feather';
@@ -23,21 +28,27 @@ import { useSelector } from 'react-redux';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import React from 'react';
 import { ScaleLoader } from 'react-spinners';
 import NoData from 'components/common/V2/TableV2/NoData';
 import InputV2 from 'components/common/V2/InputV2';
 import axios from 'axios';
 import { API_GET_FAVORITE } from 'redux/actions/apis';
+import toast from 'utils/toast';
+import Spinner from 'components/svg/Spinner';
+import TableV2 from 'components/common/V2/TableV2';
 
-const MARKET_ROW_LIMIT = 20
+const MARKET_ROW_LIMIT = 20;
 
-const MarketTable = ({ loading, data, parentState, ...restProps }) => {
+const MarketTable = ({
+    loading,
+    data = [],
+    parentState,
+    ...restProps
+}) => {
     // Init State
 
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
-
     // Use Hooks
     const router = useRouter();
     const {
@@ -45,7 +56,11 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         i18n: { language }
     } = useTranslation(['common', 'table']);
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const { width } = useWindowSize();
+    const isMobile = width < 640;
+    const [isLoading, setIsLoading] = useState(false)
+    const [mobileLimit, setMobileLimit] = useState(15)
 
     const [type, setType] = useState(0);
     const types = [
@@ -94,73 +109,97 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                 en: 'Top loser'
             }
         }
-    ]
+    ];
 
     useEffect(() => {
         setType(restProps.type);
     }, [restProps.type]);
 
+    useEffect(() => {
+        setMobileLimit(15)
+    }, [restProps?.tabIndex, restProps?.subTabIndex, restProps?.favType])
+
+    useEffect(() => {
+        if (!restProps.search?.length || restProps.tabIndex !== 0) return
+        parentState({ tabIndex: 1, type: 0 })
+    }, [restProps.search])
+
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null;
-
             return (
                 <div
                     key={item.key}
                     onClick={() =>
-                        parentState({ tabIndex: index, subTabIndex: item.key === 'favorite' ? 0 : 1, currentPage: 1, type: item.key === 'favorite' ? 1 : 0 })
+                        parentState({
+                            tabIndex: index,
+                            // subTabIndex: item.key === 'favorite' ? 0 : 1,
+                            currentPage: 1,
+                            type: item.key === 'favorite' ? 1 : 0
+                        })
                     }
                     className={classNames(
-                        'relative mr-6 pb-4 capitalize select-none font-normal text-base text-darkBlue-5 cursor-pointer flex items-center',
-                        { '!text-gray-4 !font-semibold': restProps.tabIndex === index }
+                        'relative mr-6 pb-4 capitalize select-none text-tiny sm:text-base cursor-pointer flex items-center',
+                        {
+                            'text-txtPrimary dark:text-txtPrimary-dark font-semibold': restProps.tabIndex === index,
+                            'text-txtSecondary dark:text-txtSecondary-dark font-normal': restProps.tabIndex !== index,
+                        }
                     )}
                 >
                     <span className={item.key === 'favorite' ? 'ml-2' : ''}>
                         {item.localized ? t(item.localized) : item.key} {label ? `(${label})` : null}
                     </span>
-                    {restProps.tabIndex === index && <div className="absolute left-1/2 bottom-0 w-[40px] h-[1px] bg-dominant -translate-x-1/2" />}
-                </div>)
-        })
-    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount])
+                    {restProps.tabIndex === index &&
+                        <div className="absolute left-1/2 bottom-0 w-[40px] h-[2px] bg-dominant -translate-x-1/2" />}
+                </div>);
+        });
+    }, [currentTheme, restProps.tabIndex, restProps.tabLabelCount]);
 
     const renderSubTab = useCallback(() => {
         return subTab.map((item, index) => {
             return (
                 <div key={item.key}
-                    onClick={() => parentState({ subTabIndex: index, currentPage: 1 })}
-                    className={
-                        restProps.subTabIndex === index
-                            ? 'text-base font-semibold px-4 py-3 bg-dark-2 text-gray-4 cursor-pointer select-none'
-                            : 'text-base font-semibold px-4 py-3 bg-shadow text-darkBlue-5 cursor-pointer select-none'
-                    }
+                    onClick={() => parentState({
+                        subTabIndex: index,
+                        currentPage: 1
+                    })}
+                    className={classNames('h-[44px] flex items-center text-sm sm:text-base px-4 cursor-pointer select-none', {
+                        'font-semibold dark:text-txtPrimary-dark text-txtPrimary bg-bgSegmentActive dark:bg-bgSegmentActive-dark': restProps.subTabIndex === index,
+                        'font-normal bg-bgSegmentInactive dark:bg-bgSegmentInactive-dark dark:text-txtSecondary-dark text-txtSecondary': restProps.subTabIndex !== index,
+                        'border-r border-divider dark:border-divider-dark': index === 0
+                    })}
                 >
                     {item.localized ? t(item.localized) : <span className="uppercase">{item.key}</span>}
                 </div>
-            )
-        })
-    }, [restProps.subTabIndex, restProps.tabIndex])
+            );
+        });
+    }, [restProps.subTabIndex, restProps.tabIndex]);
 
     const renderSuggested = useMemo(() => {
-        const tradingMode = restProps?.favType + 1
-
-        return <div className='px-8 pb-4'>
-            <div className='text-base text-darkBlue-5 font-normal mb-6'>
-                Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.
+        const tradingMode = restProps?.favType + 1;
+        const suggestionContent = {
+            vi: "Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.",
+            en: 'You have not added any favorite pair. Start by adding these popular pairs below.'
+        }
+        return <div className="px-8 pb-4">
+            <div className="text-base text-darkBlue-5 font-normal mb-6">
+                {suggestionContent[language]}
             </div>
-            <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6'>
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6">
                 {restProps?.suggestedSymbols?.map(symbol => {
-                    const symbolLeverageConfig = tradingMode === TRADING_MODE.FUTURES ? restProps?.futuresConfigs?.find(e => e?.pair == symbol?.s)?.leverageConfig : null
-                    const leverage = symbolLeverageConfig ? (symbolLeverageConfig?.max ?? 0) : null
+                    const symbolLeverageConfig = tradingMode === TRADING_MODE.FUTURES ? restProps?.futuresConfigs?.find(e => e?.pair == symbol?.s)?.leverageConfig : null;
+                    const leverage = symbolLeverageConfig ? (symbolLeverageConfig?.max ?? 0) : null;
                     return (
-                        <div className='w-full p-3 text-darkBlue-5 bg-darkBlue-3 rounded-md' key={symbol.s}>
-                            <div className='flex justify-between w-full'>
-                                <div className=''>
-                                    <div className='flex space-x-3 items-center'>
-                                        <div className='font-medium text-base'>
-                                            <span className="text-gray-4">{symbol?.b}</span>/{symbol?.q}
+                        <div className="w-full p-3  bg-[#F2F4F5] dark:bg-bgContainer-dark  rounded-md" key={symbol.s}>
+                            <div className="flex justify-between w-full">
+                                <div className="">
+                                    <div className="flex space-x-3 items-center">
+                                        <div className="font-medium text-base">
+                                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{symbol?.b}</span><span className="text-txtSecondary dark:text-txtSecondary-dark">/{symbol?.q}</span>
                                         </div>
-                                        {leverage ? <div className='px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4'>
+                                        {leverage ? <div
+                                            className="px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4">
                                             {leverage}x
                                         </div> : null}
                                     </div>
@@ -171,184 +210,271 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                                         {formatPrice(symbol.p)}
                                     </div>
                                 </div>
-                                <div className='cursor-pointer'>
-                                    <FavActionButton b={{ b: symbol.b, i: symbol.bi }}
-                                        q={{ q: symbol.q, i: symbol.qi }}
+                                <div className="cursor-pointer">
+                                    <FavActionButton b={{
+                                        b: symbol.b,
+                                        i: symbol.bi
+                                    }}
+                                        q={{
+                                            q: symbol.q,
+                                            i: symbol.qi
+                                        }}
                                         list={restProps.favoriteList}
                                         lang={language}
                                         mode={tradingMode} favoriteRefresher={restProps.favoriteRefresher}
                                     />
                                 </div>
                             </div>
-                            <div className='mt-4 flex font-normal text-xs gap-2'>
-                                <div className='w-full'>
-                                    <div className='w-fit font-medium text-base'>
+                            <div className="mt-4 flex font-normal text-xs gap-2">
+                                <div className="w-full">
+                                    <div className="w-fit font-medium text-base">
                                         {render24hChange(symbol, true)}
                                     </div>
-                                    <div className='mt-2 leading-4'>
+                                    <div className="mt-2 leading-4">
                                         {t('futures:24h_high')}: {formatPrice(symbol.h)}
                                     </div>
-                                    <div className='leading-4'>
+                                    <div className="leading-4">
                                         {t('futures:24h_low')}: {formatPrice(symbol.l)}
                                     </div>
                                 </div>
-                                <div className='h-full lg:w-1/2 w-full flex justify-end'>
+                                <div className="h-full lg:w-1/2 w-full flex justify-end">
                                     <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.teal : colors.red2)}
                                         alt="Nami Exchange" />
                                 </div>
                             </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
-        </div>
-    }, [restProps?.suggestedSymbols, restProps?.favType, restProps?.futuresConfigs])
-
+        </div>;
+    }, [restProps?.suggestedSymbols, restProps?.favType, restProps?.futuresConfigs]);
 
     const renderTable = useCallback(() => {
-        let modifyColumns = []
+        let modifyColumns = [];
         const translater = (key) => {
             switch (key) {
                 case 'pair':
-                    return language === 'vi' ? 'Cặp' : 'Pair'
+                    return language === 'vi' ? 'Cặp' : 'Pair';
                 case 'last_price':
-                    return language === 'vi' ? 'Giá gần nhất' : 'Last Price'
+                    return language === 'vi' ? 'Giá gần nhất' : 'Last Price';
                 case 'change_24h':
-                    return language === 'vi' ? 'Thay đổi 24h' : 'Change 24h'
+                    return language === 'vi' ? 'Thay đổi 24h' : 'Change 24h';
                 case 'market_cap':
-                    return language === 'vi' ? 'Market Cap' : 'Market Cap'
+                    return language === 'vi' ? 'Market Cap' : 'Market Cap';
                 case 'volume_24h':
-                    return language === 'vi' ? 'Khối lượng 24h' : 'Volume 24h'
+                    return language === 'vi' ? 'Khối lượng 24h' : 'Volume 24h';
                 case '24h_high':
-                    return language === 'vi' ? 'Cao nhất 24h' : '24h High'
+                    return language === 'vi' ? 'Cao nhất 24h' : '24h High';
                 case '24h_low':
-                    return language === 'vi' ? 'Thấp nhất 24h' : '24h Low'
+                    return language === 'vi' ? 'Thấp nhất 24h' : '24h Low';
                 case 'mini_chart':
-                    return language === 'vi' ? 'Biểu đồ' : 'Chart'
+                    return language === 'vi' ? 'Biểu đồ' : 'Chart';
                 default:
-                    return null
+                    return null;
             }
-        }
+        };
 
+        let pairColumnsWidth = 220;
+        let starColumnWidth = 64;
 
-        let pairColumnsWidth = 220
-        let starColumnWidth = 64
+        if (width < 768) pairColumnsWidth = 174;
 
-        if (width < 768) pairColumnsWidth = 174
-
-        if (!data?.length) pairColumnsWidth = 128
-
-        const starColumn = { key: 'star', dataIndex: 'star', title: '', fixed: 'left', align: 'left', width: starColumnWidth }
-
-        const columns = [
-            { key: 'pair', dataIndex: 'pair', title: 'Coin', fixed: 'left', align: 'left', width: pairColumnsWidth },
-            { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', align: 'right', width: 168 },
-            { key: 'change_24h', dataIndex: 'change_24h', title: 'Change 24h', align: 'right', width: 128 },
-            // { key: 'market_cap', dataIndex: 'market_cap', title: 'Market Cap', align: 'right', width: 168 },
-            // { key: 'mini_chart', dataIndex: 'mini_chart', title: 'Mini Chart', align: 'right', width: 168 },
-            { key: 'volume_24h', dataIndex: 'volume_24h', title: 'Volume 24h', align: 'right', width: 138 },
-            { key: '24h_high', dataIndex: '24h_high', title: '24h High', align: 'right', width: 128 },
-            { key: '24h_low', dataIndex: '24h_low', title: '24h Low', align: 'right', width: 132 },
-            { key: 'operation', dataIndex: 'operation', title: '', align: 'center', width: 180 }
-        ]
-
-        // Translate
-        columns.forEach(c => {
-            let item = c
-            if (c.key !== 'star' && c.key !== 'operation') {
-                item = { ...c, title: translater(c.key) }
-            }
-            modifyColumns.push(item)
-        })
+        if (!data?.length) pairColumnsWidth = 128;
 
         // Hide star button if user not found
-        if (auth) {
-            modifyColumns.unshift(starColumn)
-        } else {
-            modifyColumns = modifyColumns.filter(col => col?.key !== 'star')
-        }
 
         //
-        let tradingMode = TRADING_MODE.EXCHANGE
+        let tradingMode = TRADING_MODE.EXCHANGE;
 
         if (tab[restProps.tabIndex]?.key === 'favorite') {
             if (favSubTab[restProps.favType]?.key === 'futures') {
-                tradingMode = TRADING_MODE.FUTURES
+                tradingMode = TRADING_MODE.FUTURES;
             } else {
-                tradingMode = TRADING_MODE.EXCHANGE
+                tradingMode = TRADING_MODE.EXCHANGE;
             }
         }
 
         // only show market cap col for exchange tab
-        if (tab[restProps.tabIndex]?.key === 'futures'
-            || (tab[restProps.tabIndex]?.key === 'favorite' && favSubTab[restProps.subTabIndex]?.key === 'futures')) {
-            remove(modifyColumns, o => o.key === 'market_cap')
-            tradingMode = TRADING_MODE.FUTURES
+        if (tab[restProps.tabIndex]?.key === 'futures') {
+            remove(modifyColumns, o => o.key === 'market_cap');
+            tradingMode = TRADING_MODE.FUTURES;
         }
-
 
         // PRE PROCESS DATA FOR TABLE
-        let rowKey = `${tab[restProps.tabIndex]?.key}_${tradingMode}__`
-        let tableStatus
-        const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
 
-        if (tab[restProps.tabIndex]?.key === 'favorite') {
-            if (!restProps.auth) {
-                tableStatus = <NoData />
-            } else {
-                if (!dataSource.length) {
-                    return renderSuggested
+        const columns = [
+            {
+                key: 'star',
+                fixed: 'left',
+                align: 'left',
+                width: starColumnWidth,
+                sortable: true,
+                visibile: auth,
+                render: (_row, item) => {
+                    const {
+                        baseAsset,
+                        baseAssetId,
+                        quoteAsset,
+                        quoteAssetId,
+                    } = initMarketWatchItem(item);
+                    return auth ? <FavActionButton
+                        b={{
+                            b: baseAsset,
+                            i: baseAssetId
+                        }}
+                        q={{
+                            q: quoteAsset,
+                            i: quoteAssetId
+                        }}
+                        list={restProps.favoriteList}
+                        lang={language}
+                        mode={tradingMode}
+                        favoriteRefresher={restProps.favoriteRefresher}
+                    /> : null
+                },
+            },
+            {
+                key: 's',
+                dataIndex: 's',
+                title: translater('pair'),
+                fixed: 'left',
+                align: 'left',
+                sortable: true,
+                width: pairColumnsWidth,
+                render: (_row, item) => {
+                    return renderPair(item.b, item.q, item.lbl, width, tradingMode, language, restProps.futuresConfigs)
+                },
+            },
+            {
+                key: 'p',
+                dataIndex: 'p',
+                title: translater('last_price'),
+                align: 'right',
+                width: 168,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row)}</span>
+            },
+            {
+                key: 'change_24h',
+                title: translater('change_24h'),
+                align: 'right',
+                width: 148,
+                sortable: false,
+                render: (_row, item) => render24hChange(item, false, 'justify-end !text-base !font-normal'),
+                sorter: (a, b) => {
+                    const change24hA = getExchange24hPercentageChange(a);
+                    const change24hB = getExchange24hPercentageChange(b);
+                    return change24hA - change24hB;
                 }
-            }
-        } else {
-            if (loading) {
-                tableStatus = <ScaleLoader color={colors.teal} size={12} />
-            } else if (!dataSource.length) {
-                tableStatus = <NoData isSearch />;
-            }
+            },
+            {
+                key: 'vq',
+                dataIndex: 'vq',
+                title: translater('volume_24h'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatCurrency(row, 0)}</span>
+            },
+            {
+                key: 'h',
+                dataIndex: 'h',
+                title: translater('24h_high'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
+            },
+            {
+                key: 'l',
+                dataIndex: 'l',
+                title: translater('24h_low'),
+                align: 'right',
+                width: 148,
+                sortable: true,
+                render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
+            },
+            {
+                key: 'operation',
+                dataIndex: 'operation',
+                align: 'center',
+                width: (restProps.tabIndex === 1 || (restProps.tabIndex === 0 && restProps.favType === 0)) ? 224 : 164,
+                render: (_row, item) => renderTradeLink(item.b, item.q, language, tradingMode)
+            },
+        ];
+
+        if (isMobile) {
+            const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
+            return dataSource.slice(0, mobileLimit).map((e, index) => {
+                const basedata = data?.[index]
+                return (
+                    <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
+                        <div className='w-full flex flex-col justify-center items-start'>
+                            {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
+                            <div className='flex h-[64px] items-center gap-4'>
+                                {e.star}
+                                <div className='flex flex-col justify-center'>
+                                    {e.pair}
+                                    <span>{t('common:vol')} {e.volume_24h}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='w-full flex flex-col justify-center items-end'>
+                            {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
+                            <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
+                                <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
+                                    {e.last_price}
+                                </div>
+                                <div>
+                                    ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
+                                </div>
+                            </div>
+                        </div>
+                        <div className='min-w-[94px] flex flex-col justify-center items-end'>
+                            {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
+                            <div className='flex h-[64px] items-center w-full justify-end'>
+                                <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
+                                    'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
+                                    'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
+                                    'border-none !justify-end': !getExchange24hPercentageChange(basedata),
+                                })}>
+                                    {e.change_24h}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )
+            });
         }
-
         return (
-            <ReTable
-                // @ts-ignore
+            <TableV2
+                rowKey={(item) => `${item?.key}`}
+                defaultSort={{ key: 's', direction: 'desc' }}
+                data={loading ? [] : data?.map(e => {
+                    return {
+                        ...e,
+                        [RETABLE_SORTBY]: {
+                            change_24h: getExchange24hPercentageChange(e),
+                        }
+                    }
+                })}
                 sort
-                defaultSort={{ key: 'pair', direction: 'asc' }}
-                useRowHover
-                data={dataSource}
-                columns={modifyColumns}
-                rowKey={item => `${rowKey}___${item?.key}`}
+                isSearch={restProps?.search?.length}
                 loading={loading}
+                columns={columns}
+                page={restProps.currentPage}
+                limit={MARKET_ROW_LIMIT}
+                total={data?.length ?? 0}
                 scroll={{ x: true }}
-                tableStatus={tableStatus}
-                noBorder
-                // onRow={(record) => ({
-                //     onClick: () => router.push(PATHS.EXCHANGE.TRADE.getPair(
-                //         record?.sortByValue?.tradingMode,
-                //         {
-                //             baseAsset: record?.sortByValue?.baseAsset,
-                //             quoteAsset: record?.sortByValue?.quoteAsset
-                //         }))
-                // })}
+                height={'300px'}
                 tableStyle={{
-                    tableStyle: { minWidth: '888px !important' },
-                    headerStyle: {},
-                    rowStyle: {},
-                    shadowWithFixedCol: width < 1366,
-                    noDataStyle: {
-                        minHeight: '480px'
+                    padding: '14px 16px',
+                    headerStyle: {
+                        padding: '0px'
                     },
-                    backgroundColor: '#0c0e14 !important'
+                    fontSize: '16px !important',
                 }}
-                paginationProps={{
-                    hide: true,
-                    current: restProps.currentPage,
-                    pageSize: MARKET_ROW_LIMIT,
-                    onChange: (currentPage) => parentState({ currentPage })
-                }}
-                isNamiV2
             />
-
-
         );
     }, [
         data,
@@ -361,80 +487,122 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
         restProps.tabIndex,
         restProps.subTabIndex,
         restProps.currentPage,
-        restProps.auth
+        restProps.auth,
+        isMobile,
+        mobileLimit
     ])
 
     const renderPagination = useCallback(() => {
-        let tradingMode = TRADING_MODE.EXCHANGE
+        let tradingMode = TRADING_MODE.EXCHANGE;
 
         if (tab[restProps.tabIndex]?.key === 'favorite') {
             if (favSubTab[restProps.subTabIndex]?.key === 'futures') {
-                tradingMode = TRADING_MODE.FUTURES
+                tradingMode = TRADING_MODE.FUTURES;
             } else {
-                tradingMode = TRADING_MODE.EXCHANGE
+                tradingMode = TRADING_MODE.EXCHANGE;
             }
         }
 
-        const total = dataHandler(data, language, width, tradingMode)?.length
+        const total = dataHandler(data, language, width, tradingMode)?.length;
 
-        if (total <= MARKET_ROW_LIMIT) return null
+        if (total <= MARKET_ROW_LIMIT || total <= mobileLimit) return null
+
+        if (isMobile) {
+            return (
+                <div className='text-txtTextBtn dark:text-teal font-semibold text-sm cursor-pointer w-full text-center mt-6'
+                    onClick={() => setMobileLimit(mobileLimit + 15)}
+                >
+                    {t('common:read_more')}
+                </div>
+            )
+        }
 
         return (
-            <div className="my-4 flex items-center justify-center">
-                <RePagination total={total}
+            <div className="my-3 sm:my-5 flex items-center justify-center">
+                <RePagination
+                    // total={total}
                     isNamiV2
-                    current={restProps.currentPage}
-                    pageSize={MARKET_ROW_LIMIT}
-                    onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list" fromZero={undefined} />
+                    // current={restProps.currentPage}
+                    // pageSize={MARKET_ROW_LIMIT}
+                    // onChange={(currentPage) => parentState({ currentPage })}
+                    name="market_table___list" fromZero={undefined}
+                    pagingPrevNext={{
+                        language,
+                        page: restProps.currentPage - 1,
+                        hasNext: (restProps.currentPage * MARKET_ROW_LIMIT) < total,
+                        onChangeNextPrev: (change) => parentState({ currentPage: restProps.currentPage + change })
+                    }}
+                />
             </div>
         )
-    }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex])
-
-    useEffect(() => {
-        if (restProps.favoriteList?.exchange?.length && restProps.favoriteList?.futures?.length) {
-            parentState({ tabIndex: 0, subTabIndex: 0 })
-        }
-
-        if (restProps.favoriteList?.exchange?.length && !restProps.favoriteList?.futures?.length) {
-            parentState({ tabIndex: 0, subTabIndex: 0 })
-        }
-
-        if (restProps.favoriteList?.futures?.length && !restProps.favoriteList?.exchange?.length) {
-            parentState({ tabIndex: 0, subTabIndex: 1 })
-        }
-
-    }, [restProps.favoriteList])
+    }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
     return (
-        <div className="px-4 lg:px-0 text-darkBlue-5">
-            <div className="flex flex-col justify-start md:justify-between md:flex-row md:items-center mb-8">
-                <div className="text-2xl text-gray-4 lg:text-[32px] lg:leading-[38px] font-bold mb-4 md:mb-0">
+        <div className="px-4 sm:px-0 text-darkBlue-5">
+            <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
+                <div
+                    className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xl sm:text-[32px] sm:leading-[38px] mb-6 sm:mb-0">
                     {t('common:market')}
                 </div>
-                <div className='flex items-center space-x-4'>
-                    <div className="flex items-center border-divider-dark border-[1px] overflow-hidden rounded-md">
+                <div
+                    className="flex flex-row-reverse sm:flex-row items-center sm:space-x-4 justify-between sm:justify-end">
+                    <div
+                        className="flex items-center border border-divider dark:border-divider-dark overflow-hidden rounded-md">
                         {renderSubTab()}
                     </div>
-                    <InputV2
-                        value={restProps.search}
-                        onChange={(value) => parentState({ search: value })}
-                        placeholder={t('common:search')}
-                        prefix={(<Search color={colors.darkBlue5} size={16} />)}
-                        className='pb-0 w-[100px] sm:w-[368px]'
-                        suffix={(<X color={colors.gray[10]} size={16} />)}
-                    />
+                    <div className="w-[calc(100vw-196px)] sm:w-[368px]">
+                        <InputV2
+                            value={restProps.search}
+                            onChange={(value) => parentState({ search: value })}
+                            placeholder={t('common:search')}
+                            prefix={(<Search color={colors.darkBlue5} size={16} />)}
+                            className='pb-0 w-full'
+                            suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
+                                search: ''
+                            })} />) : null}
+                        />
+                    </div>
                 </div>
             </div>
-            <div className="bg-shadow">
-                <div id="market_table___list"
-                    className="py-4 h-full rounded-xl border-[1px] border-divider-dark">
-                    <div className="mt-[20px] flex items-center overflow-auto px-8 border-b-[1px] border-divider-dark">
-                        {renderTab()}
-                    </div>
-                    <div className={classNames('my-4 sm:my-0 h-24 border-divider-dark flex items-center px-8 justify-between flex-wrap space-y-3', { 'border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })}>
-                        {tab[restProps.tabIndex]?.key === 'favorite' ?
-                            <TokenTypes type={restProps.favType} setType={(index) => { parentState({ favType: index }) }} types={[{ id: 0, content: { vi: 'Exchange', en: 'Exchange' } }, { id: 1, content: { vi: 'Futures', en: 'Futures' } }]} lang={language} />
+            <div id="market_table___list" className="py-4 h-full rounded-xl sm:border-[1px] border-divider dark:border-divider-dark">
+                <div
+                    className="mt-[20px] flex items-center overflow-auto sm:px-8 border-b-[1px] border-divider dark:border-divider-dark">
+                    {renderTab()}
+                </div>
+                {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
+                    'py-8 sm:py-6 border-divider dark:border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
+                    { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
+                }>
+                    {tab[restProps.tabIndex]?.key === 'favorite' ?
+                        <TokenTypes type={restProps.favType} setType={(index) => {
+                            parentState({ favType: index });
+                        }} types={[{
+                            id: 0,
+                            content: {
+                                vi: 'Exchange',
+                                en: 'Exchange'
+                            }
+                        }, {
+                            id: 1,
+                            content: {
+                                vi: 'Futures',
+                                en: 'Futures'
+                            }
+                        }]} lang={language} />
+                        :
+                        isMobile ?
+                            <div className='space-y-4 w-full'>
+                                <TokenTypes type={type} setType={(index) => {
+                                    parentState({
+                                        type: index
+                                    })
+                                }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
+                                <TokenTypes type={type} setType={(index) => {
+                                    parentState({
+                                        type: index
+                                    })
+                                }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
+                            </div>
                             :
                             <TokenTypes type={type} setType={(index) => {
                                 parentState({
@@ -442,86 +610,131 @@ const MarketTable = ({ loading, data, parentState, ...restProps }) => {
                                 })
                             }} types={types} lang={language} />}
 
-                        {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
-                            <div className='h-10 px-4 sm:h-12 sm:px-6 flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer'
-                                onClick={() => addTokensToFav({
+                    {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
+                        <div
+                            className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
+                            onClick={async () => {
+                                if (isLoading) return
+                                await addTokensToFav({
                                     symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
                                     lang: language,
                                     mode: restProps?.favType + 1,
-                                    favoriteRefresher: restProps.favoriteRefresher
-                                })}
-                            >
-                                {{ en: 'Add all', vi: 'Thêm tất cả' }[language]}
-                            </div>
-                            :
-                            null}
+                                    favoriteRefresher: restProps.favoriteRefresher,
+                                    setIsLoading: setIsLoading
+                                })
+                            }}
+                        >
+                            {isLoading ? <Spinner size={24} /> : {
+                                en: 'Add all',
+                                vi: 'Thêm tất cả'
+                            }[language]}
+                        </div>
+                        :
+                        null}
 
-                    </div>
-                    <div className="">
-                        {renderTable()}
-                    </div>
-                    <div className='px-8'>
-                        {renderPagination()}
-                    </div>
+                </div> : null}
+                <div className="">
+                    {renderTable()}
+                </div>
+                <div className="sm:px-8">
+                    {renderPagination()}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export const tab = [
-    { key: 'favorite', localized: null },
-    { key: 'exchange', localized: null },
-    { key: 'futures', localized: null },
+    {
+        key: 'favorite',
+        localized: null
+    },
+    {
+        key: 'exchange',
+        localized: null
+    },
+    {
+        key: 'futures',
+        localized: null
+    },
     // { key: 'zones', localized: null }
-]
+];
 
 export const subTab = [
     // { key: 'all', localized: 'common:all' },
-    { key: 'usdt', localized: null },
-    { key: 'vndc', localized: null }
-]
+    {
+        key: 'usdt',
+        localized: null
+    },
+    {
+        key: 'vndc',
+        localized: null
+    }
+];
 
 export const favSubTab = [
-    { key: 'exchange', localized: null },
-    { key: 'futures', localized: null }
-]
+    {
+        key: 'exchange',
+        localized: null
+    },
+    {
+        key: 'futures',
+        localized: null
+    }
+];
 
 const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRefresher, isLoading = false, isAuth, futuresConfigs) => {
     if (isLoading) {
-        const loadingSkeleton = []
+        const loadingSkeleton = [];
 
-        for (let i = 0; i < 20; ++i) {
-            loadingSkeleton.push({ ...ROW_LOADING_SKELETON, key: `market_loading__skeleton_${i}` })
+        for (let i = 0; i < 15; ++i) {
+            loadingSkeleton.push({
+                ...ROW_LOADING_SKELETON,
+                key: `market_loading__skeleton_${i}`
+            });
         }
-        return loadingSkeleton
+        return loadingSkeleton;
     }
 
-    if (!Array.isArray(arr) || !arr || !arr.length) return []
+    if (!Array.isArray(arr) || !arr || !arr.length) return [];
 
-    const result = []
+    const result = [];
 
     arr.forEach(item => {
         const {
-            baseAsset, baseAssetId, quoteAsset, quoteAssetId,
-            lastPrice, volume24h, high, low, supply, label
-        } = initMarketWatchItem(item)
+            baseAsset,
+            baseAssetId,
+            quoteAsset,
+            quoteAssetId,
+            lastPrice,
+            volume24h,
+            high,
+            low,
+            supply,
+            label
+        } = initMarketWatchItem(item);
 
-        const change24h = getExchange24hPercentageChange(item)
-        const sparkLine = sparkLineBuilder(`${baseAsset}${quoteAsset}`, change24h >= 0 ? colors.teal : colors.red2)
+        const change24h = getExchange24hPercentageChange(item);
+        const sparkLine = sparkLineBuilder(`${baseAsset}${quoteAsset}`, change24h >= 0 ? colors.teal : colors.red2);
 
         if (baseAsset && quoteAsset) {
             result.push({
                 key: `market_row___${baseAsset}_${quoteAsset}`,
-                star: isAuth ? <FavActionButton b={{ b: baseAsset, i: baseAssetId }}
-                    q={{ q: quoteAsset, i: quoteAssetId }}
+                star: isAuth ? <FavActionButton b={{
+                    b: baseAsset,
+                    i: baseAssetId
+                }}
+                    q={{
+                        q: quoteAsset,
+                        i: quoteAssetId
+                    }}
                     list={favoriteList}
                     lang={lang}
                     mode={mode} favoriteRefresher={favoriteRefresher}
                 /> : null,
-                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode === 1 ? TRADING_MODE.EXCHANGE : TRADING_MODE.FUTURES, lang, futuresConfigs),
+                pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode, lang, futuresConfigs),
                 last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-                change_24h: render24hChange(item, false, 'justify-end'),
+                change_24h: render24hChange(item, false, 'justify-end !text-base !font-normal'),
                 market_cap: renderMarketCap(lastPrice, supply),
                 mini_chart: (
                     <div className="w-full flex justify-center items-center">
@@ -533,17 +746,23 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                 '24h_low': <span className="whitespace-nowrap">{formatPrice(low, high < 1000 ? 2 : 0)}</span>,
                 operation: renderTradeLink(baseAsset, quoteAsset, lang, mode),
                 [RETABLE_SORTBY]: {
-                    pair: `${baseAsset}`, last_price: lastPrice,
-                    change_24h: getExchange24hPercentageChange(item), market_cap: +lastPrice * +supply,
-                    volume_24h: volume24h, '24h_high': high, '24h_low': low,
-                    baseAsset, quoteAsset, tradingMode: mode
+                    pair: `${baseAsset}`,
+                    last_price: lastPrice,
+                    change_24h: getExchange24hPercentageChange(item),
+                    market_cap: +lastPrice * +supply,
+                    volume_24h: volume24h,
+                    '24h_high': high,
+                    '24h_low': low,
+                    baseAsset,
+                    quoteAsset,
+                    tradingMode: mode
                 }
-            })
+            });
         }
-    })
+    });
 
-    return result
-}
+    return result;
+};
 
 const ROW_LOADING_SKELETON = {
     star: <Skeletor width={65} />,
@@ -555,138 +774,140 @@ const ROW_LOADING_SKELETON = {
     '24h_high': <Skeletor width={65} />,
     '24h_low': <Skeletor width={65} />,
     operation: <Skeletor width={65} />
-}
+};
 
 const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
-    let url = lang === 'vi' ? '/vi' : ''
-    let hasLeverage = false
+    let url = lang === 'vi' ? '/vi' : '';
+    let hasLeverage = false;
     switch (mode) {
         case TRADING_MODE.FUTURES:
-            url = url + '/futures/' + b + q
-            hasLeverage = true
-            break
+            url = url + '/futures/' + b + q;
+            hasLeverage = true;
+            break;
         case TRADING_MODE.EXCHANGE:
-            url = '/trade/' + b + '-' + q
-            break
+            url = '/trade/' + b + '-' + q;
+            break;
         default:
-            break
+            break;
     }
 
-    const symbolLeverageConfig = hasLeverage ? futuresConfigs?.find(e => e?.pair == (b + q))?.leverageConfig : null
-    const leverage = hasLeverage ? (symbolLeverageConfig?.max ?? 0) : null
+    const symbolLeverageConfig = hasLeverage ? futuresConfigs?.find(e => e?.pair == (b + q))?.leverageConfig : null;
+    const leverage = (symbolLeverageConfig?.max ?? 0) ?? null;
 
     return (
-        <a href={url} target='_blank' className='hover:underline'>
+        <a href={url} target="_blank" className="hover:underline">
             <div className="flex items-center font-semibold text-base">
                 {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
                 <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
-                    <span className="text-gray-4">{b}</span>
-                    <span className="text-darkBlue-5">/{q}</span>
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark">{b}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">/{q}</span>
                 </div>
-                {leverage ? <div className='px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4 ml-2'>
+                {leverage ? <div className="px-1 py-[2px] bg-bgButtonDisabled dark:bg-bgButtonDisabled-dark text-txtPrimary dark:text-txtPrimary-dark rounded-[3px] font-semibold text-xs leading-4 ml-2">
                     {leverage}x
                 </div> : <MarketLabel labelType={lbl} />}
             </div>
         </a>
-    )
-}
+    );
+};
 
 const renderMarketCap = (price, supply) => {
     if (price && supply) {
-        return <span className="whitespace-nowrap">{formatPrice(+price * +supply)}</span>
+        return <span className="whitespace-nowrap">{formatPrice(+price * +supply)}</span>;
     }
-    return EMPTY_VALUE
-}
+    return EMPTY_VALUE;
+};
 
-const FavActionButton = ({ b, q, mode, lang, list, favoriteRefresher }) => {
-    const [loading, setLoading] = useState(false)
-    const [already, setAlready] = useState(false)
+const FavActionButton = ({
+    b,
+    q,
+    mode,
+    lang,
+    list,
+    favoriteRefresher
+}) => {
+    const [loading, setLoading] = useState(false);
+    const [already, setAlready] = useState(false);
 
-    const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`
+    const pairKey = mode === TRADING_MODE.FUTURES ? `${b?.b}_${q?.q}` : `${b?.i}_${q?.i}`;
 
     // Helper
     const callback = _.debounce(async (method, list) => {
-        setLoading(true)
-        let message = ''
-        let title = ''
+        setLoading(true);
+        let message = '';
+        let title = '';
 
         try {
-            await favoriteAction(method, mode, pairKey)
+            await favoriteAction(method, mode, pairKey);
         } catch (e) {
-            console.log(`Can't execute this action `, e)
+            console.log(`Can't execute this action `, e);
 
             if (lang === LANGUAGE_TAG.VI) title = 'Thất bại'
             if (lang === LANGUAGE_TAG.EN) title = 'Failure'
-            showNotification(
-                { message: `FAV_ACTION_UNKNOWN_ERR`, title, type: 'failure' },
-                2500,
-                'top',
-                'top-right',
+            toast(
+                { text: `Unknown error`, type: 'error' },
             )
         } finally {
-            setLoading(false)
+            setLoading(false);
 
-            await favoriteRefresher()
+            await favoriteRefresher();
             if (lang === LANGUAGE_TAG.VI) {
-                title = 'Thành công'
-                message = `Đã ${method === 'delete' ? `xoá ${b?.b}/${q?.q} khỏi` : `thêm ${b?.b}/${q?.q} vào`} danh sách yêu thích`
+                title = 'Thành công';
+                message = `Đã ${method === 'delete' ? `xoá ${b?.b}/${q?.q} khỏi` : `thêm ${b?.b}/${q?.q} vào`} danh sách yêu thích`;
             }
             if (lang === LANGUAGE_TAG.EN) {
-                title = 'Success'
-                message = `${method === 'delete' ? `Deleted ${b?.b}/${q?.q} from` : `Added ${b?.b}/${q?.q} to`} favorites`
+                title = 'Success';
+                message = `${method === 'delete' ? `Deleted ${b?.b}/${q?.q} from` : `Added ${b?.b}/${q?.q} to`} favorites`;
             }
-            showNotification(
-                { message, title, type: 'success' },
-                2500,
-                'top',
-                'top-right'
+            toast(
+                { text: message, type: 'success' },
             )
         }
-    }, 300)
+    }, 2000);
 
     useEffect(() => {
         if (list) {
             if (mode === TRADING_MODE.EXCHANGE && list?.exchange) {
-                list.exchange.includes(pairKey) ? setAlready(true) : setAlready(false)
+                list.exchange.includes(pairKey) ? setAlready(true) : setAlready(false);
             }
 
             if (mode === TRADING_MODE.FUTURES && list?.futures) {
-                list.futures.includes(pairKey) ? setAlready(true) : setAlready(false)
+                list.futures.includes(pairKey) ? setAlready(true) : setAlready(false);
             }
         }
-    }, [list, pairKey])
+    }, [list, pairKey, mode]);
 
     return (
         <div className="flex items-center"
             onClick={() => {
-                !loading && callback(already ? 'delete' : 'put', list)
+                !loading && callback(already ? 'delete' : 'put', list);
             }}>
-            {already ? <IconStarFilled size={24} color="#FFC632" />
+            {loading ? <Spinner size={24} /> : already ? <IconStarFilled size={24} color="#FFC632" />
                 : <IconStarFilled size={24} color="#8694B3" />}
         </div>
-    )
-}
+    );
+};
 
 const renderTradeLink = (b, q, lang, mode) => {
-    let url
-    let swapurl
+    let url;
+    let swapurl;
     if (mode === TRADING_MODE.FUTURES) {
-        url = getV1Url(`/futures/${b}${q}`)
+        url = getV1Url(`/futures/${b}${q}`);
     } else {
-        url = `/trade/${b}-${q}`
+        url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
-        swapurl = `/swap`
+        swapurl = `/swap?from=${b}&to=${q}`;
     }
 
     return (
-        <div className='flex justify-end items-center font-medium text-base'>
+        <div className="flex justify-end items-center font-semibold">
             <Link href={url} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center" target="_blank">
+                <a className="text-teal re_table__link px-3 flex items-center justify-center !text-sm sm:!text-base" target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Giao dịch' : 'Trade'}
                 </a>
             </Link>
             {swapurl ? <Link href={swapurl} prefetch={false}>
-                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider-dark" target="_blank">
+                <a className="text-teal re_table__link px-3 flex items-center justify-center border-l-[1px] border-divider dark:border-divider-dark !text-sm sm:!text-base!text-sm sm:!text-base"
+                    target="_blank">
                     {lang === LANGUAGE_TAG.VI ? 'Quy đổi' : 'Swap'}
                 </a>
             </Link> : null}
@@ -694,71 +915,83 @@ const renderTradeLink = (b, q, lang, mode) => {
     )
 }
 
-const TokenTypes = ({ type, setType, types, lang }) => {
-    return <div className='flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'>
+const TokenTypes = ({ type, setType, types, lang, className }) => {
+    return <div className={classNames('flex items-center space-x-3 h-9 sm:h-12 font-normal text-sm overflow-auto no-scrollbar', className)}>
         {types.map(e =>
-            <div key={e.id} className={classNames('h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider-dark cursor-pointer whitespace-nowrap', {
-                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type
+            <div key={e.id} className={classNames('flex items-center h-full flex-auto justify-center px-4 text-sm sm:text-base rounded-[800px] border-[1px] cursor-pointer whitespace-nowrap', {
+                'border-teal bg-teal bg-opacity-10 text-teal font-semibold': e.id === type,
+                'border-divider dark:border-divider-dark': e.id !== type,
             })}
                 onClick={() => setType(e.id)}
             >
                 {e?.content[lang]}
             </div>
         )}
-    </div>
-}
+    </div>;
+};
 
-export default MarketTable
+export default MarketTable;
 
-export const HotIcon = ({ size = "20" }) => <svg width={size} height={size} viewBox={`0 0 20 20`} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z" fill="#FFC632" />
-    <path d="M15.263 13.583c-.034-2.518-1.03-4.26-1.57-5.022a.318.318 0 0 0-.544.043c-.165.33-.431.747-.793.964 0 0-1.534-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.937.009 5.305-2.445 5.266-5.382z" fill="#CC1F1F" />
-</svg>
+export const HotIcon = ({ size = '20' }) => <svg width={size} height={size} viewBox={`0 0 20 20`} fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <path
+        d="M13.813 2.896a.295.295 0 0 0-.493.167c-.092.547-.284 1.435-.647 2.251 0 0-.718-3.946-5.496-5.302a.295.295 0 0 0-.373.326c.173 1.173.486 4.481-.851 7.65-.696-1.414-1.808-1.966-2.515-2.18a.295.295 0 0 0-.362.391c.619 1.542-.771 3.468-.771 6.095a7.706 7.706 0 1 0 15.412 0c0-5.23-2.82-8.38-3.904-9.398z"
+        fill="#FFC632" />
+    <path
+        d="M15.263 13.583c-.034-2.518-1.03-4.26-1.57-5.022a.318.318 0 0 0-.544.043c-.165.33-.431.747-.793.964 0 0-1.534-1.236-1.605-3.088a.317.317 0 0 0-.42-.286c-.812.276-2.535 1.204-2.952 4.16-.342-.617-1.154-.797-1.676-.847a.317.317 0 0 0-.339.391c.398 1.553-.604 2.48-.604 3.815a5.252 5.252 0 0 0 5.237 5.252c2.937.009 5.305-2.445 5.266-5.382z"
+        fill="#CC1F1F" />
+</svg>;
 
-const addTokensToFav = _.debounce(async ({ symbols, mode, lang, favoriteRefresher }) => {
+const addTokensToFav = _.debounce(async ({
+    symbols,
+    mode,
+    lang,
+    favoriteRefresher,
+    setIsLoading
+}) => {
     // Helper
-    let message = ''
-    let title = ''
-    const method = 'put'
+    setIsLoading(true)
+    let message = '';
+    let title = '';
+    const method = 'put';
 
     try {
-        const { data } = await axios.put(API_GET_FAVORITE, { pairs: symbols, tradingMode: mode });
-        await favoriteRefresher()
+        const { data } = await axios.put(API_GET_FAVORITE, {
+            pairs: symbols,
+            tradingMode: mode
+        });
+        await favoriteRefresher();
 
-        if (data.status === 'error') throw 'error'
+        if (data.status === 'error') throw 'error';
 
         if (lang === LANGUAGE_TAG.VI) {
-            title = 'Thành công'
-            message = `Đã ${method === 'delete' ? `xoá ${symbols.join(', ').replace('_', '/')} khỏi` : `thêm ${symbols.join(', ').replace('_', '/')} vào`} danh sách yêu thích`
+            title = 'Thành công';
+            message = `Đã ${method === 'delete' ? `xoá ${symbols.join(', ')
+                .replace('_', '/')} khỏi` : `thêm ${symbols.join(', ')
+                    .replace('_', '/')} vào`} danh sách yêu thích`;
         }
         if (lang === LANGUAGE_TAG.EN) {
-            title = 'Success'
-            message = `${method === 'delete' ? `Deleted ${symbols.join(', ').replace('_', '/')} from` : `Added ${symbols.join(', ').replace('_', '/')} to`} favorites`
+            title = 'Success';
+            message = `${method === 'delete' ? `Deleted ${symbols.join(', ')
+                .replace('_', '/')} from` : `Added ${symbols.join(', ')
+                    .replace('_', '/')} to`} favorites`;
         }
-        showNotification(
-            { message, title, type: 'success' },
-            2500,
-            'top',
-            'top-right'
+        toast(
+            { text: message, type: 'success' },
         )
     } catch (e) {
-        console.log(`Can't execute this action `, e)
+        console.log(`Can't execute this action `, e);
 
         if (lang === LANGUAGE_TAG.VI) {
-            title = 'Thất bại'
-            message = 'Thêm tất cả symbol thất bại, hãy thử thêm từng cặp một'
+            title = 'Thất bại';
+            message = 'Thêm tất cả symbol thất bại, hãy thử thêm từng cặp một';
         }
-
 
         if (lang === LANGUAGE_TAG.EN) {
-            title = 'Failure'
-            message = 'Add all symbols error, please try one by one'
+            title = 'Failure';
+            message = 'Add all symbols error, please try one by one';
         }
-        showNotification(
-            { message, title, type: 'failure' },
-            2500,
-            'top',
-            'top-right',
-        )
+        toast({ text: message, type: 'error' })
     }
-}, 1000)
+    setIsLoading(false)
+}, 2000)

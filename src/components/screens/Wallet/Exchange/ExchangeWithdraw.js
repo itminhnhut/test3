@@ -396,7 +396,7 @@ const ExchangeWithdraw = () => {
     return (<MaldivesLayout>
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             <div className='mal-container px-4'>
-                <div className='flex items-center justify-between mb-10 mt-20'>
+                <div className='flex items-center justify-between mb-10'>
                     <span className='font-semibold text-[2rem] leading-[3rem]'>{t('common:withdraw')}</span>
                     <div
                         className='flex items-center font-semibold text-teal cursor-pointer'
@@ -522,7 +522,7 @@ const AMOUNT = {
     OK: 'ok'
 };
 
-const Background = styled.div.attrs({ className: 'w-full h-full pt-10' })`
+const Background = styled.div.attrs({ className: 'w-full h-full pt-20' })`
     background-color: ${({ isDark }) => isDark ? colors.dark.dark : colors.gray['13']};
 `;
 

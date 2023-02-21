@@ -360,10 +360,10 @@
 
     .mal-navbar__link__group___item {
       @apply flex items-center h-full text-sm font-semibold dark:font-normal text-txtPrimary dark:text-txtPrimary-dark
-      relative;
+      relative mr-10;
       letter-spacing: normal;
       cursor: pointer;
-      margin-left: 44px;
+      // margin-left: 44px;
       
       .chevron__down {
        
@@ -399,7 +399,7 @@
       }
 
       @media (min-width: 1440px) {
-        @apply ml-10;
+        // @apply ml-10;/
       }
     }
 
@@ -466,10 +466,9 @@
 
     .mal-navbar__link__group___item___childen__lv1 {
       @apply absolute hidden left-0 z-50 bg-white dark:bg-darkBlue-3
-      border border-t-0 shadow-card_light dark:shadow-none  border-divider dark:border-divider-dark;
+      border shadow-card_light dark:shadow-none  border-divider dark:border-divider-dark;
 
       top: 100%;
-      margin-top: 1px;
       border-bottom-right-radius: 12px;
       border-bottom-left-radius: 12px;
       overflow: hidden;

@@ -5,10 +5,9 @@ import { DefaultFuturesFee } from 'redux/actions/const';
 import { Minus, Plus } from 'react-feather';
 import TradingInput from 'components/trade/TradingInput';
 import Slider from 'components/trade/InputSlider';
-import { getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import floor from 'lodash/floor';
 import ChevronDown from 'components/svg/ChevronDown';
-import { getTypesLabel, VndcFutureOrderType, validator } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { getTypesLabel, VndcFutureOrderType, validator, getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import SelectV2 from 'components/common/V2/SelectV2';
 import CollapseV2 from 'components/common/V2/CollapseV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -27,6 +26,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
     const [showCustomized, setShowCustomized] = useState(false);
     const isChangeSlide = useRef(false);
     const [loading, setLoading] = useState(false);
+    const [focus, setFocus] = useState();
 
     const minQuoteQty = useMemo(() => {
         const initValue = quoteAsset === 'VNDC' ? 100000 : 5;
@@ -125,6 +125,16 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                             ? `${t('futures:minimum_qty')}: ${formatNumber(minQuoteQty, decimals.symbol)}`
                             : `${t('futures:maximum_qty')}: ${formatNumber(maxQuoteQty, decimals.symbol)}`
                 };
+            case 'leverage':
+                const min = pairConfig?.leverageConfig.min ?? 0;
+                const max = pairConfig?.leverageConfig.max ?? 0;
+                return {
+                    isValid: !(leverage < min || leverage > max),
+                    msg:
+                        leverage < min
+                            ? `${t('futures:minimum_leverage')}: ${formatNumber(min, 0)}`
+                            : `${t('futures:maximum_leverage')}: ${formatNumber(max, 0)}`
+                };
             default:
                 break;
         }
@@ -195,14 +205,13 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
     const isError =
         !volume ||
         (available && !_validator('quoteQty')?.isValid) ||
-        leverage > pairConfig?.leverageConfig.max ||
-        leverage < pairConfig?.leverageConfig.min ||
+        !_validator('leverage')?.isValid ||
         (!_validator('price')?.isValid && showCustomized && type !== VndcFutureOrderType.Type.MARKET);
-
+    console.log(_validator('leverage'));
     return (
         <>
             <div className="grid grid-cols-2 gap-6">
-                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6 pr-6">
+                <div className="max-h-[518px] overflow-y-auto overflow-x-hidden space-y-6 pr-6 pl-[1px]">
                     <div>
                         <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-white dark:bg-bgSpotContainer-dark">
                             {order?.symbol} {order?.leverage}x
@@ -223,13 +232,14 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                         <div className="text-sm text-txtSecondary dark:Ltext-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
                         <div
                             className={classNames('px-4 mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md', {
-                                'ring-1 ring-red mx-[1px]': !_validator('quoteQty').isValid
+                                'ring-1 !ring-red': !_validator('quoteQty').isValid,
+                                'ring-1 ring-teal': focus === 'volume'
                             })}
                         >
                             <div className={changeClass}>
                                 <Minus
                                     size={16}
-                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
+                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
                                     onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
                                 />
                             </div>
@@ -246,11 +256,13 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 validator={_validator('quoteQty')}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
+                                onFocus={() => setFocus('volume')}
+                                onBlur={() => setFocus()}
                             />
                             <div className={changeClass}>
                                 <Plus
                                     size={16}
-                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
+                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
                                     onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
                                 />
                             </div>
@@ -303,11 +315,16 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                     </div>
                                     <div className="space-y-2">
                                         <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
-                                        <div className="px-4 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md">
+                                        <div
+                                            className={classNames('px-4 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md', {
+                                                'ring-1 !ring-red': !_validator('leverage').isValid,
+                                                'ring-1 ring-teal': focus === 'leverage'
+                                            })}
+                                        >
                                             <div className={changeClass}>
                                                 <Minus
                                                     size={16}
-                                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
+                                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
                                                     onClick={() =>
                                                         leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
                                                     }
@@ -318,19 +335,21 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                                 decimalScale={0}
                                                 allowNegative={false}
                                                 thousandSeparator={true}
-                                                inputClassName="!text-center w-full"
-                                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
+                                                inputClassName="!text-center w-full !ml-0"
+                                                containerClassName="px-2.5 dark:!bg-dark-2 w-full !border-none"
                                                 onValueChange={({ value }) => setLeverage(value)}
                                                 disabled={!available}
                                                 inputMode="decimal"
                                                 suffix={'x'}
                                                 allowedDecimalSeparators={[',', '.']}
-                                                clearAble
+                                                validator={_validator('leverage')}
+                                                onFocus={() => setFocus('leverage')}
+                                                onBlur={() => setFocus()}
                                             />
                                             <div className={changeClass}>
                                                 <Plus
                                                     size={16}
-                                                    className="text-txtSecondary dark:text-onus-white cursor-pointer"
+                                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
                                                     onClick={() =>
                                                         leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
                                                     }
@@ -342,6 +361,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 <div className="space-y-2 mt-4">
                                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
                                     <TradingInput
+                                        labelClassName={'dark:!text-white !text-base'}
                                         label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
                                         value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
                                         decimalScale={decimals.price}
@@ -366,31 +386,31 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('common:last_price')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(_lastPrice, decimals.symbol, 0, true)} {quoteAsset}
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:margin')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(general.margin, decimals.symbol, 0, true)} {quoteAsset}
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:average_open_price')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(general.AvePrice, decimals.symbol, 0, true)} {quoteAsset}
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:new_liq_price')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(general.liqPrice, decimals.symbol, 0, true)} {quoteAsset}
                             </div>
                         </div>
                         <div className="flex items-center justify-between">
                             <div className="text-txtSecondary-dark">{t('futures:mobile:available')}</div>
-                            <div className="font-semibold">
+                            <div className="font-semibold text-right">
                                 {formatNumber(available, decimals.symbol, 0, true)} {quoteAsset}
                             </div>
                         </div>

@@ -89,16 +89,16 @@ const ReTable = memo(
 
         const handleResize =
             (index) =>
-            (e, { size }) => {
-                setOwnColumns((prevState) => {
-                    const nextColumns = [...prevState];
-                    nextColumns[index] = {
-                        ...nextColumns[index],
-                        width: size.width
-                    };
-                    return nextColumns;
-                });
-            };
+                (e, { size }) => {
+                    setOwnColumns((prevState) => {
+                        const nextColumns = [...prevState];
+                        nextColumns[index] = {
+                            ...nextColumns[index],
+                            width: size.width
+                        };
+                        return nextColumns;
+                    });
+                };
 
         useEffect(() => {
             setOwnColumns(columns);
@@ -122,10 +122,10 @@ const ReTable = memo(
         const onRow = (item, i, a) => {
             return {
                 onClick: (e) => onRowClick && onRowClick({ ...item, rowIdx: i }, e), // click row
-                onDoubleClick: (e) => {}, // double click row
-                onContextMenu: (e) => {}, // right button click row
-                onMouseEnter: (e) => {}, // mouse enter row
-                onMouseLeave: (e) => {} // mouse leave row
+                onDoubleClick: (e) => { }, // double click row
+                onContextMenu: (e) => { }, // right button click row
+                onMouseEnter: (e) => { }, // mouse enter row
+                onMouseLeave: (e) => { } // mouse leave row
             };
         };
 
@@ -135,12 +135,17 @@ const ReTable = memo(
 
             let _ = defaultSort;
 
+
             if (Object.keys(sorter).length) {
                 const _s = Object.entries(sorter)[0];
-                // console.log('namidev-DEBUG: ___ ', _s[0], _s[1])
-                defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
-                // defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
-                // console.log(`namidev-DEBUG: After sort by ${_s[0]} `, defaultSort)
+                const customSort = ownColumns.find(e => e.key === _s[0])?.sorter
+
+                if (customSort) {
+                    // chỉ cần sort theo asc
+                    defaultSort = data.sort((a,b ) => _s[1] ? customSort(a, b) : -customSort(a, b))
+                } else {
+                    defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+                }
             }
 
             if (paginationProps) {
@@ -264,7 +269,7 @@ const ReTable = memo(
             <ReTableWrapperV2
                 ref={reference}
                 loading={loading}
-                empty={loading || data.length <= 0}
+                empty={loading || data?.length <= 0}
                 isDark={currentTheme === THEME_MODE.DARK}
                 useRowHover={useRowHover}
                 height={height}
@@ -394,7 +399,7 @@ const ReTableWrapperV2 = styled.div`
         /* box-shadow: ${({ isDark }) => (isDark ? '-1px 0 0 #263459' : '-1px 0 0 #f2f4f6')} !important; */
         background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)} !important;
         &:after {
-            border-left: ${({ noBorder, isDark }) => (noBorder ? 'none' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
+            border-left: ${({ noBorder, isDark }) => (noBorder ? 'none !important' : `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT}`)};
             z-index: 10;
             width: 1px;
             visibility: visible;
@@ -449,7 +454,7 @@ const ReTableWrapperV2 = styled.div`
         tbody tr {
             &:hover td {
                 background: ${({ useRowHover, isDark, empty }) =>
-                    !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
+        !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
                 .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
                     border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};

@@ -7,6 +7,7 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { Eye, EyeOff } from 'react-feather';
 import { getLoginUrl } from 'redux/actions/utils';
 import { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
 
 import CheckBox from 'components/common/CheckBox';
 import { PATHS } from '../../../constants/paths';
@@ -91,19 +92,22 @@ const HomeFirstAward = ({ t, language, theme }) => {
                     </div>
                 </div>
                 <div className="homepage-first_award___form relative">
-                    <img
-                        src="/images/screen/homepage/first_award_corner.png"
+                    <div
                         className={` ${
-                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px] ' : 'right-[-48px] top-[-12px] rotate-90'
-                        } absolute  z-[-10] w-[228px]`}
-                    />
-                    <img
-                        src="/images/screen/homepage/first_award_corner.png"
+                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
+                        } absolute  z-[-10] w-[228px] `}
+                    >
+                        <img src="/images/screen/homepage/first_award_corner.png" />
+                    </div>
+                    <div
                         className={`
-                 ${
-                     theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
-                 }    absolute z-[-10] w-[228px]`}
-                    />
+                    ${
+                        theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
+                    }    absolute z-[-10] w-[228px] `}
+                    >
+                        <img src="/images/screen/homepage/first_award_corner.png" />
+                    </div>
+
                     <div className="homepage-first_award___form___input_group">
                         <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
                             Email
@@ -143,17 +147,17 @@ const HomeFirstAward = ({ t, language, theme }) => {
                                     placeholder={language === LANGUAGE_TAG.VI ? 'Nhập mật khẩu của bạn (8 - 50 ký tự)' : 'Your password (8 - 50 letters)'}
                                 />
                                 <div className="flex">
-                                    <div className="cursor-pointer" onClick={() => setState({ isPwShow: !state.isPwShow })}>
-                                        {state.isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
-                                    </div>
                                     {Boolean(state.password) && (
                                         <div
                                             onClick={() => onDeleteInput('password')}
-                                            className="pl-2 ml-2 border-l cursor-pointer border-divider dark:border-vider-dark"
+                                            className="pr-2 mr-2 border-r cursor-pointer border-divider dark:border-vider-dark"
                                         >
                                             <X size={16} />
                                         </div>
                                     )}
+                                    <div className="cursor-pointer" onClick={() => setState({ isPwShow: !state.isPwShow })}>
+                                        {state.isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +165,8 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         <div className="flex items-center mt-6">
                             <div>
                                 <CheckBox
-                                    className="!w-auto"
+                                    className="!w-auto "
+                                    boxContainerClassName="min-w-[24px] min-h-[24px]"
                                     active={state.checkedTermAndPolicy}
                                     onChange={() => setState({ checkedTermAndPolicy: !state.checkedTermAndPolicy })}
                                     label={

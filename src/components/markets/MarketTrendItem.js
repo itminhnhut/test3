@@ -22,38 +22,14 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
 
     const { i18n: { language } } = useTranslation()
 
-    // Socket
-    // const publicSocket = useSelector(state => state.socket.publicSocket)
-
     // Init Pairs Price
     const _ = initMarketWatchItem(pair, false)
-
-    // Helper
-    // const listenerHandler = debounce(ticker => setState({ ticker }), 1000)
-
-    // useEffect(() => {
-    //     const event = `spot:mini_ticker:update:${_?.symbol}`
-    //
-    //     if (publicSocket && _ && _.symbol) {
-    //         subscribeExchangeSocket(publicSocket, [{ socketString: 'mini_ticker', payload: _.symbol }])
-    //         publicSocket.removeListener(event, listenerHandler);
-    //         publicSocket.on(event, listenerHandler);
-    //     }
-    //     return () => {
-    //         _?.symbol && unsubscribeExchangeSocket(publicSocket, _.symbol)
-    //         publicSocket && publicSocket.removeListener(event, listenerHandler);
-    //     }
-    // }, [_, publicSocket])
-
-    // useEffect(() => {
-    //     log.d('Market Screen | Watch change ticker ', state.ticker)
-    // }, [state.ticker])
 
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
             <a style={{ ...style }}>
-                <MCard addClass="md:max-w-[335px] select-none border border-transparent lg:hover:border-teal !bg-darkBlue-3 text-darkBlue-5">
-                    <div className="flex items-center justify-between">
+                <MCard addClass="md:max-w-[335px] select-none hover:border-green-3 hover:shadow-card_light dark:hover-shadow-none dark:hover:border-teal">
+                    <div className="flex items-center justify-between ">
                         <div className="flex items-center">
                             {(!pair) ?
                                 <Skeletor
@@ -69,7 +45,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                                 {(!pair) ?
                                     <Skeletor width={100} />
                                     : <>
-                                        <span className="text-gray-4">{_?.baseAsset}</span>/{_?.quoteAsset}
+                                        <span className="text-txtPrimary dark:text-txtPrimary-dark">{_?.baseAsset}</span><span className="text-txtSecondary dark:text-txtSecondary-dark">/{_?.quoteAsset}</span>
                                     </>}
                             </div>
                         </div>
@@ -84,10 +60,10 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
                                 {(!pair) ? <Skeletor width={65} /> : formatPrice(_.lastPrice)}
                             </div>
                             <div className="flex items-center justify-between">
-                                <div className="text-xs font-normal">
+                                <div className="text-xs font-normal text-txtSecondary dark:text-txtSecondary-dark">
                                     {(!pair) ? <Skeletor width={88} />
                                         : <>
-                                            {language === LANGUAGE_TAG.VI ? 'Khối lượng' : 'Volume'} ${formatCurrency(_.volume24h, 0)}
+                                            {language === LANGUAGE_TAG.VI ? 'KL' : 'Vol'} ${formatCurrency(_.volume24h, 0)}
                                         </>
                                     }
                                 </div>

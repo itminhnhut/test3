@@ -1,21 +1,29 @@
 import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
-import Button from 'src/components/common/Button';
-import colors from '../../../styles/colors';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
-import { useWindowSize } from 'utils/customHooks';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { getLoginUrl, getS3Url, getV1Url } from 'redux/actions/utils';
-import { useToggle } from 'react-use';
-import HomeCommunity from './HomeCommunity';
-import HomeJourney from './HomeJourney';
-import HomeLightDark from './HomeLightDark';
-import { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
+import { useRefWindowSize } from 'hooks/useWindowSize';
+import { PATHS } from 'src/constants/paths';
+import { getLoginUrl } from 'redux/actions/utils';
 
-import HomeFirstAward from './HomeFirstAward';
 
-const HomeAdditional = ({ parentState }) => {
+const HomeCommunity = dynamic(() => import('./HomeCommunity'), {
+    ssr: false
+});
+const HomeJourney = dynamic(() => import('./HomeJourney'), {
+    ssr: false
+});
+const HomeLightDark = dynamic(() => import('./HomeLightDark'), {
+    ssr: false
+});
+const HomeFirstAward = dynamic(() => import('./HomeFirstAward'), {
+    ssr: false
+});
+
+const HomeAdditional = ({ parentState, currentTheme }) => {
     // * Initial State
     const [stepCount, setStepCount] = useState(0);
     const [state, set] = useState({
@@ -24,13 +32,11 @@ const HomeAdditional = ({ parentState }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // * Use Hooks
-    const { width } = useWindowSize();
+    const { width } = useRefWindowSize();
     const {
         t,
         i18n: { language }
     } = useTranslation(['home', 'input', 'common', 'navbar']);
-
-    const theme = useSelector((state) => state.user.theme);
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -48,40 +54,50 @@ const HomeAdditional = ({ parentState }) => {
         <>
             <div className="relative">
                 <div className="absolute z-0 right-0 top-20 pointer-events-none">
-                    <img src="/images/screen/homepage/right_up.png" className="" />
+                    <Image src="/images/screen/homepage/right_up.png" width="513px" height="313px" />
                 </div>
                 <div className="absolute z-0 bottom-0 left-0 pointer-events-none">
-                    <img src="/images/screen/homepage/left_down.png" className="-mb-20" />
-                    <img src="/images/screen/homepage/ghost_down.png" className="" />
+                    <div className="-mb-20">
+                        <Image src="/images/screen/homepage/left_down.png" width="511px" height="213px" />
+                    </div>
+                    <Image src="/images/screen/homepage/ghost_down.png" width="389px" height="482px" className="" />
                 </div>
-                <HomeJourney t={t} width={width} currentTheme={theme} />
+                <HomeJourney t={t} width={width} currentTheme={currentTheme} />
                 <section className="homepage-trade3step">
                     <div className="homepage-trade3step___wrapper relative mal-container">
                         <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <img src={`/images/screen/homepage/create_account_${theme}.png`} width="48" />
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
-                                </div>
+                                <Link href={getLoginUrl('sso', 'login')} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src={`/images/screen/homepage/create_account_${currentTheme}.png`} width="48px" height="48px" />
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
+                                    </div>
+                                </Link>
+
                                 <div className="homepage-trade3step__vertial_dot_line" />
                                 <div className="homepage-trade3step__horizontal_dot_line" />
                             </div>
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <img src="/images/screen/homepage/fiat_crypto.png" width="48" />
+                                <Link href={PATHS.WALLET.EXCHANGE.DEPOSIT} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src="/images/screen/homepage/fiat_crypto.png" width="48px" height="48px" />
 
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
-                                </div>
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
+                                    </div>
+                                </Link>
+
                                 <div className="homepage-trade3step__vertial_dot_line" />
                                 <div className="homepage-trade3step__horizontal_dot_line" />
                             </div>
                             <div className="homepage-trade3step___step___item">
-                                <div className="homepage-trade3step___step___item___inner">
-                                    <img src={`/images/screen/homepage/start_trading_${theme}.png`} width="48" />
+                                <Link href={PATHS.FUTURES_V2.DEFAULT} passHref>
+                                    <div className="homepage-trade3step___step___item___inner">
+                                        <Image src={`/images/screen/homepage/start_trading_${currentTheme}.png`} width="48px" height="48px" />
 
-                                    <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
-                                </div>
+                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -182,7 +198,7 @@ const HomeAdditional = ({ parentState }) => {
                 </div>
             </section> */}
 
-            <HomeFirstAward theme={theme} t={t} language={language} />
+            <HomeFirstAward theme={currentTheme} t={t} language={language} />
             <HomeCommunity t={t} language={language} width={width} />
         </>
     );

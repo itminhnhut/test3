@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { NAV_DATA, SPOTLIGHT, USER_CP } from 'src/components/common/NavBar/constants';
-import PocketNavDrawer from 'src/components/common/NavBar/PocketNavDrawer';
+import dynamic from 'next/dynamic';
 import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
@@ -33,11 +33,9 @@ import { useRouter } from 'next/router';
 import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
-import HrefButton from 'src/components/common/V2/ButtonV2/HrefButton';
 import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS } from 'redux/actions/const';
-import Copy from 'components/svg/Copy';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
 import { BxsUserIcon, FutureExchangeIcon, FutureIcon, FuturePortfolioIcon, FutureWalletIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
@@ -46,9 +44,13 @@ import AuthButton from './AuthButton';
 import Button from '../V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 // ** Dynamic
 const NotificationList = dynamic(() => import('src/components/notification/NotificationList'), { ssr: false });
+const PocketNavDrawer = dynamic(() => import('src/components/common/NavBar/PocketNavDrawer'), {
+    ssr: false
+});
 
 export const NAVBAR_USE_TYPE = {
     FLUENT: 'fluent',
@@ -312,7 +314,7 @@ const NavBar = ({
 
                 return (
                     <div className="h-full flex items-center" key={`${title}_${key}__withchild`}>
-                        <div className="mal-navbar__link__group___item">
+                        <div className="mal-navbar__link__group___item !mr-0 pr-10">
                             <div className="flex items-center">
                                 {t(`navbar:menu.${localized}`)}
 
@@ -359,7 +361,6 @@ const NavBar = ({
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerifying = kyc_status === KYC_STATUS.PENDING_APPROVAL;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
-
         const items = [];
 
         let color;
@@ -444,7 +445,7 @@ const NavBar = ({
                         </Button>
                     )}
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     {/* <UserVip loadingVipLevel={state.loadingVipLevel} vipLevel={state.vipLevel} t={t} /> */}
                     <Link href={PATHS.FEE_STRUCTURES.TRADING}>
                         <div className="flex items-center px-4 justify-between mb-6">
@@ -463,10 +464,10 @@ const NavBar = ({
                         </div>
                     </Link>
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
                     <div className="mb-6">{items}</div>
 
-                    <hr className="border-divider-dark mb-6" />
+                    <hr className="border-divider dark:border-divider-dark mb-6" />
 
                     <Link href={buildLogoutUrl()}>
                         <a className="mal-navbar__dropdown___item rounded-xl justify-between  !text-base">
@@ -583,8 +584,8 @@ const NavBar = ({
                             ${navTheme.wrapper}
                  `}
                 >
-                    <a className="block mal-navbar__logo" onClick={() => router.back()}>
-                        <img src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
+                    <a className="block mal-navbar__logo " onClick={() => router.back()}>
+                        <Image src={getS3Url('/images/ic_back.png')} width="28" height="28" className="navbar__logo" alt="" />
                     </a>
                 </div>
             )}
@@ -602,8 +603,8 @@ const NavBar = ({
                  `}
                 >
                     <Link href="/">
-                        <a className="block mal-navbar__logo">
-                            <img
+                        <a className="block mal-navbar__logo mr-10">
+                            <Image
                                 // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                 src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
                                 width="94"
@@ -642,13 +643,7 @@ const NavBar = ({
                                     <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
-                                        <SvgIcon
-                                            name="chevron_down"
-                                            size={16}
-                                            color={colors.gray[7]}
-                                            className="chevron__down"
-                                            // style={{ marginLeft: 7 }}
-                                        />
+                                        <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
                                         {renderWallet()}
                                     </div>
                                 )}
@@ -692,12 +687,16 @@ const NavBar = ({
 
                         {width < 1366 && (
                             <div
-                                className="relative"
+                                className="relative text-txtSecondary dark:text-txtPrimary-dark"
                                 onClick={(e) => {
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu size={25} className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`} />
+                                <SvgMenu
+                                    size={25}
+                                    color="currentColor"
+                                    className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`}
+                                />
                             </div>
                         )}
                     </div>

@@ -33,11 +33,9 @@
         @apply text-txtPrimary-dark font-bold mt-5;
 
         line-height: 52px;
-        font-size: 40px;
+        font-size: 36px;
 
-        @media (min-width: 350px) {
-          font-size: 44px;
-        }
+       
 
         @media (min-width: 576px) {
           @apply mt-8;
@@ -46,8 +44,7 @@
 
         @media (min-width: 1366px) {
           @apply mt-4;
-          // font-size: 64px;
-          // line-height: 70px;
+         
           font-size: 54px;
           line-height: 68px;
         }
@@ -134,7 +131,8 @@
     }
 
     .homepage-introduce___wrapper__right {
-      @apply relative z-10 flex justify-end mt-14 md:w-[100%] lg:w-[55%];
+      @apply relative z-10 flex justify-end items-end md:w-[100%] lg:absolute;
+      max-height:556px;
       img {
         @apply block;
         width: auto;
@@ -1252,10 +1250,13 @@
 
     .homepage-trade3step___title {
       @apply text-center;
-
+      font-size:28px;
       font-weight: 600;
-      font-size: 32px;
-      line-height: 1.19;
+      @media (min-width: 768px) {
+
+        font-size: 32px;
+        line-height: 1.19;
+      }
     }
 
     .homepage-trade3step___step___wrapper {
@@ -1266,7 +1267,7 @@
         @apply flex flex-col items-center justify-center;
 
         .homepage-trade3step___step___item___inner {
-          @apply flex flex-col items-center justify-center;
+          @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
 
           .homepage-trade3step___step___item__label {
             font-weight: 600;
@@ -1301,7 +1302,7 @@
 
         @media (min-width: 992px) {
           @apply flex-row items-center;
-
+          
           &:first-child {
             .homepage-trade3step___step___item___inner {
               margin-right: 38px;
@@ -1358,7 +1359,7 @@
 
       @media (min-width: 992px) {
         @apply flex-row;
-
+       
       }
     }
 
@@ -1682,10 +1683,10 @@
         @media (min-width: 992px) {
           @apply w-1/4;
           padding-top: 98px;
-          &:hover {
-            @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
-            box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
-          }
+          //&:hover {
+          //  @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
+          //  box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
+          //}
         }
 
         .homepage-community___channel__group___item__icon {
@@ -1693,6 +1694,14 @@
           top: 28px;
           min-width: 44px;
           min-height: 44px;
+          img {
+            height: 44px;
+            width: auto;
+          }
+          .telegram-global{
+            height: 45px!important;
+          }
+
         }
 
         .homepage-community___channel__group___item__bg {
