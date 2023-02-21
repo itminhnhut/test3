@@ -11,7 +11,7 @@ const OrderStatusLabel = ({ type, className, t }) => {
         case VndcFutureOrderType.ReasonCloseCode.HIT_TP:
         case VndcFutureOrderType.ReasonCloseCode.LIQUIDATE: {
             bgColor = 'bg-teal/[0.1]'
-            textColor = 'text-teal'
+            textColor = 'text-green-3 dark:text-teal'
             content = t('futures:mobile:adjust_margin.order_completed')
             break;
         }
@@ -19,8 +19,8 @@ const OrderStatusLabel = ({ type, className, t }) => {
         // lenh huy
         case VndcFutureOrderType.ReasonCloseCode.PARTIAL_CLOSE:
         case VndcFutureOrderType.ReasonCloseCode.NORMAL: {
-            bgColor = 'bg-divider-dark/[0.5]'
-            textColor = 'text-darkBlue-5'
+            bgColor = 'bg-gray-13/[0.7] dark:bg-divider-dark/[0.5]'
+            textColor = 'text-txtSecondary dark:text-darkBlue-5'
             content = t('futures:order_canceled')
             break;
         }

@@ -26,7 +26,6 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
     const [showCustomized, setShowCustomized] = useState(false);
     const isChangeSlide = useRef(false);
     const [loading, setLoading] = useState(false);
-    const [focus, setFocus] = useState();
 
     const minQuoteQty = useMemo(() => {
         const initValue = quoteAsset === 'VNDC' ? 100000 : 5;
@@ -207,7 +206,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
         (available && !_validator('quoteQty')?.isValid) ||
         !_validator('leverage')?.isValid ||
         (!_validator('price')?.isValid && showCustomized && type !== VndcFutureOrderType.Type.MARKET);
-    console.log(_validator('leverage'));
+
     return (
         <>
             <div className="grid grid-cols-2 gap-6">
@@ -218,37 +217,48 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                         </div>
                         <div className="border border-divider dark:border-divider-dark p-4 rounded-md">
                             <div className="flex items-center justify-between">
-                                <span className="text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
                                 <span className="font-semibold">{formatNumber(order?.open_price, decimals.price, 0, true)}</span>
                             </div>
                             <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
                             <div className="flex items-center justify-between">
-                                <span className="text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
                                 <span className="font-semibold">{formatNumber(order?.order_value, decimals.symbol, 0, true)}</span>
                             </div>
                         </div>
                     </div>
                     <div className="relative">
                         <div className="text-sm text-txtSecondary dark:Ltext-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
-                        <div
-                            className={classNames('px-4 mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md', {
-                                'ring-1 !ring-red': !_validator('quoteQty').isValid,
-                                'ring-1 ring-teal': focus === 'volume'
-                            })}
-                        >
-                            <div className={changeClass}>
-                                <Minus
-                                    size={16}
-                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                    onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
-                                />
-                            </div>
+                        <div className={classNames('mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
                             <TradingInput
+                                headContainerClassName="!border-0"
+                                renderHead={
+                                    <div className={changeClass}>
+                                        <Minus
+                                            size={16}
+                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                            onClick={() =>
+                                                volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))
+                                            }
+                                        />
+                                    </div>
+                                }
+                                renderTail={
+                                    <div className={changeClass}>
+                                        <Plus
+                                            size={16}
+                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                            onClick={() =>
+                                                volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))
+                                            }
+                                        />
+                                    </div>
+                                }
                                 value={volume}
                                 decimalScale={decimals.symbol}
                                 allowNegative={false}
                                 thousandSeparator={true}
-                                containerClassName="px-2.5 dark:!bg-dark-2 w-full !border-none"
+                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                                 inputClassName="!text-center"
                                 onValueChange={({ value }) => onChangeVolume(value)}
                                 disabled={!available}
@@ -256,16 +266,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 validator={_validator('quoteQty')}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
-                                onFocus={() => setFocus('volume')}
-                                onBlur={() => setFocus()}
                             />
-                            <div className={changeClass}>
-                                <Plus
-                                    size={16}
-                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                    onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
-                                />
-                            </div>
                         </div>
                         <div className="w-full pl-1">
                             <Slider
@@ -299,7 +300,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                             <>
                                 <div className="grid grid-cols-2 gap-3">
                                     <div className="space-y-2">
-                                        <div className="text-sm text-txtSecondary-dark">{t('common:order_type')}</div>
+                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:order_type')}</div>
                                         <SelectV2
                                             options={optionsTypes}
                                             value={type}
@@ -315,55 +316,51 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                     </div>
                                     <div className="space-y-2">
                                         <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
-                                        <div
-                                            className={classNames('px-4 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md', {
-                                                'ring-1 !ring-red': !_validator('leverage').isValid,
-                                                'ring-1 ring-teal': focus === 'leverage'
-                                            })}
-                                        >
-                                            <div className={changeClass}>
-                                                <Minus
-                                                    size={16}
-                                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                                    onClick={() =>
-                                                        leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
-                                                    }
-                                                />
-                                            </div>
+                                        <div className={classNames('flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
                                             <TradingInput
+                                                headContainerClassName="!border-0"
+                                                renderHead={
+                                                    <div className={changeClass}>
+                                                        <Minus
+                                                            size={16}
+                                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                                            onClick={() =>
+                                                                leverage > pairConfig?.leverageConfig.min && setLeverage((prevState) => Number(prevState) - 1)
+                                                            }
+                                                        />
+                                                    </div>
+                                                }
+                                                renderTail={
+                                                    <div className={changeClass}>
+                                                        <Plus
+                                                            size={16}
+                                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                                            onClick={() =>
+                                                                leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
+                                                            }
+                                                        />
+                                                    </div>
+                                                }
                                                 value={leverage}
                                                 decimalScale={0}
                                                 allowNegative={false}
                                                 thousandSeparator={true}
                                                 inputClassName="!text-center w-full !ml-0"
-                                                containerClassName="px-2.5 dark:!bg-dark-2 w-full !border-none"
+                                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                                                 onValueChange={({ value }) => setLeverage(value)}
                                                 disabled={!available}
                                                 inputMode="decimal"
                                                 suffix={'x'}
                                                 allowedDecimalSeparators={[',', '.']}
                                                 validator={_validator('leverage')}
-                                                onFocus={() => setFocus('leverage')}
-                                                onBlur={() => setFocus()}
                                             />
-                                            <div className={changeClass}>
-                                                <Plus
-                                                    size={16}
-                                                    className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                                    onClick={() =>
-                                                        leverage < pairConfig?.leverageConfig.max && setLeverage((prevState) => Number(prevState) + 1)
-                                                    }
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="space-y-2 mt-4">
                                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
                                     <TradingInput
-                                        labelClassName={'dark:!text-white !text-base'}
-                                        label={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : null}
-                                        value={type === VndcFutureOrderType.Type.MARKET ? '' : price}
+                                        value={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : price}
                                         decimalScale={decimals.price}
                                         allowNegative={false}
                                         thousandSeparator={true}

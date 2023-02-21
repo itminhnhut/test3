@@ -47,7 +47,6 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
 
     const [notificationLoading, setNotificationLoading] = useState(false);
 
-    console.log('hasNextNotification', hasNextNotification);
     const markAsRead = async (ids) => {
         dispatch(await markAllAsRead(ids));
     };

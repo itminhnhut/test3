@@ -100,6 +100,7 @@ export const getRatioProfit = (sltp, order) => {
     }
     const percent = (formatX <= -100 ? -1 : Math.abs(formatX > 0 ? 50 + formatX / 2 : -50 - formatX / 2)).toFixed(0);
     const result = percent === 50 ? 0 : percent > 50 ? (percent - 50) * 2 : -(50 - percent) * 2;
+    if (!isFinite(result)) return ''
     return result < 0 ? result : '+' + result;
 };
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
 
-const index = ({ children, className, label, isCustom, active }) => {
+const index = ({ children, className, label, isCustom, active, reload }) => {
     const [open, setOpen] = useState(false);
     const wraper = useRef();
     const list = useRef();
@@ -22,7 +22,13 @@ const index = ({ children, className, label, isCustom, active }) => {
                 active ? 400 : 0
             );
         }
-    }, [active]);
+    }, [active, reload]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            wraper.current.style.height = active ? list.current.clientHeight + 'px' : 0;
+        }, 100);
+    }, [reload]);
 
     const handleOpen = () => {
         if (isCustom) return;

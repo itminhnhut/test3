@@ -68,7 +68,7 @@ const SymbolListItem = (props) => {
         >
             <div className="mr-1.5 cursor-pointer" onClick={() => handleSetFavorite(pairKey)}>
                 {alreadyInFav ? (
-                    <IconStarFilled size={14} color={colors.yellow} />
+                    <IconStarFilled size={14} color={colors.yellow[2]} />
                 ) : (
                     <IconStarFilled size={14} color={currentTheme === THEME_MODE.LIGHT ? colors.gray[1] : colors.darkBlue5} />
                 )}

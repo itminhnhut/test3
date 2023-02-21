@@ -63,7 +63,7 @@ const OtpModal = ({
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!h-[40px] !w-[40px] xs:!h-[52px] xs:!w-[52px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
+                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
             />
             <div className='flex w-full justify-between items-center'>
                 <div className={classNames({ 'mt-4': !!renderLower })}>

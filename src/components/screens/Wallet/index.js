@@ -28,6 +28,7 @@ import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
+const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
     screen: null,
@@ -186,11 +187,21 @@ const Wallet = () => {
     };
 
     const { width } = useWindowSize();
-    const limitExchangeAsset = useMemo(() => {
-        let limit = 5;
-        if (width >= 1280) limit = 7;
-        return limit;
+    // const limitExchangeAsset = useMemo(() => {
+    //     let limit = 5;
+    //     if (width >= 1280) limit = 7;
+    //     return limit;
+    // }, [width]);
+
+    // const isSmallScreen = width < WIDTH_MD;
+    // const isSmallScreen = useMemo(() => {
+    //     return;
+    // }, [width]);
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+    useEffect(() => {
+        setIsSmallScreen(width < WIDTH_MD);
     }, [width]);
+
     // Render Handler
     const renderScreenTab = useCallback(() => {
         return (
@@ -201,7 +212,7 @@ const Wallet = () => {
                             <TabItem
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left !px-0 !text-base`}
+                                className={`text-left px-4 !md:px-0 !text-base`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
@@ -432,7 +443,7 @@ const Wallet = () => {
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             {auth ? (
                 <CustomContainer>
-                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden sm:block">
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden md:block">
                         {t('common:my_wallet')}
                     </div>
                     {renderScreenTab()}
@@ -452,6 +463,7 @@ const Wallet = () => {
                                 stakingRefPrice={state.stakingRefPrice}
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
+                                isSmallScreen={isSmallScreen}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.EXCHANGE && (
@@ -461,6 +473,7 @@ const Wallet = () => {
                                 estUsd={state.exchangeRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.exchangeMarketWatch}
+                                isSmallScreen={isSmallScreen}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.FUTURES && (
@@ -469,6 +482,7 @@ const Wallet = () => {
                                 estUsd={state.futuresRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
+                                isSmallScreen={isSmallScreen}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.PARTNERS && (
@@ -477,6 +491,7 @@ const Wallet = () => {
                                 estUsd={state.partnersRefPrice}
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
+                                isSmallScreen={isSmallScreen}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}

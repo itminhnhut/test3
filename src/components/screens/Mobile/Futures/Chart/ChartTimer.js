@@ -250,7 +250,7 @@ const FavouriteButton = ({ pairConfig }) => {
     };
 
     return <div className="px-2 py-2 cursor-pointer" onClick={handleSetFavorite}>
-        {isFavorite ? <IconStarFilled size={16} color={colors.yellow}/> :
+        {isFavorite ? <IconStarFilled size={16} color={colors.yellow[2]}/> :
             <IconStar color="#718096" strokeWidth={0.5} size={18}/>}
     </div>;
 };

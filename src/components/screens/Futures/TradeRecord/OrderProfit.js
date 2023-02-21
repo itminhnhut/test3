@@ -50,7 +50,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
     // const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice,);
     const ratio = profit / order.margin;
     const percent = formatNumber(((onusMode ? Math.abs(ratio) : ratio) * 100), 2, 0, true);
-    return <div className='flex items-center w-full'>
+    return <div className='flex items-center w-full h-full'>
         <div className={`${getPriceColor(profit, onusMode)} ${className} ${onusMode ? 'gap-[2px]' : ''}`}>
             {profit !== 0 ? <>
                 <div className={isMobile ? 'text-sm font-semibold leading-[1.375rem]' : 'font-semibold'}>
@@ -64,7 +64,7 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
                             {percent + '%'}
                         </>
                         :
-                        <><ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={percent < 0 ? '' : 'rotate-0'} />{percent + '%'}</>
+                        <><ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={percent < 0 ? '' : 'rotate-0'} />{percent.replace('-', '') + '%'}</>
                     }
                 </div>
             </>

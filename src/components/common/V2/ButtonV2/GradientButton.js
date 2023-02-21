@@ -12,7 +12,7 @@ const GradientButton = ({ className = '', disabled = false, children, onClick, l
         <button
             ref={buttonRef}
             className={classNames(
-                `relative flex items-center justify-center rounded-full group px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-2 px-6  dark:bg-gradient-button-dark bg-gradient-button hover:!bg-gradient-button-hover dark:hover:!bg-gradient-button-hover-dark  hover:text-white dark:hover:text-dark-dark  transition-all `,
+                `relative flex items-center justify-center rounded-full group px-auto py-auto font-semibold h-11 sm:h-12 text-sm sm:text-base w-full py-2 px-6  dark:bg-gradient-button-dark bg-gradient-button hover:bg-gradient-button-hover dark:hover:bg-gradient-button-hover-dark  hover:text-white dark:hover:text-dark-dark  transition-all `,
                 {
                     'bg-gray-2 dark:!bg-dark-2 !text-txtDisabled': !loading && disabled
                 },

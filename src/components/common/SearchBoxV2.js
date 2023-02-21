@@ -1,29 +1,27 @@
-import { useState } from 'react';
-import { Search, X } from 'react-feather';
+import { Search } from 'react-feather';
 import { useTranslation } from 'next-i18next';
 import { CloseIcon } from 'components/svg/SvgIcon';
 
-const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChange, onFocus, width }) => {
+const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChange, onFocus, width, placeholder }) => {
     const { t } = useTranslation();
 
     return (
         <div
             className={
-                'p-3 mt-3 lg:mt-0 w-full flex items-center rounded-md bg-gray-10 dark:bg-dark-2 border border-transparent focus-within:border-teal ' +
-                wrapperClassname
+                'p-3 w-full flex items-center rounded-md bg-gray-10 dark:bg-dark-2 border border-transparent focus-within:border-teal ' + wrapperClassname
             }
         >
             <Search size={width && width >= 768 ? 20 : 16} className="text-txtSecondary dark:text-txtSecondary-dark" />
             <input
                 className={
-                    'text-base font-normal w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark ' +
+                    'text-sm md:text-base font-normal w-full px-2 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark ' +
                     inputClassname
                 }
                 value={value}
                 onChange={(e) => {
                     onChange(e?.target?.value?.trim());
                 }}
-                placeholder={t('common:search')}
+                placeholder={placeholder || t('common:search')}
                 onFocus={onFocus}
             />
             <CloseIcon

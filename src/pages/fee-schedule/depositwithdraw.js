@@ -23,6 +23,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useSelector } from 'react-redux';
 import WithdrawDepositList from 'components/screens/FeeSchedule/WithdrawDepositList';
+import NoResult from 'components/screens/Support/NoResult';
 
 const INITIAL_STATE = {
     search: '',
@@ -183,7 +184,7 @@ const DepositWithdrawFee = () => {
         }
 
         if (!data?.length) {
-            tableStatus = <Empty />;
+            tableStatus = <NoResult text={t('common:no_results_found')} /> //<Empty />;
         }
 
         return (

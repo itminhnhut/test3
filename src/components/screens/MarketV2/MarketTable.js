@@ -36,6 +36,7 @@ import { API_GET_FAVORITE } from 'redux/actions/apis';
 import toast from 'utils/toast';
 import Spinner from 'components/svg/Spinner';
 import TableV2 from 'components/common/V2/TableV2';
+import FuturesLeverage from 'components/common/FuturesLeverage';
 
 const MARKET_ROW_LIMIT = 20;
 
@@ -46,7 +47,6 @@ const MarketTable = ({
     ...restProps
 }) => {
     // Init State
-
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
     // Use Hooks
@@ -182,26 +182,24 @@ const MarketTable = ({
             vi: "Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.",
             en: 'You have not added any favorite pair. Start by adding these popular pairs below.'
         }
-        return <div className="px-8 pb-4">
+        return <div className="px-0 sm:px-8 pb-4">
             <div className="text-base text-darkBlue-5 font-normal mb-6">
                 {suggestionContent[language]}
             </div>
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-6">
+            <div className="w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-3 gap-y-6">
                 {restProps?.suggestedSymbols?.map(symbol => {
                     const symbolLeverageConfig = tradingMode === TRADING_MODE.FUTURES ? restProps?.futuresConfigs?.find(e => e?.pair == symbol?.s)?.leverageConfig : null;
                     const leverage = symbolLeverageConfig ? (symbolLeverageConfig?.max ?? 0) : null;
                     return (
                         <div className="w-full p-3  bg-[#F2F4F5] dark:bg-bgContainer-dark  rounded-md" key={symbol.s}>
+                            {leverage ? <div><FuturesLeverage value={leverage} className='sm:hidden block w-fit mb-3' /></div> : null}
                             <div className="flex justify-between w-full">
                                 <div className="">
                                     <div className="flex space-x-3 items-center">
                                         <div className="font-medium text-base">
                                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{symbol?.b}</span><span className="text-txtSecondary dark:text-txtSecondary-dark">/{symbol?.q}</span>
                                         </div>
-                                        {leverage ? <div
-                                            className="px-1 py-[2px] bg-dark-2 rounded-[3px] font-semibold text-xs leading-4">
-                                            {leverage}x
-                                        </div> : null}
+                                        {leverage ? <FuturesLeverage value={leverage} className='sm:block hidden' /> : null}
                                     </div>
                                     <div className={classNames('font-normal text-sm justify-start', {
                                         'text-red': !symbol.u,
@@ -225,21 +223,21 @@ const MarketTable = ({
                                     />
                                 </div>
                             </div>
-                            <div className="mt-4 flex font-normal text-xs gap-2">
+                            <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row font-normal text-xs sm:gap-2">
                                 <div className="w-full">
                                     <div className="w-fit font-medium text-base">
-                                        {render24hChange(symbol, true)}
+                                        {render24hChange(symbol, false, '!font-semibold !text-base')}
                                     </div>
-                                    <div className="mt-2 leading-4">
+                                    <div className="mt-2 leading-4 hidden sm:block">
                                         {t('futures:24h_high')}: {formatPrice(symbol.h)}
                                     </div>
-                                    <div className="leading-4">
+                                    <div className="leading-4 hidden sm:block">
                                         {t('futures:24h_low')}: {formatPrice(symbol.l)}
                                     </div>
                                 </div>
-                                <div className="h-full lg:w-1/2 w-full flex justify-end">
+                                <div className="h-full sm:w-1/2 w-full flex justify-center sm:justify-end">
                                     <img src={sparkLineBuilder(symbol?.s, symbol.u ? colors.teal : colors.red2)}
-                                        alt="Nami Exchange" />
+                                        alt="Nami Exchange" className='w-full' />
                                 </div>
                             </div>
                         </div>
@@ -292,6 +290,10 @@ const MarketTable = ({
             } else {
                 tradingMode = TRADING_MODE.EXCHANGE;
             }
+
+            if (!data?.length) {
+                return renderSuggested
+            }
         }
 
         // only show market cap col for exchange tab
@@ -300,7 +302,66 @@ const MarketTable = ({
             tradingMode = TRADING_MODE.FUTURES;
         }
 
-        // PRE PROCESS DATA FOR TABLE
+        if (isMobile) {
+            if (!auth && tab[restProps.tabIndex]?.key === 'favorite') {
+                return <div className='mt-8'>
+                    <NoData />
+                </div>
+            }
+            if (!data?.length) {
+                return (
+                    <div className='mt-8'>
+                        <NoData isSearch={!!restProps.search} />
+                    </div>
+                )
+            }
+            const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
+
+            return <div className='w-full overflow-auto'>
+                <div className='min-w-full w-max flex flex-col justify-center items-stretch'>
+                    {dataSource.slice(0, mobileLimit).map((e, index) => {
+                        const basedata = data?.[index]
+                        return (
+                            <div className={classNames('w-full flex flex-1 justify-between items-center font-normal text-xs gap-2', { '': index !== 0, '': index === 0 })}>
+                                <div className='w-full flex flex-col justify-center items-start'>
+                                    {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
+                                    <div className='flex h-[64px] items-center gap-4'>
+                                        {e.star}
+                                        <div className='flex flex-col justify-center'>
+                                            {e.pair}
+                                            <span>{t('common:vol')} {e.volume_24h}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='w-full flex flex-col justify-center items-end'>
+                                    {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
+                                    <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
+                                        <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
+                                            {e.last_price}
+                                        </div>
+                                        <div>
+                                            ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata?.q}/USD`] * basedata?.p, 4)}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='min-w-[94px] flex flex-col justify-center items-end'>
+                                    {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
+                                    <div className='flex h-[64px] items-center w-full justify-end'>
+                                        <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
+                                            'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
+                                            'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
+                                            'border-none !justify-end': !getExchange24hPercentageChange(basedata),
+                                        })}>
+                                            {e.change_24h}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </div>
+        }
 
         const columns = [
             {
@@ -403,61 +464,11 @@ const MarketTable = ({
             },
         ];
 
-        if (isMobile) {
-            const dataSource = dataHandler(data, language, width, tradingMode, restProps.favoriteList, restProps.favoriteRefresher, loading, auth, restProps?.futuresConfigs)
-            return dataSource.slice(0, mobileLimit).map((e, index) => {
-                const basedata = data?.[index]
-                return (
-                    <div className={classNames('w-full flex justify-between font-normal text-xs', { '': index !== 0, '': index === 0 })}>
-                        <div className='w-full flex flex-col justify-center items-start'>
-                            {index === 0 ? <div className='mb-4'>{translater('pair')} / {translater('volume_24h')} </div> : null}
-                            <div className='flex h-[64px] items-center gap-4'>
-                                {e.star}
-                                <div className='flex flex-col justify-center'>
-                                    {e.pair}
-                                    <span>{t('common:vol')} {e.volume_24h}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='w-full flex flex-col justify-center items-end'>
-                            {index === 0 ? <div className='mb-4'>{translater('last_price')}</div> : null}
-                            <div className='flex flex-col justify-center items-end h-[64px] gap-1'>
-                                <div className='font-semibold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
-                                    {e.last_price}
-                                </div>
-                                <div>
-                                    ${formatPrice(basedata?.q === 'VNDC' ? basedata?.p / 23415 : restProps.referencePrice[`${basedata.q}/USD`] * basedata?.p, 4)}
-                                </div>
-                            </div>
-                        </div>
-                        <div className='min-w-[94px] flex flex-col justify-center items-end'>
-                            {index === 0 ? <div className='mb-4'>{translater('change_24h')}</div> : null}
-                            <div className='flex h-[64px] items-center w-full justify-end'>
-                                <div className={classNames('h-9 border flex items-center justify-center rounded-[3px] w-full max-w-[74px]', {
-                                    'dark:border-teal border-bgBtnV2': getExchange24hPercentageChange(basedata) >= 0,
-                                    'dark:border-red border-red-lightRed': getExchange24hPercentageChange(basedata) < 0,
-                                    'border-none !justify-end': !getExchange24hPercentageChange(basedata),
-                                })}>
-                                    {e.change_24h}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )
-            });
-        }
         return (
             <TableV2
                 rowKey={(item) => `${item?.key}`}
                 defaultSort={{ key: 's', direction: 'desc' }}
-                data={loading ? [] : data?.map(e => {
-                    return {
-                        ...e,
-                        [RETABLE_SORTBY]: {
-                            change_24h: getExchange24hPercentageChange(e),
-                        }
-                    }
-                })}
+                data={loading ? [] : data}
                 sort
                 isSearch={restProps?.search?.length}
                 loading={loading}
@@ -468,7 +479,7 @@ const MarketTable = ({
                 scroll={{ x: true }}
                 height={'300px'}
                 tableStyle={{
-                    padding: '14px 16px',
+                    padding: '20px 16px',
                     headerStyle: {
                         padding: '0px'
                     },
@@ -487,7 +498,6 @@ const MarketTable = ({
         restProps.tabIndex,
         restProps.subTabIndex,
         restProps.currentPage,
-        restProps.auth,
         isMobile,
         mobileLimit
     ])
@@ -633,9 +643,7 @@ const MarketTable = ({
                         null}
 
                 </div> : null}
-                <div className="">
-                    {renderTable()}
-                </div>
+                {renderTable()}
                 <div className="sm:px-8">
                     {renderPagination()}
                 </div>
@@ -733,8 +741,8 @@ const dataHandler = (arr, lang, screenWidth, mode, favoriteList = {}, favoriteRe
                     mode={mode} favoriteRefresher={favoriteRefresher}
                 /> : null,
                 pair: renderPair(baseAsset, quoteAsset, label, screenWidth, mode, lang, futuresConfigs),
-                last_price: <span className="whitespace-nowrap">{formatPrice(lastPrice)}</span>,
-                change_24h: render24hChange(item, false, 'justify-end !text-base !font-normal'),
+                last_price: <span className="whitespace-nowrap sm:text-base text-sm">{formatPrice(lastPrice)}</span>,
+                change_24h: render24hChange(item, false, 'justify-end !text-sm sm:!text-base sm:!font-normal'),
                 market_cap: renderMarketCap(lastPrice, supply),
                 mini_chart: (
                     <div className="w-full flex justify-center items-center">
@@ -796,7 +804,7 @@ const renderPair = (b, q, lbl, w, mode, lang = 'vi', futuresConfigs) => {
 
     return (
         <a href={url} target="_blank" className="hover:underline">
-            <div className="flex items-center font-semibold text-base">
+            <div className="flex items-center font-semibold text-sm sm:text-base">
                 {w >= 768 && <AssetLogo assetCode={b} size={w >= 1024 ? 32 : 28} />}
                 <div className={w >= 768 ? 'ml-3 whitespace-nowrap' : 'whitespace-nowrap' + ' truncate'}>
                     <span className="text-txtPrimary dark:text-txtPrimary-dark">{b}</span>
@@ -895,7 +903,7 @@ const renderTradeLink = (b, q, lang, mode) => {
     } else {
         url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
-        swapurl = `/swap?from=${b}&to=${q}`;
+        swapurl = `/swap?fromAsset=${b}&toAsset=${q}`;
     }
 
     return (
