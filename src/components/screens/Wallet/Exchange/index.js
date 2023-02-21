@@ -30,6 +30,7 @@ import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceTo
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 // import 'react-contexifpopovery/dist/ReactContexify.css';
 
@@ -215,6 +216,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
     // Render Handler
     const renderAssetTable = useCallback(() => {
+        if (isSmallScreen) return null;
         const columns = [
             {
                 key: 'assetCode',
@@ -406,7 +408,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     };
 
     const [curAssetCodeAction, setCurAssetCodeAction] = useState('');
-    const { TRADE, BUY, DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
 
     const renderModalActionMobile = useCallback(() => {
         if (!curAssetCodeAction) return null;
@@ -574,9 +575,9 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                 </div>
             </div>
             <div className="hidden md:block">{renderAssetTable()}</div>
-            <div className="md:hidden flex flex-col gap-4 mt-4 text-sm dark:text-gray-4 text-gray-15">
-                {state &&
-                    state?.tableData?.map((item) => {
+            <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
+                {state?.tableData && state?.tableData?.length > 0 ? (
+                    state.tableData.map((item) => {
                         const { assetCode, assetDigit, assetName, available, id, wallet } = item;
                         const assetUsdRate = usdRate?.[id] || 0;
                         const totalUsd = wallet.value * assetUsdRate;
@@ -628,7 +629,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 </div>
                             </div>
                         );
-                    })}
+                    })
+                ) : (
+                    <NoData className="mt-12" isSearch={!!state.search} />
+                )}
             </div>
 
             {/* {renderPagination()} */}
@@ -648,14 +652,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 };
 
 const ASSET_ROW_LIMIT = 10;
-
-const ActionCategory = {
-    TRADE: 'TRADE',
-    BUY: 'BUY',
-    WITHDRAW: 'WITHDRAW',
-    DEPOSIT: 'DEPOSIT',
-    TRANSFER: 'TRANSFER'
-};
 
 const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, handleKycRequest }) => {
     const markets = utils?.marketAvailable;

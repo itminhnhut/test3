@@ -7,7 +7,6 @@ import { getS3Url } from 'redux/actions/utils';
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
     const { t } = useTranslation(['common', 'wallet']);
     const [currentLocale] = useLanguage();
-    console.log('isMobile: ', isMobile);
     return (
         <ModalV2
             isMobile={true}
