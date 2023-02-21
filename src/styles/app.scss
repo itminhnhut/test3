@@ -1021,30 +1021,15 @@ input:-webkit-autofill {
   }
 
   .looper {
-    width: 100vw;
-    max-width:100%;
-    overflow: hidden;
-  }
-
-  .looper__innerList {
-    display: flex;
-    justify-content: center;
-    will-change: transform;
-    width:fit-content;
-
-    @media screen and (min-width:768px) {
-        &:hover {
-            .looper__listInstance {
-                animation-play-state: paused;
-               }
-            }
-    }   
-    
+    @apply w-screen overflow-hidden max-w-full;
   }
 
   .looper__listInstance {
-    display: flex;
-    width: max-content;
+    @apply flex items-center;
+    will-change: transform;
     animation: 30s slideAnimation linear infinite;
+    &:hover {
+        animation-play-state: paused;
+    }
   }
 
