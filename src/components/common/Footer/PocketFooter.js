@@ -50,7 +50,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 )}
                             </div>
 
-                            {width < 1200 && <hr className="border-divider-dark border mt-6" />}
+                            {width < 1200 && <hr className="border-divider dark:border-divider-dark mt-6" />}
                         </div>
                     )}
                 </div>

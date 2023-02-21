@@ -1,11 +1,10 @@
 import HomeCurrentActivity from 'src/components/screens/Home/HomeCurrentActivity';
 import dynamic from 'next/dynamic';
 
-import { useWindowSize } from 'utils/customHooks';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useRefWindowSize } from 'hooks/useWindowSize';
 
 const HomeCommunity = dynamic(() => import('./HomeCommunity'), {
     ssr: false
@@ -20,7 +19,7 @@ const HomeFirstAward = dynamic(() => import('./HomeFirstAward'), {
     ssr: false
 });
 
-const HomeAdditional = ({ parentState }) => {
+const HomeAdditional = ({ parentState,currentTheme }) => {
     // * Initial State
     const [stepCount, setStepCount] = useState(0);
     const [state, set] = useState({
@@ -29,13 +28,12 @@ const HomeAdditional = ({ parentState }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // * Use Hooks
-    const { width } = useWindowSize();
+    const { width } = useRefWindowSize();
     const {
         t,
         i18n: { language }
     } = useTranslation(['home', 'input', 'common', 'navbar']);
 
-    const theme = useSelector((state) => state.user.theme);
 
     useEffect(() => {
         let interval = setInterval(() => {
@@ -61,14 +59,14 @@ const HomeAdditional = ({ parentState }) => {
                     </div>
                     <Image src="/images/screen/homepage/ghost_down.png" width="389px" height="482px" className="" />
                 </div>
-                <HomeJourney t={t} width={width} currentTheme={theme} />
+                <HomeJourney t={t} width={width} currentTheme={currentTheme} />
                 <section className="homepage-trade3step">
                     <div className="homepage-trade3step___wrapper relative mal-container">
                         <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    <Image src={`/images/screen/homepage/create_account_${theme}.png`} width="48px" height="48px" />
+                                    <Image src={`/images/screen/homepage/create_account_${currentTheme}.png`} width="48px" height="48px" />
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
                                 </div>
                                 <div className="homepage-trade3step__vertial_dot_line" />
@@ -85,7 +83,7 @@ const HomeAdditional = ({ parentState }) => {
                             </div>
                             <div className="homepage-trade3step___step___item">
                                 <div className="homepage-trade3step___step___item___inner">
-                                    <Image src={`/images/screen/homepage/start_trading_${theme}.png`} width="48px" height="48px" />
+                                    <Image src={`/images/screen/homepage/start_trading_${currentTheme}.png`} width="48px" height="48px" />
 
                                     <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
                                 </div>
@@ -189,7 +187,7 @@ const HomeAdditional = ({ parentState }) => {
                 </div>
             </section> */}
 
-            <HomeFirstAward theme={theme} t={t} language={language} />
+            <HomeFirstAward theme={currentTheme} t={t} language={language} />
             <HomeCommunity t={t} language={language} width={width} />
         </>
     );

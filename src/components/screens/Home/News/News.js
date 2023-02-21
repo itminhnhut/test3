@@ -1,8 +1,7 @@
 import { useKeenSlider } from 'keen-slider/react';
-import { useWindowSize } from 'utils/customHooks';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
-import { ChevronLeft, ChevronRight } from 'react-feather';
+import { useRefWindowSize } from 'hooks/useWindowSize';
 
 const News = ({ data, lang }) => {
     const [state, set] = useState({
@@ -11,7 +10,7 @@ const News = ({ data, lang }) => {
         currentSlide: 0
     })
     const setState = (state) => set(prevState => ({ ...prevState, ...state }))
-    const { width } = useWindowSize()
+    const { width } = useRefWindowSize()
 
     // slider
     const [refNews, slider] = useKeenSlider({

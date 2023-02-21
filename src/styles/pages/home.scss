@@ -1267,7 +1267,7 @@
         @apply flex flex-col items-center justify-center;
 
         .homepage-trade3step___step___item___inner {
-          @apply flex flex-col items-center justify-center;
+          @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
 
           .homepage-trade3step___step___item__label {
             font-weight: 600;

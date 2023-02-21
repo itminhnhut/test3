@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AppleIcon, GooglePlayIcon } from '../../svg/SvgIcon';
 import { useTranslation } from 'next-i18next';
@@ -10,12 +10,14 @@ import colors from '../../../styles/colors';
 import { useToggle } from 'react-use';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image';
+import classNames from 'classnames';
 
 // Import Swiper styles
 import 'swiper/css';
 
 const SwitchTheme = ({ currentTheme, changeTheme }) => {
     const [active, toggleActive] = useToggle(currentTheme === THEME_MODE.DARK ? true : false);
+    const [disableToggle, setDisabledToggle] = useState(false);
 
     // toggle state on theme change
     useEffect(() => toggleActive(), [currentTheme]);
@@ -23,12 +25,26 @@ const SwitchTheme = ({ currentTheme, changeTheme }) => {
     const onChange = () => {
         changeTheme();
     };
+
     return (
-        <div className={'relative  w-[90px] h-[44px] rounded-full cursor-pointer bg-gray-11 dark:bg-dark-2 '} onClick={() => onChange && onChange()}>
+        <div
+            className="relative  w-[90px] h-[44px] rounded-full cursor-pointer bg-gray-11 dark:bg-dark-2 "
+            onClick={() => {
+                if (onChange && !disableToggle) {
+                    onChange();
+
+                    // avoid instant click
+                    setDisabledToggle(true);
+                    setTimeout(() => setDisabledToggle(false), 200);
+                }
+            }}
+        >
             <div
-                className={`absolute w-[36px] h-[36px] top-1/2 -translate-y-1/2 rounded-full  bg-teal flex items-center justify-center duration-100 ease-in ${
-                    active ? ` left-1` : `left-[calc(100%-4px)] -translate-x-full`
-                }`}
+                className={classNames(
+                    'absolute w-[36px] h-[36px] top-1/2 -translate-y-1/2 rounded-full duration-100 bg-teal flex items-center justify-center transition-all ease-in',
+                    { 'left-1': active },
+                    { 'left-[calc(100%-4px)] -translate-x-full': !active }
+                )}
             >
                 {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.darkBlue3} /> : <SvgSun size={20} color={colors.gray[11]} />}
             </div>
@@ -41,7 +57,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
     return (
         <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
-            <div className="mal-container px-4 md:px-0 ax-w-[1216px] relative">
+            <div id="download_section" className="mal-container px-4 md:px-0 max-w-[1216px] relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
                         <div className="text-sm tooltip-arrow-bottom mb-[30px] justify-center items-center py-3 px-6 inline-flex animate-bounce	 rounded-full">
@@ -71,7 +87,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                                 allowTouchMove: true
                             },
 
-                            1440: {
+                            1028: {
                                 slidesPerView: 5,
                                 centeredSlides: false,
                                 spaceBetween: 40,
@@ -95,7 +111,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     </Swiper>
                 </div>
 
-                <div id="download_section" className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
+                <div className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
                     <div className="flex flex-wrap items-center gap-4 w-full md:flex-1 p-3">
                         <GradientButton className="text-left py-2 px-6 w-auto">
                             <Link href="https://apps.apple.com/app/id1480302334">

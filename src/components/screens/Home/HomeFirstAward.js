@@ -147,17 +147,17 @@ const HomeFirstAward = ({ t, language, theme }) => {
                                     placeholder={language === LANGUAGE_TAG.VI ? 'Nhập mật khẩu của bạn (8 - 50 ký tự)' : 'Your password (8 - 50 letters)'}
                                 />
                                 <div className="flex">
-                                    <div className="cursor-pointer" onClick={() => setState({ isPwShow: !state.isPwShow })}>
-                                        {state.isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
-                                    </div>
                                     {Boolean(state.password) && (
                                         <div
                                             onClick={() => onDeleteInput('password')}
-                                            className="pl-2 ml-2 border-l cursor-pointer border-divider dark:border-vider-dark"
+                                            className="pr-2 mr-2 border-r cursor-pointer border-divider dark:border-vider-dark"
                                         >
                                             <X size={16} />
                                         </div>
                                     )}
+                                    <div className="cursor-pointer" onClick={() => setState({ isPwShow: !state.isPwShow })}>
+                                        {state.isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
+                                    </div>
                                 </div>
                             </div>
                         </div>
