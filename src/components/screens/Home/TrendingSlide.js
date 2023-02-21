@@ -9,7 +9,7 @@ const TrendingSlide = ({ trending }) => {
     useEffect(() => {
         if (trending) {
             const trendingShuffle = shuffle(trending?.reduce((newArr, trend) => [...newArr, ...trend.pairs], []));
-            setListTrending([...trendingShuffle, ...trendingShuffle, ...trendingShuffle]);
+            setListTrending([...trendingShuffle, ...trendingShuffle,...trendingShuffle]);
         }
     }, [trending]);
 
