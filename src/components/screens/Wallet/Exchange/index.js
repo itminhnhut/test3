@@ -177,24 +177,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
     useEffect(() => {
         if (allAssets && Array.isArray(allAssets) && allAssets?.length) {
-            // const origin = dataHandler(allAssets, {
-            //     usdRate,
-            //     marketWatch,
-            //     translator: t,
-            //     dispatch,
-            //     setState,
-            //     show
-            // });
-
-            // let tableData = origin;
             let tableData = allAssets;
-
-            // if (state.hideSmallAsset) {
-            //     tableData = allAssets.filter((item) => item?.sortByValue?.total > 1);
-            // }
-            // if (state.search) {
-            //     tableData = tableData.filter((item) => item?.sortByValue?.asset.includes(state.search?.toUpperCase()));
-            // }
 
             const minSmallBalance = 0;
             if (state.hideSmallAsset) {
@@ -538,6 +521,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 onFocus={() => setState({ currentPage: 1 })}
                                 wrapperClassname="w-[180px]"
                                 width={width}
+                                placeholder={t('common:search_asset')}
                             />
                             <HideSmallBalance
                                 onClick={() =>
@@ -569,6 +553,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 }}
                                 onFocus={() => setState({ currentPage: 1 })}
                                 width={width}
+                                placeholder={t('common:search_asset')}
                             />
                         </div>
                     )}
