@@ -285,11 +285,12 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
                                     </div>
                                     <div className="text-right">
                                         <span className={`${profit < 0 ? 'text-red' : 'text-teal'} font-semibold`}>
-                                            {profit < 0 ? '' : '+'}{formatNumber(profit, decimals.symbol, 0, true)}
+                                            {profit < 0 ? '' : '+'}
+                                            {formatNumber(profit, decimals.symbol, 0, true)}
                                         </span>
                                         <span className={`${percent < 0 ? 'text-red' : 'text-teal'} text-xs leading-4 flex items-center justify-end`}>
                                             <ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={`${percent >= 0 ? 'rotate-0' : ''}`} />
-                                            {formatNumber(percent, 2, 0, true)}%
+                                            {formatNumber(Math.abs(percent), 2, 0, true)}%
                                         </span>
                                     </div>
                                 </div>

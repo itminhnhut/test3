@@ -128,7 +128,7 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                     <Row>
                         <Item>{t('futures:stop_loss')}</Item>
                         <Item className="text-red" F>
-                            {formatNumber(order?.sl, decimals.price)}
+                            {order?.sl ? formatNumber(order?.sl, decimals.price) : '-'}
                         </Item>
                     </Row>
                     <FeeMeta mode="open_fee" order={order} allAssets={allAssets} t={t} />
@@ -166,7 +166,7 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                     </Row>
                     <Row>
                         <Item>{t('futures:take_profit')}</Item>
-                        <Item className="text-teal">{formatNumber(order?.tp, decimals.price)}</Item>
+                        <Item className="text-teal">{order?.tp ? formatNumber(order?.tp, decimals.price) : '-'}</Item>
                     </Row>
                     <FeeMeta mode="close_fee" order={order} allAssets={allAssets} t={t} />
                     <Row>

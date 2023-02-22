@@ -6,7 +6,7 @@ const HideSmallBalance = ({ onClick, isHide, className, width }) => {
 
     return (
         <div
-            className={`flex items-center select-none cursor-pointer text-xs leading-[16px] md:text-base font-normal text-txtSecondary dark:text-txtSecondary-dark ${className}`}
+            className={`ml-3 flex items-center select-none cursor-pointer text-xs leading-[16px] md:text-base font-normal text-txtSecondary dark:text-txtSecondary-dark ${className}`}
             onClick={onClick}
         >
             <span className={`w-4 h-4 md:w-6 md:h-6 p-0.5  rounded-[3px] ${isHide ? 'bg-bgBtnV2-dark' : 'border dark:border-divider-dark'}`}>

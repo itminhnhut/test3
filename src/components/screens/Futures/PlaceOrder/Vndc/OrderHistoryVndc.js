@@ -256,17 +256,22 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
             case 0:
-                return t('futures:order_history:normal')
+                return t('futures:order_history:normal');
             case 1:
-                return t('futures:order_history:hit_sl')
+                return t('futures:order_history:hit_sl');
             case 2:
-                return t('futures:order_history:hit_tp')
+                return t('futures:order_history:hit_tp');
             case 3:
-                return t('futures:order_history:liquidate')
+                return t('futures:order_history:liquidate');
+            case 5:
+                return t('futures:mobile:adjust_margin:added_volume');
+            case 6:
+                return t('futures:mobile:adjust_margin:close_partially');
             default:
                 return '';
         }
-    }
+    };
+
 
     if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
         <Link href={getLoginUrl('sso', 'login')} locale={false}>

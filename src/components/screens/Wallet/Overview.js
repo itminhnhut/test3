@@ -108,7 +108,7 @@ const OverviewWallet = (props) => {
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
-            <span className="whitespace-nowrap">
+            <span>
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
@@ -118,17 +118,17 @@ const OverviewWallet = (props) => {
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
-            <span className="whitespace-nowrap">
+            <span>
                 {state.hideAsset
                     ? SECRET_STRING
-                    : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
+                    : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ' + '~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
             </span>
         );
     }, [futuresEstBtc, futuresRefPrice, state.hideAsset]);
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
-            <span className="whitespace-nowrap">
+            <span>
                 {state.hideAsset
                     ? SECRET_STRING
                     : formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
