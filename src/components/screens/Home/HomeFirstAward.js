@@ -150,7 +150,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                                     {Boolean(state.password) && (
                                         <div
                                             onClick={() => onDeleteInput('password')}
-                                            className="pr-2 mr-2 border-r cursor-pointer border-divider dark:border-vider-dark"
+                                            className="pr-2 mr-2 border-r cursor-pointer border-divider dark:border-divider-dark"
                                         >
                                             <X size={16} />
                                         </div>

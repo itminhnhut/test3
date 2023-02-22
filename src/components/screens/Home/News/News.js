@@ -16,17 +16,20 @@ const News = ({ data, lang }) => {
     // slider
     const [refNews, slider] = useKeenSlider({
         initial: 0,
-        slidesPerView: 1,
+        slidesPerView: 1.2,
+        centered: true,
         spacing: 32,
         loop: true,
         dot: true,
         slideChanged: (slide) => setState({ currentSlide: slide.details().relativeSlide }),
         breakpoints: {
             '(min-width: 768px)': {
-                slidesPerView: 3
+                slidesPerView: 3,
+                centered: false
             },
             '(min-width: 1024px)': {
-                slidesPerView: 4
+                slidesPerView: 4,
+                centered: false
             }
         }
     });
@@ -42,10 +45,16 @@ const News = ({ data, lang }) => {
             const refId = `https://nami.exchange/${lang}/support/${tag}/${primary_tags.slice(2, primary_tags.length).join('-')}/${news.slug}?source=app`;
             const img = news?.feature_image || 'https://static.namifutures.com/nami.exchange/images/nami_announcement.jpeg';
             return (
-                <div key={`news___${news.id}`} className="keen-slider__slide number-slide1 " title={title}>
+                <div key={`news___${news.id}`} className="keen-slider__slide number-slide1 !bg-transparent" title={title}>
                     <a href={refId} target="_blank">
                         <div className={` relative`}>
-                            <Image src={img} alt={title} width={280} height={146} />
+                            <Image
+                                src={img}
+                                alt={title}
+                                // layout="fill"
+                                width={280}
+                                height={146}
+                            />
                         </div>
                     </a>
                 </div>
@@ -91,10 +100,10 @@ const News = ({ data, lang }) => {
         });
     }, [refNews]);
 
-    useEffect(() => {
-        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000);
-        return () => clearInterval(timer.current);
-    }, [state.autoplay, slider]);
+    // useEffect(() => {
+    //     timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000);
+    //     return () => clearInterval(timer.current);
+    // }, [state.autoplay, slider]);
 
     useEffect(() => {
         width && slider && slider.resize();

@@ -82,7 +82,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         breakpoints={{
                             540: {
                                 slidesPerView: 2,
-                               
+
                                 allowTouchMove: true
                             },
                             768: {
@@ -118,8 +118,8 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
                 <div className="flex px-4 justify-between  -m-3 flex-col-reverse md:flex-row md:items-center pt-[90px]">
                     <div className="flex flex-wrap items-center gap-4 w-full md:flex-1 p-3">
-                        <GradientButton className="text-left py-2 px-6 w-auto">
-                            <Link href="https://apps.apple.com/app/id1480302334">
+                        <Link href="https://apps.apple.com/app/id1480302334" passHref>
+                            <GradientButton className="text-left py-2 px-6 w-auto">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
                                     <AppleIcon color="currentColor" />
 
@@ -128,10 +128,10 @@ const HomeLightDark = ({ onShowQr, t }) => {
                                         <div className="text-sm font-semibold ">App Store</div>
                                     </div>
                                 </a>
-                            </Link>
-                        </GradientButton>
-                        <GradientButton className="text-left py-2 px-6 w-auto">
-                            <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange">
+                            </GradientButton>
+                        </Link>
+                        <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange" passHref>
+                            <GradientButton className="text-left py-2 px-6 w-auto">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
                                     <GooglePlayIcon />
 
@@ -140,8 +140,9 @@ const HomeLightDark = ({ onShowQr, t }) => {
                                         <div className="text-sm font-semibold ">Google Play</div>
                                     </div>
                                 </a>
-                            </Link>
-                        </GradientButton>
+                            </GradientButton>
+                        </Link>
+
                         <div onClick={onShowQr} className="cursor-pointer flex-1">
                             <Image src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
 

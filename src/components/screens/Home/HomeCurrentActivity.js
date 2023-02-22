@@ -4,11 +4,9 @@ import 'keen-slider/keen-slider.min.css';
 import { formatTime, formatWallet } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import numeral from 'numeral';
-import { Swiper, SwiperSlide } from 'swiper/react';
 
-// Import Swiper styles
-import 'swiper/css';
-import { Autoplay } from 'swiper';
+// Import InfiniteLooper
+import InfiniteLooper from 'components/common/InfiniteLooper';
 
 const HomeCurrentActivity = () => {
     // Initial State
@@ -26,7 +24,7 @@ const HomeCurrentActivity = () => {
             const phake = item;
 
             return (
-                <SwiperSlide key={`homepage_user_activity_${phake.token}_${i}`} className="homepage-activity__slide__item">
+                <div key={i} className="homepage-activity__slide__item">
                     <div className="homepage-activity__item___wrapper">
                         <div className="homepage-activity__item__inner pr-4">
                             <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
@@ -46,7 +44,7 @@ const HomeCurrentActivity = () => {
                             </div>
                         </div>
                     </div>
-                </SwiperSlide>
+                </div>
             );
         });
     };
@@ -54,30 +52,7 @@ const HomeCurrentActivity = () => {
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
-                <Swiper
-                   
-                    spaceBetween={20}
-                    slidesPerView={1.5}
-                    centeredSlides
-                    loop
-                    breakpoints={{
-                        768: {
-                            slidesPerView: 3
-                        },
-
-                        1440: {
-                            slidesPerView: 4
-                            // spaceBetween: 40
-                        }
-                    }}
-                    navigation
-                    pagination={{ clickable: true }}
-                    scrollbar={{ draggable: true }}
-                    onSwiper={(swiper) => console.log(swiper)}
-                    onSlideChange={() => console.log('slide change')}
-                >
-                    {renderActivityItem()}
-                </Swiper>
+                <InfiniteLooper loopSize={2} loopDuration={70}>{renderActivityItem()}</InfiniteLooper>
             </div>
         </section>
     );

@@ -128,7 +128,7 @@ const HomeIntroduce = ({ trendData }) => {
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <Link href="#download_section">
+                            <Link href="#download_section" passHref>
                                 <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
                                     {t('home:introduce.download_app')}
                                 </GradientButton>
