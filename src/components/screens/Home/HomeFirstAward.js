@@ -25,8 +25,6 @@ const HomeFirstAward = ({ t, language, theme }) => {
     const onDeleteInput = (type) => setState({ [type]: '' });
     return (
         <section className="homepage-first_award relative" style={{ backgroundImage: `url("/images/screen/homepage/bg_first_award_${theme}.png")` }}>
-            {/* <img src="/images/screen/homepage/half-circle.png" alt="half-circle" className="absolute z-[-1] w-full left-1/2 -translate-x-1/2 top-0 max-h-full" /> */}
-            {/* <img src="/images/screen/homepage/form_splash.png" alt="form_splash" className="absolute z-[-1] w-1/2 left-0 bottom-0 h-[505px] max-h-full" /> */}
 
             <div className="homepage-first_award__wrapper mal-container">
                 <div className="homepage-first_award___step relative">
