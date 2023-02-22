@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { AppleIcon, GooglePlayIcon } from '../../svg/SvgIcon';
-import { useTranslation } from 'next-i18next';
 import GradientButton from '../../common/V2/ButtonV2/GradientButton';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { THEME_MODE } from 'hooks/useDarkMode';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
-import colors from '../../../styles/colors';
-import { useToggle } from 'react-use';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image';
 import classNames from 'classnames';
@@ -15,23 +12,23 @@ import classNames from 'classnames';
 // Import Swiper styles
 import 'swiper/css';
 
-const SwitchTheme = ({ currentTheme, changeTheme }) => {
-    const [active, toggleActive] = useToggle(currentTheme === THEME_MODE.DARK ? true : false);
+const SwitchTheme = ({ themeMode, onChangeTheme }) => {
     const [disableToggle, setDisabledToggle] = useState(false);
-
-    // toggle state on theme change
-    useEffect(() => toggleActive(), [currentTheme]);
-
-    const onChange = () => {
-        changeTheme();
-    };
 
     return (
         <div
-            className="relative  w-[90px] h-[44px] rounded-full cursor-pointer bg-gray-11 dark:bg-dark-2 "
+            className={classNames(
+                'relative  w-[90px] h-[44px] rounded-full  cursor-pointer ',
+                {
+                    'bg-dominant ': themeMode === THEME_MODE.DARK
+                },
+                {
+                    'bg-gray-11 dark:bg-darkBlue-3': themeMode === THEME_MODE.LIGHT
+                }
+            )}
             onClick={() => {
-                if (onChange && !disableToggle) {
-                    onChange();
+                if (onChangeTheme && !disableToggle) {
+                    onChangeTheme();
 
                     // avoid instant click
                     setDisabledToggle(true);
@@ -41,19 +38,23 @@ const SwitchTheme = ({ currentTheme, changeTheme }) => {
         >
             <div
                 className={classNames(
-                    'absolute w-[36px] h-[36px] top-1/2 -translate-y-1/2 rounded-full duration-100 bg-teal flex items-center justify-center transition-all ease-in',
-                    { 'left-1': active },
-                    { 'left-[calc(100%-4px)] -translate-x-full': !active }
+                    'absolute w-[36px] h-[36px] top-1/2 -translate-y-1/2 rounded-full duration-100  flex items-center justify-center transition-all ease-in',
+                    { 'left-1  bg-white text-dominant': themeMode === THEME_MODE.DARK },
+                    { 'left-[calc(100%-4px)] -translate-x-full bg-dominant text-gray-11 dark:text-dark-2': themeMode === THEME_MODE.LIGHT }
                 )}
             >
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color={colors.darkBlue3} /> : <SvgSun size={20} color={colors.gray[11]} />}
+                {themeMode !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
             </div>
         </div>
     );
 };
 
 const HomeLightDark = ({ onShowQr, t }) => {
-    const [currentTheme, onThemeSwitch] = useDarkMode();
+    const [themeMode, setThemeMode] = useState(THEME_MODE.DARK);
+
+    const onChange = () => {
+        setThemeMode((prev) => (prev === THEME_MODE.DARK ? THEME_MODE.LIGHT : THEME_MODE.DARK));
+    };
 
     return (
         <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
@@ -64,7 +65,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             Thử ngay{' '}
                         </div>
                         <div className="flex justify-center ">
-                            <SwitchTheme currentTheme={currentTheme} changeTheme={onThemeSwitch} />
+                            <SwitchTheme onChangeTheme={onChange} themeMode={themeMode} />
                         </div>
                     </div>
                 </div>
@@ -109,7 +110,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
                                 <div className="relative overflow-hidden w-full h-[630px] md:h-[550px] lg:h-[415px] ">
-                                    <Image src={`/images/screen/homepage/iphone_${index + 1}_${currentTheme}.png`} layout="fill" className="p-1" alt="iphone" />
+                                    <Image src={`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`} layout="fill" className="p-1" alt="iphone" />
                                 </div>
                             </SwiperSlide>
                         ))}
@@ -145,12 +146,6 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
                         <div onClick={onShowQr} className="cursor-pointer flex-1">
                             <Image src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
-
-                            {/* {currentTheme !== THEME_MODE.LIGHT ? (
-                                <img src={getS3Url('/images/icon/ic_qr.png')} width="44" alt="Nami Exchange" />
-                            ) : (
-                                <img src={getS3Url('/images/screen/homepage/qr_light.png')} width="44" alt="Nami Exchange" />
-                            )} */}
                         </div>
                     </div>
                     <div className="text-left md:text-right   p-3">

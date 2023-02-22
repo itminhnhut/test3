@@ -1,8 +1,8 @@
 import React from 'react';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { getV1Url } from 'redux/actions/utils';
-import Link from 'next/link'
-import Image from 'next/image'
+import Link from 'next/link';
+import Image from 'next/image';
 
 const JOURNEY_DESCRIPTIONS = [
     {
@@ -38,110 +38,37 @@ const HomeJourney = ({ t, width, currentTheme }) => {
             <div className="homepage-journey__wrapper mal-container">
                 <div className="homepage-journey__title">{t('home:journey.title')}</div>
                 <div className="homepage-journey__description">
-                    {width >= 992 ? (
-                        <>
-                            {t('home:journey.description_desktop1')}
-                            <br />
-                            {t('home:journey.description_desktop2')}
-                        </>
-                    ) : (
-                        <>{t('home:journey.description_mobile')}</>
-                    )}
+                    {t('home:journey.description_desktop1')}
+                    <br />
+                    {t('home:journey.description_desktop2')}
                 </div>
 
                 <div className="homepage-journey__group_content">
                     <div className="homepage-journey__group_content___left -m-2">
                         {JOURNEY_DESCRIPTIONS.map((item) => (
-                            <Link key={item.key} href={item.href} passHref>
-                                <div className="p-2 w-full md:w-1/2 relative group">
-                                    <div className="homepage-journey__group_content___left__item ">
-                                        <div className="homepage-journey__group_content___left__item___icon">
-                                            <Image
-                                                src={`/images/screen/homepage/${item.image}${
-                                                    item.image === 'token_saving_cost_1' ? `_${currentTheme}` : ''
-                                                }.png`}
-                                                width={width >= 1366 ? '52' : '44'}
-                                                height={width >= 1366 ? '52' : '44'}
-                                            />
+                            // <Link key={item.key} href={item.href} passHref>
+                            <div key={item.key} className="p-2 w-full md:w-1/2 relative group">
+                                <div className="homepage-journey__group_content___left__item ">
+                                    <div className="homepage-journey__group_content___left__item___icon">
+                                        <Image
+                                            src={`/images/screen/homepage/${item.image}${item.image === 'token_saving_cost_1' ? `_${currentTheme}` : ''}.png`}
+                                            width={width >= 1366 ? '52' : '44'}
+                                            height={width >= 1366 ? '52' : '44'}
+                                        />
+                                    </div>
+                                    <div className="homepage-journey__group_content___left__item___content">
+                                        <div className="homepage-journey__group_content___left__item___content__title">{t(`home:${item.localized}`)}</div>
+                                        <div className="homepage-journey__group_content___left__item___content__description">
+                                            {t(`home:${item.localized}_description`)}
                                         </div>
-                                        <div className="homepage-journey__group_content___left__item___content">
-                                            <div className="homepage-journey__group_content___left__item___content__title">{t(`home:${item.localized}`)}</div>
-                                            <div className="homepage-journey__group_content___left__item___content__description">
-                                                {t(`home:${item.localized}_description`)}
-                                            </div>
-                                        </div>
-                                        <div className="text-txtPrimary hidden lg:block group-hover:opacity-100 ease-in-out group-hover:right-0 right-4 relative opacity-0 transition-all dark:text-txtPrimary-dark">
+                                    </div>
+                                    {/* <div className="text-txtPrimary hidden lg:block group-hover:opacity-100 ease-in-out group-hover:right-0 right-4 relative opacity-0 transition-all dark:text-txtPrimary-dark">
                                             <ArrowRightIcon size={16} color="currentColor" />
-                                        </div>
-                                    </div>
+                                        </div> */}
                                 </div>
-                            </Link>
+                            </div>
+                            // {/* </Link> */}
                         ))}
-
-                        {/* <div className="p-4 w-full md:w-1/2 group">
-                            <div className="homepage-journey__group_content___left__item relative">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        // src={getS3Url('/images/screen/homepage/crypto_knowledge.png')}
-                                        src={'/images/screen/homepage/crypto_knowledge_1.png'}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_4')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_4_description')}
-                                    </div>
-                                </div>
-                                <div className="text-txtPrimary group-hover:opacity-100 group-hover:right-4 right-8 top-1/2 -translate-y-1/2 absolute opacity-0 transition-all dark:text-txtPrimary-dark">
-                                    <ArrowRightIcon size={16} color="currentColor" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-4 w-full md:w-1/2 group">
-                            <div className="homepage-journey__group_content___left__item relative">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        src={`/images/screen/homepage/token_saving_cost_1_${currentTheme}.png`}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_3')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_3_description')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-txtPrimary group-hover:opacity-100 group-hover:right-4 right-8 top-1/2 -translate-y-1/2 absolute opacity-0 transition-all dark:text-txtPrimary-dark">
-                                <ArrowRightIcon size={16} color="currentColor" />
-                            </div>
-                        </div>
-
-                        <div className="p-4 w-full md:w-1/2 group relative">
-                            <div className="homepage-journey__group_content___left__item">
-                                <div className="homepage-journey__group_content___left__item___icon">
-                                    <img
-                                        // src={getS3Url('/images/screen/homepage/master_revenue.png')}
-                                        src={'/images/screen/homepage/master_revenue_1.png'}
-                                        width={width >= 1366 ? '52' : '44'}
-                                        height={width >= 1366 ? '52' : '44'}
-                                    />
-                                </div>
-                                <div className="homepage-journey__group_content___left__item___content">
-                                    <div className="homepage-journey__group_content___left__item___content__title">{t('home:journey.reason_2')}</div>
-                                    <div className="homepage-journey__group_content___left__item___content__description">
-                                        {t('home:journey.reason_2_description')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="text-txtPrimary group-hover:opacity-100 group-hover:right-4 right-8 top-1/2 -translate-y-1/2 absolute opacity-0 transition-all dark:text-txtPrimary-dark">
-                                <ArrowRightIcon size={16} color="currentColor" />
-                            </div>
-                        </div> */}
                     </div>
                 </div>
             </div>

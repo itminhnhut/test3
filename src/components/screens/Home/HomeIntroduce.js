@@ -45,7 +45,7 @@ const HomeIntroduce = ({ trendData,t }) => {
         return (
             <section className="homepage-introduce">
                 <TrendingSlide trending={state.trending} />
-                <div className="homepage-introduce___wrapper max-w-screen-v3 mx-auto relative">
+                <div className="homepage-introduce___wrapper max-w-[1440px] lg:!mt-20 mx-auto relative">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">

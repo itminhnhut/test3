@@ -150,7 +150,7 @@ const Index = () => {
     }, []);
 
     return (
-        <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.FLUENT}>
+        <MaldivesLayout  navMode={NAVBAR_USE_TYPE.FLUENT} >
             <div className="homepage">
                 <HomeIntroduce trendData={state.trendData} t={t} />
                 <HomeMarketTrend trendData={state.trendData} />

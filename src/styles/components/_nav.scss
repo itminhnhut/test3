@@ -560,18 +560,18 @@
 
     // DROP DOWN
     .mal-navbar__dropdown {
-      @apply absolute hidden border-divider-dark;
+      @apply absolute hidden border-divider dark:border-divider-dark;
 
       top: 100%;
       right:0;
       // left: 50%;
       // transform: translateX(-50%);
       min-width: 130px;
-      padding-top: 29px;
+      padding-top: 28px;
       gap:12px;
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer dark:bg-darkBlue-3 dark:shadow-none
-        border-l border-r border-b dark:border-divider-dark;
+        border-l border-r border-b border-divider dark:border-divider-dark;
 
         border-color: transparent;
         padding: 8px 0;

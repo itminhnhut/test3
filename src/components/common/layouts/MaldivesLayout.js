@@ -8,12 +8,12 @@ import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from 'react-toastify';
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
 import { useRouter } from 'next/router';
 
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
 const MadivesLayout = ({
     navOverComponent,
@@ -31,7 +31,7 @@ const MadivesLayout = ({
     resetDefault,
     onChangeSpotState,
     useNavShadow = false,
-    useGridSettings = false,
+    useGridSettings = false
 }) => {
     // * Initial State
     const [state, set] = useState({ isDrawer: false });
@@ -39,7 +39,7 @@ const MadivesLayout = ({
 
     // Use Hooks
     const { width, height } = useWindowSize();
-    const router = useRouter()
+    const router = useRouter();
     const theme = useSelector((state) => state.user.theme);
     const isApp = useApp();
 
@@ -56,8 +56,8 @@ const MadivesLayout = ({
         store.dispatch(setTheme());
     }, []);
 
-    const dark = theme === THEME_MODE.DARK
-    const light = theme !== THEME_MODE.DARK
+    const dark = theme === THEME_MODE.DARK;
+    const light = theme !== THEME_MODE.DARK;
     return (
         <>
             <div
@@ -77,15 +77,15 @@ const MadivesLayout = ({
                     hideProgressBar
                     closeButton={false}
                     theme={light ? 'light' : 'dark'}
-                    className='nami-toast'
+                    className="nami-toast"
                 />
-                <ReactNotifications className='fixed z-[9000] pointer-events-none w-full h-full' />
+                <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full" />
                 {!hideNavBar && !hideInApp && !isApp && (
                     <NavBar
                         name={navName}
                         useOnly={navMode}
                         // style={ isHomePage ? {...navStyle} : {  ...navbarStyle, ...navStyle }}
-                        style={ {  ...navbarStyle, ...navStyle }}
+                        style={{ ...navbarStyle, ...navStyle }}
                         spotState={spotState}
                         onChangeSpotState={onChangeSpotState}
                         resetDefault={resetDefault}
@@ -100,7 +100,7 @@ const MadivesLayout = ({
                         paddingTop: !navOverComponent && !hideInApp && !isApp ? (width >= 992 ? DESKTOP_NAV_HEIGHT : MOBILE_NAV_HEIGHT) : 0,
                         ...contentWrapperStyle
                     }}
-                    className='relative flex-1'
+                    className="relative flex-1"
                 >
                     {useNavShadow && <NavBarBottomShadow />}
                     {children}

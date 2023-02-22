@@ -52,6 +52,71 @@ const types = [
         }
     }
 ];
+
+const TrendTab = ({ width, type, setType, setState, types, t }) => {
+    return (
+        <div className="w-full flex justify-between">
+            <TokenTypes
+                type={type?.id}
+                setType={(i) => {
+                    setType(i);
+                }}
+                types={types}
+                lang={'vi'}
+                setState={setState}
+            />
+            {width >= 992 && (
+                <span className="flex flex-row items-center text-base font-semibold">
+                    <a href="/market" className="!text-teal mr-3">
+                        {t('home:markettrend.explore_market')}
+                    </a>
+                    <ArrowRightIcon size={16} />
+                </span>
+            )}
+        </div>
+    );
+};
+
+const TokenTypes = ({ type, setType, types, lang, width, setState }) => {
+    const isMobile = width < 992;
+    return (
+        <div
+            className={
+                isMobile
+                    ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar haha'
+                    : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar haha'
+            }
+        >
+            {types.map((e, index) => (
+                <div
+                    key={e.id}
+                    className={
+                        isMobile
+                            ? classNames(
+                                  'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                  {
+                                      '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                  }
+                              )
+                            : classNames(
+                                  'h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                  {
+                                      '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                  }
+                              )
+                    }
+                    onClick={() => {
+                        setType(e);
+                        setState({ marketTabIndex: index });
+                    }}
+                >
+                    {e?.content[lang]}
+                </div>
+            ))}
+        </div>
+    );
+};
+
 const HomeMarketTrend = ({ trendData }) => {
     // * Initial State
     const [type, setType] = useState(types[0]);
@@ -102,47 +167,6 @@ const HomeMarketTrend = ({ trendData }) => {
             </div>
         );
     }, [width]);
-
-    const TokenTypes = ({ type, setType, types, lang }) => {
-        const isMobile = width < 992;
-        return (
-            <div
-                className={
-                    isMobile
-                        ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar haha'
-                        : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar haha'
-                }
-            >
-                {types.map((e, index) => (
-                    <div
-                        key={e.id}
-                        className={
-                            isMobile
-                                ? classNames(
-                                      'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                      {
-                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                      }
-                                  )
-                                : classNames(
-                                      'h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                      {
-                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                      }
-                                  )
-                        }
-                        onClick={() => {
-                            setType(e);
-                            setState({ marketTabIndex: index });
-                            // document.getElementById(e.id).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start',boundary:document.getElementById('root') })
-                        }}
-                    >
-                        {e?.content[lang]}
-                    </div>
-                ))}
-            </div>
-        );
-    };
 
     const renderMarketBody = useCallback(() => {
         const tabMap = ['topView', 'newListings', 'topGainers', 'topLosers'];
@@ -232,7 +256,9 @@ const HomeMarketTrend = ({ trendData }) => {
             <div className="homepage-markettrend__wrapper mal-container">
                 <div className="homepage-markettrend__tab_and_title">
                     <div className="homepage-markettrend__title">{t('home:markettrend.title')}</div>
-                    <div className="homepage-markettrend__tab">{renderTrendTab()}</div>
+                    <div className="homepage-markettrend__tab">
+                        <TrendTab type={type} width={width} types={types} setType={setType} t={t} setState={setState} />
+                    </div>
                 </div>
 
                 <div className="homepage-markettrend__market_table">

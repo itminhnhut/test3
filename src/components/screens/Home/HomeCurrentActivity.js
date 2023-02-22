@@ -34,7 +34,7 @@ const HomeCurrentActivity = () => {
                             <div className="homepage-activity__item__inner___text text-txtPrimary dark:text-txtPrimary-dark">{phake.code}</div>
                             <div className="homepage-activity__item__inner___label">{phake.time}</div>
                         </div>
-                        <div className="homepage-activity__item__inner specific__case">
+                        <div className="homepage-activity__item__inner specific__case text-right">
                             <div className="homepage-activity__item__inner___text g">
                                 {phake.type === 'DEP' ? '+' : '-'}
                                 {numeral(phake.amount).format('0.000a')} {phake.symbol.toUpperCase()}
@@ -52,7 +52,7 @@ const HomeCurrentActivity = () => {
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
-                <InfiniteLooper onHoverPaused={false} loopSize={2} loopDuration={70}>{renderActivityItem()}</InfiniteLooper>
+                <InfiniteLooper gap={104} loopSize={2} loopDuration={100}>{renderActivityItem()}</InfiniteLooper>
             </div>
         </section>
     );
