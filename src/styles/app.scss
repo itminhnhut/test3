@@ -1058,11 +1058,15 @@ input:-webkit-autofill {
           transform: translateX(calc(-100% - var(--gap)));
         }
       }
-      &:hover {
-          .looper__listInstance {
-            animation-play-state: paused;
-          }
+    &.looper-hover__paused {
+        &:hover {
+            .looper__listInstance {
+              animation-play-state: paused;
+            }
+        }
     }
+      
+    
     .looper__listInstance {
         flex-shrink: 0;
         display: flex;

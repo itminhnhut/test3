@@ -52,7 +52,7 @@ const HomeCurrentActivity = () => {
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
-                <InfiniteLooper loopSize={2} loopDuration={70}>{renderActivityItem()}</InfiniteLooper>
+                <InfiniteLooper onHoverPaused={false} loopSize={2} loopDuration={70}>{renderActivityItem()}</InfiniteLooper>
             </div>
         </section>
     );
