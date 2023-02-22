@@ -67,7 +67,7 @@ const TradingInput = ({
         <div className="flex flex-col w-full relative">
             <div
                 className={classNames(
-                    `relative flex items-center px-[12px] py-2.5 rounded-md  border border-transparent ${
+                    `relative flex items-center px-[12px] py-2.5 rounded-md border border-transparent w-full ${
                         onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-10 dark:bg-darkBlue-3'
                     }`,
                     { '!border-dominant': !onusMode && state.isFocus && !isError },
@@ -131,14 +131,14 @@ const TradingInput = ({
                     <input
                         value={inputProps?.value}
                         disabled
-                        className={classNames('ml-2 flex-grow text-sm font-medium text-right', { 'mr-2': !!renderTail }, inputClassName)}
+                        className={classNames('ml-2 flex-grow text-right', { 'mr-2': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
                     />
                 ) : (
                     <NumberFormat
                         thousandSeparator
                         getInputRef={(ref) => (inputRef.current = ref)}
                         type="text"
-                        className={classNames('ml-2 flex-grow text-sm font-medium text-right', { 'mr-2': !!renderTail }, inputClassName)}
+                        className={classNames('ml-2 flex-grow text-right', { 'mr-2': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
                         onFocus={_onFocus}
                         onBlur={_onBlur}
                         autoComplete="off"

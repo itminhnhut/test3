@@ -70,6 +70,43 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
+    const dataSource = useMemo(() => {
+        const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
+        return filteredData.map((item) => {
+            const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
+            const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+            const decimalScalePrice = getDecimalPrice(symbol);
+            item['decimalSymbol'] = decimalSymbol;
+            item['decimalScalePrice'] = decimalScalePrice;
+            return item;
+        });
+    }, [ordersList, status]);
+
+    const dataFilter = useMemo(() => {
+        const items = dataSource.filter((o) => {
+            const conditions = [];
+            if (hideOther) {
+                conditions.push(o.symbol === pairConfig?.symbol);
+            }
+            if (filters.side) {
+                conditions.push(o.side === filters.side);
+            }
+            if (Object.values(VndcFutureOrderType.Status).includes(filters.status)) {
+                conditions.push(parseInt(o.status) === filters.status);
+            }
+
+            const createdAt = new Date(o.created_at).valueOf();
+
+            if (isArray(filters.timeRange) && filters.timeRange.length > 0) {
+                conditions.push(createdAt > filters.timeRange[0].valueOf() && createdAt < filters.timeRange[1].valueOf());
+            }
+
+            return conditions.every((e) => e);
+        });
+
+        return filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
+    }, [hideOther, dataSource, filters, pair, status]);
+
     const closeTypes = useMemo(() => {
         return {
             position: [
@@ -87,7 +124,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 },
                 {
                     type: 'PAIR',
-                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: pairConfig?.symbol })
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair', { pair: pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset })
                 }
             ],
             openOrders: [
@@ -97,7 +134,9 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 },
                 {
                     type: 'ALL_PAIR_PENDING',
-                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', { pair: pairConfig?.symbol })
+                    label: t('futures:mobile.close_all_positions.close_type.close_all_pair_pending', {
+                        pair: pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset
+                    })
                 }
             ]
         };
@@ -107,13 +146,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return (
             <PopoverV2
                 ref={btnCloseAll}
-                label={<CloseButton>{t(isPosition ? 'common:close_all_orders' : 'common:cancel_all_orders')}</CloseButton>}
+                label={<CloseButton disabled={!dataFilter.length}>{t(isPosition ? 'common:close_all_orders' : 'common:cancel_all_orders')}</CloseButton>}
                 className="w-max py-2 text-sm !mt-2 z-20 !left-0"
             >
                 <div className="overflow-hidden rounded-md shadow-lg bg-white dark:bg-darkBlue-3 w-max">
                     <div className="relative space-y-2">
                         {closeTypes[isPosition ? 'position' : 'openOrders'].map((item, index) => {
-                            const isActive = closeType?.type === item.type;
                             return (
                                 <div
                                     onClick={() => {
@@ -122,8 +160,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                                     }}
                                     key={index}
                                     className={classNames(
-                                        'text-left py-2 px-4 cursor-pointer w-full text-sm text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
-                                        { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
+                                        'text-left py-2 px-4 cursor-pointer w-full text-sm text-txtPrimary dark:text-white hover:bg-gray-13 dark:hover:bg-hover-dark'
                                     )}
                                 >
                                     {item.label}
@@ -502,43 +539,6 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             };
         });
     };
-
-    const dataSource = useMemo(() => {
-        const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
-        return filteredData.map((item) => {
-            const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
-            const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
-            const decimalScalePrice = getDecimalPrice(symbol);
-            item['decimalSymbol'] = decimalSymbol;
-            item['decimalScalePrice'] = decimalScalePrice;
-            return item;
-        });
-    }, [ordersList, status]);
-
-    const dataFilter = useMemo(() => {
-        const items = dataSource.filter((o) => {
-            const conditions = [];
-            if (hideOther) {
-                conditions.push(o.symbol === pairConfig?.symbol);
-            }
-            if (filters.side) {
-                conditions.push(o.side === filters.side);
-            }
-            if (Object.values(VndcFutureOrderType.Status).includes(filters.status)) {
-                conditions.push(parseInt(o.status) === filters.status);
-            }
-
-            const createdAt = new Date(o.created_at).valueOf();
-
-            if (isArray(filters.timeRange) && filters.timeRange.length > 0) {
-                conditions.push(createdAt > filters.timeRange[0].valueOf() && createdAt < filters.timeRange[1].valueOf());
-            }
-
-            return conditions.every((e) => e);
-        });
-
-        return filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
-    }, [hideOther, dataSource, filters, pair, status]);
 
     const decimals = useMemo(() => {
         return {

@@ -121,26 +121,30 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                 message={message.current?.message}
                 notes={message.current?.notes}
             />
-            <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
+            <ModalV2 className={isPosition ? '!max-w-[800px]' : '!max-w-[448px]'} isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-2xl font-semibold">{closeType?.label}</div>
-                <div className={classNames('grid grid-cols-2 gap-6 mt-6')}>
-                    <div className="flex flex-col justify-between space-y-6">
+                <div className={classNames('grid gap-6 mt-6', { 'grid-cols-2': isPosition })}>
+                    <div className={`flex flex-col justify-between ${isPosition ? 'space-y-6' : 'space-y-10'}`}>
                         <div className="space-y-6">
                             <div className="border border-divider dark:border-divider-dark p-4 rounded-md">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                        {t('futures:mobile:close_all_positions:estimated_pnl')}
-                                    </span>
-                                    {loading ? (
-                                        <Skeletor width={80} height={12} className="rounded-lg" />
-                                    ) : (
-                                        <span className={`font-semibold ${totalProfit < 0 ? 'text-red' : 'text-teal'}`}>
-                                            {totalProfit < 0 ? '' : '+'}
-                                            {formatNumber(totalProfit, decimals.symbol, 0, true)} {quoteAsset}
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
+                                {isPosition && (
+                                    <>
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                {t('futures:mobile:close_all_positions:estimated_pnl')}
+                                            </span>
+                                            {loading ? (
+                                                <Skeletor width={80} height={12} className="rounded-lg" />
+                                            ) : (
+                                                <span className={`font-semibold ${totalProfit < 0 ? 'text-red' : 'text-teal'}`}>
+                                                    {totalProfit < 0 ? '' : '+'}
+                                                    {formatNumber(totalProfit, decimals.symbol, 0, true)} {quoteAsset}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
+                                    </>
+                                )}
                                 <div className="flex items-center justify-between">
                                     <span className="text-txtSecondary dark:text-txtSecondary-dark">
                                         {t('futures:mobile:close_all_positions:estimated_time')}
@@ -154,7 +158,7 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                                 <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-txtSecondary dark:text-txtSecondary-dark">
-                                        {t('futures:mobile:close_all_positions:close_type:close_all_loss', { pair: quoteAsset })}
+                                        {isPosition ? closeType?.label : t('futures:mobile:close_all_positions:estimated_orders')}
                                     </span>
                                     {loading ? (
                                         <Skeletor width={80} height={12} className="rounded-lg" />
@@ -165,7 +169,11 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                                     )}
                                 </div>
                             </div>
-                            <div className="px-6 py-4 bg-gray-13 dark:bg-dark-4 rounded-md text-txtSecondary dark:text-txtSecondary-dark flex space-x-4">
+                            <div
+                                className={`${
+                                    isPosition ? 'px-6' : 'px-4'
+                                } py-4 bg-gray-13 dark:bg-dark-4 rounded-md text-txtSecondary dark:text-txtSecondary-dark flex space-x-4`}
+                            >
                                 <BxsInfoCircle />
                                 <span>{t('futures:mobile:close_all_positions:confirm_description')}</span>
                             </div>
@@ -175,7 +183,7 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                         </ButtonV2>
                     </div>
                     {isPosition && (
-                        <div className="bg-gray-13 dark:bg-dark-4 rounded-xl py-4">
+                        <div className="bg-gray-13 dark:bg-dark-4 rounded-xl py-4 relative">
                             <div className="font-semibold mb-6 px-4">{t('futures:mobile:close_all_positions:position_list')}</div>
                             <OrdersList loading={loading} orders={orders} marketWatch={marketWatch} decimals={decimals} calProfit={calProfit} />
                         </div>
@@ -232,7 +240,7 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
         );
     }
 
-    if (orders.length <= 0) return <NoData />;
+    if (orders.length <= 0) return <NoData className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full" />;
 
     return (
         <>
@@ -264,7 +272,9 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
                                     <div className="space-y-1">
                                         <div className="leading-6 space-x-2 flex items-center">
                                             <span className="font-semibold">{order?.symbol}</span>
-                                            <span className="px-1 py-0.5 text-xs font-semibold">{order?.leverage}x</span>
+                                            <span className="px-1 py-0.5 text-xs font-semibold bg-gray-11 dark:bg-dark-2 rounded-[3px]">
+                                                {order?.leverage}x
+                                            </span>
                                             <ShareIcon onClick={() => onShareModal(order)} className="cursor-pointer" color={isDark ? '#e2e8f0' : '#1e1e1e'} />
                                         </div>
                                         <div className={`flex items-center text-xs leading-4 ${isBuy ? 'text-teal' : 'text-red'}`}>
@@ -275,7 +285,7 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
                                     </div>
                                     <div className="text-right">
                                         <span className={`${profit < 0 ? 'text-red' : 'text-teal'} font-semibold`}>
-                                            {formatNumber(profit, decimals.symbol, 0, true)}
+                                            {profit < 0 ? '' : '+'}{formatNumber(profit, decimals.symbol, 0, true)}
                                         </span>
                                         <span className={`${percent < 0 ? 'text-red' : 'text-teal'} text-xs leading-4 flex items-center justify-end`}>
                                             <ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={`${percent >= 0 ? 'rotate-0' : ''}`} />
