@@ -51,7 +51,9 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
         dispatch(await markAllAsRead(ids));
     };
 
-    const fetchNotificationsOnOpen = _.throttle(() => dispatch(getNotifications({ lang: i18n.language })), 1000);
+    const fetchNotificationsOnOpen = _.throttle(() => {
+        dispatch(getNotifications({ lang: i18n.language }));
+    }, 1000);
 
     const loadMoreNotification = () => {
         let prevId;
@@ -137,7 +139,11 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                         isPopover ? closeDropdownPopover() : openDropdownPopover();
                     }}
                 >
-                    <div className={`${isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'} hover:!text-dominant relative`}>
+                    <div
+                        className={`${
+                            isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
+                        } hover:!text-dominant relative`}
+                    >
                         <BxsBellIcon size={20} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
                     </div>

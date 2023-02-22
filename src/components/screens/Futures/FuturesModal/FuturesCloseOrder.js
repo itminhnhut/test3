@@ -101,6 +101,7 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
             return;
         }
         setVolume(value);
+        setPercent((value * 100) / maxQuoteQty);
     };
 
     const arrDot = useMemo(() => {
@@ -121,7 +122,7 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
             }
             return i;
         });
-        const value = ((+order_value * (_x ? _x : x)) / 100).toFixed(decimals.symbol);
+        const value = ((+maxQuoteQty * (_x ? _x : x)) / 100).toFixed(decimals.symbol);
         setVolume(+value || '');
         setPercent(_x ? _x : x);
     };

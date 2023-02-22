@@ -23,6 +23,7 @@ import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel'
 import _ from 'lodash';
 import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
+import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
     const { t, i18n: { language } } = useTranslation()
@@ -37,6 +38,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const rowData = useRef(null);
     const hasNext = useRef(true);
     const [showOrderDetail, setShowOrderDetail] = useState(false);
+    const [showShareModal, setShowShareModal] = useState(false);
 
     const columns = useMemo(() => [
         {
@@ -279,10 +281,19 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         setShowDetail(!showDetail);
     }
 
+    const flag = useRef(false);
     const onHandleClick = (key, data) => {
         rowData.current = data;
         switch (key) {
+            case 'share':
+                flag.current = true;
+                setShowShareModal(true);
+                break;
             case 'detail':
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
                 setShowOrderDetail(true);
                 break;
             default:
@@ -299,13 +310,20 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
 
     return (
         <>
-            {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />}
+            {/* {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />} */}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
             <FuturesOrderDetail
                 order={rowData.current}
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}
                 decimals={decimals}
+            />
+              <FututesShareModal
+                order={rowData.current}
+                isVisible={showShareModal}
+                onClose={() => setShowShareModal(false)}
+                decimals={decimals}
+                // pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <TableV2
                 data={loading ? [] : dataSource}

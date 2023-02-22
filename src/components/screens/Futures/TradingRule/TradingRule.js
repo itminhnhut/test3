@@ -230,7 +230,7 @@ const TradingRules = () => {
         <MaldivesLayout>
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
             <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20')}>
-                <div className="max-w-screen-v3 m-auto">
+                <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
                         {isMobile && <HelperIcon onClick={() => setShowModal(true)} />}

@@ -222,7 +222,7 @@ const DepositWithdrawFee = () => {
                         pageSize: ROW_LIMIT,
                         onChange: (currentPage) => {
                             window.document.getElementById('#deposit_withdraw_table').scrollIntoView({
-                                // behavior: 'smooth'
+                                behavior: 'smooth'
                             });
 
                             setState({ currentPage });
