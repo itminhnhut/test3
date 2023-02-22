@@ -62,8 +62,8 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
         >
             <p className='text-[22px] font-semibold mb-6'>{t('reference:referral.modify_note')}</p>
             <div>
-                <p className='text-txtSecondary text-sm mb-2'>{t('reference:referral.note')}</p>
-                <div className="rounded px-3 h-12 flex justify-between items-center bg-dark-2 gap-4">
+                <p className='text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2'>{t('reference:referral.note')}</p>
+                <div className="rounded px-3 h-12 flex justify-between items-center bg-gray-10 dark:bg-dark-2 gap-4">
                     <div className="flex justify-between items-center w-full">
                         <input
                             onFocus={onFocus}
@@ -80,7 +80,7 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                             </svg>
                         ) : null}
                     </div>
-                    <div className="w-10 text-txtSecondary">{note.length}/30</div>
+                    <div className="w-10 text-txtSecondary dark:text-txtSecondary-dark">{note.length}/30</div>
                 </div>
             </div>
             <div
