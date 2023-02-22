@@ -13,10 +13,11 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
-    ssr: false,loading:() => <div className="h-10 w-full bg-transparent" />
+    ssr: false,
+    loading: () => <div className="h-10 w-full bg-transparent" />
 });
 
-const HomeIntroduce = ({ trendData,t }) => {
+const HomeIntroduce = ({ trendData, t }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
@@ -122,11 +123,14 @@ const HomeIntroduce = ({ trendData,t }) => {
                         </div>
 
                         <div className="homepage-introduce___download">
-                            <Link href="#download_section" passHref>
-                                <GradientButton className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark">
-                                    {t('home:introduce.download_app')}
-                                </GradientButton>
-                            </Link>
+                            <GradientButton
+                                onClick={() => {
+                                    document.getElementById('download_section').scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark"
+                            >
+                                {t('home:introduce.download_app')}
+                            </GradientButton>
                         </div>
                     </div>
                     <div className="homepage-introduce___wrapper__right">
