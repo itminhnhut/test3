@@ -206,7 +206,7 @@ const Futures = () => {
             symbol: unitConfig?.assetDigit ?? 0
         };
     }, [unitConfig, pairConfig]);
-console.log(state.pairPrice)
+
     return (
         <>
             <FuturesTermsModal />

@@ -306,8 +306,8 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                             <div>{t('futures:mobile:adjust_margin:closed_volume')}</div>
                             <div className="space-x-1">
                                 <span>{t('futures:mobile:adjust_margin:est_pnl')}:</span>
-                                <span className={general.profit < 0 ? 'text-red' : 'text-teal'}>
-                                    {formatNumber(general.profit, decimals.symbol)} {quoteAsset}
+                                <span className={general.est_pnl < 0 ? 'text-red' : 'text-teal'}>
+                                    {formatNumber(general.est_pnl, decimals.symbol, 0, true)} {quoteAsset}
                                 </span>
                             </div>
                         </div>

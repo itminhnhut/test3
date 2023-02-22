@@ -63,7 +63,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [closeType, setCloseType] = useState();
     const btnCloseAll = useRef();
 
-    const router = useRouter()
+    const router = useRouter();
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
@@ -146,12 +146,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 192,
                 render: (_row, item) => (
-                    <div className='text-gray-4 font-normal text-sm h-full'>
+                    <div className="text-gray-4 font-normal text-sm h-full">
                         <div>{formatTime(item.opened_at, 'HH:mm:ss dd/MM/yyyy')}</div>
                         <div>ID #{item.displaying_id}</div>
                     </div>
                 ),
-                sortable: true,
+                sortable: true
             },
             {
                 key: 'pair',
@@ -160,15 +160,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 204,
                 render: (row, item) => {
-                    let specialOrder
+                    let specialOrder;
                     if (item?.metadata?.dca_order_metadata) {
                         if (!item?.meta_data?.dca_order_metadata?.is_main_order) {
-                            specialOrder = t('futures:mobile:adjust_margin:added_volume')
+                            specialOrder = t('futures:mobile:adjust_margin:added_volume');
                         }
                     }
                     if (item?.metadata?.partial_close_metadata) {
                         if (!item?.meta_data?.partial_close_metadata?.is_main_order) {
-                            specialOrder = t('futures:mobile:adjust_margin:close_partially')
+                            specialOrder = t('futures:mobile:adjust_margin:close_partially');
                         }
                     }
 
@@ -183,7 +183,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                             specialOrder={!isPosition ? specialOrder : null}
                             canShare={isPosition}
                         />
-                    )
+                    );
                 },
                 sortable: true
             },
@@ -219,7 +219,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 render: (row, item) =>
                     item?.order_value ? (
                         <div onClick={() => onHandleClick('vol', item)} className="flex items-center gap-3 font-normal text-sm text-darkBlue-5">
-                            <div className='flex flex-col gap-1'>
+                            <div className="flex flex-col gap-1">
                                 <div>
                                     {t('common:vol')}: <span className="text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
                                 </div>
@@ -267,13 +267,17 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                             <div>
                                 SL:{' '}
                                 <span className="text-red">
-                                    {row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.sl, row)}%)` : ''}` : '_'}
+                                    {row?.sl
+                                        ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.sl, row)}%)` : ''}`
+                                        : '_'}
                                 </span>
                             </div>
                             <div>
                                 TP:{' '}
                                 <span className="text-teal">
-                                    {row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.tp, row)}%)` : ''}` : '_'}
+                                    {row?.tp
+                                        ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.tp, row)}%)` : ''}`
+                                        : '_'}
                                 </span>
                             </div>
                         </div>
@@ -441,7 +445,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 break;
             case 'router':
                 flag.current = true;
-                router?.push('/futures/' + data.symbol)
+                router?.push('/futures/' + data.symbol);
                 break;
             case 'sltp':
                 flag.current = true;
@@ -465,8 +469,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     flag.current = false;
                     return;
                 }
-                router.push('/futures/order/' + data?.displaying_id);
-                // setShowOrderDetail(true);
+                // router.push('/futures/order/' + data?.displaying_id);
+                setShowOrderDetail(true);
                 break;
             default:
                 break;
@@ -569,7 +573,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 decimals={decimals}
-                marketWatch={marketWatch}
+                pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <FuturesCloseOrder
                 order={rowData.current}
@@ -615,7 +619,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                     headerFontStyle: {
                         height: '68px !important',
                         'padding-top': '0px !important',
-                        'padding-bottom': '0px !important',
+                        'padding-bottom': '0px !important'
                     }
                 }}
             />
