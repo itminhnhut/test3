@@ -24,19 +24,20 @@ const getAllAssets = createSelector([(state) => state.utils, (utils, params) => 
         return assets;
     }, {});
 });
-const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice, marketWatch }) => {
+const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) => {
     const { t } = useTranslation();
     const allAssets = useSelector((state) => getAllAssets(state));
-    const _lastPrice = marketWatch ? marketWatch[order?.symbol]?.lastPrice : lastPrice;
-    const status = order?.status;
+    const marketWatch = useSelector((state) => state.futures.marketWatch);
+    const pairTicker = marketWatch[order?.symbol];
+    const _lastPrice = pairTicker ? pairTicker?.lastPrice : lastPrice;
 
     const price = order?.status === VndcFutureOrderType.Status.PENDING ? order?.price : order?.open_price;
 
     const renderQuoteprice = useCallback(() => {
         return order?.side === VndcFutureOrderType.Side.BUY ? (
-            <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={marketWatch} dataKey={'bid'} symbol={order?.symbol} />
+            <MiniTickerData key={order?.displaying_id + 'bid'} initPairPrice={pairTicker} dataKey={'bid'} symbol={order?.symbol} />
         ) : (
-            <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={marketWatch} dataKey={'ask'} symbol={order?.symbol} />
+            <MiniTickerData key={order?.displaying_id + 'ask'} initPairPrice={pairTicker} dataKey={'ask'} symbol={order?.symbol} />
         );
     }, [order]);
 
