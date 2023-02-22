@@ -121,8 +121,8 @@ const SupportSearchResult = () => {
         <MaldivesLayout>
             <div className='w-full bg-white dark:bg-shadow'>
                 <SearchSection t={t} width={width} />
-                <div className='w-full mt-7 sm:mt-0 pt-6 flex justify-center'>
-                    <div className='w-full  max-w-[1216px] pb-[120px] px-6 lg:px-[112px] h-full drop-shadow-onlyLight bg-transparent'>
+                <div className='w-full mt-7 sm:mt-0 pt-6 flex justify-center max-w-screen-v3 2xl:max-w-screen-xxl m-auto'>
+                    <div className='w-full pb-[120px] px-6 lg:px-[112px] 2xl:px-0 h-full drop-shadow-onlyLight bg-transparent'>
                         <div className='w-full block sm:flex items-end justify-between text-gray-4'>
                             <div className='font-semibold text-base sm:text-[32px] sm:leading-[38px] text-txtPrimary dark:text-txtPrimary-dark'>
                                 {t('support-center:search_result')}: {state?.query}
