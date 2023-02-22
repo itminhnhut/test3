@@ -468,11 +468,10 @@ const MarketTable = ({
 
         return (
             <TableV2
-                rowKey={(item) => `${item?.key}`}
-                defaultSort={{ key: 's', direction: 'desc' }}
                 data={loading ? [] : data}
                 sort
                 isSearch={restProps?.search?.length}
+                // defaultSort={{ key: 's', direction: 'asc' }}
                 loading={loading}
                 columns={columns}
                 page={restProps.currentPage}
@@ -487,6 +486,8 @@ const MarketTable = ({
                     },
                     fontSize: '16px !important',
                 }}
+                sorted={restProps.type !== 0}
+                cbSort={(e) => parentState({ type: 0 })}
             />
         );
     }, [

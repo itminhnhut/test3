@@ -146,8 +146,6 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
         });
     }, [auth, state.navActiveLv1, currentTheme]);
 
-    console.log('auth?.username:', auth);
-
     return (
         <>
             <div className={`mal-overlay ${isActive ? 'mal-overlay__active' : ''}`} onClick={onClose} />
