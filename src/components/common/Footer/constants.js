@@ -12,7 +12,7 @@ export const SOCIALS_HREF = [
     {
         key: 2,
         name: 'blog',
-        href: '/support'
+        href: 'https://nami.io/'
     },
     {
         key: 3,
