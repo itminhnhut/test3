@@ -184,29 +184,34 @@ body {
         text-txtPrimary dark:text-txtPrimary-dark;
     }
 
-    .txtPri-1 {
+    .txtPri-1 { // [size, leading]: [14px, 20px] -> [16px, 24px],
         @apply font-semibold text-sm md:text-base
-        text-gray-15 dark:text-gray-4;
+        text-gray-15 dark:text-gray-4 tracking-normal;
     }
 
-    .txtPri-2 {
-        @apply font-normal text-base
-        text-gray-15 dark:text-gray-4;
-    } 
-    
+    .txtPri-2 {// [size, leading]: [14px, 28px] -> [16px, 24px],
+        @apply font-normal text-[14px] leading-[28px] md:text-[16px] md:leading-[24px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
     .txtPri-3 {// [size, leading]: [20px, 32px] -> [24px, 30px],
         @apply font-semibold text-[20px] leading-[32px] md:text-[24px] md:leading-[30px]
-        text-gray-15 dark:text-gray-4;
-    } 
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
+
+    .txtPri-4 {// [size, leading]: [20px, 28px] -> [32px, 38px],
+        @apply font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px]
+        text-gray-15 dark:text-gray-4 tracking-normal;
+    }
     
     .txtSecond-1 {
         @apply font-normal text-[12px] leading-[16px] md:text-base
-        text-gray-1 dark:text-gray-7;
+        text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
     .txtSecond-2 { // [size, leading]: [14px, 20px] -> [16px, 24px], #768394 -> #8694b2
         @apply font-normal text-sm md:text-base
-        text-gray-1 dark:text-gray-7;
+        text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
     .value-up {

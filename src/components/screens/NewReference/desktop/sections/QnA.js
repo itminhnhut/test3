@@ -94,7 +94,7 @@ const QnA = ({ id, t, language }) => {
                     return (
                         <div key={index} className="text-sm leading-6 py-4">
                             <p className="font-semibold cursor-pointer mb-3 leading-5">{data.q[language]}</p>
-                            <span className="text-txtSecondary text-justify" style={{ whiteSpace: 'pre-line' }}>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark text-justify" style={{ whiteSpace: 'pre-line' }}>
                                 {data.a[language]}
                             </span>
                         </div>
@@ -105,7 +105,7 @@ const QnA = ({ id, t, language }) => {
     };
     return (
         <div className="flex w-full gap-8" id={id}>
-            <RefCard wrapperClassName="!p-8 w-full !bg-darkBlue-3">
+            <RefCard wrapperClassName="!p-8 w-full bg-light dark:bg-darkBlue-3">
                 <div className="font-semibold text-[20px] leading-6 mb-4">FAQ</div>
                 {renderData(QnAData)}
                 <div className="text-teal underline font-medium text-sm text-center mt-8">

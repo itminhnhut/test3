@@ -391,7 +391,7 @@ export const Tooltip = ({ children, place, offset, arrowColor, className, ...res
     return (
         <ReactTooltip
             ref={ref}
-            className={classNames('!bg-hover-dark !rounded-lg !opacity-100 !text-gray-6 !shadow-ref !px-3', className)}
+            className={classNames('!bg-darkBlue dark:!bg-dark-5 !rounded-lg !opacity-100 !shadow-ref !px-3', className)}
             place={place}
             effect="solid"
             {...restProps}

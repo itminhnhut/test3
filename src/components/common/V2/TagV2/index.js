@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useWindowSize } from 'react-use';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const types = {
     DEFAULT: 'default',
@@ -14,10 +15,7 @@ const types = {
 };
 
 const typeStyles = {
-    [types.DEFAULT]: {
-        backgroundColor: 'rgba(34,41,64,0.5)',
-        color: colors.teal
-    },
+    [types.DEFAULT]: {},
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',
         color: colors.teal,
@@ -41,14 +39,17 @@ function TagV2({
 }) {
     const style = typeStyles[type];
 
+    const [theme] = useDarkMode();
     const { width } = useWindowSize();
     const isMobile = width < 768;
+
+    const defaultBgColor = theme === THEME_MODE.DARK ? 'rgba(34, 41, 64, 0.5)' : 'rgba(242, 244, 245, 0.7)';
+    const defaultColor = theme === THEME_MODE.DARK ? colors.gray['7'] : colors.gray['1'];
 
     return (
         <span
             style={{
-                backgroundColor: style.backgroundColor,
-                color: style.color
+                backgroundColor: style.backgroundColor || defaultBgColor
             }}
             className={classnames(className, 'flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1')}
         >
@@ -56,7 +57,10 @@ function TagV2({
                 className: 'mr-2',
                 size: isMobile ? 12 : 16
             })}
-            <span className='text-xs md:text-sm'>{children}</span>
+            <span
+                style={{ color: style.color || defaultColor }}
+                className='text-xs md:text-sm'
+            >{children}</span>
         </span>
     );
 }

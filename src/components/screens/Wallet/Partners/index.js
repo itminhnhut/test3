@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { formatNumber as formatWallet, getS3Url, setTransferModal } from 'redux/actions/utils';
+import { formatNumber as formatWallet, setTransferModal } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { Check, Search, X } from 'react-feather';
-import { SeeIcon, HideIcon, PartnersIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon } from 'components/svg/SvgIcon';
 
 import { SECRET_STRING } from 'utils';
 
@@ -11,21 +10,15 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import MCard from 'components/common/MCard';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { RETABLE_SORTBY } from 'components/common/ReTable';
-import RePagination from 'components/common/ReTable/RePagination';
 import { orderBy } from 'lodash';
 import Skeletor from 'components/common/Skeletor';
-import Empty from 'components/common/Empty';
-import { ExchangeOrderEnum, WalletType } from 'redux/actions/const';
-import Link from 'next/link';
-import { PATHS } from 'constants/paths';
-import SvgWalletFutures from 'components/svg/SvgWalletFutures';
+import { WalletType } from 'redux/actions/const';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TableV2 from 'components/common/V2/TableV2';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import EstBalance from 'components/common/EstBalance';
-import ModalV2 from 'components/common/V2/ModalV2';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -214,15 +207,12 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
 
     const renderEstWallet = useCallback(() => {
         return (
-            <div className="flex items-center mt-12">
-                <div className="rounded-full dark:bg-bgButtonDisabled-dark w-[64px] h-[64px] flex items-center justify-center">
+            <div className="mt-[24px] md:mt-12 flex items-center justify-between">
+                <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
                     <PartnersIcon size={32} />
                 </div>
-                <div className="ml-6 dark:text-txtPrimary-dark text-txtPrimary md:min-h-[64px] flex flex-col justify-center">
-                    <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                        <span className="mr-1.5">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)}</span>
-                        <span>BTC</span>
-                    </div>
+                <div>
+                    <div className="t-common-v2">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
                     <div className="font-normal text-sm md:text-base mt-1">
                         {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
@@ -234,18 +224,18 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
     // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
         return (
-            <div className="flex pt-8 gap-12">
-                <div>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>{' '}
-                    <span className="font-semibold">
+            <div className="txtPri-1 grid grid-cols-2 mt-5 md:flex md:justify-start md:mt-8">
+                <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
+                    <span className="txtSecond-1">{t('common:available_balance')}: &nbsp;</span>
+                    <span className="mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
                     </span>
                 </div>
-                <div>
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:in_order')}: </span>{' '}
-                    <span className="font-semibold">
+                <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
+                    <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
+                    <div className="mt-2 md:mt-0">
                         {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
-                    </span>
+                    </div>
                 </div>
             </div>
         );
@@ -277,72 +267,145 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
 
     return (
         <div>
-            <MCard addClass="mt-5 !p-8 dark:!bg-bgTabInactive-dark rounded-xl !bg-transparent shadow-card_light dark:shadow-none">
-                <div className="flex flex-col sm:flex-row sm:gap-0 gap-3 sm:items-end sm:justify-between text-base border-b border-divider dark:border-divider-dark pb-8">
+            <MCard
+                addClass={`mt-5 !p-8 rounded-xl 
+             ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
+            >
+                <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
                     <div>
                         <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
-
-                        {/* <div className="flex items-center font-normal text-base tracking-normal text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="mr-3">{t('wallet:est_balance')}</div>
-                            <div
-                                className="flex items-center cursor-pointer hover:opacity-80 select-none"
-                                onClick={() => setState({ hideAsset: !state.hideAsset })}
-                            >
-                                {state.hideAsset ? <HideIcon /> : <SeeIcon />}
-                            </div>
-                        </div> */}
                         {renderEstWallet()}
                     </div>
 
-                    <div className="">
-                        <div className="flex items-end justify-end h-full w-full sm:w-auto">
+                    <div className="hidden md:block">
+                        <div className="flex items-end justify-end h-full w-full ">
                             <ButtonV2
+                                disabled
                                 onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                                // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                                // className={isBuy ? 'bg-teal' : 'bg-red'}
                                 className="!px-6 !py-3 !font-semibold !text-base"
                             >
                                 {t('common:transfer')}
                             </ButtonV2>
-
-                            {/* <div
-                                className="py-1.5 md:py-2 text-center w-[30%] max-w-[100px] sm:w-[100px] mr-2 sm:mr-0 sm:ml-2 rounded-md font-medium text-xs xl:text-sm cursor-pointer
-                                    text-txtSecondary dark:text-txtSecondary-dark hover:!bg-dominant dark:bg-dark-2 hover:!text-white
-                                 "
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
-                            >
-                                {t('common:transfer')}
-                            </div> */}
                         </div>
                     </div>
                 </div>
                 {renderAvailableBalance()}
             </MCard>
+            <ButtonV2 disabled onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="py-3 !font-semibold !text-base w-full md:hidden mt-6">
+                {t('common:transfer')}
+            </ButtonV2>
 
-            <div className="mt-16 sm:flex sm:items-end sm:justify-between">
-                <div className="t-common-v2">{t('common:partners')}</div>
-                <div className="flex items-center justify-between mt-4 sm:mt-0">
-                    <HideSmallBalance
-                        onClick={() =>
-                            setState({
-                                hideSmallAsset: !state.hideSmallAsset
-                            })
-                        }
-                        isHide={state.hideSmallAsset}
-                        className="mr-8"
-                    />
-                    <SearchBoxV2
-                        value={state.search}
-                        onChange={(value) => {
-                            setState({ search: value });
-                        }}
-                        onFocus={() => setState({ currentPage: 1 })}
-                        width
-                    />
-                </div>
+            <div className="mt-12 md:mt-16 flex items-center justify-between">
+                <div className="t-common-v2 hidden md:block">{t('common:partners')}</div>
+                {isSmallScreen ? (
+                    <div className="w-full flex items-center justify-between">
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            wrapperClassname="w-[180px]"
+                            placeholder={t('common:search_asset')}
+                            width={width}
+                        />
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="whitespace-nowrap"
+                            width={width}
+                        />
+                    </div>
+                ) : (
+                    <div className="flex items-center">
+                        <HideSmallBalance
+                            onClick={() =>
+                                setState({
+                                    hideSmallAsset: !state.hideSmallAsset
+                                })
+                            }
+                            isHide={state.hideSmallAsset}
+                            className="mr-8 whitespace-nowrap"
+                            width={width}
+                        />
+                        <SearchBoxV2
+                            value={state.search}
+                            onChange={(value) => {
+                                setState({ search: value });
+                            }}
+                            onFocus={() => setState({ currentPage: 1 })}
+                            width={width}
+                            placeholder={t('common:search_asset')}
+                        />
+                    </div>
+                )}
             </div>
 
-            {renderAssetTable()}
+            {/* {renderAssetTable()} */}
+            <div className="hidden md:block">{renderAssetTable()}</div>
+            <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
+                {state?.tableData && state?.tableData?.length > 0 ? (
+                    state.tableData.map((item) => {
+                        const { assetCode, assetDigit, assetName, available, id, wallet } = item;
+                        const assetUsdRate = usdRate?.[id] || 0;
+                        const totalUsd = wallet.value * assetUsdRate;
+
+                        return (
+                            <div key={`CARD_ROW_${item?.assetCode}`} className="w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl">
+                                <div className="flex justify-between items-center">
+                                    <div className="flex items-center">
+                                        <AssetLogo assetCode={assetCode} size={32} />
+                                        <span className="font-semibold mr-2 ml-3">{assetCode}</span>
+                                        <span className="txtSecond-1">{assetName}</span>
+                                    </div>
+                                    <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className="txtPri-1 whitespace-nowrap">
+                                        {state.hideAsset
+                                            ? SECRET_STRING
+                                            : wallet.value
+                                            ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                            : '0.0000'}
+                                    </span>
+                                    &nbsp;
+                                    <span className="txtSecond-1  whitespace-nowrap">
+                                        ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
+                                    </span>
+                                </div>
+                                <div>
+                                    <div className="flex items-center justify-between">
+                                        <span className="txtSecond-2">{t('common:available_balance')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : available
+                                                ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center justify-between mt-3">
+                                        <span className="txtSecond-2">{t('common:in_order')}</span>
+                                        <span className="txtPri-1">
+                                            {state.hideAsset
+                                                ? SECRET_STRING
+                                                : wallet.locked_value
+                                                ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : '0.0000'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })
+                ) : (
+                    <NoData className="mt-12" isSearch={!!state.search} />
+                )}
+            </div>
         </div>
     );
 };
@@ -360,9 +423,10 @@ const ROW_LOADING_SKELETON = {
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         <ButtonV2
+            disabled
             variants="text"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
-            className="!text-base"
+            className="!text-base cursor-not-allowed"
         >
             {translator('common:transfer')}
         </ButtonV2>

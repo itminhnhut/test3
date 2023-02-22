@@ -232,7 +232,7 @@ const RenderContent = ({
         );
     };
     return (
-        <RefCard wrapperClassName='!p-8 w-full h-auto !bg-darkBlue-3' style={{ height: 'fit-content' }}>
+        <RefCard wrapperClassName='!p-8 w-full h-auto bg-white dark:bg-darkBlue-3' style={{ height: 'fit-content' }}>
             <div className='mb-6 flex justify-between w-full'>
                 <div className='font-semibold text-[20px] leading-6'>
                     {title}
@@ -242,9 +242,9 @@ const RenderContent = ({
                         return <div
                             key={t.value}
                             onClick={() => setTimeTab(t.value)}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer', {
-                                'text-txtSecondary border-divider-dark': timeTab !== t.value,
-                                'text-teal font-semibold border-teal bg-teal/[.1]': timeTab === t.value,
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-semibold', {
+                                'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== t.value,
+                                'text-teal border-teal bg-teal/[.1]': timeTab === t.value,
                             })}
                         >{t.title}</div>;
                     })}
@@ -261,9 +261,9 @@ const RenderContent = ({
                         hasShadow
                         text={<div
                             onClick={() => setTimeTab('custom')}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer', {
-                                'text-txtSecondary border-divider-dark': timeTab !== 'custom',
-                                'text-teal font-semibold border-teal bg-teal/[.1]': timeTab === 'custom',
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-semibold', {
+                                'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
+                                'text-teal border-teal bg-teal/[.1]': timeTab === 'custom',
                             })}
                         >{t('reference:referral.custom')}</div>}
                     />
