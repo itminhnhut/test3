@@ -47,6 +47,10 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
         return type === VndcFutureOrderType.Type.MARKET;
     }, [type, order]);
 
+    const isPending = useMemo(() => {
+        return order?.status === VndcFutureOrderType.Status.PENDING;
+    }, [order]);
+
     const totalPnL = useMemo(() => {
         const profit = getProfitVndc(order, order?.side === VndcFutureOrderType.Side.BUY ? pairTicker?.bid : pairTicker?.ask, true) || 0;
         return {
@@ -263,175 +267,203 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                 message={message.current?.message}
                 notes={message.current?.notes}
             />
-            <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
-                <div className="flex items-center justify-between mt-4 mb-8">
-                    <div className="text-2xl font-semibold">{t('futures:close_order:title')}</div>
-                    <div className="flex items-center space-x-2">
-                        <span className="text-txtSecondary dark:text-txtSecondary">{t('futures:mobile:adjust_margin:close_partially')}</span>
-                        <SwitchV2
-                            onChange={() => {
-                                setPartialClose(!partialClose);
-                                setShowCustomized(false);
-                            }}
-                            checked={partialClose}
-                        />
+            {isPending ? (
+                <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+                    <div className="text-2xl leading-[30px] font-semibold mb-3">{t('futures:close_order:title')}</div>
+                    <div className="text-teal text-lg font-semibold relative w-max bottom-[-13px] px-[6px] left-[9px] bg-white dark:bg-bgSpotContainer-dark">
+                        {order?.symbol} {order?.leverage}x
                     </div>
-                </div>
-                <div className="rounded-md border border-divider dark:border-divider-dark p-6 flex divide-x divide-divider dark:divide-divider-dark">
-                    <Row>
-                        <Item>{t('common:pair')}</Item>
-                        <Item className="text-teal">
-                            {order?.symbol} {order?.leverage}x
-                        </Item>
-                    </Row>
-                    <Row>
-                        <Item>{t('futures:mobile:quote_price')}</Item>
-                        <Item>{formatNumber(_lastPrice, decimals.price)}</Item>
-                    </Row>
-                    <Row>
-                        <Item>{t('futures:mobile:adjust_margin:current_volume')}</Item>
-                        <Item>{formatNumber(order?.order_value, decimals.symbol)}</Item>
-                    </Row>
-                    <Row>
-                        <Item className="whitespace-nowrap">{t('futures:mobile:close_all_positions:estimated_pnl')}</Item>
-                        <Item className={totalPnL.percent < 0 ? 'text-red' : 'text-teal'}>
-                            {formatNumber(totalPnL.profit, decimals.symbol, 0, true)} ({formatNumber(totalPnL.percent, 2, 0, true)}%)
-                        </Item>
-                    </Row>
-                </div>
-                <CollapseV2 reload={showCustomized} className={`w-full`} isCustom active={partialClose}>
-                    <Tooltip id={'pending_closed_volume'} place="top" effect="solid" isV3 className="max-w-[300px]" />
-                    <div className="pt-6">
-                        <div className="flex items-center justify-between text-sm text-txtSecondary dark:text-txtSecondary mb-2">
-                            <div>{t('futures:mobile:adjust_margin:closed_volume')}</div>
-                            <div className="space-x-1">
-                                <span>{t('futures:mobile:adjust_margin:est_pnl')}:</span>
-                                <span className={general.est_pnl < 0 ? 'text-red' : 'text-teal'}>
-                                    {formatNumber(general.est_pnl, decimals.symbol, 0, true)} {quoteAsset}
-                                </span>
-                            </div>
+                    <div className="border border-divider dark:border-divider-dark p-4 rounded-md mb-6">
+                        <div className="flex items-center justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:mark_price')}</span>
+                            <span className="font-semibold">{formatNumber(_lastPrice, decimals.price, 0, true)}</span>
                         </div>
-                        <div className={classNames('mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
-                            <TradingInput
-                                headContainerClassName="!border-0"
-                                renderHead={
-                                    <div className={changeClass}>
-                                        <Minus
-                                            size={16}
-                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                            onClick={() => volume > minQuoteQty && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
-                                        />
-                                    </div>
-                                }
-                                renderTail={
-                                    <div className={changeClass}>
-                                        <Plus
-                                            size={16}
-                                            className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
-                                            onClick={() => volume < maxQuoteQty && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
-                                        />
-                                    </div>
-                                }
-                                value={volume}
-                                decimalScale={decimals.symbol}
-                                allowNegative={false}
-                                thousandSeparator={true}
-                                containerClassName="px-2.5 dark:!bg-dark-2 w-full"
-                                inputClassName="!text-center"
-                                onValueChange={({ value }) => onChangeVolume(value)}
-                                inputMode="decimal"
-                                validator={_validator('quoteQty')}
-                                allowedDecimalSeparators={[',', '.']}
-                                clearAble
-                            />
+                        <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
+                            <span className="font-semibold">{formatNumber(order?.order_value, decimals.symbol, 0, true)}</span>
                         </div>
-                        <div className="w-full pl-1">
-                            <Slider
-                                useLabel
-                                positionLabel="top"
-                                labelSuffix="%"
-                                x={percent}
-                                axis="x"
-                                xmax={100}
-                                xmin={0}
-                                onChange={({ x }) => onChangePercent(x)}
-                                dots={4}
+                        <div className="h-[0.5px] bg-divider dark:bg-divider-dark w-full my-3"></div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:close_all_positions:estimated_pnl')}</span>
+                            <span className="font-semibold">-</span>
+                        </div>
+                    </div>
+                    <ButtonV2 disabled={isError || loading} onClick={onConfirm} className="mt-10">
+                        {t('common:confirm')}
+                    </ButtonV2>
+                </ModalV2>
+            ) : (
+                <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
+                    <div className="flex items-center justify-between mt-4 mb-8">
+                        <div className="text-2xl font-semibold">{t('futures:close_order:title')}</div>
+                        <div className="flex items-center space-x-2">
+                            <span className="text-txtSecondary dark:text-txtSecondary">{t('futures:mobile:adjust_margin:close_partially')}</span>
+                            <SwitchV2
+                                onChange={() => {
+                                    setPartialClose(!partialClose);
+                                    setShowCustomized(false);
+                                }}
+                                checked={partialClose}
                             />
                         </div>
                     </div>
-                    <CollapseV2
-                        className="w-full"
-                        isCustom
-                        active={showCustomized}
-                        label={
-                            <div
-                                className="font-semibold flex items-center space-x-2 cursor-pointer w-max pt-6"
-                                onClick={() => setShowCustomized(!showCustomized)}
-                            >
-                                <span>{t('futures:mobile:adjust_margin:advanced_custom')}</span>
-                                <ChevronDown size={16} className={`${showCustomized ? 'rotate-0' : ''} transition-all`} />
-                            </div>
-                        }
-                    >
-                        {showCustomized && (
-                            <div className="pt-4 grid grid-cols-12 gap-3">
-                                <div className="space-y-2 col-span-3">
-                                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:order_type')}</div>
-                                    <SelectV2
-                                        options={optionsTypes}
-                                        value={type}
-                                        onChange={(e) => {
-                                            setType(e);
-                                            setPrice(_lastPrice);
-                                        }}
-                                        keyExpr="value"
-                                        displayExpr="title"
-                                        className=""
-                                        position="top"
-                                    />
-                                </div>
-                                <div className="space-y-2 col-span-9">
-                                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
-                                    <TradingInput
-                                        value={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : price}
-                                        decimalScale={decimals.price}
-                                        allowNegative={false}
-                                        thousandSeparator={true}
-                                        containerClassName="px-2.5 dark:!bg-dark-2 w-full"
-                                        inputClassName="!text-left !ml-0"
-                                        onValueChange={({ value }) => setPrice(value)}
-                                        disabled={type === VndcFutureOrderType.Type.MARKET}
-                                        validator={_validator('price')}
-                                        renderTail={() => <span className={`text-txtSecondary dark:text-txtSecondary-dark`}>{quoteAsset}</span>}
-                                        allowedDecimalSeparators={[',', '.']}
-                                        clearAble
-                                    />
-                                </div>
-                            </div>
-                        )}
-                    </CollapseV2>
-                    <div className="h-[1px] my-6 bg-divider dark:bg-divider-dark w-full" />
-                    <div className="flex items-center justify-between">
+                    <div className="rounded-md border border-divider dark:border-divider-dark p-6 flex divide-x divide-divider dark:divide-divider-dark">
                         <Row>
-                            <Item>{t('futures:mobile:adjust_margin:closed_volume')}</Item>
-                            <Item>{formatNumber(volume, decimals.symbol)}</Item>
-                        </Row>
-                        <Row center>
-                            <Item data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')} data-for="pending_closed_volume" tooltip>
-                                {t('futures:mobile:adjust_margin:pending_closed_volume')}
+                            <Item>{t('common:pair')}</Item>
+                            <Item className="text-teal">
+                                {order?.symbol} {order?.leverage}x
                             </Item>
-                            <Item className="text-center">{formatNumber(general.pendingVol, decimals.symbol)}</Item>
                         </Row>
-                        <Row right>
-                            <Item>{t('futures:mobile:adjust_margin:remaining_volume')}</Item>
-                            <Item>{formatNumber(general.remaining_volume, decimals.symbol)}</Item>
+                        <Row>
+                            <Item>{t('futures:mobile:quote_price')}</Item>
+                            <Item>{formatNumber(_lastPrice, decimals.price)}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:adjust_margin:current_volume')}</Item>
+                            <Item>{formatNumber(order?.order_value, decimals.symbol)}</Item>
+                        </Row>
+                        <Row>
+                            <Item className="whitespace-nowrap">{t('futures:mobile:close_all_positions:estimated_pnl')}</Item>
+                            <Item className={totalPnL.percent < 0 ? 'text-red' : 'text-teal'}>
+                                {formatNumber(totalPnL.profit, decimals.symbol, 0, true)} ({formatNumber(totalPnL.percent, 2, 0, true)}%)
+                            </Item>
                         </Row>
                     </div>
-                </CollapseV2>
-                <ButtonV2 disabled={isError || loading} onClick={onConfirm} className="mt-10">
-                    {t('common:confirm')}
-                </ButtonV2>
-            </ModalV2>
+                    <CollapseV2 reload={showCustomized} className={`w-full`} isCustom active={partialClose}>
+                        <Tooltip id={'pending_closed_volume'} place="top" effect="solid" isV3 className="max-w-[300px]" />
+                        <div className="pt-6">
+                            <div className="flex items-center justify-between text-sm text-txtSecondary dark:text-txtSecondary mb-2">
+                                <div>{t('futures:mobile:adjust_margin:closed_volume')}</div>
+                                <div className="space-x-1">
+                                    <span>{t('futures:mobile:adjust_margin:est_pnl')}:</span>
+                                    <span className={general.est_pnl < 0 ? 'text-red' : 'text-teal'}>
+                                        {formatNumber(general.est_pnl, decimals.symbol, 0, true)} {quoteAsset}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className={classNames('mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
+                                <TradingInput
+                                    headContainerClassName="!border-0"
+                                    renderHead={
+                                        <div className={changeClass}>
+                                            <Minus
+                                                size={16}
+                                                className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                                onClick={() => volume > minQuoteQty && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
+                                            />
+                                        </div>
+                                    }
+                                    renderTail={
+                                        <div className={changeClass}>
+                                            <Plus
+                                                size={16}
+                                                className="fill-current text-txtSecondary dark:text-txtSecondary-dark cursor-pointer"
+                                                onClick={() => volume < maxQuoteQty && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
+                                            />
+                                        </div>
+                                    }
+                                    value={volume}
+                                    decimalScale={decimals.symbol}
+                                    allowNegative={false}
+                                    thousandSeparator={true}
+                                    containerClassName="px-2.5 dark:!bg-dark-2 w-full"
+                                    inputClassName="!text-center"
+                                    onValueChange={({ value }) => onChangeVolume(value)}
+                                    inputMode="decimal"
+                                    validator={_validator('quoteQty')}
+                                    allowedDecimalSeparators={[',', '.']}
+                                    clearAble
+                                />
+                            </div>
+                            <div className="w-full pl-1">
+                                <Slider
+                                    useLabel
+                                    positionLabel="top"
+                                    labelSuffix="%"
+                                    x={percent}
+                                    axis="x"
+                                    xmax={100}
+                                    xmin={0}
+                                    onChange={({ x }) => onChangePercent(x)}
+                                    dots={4}
+                                />
+                            </div>
+                        </div>
+                        <CollapseV2
+                            className="w-full"
+                            isCustom
+                            active={showCustomized}
+                            label={
+                                <div
+                                    className="font-semibold flex items-center space-x-2 cursor-pointer w-max pt-6"
+                                    onClick={() => setShowCustomized(!showCustomized)}
+                                >
+                                    <span>{t('futures:mobile:adjust_margin:advanced_custom')}</span>
+                                    <ChevronDown size={16} className={`${showCustomized ? 'rotate-0' : ''} transition-all`} />
+                                </div>
+                            }
+                        >
+                            {showCustomized && (
+                                <div className="pt-4 grid grid-cols-12 gap-3">
+                                    <div className="space-y-2 col-span-3">
+                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:order_type')}</div>
+                                        <SelectV2
+                                            options={optionsTypes}
+                                            value={type}
+                                            onChange={(e) => {
+                                                setType(e);
+                                                setPrice(_lastPrice);
+                                            }}
+                                            keyExpr="value"
+                                            displayExpr="title"
+                                            className=""
+                                            position="top"
+                                        />
+                                    </div>
+                                    <div className="space-y-2 col-span-9">
+                                        <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:price')}</div>
+                                        <TradingInput
+                                            value={type === VndcFutureOrderType.Type.MARKET ? t('futures:market') : price}
+                                            decimalScale={decimals.price}
+                                            allowNegative={false}
+                                            thousandSeparator={true}
+                                            containerClassName="px-2.5 dark:!bg-dark-2 w-full"
+                                            inputClassName="!text-left !ml-0"
+                                            onValueChange={({ value }) => setPrice(value)}
+                                            disabled={type === VndcFutureOrderType.Type.MARKET}
+                                            validator={_validator('price')}
+                                            renderTail={() => <span className={`text-txtSecondary dark:text-txtSecondary-dark`}>{quoteAsset}</span>}
+                                            allowedDecimalSeparators={[',', '.']}
+                                            clearAble
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </CollapseV2>
+                        <div className="h-[1px] my-6 bg-divider dark:bg-divider-dark w-full" />
+                        <div className="flex items-center justify-between">
+                            <Row>
+                                <Item>{t('futures:mobile:adjust_margin:closed_volume')}</Item>
+                                <Item>{formatNumber(volume, decimals.symbol)}</Item>
+                            </Row>
+                            <Row center>
+                                <Item data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')} data-for="pending_closed_volume" tooltip>
+                                    {t('futures:mobile:adjust_margin:pending_closed_volume')}
+                                </Item>
+                                <Item className="text-center">{formatNumber(general.pendingVol, decimals.symbol)}</Item>
+                            </Row>
+                            <Row right>
+                                <Item>{t('futures:mobile:adjust_margin:remaining_volume')}</Item>
+                                <Item>{formatNumber(general.remaining_volume, decimals.symbol)}</Item>
+                            </Row>
+                        </div>
+                    </CollapseV2>
+                    <ButtonV2 disabled={isError || loading} onClick={onConfirm} className="mt-10">
+                        {t('common:confirm')}
+                    </ButtonV2>
+                </ModalV2>
+            )}
         </>
     );
 };

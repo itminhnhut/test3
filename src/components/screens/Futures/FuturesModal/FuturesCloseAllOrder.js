@@ -15,8 +15,10 @@ import { ApiStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import NoData from 'components/common/V2/TableV2/NoData';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
+import classNames from 'classnames';
 
-const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, closeType }) => {
+const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, closeType, isPosition }) => {
     const { t } = useTranslation();
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
     const quoteAsset = pairConfig?.quoteAsset;
@@ -121,7 +123,7 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
             />
             <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
                 <div className="text-2xl font-semibold">{closeType?.label}</div>
-                <div className="grid grid-cols-2 gap-6 mt-6">
+                <div className={classNames('grid grid-cols-2 gap-6 mt-6')}>
                     <div className="flex flex-col justify-between space-y-6">
                         <div className="space-y-6">
                             <div className="border border-divider dark:border-divider-dark p-4 rounded-md">
@@ -172,10 +174,12 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
                             {t('common:confirm')}
                         </ButtonV2>
                     </div>
-                    <div className="bg-gray-13 dark:bg-dark-4 rounded-xl py-4">
-                        <div className="font-semibold mb-6 px-4">{t('futures:mobile:close_all_positions:position_list')}</div>
-                        <OrdersList loading={loading} orders={orders} marketWatch={marketWatch} decimals={decimals} calProfit={calProfit} />
-                    </div>
+                    {isPosition && (
+                        <div className="bg-gray-13 dark:bg-dark-4 rounded-xl py-4">
+                            <div className="font-semibold mb-6 px-4">{t('futures:mobile:close_all_positions:position_list')}</div>
+                            <OrdersList loading={loading} orders={orders} marketWatch={marketWatch} decimals={decimals} calProfit={calProfit} />
+                        </div>
+                    )}
                 </div>
             </ModalV2>
         </>
@@ -187,6 +191,13 @@ export default FuturesCloseAllOrder;
 const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
+    const [showShareModal, setShowShareModal] = useState(false);
+    const rowData = useRef(null);
+
+    const onShareModal = (order) => {
+        rowData.current = order;
+        setShowShareModal(true);
+    };
 
     if (loading) {
         return (
@@ -224,49 +235,58 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
     if (orders.length <= 0) return <NoData />;
 
     return (
-        <div className="max-h-[514px] overflow-auto px-4 divide-y divide-divider dark:divide-divider-dark">
-            {orders &&
-                Array.isArray(orders) &&
-                orders.length > 0 &&
-                orders?.map((order, i) => {
-                    const isBuy = order?.side === VndcFutureOrderType.Side.BUY;
-                    const pairTicker = marketWatch[order?.symbol];
-                    const profit = getProfitVndc(order, isBuy ? pairTicker?.bid : pairTicker?.ask, true);
-                    const percent = (profit / order?.margin) * 100;
-                    calProfit({ [order?.displaying_id]: profit });
-                    return (
-                        <div key={i} className="space-y-2 py-3 first:pt-0 last:pb-0">
-                            <div className="flex items-center space-x-1 text-xxs leading-3 text-txtSecondary dark:text-txtSecondary-dark py-1">
-                                <span>ID #{order?.displaying_id}</span>
-                                <span>•</span>
-                                <span>{formatTime(order?.opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <div className="space-y-1">
-                                    <div className="leading-6 space-x-2 flex items-center">
-                                        <span className="font-semibold">{order?.symbol}</span>
-                                        <span className="px-1 py-0.5 text-xs font-semibold">{order?.leverage}x</span>
-                                        <ShareIcon className="cursor-pointer" color={isDark ? '#e2e8f0' : '#1e1e1e'}/>
+        <>
+            <FututesShareModal
+                order={rowData.current}
+                isVisible={showShareModal}
+                onClose={() => setShowShareModal(false)}
+                decimals={decimals}
+                pairTicker={marketWatch[rowData.current?.symbol]}
+            />
+            <div className="max-h-[514px] overflow-auto px-4 divide-y divide-divider dark:divide-divider-dark">
+                {orders &&
+                    Array.isArray(orders) &&
+                    orders.length > 0 &&
+                    orders?.map((order, i) => {
+                        const isBuy = order?.side === VndcFutureOrderType.Side.BUY;
+                        const pairTicker = marketWatch[order?.symbol];
+                        const profit = getProfitVndc(order, isBuy ? pairTicker?.bid : pairTicker?.ask, true);
+                        const percent = (profit / order?.margin) * 100;
+                        calProfit({ [order?.displaying_id]: profit });
+                        return (
+                            <div key={i} className="space-y-2 py-3 first:pt-0 last:pb-0">
+                                <div className="flex items-center space-x-1 text-xxs leading-3 text-txtSecondary dark:text-txtSecondary-dark py-1">
+                                    <span>ID #{order?.displaying_id}</span>
+                                    <span>•</span>
+                                    <span>{formatTime(order?.opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <div className="space-y-1">
+                                        <div className="leading-6 space-x-2 flex items-center">
+                                            <span className="font-semibold">{order?.symbol}</span>
+                                            <span className="px-1 py-0.5 text-xs font-semibold">{order?.leverage}x</span>
+                                            <ShareIcon onClick={() => onShareModal(order)} className="cursor-pointer" color={isDark ? '#e2e8f0' : '#1e1e1e'} />
+                                        </div>
+                                        <div className={`flex items-center text-xs leading-4 ${isBuy ? 'text-teal' : 'text-red'}`}>
+                                            <TypeTable type="side" data={order} />
+                                            <span>&nbsp;/&nbsp;</span>
+                                            <TypeTable type="type" data={order} />
+                                        </div>
                                     </div>
-                                    <div className={`flex items-center text-xs leading-4 ${isBuy ? 'text-teal' : 'text-red'}`}>
-                                        <TypeTable type="side" data={order} />
-                                        <span>&nbsp;/&nbsp;</span>
-                                        <TypeTable type="type" data={order} />
+                                    <div className="text-right">
+                                        <span className={`${profit < 0 ? 'text-red' : 'text-teal'} font-semibold`}>
+                                            {formatNumber(profit, decimals.symbol, 0, true)}
+                                        </span>
+                                        <span className={`${percent < 0 ? 'text-red' : 'text-teal'} text-xs leading-4 flex items-center justify-end`}>
+                                            <ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={`${percent >= 0 ? 'rotate-0' : ''}`} />
+                                            {formatNumber(percent, 2, 0, true)}%
+                                        </span>
                                     </div>
                                 </div>
-                                <div className="text-right">
-                                    <span className={`${profit < 0 ? 'text-red' : 'text-teal'} font-semibold`}>
-                                        {formatNumber(profit, decimals.symbol, 0, true)}
-                                    </span>
-                                    <span className={`${percent < 0 ? 'text-red' : 'text-teal'} text-xs leading-4 flex items-center`}>
-                                        <ChevronDown color={percent < 0 ? colors.red2 : colors.teal} className={`${percent >= 0 ? 'rotate-0' : ''}`} />
-                                        {formatNumber(percent, 2)}%
-                                    </span>
-                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-        </div>
+                        );
+                    })}
+            </div>
+        </>
     );
 };

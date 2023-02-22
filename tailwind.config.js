@@ -242,6 +242,8 @@ module.exports = {
         },
         extend: {
             screens: {
+                '2xl': '2160px',
+                xxl: '1440px',
                 v3: '1216px',
                 nao: '1160px',
                 mb: '820px',
