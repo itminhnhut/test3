@@ -100,10 +100,10 @@ const News = ({ data, lang }) => {
         });
     }, [refNews]);
 
-    // useEffect(() => {
-    //     timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000);
-    //     return () => clearInterval(timer.current);
-    // }, [state.autoplay, slider]);
+    useEffect(() => {
+        timer.current = setInterval(() => state.autoplay && slider && slider.next(), 8000);
+        return () => clearInterval(timer.current);
+    }, [state.autoplay, slider]);
 
     useEffect(() => {
         width && slider && slider.resize();
