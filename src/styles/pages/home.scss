@@ -1516,7 +1516,11 @@
   @apply relative bg-[#f2f4f5] dark:bg-darkBlue-3;
   .homepage-activity__slide__item {
     @apply relative;
-  
+    &::after {
+      @apply rounded-full w-2 h-2 bg-gray-11 dark:bg-dark-1 absolute top-1/2 -translate-y-1/2 -left-6;
+
+      content:'';
+    }
   }
   .homepage-activity___wrapper {
     max-width:1660px;
