@@ -38,24 +38,24 @@ const OtpModal = ({
         <Wrapper
             isVisible={isVisible}
             containerClassName={classNames(
-                'p-[32px] !translate-y-0 sm:min-w-[0px] !bg-[#000]',
+                'p-[32px] !translate-y-0 sm:min-w-[0px] !bg-black-10/[0.6] dark:!bg-[#000]',
                 className
             )}
             className='!max-w-[488px]'
             customHeader={() =>
-                <div className='flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2 text-gray-4 bg-dark'>
+                <div className='flex items-end justify-end h-12 sticky top-0 z-10  pb-6 sm:pb-2 text-txtPrimary dark:text-gray-4'>
                     <a href={getLoginUrl('sso', 'login')}>
                         <X size={24} className="cursor-pointer" />
                     </a>
                 </div>
             }
         >
-            <div className={classNames({ 'mb-4 text-gray-4 font-semibold text-[22px] leading-[30px] mt-6': !!renderUpper })}>
+            <div className={classNames({ 'mb-4 text-txtPrimary dark:text-gray-4 font-semibold text-[22px] leading-[30px] mt-6': !!renderUpper })}>
                 {typeof renderUpper === 'function'
                     ? renderUpper()
                     : renderUpper}
             </div>
-            {label && <div className='text-darkBlue-5 font-normal text-sm sm:text-base max-w-lg'>{label}</div>}
+            {label && <div className='text-txtSecondary dark:text-darkBlue-5 font-normal text-sm sm:text-base max-w-lg'>{label}</div>}
             <OtpInput
                 value={value}
                 onChange={(otp) => onChange(otp)}
@@ -63,7 +63,7 @@ const OtpModal = ({
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] border border-divider-dark rounded-[4px] bg-dark-2 focus:!border-teal'
+                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal'
             />
             <div className='flex w-full justify-between items-center'>
                 <div className={classNames({ 'mt-4': !!renderLower })}>
@@ -75,7 +75,7 @@ const OtpModal = ({
                     onClick={async () => await doPaste()}
                 >
                     <Copy color={colors.teal} />
-                    <div className='text-teal font-semibold text-base'>
+                    <div className='dark:text-teal text-green-3 font-semibold text-base'>
                         {t('common:paste')}
                     </div>
                 </div>
@@ -94,4 +94,4 @@ const OtpModal = ({
 
 export default OtpModal
 
-const DivComponent = ({ children }) => <div className='bg-shadow h-full w-full pt-[102px] px-4'>{children}</div>
+const DivComponent = ({ children }) => <div className='bg-white dark:bg-shadow h-full w-full pt-[102px] px-4'>{children}</div>

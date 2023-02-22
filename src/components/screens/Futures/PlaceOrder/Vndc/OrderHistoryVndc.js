@@ -58,7 +58,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             dataIndex: 'symbol',
             title: t('common:pair'),
             align: 'left',
-            width: 204,
+            width: 224,
             render: (row, item) => {
                 let specialOrder
                 if (item?.metadata?.dca_order_metadata) {
@@ -87,15 +87,15 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             },
             sortable: true
         },
-        {
-            key: 'status',
-            dataIndex: 'reason_close_code',
-            title: t('common:status'),
-            align: 'center',
-            width: 178,
-            render: (_row, item) => <OrderStatusLabel type={item?.reason_close_code} t={t} />,
-            sortable: true,
-        },
+        // {
+        //     key: 'status',
+        //     dataIndex: 'reason_close_code',
+        //     title: t('common:status'),
+        //     align: 'center',
+        //     width: 178,
+        //     render: (_row, item) => <OrderStatusLabel type={item?.reason_close_code} t={t} />,
+        //     sortable: true,
+        // },
         {
             key: 'sltp',
             title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
