@@ -8,6 +8,8 @@ import SvgSun from 'src/components/svg/Sun';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Image from 'next/image';
 import classNames from 'classnames';
+import { getS3Url } from 'redux/actions/utils';
+
 
 // Import Swiper styles
 import 'swiper/css';
@@ -72,7 +74,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
                 <div className="relative bg-transparent">
                     <div className="absolute left-[35%] top-1/2 -translate-x-1/2 w-full h-full -translate-y-1/2 ">
-                        <Image src="/images/screen/homepage/splash_dark.png" layout="fill" />
+                        <Image src={getS3Url("/images/screen/homepage/splash_dark.png")} layout="fill" />
                     </div>
                     <Swiper
                         spaceBetween={10}
@@ -110,7 +112,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
                                 <div className="relative overflow-hidden w-full h-[630px] md:h-[550px] lg:h-[415px] ">
-                                    <Image src={`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`} layout="fill" className="p-1" alt="iphone" />
+                                    <Image src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`)} layout="fill" className="p-1" alt="iphone" />
                                 </div>
                             </SwiperSlide>
                         ))}

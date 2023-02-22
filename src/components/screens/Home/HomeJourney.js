@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
-import { getV1Url } from 'redux/actions/utils';
+import { getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -51,7 +51,7 @@ const HomeJourney = ({ t, width, currentTheme }) => {
                                 <div className="homepage-journey__group_content___left__item ">
                                     <div className="homepage-journey__group_content___left__item___icon">
                                         <Image
-                                            src={`/images/screen/homepage/${item.image}${item.image === 'token_saving_cost_1' ? `_${currentTheme}` : ''}.png`}
+                                            src={getS3Url(`/images/screen/homepage/${item.image}${item.image === 'token_saving_cost_1' ? `_${currentTheme}` : ''}.png`)}
                                             width={width >= 1366 ? '52' : '44'}
                                             height={width >= 1366 ? '52' : '44'}
                                         />

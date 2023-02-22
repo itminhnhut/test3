@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber,getS3Url } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
@@ -134,7 +134,7 @@ const HomeIntroduce = ({ trendData, t }) => {
                         </div>
                     </div>
                     <div className="homepage-introduce___wrapper__right">
-                        <video src="/images/screen/homepage/banner_graphics.mp4" loop muted autoPlay className="pointer-events-none h-full" />
+                        <video src={getS3Url("/images/screen/homepage/banner_graphics.mp4")} loop muted autoPlay className="pointer-events-none h-full" />
                     </div>
                 </div>
             </section>

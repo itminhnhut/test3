@@ -5,7 +5,7 @@ import { Trans } from 'next-i18next';
 import { CheckedDoubleIcon } from '../../svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { Eye, EyeOff } from 'react-feather';
-import { getLoginUrl } from 'redux/actions/utils';
+import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
 
@@ -24,8 +24,10 @@ const HomeFirstAward = ({ t, language, theme }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const onDeleteInput = (type) => setState({ [type]: '' });
     return (
-        <section className="homepage-first_award relative" style={{ backgroundImage: `url("/images/screen/homepage/bg_first_award_${theme}.png")` }}>
-
+        <section
+            className="homepage-first_award relative"
+            style={{ backgroundImage: `url('${getS3Url(`/images/screen/homepage/bg_first_award_${theme}.png`)}')` }}
+        >
             <div className="homepage-first_award__wrapper mal-container">
                 <div className="homepage-first_award___step relative">
                     <div className="homepage-first_award__title">{t('home:first_award.title')}</div>
@@ -95,7 +97,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                             theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
                         } absolute  z-[-10] w-[228px] `}
                     >
-                        <img src="/images/screen/homepage/first_award_corner.png" />
+                        <img src={getS3Url('/images/screen/homepage/first_award_corner.png')} />
                     </div>
                     <div
                         className={`
@@ -103,7 +105,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
                     }    absolute z-[-10] w-[228px] `}
                     >
-                        <img src="/images/screen/homepage/first_award_corner.png" />
+                        <img src={getS3Url('/images/screen/homepage/first_award_corner.png')} />
                     </div>
 
                     <div className="homepage-first_award___form___input_group">
