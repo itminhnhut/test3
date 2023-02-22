@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next'
-import React, { useMemo } from 'react'
+import React, { Fragment, useMemo } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight } from 'react-feather';
 import DatePicker from 'components/common/DatePicker/DatePicker';
 import { useCallback } from 'react';
@@ -29,7 +29,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
         switch (object.type) {
             case 'daterange':
                 return (
-                    <div className="date-range-picker flex justify-center w-full">
+                    <div className="flex justify-center w-full">
                         <DatePicker
                             date={filter[key].value}
                             onChange={e => onChange(e.selection)}
@@ -41,16 +41,18 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                 );
             case 'popover':
                 return <Popover className="relative w-full">
-                    {({ close }) => (
+                    {({ close, open }) => (
                         <div className='h-full w-full'>
                             <Popover.Button className='w-full'>
                                 <div
-                                    className="relative py-2 text-sm font-medium px-3 flex items-center justify-between bg-dark-2 rounded-md h-full w-full leading-6">
+                                    className="relative py-2 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6">
                                     {object.values.find(e => e.value === filter[key].value).title}
                                     <ChevronDown size={16} className="ml-1" />
                                 </div>
                             </Popover.Button>
                             <Transition
+                                show={open}
+                                as={Fragment}
                                 enter="transition ease-out duration-200"
                                 enterFrom="opacity-0 translate-y-1"
                                 enterTo="opacity-100 translate-y-0"
@@ -58,11 +60,11 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                                 leaveFrom="opacity-100 translate-y-0"
                                 leaveTo="opacity-0 translate-y-1"
                             >
-                                <Popover.Panel className="absolute z-10 bg-dark-2 w-full">
+                                <Popover.Panel className="absolute z-10 bg-white dark:bg-dark-2 rounded-md border border-divider dark:border-none w-full">
                                     <div
-                                        className="h-full py-1 shadow-onlyLight font-medium text-xs flex flex-col">
+                                        className="h-full py-1 shadow-onlyLight text-sm flex flex-col">
                                         {object.values.map((e, index) => (
-                                            <div key={index} className='h-10 px-4 py-2 flex items-center hover:bg-[#00c8bc0d]'
+                                            <div key={index} className='h-10 px-4 py-2 flex items-center text-txtSecondary dark:text-txtSecondary-dark cursor-pointer hover:bg-[#00c8bc0d]'
                                                 onClick={() => {
                                                     onChange(e.value)
                                                     close()
@@ -78,7 +80,7 @@ export const TableFilter = ({ filters, filter, setFilter }) => {
                     )}
                 </Popover>
             case 'date':
-                return <div className="date-range-picker flex justify-center w-full">
+                return <div className="flex justify-center w-full">
                     <DatePicker
                         date={filter[key].value}
                         onChange={e => onChange(e)}

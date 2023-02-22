@@ -838,7 +838,7 @@ export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
         return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
     } else {
-        return value === 0 ? '' : value < 0 ? 'text-red' : 'text-teal';
+        return value === 0 ? '' : value < 0 ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     }
 };
 
@@ -1026,7 +1026,7 @@ export const TypeTable = ({ type, data }) => {
         i18n: { language }
     } = useTranslation();
     const str = String(data[type]).toUpperCase();
-    const color = str === 'SELL' ? 'text-red' : 'text-teal';
+    const color = str === 'SELL' ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     switch (type) {
         case 'side':
             return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;

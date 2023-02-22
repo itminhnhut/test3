@@ -3,7 +3,7 @@ import React from 'react';
 const GlobeFilled = ({size,className,onClick,color}) => {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} onClick={onClick} className={className} viewBox="0 0 16 16" fill="none">
-            <g clip-path="url(#clip0_1182_89414)">
+            <g clipPath="url(#clip0_1182_89414)">
                 <path
                     d="M8.28516 15.9912C9.50868 15.8173 10.5813 14.5403 11.2562 12.6544C10.2805 12.4359 9.28486 12.3186 8.28516 12.3047V15.9912Z"
                     fill={color || "#E2E8F0"}

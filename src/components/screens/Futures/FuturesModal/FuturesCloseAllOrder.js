@@ -14,6 +14,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { ApiStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import NoData from 'components/common/V2/TableV2/NoData';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, closeType }) => {
     const { t } = useTranslation();
@@ -184,6 +185,9 @@ const FuturesCloseAllOrder = ({ isVisible, onClose, marketWatch, pairConfig, clo
 export default FuturesCloseAllOrder;
 
 const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+
     if (loading) {
         return (
             <div className="max-h-[514px] overflow-auto px-4 divide-y divide-divider dark:divide-divider-dark">
@@ -242,7 +246,7 @@ const OrdersList = ({ orders, marketWatch, decimals, calProfit, loading }) => {
                                     <div className="leading-6 space-x-2 flex items-center">
                                         <span className="font-semibold">{order?.symbol}</span>
                                         <span className="px-1 py-0.5 text-xs font-semibold">{order?.leverage}x</span>
-                                        <ShareIcon className="cursor-pointer" />
+                                        <ShareIcon className="cursor-pointer" color={isDark ? '#e2e8f0' : '#1e1e1e'}/>
                                     </div>
                                     <div className={`flex items-center text-xs leading-4 ${isBuy ? 'text-teal' : 'text-red'}`}>
                                         <TypeTable type="side" data={order} />

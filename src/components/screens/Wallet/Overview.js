@@ -12,10 +12,9 @@ import { useRouter } from 'next/router';
 import { WalletType } from 'redux/actions/const';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import SvgWalletOverview from 'components/svg/SvgWalletOverview';
-import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { HideIcon, SeeIcon, PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
+import { PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
@@ -386,7 +385,7 @@ const OverviewWallet = (props) => {
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
-                            <ButtonV2 variants="text" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
+                            <ButtonV2 disabled variants="text" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -501,7 +500,7 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
             <div className="mt-2 text-left">
                 {listActions.map((item) => (
                     <div className="first:mt-0 mt-3">
-                        <ButtonV2 variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
+                        <ButtonV2 disabled={keys[0] === ActionType.PARTNERS} variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW

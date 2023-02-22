@@ -28,7 +28,7 @@ const MarketTrendItem = memo(({ loading, pair, style = {} }) => {
     return (
         <Link href={`trade/${_.baseAsset}-${_.quoteAsset}`}>
             <a style={{ ...style }}>
-                <MCard addClass="md:max-w-[335px] select-none hover:border-green-3 hover:shadow-card_light dark:hover-shadow-none dark:hover:border-teal">
+                <MCard addClass="sm:max-w-[335px] select-none hover:border-green-3 hover:shadow-card_light dark:hover-shadow-none dark:hover:border-teal">
                     <div className="flex items-center justify-between ">
                         <div className="flex items-center">
                             {(!pair) ?

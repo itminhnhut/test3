@@ -146,7 +146,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 192,
                 render: (_row, item) => (
-                    <div className="text-gray-4 font-normal text-sm h-full">
+                    <div className='text-txtPrimary dark:text-gray-4 font-normal text-sm h-full flex flex-col justify-between'>
                         <div>{formatTime(item.opened_at, 'HH:mm:ss dd/MM/yyyy')}</div>
                         <div>ID #{item.displaying_id}</div>
                     </div>
@@ -218,13 +218,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 204,
                 render: (row, item) =>
                     item?.order_value ? (
-                        <div onClick={() => onHandleClick('vol', item)} className="flex items-center gap-3 font-normal text-sm text-darkBlue-5">
-                            <div className="flex flex-col gap-1">
+                        <div onClick={() => onHandleClick('vol', item)} className="w-full flex justify-between items-center gap-3 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
+                            <div className='flex flex-col gap-1'>
                                 <div>
-                                    {t('common:vol')}: <span className="text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
+                                    {t('common:vol')}: <span className="text-txtPrimary dark:text-gray-4">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</span>
                                 </div>
                                 <div>
-                                    {t('futures:margin')}: <span className="text-gray-4">{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
+                                    {t('futures:margin')}: <span className="text-txtPrimary dark:text-gray-4">{formatNumber(item?.margin, item?.decimalScalePrice, 0, true)}</span>
                                 </div>
                             </div>
                             <Edit />
@@ -241,16 +241,16 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'left',
                 width: 200,
                 render: (row) => (
-                    <div className="flex flex-col gap-1 font-normal text-sm text-darkBlue-5">
+                    <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
                         <div>
                             {t('common:market')}:{' '}
-                            <span className="text-gray-4">
+                            <span className="text-txtPrimary dark:text-gray-4">
                                 {' '}
                                 {marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}
                             </span>
                         </div>
                         <div>
-                            {t('futures:order_table.open')}: <span className="text-gray-4">{formatNumber(row?.price, row?.decimalScalePrice, 0, true)}</span>
+                            {t('futures:order_table.open')}: <span className="text-txtPrimary dark:text-gray-4">{formatNumber(row?.price, row?.decimalScalePrice, 0, true)}</span>
                         </div>
                     </div>
                 ),
@@ -263,21 +263,17 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 228,
                 render: (row) => (
                     <div className="flex items-center w-full justify-between">
-                        <div className="flex flex-col gap-1 font-normal text-sm text-darkBlue-5">
+                        <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
                             <div>
                                 SL:{' '}
-                                <span className="text-red">
-                                    {row?.sl
-                                        ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.sl, row)}%)` : ''}`
-                                        : '_'}
+                                <span className="text-red-2 dark:text-red">
+                                    {row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.sl, row)}%)` : ''}` : '_'}
                                 </span>
                             </div>
                             <div>
                                 TP:{' '}
-                                <span className="text-teal">
-                                    {row?.tp
-                                        ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.tp, row)}%)` : ''}`
-                                        : '_'}
+                                <span className="text-green-3 dark:text-teal">
+                                    {row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)} ${isPosition ? `(${getRatioProfit(row?.tp, row)}%)` : ''}` : '_'}
                                 </span>
                             </div>
                         </div>
@@ -295,7 +291,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 align: 'right',
                 width: 138,
                 render: (row, item) => (
-                    <div className="text-gray-4 text-sm font-normal">{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>
+                    <div className="text-txtPrimary dark:text-gray-4 text-sm font-normal">{formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)}</div>
                 ),
                 sortable: false
             },
@@ -305,7 +301,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:mobile.market_price'),
                 align: 'right',
                 width: 138,
-                render: (row, item) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
+                render: (row, item) => marketWatch[row?.symbol] && <div className='text-txtPrimary dark:text-gray-4 text-sm font-normal'>{formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}</div>,
                 sortable: false
             },
             {
@@ -314,9 +310,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:volume'),
                 align: 'left',
                 width: 138,
-                render: (row, item) => (
-                    <div className="text-gray-4 text-sm font-normal">{formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)}</div>
-                ),
+                render: (row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
                 sortable: false
             },
             {
@@ -630,7 +624,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 const CloseButton = ({ children, onClick, disabled = false }) => {
     return (
         <button
-            className="w-[122px] h-[36px] flex items-center justify-center font-semibold text-sm text-txtPrimary dark:text-darkBlue-5 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark bg-dark dark:bg-dark-2 cursor-pointer rounded-md"
+            className="w-[122px] h-[36px] flex items-center justify-center font-semibold text-sm text-txtPrimary dark:text-darkBlue-5 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark bg-gray-13 dark:bg-dark-2 cursor-pointer rounded-md"
             onClick={onClick}
             disabled={disabled}
         >

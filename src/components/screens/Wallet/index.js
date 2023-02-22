@@ -28,7 +28,7 @@ import { MIN_WALLET } from 'constants/constants';
 import PartnersWallet from './Partners';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import useWindowSize from 'hooks/useWindowSize';
-const WIDTH_MD = 768;
+export const WIDTH_MD = 768;
 
 const INITIAL_STATE = {
     screen: null,
@@ -212,7 +212,7 @@ const Wallet = () => {
                             <TabItem
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left !px-0 !text-base`}
+                                className={`text-left px-4 !md:px-0 !text-base`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
@@ -443,7 +443,7 @@ const Wallet = () => {
         <Background isDark={currentTheme === THEME_MODE.DARK}>
             {auth ? (
                 <CustomContainer>
-                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden sm:block">
+                    <div className="text-[32px] font-bold leading-[38px] text-txtPrimary dark:text-txtPrimary-dark mb-8 text-left hidden md:block">
                         {t('common:my_wallet')}
                     </div>
                     {renderScreenTab()}

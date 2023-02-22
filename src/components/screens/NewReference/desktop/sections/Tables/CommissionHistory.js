@@ -167,14 +167,14 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 
     return (
         <div className='flex w-full' id={id}>
-            <div className='w-full border border-divider-dark rounded-xl py-8'>
+            <div className='w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8'>
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
                     {t('reference:referral.commission_histories')}
                 </div>
                 <div className='flex gap-6 flex-wrap mx-6 mb-6'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
-                <div className='border-t border-divider-dark'>
+                <div className='border-t border-divider dark:border-divider-dark'>
                     <ReTable
                         // defaultSort={{ key: 'namiId', direction: 'desc' }}
                         className="friendlist-table"

@@ -54,7 +54,7 @@ const SwapHistory = ({ width }) => {
 
     return (
         <div className="m-auto mt-20">
-            <div className="text-[20px] text-left leading-7 text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('convert:history')}</div>
+            <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">{t('convert:history')}</div>
             {auth ? (
                 <div className="mt-8 pt-4 bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl">
                     <TableV2

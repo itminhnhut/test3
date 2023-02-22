@@ -14,8 +14,10 @@ import classnames from 'classnames';
 import FriendList from 'components/screens/NewReference/desktop/sections/Tables/FriendList';
 import CommissionHistory from 'components/screens/NewReference/desktop/sections/Tables/CommissionHistory';
 
-import dynamic from 'next/dynamic'
-const Overview = dynamic(() => import('./sections/Overview'), {ssr: false})
+import dynamic from 'next/dynamic';
+import { DESKTOP_NAV_HEIGHT } from 'components/common/NavBar/constants';
+
+const Overview = dynamic(() => import('./sections/Overview'), { ssr: false });
 
 const tabs = {
     Overview: 'overview',
@@ -93,64 +95,16 @@ const RefDesktopScreen = () => {
             });
     }, [user]);
 
-    // useEffect(() => {
-    //     document.addEventListener('scroll', onScroll);
-    //     return () => {
-    //         document.removeEventListener('scroll', onScroll);
-    //         inViewObserver.disconnect();
-    //     };
-    // }, []);
-    //
-    // const inViewObserver = new IntersectionObserver(
-    //     (entries) => {
-    //         entries.forEach((entry) => {
-    //             if (entry.isIntersecting) {
-    //                 const _tab = entry.target.getAttribute('id');
-    //                 setTab(_tab);
-    //                 inViewObserver.unobserve(document.getElementById(_tab));
-    //             }
-    //         });
-    //     },
-    //     {
-    //         root: null,
-    //         threshold: 0.7,
-    //         rootMargin: '0px'
-    //     }
-    // );
-
-    const timer = useRef(null);
-    const onScroll = (e) => {
-        clearTimeout(timer.current);
-        if (isClickTab.current) {
-            timer.current = setTimeout(() => {
-                isClickTab.current = false;
-            }, 500);
-            return;
-        }
-        tabRef.current?.ref.querySelectorAll('.tab-item')
-            .forEach((el) => {
-                const id = el.getAttribute('value');
-                // inViewObserver.observe(document.getElementById(id));
-            });
-    };
-
     const handleClickTab = (tabId) => {
-        // const el = document.getElementById(tabId);
-        // window.scrollTo({
-        //     top: el.offsetTop - 120,
-        //     behavior: 'smooth'
-        // });
-        // el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-        // isClickTab.current = true;
         setTab(tabId);
     };
 
     return (
-        <div className='h-auto w-full pt-[74px]'>
+        <div className='h-auto w-full bg-gray-13 dark:bg-transparent' style={{ paddingTop: DESKTOP_NAV_HEIGHT }}>
             <div className='space-y-20' ref={contentRef}>
                 <Overview t={t} data={overviewData} commisionConfig={config} width={width} user={user} />
                 <div className='container !mb-[7.5rem]'>
-                    <Tabs ref={tabRef} tab={tab} className='gap-6 border-b border-divider-dark mb-12' isMobile>
+                    <Tabs ref={tabRef} tab={tab} className='gap-6 border-b dark:border-divider-dark mb-12' isMobile>
                         <TabItem className='!text-left !px-0' value={tabs.Overview}
                                  onClick={() => handleClickTab(tabs.Overview)}>
                             {t('reference:referral.info')}
@@ -182,11 +136,11 @@ const RefDesktopScreen = () => {
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.FriendList })}>
-                            <FriendList t={t} commisionConfig={config} id={tabs.FriendList}/>
+                            <FriendList t={t} commisionConfig={config} id={tabs.FriendList} />
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.CommissionHistory })}>
-                            <CommissionHistory t={t} commisionConfig={config} id={tabs.CommissionHistory}/>
+                            <CommissionHistory t={t} commisionConfig={config} id={tabs.CommissionHistory} />
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.FAQandTerm })}>
