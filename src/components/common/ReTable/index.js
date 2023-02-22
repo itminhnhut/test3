@@ -68,6 +68,8 @@ const ReTable = memo(
         height,
         reference,
         onRowClick,
+        sorted,
+        cbSort,
         ...restProps
     }) => {
         // * Init State
@@ -131,18 +133,18 @@ const ReTable = memo(
 
         const renderTable = useCallback(() => {
             let defaultSort =
-                sort && restProps?.defaultSort ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`]) : data;
+                sort && !sorted && restProps?.defaultSort ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`]) : data;
 
             let _ = defaultSort;
 
 
-            if (Object.keys(sorter).length) {
+            if (Object.keys(sorter).length && !sorted) {
                 const _s = Object.entries(sorter)[0];
                 const customSort = ownColumns.find(e => e.key === _s[0])?.sorter
 
                 if (customSort) {
                     // chỉ cần sort theo asc
-                    defaultSort = data.sort((a,b ) => _s[1] ? customSort(a, b) : -customSort(a, b))
+                    defaultSort = data.sort((a, b) => _s[1] ? customSort(a, b) : -customSort(a, b))
                 } else {
                     defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
                 }
@@ -208,9 +210,12 @@ const ReTable = memo(
                                 <div
                                     key={c.key}
                                     className={className.join(' ')}
-                                    onClick={() => !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                    onClick={() => {
+                                        !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })
+                                        if (cbSort) cbSort(!sorter?.[`${c.key}`])
+                                    }}
                                 >
-                                    {c.title} {!c?.preventSort && <Sorter isUp={sorter?.[`${c.key}`]} />}
+                                    {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
                                 </div>
                             )
                         };
@@ -240,9 +245,12 @@ const ReTable = memo(
                                 <div
                                     key={c.key}
                                     className={className.join(' ')}
-                                    onClick={() => !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })}
+                                    onClick={() => {
+                                        !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] })
+                                        if (cbSort) cbSort(!sorter?.[`${c.key}`])
+                                    }}
                                 >
-                                    {c.title} {!c?.preventSort && <Sorter isUp={sorter?.[`${c.key}`]} />}
+                                    {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
                                 </div>
                             )
                         };
@@ -251,7 +259,8 @@ const ReTable = memo(
                 });
                 sortColumn && sortColumn.length && setOwnColumns(sortColumn);
             }
-        }, [sort, columns, sorter]);
+        }, [sort, columns, sorter, restProps?.defaultSort, cbSort]);
+
 
         // Init Pagination
         useEffect(() => {

@@ -418,7 +418,7 @@ export const EWModal = styled(Div100vh)`
                     width: 8px;
                     height: 6px;
                     background-color: ${colors.teal};
-                    clip-path: polygon(50% 100%, 0 0, 100% 0);
+                    clipPath: polygon(50% 100%, 0 0, 100% 0);
                 }
 
                 :after {

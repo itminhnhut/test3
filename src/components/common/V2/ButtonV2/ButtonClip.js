@@ -30,5 +30,5 @@ const ClipPath = styled.div.attrs(({ mode, active, buy, sell }) => ({
         }
     )
 }))`
-    clip-path: ${({ mode, buy }) => `polygon(0% 0%, calc(100% - ${mode === buy ? '16px' : '0px'}) 0%, 100% 100%, ${mode === buy ? '0' : '16px'} 100%);`};
+    clip-path: ${({ mode, buy }) => `polygon(0% 0%, calc(100% - ${mode === buy ? '16px' : '0px'}) 0%, 100% 100%, ${mode === buy ? '0' : '16px'} 100%);`}
 `;

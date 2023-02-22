@@ -12,10 +12,9 @@ import { useSelector } from 'react-redux';
 import DomToImage from 'dom-to-image';
 import { IconLoading } from 'components/common/Icons';
 
-const FututesShareModal = ({ isVisible, onClose, order, marketWatch }) => {
+const FututesShareModal = ({ isVisible, onClose, order, pairTicker }) => {
     const refCode = useSelector((state) => state.auth?.user?.code_refer);
     const content = useRef();
-    const pairTicker = marketWatch[order?.symbol];
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
 

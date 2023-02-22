@@ -290,7 +290,11 @@ const MarketTable = ({
             } else {
                 tradingMode = TRADING_MODE.EXCHANGE;
             }
-
+            if (!auth) {
+                return <div className='my-8'>
+                    <NoData />
+                </div>
+            }
             if (!data?.length) {
                 return renderSuggested
             }
@@ -303,14 +307,9 @@ const MarketTable = ({
         }
 
         if (isMobile) {
-            if (!auth && tab[restProps.tabIndex]?.key === 'favorite') {
-                return <div className='mt-8'>
-                    <NoData />
-                </div>
-            }
             if (!data?.length) {
                 return (
-                    <div className='mt-8'>
+                    <div className='my-8'>
                         <NoData isSearch={!!restProps.search} />
                     </div>
                 )
@@ -413,7 +412,10 @@ const MarketTable = ({
                 align: 'right',
                 width: 168,
                 sortable: true,
-                render: (row) => <span className="whitespace-nowrap">{formatPrice(row)}</span>
+                render: (row, item) => <div>
+                    <div className="whitespace-nowrap">{formatPrice(row)}</div>
+                    <div className='text-txtSecondary dark:text-txtSecondary-dark font-normal text-xs'>${formatPrice(item?.q === 'VNDC' ? item?.p / 23415 : restProps.referencePrice[`${item?.q}/USD`] * item?.p, 4)}</div>
+                </div>
             },
             {
                 key: 'change_24h',
@@ -466,11 +468,10 @@ const MarketTable = ({
 
         return (
             <TableV2
-                rowKey={(item) => `${item?.key}`}
-                defaultSort={{ key: 's', direction: 'desc' }}
                 data={loading ? [] : data}
                 sort
                 isSearch={restProps?.search?.length}
+                // defaultSort={{ key: 's', direction: 'asc' }}
                 loading={loading}
                 columns={columns}
                 page={restProps.currentPage}
@@ -485,6 +486,8 @@ const MarketTable = ({
                     },
                     fontSize: '16px !important',
                 }}
+                sorted={restProps.type !== 0}
+                cbSort={(e) => parentState({ type: 0 })}
             />
         );
     }, [
@@ -622,7 +625,10 @@ const MarketTable = ({
 
                     {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
                         <div
-                            className="h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer"
+                            className={classNames("h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer", {
+                                'w-[164px]': language === 'vi',
+                                'w-[124px]': language !== 'vi'
+                            })}
                             onClick={async () => {
                                 if (isLoading) return
                                 await addTokensToFav({

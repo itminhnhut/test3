@@ -16,7 +16,7 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
 import { divide, find, orderBy, uniqBy } from 'lodash';
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, getV1Url, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
+import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, countDecimals, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { Search, X, XCircle } from 'react-feather';
 import { ApiStatus } from 'redux/actions/const';
@@ -370,6 +370,7 @@ const SwapModule = ({ width, pair }) => {
         for (let i = 0; i < data?.length; ++i) {
             const { fromAsset, available, filters } = data?.[i];
             const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
+
             assetItems.push(
                 <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
                     <div className={`flex items-center  `}>
@@ -381,7 +382,7 @@ const SwapModule = ({ width, pair }) => {
                             <span className="text-xs leading-4 text-left">{assetName}</span>
                         </p>
                     </div>
-                    <div>{available ? formatWallet(available, (filters?.[0]?.stepSize + '').replace('0.', '').length) : '0.0000'}</div>
+                    <div> {available ? formatWallet(available) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -464,7 +465,7 @@ const SwapModule = ({ width, pair }) => {
                             <span className="text-xs leading-4 text-left">{assetName}</span>
                         </p>
                     </div>
-                    <div>{available ? formatWallet(available, (filters?.[0]?.stepSize + '').replace('0.', '').length) : '0.0000'}</div>
+                    <div> {available ? formatWallet(available) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -533,7 +534,7 @@ const SwapModule = ({ width, pair }) => {
     const renderSwapBtn = useCallback(() => {
         if (!auth) {
             return (
-                <HrefButton className="block mt-8 !w-full !max-w-none text-base font-medium" href={getLoginUrl('sso', 'login')} variants="primary">
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
                     {t('common:sign_in')}
                 </HrefButton>
             );
@@ -613,10 +614,12 @@ const SwapModule = ({ width, pair }) => {
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
             <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
-                <div className="my-6 text-left font-medium leading-7 text-[20px] text-dark-2 dark:text-gray-4 hover:bg-transparent">{t('convert:confirm')}</div>
+                <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
+                    {t('convert:confirm')}
+                </div>
                 <div className="flex flex-col items-start justify-between gap-2">
                     <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:from_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
+                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
                         <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.fromQty)} </span>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.fromAsset}</span>
                     </div>
@@ -624,7 +627,7 @@ const SwapModule = ({ width, pair }) => {
 
                 <div className="flex flex-col mt-4 items-start justify-between gap-2">
                     <span className="text-sm leading-5  text-txtSecondary dark:text-txtSecondary-dark">{t('convert:to_amount')}:</span>
-                    <div className="w-full rounded-md bg-gray-4 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
+                    <div className="w-full rounded-md bg-gray-10 dark:bg-dark-2 px-3 py-2 flex justify-between text-base items-center leading-6">
                         <span className="py-1 text-txtPrimary dark:text-txtPrimary-dark">{formatPrice(state.preOrder?.toQty)}</span>
                         <span className="text-txtSecondary dark:text-txtSecondary-dark">{state.preOrder?.toAsset}</span>
                     </div>
