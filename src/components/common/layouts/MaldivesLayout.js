@@ -45,7 +45,7 @@ const MadivesLayout = ({
 
     // NOTE: Apply this style for NavBar on this layout.
     const navbarStyle = {
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0
     };
@@ -84,7 +84,8 @@ const MadivesLayout = ({
                     <NavBar
                         name={navName}
                         useOnly={navMode}
-                        style={ isHomePage ? {...navStyle} : {  ...navbarStyle, ...navStyle }}
+                        // style={ isHomePage ? {...navStyle} : {  ...navbarStyle, ...navStyle }}
+                        style={ {  ...navbarStyle, ...navStyle }}
                         spotState={spotState}
                         onChangeSpotState={onChangeSpotState}
                         resetDefault={resetDefault}
