@@ -68,6 +68,7 @@
     "25p_discount": "25% discount",
     "kyc_wait": "Wait for confirmation",
     "kyc_verified": "Verified",
+    "kyc_unverified": "Unverified",
     "this_device": "This device",
     "revoke_title": "Revoke Devices",
     "revoke_this_device": "Revoke this device",

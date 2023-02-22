@@ -7,6 +7,7 @@ import Delete from 'components/svg/Delete';
 import { USER_DEVICE_STATUS } from 'constants/constants';
 import { floor, range } from 'lodash';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Axios from 'axios';
 import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
@@ -72,23 +73,26 @@ function Activity({ t }) {
     const onRevoke = async (revokeId, isThisDevice = false) => {
         if (!revokeId) return;
         setRevoking(true);
-        try {
-            const id = revokeId === 'all' ? 'all' : revokeId;
-            const { data } = await Axios.post(USER_REVOKE_DEVICE, { id });
-            if (data?.status === ApiStatus.SUCCESS && (id === 'all' || isThisDevice)) {
-                router.reload();
-            }
-        } catch (e) {
-            console.log(`Can't revoke device ${revokeId} `, e);
-        } finally {
-            setRevoking(false);
-            getActivities();
-            setRevokeDevice(null);
-            closeRevokeModal();
-        }
+        const id = revokeId === 'all' ? 'all' : revokeId;
+        await Axios.post(USER_REVOKE_DEVICE, { id })
+            .then(async ({ data }) => {
+                if (data?.status === ApiStatus.SUCCESS && (id === 'all' || isThisDevice)) {
+                    await router.reload();
+                }
+            })
+            .catch(() => {
+                console.log(`Can't revoke device ${revokeId} `, e);
+            })
+            .finally(() => {
+                getActivities();
+                setRevokeDevice(null);
+                closeRevokeModal();
+                setRevoking(false);
+            });
     };
 
     const closeRevokeModal = () => {
+        if (revoking) return;
         setRevokeDevice(null);
         setOpenRevokeModal(false);
     };
@@ -102,9 +106,13 @@ function Activity({ t }) {
                 title={t('profile:revoke_title')}
                 message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice?.device_title }) : t('profile:revoke_question_all')}
                 textButton={t('common:confirm')}
-                onConfirm={() => {
-                    onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice?.this_device);
-                }}
+                customButton={<ButtonV2
+                    loading={revoking}
+                    onClick={() => {
+                        onRevoke(revokeDevice ? revokeDevice.id : 'all', revokeDevice?.this_device);
+                    }}
+                    className='mt-6'
+                >{t('common:confirm')}</ButtonV2>}
                 className='w-96'
             />
             <div className='flex items-center justify-between mb-8'>

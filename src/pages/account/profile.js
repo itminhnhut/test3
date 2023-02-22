@@ -136,7 +136,17 @@ const ModalChangeReferee = ({
     const [refCode, setRefCode] = useState('');
     const [referrer, setReferrer] = useState(null);
     const [checking, setChecking] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const dispatch = useDispatch();
+
+    const handleClose = () => {
+        setRefCode('');
+        setSubmitting(false);
+        setChecking(false);
+        setReferrer(null);
+
+        onClose();
+    };
 
     const checkRef = useCallback(debounce((code) => {
         setChecking(true);
@@ -153,7 +163,8 @@ const ModalChangeReferee = ({
             });
     }, 300), []);
 
-    const setInvite = () => {
+    const submitReferrer = () => {
+        setSubmitting(true);
         fetchApi({
             url: API_NEW_REFERRAL_CREATE_INVITE,
             options: {
@@ -165,7 +176,7 @@ const ModalChangeReferee = ({
                 if (res.status === ApiStatus.SUCCESS) {
                     await dispatch(getMe());
                     const referrer = res.data.referrer || {};
-                    const referralName = referrer.name || referrer.username || referrer.code || '--';
+                    const referralName = referrer.name || referrer.username || referrer.email || '--';
 
                     toast({
                         text: t('profile:add_ref_code_success', { referralName }),
@@ -185,8 +196,8 @@ const ModalChangeReferee = ({
                 });
             })
             .finally(() => {
-                setRefCode('');
-                onClose();
+                setSubmitting(false);
+                handleClose();
             });
     };
 
@@ -199,11 +210,14 @@ const ModalChangeReferee = ({
 
     const suffixInput = useMemo(() => {
         if (checking) return <Spinner size={20} />;
-        if (!referrer) return <span className='text-txtSecondary'>{referrer?.username}</span>;
+        if (!!referrer) {
+            return <span
+                className='text-txtSecondary dark:text-txtSecondary-dark'>{referrer?.username}</span>;
+        }
         return null;
     }, [referrer, checking]);
 
-    return <ModalV2 isVisible={open} onBackdropCb={onClose} className='w-[30rem]'>
+    return <ModalV2 isVisible={open} onBackdropCb={handleClose} className='w-[30rem]'>
         <p className='text-xl font-medium py-6'>{t('profile:referrer')}</p>
         <InputV2
             value={refCode}
@@ -215,7 +229,8 @@ const ModalChangeReferee = ({
             error={(!referrer && !!refCode) ? t('profile:error.REFERRAL_CODE_NOT_FOUND') : null}
         />
         <ButtonV2
-            onClick={setInvite}
+            onClick={submitReferrer}
+            loading={submitting}
             disabled={!refCode || !referrer}
             className='mt-4'>{t('common:confirm')
         }</ButtonV2>

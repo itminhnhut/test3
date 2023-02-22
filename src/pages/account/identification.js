@@ -184,8 +184,10 @@ const VerifiedKycCard = ({
     return <div className={classnames(className, 'bg-white dark:bg-darkBlue-3 rounded-xl text-center px-10 py-12')}>
         <img className='mx-auto w-[7.5rem] w-[7.5rem] md:w-[12.5rem] md:h-[12.5rem]'
              src={getS3Url('/images/screen/account/kyc_verified.png')} />
-        <p className='text-teal font-medium text-xl md:text-2xl mb-2 mt-6'>{t('identification:account.congratulations')}</p>
-        <span className='text-teal font-medium text-xl md:text-2xl'>{t('identification:account.verified')}</span>
+        <span className='text-teal font-semibold md:leading-8 text-xl md:text-2xl mb-2 mt-6'>
+            {t('identification:account.congratulations')}<br />
+            {t('identification:account.verified')}
+        </span>
     </div>;
 };
 
