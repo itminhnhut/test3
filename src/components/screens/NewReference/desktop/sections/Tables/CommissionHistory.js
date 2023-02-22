@@ -162,7 +162,10 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         align: 'right',
         width: 200,
         sorter: false,
-        render: (data, item) => <span className='text-teal'>+ {formatNumber(data, 4)} {assetTabs.find(e => e.value === item.currency)?.title}</span>
+        render: (data, item) => {
+            const value = data < 0 ? 0 : `+ ${formatNumber(data, 4)}`
+            return <span className='text-teal'>{value} {assetTabs.find(e => e.value === item.currency)?.title}</span>
+        }
     }], [dataSource]);
 
     return (
