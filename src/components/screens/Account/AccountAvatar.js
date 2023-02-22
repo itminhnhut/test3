@@ -345,7 +345,7 @@ const AccountAvatar = ({
                     className='flex flex-col flex-col-reverse md:flex-row md:pb-10 flex-1 min-h-0'>
                     <div
                         ref={avatarRef}
-                        className='overflow-y-auto relative -mr-3 pr-2 min-h-0 md:w-[25rem] pb-8 md:pr-6'
+                        className='overflow-y-auto relative -mr-3 pr-2 min-h-0 md:w-[25rem] pb-8 md:pr-2'
                         onScroll={onScroll}
                     >
                         {isMobile && <UploadAvatar t={t} className='h-44 mb-14' onDropCustomAvatar={onDropCustomAvatar} />}
@@ -363,8 +363,7 @@ const AccountAvatar = ({
                                             'border-teal bg-teal/[.1] text-teal': currentCategoryId === category.id,
                                             'border-divider text-txtSecondary dark:text-txtSecondary-dark dark:border-divider-dark': currentCategoryId !== category.id
                                         })
-                                    }
-                                >{category.name[language]}</div>;
+                                    } >{category.name[language]}</div>;
                             })}
                         </div>
                         <div className='space-y-6'>
@@ -376,7 +375,7 @@ const AccountAvatar = ({
                                 >
                                     <div className='bg-white dark:bg-darkBlue-3 border border-divider dark:border-none p-4 rounded-xl'>
                                         <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{avatarSet.category.name[language]}</p>
-                                        <div className='flex flex-wrap'>
+                                        <div className='flex flex-wrap gap-x-6 gap-y-4'>
                                             {avatarSet.images.map((image, index) => {
                                                 const isSelected = avatar?.type === AVATAR_TYPE.PRESET && image === avatar?.src;
                                                 return <div
@@ -385,7 +384,7 @@ const AccountAvatar = ({
                                                         src: image,
                                                         type: AVATAR_TYPE.PRESET
                                                     })}
-                                                    className={classnames('border border-transparent rounded-full cursor-pointer p-[3px]', {
+                                                    className={classnames('border border-transparent rounded-full cursor-pointer', {
                                                         '!border-teal': isSelected
                                                     })}
                                                 >

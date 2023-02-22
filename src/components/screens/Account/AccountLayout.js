@@ -17,7 +17,9 @@ import { PATHS } from 'constants/paths';
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useEffect } from 'react';
+import colors from 'styles/colors';
 
+const KYCUnVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='default'>{t('profile:kyc_unverified')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='ml-3' type='warning'>{t('profile:kyc_wait')}</TagV2>;
 
 const KYCVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='success'>{t('profile:kyc_verified')}</TagV2>;
@@ -35,12 +37,13 @@ export default function AccountLayout({ children }) {
         if (!auth.user && !auth.loadingUser) {
             window.open(getLoginUrl('sso', 'login'), '_self');
         }
-    }, [auth])
+    }, [auth]);
 
     return <MaldivesLayout
         dark={currentTheme === THEME_MODE.DARK}
         light={currentTheme === THEME_MODE.LIGHT}
         hideInApp={isApp}
+        contentWrapperStyle={{ backgroundColor: colors.gray['10'] }}
     >
         <div
             className='bg-black-800 h-24 md:h-44'
@@ -50,13 +53,15 @@ export default function AccountLayout({ children }) {
                 backgroundPosition: 'center'
             }}
         />
-        <Container className='mal-container px-4 h-full'>
+        <Container className='mal-container px-4'>
             <div className='flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between'>
                 <AccountAvatar currentAvatar={auth?.user?.avatar} />
                 <div className='mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center'>
                     <div className='flex flex-col md:flex-row items-center md:items-start'>
                         <div className='mb-3 md:mb-0'>
-                            <div className='text-xl md:text-2xl !leading-7 mb-2 font-semibold'>{auth?.user?.name}</div>
+                            <div className='text-xl md:text-2xl !leading-7 mb-2 font-semibold'>
+                                {auth?.user?.name || auth?.user?.username || auth?.user?.email}
+                            </div>
                             <TextCopyable
                                 text={auth?.user?.code}
                                 className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start'
@@ -64,6 +69,7 @@ export default function AccountLayout({ children }) {
                         </div>
 
                         {{
+                            [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
                             [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
                             [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
                         }[auth?.user?.kyc_status] || null}

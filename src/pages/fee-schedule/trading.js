@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { formatNumber } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { API_GET_FUTURE_FEE_CONFIGS, API_GET_VIP, API_SET_ASSET_AS_FEE } from 'redux/actions/apis';
 import { BREAK_POINTS, FEE_STRUCTURES, FEE_TABLE, ROOT_TOKEN } from 'constants/constants';
 import { ApiStatus, TRADING_MODE } from 'redux/actions/const';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { orderBy, range } from 'lodash';
+import { orderBy, range, throttle } from 'lodash';
 import { PATHS } from 'constants/paths';
 
 import Axios from 'axios';
@@ -18,6 +18,8 @@ import TabItem, { TabItemComponent } from 'components/common/TabItem';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
 import Empty from 'components/common/Empty';
+import ExchangeFeeMobileList from 'components/screens/FeeSchedule/ExchangeFeeMobileList';
+import FuturesFeeMobileList from 'components/screens/FeeSchedule/FuturesFeeMobileList';
 
 import NamiCircle from 'components/svg/NamiCircle';
 import SwitchV2 from 'components/common/V2/SwitchV2';
@@ -25,122 +27,6 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Crown from 'components/svg/Crown';
 import classnames from 'classnames';
 import useDarkMode from 'hooks/useDarkMode';
-
-const FuturesFeeMobileList = ({
-    t,
-    data = [],
-    currentQuote,
-    loading = true
-}) => {
-    const [isShowMore, setIsShowMore] = useState(false);
-
-    return <div>
-        <div className='divide-y divide-divider dark:divide-divider-dark space-y-8'>
-            { // LOADING
-                loading && range(0, 5)
-                    .map(i => {
-                        return <div key={i} className='pt-8 animate-pulse'>
-                            <div className='flex justify-between mb-6'>
-                                <div className='w-28 h-7 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                                <div className='w-28 h-7 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                            </div>
-
-                            <div className='flex justify-between items-center mb-3'>
-                                <div className='w-40 h-3 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                                <div className='w-48 h-3 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                            </div>
-
-                            <div className='flex justify-between items-center'>
-                                <div className='w-40 h-3 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                                <div className='w-48 h-3 bg-darkBlue-5 dark:bg-dark-2 rounded-md' />
-                            </div>
-                        </div>;
-                    })
-            }
-            {
-                (data || [])
-                    .filter(c => {
-                        const quote = c?.name.substring(c?.name?.length - 4);
-                        return quote === currentQuote;
-                    })
-                    .slice(0, isShowMore ? undefined : 10)
-                    .map(item => {
-                        return <div key={item.name} className='pt-8'>
-                            <div className='flex justify-between mb-6'>
-                                <div>
-                                    <p className='text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1'>{t('common:pair')}</p>
-                                    <Link
-                                        href={PATHS.FUTURES.TRADE.getPair(TRADING_MODE.FUTURES, { pair: item?.name })}>
-                                        <a className='font-semibold hover:!underline'>{item?.name}</a>
-                                    </Link>
-                                </div>
-                                <div>
-                                    <p className='text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1'>{t('common:max_leverage')}</p>
-                                    <span className='font-semibold'>{item.max_leverage}x</span>
-                                </div>
-                            </div>
-
-                            <div className='flex justify-between items-center text-sm mb-3'>
-                                <div
-                                    className='text-txtSecondary dark:text-txtSecondary-dark'>{t('fee-structure:fee_open_close')}</div>
-                                <div>{item?.place_order_fee * 100}%&nbsp;/&nbsp;{item?.close_order_fee * 100}%</div>
-                            </div>
-
-                            <div className='flex justify-between items-center text-sm'>
-                                    <span
-                                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('fee-structure:fee_nami_open_close')}</span>
-                                <p className='whitespace-nowrap'>{item?.place_order_fee_promote * 100}%&nbsp;/&nbsp;{item?.close_order_fee_promote * 100}%</p>
-                            </div>
-                        </div>;
-                    })
-            }
-        </div>
-        <div className='text-center mt-8'>
-            <span
-                className='text-teal font-semibold cursor-pointer'
-                onClick={() => setIsShowMore(!isShowMore)}
-            >{isShowMore ? t('fee-structure:show_less') : t('fee-structure:show_more')}</span>
-        </div>
-    </div>;
-};
-
-const ExchangeMobileList = ({ t }) => {
-    return <div className='divide-y divide-divider dark:divide-divider-dark space-y-8'>
-        {FEE_TABLE.map(item => {
-            return <div key={item.level} className='pt-8'>
-                <div className='flex justify-between mb-6'>
-                    <div>
-                        <p className='text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1'>{t('common:fee_level')}</p>
-                        <span className='font-semibold'>VIP {item.level}</span>
-                    </div>
-                    <div>
-                        <p className='text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1'>NAMI</p>
-                        <span
-                            className='font-semibold'>≥ {formatNumber(item.nami_holding, 0)} NAMI</span>
-                    </div>
-                </div>
-
-                <div className='flex justify-between items-center text-sm mb-3'>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark'>Maker/Taker</div>
-                    <div>{item.maker_taker}</div>
-                </div>
-
-                <div className='flex justify-between items-center text-sm'>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                        <span>Maker/Taker </span>
-                        <span
-                            className='text-teal whitespace-nowrap'>({t('fee-structure:use_asset_deduction', {
-                            value: '25%',
-                            asset: 'NAMI'
-                        })})</span>
-                    </div>
-                    <p className='whitespace-nowrap'>{item.maker_taker_deducted}</p>
-                </div>
-            </div>;
-        })}
-    </div>;
-
-};
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -220,37 +106,34 @@ const TradingFee = () => {
         }
     };
 
-    const onUseAssetAsFee = async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
-        const throttle = 800;
+    const onUseAssetAsFee = throttle(async (action = 'get', currency = undefined, assetCode = 'NAMI') => {
         setState({ loadingAssetFee: true });
 
         try {
             if (action === 'get') {
                 const { data } = await Axios.get(API_SET_ASSET_AS_FEE);
                 if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                    setTimeout(() => {
-                        setState({
-                            assetFee: data.data,
-                            promoteFee: {
-                                exchange: data?.data?.promoteSpot,
-                                futures: data?.data?.promoteFutures
-                            }
-                        });
-                    }, throttle);
+                    setState({
+                        assetFee: data.data,
+                        promoteFee: {
+                            exchange: data?.data?.promoteSpot,
+                            futures: data?.data?.promoteFutures
+                        }
+                    });
                 }
             }
             if (action === 'set' && currency !== undefined) {
                 const { data } = await Axios.post(API_SET_ASSET_AS_FEE, { currency });
                 if (data?.status === ApiStatus.SUCCESS && data?.data) {
-                    setTimeout(() => setState({ assetFee: data.data }), throttle);
+                    setState({ assetFee: data.data });
                 }
             }
         } catch (e) {
             console.log(`Can't ${action} ${assetCode} as asset fee `, e);
         } finally {
-            setTimeout(() => setState({ loadingAssetFee: false }), throttle);
+            setState({ loadingAssetFee: false });
         }
-    };
+    }, 800);
 
     // Render Handler
     const renderNamiAvailable = useCallback(() => {
@@ -518,8 +401,8 @@ const TradingFee = () => {
             </>)
             :
             (<>
-                <span className='mr-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark'>{maker}%</span>
-                <span>{taker}%</span>
+                <span>{maker}%</span>
+                <span className='ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark'>{taker}%</span>
             </>);
     }, [state.assetFee?.feeCurrency]);
 
@@ -546,7 +429,7 @@ const TradingFee = () => {
             <div
                 className='md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm'
                 style={{
-                    backgroundImage: `url(/images/screen/account/bg_transfer_onchain_${currentTheme}.png)`,
+                    backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
@@ -617,7 +500,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             <div className='flex justify-between sm:block'>
                                 <span className='inline-block min-w-[35px] mr-9'>Taker</span>
                                 <span className='float-right'>
@@ -642,7 +525,7 @@ const TradingFee = () => {
                             </span>
                         </div>
 
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             <div className='flex justify-between sm:block'>
                                 <span className='inline-block min-w-[35px] mr-9'>Maker</span>
                                 <span className='float-right'>
@@ -650,7 +533,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             <div className='flex justify-between sm:block'>
                                 <span className='inline-block min-w-[35px] mr-9'>Taker</span>
                                 <span className='float-right'>
@@ -672,7 +555,7 @@ const TradingFee = () => {
                             </span>
                         </div>
 
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             <div className='flex justify-between sm:block'>
                                 <span className='inline-block min-w-[35px] mr-9'>Maker</span>
                                 <span className='float-right'>
@@ -680,7 +563,7 @@ const TradingFee = () => {
                                 </span>
                             </div>
                         </div>
-                        <div className='font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             <div className='flex justify-between sm:block'>
                                 <span className='inline-block min-w-[35px] mr-9'>Taker</span>
                                 <span className='float-right'>
@@ -725,7 +608,7 @@ const TradingFee = () => {
                         >{tab.title}</div>;
                     })}
                 </div>
-                {state.tabIndex === 0 && <ExchangeMobileList t={t} />}
+                {state.tabIndex === 0 && <ExchangeFeeMobileList t={t} />}
                 {
                     [1, 2].includes(state.tabIndex) &&
                     <FuturesFeeMobileList
