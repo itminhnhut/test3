@@ -30,17 +30,12 @@ const Support = () => {
     const dispath = useDispatch();
 
     React.useEffect(() => {
-        // document.body.classList.add('hidden-scrollbar');
         document.body.classList.add('no-scrollbar');
-        // document.body.classList.add('!bg-onus');
-
         const intervalReloadData = setInterval(() => {
             dispath(reloadData());
         }, 5 * 60 * 1000);
-
         return () => {
-            document.body.classList.remove('hidden-scrollbar');
-            // document.body.classList.remove('bg-onus');
+            document.body.classList.remove('no-scrollbar');
             clearInterval(intervalReloadData);
         };
     }, []);
@@ -81,7 +76,7 @@ const Support = () => {
             }}>
                 {SupportCategories.faq[language].map((faq) => (
                     <a href={
-                        PATHS.SUPPORT.FAQ +
+                        (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
                     }>
                         <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
@@ -105,7 +100,7 @@ const Support = () => {
             SupportCategories.announcements[language].map((announcement) => (
                 <a
                     href={
-                        PATHS.SUPPORT.ANNOUNCEMENT +
+                        (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT +
                         `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
                     }
                     className={classNames({ 'w-[calc(50%-8px)]': isMobile })}
@@ -273,7 +268,7 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                             </span>
                             <div>
                                 <a href={
-                                    PATHS.SUPPORT.DEFAULT +
+                                    (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.DEFAULT +
                                     `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
                                     }`
                                 }>

@@ -1,7 +1,5 @@
 import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import SupportBanner from 'components/screens/Support/SupportBanner';
-import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
 import SearchSection from 'components/screens/Support/SearchSection';
 import { appUrlHandler, getSupportCategoryIcons, SupportCategories } from 'constants/faqHelper';
 import { PATHS } from 'constants/paths';
@@ -12,13 +10,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronUp } from 'react-feather';
-import useHideScrollbar from 'hooks/useHideScrollbar';
-import { handleHideScrollBar } from 'utils/helpers';
 import { useWindowSize } from 'utils/customHooks';
-import SupportSection from './SupportSection';
 import { LastedArticles } from 'pages/support';
 import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { reloadData } from 'redux/actions/heath';
 
 
 const TopicsLayout = ({
@@ -43,9 +39,7 @@ const TopicsLayout = ({
     const isApp = useApp();
 
     const [toggleMenu, setToggleMenu] = useState(false)
-
-    const baseHref = mode === 'announcement' ? PATHS.SUPPORT.ANNOUNCEMENT : PATHS.SUPPORT.FAQ;
-    const queryMode = mode === 'announcement' ? 'noti' : 'faq';
+    const dispath = useDispatch();
     const topics =
         mode === 'announcement'
             ? SupportCategories.announcements[language]
@@ -54,8 +48,17 @@ const TopicsLayout = ({
 
     const mainTopic = topics.find((o) => o?.displaySlug === router?.query?.topic);
     const subTopics = mainTopic?.subCats?.find((o) => o?.displaySlug === faqCurrentGroup) || false;
+    useEffect(() => {
+        document.body.classList.add('no-scrollbar');
+        const intervalReloadData = setInterval(() => {
+            dispath(reloadData());
+        }, 5 * 60 * 1000);
+        return () => {
+            document.body.classList.remove('no-scrollbar');
+            clearInterval(intervalReloadData);
+        };
+    }, []);
 
-    useEffect(handleHideScrollBar, []);
     useEffect(() => {
         if (isFaq && router?.query?.topic) {
             setShowDropdown({ [router.query.topic]: true });
@@ -90,8 +93,8 @@ const TopicsLayout = ({
                     }}
                 >
                     <a className={classNames(
-                        'px-4 sm:px-6 flex flex-grow items-center text-txtPrimary dark:text-gray-4 font-normal text-base cursor-pointer', {
-                        'sm:!px-5 !font-semibold': !isFaq && router?.query?.topic === item?.displaySlug
+                        'px-4 sm:px-6 flex flex-grow items-center text-txtPrimary dark:text-gray-4 font-normal text-sm sm:text-base cursor-pointer', {
+                        'sm:!px-5 sm:!font-semibold': !isFaq && router?.query?.topic === item?.displaySlug
                     })}>
                         <div className="h-6 w-6 mr-3 sm:mr-6">
                             <Image
@@ -239,13 +242,13 @@ const TopicsLayout = ({
                                 </div>
                                 : null}
                             <div className={classNames('', {
-                                'absolute w-full h-full bg-black/60 dark:bg-dark/80': isMobile && toggleMenu,
+                                'absolute w-full h-full': isMobile && toggleMenu,
                                 'hidden h-0': isMobile && !toggleMenu
                             })}>
                                 <div className='bg-bgPrimary dark:bg-dark pt-3 sm:pt-0'>
                                     {renderTopics}
                                 </div>
-                                <div className='h-[calc(100%-600px)] min-h-[150px] w-full bg-dark bg-opacity-80 sm:hidden' onClick={() => setToggleMenu(false)}></div>
+                                <div className='h-[calc(100%-600px)] min-h-[150px] w-full bg-black-800/[.6] dark:bg-black-800/80 sm:hidden' onClick={() => setToggleMenu(false)}></div>
                             </div>
                         </div>
 

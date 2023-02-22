@@ -84,7 +84,7 @@ const FaqArticle = (props) => {
                     {props?.data?.article?.title}
                 </div>
                 <div className='sm:mt-2 text-[10px] sm:text-xs lg:text-[16px] lg:mt-4 font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                    {formatTime(props?.data?.article?.created_at, 'dd-MM-yyyy')}
+                    {formatTime(props?.data?.article?.created_at, 'dd/MM/yyyy')}
                 </div>
                 <GhostContent content={props?.data?.article?.html} />
             </TopicsLayout>

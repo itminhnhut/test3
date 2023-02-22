@@ -8,6 +8,7 @@ import { useTranslation } from 'next-i18next';
 import { formatTime } from 'redux/actions/utils';
 import Parse from 'html-react-parser';
 import _ from 'lodash';
+import { stripHtml } from "string-strip-html";
 
 const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     const { width } = useWindowSize()
@@ -35,12 +36,18 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
     }
 
     const getHighlightedText = (text, highlight) => {
+        text = stripHtml(text).result
+        try {
+            const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+            return parts.map((part, i) => part &&
+                <span key={i} style={part.toLowerCase() === highlight?.toLowerCase() ? { color: '#47cc85' } : {}}>
+                    {Parse(part)}
+                </span>)
+
+        } catch {
+            return text
+        }
         // Split on highlight term and include term into parts, ignore case
-        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-        return parts.map((part, i) => part &&
-            <span key={i} style={part.toLowerCase() === highlight?.toLowerCase() ? { color: '#47cc85' } : {}}>
-                {Parse(part)}
-            </span>)
 
     }
 
@@ -59,6 +66,8 @@ const SearchResultItem = memo(({ article, loading = false, keyword = '' }) => {
             return PATHS.SUPPORT.ANNOUNCEMENT + `/${cats?.[0]?.slug?.replace(`noti-${language}-`, '')}/${article?.slug}`
         }
     }
+
+    console.log(article)
 
     return (
         <div className="mb-8 sm:mb-12">

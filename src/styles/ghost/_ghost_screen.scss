@@ -1132,7 +1132,7 @@ production stylesheet in assets/built/screen.css
         .gh-content .kg-toggle-card .kg-toggle-content > ul,
         .gh-content .kg-toggle-card .kg-toggle-content > p {
             @apply text-sm;
-            @apply font-medium;
+            @apply font-normal;
             line-height: 20px;
         }
 
