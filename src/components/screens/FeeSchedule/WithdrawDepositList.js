@@ -3,7 +3,7 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import React, { useEffect, useState } from 'react';
 import { formatNumber } from 'redux/actions/utils';
 import NoResult from '../Support/NoResult';
-const ROW_PER_PAGE = 5;
+const ROW_PER_PAGE = 6;
 const WithdrawDepositList = ({ t, paymentConfigs, search, configs }) => {
     const [paymentFees, setPaymentFees] = useState({ filteredData: [], data: [], page: 1, maxPage: 1 });
 
