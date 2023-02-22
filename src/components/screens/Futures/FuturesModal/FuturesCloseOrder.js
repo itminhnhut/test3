@@ -71,8 +71,6 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
         return order_value - (pendingVol ?? 0);
     }, [order]);
 
-    console.log('maxQuoteQty', maxQuoteQty);
-
     useEffect(() => {
         if (isVisible) {
             setVolume();

@@ -579,14 +579,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}
                 decimals={decimals}
-                marketWatch={marketWatch}
             />
             <FututesShareModal
                 order={rowData.current}
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 decimals={decimals}
-                pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <FuturesCloseOrder
                 order={rowData.current}
