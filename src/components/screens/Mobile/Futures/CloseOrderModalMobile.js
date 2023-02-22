@@ -415,7 +415,7 @@ const CloseOrderModalMobile = ({
                                             decimalScale={configSymbol.decimalScalePrice}
                                             allowNegative={false}
                                             thousandSeparator={true}
-                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2 w-[calc(100%-9.75rem)]"
+                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2"
                                             inputClassName="!text-left"
                                             placeholder={getLabel(type)}
                                             onValueChange={({ value }) => setPrice(value)}
