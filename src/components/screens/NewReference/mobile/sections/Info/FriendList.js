@@ -53,7 +53,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
         >
             <p className='text-[22px] py-6 font-semibold'>{t('reference:referral.friend_list')}</p>
             {loading ? <IconLoading color={colors.teal} /> : friendList.length ? <div>
-                <div className='flex w-full justify-between text-txtSecondary text-sm mb-6'>
+                <div className='flex w-full justify-between text-txtSecondary dark:text-txtSecondary-dark text-sm mb-6'>
                     <div>
                         NamiID
                     </div>
@@ -80,7 +80,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}
-            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
+            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-txtSecondary dark:text-txtSecondary-dark text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
         </ModalV2>
         :
         <PopupModal

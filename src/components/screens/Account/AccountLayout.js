@@ -43,7 +43,7 @@ export default function AccountLayout({ children }) {
         dark={currentTheme === THEME_MODE.DARK}
         light={currentTheme === THEME_MODE.LIGHT}
         hideInApp={isApp}
-        contentWrapperStyle={{ backgroundColor: colors.gray['10'] }}
+        contentWrapperStyle={{ backgroundColor: currentTheme === THEME_MODE.DARK ? colors.dark.dark : colors.gray['10'] }}
     >
         <div
             className='bg-black-800 h-24 md:h-44'
