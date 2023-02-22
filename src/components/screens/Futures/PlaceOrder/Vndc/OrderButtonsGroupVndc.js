@@ -42,6 +42,7 @@ const FuturesOrderButtonsGroupVndc = ({
     const [showModal, setShowModal] = useState('');
     const [hidden, setHidden] = useState(false);
     const messages = useRef(null);
+    const canBlur = useRef(true);
 
     const isShowConfirm = useMemo(() => {
         return settings?.user_setting ? settings?.user_setting?.show_place_order_confirm_modal : true;
@@ -66,6 +67,7 @@ const FuturesOrderButtonsGroupVndc = ({
 
     const onSave = () => {
         setLoading(true);
+        canBlur.current = false;
         placeFuturesOrder(
             handleParams(side),
             {
@@ -75,6 +77,7 @@ const FuturesOrderButtonsGroupVndc = ({
             },
             t,
             (data) => {
+                canBlur.current = true;
                 messages.current = data;
                 setLoading(false);
                 setShowModal('alert');
@@ -130,7 +133,12 @@ const FuturesOrderButtonsGroupVndc = ({
                 notes={messages.current?.notes}
                 className="max-w-[448px]"
             />
-            <ModalV2 className="max-w-[448px] text-base" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
+            <ModalV2
+                closeButton={!loading}
+                className="max-w-[448px] text-base"
+                isVisible={showModal === 'confirm'}
+                onBackdropCb={() => canBlur.current && setShowModal('')}
+            >
                 <div className="text-2xl mb-6 font-semibold">{t('futures:preferences:order_confirm')}</div>
                 <div className="p-4 mb-6 rounded-md border border-divider dark:border-divider-dark divide-y divide-divider dark:divide-divider-dark space-y-3">
                     <div className="flex items-center justify-between">
@@ -181,7 +189,7 @@ const FuturesOrderButtonsGroupVndc = ({
                     labelClassName="!text-base"
                     label={t('futures:mobile:not_show_this_message')}
                 />
-                <ButtonV2 disabled={loading} onClick={onSave} className="mt-10">
+                <ButtonV2 disabled={loading} onClick={onSave} loading={loading} className="mt-10">
                     {t('common:confirm')}
                 </ButtonV2>
             </ModalV2>

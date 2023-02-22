@@ -34,7 +34,7 @@ import PriceChangePercent from 'components/common/PriceChangePercent';
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
-const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState, isVndcFutures, isAuth }) => {
+const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutures, isAuth }) => {
     // ? Xử lí minW để khi giá thay đổi, giao diện này sẽ không bị xê dịch.
     // ? Nguyên nhân: Font sida (;_;)
     const [itemsPriceMinW, setItemsPriceMinW] = useState(0);
@@ -130,63 +130,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
         },
         [pairPrice?.lastPrice, pricePrecision, lastPriceMinW, prevLastPrice]
     );
-
-    // ? Render markPrice
-    const renderMarkPrice = useCallback(() => {
-        return (
-            <FuturesPairDetailItem
-                containerClassName=""
-                label={t('futures:mark_price')}
-                value={formatNumber(roundTo(markPrice?.markPrice || 0, pricePrecision), pricePrecision, itemsPriceMinW !== undefined ? 0 : pricePrecision)}
-            />
-        );
-    }, [markPrice?.markPrice, pricePrecision, itemsPriceMinW]);
-
-    const renderMarkPriceItems = useCallback(() => {
-        return MARK_PRICE_ITEMS.map((mark) => {
-            const { key, code, localized: localizedPath } = mark;
-            let minWidth = itemsPriceMinW || 0;
-            let value = null;
-            let localized = t(localizedPath);
-
-            switch (code) {
-                case 'indexPrice':
-                    value = formatNumber(roundTo(markPrice?.indexPrice || 0, pricePrecision), pricePrecision);
-                    break;
-                case 'fundingCountdown':
-                    const rateWidth = markPrice?.fundingRate?.toString()?.length + getDecimalScale(markPrice?.fundingRate) * TEXT_XS_WIDTH_PER_LETTER || 0;
-                    const timerWidth = TEXT_XS_WIDTH_PER_LETTER * 8;
-
-                    value = (
-                        <div className="w-[90%] flex items-center justify-between">
-                            <div
-                                style={{
-                                    minWidth: rateWidth
-                                }}
-                                className={classNames({
-                                    'text-red': !!markPrice?.fundingRate
-                                })}
-                            >
-                                {formatNumber(markPrice?.fundingRate * 100, 4, 4, true)}%
-                            </div>
-                            <div className="ml-4">
-                                {markPrice?.nextFundingTime ? secondToMinutesAndSeconds((markPrice?.nextFundingTime - Date.now()) * 0.001).toString() : '--:--'}
-                            </div>
-                        </div>
-                    );
-                    minWidth = rateWidth + timerWidth + 18;
-                    break;
-                default:
-                    return null;
-            }
-
-            return (
-                <div key={`markPrice_items_${key}`} style={{ minWidth }}>
-                    <FuturesPairDetailItem containerClassName="" label={localized} value={value} />
-                </div>
-            );
-        });
-    }, [markPrice, pricePrecision, itemsPriceMinW]);
 
     //   useEffect(() => {
     //     if (!symbolOptions?.symbol) return;
@@ -359,10 +302,10 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
     }, [router.query, pairPrice?.symbol, pairPrice, lastPriceRef, lastPriceMinW]);
 
     useEffect(() => {
-        if (router.query?.pair === pairPrice?.symbol && itemsPriceMinW === undefined && itemsPriceRef.current && markPrice && markPrice?.markPrice) {
+        if (router.query?.pair === pairPrice?.symbol && itemsPriceMinW === undefined && itemsPriceRef.current) {
             setItemsPriceMinW((itemsPriceRef?.current?.clientWidth || 20) + 24);
         }
-    }, [router.query, pairPrice?.symbol, markPrice, itemsPriceRef, itemsPriceMinW]);
+    }, [router.query, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
 
     const RenderInfoModal = () => {
         const renderContent = (title) => {
@@ -573,7 +516,6 @@ const FuturesPairDetail = ({ pairPrice, markPrice, pairConfig, forceUpdateState,
 const TEXT_XS_WIDTH_PER_LETTER = 6.7;
 
 const MARK_PRICE_ITEMS = [
-    // { key: 0, code: 'markPrice', localized: 'futures:mark_price' },
     {
         key: 1,
         code: 'indexPrice',
