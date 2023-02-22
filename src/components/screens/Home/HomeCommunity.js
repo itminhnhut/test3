@@ -31,7 +31,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_facebook_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Facebook</div>
+                            <div className="homepage-community___channel__group___item__label">Facebook</div>
                         </a>
                     </Link>
                     <Link href="https://www.facebook.com/groups/nami.exchange">
@@ -40,7 +40,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_facebook_v3_plus.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Facebook Group</div>
+                            <div className="homepage-community___channel__group___item__label">Facebook Group</div>
                         </a>
                     </Link>
                     <Link href="https://t.me/namitrade">
@@ -49,7 +49,7 @@ const HomeCommunity = ({
                                 <img className="telegram-global" src={getS3Url('/images/icon/ic_telegram_v3_plus.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Telegram Global</div>
+                            <div className="homepage-community___channel__group___item__label">Telegram Global</div>
                         </a>
                     </Link>
                     <Link href="https://t.me/namitradevn">
@@ -58,7 +58,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_telegram_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Telegram</div>
+                            <div className="homepage-community___channel__group___item__label">Telegram</div>
                         </a>
                     </Link>
                     <Link href="https://twitter.com/NamiTrade">
@@ -67,7 +67,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_twitter_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Twitter</div>
+                            <div className="homepage-community___channel__group___item__label">Twitter</div>
                         </a>
                     </Link>
                     <Link href="https://www.reddit.com/r/NAMIcoin">
@@ -76,7 +76,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_reddit_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Reddit</div>
+                            <div className="homepage-community___channel__group___item__label">Reddit</div>
                         </a>
                     </Link>
                     <Link href="https://nami.io">
@@ -85,7 +85,7 @@ const HomeCommunity = ({
                                 <img src={getS3Url('/images/icon/ic_globe_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">Blog</div>
+                            <div className="homepage-community___channel__group___item__label">Blog</div>
                         </a>
                     </Link>
                     <Link
@@ -96,7 +96,7 @@ const HomeCommunity = ({
                                 <img className="block dark:hidden" src={getS3Url('/images/icon/ic_coingecko_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg"/>
-                            <div className="homepage-community___channel__group___item__label group-hover:underline">CoinGecko</div>
+                            <div className="homepage-community___channel__group___item__label">CoinGecko</div>
                         </a>
                     </Link>
                 </div>

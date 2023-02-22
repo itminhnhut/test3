@@ -4,14 +4,6 @@ import SvgIcon from 'src/components/svg';
 import SvgMenu from 'src/components/svg/Menu';
 import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
-import SvgDocument from 'src/components/svg/SvgDocument';
-import SvgExit from 'src/components/svg/SvgExit';
-import SvgIdentifyCard from 'src/components/svg/SvgIdentifyCard';
-import SvgLayout from 'src/components/svg/SvgLayout';
-import SvgLock from 'src/components/svg/SvgLock';
-import SvgReward from 'src/components/svg/SvgReward';
-import SvgUser from 'src/components/svg/SvgUser';
-import SvgUserPlus from 'src/components/svg/SvgUserPlus';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
@@ -356,7 +348,7 @@ const NavBar = ({
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const { avatar,  code,  kyc_status } = auth;
+        const { avatar, code, kyc_status } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerifying = kyc_status === KYC_STATUS.PENDING_APPROVAL;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
@@ -686,7 +678,7 @@ const NavBar = ({
 
                         {width < 1366 && (
                             <div
-                                className="relative text-txtSecondary dark:text-txtPrimary-dark"
+                                className="relative text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark"
                                 onClick={(e) => {
                                     onDrawerAction(true);
                                 }}

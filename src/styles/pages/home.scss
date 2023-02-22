@@ -450,8 +450,7 @@
               border-radius: 12px;
 
               &:hover {
-                @apply bg-white dark:bg-[#2d333d] dark:shadow-none;
-                box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
+                @apply bg-hover-1  dark:bg-dark-1;
               }
             }
 
@@ -1677,13 +1676,7 @@
         transition: all .3s ease;
         min-height: 110px;
 
-        &:hover {
-          .homepage-community___channel__group___item__bg{
-            min-height:200px;   
-            max-width:400px !important;     
-            width:400px !important;
-          }
-        }
+       
         @media (min-width: 992px) {
           @apply w-1/4;
           padding-top: 98px;
@@ -1691,6 +1684,22 @@
           //  @apply bg-white dark:bg-darkBlue-3 dark:shadow-none;
           //  box-shadow: 0 10px 30px rgba(89, 111, 153, 0.05);
           //}
+
+          &:hover {
+            .homepage-community___channel__group___item__icon {
+              filter:brightness(1.05);
+            }
+           
+            .homepage-community___channel__group___item__bg{
+              min-height:150px;   
+              max-width:400px !important;     
+              width:400px !important;
+              background-image: radial-gradient(ellipse farthest-corner at 50% 0%, #63FFDA, #46FF88 30%, transparent 50%);           
+            }
+            .homepage-community___channel__group___item__label {
+              @apply text-dominant dark:text-dominant;
+            }
+          }
         }
 
         .homepage-community___channel__group___item__icon {
@@ -1698,6 +1707,7 @@
           top: 28px;
           min-width: 44px;
           min-height: 44px;
+          transition: 0.1s ease-out;
           img {
             height: 44px;
             width: auto;
@@ -1718,7 +1728,7 @@
           top: 58px;
           object-fit: contain;
           opacity: 0.15;
-          transition:ease-out;
+          transition: 0.15s all ease-out;
           background-image: radial-gradient(ellipse farthest-corner at 50% 0%, #63FFDA, #46FF88 5%, transparent 50%);
         }
 
@@ -1726,6 +1736,7 @@
           @apply dark:text-txtPrimary-dark md:text-base text-sm;
           font-weight: 600;
           text-underline-offset: 8px;
+          transition: 0.15s ease-out;
         }
       }
 

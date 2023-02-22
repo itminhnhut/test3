@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { getMarketWatch } from 'redux/actions/market';
@@ -15,10 +15,10 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 
 const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
-    ssr: false
+    ssr: false,loading:() => <div className="h-10 w-full bg-transparent" />
 });
 
-const HomeIntroduce = ({ parentState }) => {
+const HomeIntroduce = ({ trendData }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
@@ -38,6 +38,7 @@ const HomeIntroduce = ({ parentState }) => {
             console.log('__ data', data);
             if (data && data.status === 'ok') {
                 setState({ trending: data?.data });
+                console.log('data?.data:', data?.data)
             }
         } catch (e) {
             console.log('Cant get top trending data: ', e);
@@ -50,7 +51,7 @@ const HomeIntroduce = ({ parentState }) => {
         return (
             <section className="homepage-introduce">
                 <TrendingSlide trending={state.trending} />
-                <div className="homepage-introduce___wrapper mal-container relative">
+                <div className="homepage-introduce___wrapper max-w-screen-v3 m-auto relative">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
@@ -184,4 +185,4 @@ const makeData = () => {
 // const MEMBER_RANGE = [5, 20]
 const VOLUME_24H_RANGE = [1e5, 9e5];
 
-export default HomeIntroduce;
+export default memo(HomeIntroduce);

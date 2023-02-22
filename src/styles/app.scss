@@ -1038,35 +1038,45 @@ input:-webkit-autofill {
 
 
 
+
   .looper {
-    @apply w-screen overflow-hidden max-w-full;
-    @keyframes slideAnimation {
+    --gap: 2rem;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: var(--gap);
+    @keyframes scroll {
         from {
-          transform: translateX(0%);
+          transform: translateX(0);
         }
         to {
-          transform: translateX(-100%);
+          transform: translateX(calc(-100% - var(--gap)));
         }
       }
-    .looper__listInstance {
-        @apply flex items-center;
-        will-change: transform;
-        animation: 8s slideAnimation linear infinite;
-
-        @media screen and (min-width:768px) {
-            animation-duration: 12s;
-        }
-        @media screen and (min-width:1028px) {
-            animation-duration: 18s;
-        }
-        @media screen and (min-width:1440px) {
-            animation-duration: 25s;
-        }
-        &:hover {
+      &:hover {
+          .looper__listInstance {
             animation-play-state: paused;
-        }
+          }
+    }
+    .looper__listInstance {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: space-around;
+        min-width: 100%;
+        gap: var(--gap);
+        animation: 25s scroll linear infinite;
+        //  @media screen and (min-width:768px) {
+        //     animation-duration: 12s;
+        // }
+        // @media screen and (min-width:1028px) {
+        //     animation-duration: 18s;
+        // }
+        // @media screen and (min-width:1440px) {
+        //     animation-duration: 25s;
+        // }
       }
   }
+  
 
   
 

@@ -11,7 +11,6 @@ import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
 
 import classNames from 'classnames';
-import { useRefWindowSize } from 'hooks/useWindowSize';
 
 const types = [
     {
@@ -64,7 +63,7 @@ const HomeMarketTrend = ({ trendData }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // * Use Hooks
-    const { width } = useRefWindowSize();
+    const { width } = useWindowSize();
     const { t } = useTranslation(['home', 'table']);
 
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
@@ -110,8 +109,8 @@ const HomeMarketTrend = ({ trendData }) => {
             <div
                 className={
                     isMobile
-                        ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar'
-                        : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar'
+                        ? 'flex space-x-3 h-9 font-normal text-sm overflow-auto no-scrollbar haha'
+                        : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar haha'
                 }
             >
                 {types.map((e, index) => (
@@ -135,6 +134,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         onClick={() => {
                             setType(e);
                             setState({ marketTabIndex: index });
+                            // document.getElementById(e.id).scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start',boundary:document.getElementById('root') })
                         }}
                     >
                         {e?.content[lang]}

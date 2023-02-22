@@ -18,11 +18,22 @@ const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: fals
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), { ssr: false });
 const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), { ssr: false });
+const HomeCommunity = dynamic(() => import('components/screens/Home/HomeCommunity'), {
+    ssr: false
+});
+const HomeFirstAward = dynamic(() => import('components/screens/Home/HomeFirstAward'), {
+    ssr: false
+});
+const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDark'), {
+    ssr: false
+});
+
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
 
 import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import { X } from 'react-feather';
 import useDarkMode from 'hooks/useDarkMode';
+import { useRefWindowSize } from 'hooks/useWindowSize';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
@@ -33,8 +44,12 @@ const Index = () => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     // * Use Hooks
-    const { t } = useTranslation(['home', 'modal']);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation(['home', 'modal']);
     const [currentTheme] = useDarkMode();
+    const { width } = useRefWindowSize();
 
     // * Render Handler
     const renderQrCodeModal = useCallback(() => {
@@ -137,10 +152,15 @@ const Index = () => {
     return (
         <MaldivesLayout navOverComponent navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce parentState={setState} trendData={state.streamLineData} />
+                <HomeIntroduce trendData={state.trendData} />
                 <HomeMarketTrend trendData={state.trendData} />
                 <HomeNews />
-                <HomeAdditional parentState={setState} currentTheme={currentTheme} />
+                <HomeAdditional t={t} width={width} currentTheme={currentTheme} />
+                <HomeLightDark t={t} onShowQr={() => setState({ showQR: true })} />
+
+                <HomeFirstAward theme={currentTheme} t={t} language={language} />
+                <HomeCommunity t={t} language={language} width={width} />
+
                 {renderQrCodeModal()}
             </div>
         </MaldivesLayout>

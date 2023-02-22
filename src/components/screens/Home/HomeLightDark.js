@@ -80,6 +80,11 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         loop
                         allowTouchMove
                         breakpoints={{
+                            540: {
+                                slidesPerView: 2,
+                               
+                                allowTouchMove: true
+                            },
                             768: {
                                 slidesPerView: 3,
                                 spaceBetween: 20,
