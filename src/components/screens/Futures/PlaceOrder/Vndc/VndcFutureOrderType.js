@@ -189,39 +189,39 @@ export const validator = (key, price, type, side, lastPrice, pairConfig, decimal
 
             if (side === FuturesOrderEnum.Side.BUY) {
                 // Truong hop la buy thi gia limit phai nho hon gia hien tai
-                if (type === "LIMIT") {
+                if (type === 'LIMIT') {
                     if (price < lowerBound.min) {
                         isValid = false;
-                        msg = `${t("futures:minimum_price")} ${formatNumber(lowerBound.min, decimal, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimal, 0, true)}`;
                     } else if (price > lowerBound.max) {
                         isValid = false;
-                        msg = `${t("futures:maximum_price")} ${formatNumber(lowerBound.max, decimal, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimal, 0, true)}`;
                     }
-                } else if (type === "STOP_MARKET") {
+                } else if (type === 'STOP_MARKET' || type === 'STOP') {
                     if (price < upperBound.min) {
                         isValid = false;
-                        msg = `${t("futures:minimum_price")} ${formatNumber(upperBound.min, decimal, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimal, 0, true)}`;
                     } else if (price > upperBound.max) {
                         isValid = false;
-                        msg = `${t("futures:maximum_price")} ${formatNumber(upperBound.max, decimal, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimal, 0, true)}`;
                     }
                 }
             } else if (side === FuturesOrderEnum.Side.SELL) {
-                if (type === "LIMIT") {
+                if (type === 'LIMIT') {
                     if (price < upperBound.min) {
                         isValid = false;
-                        msg = `${t("futures:minimum_price")} ${formatNumber(upperBound.min, decimal, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimal, 0, true)}`;
                     } else if (price > upperBound.max) {
                         isValid = false;
-                        msg = `${t("futures:maximum_price")} ${formatNumber(upperBound.max, decimal, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimal, 0, true)}`;
                     }
-                } else if (type === "STOP_MARKET") {
+                } else if (type === 'STOP_MARKET' || type === 'STOP') {
                     if (price < lowerBound.min) {
                         isValid = false;
-                        msg = `${t("futures:minimum_price")} ${formatNumber(lowerBound.min, decimal, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimal, 0, true)}`;
                     } else if (price > lowerBound.max) {
                         isValid = false;
-                        msg = `${t("futures:maximum_price")} ${formatNumber(lowerBound.max, decimal, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimal, 0, true)}`;
                     }
                 }
             }
