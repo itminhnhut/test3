@@ -210,9 +210,10 @@ const Wallet = () => {
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
+                                isMobile
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
-                                className={`text-left px-4 !md:px-0 !text-base`}
+                                className={`text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0`}
                                 value={e.key}
                                 onClick={() => {
                                     const current = SCREEN_TAB_SERIES.find((o) => o?.key === e.key);
