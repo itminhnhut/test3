@@ -103,8 +103,8 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         navigation
                         pagination={{ clickable: true }}
                         scrollbar={{ draggable: true }}
-                        onSwiper={(swiper) => console.log(swiper)}
-                        onSlideChange={() => console.log('slide change')}
+                        onSwiper={(swiper) => undefined}
+                        onSlideChange={() => undefined}
                     >
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">

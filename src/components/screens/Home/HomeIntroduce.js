@@ -31,10 +31,8 @@ const HomeIntroduce = ({ trendData,t }) => {
         setState({ loadingTrend: true });
         try {
             const { data } = await axios.get(API_GET_TRENDING);
-            console.log('__ data', data);
             if (data && data.status === 'ok') {
                 setState({ trending: data?.data });
-                console.log('data?.data:', data?.data)
             }
         } catch (e) {
             console.log('Cant get top trending data: ', e);
