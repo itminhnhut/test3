@@ -11,6 +11,7 @@ import { PORTAL_MODAL_ID } from 'constants/constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import useWindowSize from 'hooks/useWindowSize';
+import useDarkMode from 'hooks/useDarkMode';
 
 const INITIAL_STATE = {
     redirectTo: null,
@@ -23,15 +24,17 @@ const ExternalWithdrawal = (props) => {
         t,
         i18n: { language },
     } = useTranslation()
-    useEffect(() => {
-        const root = window.document.documentElement;
-        root.classList.remove('light')
-        root.classList.add('dark')
-    }, [])
+
+    const [, , setTheme] = useDarkMode()
+
     const { width } = useWindowSize()
     const {
         service,
+        theme
     } = router.query;
+    useEffect(() => {
+        setTheme(theme ? theme : 'dark')
+    }, [theme])
     const [state, set] = useState(INITIAL_STATE);
     const setState = state => set(prevState => ({ ...prevState, ...state }));
     const doLoginWithOtp = async (otp) => {
@@ -118,8 +121,8 @@ const ExternalWithdrawal = (props) => {
                         isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
                         renderUpper={() => <div className="font-bold text-xl sm:text-[22px] sm:leading-[30px]"> {t('common:tfa_authentication')}</div>}
                         renderLower={() => state.message
-                            ? <div className="text-red text-center text-sm">{state.message}</div>
-                            : <div className="text-red text-center text-sm">&nbsp;</div>
+                            ? <div className="text-red-2 dark:text-red text-center text-sm">{state.message}</div>
+                            : <div className="text-red-2 dark:text-red text-center text-sm">&nbsp;</div>
                         }
                         isMobile={width < 640}
                     />

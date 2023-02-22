@@ -195,7 +195,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 dataIndex: 'symbol',
                 title: t('common:pair'),
                 align: 'left',
-                width: 204,
+                width: 224,
                 render: (row, item) => {
                     let specialOrder;
                     if (item?.metadata?.dca_order_metadata) {
@@ -579,14 +579,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}
                 decimals={decimals}
-                marketWatch={marketWatch}
             />
             <FututesShareModal
                 order={rowData.current}
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 decimals={decimals}
-                pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <FuturesCloseOrder
                 order={rowData.current}

@@ -21,9 +21,9 @@ const LanguageSetting = () => {
 
     return (
         <div ref={ref} className="mal-navbar__hamburger__spacing flex items-center h-full" onClick={toggleOpen}>
-            <a href="#" className="mal-navbar__svg_dominant text-txtSecondary dark:text-txtSecondary-dark">
+            <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                 <SvgGlobe type={2} size={20} color="currentColor" />
-            </a>
+            </div>
 
             {isOpen && (
                 <div className="absolute mt-[1px] bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-4 rounded-b-xl  ">
