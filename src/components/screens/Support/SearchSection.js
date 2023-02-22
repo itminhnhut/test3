@@ -13,7 +13,7 @@ const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v
     return (
         <div className={classNames('flex justify-center w-full h-[158px] sm:h-[456px] bg-[#000]')}>
             <div
-                className={classNames('relative max-w-[1216px] w-full px-4 lg:px-[112px] flex flex-col justify-center h-full')}
+                className={classNames('relative max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full px-4 lg:px-[112px] flex flex-col justify-center h-full')}
                 style={{
                     backgroundImage: image,
                     backgroundSize: 'cover',

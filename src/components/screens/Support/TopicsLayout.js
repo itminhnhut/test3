@@ -190,7 +190,7 @@ const TopicsLayout = ({
             <div className="bg-bgPrimary dark:bg-dark pt-0">
                 <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png')`} />
                 <div className="bg-bgPrimary dark:bg-dark rounded-t-[20px] lg:mt-0">
-                    <div className="block sm:flex min-h-[500px] relative">
+                    <div className="block sm:flex min-h-[500px] relative 2xl:max-w-screen-xxl m-auto">
                         <div
                             style={{ width: COL_WIDTH, minWidth: COL_WIDTH }}
                             className="pt-16 sm:py-20 border-r border-divider dark:border-divider-dark"
@@ -265,7 +265,6 @@ const TopicsLayout = ({
                             )}
                         </div>
                     </div>
-
                 </div>
             </div>
         </MaldivesLayout>
