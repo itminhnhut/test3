@@ -7,10 +7,11 @@ import Button from 'components/common/V2/ButtonV2/Button'
 
 import { BREAK_POINTS } from 'constants/constants'
 import { getLoginUrl } from 'redux/actions/utils'
-import { X } from 'react-feather'
+import { Check, X } from 'react-feather'
 import Copy from 'components/svg/Copy'
 import colors from 'styles/colors'
 import { useTranslation } from 'next-i18next'
+import { useState } from 'react'
 
 const OtpModal = ({
     isVisible,
@@ -23,13 +24,21 @@ const OtpModal = ({
     renderUpper,
     renderLower,
     className,
-    isMobile = false
+    isMobile = false,
+    loading
 }) => {
     const { t } = useTranslation()
+    const [pasted, setPasted] = useState(false)
 
     const doPaste = async () => {
-        const data = await navigator.clipboard.readText()
-        onChange(data.slice(0, 6))
+        try {
+            const data = await navigator?.clipboard?.readText()
+            onChange(data.replace(/\D/g, '').slice(0, 6))
+            setPasted(true)
+            setTimeout(() => setPasted(false), 500)
+        } catch {
+
+        }
     }
 
     const Wrapper = isMobile ? DivComponent : ModalV2
@@ -58,12 +67,12 @@ const OtpModal = ({
             {label && <div className='text-txtSecondary dark:text-darkBlue-5 font-normal text-sm sm:text-base max-w-lg'>{label}</div>}
             <OtpInput
                 value={value}
-                onChange={(otp) => onChange(otp)}
+                onChange={(otp) => onChange(otp.replace(/\D/g, ''))}
                 numInputs={otpLength}
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal'
+                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal'
             />
             <div className='flex w-full justify-between items-center'>
                 <div className={classNames({ 'mt-4': !!renderLower })}>
@@ -72,9 +81,13 @@ const OtpModal = ({
                         : renderLower}
                 </div>
                 <div className='w-full flex justify-end items-center space-x-2 mt-7 cursor-pointer'
-                    onClick={async () => await doPaste()}
+                    onClick={pasted ? undefined : async () => await doPaste()}
                 >
-                    <Copy color={colors.teal} />
+                    {pasted ?
+                        <Check size={16} className="dark:text-teal text-green-3" />
+                        :
+                        <Copy color={colors.teal} />
+                    }
                     <div className='dark:text-teal text-green-3 font-semibold text-base'>
                         {t('common:paste')}
                     </div>
@@ -83,7 +96,7 @@ const OtpModal = ({
             <div className='mt-10'>
                 <Button
                     disabled
-                    loading={value?.length >= 6}
+                    loading={loading}
                 >
                     {t('common:confirm')}
                 </Button>
