@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getFuturesFavoritePairs, mergeFuturesFavoritePairs } from 'redux/actions/futures';
 import { API_GET_FUTURES_MARKET_WATCH } from 'redux/actions/apis';
@@ -13,13 +13,14 @@ import { BxsStarIcon } from 'components/svg/SvgIcon';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
+import { FireIcon } from 'components/svg/SvgIcon';
 
-const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
+const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
+    const quoteAsset = pairConfig?.quoteAsset;
     const [loading, setLoading] = useState(false);
     const [refreshMarketWatch, setRefreshMarketWatch] = useState(null);
     const dispatch = useDispatch();
     const favoritePairs = useSelector((state) => state.futures.favoritePairs);
-    const publicSocket = useSelector((state) => state.socket.publicSocket);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
 
     const fetchMarketWatch = async (isRefresh = false) => {
@@ -36,15 +37,6 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
         }
     };
 
-    const renderPairItems = useCallback(() => {
-        const marketWatch = refreshMarketWatch?.map((o) => {
-            const quoteAsset = allPairConfigs.find((i) => i.pair === o.s)?.quoteAsset;
-            return FuturesMarketWatch.create(o, quoteAsset);
-        });
-        const pairs = mergeFuturesFavoritePairs(favoritePairs, marketWatch);
-        return pairs?.map((pair) => <FuturesFavoritePairItem key={pair?.symbol} pair={pair} />);
-    }, [favoritePairs, refreshMarketWatch]);
-
     useEffect(() => {
         // Init
         fetchMarketWatch();
@@ -53,11 +45,26 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
 
     if (!favoritePairs) return null;
 
+    const dataFilter = useMemo(() => {
+        const suggestedSymbols = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'LTC', 'DOT'];
+        const marketWatch = refreshMarketWatch?.map((o) => {
+            const quoteAsset = allPairConfigs.find((i) => i.pair === o.s)?.quoteAsset;
+            return FuturesMarketWatch.create(o, quoteAsset);
+        });
+
+        const favorites = mergeFuturesFavoritePairs(favoritePairs, marketWatch);
+        return {
+            isFavorite: Array.isArray(favorites) && favorites.length > 0,
+            list:
+                (Array.isArray(favorites) && favorites.length > 0
+                    ? favorites
+                    : marketWatch?.filter((o) => suggestedSymbols.find((s) => s + quoteAsset === o?.symbol))) || []
+        };
+    }, [favoritePairs, refreshMarketWatch]);
+
     return (
         <div className="h-full flex items-center pr-3">
-            <div className="flex items-center pl-6 h-full dragHandleArea">
-                <BxsStarIcon size={16} fill={colors.yellow[2]} />
-            </div>
+            <div className="flex items-center pl-6 h-full">{dataFilter.isFavorite ? <BxsStarIcon size={16} fill={colors.yellow[2]} /> : <FireIcon />}</div>
             <InfoSlider gutter={18} forceUpdateState={favoritePairLayout?.h} containerClassName="h-full">
                 {loading ? (
                     <div className="flex gap-11">
@@ -71,7 +78,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout }) => {
                         <Skeletor width={120} />
                     </div>
                 ) : (
-                    renderPairItems()
+                    dataFilter.list.map((pair) => <FuturesFavoritePairItem key={pair?.symbol} pair={pair} />)
                 )}
             </InfoSlider>
         </div>

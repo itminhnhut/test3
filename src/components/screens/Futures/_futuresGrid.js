@@ -348,7 +348,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 8,
+                w: 7,
                 h: 4,
                 x: 0,
                 y: 0,
@@ -359,7 +359,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 8,
+                w: 7,
                 h: 26,
                 x: 0,
                 y: 5,
@@ -381,9 +381,9 @@ export default {
                 isResizable: false
             },
             {
-                w: 4,
+                w: 5,
                 h: 26,
-                x: 9,
+                x: 97,
                 y: 3,
                 i: futuresGridKey.orderDetail,
                 minW: 4,
@@ -406,7 +406,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 10,
+                w: 9,
                 h: 4,
                 x: 0,
                 y: 0,
@@ -417,7 +417,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 10,
+                w: 9,
                 h: 26,
                 x: 0,
                 y: 5,
@@ -439,9 +439,9 @@ export default {
                 isResizable: false
             },
             {
-                w: 4,
+                w: 5,
                 h: 26,
-                x: 10,
+                x: 9,
                 y: 3,
                 i: futuresGridKey.orderDetail,
                 minW: 4,
@@ -464,7 +464,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 12,
+                w: 11,
                 h: 4,
                 x: 0,
                 y: 0,
@@ -475,7 +475,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 12,
+                w: 11,
                 h: 26,
                 x: 0,
                 y: 5,
@@ -497,9 +497,9 @@ export default {
                 isResizable: false
             },
             {
-                w: 4,
+                w: 5,
                 h: 26,
-                x: 15,
+                x: 11,
                 y: 3,
                 i: futuresGridKey.orderDetail,
                 moved: false,
@@ -521,7 +521,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 14,
+                w: 13,
                 h: 4,
                 x: 0,
                 y: 0,
@@ -532,7 +532,7 @@ export default {
                 isResizable: false
             },
             {
-                w: 14,
+                w: 13,
                 h: 26,
                 x: 0,
                 y: 5,
@@ -554,9 +554,9 @@ export default {
                 isResizable: false
             },
             {
-                w: 4,
+                w: 5,
                 h: 29,
-                x: 15,
+                x: 13,
                 y: 3,
                 i: futuresGridKey.orderDetail,
                 moved: false,

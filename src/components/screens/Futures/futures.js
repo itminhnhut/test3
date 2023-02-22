@@ -73,7 +73,6 @@ const Futures = () => {
     const pairConfig = useMemo(() => allPairConfigs?.find((o) => o.pair === state.pair), [allPairConfigs, state.pair]);
     const unitConfig = useSelector((state) => getUnit(state, pairConfig?.quoteAsset));
 
-
     const subscribeFuturesSocket = (pair) => {
         if (!publicSocket) {
             setState({ socketStatus: !!publicSocket });
@@ -221,7 +220,7 @@ const Futures = () => {
                     page="futures"
                     spotState={filterLayout}
                     onChangeSpotState={setFilterLayout}
-                    resetDefault={resetDefault}
+                    // resetDefault={resetDefault}
                 >
                     <div className="w-full">
                         {isMediumDevices && (
@@ -242,7 +241,7 @@ const Futures = () => {
                                     })
                                 }
                             >
-                                {auth && filterLayout.isShowFavorites && (
+                                {filterLayout.isShowFavorites && (
                                     <div key={futuresGridKey.favoritePair} className={`border-b border-r border-divider dark:border-divider-dark`}>
                                         <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
                                     </div>
