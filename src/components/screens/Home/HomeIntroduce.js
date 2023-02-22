@@ -1,8 +1,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { formatNumber } from 'redux/actions/utils';
-import { useTranslation } from 'next-i18next';
 import { getMarketWatch } from 'redux/actions/market';
-import { useRefWindowSize } from 'src/hooks/useWindowSize';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
 import { API_GET_TRENDING } from 'redux/actions/apis';
@@ -18,7 +16,7 @@ const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
     ssr: false,loading:() => <div className="h-10 w-full bg-transparent" />
 });
 
-const HomeIntroduce = ({ trendData }) => {
+const HomeIntroduce = ({ trendData,t }) => {
     const [state, set] = useState({
         pairsLength: null,
         loading: false,
@@ -29,8 +27,6 @@ const HomeIntroduce = ({ trendData }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
-    const { t } = useTranslation(['home']);
-
     const getTrending = async () => {
         setState({ loadingTrend: true });
         try {
@@ -51,7 +47,7 @@ const HomeIntroduce = ({ trendData }) => {
         return (
             <section className="homepage-introduce">
                 <TrendingSlide trending={state.trending} />
-                <div className="homepage-introduce___wrapper max-w-screen-v3 m-auto relative">
+                <div className="homepage-introduce___wrapper max-w-screen-v3 mx-auto relative">
                     <div className="homepage-introduce___wrapper__left">
                         <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
                         <div className="homepage-introduce___title">
