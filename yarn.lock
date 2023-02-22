@@ -2424,6 +2424,11 @@ code-point-at@^1.0.0:
   resolved "https://registry.npmjs.org/code-point-at/-/code-point-at-1.1.0.tgz"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
 
+codsen-utils@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/codsen-utils/-/codsen-utils-1.2.0.tgz#d5b9b50c8f1082f3b6bc1e8f6378bb4d714972c6"
+  integrity sha512-cejy31V+xUI6oxQFTxUmT2cZrmIgUg+bZlWtofn8Xdh2JV43ncJK149QNLfPl4G90nkSrqWn9Xu7ZIcbqMDr4A==
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
@@ -4250,6 +4255,11 @@ html-dom-parser@1.0.4:
     domhandler "4.3.0"
     htmlparser2 "7.2.0"
 
+html-entities@^2.3.3:
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.3.tgz#117d7626bece327fc8baace8868fa6f5ef856e46"
+  integrity sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==
+
 html-minifier-terser@^6.0.2:
   version "6.1.0"
   resolved "https://registry.npmjs.org/html-minifier-terser/-/html-minifier-terser-6.1.0.tgz"
@@ -5272,10 +5282,20 @@ lodash.topath@^4.5.2:
   resolved "https://registry.npmjs.org/lodash.topath/-/lodash.topath-4.5.2.tgz"
   integrity sha1-NhY1Hzu6YZlKCTGYlmC9AyVP0Ak=
 
+lodash.trim@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.yarnpkg.com/lodash.trim/-/lodash.trim-4.5.1.tgz#36425e7ee90be4aa5e27bcebb85b7d11ea47aa57"
+  integrity sha512-nJAlRl/K+eiOehWKDzoBVrSMhK0K3A3YQsUNXHQa5yIrKBAhsZgSu3KoAFoFT+mEgiyBHddZ0pRk1ITpIp90Wg==
+
 lodash.truncate@^4.4.2:
   version "4.4.2"
   resolved "https://registry.npmjs.org/lodash.truncate/-/lodash.truncate-4.4.2.tgz"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
+
+lodash.without@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.without/-/lodash.without-4.4.0.tgz#3cd4574a00b67bae373a94b748772640507b7aac"
+  integrity sha512-M3MefBwfDhgKgINVuBJCO1YR3+gf6s9HNJsIiZ/Ru77Ws6uTb9eBuvrkpzO+9iLoAaRodGuq7tyrPCx+74QYGQ==
 
 lodash@^4.17.11, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
@@ -6881,6 +6901,35 @@ range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   integrity sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==
+
+ranges-apply@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/ranges-apply/-/ranges-apply-7.0.4.tgz#0b5fa95e85d571b16e1e5cefeb982751e990e76b"
+  integrity sha512-n+ARZO3ZeSa2Ot9FUzDsJLeC3sB+c2jPmDoo2/H26NyABCc7ixMYlvoEf2PW2hJ724gYAGYreA3THWloga8FrQ==
+  dependencies:
+    ranges-merge "^9.0.4"
+    tiny-invariant "^1.3.1"
+
+ranges-merge@^9.0.4:
+  version "9.0.4"
+  resolved "https://registry.yarnpkg.com/ranges-merge/-/ranges-merge-9.0.4.tgz#2fcf61a7bd90ef0af66b520a5b444e38bde2d6c5"
+  integrity sha512-LAtgcJFpiMqZdgUpj2c+aMfjQFmGT869c3f38w/Ex2mnJ9/Ds/DHH3fvFLfGVw8w+nbILBqhwwKUrL5j9jAEAQ==
+  dependencies:
+    ranges-push "^7.0.4"
+    ranges-sort "^6.0.4"
+
+ranges-push@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/ranges-push/-/ranges-push-7.0.4.tgz#7776e86090c64d041ca52839db60dab8c8bb86a5"
+  integrity sha512-gGrO5/lwdRDJVcWfAw2Kz/Rg5yJ71RHtLisincBWPkuP065E9Pr62fdu2TbG5X/jxyXaJ1B6BE7vmZlYi9QseQ==
+  dependencies:
+    string-collapse-leading-whitespace "^7.0.3"
+    string-trim-spaces-only "^5.0.4"
+
+ranges-sort@^6.0.4:
+  version "6.0.4"
+  resolved "https://registry.yarnpkg.com/ranges-sort/-/ranges-sort-6.0.4.tgz#1696b5de5fb5f8f801f16c19917f50df1e81b057"
+  integrity sha512-SW0OIXtZ76jLxjwhKEchAihBcxT5A/XW88IHaED/8ty/GWgYgAITaVO+i7AniPfnVS5v/PTK0uTgbsiCJ382Iw==
 
 raw-body@2.4.0:
   version "2.4.0"
@@ -8643,6 +8692,11 @@ stream-parser@^0.3.1:
   dependencies:
     debug "2"
 
+string-collapse-leading-whitespace@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/string-collapse-leading-whitespace/-/string-collapse-leading-whitespace-7.0.3.tgz#e3a6744937d8172562aad58ad6c7e6025fa9d977"
+  integrity sha512-gQz3NEpbEqXgbXIi19rsBm8ivq2TAyhQe6/a0qxGcGYzxlCPrNm+gR60OEeUWLap17IPjVlEfsGl6kWlzfWpFg==
+
 string-convert@^0.2.0:
   version "0.2.1"
   resolved "https://registry.npmjs.org/string-convert/-/string-convert-0.2.1.tgz"
@@ -8652,6 +8706,32 @@ string-hash@1.1.3:
   version "1.1.3"
   resolved "https://registry.npmjs.org/string-hash/-/string-hash-1.1.3.tgz"
   integrity sha1-6Kr8CsGFW0Zmkp7X3RJ1311sgRs=
+
+string-left-right@^6.0.7:
+  version "6.0.7"
+  resolved "https://registry.yarnpkg.com/string-left-right/-/string-left-right-6.0.7.tgz#90b7ce61eb19253e8af5ce0904a96a47c8f03c3a"
+  integrity sha512-mvo3eW75j7bsGRyvpzQYlHekI2M3HBeYGIvt/eUX0HnPU8rZMAS765zMkT0a4Qidrmz8RyRTYFvsQxrdH3DvUA==
+  dependencies:
+    codsen-utils "^1.2.0"
+    lodash.clonedeep "^4.5.0"
+
+string-strip-html@^13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/string-strip-html/-/string-strip-html-13.1.0.tgz#5c3b8046da56a7a789a694a83885473604bc1e12"
+  integrity sha512-6pHQfDkBfa4p0gMJGGCOF3Cboo2OpUr/p3P+1zeIVHvC9qP+/MEJ9x4sXHSMS9Jw3i3I1FRzN20qD5XbfkPG9w==
+  dependencies:
+    codsen-utils "^1.2.0"
+    html-entities "^2.3.3"
+    lodash.trim "^4.5.1"
+    lodash.without "^4.4.0"
+    ranges-apply "^7.0.4"
+    ranges-push "^7.0.4"
+    string-left-right "^6.0.7"
+
+string-trim-spaces-only@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/string-trim-spaces-only/-/string-trim-spaces-only-5.0.4.tgz#16d0ec7257adef69416d24de0207ff17a46b438c"
+  integrity sha512-EfgB6r9AxMPJdO6RWvnig55qhyjLp377ot3qcmLIeoDV2CC1EB2yirrWEPUIcudrofwGCzyUVcvGUgtVhNajRg==
 
 string-width@^1.0.1:
   version "1.0.2"
@@ -9021,6 +9101,11 @@ timesync@^1.0.11:
   integrity sha512-qT2Y/qAQAeQTa/M+Dteec+76vsUAbY1TQQtXBVTuNMHBkKflT2uLnqG8T+V7eK7CADhwRq+2Etmj5df9VOpkNQ==
   dependencies:
     debug "^4.3.4"
+
+tiny-invariant@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.3.1.tgz#8560808c916ef02ecfd55e66090df23a4b7aa642"
+  integrity sha512-AD5ih2NlSssTCwsMznbvwMZpJ1cbhkGd2uueNxzv2jDlEeZdU04JQfRnggJQ8DrcVBGjAsCKwFBbDlVNtEMlzw==
 
 tiny-relative-date@^1.3.0:
   version "1.3.0"

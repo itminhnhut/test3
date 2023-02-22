@@ -53,7 +53,7 @@ const SupportSearchResult = () => {
     // ? render
     const renderTab = useCallback(() => TAB_SERIES.map(item => (
         <div className={classNames(
-            'flex items-center truncate border-[1px] px-4 py-2 sm:px-5 sm:py-3 rounded-[800px] text-tiny leading-5 sm:text-base sm:leading-6 cursor-pointer',
+            'flex items-center border-[1px] px-4 py-2 sm:px-5 sm:py-3 rounded-[800px] text-tiny leading-5 sm:text-base sm:leading-6 cursor-pointer whitespace-nowrap',
             { 'border-green-2 dark:border-teal bg-teal/10 font-medium text-txtTextBtn dark:text-teal': item.key === state.tab },
             { 'border-divider dark:border-divider-dark font-normal text-txtSecondary dark:text-darkBlue-5': item.key !== state.tab })}
             key={item.key}
@@ -139,7 +139,7 @@ const SupportSearchResult = () => {
                             </div>
                         </div>
                         {!isMobile ? <div className='mt-5 border-t-[1px] border-divider dark:border-divider-dark w-full'></div> : null}
-                        <div className='mt-8 sm:mt-10 flex w-full gap-6'>
+                        <div className='mt-8 sm:mt-10 flex w-full gap-6 overflow-auto no-scrollbar'>
                             {renderTab()}
                         </div>
                         <div className='w-full mt-8 sm:mt-12' id='search-result'>

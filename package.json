@@ -150,6 +150,7 @@
     "sass": "^1.32.8",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^2.1.1",
+    "string-strip-html": "^13.1.0",
     "styled-components": "^5.3.5",
     "swiper": "^8.4.5",
     "timesync": "^1.0.11",
