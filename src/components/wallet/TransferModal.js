@@ -27,6 +27,7 @@ import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import SwapWarning from 'components/svg/SwapWarning';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -57,7 +58,8 @@ export const WalletTypeV1 = {
     MARGIN: 1,
     FUTURES: 2,
     P2P: 3,
-    POOL: 4
+    POOL: 4,
+    PARTNERS: 8
 };
 
 export const MinTransferFromBroker = {
@@ -128,6 +130,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
     // Helper
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
+        console.log('from_wallet: ', from_wallet, 'to_wallet: ', to_wallet);
         setState({ isPlacingOrder: true });
         try {
             const { data } = await Axios.post(POST_WALLET_TRANSFER, {
@@ -168,6 +171,7 @@ const TransferModal = ({ isMobile, alert }) => {
             } else {
                 // Process error
                 let message = 'Error occur, please try again';
+                console.log('data.status: ', data.status);
                 switch (data.status) {
                     case TransferWalletResult.INVALID_WALLET_TYPE: {
                         message = t('error:INVALID_USER');
@@ -298,14 +302,6 @@ const TransferModal = ({ isMobile, alert }) => {
                         <span className={state.openList?.fromWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
                             <ArrowDropDownIcon size={16} />
                         </span>
-                        {/* <ArrowDropDownIcon
-                            size={16}
-                            className={
-                                state.openList?.fromWalletList
-                                    ? 'text-txtSecondary text-txtSecondary-dark rotate-180'
-                                    : 'text-txtSecondary text-txtSecondary-dark'
-                            }
-                        /> */}
                     </div>
                     {state.openList?.fromWalletList && (
                         <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
@@ -328,7 +324,7 @@ const TransferModal = ({ isMobile, alert }) => {
                         </div>
                     )}
                 </div>
-                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer" onClick={revertWallet}>
+                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer select-none" onClick={revertWallet}>
                     <SyncAltIcon size={20} />
                 </div>
 
@@ -343,14 +339,6 @@ const TransferModal = ({ isMobile, alert }) => {
                         <span className={state.openList?.toWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
                             <ArrowDropDownIcon size={16} />
                         </span>
-                        {/* <ArrowDropDownIcon
-                            size={16}
-                            className={
-                                state.openList?.toWalletList
-                                    ? 'text-txtSecondary text-txtSecondary-dark rotate-180'
-                                    : 'text-txtSecondary text-txtSecondary-dark'
-                            }
-                        /> */}
                     </div>
                     {state.openList?.toWalletList && (
                         <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
@@ -497,10 +485,16 @@ const TransferModal = ({ isMobile, alert }) => {
     const renderIssues = useCallback(() => {
         const errorItems = [];
         Object.values(state.errors)?.forEach((err) => {
-            err && errorItems.push(<div className="text-red text-sm">{err}</div>);
+            err &&
+                errorItems.push(
+                    <div className="flex items-center text-left gap-1">
+                        <SwapWarning size={12} fill={colors.red2} />
+                        {err}
+                    </div>
+                );
         });
 
-        let className = 'mt-3 max-h-0 transition-all ease-in duration-200 ';
+        let className = 'flex items-center text-red pt-3 text-xs text-left leading-4 gap-1 max-h-0 transition-all ease-in duration-200 ';
         if (errorItems.length) {
             className += 'max-h-[34px] ';
         }
@@ -508,7 +502,7 @@ const TransferModal = ({ isMobile, alert }) => {
         if (errorItems.length === 1) {
             className += 'text-center';
         }
-
+        // return null;
         return <div className={className}>{errorItems}</div>;
     }, [state.errors]);
 
@@ -677,6 +671,10 @@ const convertToWalletV1Type = (walletType) => {
             return WalletTypeV1.SPOT;
         case WalletType.FUTURES:
             return WalletTypeV1.FUTURES;
+        case WalletType.BROKER:
+            return WalletTypeV1.PARTNERS;
+        case WalletType.PARTNERS:
+            return WalletTypeV1.PARTNERS;
         default:
             return null;
     }
