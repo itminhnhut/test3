@@ -507,7 +507,11 @@ const SwapModule = ({ width, pair }) => {
             }
 
             if (state.estRate?.price && state.estRate?.fromAsset === state.fromAsset && state.estRate?.toAsset === state.toAsset) {
-                price = state.changeEstRatePosition ? formatSwapRate(1 / +state.estRate?.price) : formatSwapRate(+state.estRate?.price);
+                try {
+                    price = state.changeEstRatePosition ? formatSwapRate(1 / +state.estRate?.price) : formatSwapRate(+state.estRate?.price);
+                } catch (error) {
+                    console.error('BigInt error', error, 'state: ', state);
+                }
             }
 
             if (!state.fromAmount > 0) {

@@ -56,7 +56,7 @@ const Terms = () => {
     const Content = () => {
         return (
             <div
-                className={`max-w-screen-v3 m-auto text-txtPrimary bg-white dark:bg-dark dark:text-txtPrimary-dark font-SF-Pro txtPri-2 text-left ${
+                className={`max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-txtPrimary bg-white dark:bg-dark dark:text-txtPrimary-dark font-SF-Pro txtPri-2 text-left ${
                     width < WIDTH_MD ? 'pb-20' : 'px-24 pb-[120px]'
                 }`}
             >

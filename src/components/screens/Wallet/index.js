@@ -555,6 +555,6 @@ const Background = styled.div.attrs({ className: 'w-full h-full' })`
     background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 `;
 
-const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 m-auto md:px-4 md:py-20' })``;
+const CustomContainer = styled.div.attrs({ className: 'max-w-screen-v3 2xl:max-w-screen-xxl m-auto md:px-4 md:py-20' })``;
 
 export default Wallet;
