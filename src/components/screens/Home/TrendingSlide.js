@@ -9,9 +9,10 @@ const LOOPER_LIST_SIZE = 2;
 
 const TrendingSlide = ({ trending }) => {
     const [listTrending, setListTrending] = useState([]);
+    console.log('listTrending:', listTrending)
     useEffect(() => {
         if (trending) {
-            const trendingShuffle = shuffle(trending?.reduce((newArr, trend) => [...newArr, ...trend.pairs], []));
+            const trendingShuffle = shuffle(Object.values(trending)?.reduce((newArr, pairs) => [...newArr, ...pairs], []));
             setListTrending([...trendingShuffle]);
         }
     }, [trending]);

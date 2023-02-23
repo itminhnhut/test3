@@ -10,11 +10,16 @@ import Button from 'components/common/Button';
 import { getMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find } from 'lodash';
 import { useSelector } from 'react-redux';
-import Skeleton from 'react-loading-skeleton';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
-const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
-const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), { ssr: false });
+const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
+const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
 const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: false });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
@@ -54,6 +59,7 @@ const Index = () => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
+
     // * Use Hooks
     const {
         t,
@@ -94,6 +100,7 @@ const Index = () => {
             </ModalV2>
         );
     }, [state.showQR]);
+
 
     useEffect(async () => {
         if (!(exchangeConfig && exchangeConfig.length)) return;
@@ -147,19 +154,6 @@ const Index = () => {
             }
         });
     }, [exchangeConfig]);
-
-    // Adding scroll smooth behavior for homepage only
-    useEffect(() => {
-        let htmlElement;
-        if (window !== undefined) {
-            htmlElement = window.document.getElementsByTagName('html')[0];
-            htmlElement.style.scrollBehavior = 'smooth';
-        }
-
-        return () => {
-            htmlElement.style.scrollBehavior = 'auto';
-        };
-    }, []);
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
