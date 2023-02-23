@@ -125,15 +125,13 @@ const Overview = ({
 
     return (
         <>
-            <div
-                className='w-full h-[27.5rem] bg-[#0C0C0C]'
-                style={{
-                    backgroundImage: `url(/images/reference/background_desktop_2.png)`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
-            >
+            <div className='w-full h-[27.5rem] bg-[#0C0C0C]'>
                 <div className='py-20 container h-full'
+                     style={{
+                         backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center'
+                     }}
                 >
                     <ModalShareRefCode
                         t={t}

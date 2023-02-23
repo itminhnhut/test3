@@ -176,7 +176,7 @@ const ModalChangeReferee = ({
         })
             .then(async (res) => {
                 if (res.status === ApiStatus.SUCCESS) {
-                    await dispatch(getMe());
+                    await dispatch(getMe(true));
                     const referrer = res.data.referrer || {};
                     const referralName = referrer.name || referrer.username || referrer.email || '--';
 
