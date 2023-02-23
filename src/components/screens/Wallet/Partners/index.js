@@ -423,9 +423,8 @@ const ROW_LOADING_SKELETON = {
 const renderOperationLink = (assetName, translator, dispatch) => {
     return (
         <ButtonV2
-            disabled
             variants="text"
-            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT, asset: assetName }))}
+            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT, asset: assetName }))}
             className="!text-base cursor-not-allowed"
         >
             {translator('common:transfer')}
