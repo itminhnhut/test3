@@ -199,6 +199,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                                 minWidth: '100px',
                             },
                         }}
+                        isNamiV2
                     // paginationProps={{
                     //     hide: true,
                     //     current: page,

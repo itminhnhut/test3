@@ -558,8 +558,7 @@ export const RegisterPartnerModal = ({
                     <div
                         className='space-y-4'
                     >
-                        <div
-                            className='text-txtSecondary dark:text-txtSecondary-dark font-semibold text-2xl mb-2'>{t('reference:referral.partner.title')}</div>
+                        <div className='font-semibold text-2xl mb-2'>{t('reference:referral.partner.title')}</div>
                         <RefInput
                             type='fullName'
                             text={state.fullName}

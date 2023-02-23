@@ -266,7 +266,7 @@ const AddNewRef = ({
                             </div>
                         </div>
                     </div>
-                    <div className='flex items-center gap-2 text-xs font-medium'>
+                    <div className='flex items-center gap-2 mt-2 text-xs font-medium'>
                         <CheckBox
                             boxContainerClassName='w-5 h-5'
                             label={t('reference:referral.set_default')}
@@ -274,7 +274,7 @@ const AddNewRef = ({
                             active={isDefault}
                         ></CheckBox>
                     </div>
-                    <ButtonV2 className='mt-10' disabled={isError} onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
+                    <ButtonV2 className='mt-6' disabled={isError} onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
                 </div>
             </ModalV2> : <PopupModal
                 isVisible={isShow}
