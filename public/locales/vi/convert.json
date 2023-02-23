@@ -2,7 +2,7 @@
   "errors": {
     "min": "Số lượng tối thiểu là {{amount}}",
     "max": "Số lượng tối đa là {{amount}}",
-    "insufficient": "Số dư không đủ",
+    "insufficient": "Số dư không khả dụng",
     "invalid_address": "Địa chỉ nhận không hợp lệ",
     "invalid_memo": "Memo không hợp lệ",
     "invalid_asset": "Tài sản không hợp lệ",
@@ -30,7 +30,7 @@
   "from": "Quy đổi",
   "refresh": "Làm mới",
   "confirm": "Xác nhận quy đổi",
-  "swap_success": "Quy đổi từ {{fromQty}} {{fromAsset}} sang {{toQty}} {{toAsset}} với giá trung bình {{displayingPrice}}",
+  "swap_success": "Quy đổi {{fromQty}} {{fromAsset}} thành {{toQty}} {{toAsset}} thành công",
   "history": "Lịch sử quy đổi",
   "view_all": "Xem tất cả",
   "from_amount": "Số lượng token quy đổi",
