@@ -1,7 +1,7 @@
 {
   "errors": {
-    "min": "Số lượng tối thiểu là {{amount}}",
-    "max": "Số lượng tối đa là {{amount}}",
+    "min": "Giá trị quy đổi tối thiểu là {{amount}}",
+    "max": "Giá trị quy đổi tối đa là {{amount}}",
     "insufficient": "Số dư không khả dụng",
     "invalid_address": "Địa chỉ nhận không hợp lệ",
     "invalid_memo": "Memo không hợp lệ",
