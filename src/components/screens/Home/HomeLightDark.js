@@ -10,7 +10,6 @@ import Image from 'next/image';
 import classNames from 'classnames';
 import { getS3Url } from 'redux/actions/utils';
 
-
 // Import Swiper styles
 import 'swiper/css';
 
@@ -60,7 +59,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
     return (
         <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
-            <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 md:px-0 relative">
+            <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
                         <div className="text-sm tooltip-arrow-bottom mb-[30px] justify-center items-center py-3 px-6 inline-flex animate-bounce	 rounded-full">
@@ -74,25 +73,21 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
                 <div className="relative bg-transparent">
                     <div className="absolute left-[35%] top-1/2 -translate-x-1/2 w-full h-full -translate-y-1/2 ">
-                        <Image src={getS3Url("/images/screen/homepage/splash_dark.png")} layout="fill" />
+                        <Image src={getS3Url('/images/screen/homepage/splash_dark.png')} layout="fill" />
                     </div>
                     <Swiper
                         spaceBetween={10}
-                        slidesPerView={1.2}
+                        slidesPerView={1.5}
                         centeredSlides
                         loop
                         allowTouchMove
                         breakpoints={{
                             540: {
-                                slidesPerView: 2,
-
-                                allowTouchMove: true
+                                slidesPerView: 2
                             },
                             768: {
-                                slidesPerView: 3,
-                                spaceBetween: 20,
-                                centeredSlides: false,
-                                allowTouchMove: true
+                                slidesPerView: 3.5,
+                                spaceBetween: 20
                             },
 
                             1028: {
@@ -111,15 +106,21 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     >
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
-                                <div className="relative overflow-hidden w-full h-[630px] md:h-[550px] lg:h-[415px] ">
-                                    <Image src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`)} layout="fill" className="p-1" alt="iphone" />
+                                <div className="relative overflow-hidden w-full h-[650px] md:h-[450px]">
+                                    <Image
+                                        src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`)}
+                                        layout="fill"
+                                        className="p-1"
+                                        alt="iphone"
+                                        objectFit="contain"
+                                    />
                                 </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
                 </div>
 
-                <div className="flex px-4 justify-between  -m-3 flex-col-reverse lg:flex-row lg:items-center pt-[90px]">
+                <div className="flex justify-between  -m-3 flex-col-reverse lg:flex-row lg:items-center pt-[90px]">
                     <div className="flex flex-wrap items-center gap-4 p-3">
                         <Link href="https://apps.apple.com/app/id1480302334" passHref>
                             <GradientButton className="text-left py-2 px-6 w-auto">

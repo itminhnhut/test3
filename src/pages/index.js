@@ -55,10 +55,11 @@ const Index = () => {
     const renderQrCodeModal = useCallback(() => {
         return (
             <ModalV2
+                isMobile={width < 570}
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="w-[90%] !max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
+                className="!max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
                 customHeader={() => (
                     <div className="flex justify-end mb-6">
                         <div
@@ -150,7 +151,7 @@ const Index = () => {
     }, []);
 
     return (
-        <MaldivesLayout  navMode={NAVBAR_USE_TYPE.FLUENT} >
+        <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
                 <HomeIntroduce trendData={state.trendData} t={t} />
                 <HomeMarketTrend trendData={state.trendData} />

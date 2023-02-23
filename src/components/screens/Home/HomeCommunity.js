@@ -11,7 +11,7 @@ const HomeCommunity = ({
 
     return (
         <section className="homepage-community">
-            <div className="homepage-community___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
+            <div className="homepage-community___wrapper px-4 max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                 <div className="homepage-community___title">{t('home:community.title')}</div>
                 <div className="homepage-community___description">
                     {width >= 992 ? (

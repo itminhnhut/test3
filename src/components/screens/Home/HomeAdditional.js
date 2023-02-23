@@ -28,40 +28,42 @@ const HomeAdditional = ({ currentTheme, t, width }) => {
                 </div>
                 <HomeJourney t={t} width={width} currentTheme={currentTheme} />
                 <section className="homepage-trade3step">
-                    <div className="homepage-trade3step___wrapper relative max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
-                        <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
-                        <div className="homepage-trade3step___step___wrapper">
-                            <div className="homepage-trade3step___step___item">
-                                <Link href={getLoginUrl('sso', 'register')} passHref>
-                                    <div className="homepage-trade3step___step___item___inner">
-                                        <Image src={getS3Url(`/images/screen/homepage/create_account_${currentTheme}.png`)} width="48px" height="48px" />
-                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
-                                    </div>
-                                </Link>
+                    <div className="homepage-trade3step___wrapper relative max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4">
+                        <div className="homepage-trade3step__inner">
+                            <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
+                            <div className="homepage-trade3step___step___wrapper">
+                                <div className="homepage-trade3step___step___item">
+                                    <Link href={getLoginUrl('sso', 'register')} passHref>
+                                        <div className="homepage-trade3step___step___item___inner">
+                                            <Image src={getS3Url(`/images/screen/homepage/create_account_${currentTheme}.png`)} width="48px" height="48px" />
+                                            <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
+                                        </div>
+                                    </Link>
 
-                                <div className="homepage-trade3step__vertial_dot_line" />
-                                <div className="homepage-trade3step__horizontal_dot_line" />
-                            </div>
-                            <div className="homepage-trade3step___step___item">
-                                <Link href={PATHS.WALLET.EXCHANGE.DEPOSIT} passHref>
-                                    <div className="homepage-trade3step___step___item___inner">
-                                        <Image src={getS3Url('/images/screen/homepage/fiat_crypto.png')} width="48px" height="48px" />
+                                    <div className="homepage-trade3step__vertial_dot_line" />
+                                    <div className="homepage-trade3step__horizontal_dot_line" />
+                                </div>
+                                <div className="homepage-trade3step___step___item">
+                                    <Link href={PATHS.WALLET.EXCHANGE.DEPOSIT} passHref>
+                                        <div className="homepage-trade3step___step___item___inner">
+                                            <Image src={getS3Url('/images/screen/homepage/fiat_crypto.png')} width="48px" height="48px" />
 
-                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
-                                    </div>
-                                </Link>
+                                            <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
+                                        </div>
+                                    </Link>
 
-                                <div className="homepage-trade3step__vertial_dot_line" />
-                                <div className="homepage-trade3step__horizontal_dot_line" />
-                            </div>
-                            <div className="homepage-trade3step___step___item">
-                                <Link href={PATHS.FUTURES_V2.DEFAULT} passHref>
-                                    <div className="homepage-trade3step___step___item___inner">
-                                        <Image src={getS3Url(`/images/screen/homepage/start_trading_${currentTheme}.png`)} width="48px" height="48px" />
+                                    <div className="homepage-trade3step__vertial_dot_line" />
+                                    <div className="homepage-trade3step__horizontal_dot_line" />
+                                </div>
+                                <div className="homepage-trade3step___step___item">
+                                    <Link href={PATHS.FUTURES_V2.DEFAULT} passHref>
+                                        <div className="homepage-trade3step___step___item___inner">
+                                            <Image src={getS3Url(`/images/screen/homepage/start_trading_${currentTheme}.png`)} width="48px" height="48px" />
 
-                                        <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
-                                    </div>
-                                </Link>
+                                            <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_3')}</div>
+                                        </div>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -10,19 +10,25 @@
   position: relative;
   z-index: 1;
 
+  .homepage-introduce__banner {
+    @apply flex lg:absolute 2xl:hidden right-0 max-h-[556px] bottom-0 top-20;
+    
+  }
+
   .homepage-introduce___wrapper {
-    @apply flex flex-col md:mt-14 2xl:mt-20 mt-10;
+    @apply flex flex-col md:mt-14 px-4 2xl:mt-20 mt-10;
     @media (min-width: 768px) {
       @apply flex-row flex-wrap items-end;
     }
 
     .homepage-introduce___wrapper__left {
-      @apply relative z-20 px-4 w-full md:w-[60%] lg:w-[45%] md:mb-[100px];
+        @apply relative z-20 w-full md:w-[60%] lg:w-[45%] lg:mb-[50px] xl:mb-[100px];
 
       .homepage-introduce___nami_exchange {
         @apply text-sm text-dominant font-medium;
 
         // letter-spacing: 0.15em;
+        
 
         @media (min-width: 1366px) {
           font-size: 16px;
@@ -112,6 +118,8 @@
           }
         }
 
+       
+
         @media (min-width: 1366px) {
           height: 50px;
           margin-top: 44px;
@@ -128,22 +136,21 @@
     }
 
     .homepage-introduce___wrapper__right {
-      @apply relative z-10 flex justify-end items-end md:w-[100%] lg:absolute;
-      max-height:556px;
-      img {
-        @apply block;
-        width: auto;
-        height: 263px;
-        @media (min-width: 600px) {
-          height: 400px;
-        }
-        @media (min-width: 992px) {
-          height: 520px;
-        }
-        object-fit: cover;
-        object-position: center;
-        transform: translateZ(60px);
-      }
+      @apply relative z-10 justify-end items-end md:w-[100%] lg:absolute right-4 max-h-[556px] 2xl:flex hidden;
+      // img {
+      //   @apply block;
+      //   width: auto;
+      //   height: 263px;
+      //   @media (min-width: 600px) {
+      //     height: 400px;
+      //   }
+      //   @media (min-width: 992px) {
+      //     height: 520px;
+      //   }
+      //   object-fit: cover;
+      //   object-position: center;
+      //   transform: translateZ(60px);
+      // }
 
       .homepage-introduce___graphics__backward {
         @apply absolute top-0 right-0 z-10;
@@ -915,7 +922,7 @@
   //   z-index:1000;
   // }
   .homepage-journey__wrapper {
-    @apply text-txtPrimary px-4 md:px-0 py-[120px];
+    @apply text-txtPrimary px-4 py-[120px];
 
     .homepage-journey__title {
       @apply dark:text-txtPrimary-dark mb-5;
@@ -1222,7 +1229,7 @@
 
 .homepage-trade3step {
   // background: linear-gradient(102.6deg, #233074 1.59%, #223050 79.79%);
-  @apply px-4 bg-white dark:bg-dark-dark pb-12 md:pb-[120px];
+  @apply  bg-white dark:bg-dark-dark pb-12 md:pb-[120px];
 
 
   .homepage-trade3step__bubble {
@@ -1236,148 +1243,152 @@
   }
 
   .homepage-trade3step___wrapper {
-    @apply dark:text-txtPrimary-dark dark:bg-darkBlue-3/50 bg-white/40 text-txtPrimary border dark:border-divider-dark border-dominant rounded-[24px];
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    // background: linear-gradient(to bottom, #1e2028, #1e806e 26%, #1effc9 -41%);
-    // -webkit-mask:-webkit-gradient(to bottom, #1e2028, #1e806e 26%, #1effc9 -41%);
-
-    padding: 48px 0;
-
-    .homepage-trade3step___title {
-      @apply text-center;
-      font-size:28px;
-      font-weight: 600;
-      @media (min-width: 768px) {
-
-        font-size: 32px;
-        line-height: 1.19;
+    .homepage-trade3step__inner {
+      @apply py-12 dark:text-txtPrimary-dark dark:bg-darkBlue-3/50 bg-white/40 text-txtPrimary border dark:border-divider-dark border-dominant rounded-[24px];
+      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(20px);
+      .homepage-trade3step___title {
+        @apply text-center;
+        font-size:28px;
+        font-weight: 600;
+        @media (min-width: 768px) {
+  
+          font-size: 32px;
+          line-height: 1.19;
+        }
       }
-    }
-
-    .homepage-trade3step___step___wrapper {
-      @apply flex flex-col justify-center;
-      margin-top: 48px;
-
-      .homepage-trade3step___step___item {
-        @apply flex flex-col items-center justify-center;
-
-        .homepage-trade3step___step___item___inner {
-          @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
-
-          .homepage-trade3step___step___item__label {
-            font-weight: 600;
-            font-size: 60px;
-            line-height: 70px;
+      .homepage-trade3step___step___wrapper {
+        @apply flex flex-col justify-center;
+        margin-top: 48px;
+  
+        .homepage-trade3step___step___item {
+          @apply flex flex-col items-center justify-center;
+  
+          .homepage-trade3step___step___item___inner {
+            @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
+  
+            .homepage-trade3step___step___item__label {
+              font-weight: 600;
+              font-size: 60px;
+              line-height: 70px;
+            }
+  
+            .homepage-trade3step___step___item__sublabel {
+              font-weight: 600;
+              font-size: 16px;
+              line-height: 26px;
+  
+            }
           }
-
-          .homepage-trade3step___step___item__sublabel {
-            font-weight: 600;
-            font-size: 16px;
-            line-height: 26px;
-
+  
+          .homepage-trade3step__vertial_dot_line {
+            @apply bg-gradient-to-t from-dominant dark:to-[rgba(0,0,0,0)] to-[rgba(255,255,255,0.2)];
+            width: 1px;
+            height: 60px;
+            margin: 8px 0;
+      
+  
+          }
+  
+          .homepage-trade3step__horizontal_dot_line {
+            @apply hidden bg-gradient-to-l from-dominant dark:to-[rgba(0,0,0,.2)] to-[rgba(255,255,255,0.2)];
+            width: 166px;
+            height: 1px;
+  
+          }
+  
+          @media (min-width: 992px) {
+            @apply flex-row items-center;
+  
+            &:first-child {
+              .homepage-trade3step___step___item___inner {
+                margin-right: 38px;
+              }
+            }
+  
+            &:nth-child(2) {
+              .homepage-trade3step___step___item___inner {
+                margin: 0 38px;
+              }
+            }
+  
+            &:last-child {
+              .homepage-trade3step___step___item___inner {
+                margin-left: 38px;
+              }
+            }
+  
+            .homepage-trade3step__vertial_dot_line {
+              @apply hidden;
+            }
+  
+            .homepage-trade3step__horizontal_dot_line {
+              @apply block;
+  
+            }
+          }
+  
+          @media (min-width: 1366px) {
+            &:first-child {
+              .homepage-trade3step___step___item___inner {
+                margin-right: 68px;
+              }
+            }
+  
+            .homepage-trade3step___step___item__sublabel {
+              margin-top: 24px;
+            }
+  
+  
+            &:nth-child(2) {
+              .homepage-trade3step___step___item___inner {
+                margin: 0 68px;
+              }
+            }
+  
+            &:last-child {
+              .homepage-trade3step___step___item___inner {
+                margin-left: 68px;
+              }
+            }
           }
         }
+  
+        @media (min-width: 992px) {
+          @apply flex-row;
+  
+        }
+      }
+  
+      .homepage-trade3step___create_account {
+        @apply flex flex-col items-center;
+        margin-top: 44px;
+  
+        a {
+          width: 180px;
+          height: 50px;
+          border-radius: 12px;
+          line-height: 38px;
+          background: linear-gradient(138.83deg, rgba(0, 220, 194, 0.9) 2.54%, #00BEB3 50.84%);
+        }
+  
+        .homepage-trade3step___create_account___pr {
+          @apply text-txtSecondary dark:text-txtSecondary-dark;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 24px;
+          margin-top: 14px;
+        }
+      }
+    }
+   
 
-        .homepage-trade3step__vertial_dot_line {
-          @apply bg-gradient-to-t from-dominant dark:to-[rgba(0,0,0,0)] to-[rgba(255,255,255,0.2)];
-          width: 1px;
-          height: 60px;
-          margin: 8px 0;
+
+ 
+
     
 
-        }
-
-        .homepage-trade3step__horizontal_dot_line {
-          @apply hidden bg-gradient-to-l from-dominant dark:to-[rgba(0,0,0,.2)] to-[rgba(255,255,255,0.2)];
-          width: 166px;
-          height: 1px;
-
-        }
-
-        @media (min-width: 992px) {
-          @apply flex-row items-center;
-
-          &:first-child {
-            .homepage-trade3step___step___item___inner {
-              margin-right: 38px;
-            }
-          }
-
-          &:nth-child(2) {
-            .homepage-trade3step___step___item___inner {
-              margin: 0 38px;
-            }
-          }
-
-          &:last-child {
-            .homepage-trade3step___step___item___inner {
-              margin-left: 38px;
-            }
-          }
-
-          .homepage-trade3step__vertial_dot_line {
-            @apply hidden;
-          }
-
-          .homepage-trade3step__horizontal_dot_line {
-            @apply block;
-
-          }
-        }
-
-        @media (min-width: 1366px) {
-          &:first-child {
-            .homepage-trade3step___step___item___inner {
-              margin-right: 68px;
-            }
-          }
-
-          .homepage-trade3step___step___item__sublabel {
-            margin-top: 24px;
-          }
-
-
-          &:nth-child(2) {
-            .homepage-trade3step___step___item___inner {
-              margin: 0 68px;
-            }
-          }
-
-          &:last-child {
-            .homepage-trade3step___step___item___inner {
-              margin-left: 68px;
-            }
-          }
-        }
-      }
-
-      @media (min-width: 992px) {
-        @apply flex-row;
-
-      }
-    }
-
-    .homepage-trade3step___create_account {
-      @apply flex flex-col items-center;
-      margin-top: 44px;
-
-      a {
-        width: 180px;
-        height: 50px;
-        border-radius: 12px;
-        line-height: 38px;
-        background: linear-gradient(138.83deg, rgba(0, 220, 194, 0.9) 2.54%, #00BEB3 50.84%);
-      }
-
-      .homepage-trade3step___create_account___pr {
-        @apply text-txtSecondary dark:text-txtSecondary-dark;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 24px;
-        margin-top: 14px;
-      }
-    }
+   
 
 
   }

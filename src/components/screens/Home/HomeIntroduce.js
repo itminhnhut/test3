@@ -1,5 +1,5 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { formatNumber,getS3Url } from 'redux/actions/utils';
+import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
@@ -44,7 +44,7 @@ const HomeIntroduce = ({ trendData, t }) => {
 
     const renderIntroduce = useCallback(() => {
         return (
-            <section className="homepage-introduce">
+            <section className="homepage-introduce relative">
                 <TrendingSlide trending={state.trending} />
                 <div className="homepage-introduce___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto relative">
                     <div className="homepage-introduce___wrapper__left">
@@ -134,8 +134,11 @@ const HomeIntroduce = ({ trendData, t }) => {
                         </div>
                     </div>
                     <div className="homepage-introduce___wrapper__right">
-                        <video src={getS3Url("/images/screen/homepage/banner_graphics.mp4")} loop muted autoPlay className="pointer-events-none h-full" />
+                        <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
                     </div>
+                </div>
+                <div className="homepage-introduce__banner ">
+                    <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
                 </div>
             </section>
         );
