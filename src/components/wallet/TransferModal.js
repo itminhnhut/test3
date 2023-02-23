@@ -558,7 +558,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 currentWallets = allExchangeWallet;
             } else if (state.fromWallet === ALLOWED_WALLET_FROM.FUTURES) {
                 currentWallets = allFuturesWallet;
-            } else if (state.fromWallet === ALLOWED_WALLET.BROKER) {
+            } else if (state.fromWallet === ALLOWED_WALLET_FROM.BROKER) {
                 currentWallets = allPartnersWallet;
             }
 
