@@ -149,7 +149,6 @@ const SwapModule = ({ width, pair }) => {
         } else {
             switch (status) {
                 case 'SWAP_CANNOT_ESTIMATE_PRICE':
-                    // setState({ fromErrors: { not_found: t('convert:est_rate_not_found') } });
                     setState({ toErrors: { not_found: t('convert:est_rate_not_found') } });
                     break;
                 case 'TRADE_NOT_ALLOWED':
@@ -205,9 +204,10 @@ const SwapModule = ({ width, pair }) => {
             params: { preOrderId }
         });
         setState({ processingOrder: false });
+
         if (result?.status === ApiStatus.SUCCESS && result?.data) {
-            const { displayingId, fromAsset, toAsset, fromQty, toQty, displayingPrice } = result?.data;
-            let msg = t('convert:swap_success', { fromQty, fromAsset, toQty, toAsset, displayingPrice });
+            const { displayingId, fromAsset, toAsset, fromQty, toQty } = result?.data;
+            let msg = t('convert:swap_success', { fromQty, fromAsset, toQty, toAsset });
 
             setState({ openModal: false, preOrder: null, invoiceId: displayingId });
             onOpenAlertResultSwap({
@@ -392,7 +392,6 @@ const SwapModule = ({ width, pair }) => {
                 <div className="px-4">
                     <SearchBoxV2
                         value={state.search}
-                        placeholder={t('wallet:search_asset')}
                         onChange={(value) => {
                             setState({ search: value });
                         }}
@@ -475,7 +474,6 @@ const SwapModule = ({ width, pair }) => {
                 <div className="px-4">
                     <SearchBoxV2
                         value={state.search}
-                        placeholder={t('wallet:search_asset')}
                         onChange={(value) => {
                             setState({ search: value });
                         }}
