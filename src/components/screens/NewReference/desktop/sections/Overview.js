@@ -71,7 +71,7 @@ const Overview = ({
         i18n: { language }
     } = useTranslation();
     const [currentTheme] = useDarkMode();
-    const router = useRouter()
+    const router = useRouter();
 
     useEffect(() => {
         fetchAPI({
@@ -165,15 +165,6 @@ const Overview = ({
 
                     <div className='flex gap-6 mt-7 select-none'>
                         {
-                            (isPartner || !user) &&
-                            <div
-                                className='px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'
-                                onClick={() => router.push(policyLink)}
-                            >
-                                <span>{t('reference:referral.referral_policy')}</span>
-                            </div>
-                        }
-                        {
                             !isPartner &&
                             <div
                                 onClick={() => setShowRegisterPartner(true)}
@@ -181,6 +172,15 @@ const Overview = ({
                                 <Partner /><span className='ml-2'>{t('reference:referral.partner.button')}</span>
                             </div>
                         }
+                        {/* { */}
+                        {/*     (isPartner || !user) && */}
+                        <div
+                            className='px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'
+                            onClick={() => router.push(policyLink)}
+                        >
+                            <span>{t('reference:referral.referral_policy')}</span>
+                        </div>
+                        {/* } */}
                     </div>
                 </div>
             </div>
@@ -193,10 +193,10 @@ const Overview = ({
                                 <img src={user?.avatar || '/images/default_avatar.png'}
                                      className='h-full w-20 h-20 rounded-full object-fit' />
                                 <div
-                                    className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
+                                    className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(5, 32)}</div>
                             </div>
                             <div className='h-full flex flex-col'>
-                                <p className='font-semibold text-[22px] leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
+                                <p className='font-semibold text-2xl leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
                                 <span className='text-txtSecondary dark:text-txtSecondary-dark leading-6'>
                                     {t('reference:referral.ranking')}:{' '}
                                     <span
@@ -210,7 +210,7 @@ const Overview = ({
                             <div>{t('reference:referral.current_volume')}</div>
                             <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
                         </div>
-                        <div className='w-full bg-white rounded-full flex'>
+                        <div className='w-full bg-white rounded-full overflow-hidden flex'>
                             <Progressbar
                                 background={colors.teal}
                                 percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
@@ -218,7 +218,7 @@ const Overview = ({
                                 className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
                             />
                             <Progressbar
-                                background={colors.blue1}
+                                background={colors.blue['1']}
                                 percent={(data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100}
                                 height={8}
                                 className='!rounded-r-lg'
@@ -261,7 +261,7 @@ const Overview = ({
                             <div className='flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
                                 <span
                                     className='pr-4 font-semibold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
-                                <CopyIcon data={data?.defaultRefCode?.code} size={14} className='cursor-pointer' />
+                                <CopyIcon data={data?.defaultRefCode?.code} size={16} className='cursor-pointer' />
                             </div>
                         </div>
                         <div className='flex-1 min-w-0'>
@@ -271,7 +271,7 @@ const Overview = ({
                                 <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
                                     {refLink}
                                 </div>
-                                <CopyIcon data={refLink} size={14} className='cursor-pointer' />
+                                <CopyIcon data={refLink} size={16} className='cursor-pointer' />
                             </div>
                         </div>
                     </div>
@@ -410,7 +410,8 @@ const RefDetail = ({
             className='max-w-[884px] h-[90%]'
             wrapClassName='px-6 flex flex-col'
         >
-            <div className='border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold'>
+            <div
+                className='border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold'>
                 {t('reference:referral.referral_code_management')}
             </div>
             {showAddRef && (
@@ -454,7 +455,8 @@ const RefDetail = ({
                                         {data.code}
                                         <CopyIcon data={data.code} size={24} className='cursor-pointer' />
                                     </div>
-                                    <div onClick={data.status ? null : () => handleSetDefault(data.code)} className='text-sm'>
+                                    <div onClick={data.status ? null : () => handleSetDefault(data.code)}
+                                         className='text-sm'>
                                         {
                                             data.status ?
                                                 <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
@@ -546,8 +548,6 @@ const ModalShareRefCode = ({
         if (downloading || !node) return;
         setDownloading(true);
         const element = ReactDOM.findDOMNode(node);
-
-        console.log(element, 'element'.repeat(10))
 
         domtoimage.toPng(element)
             .then(function (uri) {
