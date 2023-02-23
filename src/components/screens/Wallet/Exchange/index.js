@@ -78,7 +78,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     const renderEstWallet = useCallback(() => {
         return (
             <div className="mt-[24px] md:mt-12 flex items-center justify-between">
-                <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
+                <div className="hidden md:flex rounded-full dark:bg-dark-2 w-[64px] h-[64px] items-center justify-center mr-6">
                     <SvgWalletExchange size={32} />
                 </div>
                 <div>
