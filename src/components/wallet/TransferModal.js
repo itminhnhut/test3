@@ -27,6 +27,8 @@ import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import SwapWarning from 'components/svg/SwapWarning';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -46,7 +48,7 @@ const ALLOWED_TO_WALLET = {
 };
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
-    FUTURES: WalletType.FUTURES,
+    FUTURES: WalletType.FUTURES
 };
 
 const TransferWalletResult = {
@@ -61,7 +63,8 @@ export const WalletTypeV1 = {
     MARGIN: 1,
     FUTURES: 2,
     P2P: 3,
-    POOL: 4
+    POOL: 4,
+    PARTNERS: 8
 };
 
 export const MinTransferFromBroker = {
@@ -81,8 +84,8 @@ const INITIAL_STATE = {
     allWallets: null,
     focus: {},
     errors: {},
-    isPlacingOrder: false
-
+    isPlacingOrder: false,
+    resultTransfer: null
     // ...
 };
 
@@ -104,9 +107,9 @@ const TransferModal = ({ isMobile, alert }) => {
         i18n: { language }
     } = useTranslation(['common', 'wallet', 'error']);
 
-    useOutsideClick(fromWalletRef, () =>   state.openList?.fromWalletList && setState({openList: { ...state.openList, fromWalletList: false }}));
-    useOutsideClick(toWalletRef, () => state.openList?.toWalletList && setState({openList: { ...state.openList, toWalletList: false }}));
-    useOutsideClick(assetListRef, () => state.openList?.assetList && setState({openList: { ...state.openList, assetList: false }}));
+    useOutsideClick(fromWalletRef, () => state.openList?.fromWalletList && setState({ openList: { ...state.openList, fromWalletList: false } }));
+    useOutsideClick(toWalletRef, () => state.openList?.toWalletList && setState({ openList: { ...state.openList, toWalletList: false } }));
+    useOutsideClick(assetListRef, () => state.openList?.assetList && setState({ openList: { ...state.openList, assetList: false } }));
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
@@ -132,6 +135,7 @@ const TransferModal = ({ isMobile, alert }) => {
 
     // Helper
     const onTransfer = async (currency, from_wallet, to_wallet, amount, utils) => {
+        console.log('from_wallet: ', from_wallet, 'to_wallet: ', to_wallet);
         setState({ isPlacingOrder: true });
         try {
             const { data } = await Axios.post(POST_WALLET_TRANSFER, {
@@ -143,8 +147,9 @@ const TransferModal = ({ isMobile, alert }) => {
 
             if (data.status === 'ok') {
                 const { amount } = data.data;
-                const fromWallet = utils?.fromWallet;
-                const toWallet = utils?.toWallet;
+                // const fromWallet = utils?.fromWallet;
+                // const toWallet = utils?.toWallet;
+                // console.log('___here: ', fromWallet, toWallet);
                 const message = t('wallet:transfer_success', {
                     amount: formatWallet(+amount, currentWallet?.assetDigit),
                     assetCode: utils?.assetName,
@@ -156,19 +161,25 @@ const TransferModal = ({ isMobile, alert }) => {
                 dispatch(getWallet());
                 dispatch(getUserFuturesBalance());
                 dispatch(getUserPartnersBalance());
+                onOpenAlertResultTransfer({
+                    msg: message,
+                    type: 'success',
+                    title: t('common:success'),
+                    duration: 1500
+                });
 
-                setTimeout(() => {
-                    onClose();
-                    if (isMobile && alert) {
-                        alert.show('success', t('common:success'), message);
-                    } else {
-                        showNotification({
-                            message,
-                            title: t('common:success'),
-                            type: 'success'
-                        });
-                    }
-                }, 300);
+                // setTimeout(() => {
+                //     onClose();
+                //     if (isMobile && alert) {
+                //         alert.show('success', t('common:success'), message);
+                //     } else {
+                //         showNotification({
+                //             message,
+                //             title: t('common:success'),
+                //             type: 'success'
+                //         });
+                //     }
+                // }, 300);
             } else {
                 // Process error
                 let message = 'Error occur, please try again';
@@ -186,15 +197,21 @@ const TransferModal = ({ isMobile, alert }) => {
                         break;
                     }
                 }
-                if (isMobile && alert) {
-                    alert.show('error', t('common:failure'), message);
-                } else {
-                    showNotification({
-                        message,
-                        title: t('common:failure'),
-                        type: 'failure'
-                    });
-                }
+                onOpenAlertResultTransfer({
+                    msg: message,
+                    type: 'warning',
+                    title: t('common:failure')
+                });
+
+                // if (isMobile && alert) {
+                //     alert.show('error', t('common:failure'), message);
+                // } else {
+                //     showNotification({
+                //         message,
+                //         title: t('common:failure'),
+                //         type: 'failure'
+                //     });
+                // }
             }
         } catch (e) {
             console.error('Swap error: ', e);
@@ -257,25 +274,41 @@ const TransferModal = ({ isMobile, alert }) => {
     const getWalletType = (walletType, isDisable) => {
         switch (walletType) {
             case WalletType.SPOT:
-                return <div className="flex justify-center items-center">
-                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletExchange size={20}/></span>
-                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
-                </div>;
+                return (
+                    <div className="flex justify-center items-center">
+                        <span className={isDisable ? 'opacity-20' : ''}>
+                            <SvgWalletExchange size={20} />
+                        </span>
+                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:spot_short')}</span>
+                    </div>
+                );
             case WalletType.FUTURES:
-                return <div className="flex justify-center items-center">
-                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletFutures size={20}/></span>
-                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:futures_short')}</span>
-                </div>;
+                return (
+                    <div className="flex justify-center items-center">
+                        <span className={isDisable ? 'opacity-20' : ''}>
+                            <SvgWalletFutures size={20} />
+                        </span>
+                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:futures_short')}</span>
+                    </div>
+                );
             case WalletType.BROKER:
-                return <div className="flex justify-center items-center">
-                    <span className={isDisable ? 'opacity-20' : ''}><PartnersIcon size={20}/></span>
-                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:broker_short')}</span>
-                </div>;
+                return (
+                    <div className="flex justify-center items-center">
+                        <span className={isDisable ? 'opacity-20' : ''}>
+                            <PartnersIcon size={20} />
+                        </span>
+                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:broker_short')}</span>
+                    </div>
+                );
             default:
-                return <div className="flex justify-center items-center">
-                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletExchange size={20}/></span>
-                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
-                </div>;
+                return (
+                    <div className="flex justify-center items-center">
+                        <span className={isDisable ? 'opacity-20' : ''}>
+                            <SvgWalletExchange size={20} />
+                        </span>
+                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:spot_short')}</span>
+                    </div>
+                );
         }
     };
 
@@ -288,40 +321,37 @@ const TransferModal = ({ isMobile, alert }) => {
                     ref={fromWalletRef}
                     onClick={() => setState({ openList: { fromWalletList: !state.openList?.fromWalletList } })}
                 >
-                    <div
-                        className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:from')}</div>
-                    <div
-                        className={
-                            'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
-                    >
+                    <div className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:from')}</div>
+                    <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.fromWallet)}
-                        <ArrowDropDownIcon size={16} className={
-                            state.openList?.fromWalletList
-                                ? 'text-txtSecondary text-txtSecondary-dark rotate-180'
-                                : 'text-txtSecondary text-txtSecondary-dark'
-                        }/>
+                        <span className={state.openList?.fromWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                            <ArrowDropDownIcon size={16} />
+                        </span>
                     </div>
                     {state.openList?.fromWalletList && (
-                        <div
-                            className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET_FROM)
-                                .map((walletType) => {
-                                    return <div
+                        <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
+                            {Object.keys(ALLOWED_WALLET_FROM).map((walletType) => {
+                                return (
+                                    <div
                                         key={`wallet_type_from__${walletType}`}
                                         className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('fromWallet', walletType)}
                                     >
                                         {getWalletType(ALLOWED_WALLET_FROM[walletType])}
-                                        {ALLOWED_WALLET_FROM[walletType] === state.fromWallet &&
-                                            <CheckSuccess size={14}
-                                                          color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                          checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}/>}
+                                        {ALLOWED_WALLET_FROM[walletType] === state.fromWallet && (
+                                            <CheckSuccess
+                                                size={14}
+                                                color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
+                                            />
+                                        )}
                                     </div>
-                                })}
+                                );
+                            })}
                         </div>
                     )}
                 </div>
-                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer" onClick={revertWallet}>
+                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer select-none" onClick={revertWallet}>
                     <SyncAltIcon size={20} />
                 </div>
 
@@ -330,47 +360,34 @@ const TransferModal = ({ isMobile, alert }) => {
                     ref={toWalletRef}
                     onClick={() => setState({ openList: { toWalletList: !state.openList?.toWalletList } })}
                 >
-                    <div
-                        className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:to')}</div>
-                    <div
-                        className={
-                            'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
-                    >
+                    <div className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:to')}</div>
+                    <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.toWallet)}
                         <span className={state.openList?.toWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
                             <ArrowDropDownIcon size={16} />
                         </span>
-                        {/* <ArrowDropDownIcon
-                            size={16}
-                            className={
-                                state.openList?.toWalletList
-                                    ? 'text-txtSecondary text-txtSecondary-dark rotate-180'
-                                    : 'text-txtSecondary text-txtSecondary-dark'
-                            }
-                        /> */}
                     </div>
                     {state.openList?.toWalletList && (
-                        <div
-                            className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET_TO)
-                                .map((walletType) => {
-                                    const isDisable = state.fromWallet === walletType
-                                    return (
-                                        <div
-                                            key={`wallet_type_to__${walletType}`}
-                                            className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                            onClick={() => !isDisable && onSetWallet('toWallet', walletType)}
-                                        >
-                                            {getWalletType(ALLOWED_WALLET_TO[walletType], isDisable)}
-                                            {
-                                                ALLOWED_WALLET_TO[walletType] === state.toWallet &&
-                                                <CheckSuccess size={14}
-                                                              color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                              checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}/>
-                                            }
-                                        </div>
-                                    )
-                                })}
+                        <div className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
+                            {Object.keys(ALLOWED_WALLET_TO).map((walletType) => {
+                                const isDisable = state.fromWallet === walletType;
+                                return (
+                                    <div
+                                        key={`wallet_type_to__${walletType}`}
+                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                        onClick={() => !isDisable && onSetWallet('toWallet', walletType)}
+                                    >
+                                        {getWalletType(ALLOWED_WALLET_TO[walletType], isDisable)}
+                                        {ALLOWED_WALLET_TO[walletType] === state.toWallet && (
+                                            <CheckSuccess
+                                                size={14}
+                                                color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}
+                                            />
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -383,13 +400,12 @@ const TransferModal = ({ isMobile, alert }) => {
             <div
                 ref={assetListRef}
                 className="relative flex items-center cursor-pointer select-none"
-                 onClick={() => {
-                     setState({ openList: { assetList: !state.openList?.assetList } })
-                 }}>
-                <AssetLogo assetCode={state.asset} size={24}/>
-                <div className="mx-2 font-bold text-sm">
-                    {state.asset}
-                </div>
+                onClick={() => {
+                    setState({ openList: { assetList: !state.openList?.assetList } });
+                }}
+            >
+                <AssetLogo assetCode={state.asset} size={24} />
+                <div className="mx-2 font-bold text-sm">{state.asset}</div>
                 <ArrowDropDownIcon
                     size={16}
                     className={state.openList?.assetList ? 'text-txtSecondary text-txtSecondary-dark rotate-180' : 'text-txtSecondary text-txtSecondary-dark'}
@@ -416,8 +432,7 @@ const TransferModal = ({ isMobile, alert }) => {
                     return (
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
-                            className={
-                                `px-4 py-3 font-normal text-md flex items-center justify-between cursor-pointer
+                            className={`px-4 py-3 font-normal text-md flex items-center justify-between cursor-pointer
                                 hover:bg-hover-1 dark:hover:bg-hover-dark 
                                 ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
                             onClick={() =>
@@ -429,7 +444,7 @@ const TransferModal = ({ isMobile, alert }) => {
                             }
                         >
                             <div className="flex justify-center">
-                                <AssetLogo assetCode={wallet?.assetCode} size={24}/>
+                                <AssetLogo assetCode={wallet?.assetCode} size={24} />
                                 <span className="ml-2">{wallet?.assetCode}</span>
                             </div>
                             <div className="flex items-center">
@@ -504,10 +519,16 @@ const TransferModal = ({ isMobile, alert }) => {
     const renderIssues = useCallback(() => {
         const errorItems = [];
         Object.values(state.errors)?.forEach((err) => {
-            err && errorItems.push(<div className="text-red text-sm">{err}</div>);
+            err &&
+                errorItems.push(
+                    <div className="flex items-center text-left gap-1">
+                        <SwapWarning size={12} fill={colors.red2} />
+                        {err}
+                    </div>
+                );
         });
 
-        let className = 'mt-3 max-h-0 transition-all ease-in duration-200 ';
+        let className = 'flex items-center text-red pt-3 text-xs text-left leading-4 gap-1 max-h-0 transition-all ease-in duration-200 ';
         if (errorItems.length) {
             className += 'max-h-[34px] ';
         }
@@ -515,7 +536,7 @@ const TransferModal = ({ isMobile, alert }) => {
         if (errorItems.length === 1) {
             className += 'text-center';
         }
-
+        // return null;
         return <div className={className}>{errorItems}</div>;
     }, [state.errors]);
 
@@ -627,6 +648,32 @@ const TransferModal = ({ isMobile, alert }) => {
         return router.push(href);
     };
 
+    const renderAlertNotification = useCallback(() => {
+        if (!state?.resultTransfer) return null;
+
+        setTimeout(() => {
+            onCloseAlertResultTransfer();
+        }, state?.duration || 5000);
+
+        return (
+            <AlertModalV2
+                isVisible={!!state.resultTransfer}
+                onClose={onCloseAlertResultTransfer}
+                type={state?.resultTransfer?.type}
+                title={state?.resultTransfer?.title}
+                message={state?.resultTransfer?.msg}
+            />
+        );
+    }, [state.resultTransfer]);
+
+    const onOpenAlertResultTransfer = ({ msg, type, title, duration }) => {
+        set((prevState) => ({ ...prevState, resultTransfer: { msg, type, title, duration } }));
+    };
+
+    const onCloseAlertResultTransfer = () => {
+        if (state.resultTransfer) set((prevState) => ({ ...prevState, resultTransfer: null }));
+    };
+
     return (
         <ModalV2
             isVisible={!!isVisible}
@@ -670,10 +717,10 @@ const TransferModal = ({ isMobile, alert }) => {
                     </div>
                     {renderAssetSelect()}
                 </div>
-
             </div>
             {renderIssues()}
             {renderTransferButton()}
+            {renderAlertNotification()}
         </ModalV2>
     );
 };
@@ -684,6 +731,10 @@ const convertToWalletV1Type = (walletType) => {
             return WalletTypeV1.SPOT;
         case WalletType.FUTURES:
             return WalletTypeV1.FUTURES;
+        case WalletType.BROKER:
+            return WalletTypeV1.PARTNERS;
+        case WalletType.PARTNERS:
+            return WalletTypeV1.PARTNERS;
         default:
             return null;
     }
