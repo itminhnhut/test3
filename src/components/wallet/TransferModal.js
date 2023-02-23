@@ -294,7 +294,7 @@ const TransferModal = ({
                                 .map((walletType) => (
                                     <div
                                         key={`wallet_type_from__${walletType}`}
-                                        className="flex items-center justify-between font-medium text-sm hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                        className="flex items-center justify-between font-medium text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('fromWallet', walletType)}
                                     >
                                         {getWalletType(ALLOWED_WALLET[walletType])}
@@ -307,7 +307,7 @@ const TransferModal = ({
                         </div>
                     )}
                 </div>
-                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-bgSecondary-dark rotate-90">
+                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90">
                     <SyncAltIcon size={20}/>
                 </div>
 
@@ -339,7 +339,7 @@ const TransferModal = ({
                                 .map((walletType) => (
                                     <div
                                         key={`wallet_type_to__${walletType}`}
-                                        className="flex items-center justify-between font-medium text-sm hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                        className="flex items-center justify-between font-medium text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('toWallet', walletType)}
                                     >
                                         {getWalletType(ALLOWED_WALLET[walletType])}
@@ -396,8 +396,8 @@ const TransferModal = ({
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
                             className={
                                 `px-4 py-3 font-medium text-sm flex items-center justify-between cursor-pointer
-                                hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark 
-                                ${state.asset === wallet?.assetCode ? 'bg-bgSecondary dark:bg-bgSecondary-dark' : ''}`
+                                hover:bg-hover-1 dark:hover:bg-hover-dark 
+                                ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`
                             }
                             onClick={() => state.asset !== wallet?.assetCode && setState({
                                 asset: wallet?.assetCode,
@@ -528,9 +528,9 @@ const TransferModal = ({
     }, [asset]);
 
     useEffect(() => {
-        if (state.fromWallet === state.toWallet) {
-            setState({ toWallet: null });
-        }
+        // if (state.fromWallet === state.toWallet) {
+        //     setState({ toWallet: null });
+        // }
     }, [state.fromWallet, state.toWallet]);
 
     useEffect(() => {
@@ -556,36 +556,26 @@ const TransferModal = ({
     }, [state.fromWallet, allFuturesWallet, allExchangeWallet, assetConfig]);
 
     useEffect(() => {
-        !state.fromWallet
-            ? setState({
-                errors: {
-                    ...state.errors,
-                    fromWallet: t('wallet:errors.transfer_source_wallet_issues')
-                }
-            })
-            : setState({
-                errors: {
-                    ...state.errors,
-                    fromWallet: null
-                }
-            });
-    }, [state.fromWallet]);
+        const _errors = {fromWallet: null,  toWallet: null, differenceWallet: null}
+        if(!state.fromWallet){
+            _errors.fromWallet =  t('wallet:errors.transfer_source_wallet_issues')
+        }
+        if(!state.toWallet){
+            _errors.toWallet =  t('wallet:errors.transfer_destination_wallet_issues')
+        }
+        if(state.fromWallet && state.toWallet && state.fromWallet === state.toWallet){
+            _errors.differenceWallet =  t('wallet:errors.transfer_destination_wallet_issues')
+        }
 
-    useEffect(() => {
-        !state.toWallet
-            ? setState({
-                errors: {
-                    ...state.errors,
-                    toWallet: t('wallet:errors.transfer_destination_wallet_issues')
-                }
-            })
-            : setState({
-                errors: {
-                    ...state.errors,
-                    toWallet: null
-                }
-            });
-    }, [state.toWallet]);
+        setState({
+            errors: {
+                ...state.errors,
+                ..._errors
+            }
+        })
+
+    }, [state.fromWallet, state.toWallet]);
+
 
     useEffect(() => {
         const _errors = {};
