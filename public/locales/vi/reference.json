@@ -100,7 +100,7 @@
         "set_default": "Đặt làm mặc định",
         "link": "Link giới thiệu",
         "you_friends_get": "Bạn nhận / Bạn bè nhận",
-        "friends": "Bạn bè",
+        "friends": "bạn bè",
         "note": "Ghi chú",
         "add_ref_code": "Thêm mã giới thiệu",
         "update_success": "Cập nhật thành công",
@@ -160,8 +160,8 @@
             "title": "Đăng ký đối tác cộng đồng",
             "fullname": "Tên đầy đủ",
             "fullname_placeholder": "Nhập tên đầy đủ",
-            "id": "Số chứng minh thư/passport",
-            "id_placeholder": "Your national id or passport",
+            "id": "CMTND/CCCD/Hộ chiếu",
+            "id_placeholder": "Nhập CMTND/CCCD/Hộ chiếu",
             "email": "Email",
             "email_placeholder": "Nhập email",
             "social": "Mạng xã hội",
@@ -179,12 +179,12 @@
             "paste": "Dán"
         },
         "share": {
-            "title": "Chia sẻ mã giới thiệu",
-            "title_2": "Tham gia Nami Exchange",
-            "content": "Cùng nhau kiếm tiền dễ dàng<br/>với tỷ lệ hoa hồng lên đến",
-            "scan_and_join": "Quét mã và tham gia ngay",
-            "id_referral": "ID giới thiệu",
-            "download": "Tải xuống"
+            "title": "Chia sẻ",
+            "title_2": "Giới thiệu Nami đến bạn bè",
+            "content": "Nhận đến {{percent}} hoa hồng mỗi khi bạn bè của bạn thực hiện giao dịch trên Nami Exchange",
+            "scan_and_join": "Quét QRcode để nhận mã giới thiệu",
+            "id_referral": "Mã giới thiệu",
+            "btn": "Chia sẻ"
         }
     }
 }

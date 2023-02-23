@@ -283,9 +283,11 @@ const FriendList = ({
 
     return (
         <div className='flex w-full' id={id}>
-            <ModalCommissionFriend t={t} commissionConfig={commissionConfig} friend={commissionByFriendDetail}
-                                   onClose={() => setCommissionByFriendDetail(null)} />
-
+            <ModalCommissionFriend
+                t={t} commissionConfig={commissionConfig}
+                friend={commissionByFriendDetail}
+                onClose={() => setCommissionByFriendDetail(null)}
+            />
             <div
                 className='w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8'>
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>

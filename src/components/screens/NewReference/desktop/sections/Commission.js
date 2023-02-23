@@ -129,7 +129,7 @@ const Commission = ({ t, language, id }) => {
                             {formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}
                         </div>
                         <div>
-                            {t('reference:referral.type')}: {data.kind}
+                            {t('reference:referral.type')}: <span className='capitalize'>{data.kind?.toLowerCase()}</span>
                         </div>
                     </div>
                 </div>

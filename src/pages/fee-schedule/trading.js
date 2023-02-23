@@ -14,7 +14,6 @@ import Axios from 'axios';
 import withTabLayout, { TAB_ROUTES } from 'components/common/layouts/withTabLayout';
 import useWindowSize from 'hooks/useWindowSize';
 import Link from 'next/link';
-import TabItem, { TabItemComponent } from 'components/common/TabItem';
 import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
 import Empty from 'components/common/Empty';
@@ -27,6 +26,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Crown from 'components/svg/Crown';
 import classnames from 'classnames';
 import useDarkMode from 'hooks/useDarkMode';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -157,13 +157,16 @@ const TradingFee = () => {
     }, [state.assetFee, state.loadingAssetFee]);
 
     const renderFeeTab = useCallback(() => {
-        return TRADING_FEE_TAB.map(tab => <TabItem
-            key={`trading_fee_Tab__${tab.dataIndex}`}
-            title={tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
-            active={tab.index === state.tabIndex}
-            onClick={() => setState({ tabIndex: tab.index })}
-            component={TabItemComponent.Div}
-        />);
+        return <Tabs tab={state.tabIndex}>
+            {
+                TRADING_FEE_TAB.map(tab => <TabItem
+                    key={`trading_fee_Tab__${tab.dataIndex}`}
+                    value={tab.index}
+                    className='!text-left !mx-6 !px-0'
+                    onClick={() => setState({ tabIndex: tab.index })}
+                >{tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}</TabItem>)
+            }
+        </Tabs>;
     }, [state.tabIndex, TRADING_FEE_TAB]);
 
     const renderFuturesTableFee = useCallback(() => {
@@ -455,7 +458,7 @@ const TradingFee = () => {
             <div className='hidden md:flex flex-wrap items-center justify-between mt-20'>
                 <div>
                     <div className='text-[2rem] leading-8 font-semibold'>
-                        <span>{t('fee-structure:your_fee_level')}:</span>
+                        <span>{t('fee-structure:your_fee_level')}</span>
                         <span className='ml-2 text-teal'>VIP {state.vipLevel || 0}</span>
                     </div>
 
@@ -623,25 +626,25 @@ const TradingFee = () => {
                 }
             </div>
 
-            <div className='mt-12 md:mt-8 space-y-2 nami-list-disc'>
-                <div>
-                    {t('fee-structure:maker_taker_description')}<span
-                    className='ml-2'>{t('fee-structure:maker_taker_description_2')}</span>
-                    <Link href={PATHS.REFERENCE.MAKER_TAKER}>
-                        <a className='ml-3 text-teal font-semibold hover:!underline'
-                           target='_blank'>{t('common:read_more')}</a>
-                    </Link>
-                </div>
-                <div>
-                    {t('fee-structure:referral_description_value', { value: '20%' })}
-                    <Link href={PATHS.ACCOUNT.REFERRAL}>
-                        <a className='ml-3 text-teal font-semibold hover:!underline'>{t('common:read_more')}</a>
-                    </Link>
-                </div>
-                <div>
-                    {t('fee-structure:swap_fee_description')}
-                </div>
-            </div>
+            {/* <div className='mt-12 md:mt-8 space-y-2 nami-list-disc'> */}
+            {/*     <div> */}
+            {/*         {t('fee-structure:maker_taker_description')}<span */}
+            {/*         className='ml-2'>{t('fee-structure:maker_taker_description_2')}</span> */}
+            {/*         <Link href={PATHS.REFERENCE.MAKER_TAKER}> */}
+            {/*             <a className='ml-3 text-teal font-semibold hover:!underline' */}
+            {/*                target='_blank'>{t('common:read_more')}</a> */}
+            {/*         </Link> */}
+            {/*     </div> */}
+            {/*     <div> */}
+            {/*         {t('fee-structure:referral_description_value', { value: '20%' })} */}
+            {/*         <Link href={PATHS.ACCOUNT.REFERRAL}> */}
+            {/*             <a className='ml-3 text-teal font-semibold hover:!underline'>{t('common:read_more')}</a> */}
+            {/*         </Link> */}
+            {/*     </div> */}
+            {/*     <div> */}
+            {/*         {t('fee-structure:swap_fee_description')} */}
+            {/*     </div> */}
+            {/* </div> */}
         </>
     );
 };
@@ -651,7 +654,7 @@ const TRADING_FEE_TAB = [
         index: 0,
         dataIndex: 'exchange',
         title: 'Exchange',
-        localized: 'navbar:submenu.spot'
+        localized: 'fee-structure:exchange_trading'
     },
     {
         index: 1,
