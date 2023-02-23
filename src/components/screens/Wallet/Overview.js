@@ -498,9 +498,9 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
     return (
         <ModalV2 isVisible={keys.length !== 0 && isShowAction[keys[0]]} onBackdropCb={onBackdropCb} wrapClassName="px-6" isMobile={true} onHandleClick>
             <div className="mt-2 text-left">
-                {listActions.map((item) => (
-                    <div className="first:mt-0 mt-3">
-                        <ButtonV2 disabled={keys[0] === ActionType.PARTNERS} variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
+                {listActions.map((item, idx) => (
+                    <div key={`action_btn_` + item + '_'} className="first:mt-0 mt-3">
+                        <ButtonV2 variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW

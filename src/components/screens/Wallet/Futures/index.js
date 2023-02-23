@@ -283,7 +283,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                     <div className="hidden md:block">
                         <div className="flex items-end justify-end h-full w-full ">
                             <ButtonV2
-                                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
                                 className="px-6 py-3 !font-semibold !text-base"
                             >
@@ -295,7 +295,7 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                 {renderAvailableBalance()}
             </MCard>
             <ButtonV2
-                onClick={() => dispatch(setTransferModal({ isVisible: true }))}
+                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }))}
                 // disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
                 className="py-3 !font-semibold !text-base w-full md:hidden mt-6"
             >
@@ -355,59 +355,70 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
             <div className="hidden md:block">{renderAssetTable()}</div>
             <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
                 {state?.tableData && state?.tableData?.length > 0 ? (
-                    state.tableData.map((item) => {
-                        const { assetCode, assetDigit, assetName, available, id, wallet } = item;
-                        const assetUsdRate = usdRate?.[id] || 0;
-                        const totalUsd = wallet.value * assetUsdRate;
+                    <>
+                        {state.tableData.map((item, index) => {
+                            const { assetCode, assetDigit, assetName, available, id, wallet } = item;
+                            const assetUsdRate = usdRate?.[id] || 0;
+                            const totalUsd = wallet.value * assetUsdRate;
+                            const hidden = index + 1 > state.currentPage * ASSET_ROW_LIMIT;
 
-                        return (
-                            <div key={`CARD_ROW_${item?.assetCode}`} className="w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl">
-                                <div className="flex justify-between items-center">
+                            return (
+                                <div key={`CARD_ROW_${item?.assetCode}`} className="w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl">
+                                    <div className="flex justify-between items-center">
+                                        <div className="flex items-center">
+                                            <AssetLogo assetCode={assetCode} size={32} />
+                                            <span className="font-semibold mr-2 ml-3">{assetCode}</span>
+                                            <span className="txtSecond-1">{assetName}</span>
+                                        </div>
+                                        <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div>
+                                    </div>
                                     <div className="flex items-center">
-                                        <AssetLogo assetCode={assetCode} size={32} />
-                                        <span className="font-semibold mr-2 ml-3">{assetCode}</span>
-                                        <span className="txtSecond-1">{assetName}</span>
-                                    </div>
-                                    <div className="cursor-pointer">{renderOperationLink(assetCode, t, dispatch)}</div>
-                                </div>
-                                <div className="flex items-center">
-                                    <span className="txtPri-1 whitespace-nowrap">
-                                        {state.hideAsset
-                                            ? SECRET_STRING
-                                            : wallet.value
-                                            ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                            : '0.0000'}
-                                    </span>
-                                    &nbsp;
-                                    <span className="txtSecond-1  whitespace-nowrap">
-                                        ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
-                                    </span>
-                                </div>
-                                <div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">{t('common:available_balance')}</span>
-                                        <span className="txtPri-1">
+                                        <span className="txtPri-1 whitespace-nowrap">
                                             {state.hideAsset
                                                 ? SECRET_STRING
-                                                : available
-                                                ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                : wallet.value
+                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
                                                 : '0.0000'}
+                                        </span>
+                                        &nbsp;
+                                        <span className="txtSecond-1  whitespace-nowrap">
+                                            ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
                                         </span>
                                     </div>
-                                    <div className="flex items-center justify-between mt-3">
-                                        <span className="txtSecond-2">{t('common:in_order')}</span>
-                                        <span className="txtPri-1">
-                                            {state.hideAsset
-                                                ? SECRET_STRING
-                                                : wallet.locked_value
-                                                ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                : '0.0000'}
-                                        </span>
+                                    <div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('common:available_balance')}</span>
+                                            <span className="txtPri-1">
+                                                {state.hideAsset
+                                                    ? SECRET_STRING
+                                                    : available
+                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center justify-between mt-3">
+                                            <span className="txtSecond-2">{t('common:in_order')}</span>
+                                            <span className="txtPri-1">
+                                                {state.hideAsset
+                                                    ? SECRET_STRING
+                                                    : wallet.locked_value
+                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
+                            );
+                        })}
+                        {state.tableData.length > state.currentPage * ASSET_ROW_LIMIT + ASSET_ROW_LIMIT && (
+                            <div
+                                onClick={() => setState({ currentPage: state.currentPage + 1 })}
+                                className="text-teal text-sm font-semibold text-center cursor-pointer mt-2"
+                            >
+                                {t('common:load_more')}
                             </div>
-                        );
-                    })
+                        )}
+                    </>
                 ) : (
                     <NoData className="mt-12" isSearch={!!state.search} />
                 )}
@@ -423,7 +434,7 @@ const renderOperationLink = (assetName, translator, dispatch) => {
         <ButtonV2
             variants="text"
             onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT, asset: assetName }))}
-            className="!text-base"
+            className="!md:text-base text-sm"
         >
             {translator('common:transfer')}
         </ButtonV2>
