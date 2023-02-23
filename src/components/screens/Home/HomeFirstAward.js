@@ -144,7 +144,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                                     className="homepage-first_award___form___input"
                                     onFocus={() => setState({ focus: 'pwd' })}
                                     onBlur={() => setState({ focus: null })}
-                                    placeholder={language === LANGUAGE_TAG.VI ? 'Nhập mật khẩu của bạn (8 - 50 ký tự)' : 'Your password (8 - 50 letters)'}
+                                    placeholder={t('input:password_length_required')}
                                 />
                                 <div className="flex">
                                     {Boolean(state.password) && (
@@ -170,11 +170,11 @@ const HomeFirstAward = ({ t, language, theme }) => {
                                     active={state.checkedTermAndPolicy}
                                     onChange={() => setState({ checkedTermAndPolicy: !state.checkedTermAndPolicy })}
                                     label={
-                                        <div className="dark:text-darkBlue-5 text-gray-9 text-base">
+                                        <div className="dark:text-darkBlue-5 text-gray-9 ">
                                             <Trans i18nKey="home:first_award.terms_of_service">
                                                 <HrefButton
                                                     target="_blank"
-                                                    className="!inline !text-base !p-0 w-fit-content"
+                                                    className="!inline !p-0 !text-sm w-fit-content"
                                                     href={PATHS.TERM_OF_SERVICES.DEFAULT}
                                                     variants="blank"
                                                 />
@@ -191,9 +191,9 @@ const HomeFirstAward = ({ t, language, theme }) => {
                             </HrefButton>
                         </div>
                         <div className="text-center text-txtSecondary dark:text-txtSecondary-dark mt-6">
-                            {t('common:already_have_account')}
+                            {t('home:first_award.already_have_account')}
                             <a href={getLoginUrl('sso', 'login')} className="ml-2 font-semibold text-dominant">
-                                {t('common:sign_in')}
+                                {t('home:first_award.login')}
                             </a>
                         </div>
                     </div>

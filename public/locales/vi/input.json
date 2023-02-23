@@ -1,4 +1,5 @@
 {
-  "email_placeholder": "Nhập email",
-  "password_placeholder": "Mật khẩu"
+  "email_placeholder": "Nhập email của bạn",
+  "password_placeholder": "Mật khẩu",
+  "password_length_required":"Độ dài từ 8-50 kí tự"
 }

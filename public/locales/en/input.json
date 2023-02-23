@@ -1,4 +1,5 @@
 {
-  "email_placeholder": "Input Email",
-  "password_placeholder": "Password"
+  "email_placeholder": "Enter your email",
+  "password_placeholder": "Password",
+  "password_length_required":"Length from 8-50 characters"
 }

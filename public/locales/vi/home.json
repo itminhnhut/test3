@@ -4,9 +4,9 @@
         "title_desktop1": "Sàn giao dịch Spot",
         "title_desktop2": "và Futures an toàn",
         "description": "Với nền tảng đầu tư và giao dịch tiền điện tử hiệu quả nhất",
-        "total_order_paid": "Khối lượng giao dịch 24h",
-        "total_user": "Tổng lượng người dùng",
-        "total_pairs": "Tổng số cặp giao dịch",
+        "total_order_paid": "khối lượng 24h",
+        "total_user": "người dùng",
+        "total_pairs": "cặp giao dịch",
         "download_app":"Tải ứng dụng"
     },
     "markettrend": {
@@ -27,9 +27,11 @@
         "rule_4": "Đòn bẩy Futures lên tới <0>125x</0>",
         "rule_5": "Phí giao dịch chỉ từ <0>0,06%</0>",
         "rule_6": "Hỗ trợ <0>24/7</0>",
-        "terms_of_service":"Tôi đồng ý với <0>Điều khoản và điều kiện</0> của Nami Exchange",
+        "terms_of_service":"Tôi đồng ý với <0>Điều kiện và điều khoản</0> của Nami Exchange",
         "following_at": "Theo dõi chúng tôi tại",
-        "join_nami_by": "Đăng kí tài khoản bằng"
+        "join_nami_by": "Đăng kí tài khoản bằng",
+        "already_have_account":"Bạn đã đăng ký?",
+        "login":"Đăng nhập"
     },
     "journey": {
         "title": "Bắt đầu hành trình của bạn",
