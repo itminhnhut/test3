@@ -114,7 +114,7 @@
         "minimum_amount": "Minimum amount is {{min}}",
         "maximum_amount": "Maximum amount is {{max}}"
     },
-    "est_balance": "Estimated Balance",
+    "est_balance": "Total Balance",
     "hide_asset": "Hide Asset",
     "asset_balance": "Asset Balance",
     "receive_address": "Withdraw Address",

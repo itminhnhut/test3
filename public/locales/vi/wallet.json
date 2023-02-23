@@ -114,7 +114,7 @@
         "minimum_amount": "Số lượng tối thiểu {{min}}",
         "maximum_amount": "Số lượng tối đa {{max}}"
     },
-    "est_balance": "Tài sản ước lượng",
+    "est_balance": "Tổng số dư",
     "hide_asset": "Ẩn số dư",
     "hide_small_asset": "Ẩn số dư nhỏ",
     "asset_balance": "Số dư tài sản",

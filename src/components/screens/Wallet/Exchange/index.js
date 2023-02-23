@@ -506,7 +506,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             }}
                             onFocus={() => setState({ currentPage: 1 })}
                             wrapperClassname="w-[180px]"
-                            placeholder={t('common:search_asset')}
                             width={width}
                         />
                         <HideSmallBalance
@@ -539,7 +538,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             }}
                             onFocus={() => setState({ currentPage: 1 })}
                             width={width}
-                            placeholder={t('common:search_asset')}
                         />
                     </div>
                 )}
@@ -561,7 +559,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 onFocus={() => setState({ currentPage: 1 })}
                                 wrapperClassname="w-[180px]"
                                 width={width}
-                                placeholder={t('common:search_asset')}
                             />
                             <HideSmallBalance
                                 onClick={() =>
@@ -593,7 +590,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 }}
                                 onFocus={() => setState({ currentPage: 1 })}
                                 width={width}
-                                placeholder={t('common:search_asset')}
                             />
                         </div>
                     )}

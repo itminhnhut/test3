@@ -371,7 +371,7 @@ const OverviewWallet = (props) => {
                 </CardWallet>
                 <CardWallet onClick={() => onHandleClick('details_partners')} isSmallScreen={isSmallScreen}>
                     <AssetBalance
-                        title="Partners"
+                        title={t('common:partners')}
                         icon={<PartnersIcon size={isSmallScreen ? 24 : 32} />}
                         renderEstBalance={renderPartnersEstBalance}
                         isSmallScreen={isSmallScreen}
