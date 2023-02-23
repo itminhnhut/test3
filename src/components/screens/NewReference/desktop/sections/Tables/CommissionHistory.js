@@ -12,6 +12,7 @@ import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
 import _ from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useSelector } from 'react-redux';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
     const assetConfig = useSelector(state => state.utils.assetConfig)
@@ -186,6 +187,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                         rowKey={(item) => item?.key}
                         loading={!dataSource?.results?.length}
                         scroll={{ x: true }}
+                        emptyText={<NoData />}
                         // tableStatus={}
                         tableStyle={{
                             // paddingHorizontal: '1.75rem',
