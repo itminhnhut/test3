@@ -32,10 +32,14 @@ const DEFAULT_STATE = {
     asset: 'VNDC'
 };
 
-const ALLOWED_WALLET = {
+const ALLOWED_WALLET_FROM = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
     BROKER: WalletType.BROKER,
+};
+const ALLOWED_WALLET_TO = {
+    SPOT: WalletType.SPOT,
+    FUTURES: WalletType.FUTURES,
 };
 
 const TransferWalletResult = {
@@ -251,29 +255,29 @@ const TransferModal = ({
         [currentWallet, assetDigit]
     );
 
-    const getWalletType = (walletType) => {
+    const getWalletType = (walletType, isDisable) => {
         switch (walletType) {
             case WalletType.SPOT:
                 return <div className="flex justify-center items-center">
                     <SvgWalletExchange size={20}/>
-                    <span className="mx-2">{t('wallet:spot_short')}</span>
+                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
                 </div>;
             case WalletType.FUTURES:
                 return <div className="flex justify-center items-center">
 
                     <SvgWalletFutures size={20}/>
-                    <span className="mx-2">{t('wallet:futures_short')}</span>
+                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:futures_short')}</span>
                 </div>;
             case WalletType.BROKER:
                 return <div className="flex justify-center items-center">
 
                     <PartnersIcon size={20}/>
-                    <span className="mx-2">{t('wallet:broker_short')}</span>
+                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:broker_short')}</span>
                 </div>;
             default:
                 return <div className="flex justify-center items-center">
                     <SvgWalletExchange size={20}/>
-                    <span className="mx-2">{t('wallet:spot_short')}</span>
+                    <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
                 </div>;
         }
     };
@@ -303,20 +307,20 @@ const TransferModal = ({
                     {state.openList?.fromWalletList && (
                         <div
                             className="absolute z-20 mt-2 rounded-lg border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET)
-                                .map((walletType) => (
-                                    <div
+                            {Object.keys(ALLOWED_WALLET_FROM)
+                                .map((walletType) => {
+                                    return <div
                                         key={`wallet_type_from__${walletType}`}
                                         className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('fromWallet', walletType)}
                                     >
-                                        {getWalletType(ALLOWED_WALLET[walletType])}
-                                        {ALLOWED_WALLET[walletType] === state.fromWallet &&
+                                        {getWalletType(ALLOWED_WALLET_FROM[walletType])}
+                                        {ALLOWED_WALLET_FROM[walletType] === state.fromWallet &&
                                             <CheckSuccess size={14}
                                                           color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
                                                           checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}/>}
                                     </div>
-                                ))}
+                                })}
                         </div>
                     )}
                 </div>
@@ -348,22 +352,25 @@ const TransferModal = ({
                     {state.openList?.toWalletList && (
                         <div
                             className="absolute z-20 mt-2 rounded-lg border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
-                            {Object.keys(ALLOWED_WALLET)
-                                .map((walletType) => (
-                                    <div
-                                        key={`wallet_type_to__${walletType}`}
-                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
-                                        onClick={() => onSetWallet('toWallet', walletType)}
-                                    >
-                                        {getWalletType(ALLOWED_WALLET[walletType])}
-                                        {
-                                            ALLOWED_WALLET[walletType] === state.toWallet &&
-                                            <CheckSuccess size={14}
-                                                          color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
-                                                          checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}/>
-                                        }
-                                    </div>
-                                ))}
+                            {Object.keys(ALLOWED_WALLET_TO)
+                                .map((walletType) => {
+                                    const isDisable = state.fromWallet === walletType
+                                    return (
+                                        <div
+                                            key={`wallet_type_to__${walletType}`}
+                                            className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                            onClick={() => !isDisable && onSetWallet('toWallet', walletType)}
+                                        >
+                                            {getWalletType(ALLOWED_WALLET_TO[walletType], isDisable)}
+                                            {
+                                                ALLOWED_WALLET_TO[walletType] === state.toWallet &&
+                                                <CheckSuccess size={14}
+                                                              color={currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E'}
+                                                              checkColor={currentTheme === THEME_MODE.DARK ? '#1E1E1E' : '#E2E8F0'}/>
+                                            }
+                                        </div>
+                                    )
+                                })}
                         </div>
                     )}
                 </div>
@@ -553,9 +560,9 @@ const TransferModal = ({
             let allWallets;
             let currentWallets;
 
-            if (state.fromWallet === ALLOWED_WALLET.SPOT) {
+            if (state.fromWallet === ALLOWED_WALLET_FROM.SPOT) {
                 currentWallets = allExchangeWallet;
-            } else if (state.fromWallet === ALLOWED_WALLET.FUTURES) {
+            } else if (state.fromWallet === ALLOWED_WALLET_FROM.FUTURES) {
                 currentWallets = allFuturesWallet;
             }
 
