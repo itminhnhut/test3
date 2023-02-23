@@ -10,22 +10,37 @@ import Button from 'components/common/Button';
 import { getMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find } from 'lodash';
 import { useSelector } from 'react-redux';
-const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
-const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
-const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), { ssr: false });
+const APP_URL = process.env.APP_URL || 'https://nami.exchange';
+const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
+const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
 const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: false });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
-const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), { ssr: false });
-const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), { ssr: false });
+const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
+const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), {
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
+});
 const HomeCommunity = dynamic(() => import('components/screens/Home/HomeCommunity'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 const HomeFirstAward = dynamic(() => import('components/screens/Home/HomeFirstAward'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDark'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
@@ -34,6 +49,7 @@ import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import { X } from 'react-feather';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
+import Skeletor from '../components/common/Skeletor';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
@@ -43,6 +59,7 @@ const Index = () => {
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
+
     // * Use Hooks
     const {
         t,
@@ -83,6 +100,7 @@ const Index = () => {
             </ModalV2>
         );
     }, [state.showQR]);
+
 
     useEffect(async () => {
         if (!(exchangeConfig && exchangeConfig.length)) return;
@@ -136,19 +154,6 @@ const Index = () => {
             }
         });
     }, [exchangeConfig]);
-
-    // Adding scroll smooth behavior for homepage only
-    useEffect(() => {
-        let htmlElement;
-        if (window !== undefined) {
-            htmlElement = window.document.getElementsByTagName('html')[0];
-            htmlElement.style.scrollBehavior = 'smooth';
-        }
-
-        return () => {
-            htmlElement.style.scrollBehavior = 'auto';
-        };
-    }, []);
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>

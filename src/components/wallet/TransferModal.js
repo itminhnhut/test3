@@ -7,7 +7,7 @@ import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { PulseLoader } from 'react-spinners';
 import { getUserFuturesBalance, getUserPartnersBalance, getWallet } from 'redux/actions/user';
-import { orderBy } from 'lodash';
+import { orderBy, isEmpty } from 'lodash';
 
 import Axios from 'axios';
 import useOutsideClick from 'hooks/useOutsideClick';
@@ -25,6 +25,8 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import SvgWalletExchange from 'components/svg/SvgWalletExchange';
 import { EXCHANGE_ACTION } from 'pages/wallet';
+import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -35,7 +37,12 @@ const DEFAULT_STATE = {
 const ALLOWED_WALLET_FROM = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES,
-    BROKER: WalletType.BROKER,
+    BROKER: WalletType.BROKER
+};
+
+const ALLOWED_TO_WALLET = {
+    SPOT: WalletType.SPOT,
+    FUTURES: WalletType.FUTURES
 };
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
@@ -79,10 +86,7 @@ const INITIAL_STATE = {
     // ...
 };
 
-const TransferModal = ({
-    isMobile,
-    alert
-}) => {
+const TransferModal = ({ isMobile, alert }) => {
     // Init State
     const router = useRouter();
     const [state, set] = useState(INITIAL_STATE);
@@ -105,15 +109,11 @@ const TransferModal = ({
     useOutsideClick(assetListRef, () => state.openList?.assetList && setState({openList: { ...state.openList, assetList: false }}));
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
-    const {
-        isVisible,
-        fromWallet,
-        toWallet,
-        asset
-    } = useSelector((state) => state.utils.transferModal) || {};
+    const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
     const auth = useSelector((state) => state.auth?.user);
     const allExchangeWallet = useSelector((state) => state.wallet?.SPOT) || null;
     const allFuturesWallet = useSelector((state) => state.wallet?.FUTURES) || null;
+    const allPartnersWallet = useSelector((state) => state.wallet?.PARTNERS) || null;
     const assetConfig = useSelector((state) => state.utils.assetConfig) || null;
 
     const currentWallet = useMemo(() => {
@@ -218,10 +218,11 @@ const TransferModal = ({
         });
     };
 
-    const onFocus = () => setState({
-        focus: { amount: true },
-        openList: {}
-    });
+    const onFocus = () =>
+        setState({
+            focus: { amount: true },
+            openList: {}
+        });
 
     const onBlur = () => setState({ focus: {} });
 
@@ -233,22 +234,20 @@ const TransferModal = ({
     };
     const revertWallet = () => {
         console.log('__ vao day', 111);
-        if(state.fromWallet && state.toWallet){
+        if (state.fromWallet && state.toWallet) {
             const _newState = {
                 fromWallet: state.toWallet,
                 toWallet: state.fromWallet
-            }
+            };
             setState({
                 ..._newState
-            })
+            });
         }
     };
 
-
     const onSetMax = useMemo(
         () => () => {
-            const format = formatNumber(currentWallet?.available, assetDigit, 0, true)
-                .replace(/,/g, '');
+            const format = formatNumber(currentWallet?.available, assetDigit, 0, true).replace(/,/g, '');
             setState({ amount: format });
             return null;
         },
@@ -306,7 +305,7 @@ const TransferModal = ({
                     </div>
                     {state.openList?.fromWalletList && (
                         <div
-                            className="absolute z-20 mt-2 rounded-lg border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
+                            className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
                             {Object.keys(ALLOWED_WALLET_FROM)
                                 .map((walletType) => {
                                     return <div
@@ -340,18 +339,21 @@ const TransferModal = ({
                             'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
                     >
                         {getWalletType(state.toWallet)}
-                        <ArrowDropDownIcon
+                        <span className={state.openList?.toWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                            <ArrowDropDownIcon size={16} />
+                        </span>
+                        {/* <ArrowDropDownIcon
                             size={16}
                             className={
                                 state.openList?.toWalletList
                                     ? 'text-txtSecondary text-txtSecondary-dark rotate-180'
                                     : 'text-txtSecondary text-txtSecondary-dark'
                             }
-                        />
+                        /> */}
                     </div>
                     {state.openList?.toWalletList && (
                         <div
-                            className="absolute z-20 mt-2 rounded-lg border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
+                            className="absolute z-20 mt-2 rounded-xl border border-divider dark:border-divider-dark left-0 top-full w-full bg-bgPrimary dark:bg-[#141921] overflow-hidden gap-y-3">
                             {Object.keys(ALLOWED_WALLET_TO)
                                 .map((walletType) => {
                                     const isDisable = state.fromWallet === walletType
@@ -419,12 +421,14 @@ const TransferModal = ({
                             className={
                                 `px-4 py-3 font-normal text-md flex items-center justify-between cursor-pointer
                                 hover:bg-hover-1 dark:hover:bg-hover-dark 
-                                ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`
+                                ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`}
+                            onClick={() =>
+                                state.asset !== wallet?.assetCode &&
+                                setState({
+                                    asset: wallet?.assetCode,
+                                    openList: {}
+                                })
                             }
-                            onClick={() => state.asset !== wallet?.assetCode && setState({
-                                asset: wallet?.assetCode,
-                                openList: {}
-                            })}
                         >
                             <div className="flex justify-center">
                                 <AssetLogo assetCode={wallet?.assetCode} size={24}/>
@@ -435,7 +439,6 @@ const TransferModal = ({
                                     {formatAvl(available, _assetDigit)}
                                     {/* {available && available > 0 ? formatWallet(available, wallet?.assetDigit) : '0.0000'} */}
                                 </span>
-
                             </div>
                         </div>
                     );
@@ -449,8 +452,7 @@ const TransferModal = ({
             <NumberFormat
                 thousandSeparator
                 allowNegative={false}
-                placeholder={Number(0)
-                    .toPrecision(assetDigit + 1)}
+                placeholder={Number(0).toPrecision(assetDigit + 1)}
                 className="w-full text-left sm:text-[24px] font-semibold"
                 value={state.amount}
                 onValueChange={({ value }) => setState({ amount: value })}
@@ -468,33 +470,25 @@ const TransferModal = ({
     }, [state.asset, currentWallet, assetDigit]);
 
     const renderTransferButton = useCallback(() => {
-        const isErrors = !Object.values(state.errors)
-            ?.findIndex((item) => item?.length);
+        const isErrors = !Object.values(state.errors)?.findIndex((item) => item?.length);
         const isAmountEmpty = !(state.amount?.length && typeof +state.amount === 'number');
         const isInsufficient = currentWallet?.available < +state.amount;
         if (!auth) {
             return (
-                <div className="cursor-pointer flex items-center justify-center h-full">
-                    <div
-                        className="w-full bg-dominant text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80"
-                        onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')}
-                    >
-                        {t('futures:order_table:login_to_continue')}
-                    </div>
-                </div>
+                <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
+                    {t('common:sign_in')}
+                </HrefButton>
             );
         }
+
+        let shouldDisable = isErrors || isAmountEmpty || isInsufficient || state.isPlacingOrder;
+
         return (
-            <div
-                className={
-                    isErrors || isAmountEmpty || isInsufficient
-                        ? 'mt-10 py-3.5 font-bold text-center text-sm bg-gray-12 text-txtDisabled dark:bg-dark-2 dark:text-txtDisabled-dark cursor-not-allowed rounded-xl'
-                        : 'mt-10 py-3.5 font-bold text-center text-sm bg-dominant text-white cursor-pointer rounded-xl hover:opacity-80'
-                }
+            <ButtonV2
+                loading={state.isPlacingOrder}
+                disabled={shouldDisable}
                 onClick={() =>
-                    !isErrors &&
-                    !isAmountEmpty &&
-                    !isInsufficient &&
+                    !shouldDisable &&
                     !state.isPlacingOrder &&
                     onTransfer(currentWallet?.id, convertToWalletV1Type(state.fromWallet), convertToWalletV1Type(state.toWallet), +state.amount, {
                         fromWallet: getWalletType(state.fromWallet),
@@ -502,18 +496,18 @@ const TransferModal = ({
                         assetName: state.asset
                     })
                 }
+                className="mt-8"
             >
-                {state.isPlacingOrder ? <PulseLoader color={colors.white} size={3}/> : t('common:transfer')}
-            </div>
+                {t('common:transfer')}
+            </ButtonV2>
         );
     }, [state.errors, state.amount, state.fromWallet, state.toWallet, state.isPlacingOrder, state.asset, currentWallet, auth]);
 
     const renderIssues = useCallback(() => {
         const errorItems = [];
-        Object.values(state.errors)
-            ?.forEach((err) => {
-                err && errorItems.push(<div className="text-red text-sm">{err}</div>);
-            });
+        Object.values(state.errors)?.forEach((err) => {
+            err && errorItems.push(<div className="text-red text-sm">{err}</div>);
+        });
 
         let className = 'mt-3 max-h-0 transition-all ease-in duration-200 ';
         if (errorItems.length) {
@@ -564,6 +558,8 @@ const TransferModal = ({
                 currentWallets = allExchangeWallet;
             } else if (state.fromWallet === ALLOWED_WALLET_FROM.FUTURES) {
                 currentWallets = allFuturesWallet;
+            } else if (state.fromWallet === ALLOWED_WALLET.BROKER) {
+                currentWallets = allPartnersWallet;
             }
 
             allWallets = assetConfig
@@ -575,18 +571,18 @@ const TransferModal = ({
             allWallets = orderBy(allWallets, (o) => o?.wallet?.value - o?.wallet?.locked_value, 'desc');
             setState({ allWallets });
         }
-    }, [state.fromWallet, allFuturesWallet, allExchangeWallet, assetConfig]);
+    }, [state.fromWallet, allFuturesWallet, allPartnersWallet, allExchangeWallet, assetConfig]);
 
     useEffect(() => {
-        const _errors = {fromWallet: null,  toWallet: null, differenceWallet: null}
-        if(!state.fromWallet){
-            _errors.fromWallet =  t('wallet:errors.transfer_source_wallet_issues')
+        const _errors = { fromWallet: null, toWallet: null, differenceWallet: null };
+        if (!state.fromWallet) {
+            _errors.fromWallet = t('wallet:errors.transfer_source_wallet_issues');
         }
-        if(!state.toWallet){
-            _errors.toWallet =  t('wallet:errors.transfer_destination_wallet_issues')
+        if (!state.toWallet) {
+            _errors.toWallet = t('wallet:errors.transfer_destination_wallet_issues');
         }
-        if(state.fromWallet && state.toWallet && state.fromWallet === state.toWallet){
-            _errors.differenceWallet =  t('wallet:errors.transfer_destination_wallet_issues')
+        if (state.fromWallet && state.toWallet && state.fromWallet === state.toWallet) {
+            _errors.differenceWallet = t('wallet:errors.transfer_destination_wallet_issues');
         }
 
         setState({
@@ -594,10 +590,8 @@ const TransferModal = ({
                 ...state.errors,
                 ..._errors
             }
-        })
-
+        });
     }, [state.fromWallet, state.toWallet]);
-
 
     useEffect(() => {
         const _errors = {};
@@ -610,7 +604,6 @@ const TransferModal = ({
         if (currentWallet?.available && state.amount) {
             if (currentWallet?.available < +state.amount) {
                 _errors.insufficient = t('wallet:errors.invalid_insufficient_balance');
-
             } else {
                 _errors.insufficient = null;
                 setState({
@@ -626,7 +619,7 @@ const TransferModal = ({
         setState({
             errors: {
                 ...state.errors,
-                ..._errors,
+                ..._errors
             }
         });
     }, [state.amount, currentWallet]);
@@ -640,7 +633,7 @@ const TransferModal = ({
         <ModalV2
             isVisible={!!isVisible}
             onBackdropCb={onClose}
-            wrapClassName={'p-8 h-full bg-white dark:bg-dark text-base rounded-2xl'}
+            wrapClassName={'p-8 h-full bg-white dark:bg-dark text-base rounded-xl'}
             className="!w-[488px] bg-bgPrimary dark:bg-bgPrimary-dark !overflow-visible"
             noButton
         >
@@ -649,32 +642,35 @@ const TransferModal = ({
             </div>
             {renderWalletSelect()}
             <div
-                className={`mt-[50px] p-4 sm:py-3.5 sm:px-5 rounded-xl ${
-                    state.focus?.amount
-                        ? 'border border-dominant'
-                        : 'border border-divider dark:border-divider-dark hover:!border-dominant'
+                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${
+                    state?.errors?.minAmount || state?.errors?.insufficient
+                        ? 'border-red-2'
+                        : state.focus?.amount
+                        ? ' border-dominant'
+                        : ' border-divider dark:border-divider-dark hover:!border-dominant'
                 }
                 `}
             >
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('common:amount')}</div>
-                    <div
-                        className="text-sm text-txtSecondary dark:text-txtSecondary-dark flex justify-center items-center gap-2">
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark flex justify-center items-center gap-2">
                         <span>{t('common:available_balance')}: </span>
                         {renderAvailableWallet()}
-                        <AddCircleColorIcon className="cursor-pointer"
-                                            onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}/>
+                        <AddCircleColorIcon
+                            className="cursor-pointer"
+                            onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                        />
                     </div>
                 </div>
                 <div className="mt-6 flex items-center">
                     {renderAmountInput()}
                     <div
                         className="font-bold text-dominant text-sm cursor-pointer uppercase pr-3 mr-3 border-r border-divider dark:border-divider-dark"
-                        onClick={onSetMax}>
+                        onClick={onSetMax}
+                    >
                         {t('common:max')}
                     </div>
                     {renderAssetSelect()}
-
                 </div>
 
             </div>

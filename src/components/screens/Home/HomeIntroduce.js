@@ -3,14 +3,13 @@ import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
-import { API_GET_TRENDING } from 'redux/actions/apis';
-
+import { API_GET_TRENDING, API_GET_OVERVIEW_STATISTIC } from 'redux/actions/apis';
 import colors from 'styles/colors';
 import CountUp from 'react-countup';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import classNames from 'classnames';
 
 const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
     ssr: false,
@@ -23,135 +22,12 @@ const HomeIntroduce = ({ trendData, t }) => {
         loading: false,
         makedData: null,
         trending: null,
-        loadingTrend: false
+        loadingTrend: false,
+        statistic: null,
+        loadingStatistic: true
     });
+
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
-    // Use Hooks
-    const getTrending = async () => {
-        setState({ loadingTrend: true });
-        try {
-            const { data } = await axios.get(API_GET_TRENDING);
-            if (data && data.status === 'ok') {
-                setState({ trending: data?.data });
-            }
-        } catch (e) {
-            console.log('Cant get top trending data: ', e);
-        } finally {
-            setState({ loadingTrend: false });
-        }
-    };
-
-    const renderIntroduce = useCallback(() => {
-        return (
-            <section className="homepage-introduce relative">
-                <TrendingSlide trending={state.trending} />
-                <div className="homepage-introduce___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto relative">
-                    <div className="homepage-introduce___wrapper__left">
-                        <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
-                        <div className="homepage-introduce___title">
-                            {t('home:introduce.title_desktop1')} <br />
-                            {t('home:introduce.title_desktop2')}
-                        </div>
-                        {/* <div className="homepage-introduce___description">
-                            <Trans>{t('home:introduce.description')}</Trans>
-                        </div> */}
-                        <div className="flex"></div>
-                        <div className="homepage-introduce___statitics">
-                            <div className="homepage-introduce___statitics____item">
-                                <div className="homepage-introduce___statitics____item___value">
-                                    {/* {renderCountUp} */}
-                                    {state.loading && !state.makedData ? (
-                                        <PulseLoader size={5} color={colors.teal} />
-                                    ) : (
-                                        <>
-                                            $
-                                            <CountUp
-                                                start={0}
-                                                end={COUNT.VOLUME_24H + state.makedData?.volume24h}
-                                                duration={2.75}
-                                                prefix="$"
-                                                formattingFn={(value) => formatNumber(value, 0)}
-                                                delay={0}
-                                                useEasing
-                                            >
-                                                {({ countUpRef }) => <span ref={countUpRef} />}
-                                            </CountUp>
-                                        </>
-                                    )}
-                                </div>
-                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
-                            </div>
-                            <div className="homepage-introduce___statitics____item">
-                                <div className="homepage-introduce___statitics____item___value">
-                                    {state.loading && !state.makedData ? (
-                                        <PulseLoader size={5} color={colors.teal} />
-                                    ) : (
-                                        <CountUp
-                                            start={0}
-                                            end={COUNT.MEMBER}
-                                            duration={2.75}
-                                            formattingFn={(value) => formatNumber(value, 0)}
-                                            delay={0}
-                                            useEasing
-                                        >
-                                            {({ countUpRef }) => <span ref={countUpRef} />}
-                                        </CountUp>
-                                    )}{' '}
-                                </div>
-                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
-                            </div>
-                            <div className="homepage-introduce___statitics____item">
-                                <div className="homepage-introduce___statitics____item___value">
-                                    {state.loading ? (
-                                        <PulseLoader size={5} color={colors.teal} />
-                                    ) : (
-                                        <CountUp
-                                            start={0}
-                                            end={state.pairsLength}
-                                            duration={2.75}
-                                            formattingFn={(value) => formatNumber(value, 0)}
-                                            delay={0}
-                                            useEasing
-                                        >
-                                            {({ countUpRef }) => <span ref={countUpRef} />}
-                                        </CountUp>
-                                    )}
-                                </div>
-                                <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
-                            </div>
-                        </div>
-
-                        <div className="homepage-introduce___download">
-                            <GradientButton
-                                onClick={() => {
-                                    document.getElementById('download_section').scrollIntoView({ behavior: 'smooth' });
-                                }}
-                                className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark"
-                            >
-                                {t('home:introduce.download_app')}
-                            </GradientButton>
-                        </div>
-                    </div>
-                    <div className="homepage-introduce___wrapper__right">
-                        <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
-                    </div>
-                </div>
-                <div className="homepage-introduce__banner ">
-                    <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
-                </div>
-            </section>
-        );
-    }, [state.loading, state.pairsLength, state.makedData, state.trending]);
-
-    useAsync(async () => {
-        setState({ loading: true });
-        const pairs = await getMarketWatch();
-        if (pairs && pairs.length) {
-            setState({ pairsLength: pairs.length });
-        }
-        setState({ loading: false });
-    });
 
     useEffect(() => {
         const makedData = makeData();
@@ -160,12 +36,118 @@ const HomeIntroduce = ({ trendData, t }) => {
         }
     }, []);
 
-    useEffect(() => {
-        getTrending();
-        const inverval = setInterval(() => getTrending(), 60000);
-        return () => inverval && clearInterval(inverval);
+    useAsync(async () => {
+        try {
+            const stats = await axios.get(API_GET_OVERVIEW_STATISTIC);
+            if (stats.data.status === 'ok' && stats.data.data.overview) {
+                setState({ statistic: stats.data.data.overview });
+            }
+        } catch (error) {
+            console.log('fetch OVERVIEW_STATISTIC failed...');
+        } finally {
+            setState({ loadingStatistic: false });
+        }
     }, []);
-    return renderIntroduce();
+
+    return (
+        <section className="homepage-introduce relative">
+            <TrendingSlide trending={trendData} />
+            <div className="homepage-introduce___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto relative">
+                <div className="homepage-introduce___wrapper__left">
+                    <div className="homepage-introduce___nami_exchange">NAMI EXCHANGE</div>
+                    <div className="homepage-introduce___title">
+                        {t('home:introduce.title_desktop1')} <br />
+                        {t('home:introduce.title_desktop2')}
+                    </div>
+                    {/* <div className="homepage-introduce___description">
+                <Trans>{t('home:introduce.description')}</Trans>
+            </div> */}
+                    <div className="flex"></div>
+                    <div className="homepage-introduce___statitics">
+                        <div className="homepage-introduce___statitics____item">
+                            <div className="homepage-introduce___statitics____item___value">
+                                {/* {renderCountUp} */}
+                                {state.loadingStatistic || !state.statistic?.volume_24h ? (
+                                    <PulseLoader size={5} color={colors.teal} />
+                                ) : (
+                                    <>
+                                        $
+                                        <CountUp
+                                            start={0}
+                                            end={state.statistic?.volume_24h}
+                                            duration={2.75}
+                                            prefix="$"
+                                            formattingFn={(value) => formatNumber(value, 0)}
+                                            delay={0}
+                                            useEasing
+                                        >
+                                            {({ countUpRef }) => <span ref={countUpRef} />}
+                                        </CountUp>
+                                    </>
+                                )}
+                            </div>
+                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_order_paid')}</div>
+                        </div>
+                        <div className="homepage-introduce___statitics____item">
+                            <div className="homepage-introduce___statitics____item___value">
+                                {state.loadingStatistic || !state.statistic?.num_of_users ? (
+                                    <PulseLoader size={5} color={colors.teal} />
+                                ) : (
+                                    <CountUp
+                                        start={0}
+                                        end={state.statistic.num_of_users}
+                                        duration={2.75}
+                                        formattingFn={(value) => formatNumber(value, 0)}
+                                        delay={0}
+                                        useEasing
+                                    >
+                                        {({ countUpRef }) => <span ref={countUpRef} />}
+                                    </CountUp>
+                                )}{' '}
+                            </div>
+                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_user')}</div>
+                        </div>
+                        <div className="homepage-introduce___statitics____item">
+                            <div className="homepage-introduce___statitics____item___value">
+                                {state.loadingStatistic || !state.statistic?.total_trading_pair ? (
+                                    <PulseLoader size={5} color={colors.teal} />
+                                ) : (
+                                    <CountUp
+                                        start={0}
+                                        end={state.statistic.total_trading_pair}
+                                        duration={2.75}
+                                        formattingFn={(value) => formatNumber(value, 0)}
+                                        delay={0}
+                                        useEasing
+                                    >
+                                        {({ countUpRef }) => <span ref={countUpRef} />}
+                                    </CountUp>
+                                )}
+                            </div>
+                            <div className="homepage-introduce___statitics____item___description">{t('home:introduce.total_pairs')}</div>
+                        </div>
+                    </div>
+
+                    <div className="homepage-introduce___download">
+                        <GradientButton
+                            onClick={() => {
+                                document.getElementById('download_section').scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            className="w-auto hover:!bg-gradient-button-hover-dark hover:!text-dark-dark !bg-gradient-button-dark  text-txtPrimary-dark"
+                        >
+                            {t('home:introduce.download_app')}
+                        </GradientButton>
+                    </div>
+                </div>
+                <div className="homepage-introduce___wrapper__right">
+                    <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
+                </div>
+            </div>
+            <div className="homepage-introduce__banner ">
+                <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className={classNames(`pointer-events-none h-full`)} />
+            </div>
+        </section>
+    );
 };
 
 const COUNT = {
