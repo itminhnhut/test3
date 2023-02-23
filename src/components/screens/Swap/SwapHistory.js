@@ -111,7 +111,6 @@ const SwapHistory = ({ width }) => {
         },
         { key: 'createdAt', dataIndex: 'createdAt', title: t('common:time'), width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
     ];
-    auth = false;
 
     return (
         <div className="m-auto mt-20">
