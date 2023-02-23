@@ -665,7 +665,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 <div className="mt-6 flex items-center">
                     {renderAmountInput()}
                     <div
-                        className="font-bold text-dominant text-sm cursor-pointer uppercase pr-3 mr-3 border-r border-divider dark:border-divider-dark"
+                        className="font-bold text-dominant text-sm cursor-pointer uppercase pr-3 mx-3 border-r border-divider dark:border-divider-dark"
                         onClick={onSetMax}
                     >
                         {t('common:max')}
