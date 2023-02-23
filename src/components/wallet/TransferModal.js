@@ -258,24 +258,22 @@ const TransferModal = ({ isMobile, alert }) => {
         switch (walletType) {
             case WalletType.SPOT:
                 return <div className="flex justify-center items-center">
-                    <SvgWalletExchange size={20}/>
+                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletExchange size={20}/></span>
                     <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
                 </div>;
             case WalletType.FUTURES:
                 return <div className="flex justify-center items-center">
-
-                    <SvgWalletFutures size={20}/>
+                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletFutures size={20}/></span>
                     <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:futures_short')}</span>
                 </div>;
             case WalletType.BROKER:
                 return <div className="flex justify-center items-center">
-
-                    <PartnersIcon size={20}/>
+                    <span className={isDisable ? 'opacity-20' : ''}><PartnersIcon size={20}/></span>
                     <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:broker_short')}</span>
                 </div>;
             default:
                 return <div className="flex justify-center items-center">
-                    <SvgWalletExchange size={20}/>
+                    <span className={isDisable ? 'opacity-20' : ''}><SvgWalletExchange size={20}/></span>
                     <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark': ''}`}>{t('wallet:spot_short')}</span>
                 </div>;
         }
