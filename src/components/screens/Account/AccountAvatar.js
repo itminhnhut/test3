@@ -337,7 +337,7 @@ const AccountAvatar = ({
             isVisible={openModal && !openConfirmModal}
             onBackdropCb={() => setOpenModal(false)}
             className='md:w-[50rem] h-full md:h-[42.5rem]'
-            wrapClassName='flex flex-col select-none !px-4'
+            wrapClassName='flex flex-col select-none !px-4 md:!px-8'
         >
             <div className='flex flex-col flex-1 min-h-0'>
                 <p className='text-xl md:text-2xl font-semibold mb-8'>{t('profile:change_avatar')}</p>

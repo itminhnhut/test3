@@ -114,7 +114,8 @@
     "enter_ref_code": "Nhập mã giới thiệu",
     "add_ref_code_success": "Bạn đã thêm mã giới thiệu #{{referrerName}} thành công.",
     "error": {
-        "SELF_INVITE": "SELF_INVITE",
+        "USER_IS_INVITED": "Bạn đã nhập mã giới thiệu. Vui lòng tải lại trang để cập nhập dữ liệu",
+        "SELF_INVITE": "Không thể nhập mã giới thiệu của chính mình",
         "REFERRAL_CODE_NOT_FOUND": "Mã giới thiệu không tồn tại.",
         "failed": "Thêm mã giới thiệu thất bại."
     },

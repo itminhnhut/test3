@@ -74,6 +74,7 @@ function Activity({ t }) {
         if (!revokeId) return;
         setRevoking(true);
         const id = revokeId === 'all' ? 'all' : revokeId;
+
         await Axios.post(USER_REVOKE_DEVICE, { id })
             .then(async ({ data }) => {
                 if (data?.status === ApiStatus.SUCCESS && (id === 'all' || isThisDevice)) {

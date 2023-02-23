@@ -197,18 +197,28 @@ function Identification() {
     const { t } = useTranslation();
 
     return <AccountLayout>
-        <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
-            <NotKycCard t={t} className='md:col-span-2' />
-            <KYCStepCard t={t} className='md:col-span-3' />
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
-            <ProcessKycCard t={t} className='md:col-span-2' />
-            <KYCStepCard t={t} className='md:col-span-3' />
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
-            <VerifiedKycCard t={t} className='md:col-span-2' />
-            <CurrentFuturesCard t={t} className='md:col-span-3' />
-        </div>
+        {
+            user?.kyc_status === KYC_STATUS.NO_KYC &&
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <NotKycCard t={t} className='md:col-span-2' />
+                <KYCStepCard t={t} className='md:col-span-3' />
+            </div>
+        }
+        {
+            user?.kyc_status === KYC_STATUS.PENDING_APPROVAL &&
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <ProcessKycCard t={t} className='md:col-span-2' />
+                <KYCStepCard t={t} className='md:col-span-3' />
+            </div>
+        }
+        {
+            user?.kyc_status === KYC_STATUS.APPROVED &&
+            <div className='grid grid-cols-1 md:grid-cols-5 gap-8 my-12'>
+                <VerifiedKycCard t={t} className='md:col-span-2' />
+                <CurrentFuturesCard t={t} className='md:col-span-3' />
+            </div>
+        }
+
     </AccountLayout>;
 }
 
