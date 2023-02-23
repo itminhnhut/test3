@@ -157,12 +157,12 @@ const TradingFee = () => {
     }, [state.assetFee, state.loadingAssetFee]);
 
     const renderFeeTab = useCallback(() => {
-        return <Tabs tab={state.tabIndex}>
+        return <Tabs tab={state.tabIndex} className='space-x-6'>
             {
                 TRADING_FEE_TAB.map(tab => <TabItem
                     key={`trading_fee_Tab__${tab.dataIndex}`}
                     value={tab.index}
-                    className='!text-left !mx-6 !px-0'
+                    className='!text-left !px-0'
                     onClick={() => setState({ tabIndex: tab.index })}
                 >{tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}</TabItem>)
             }
