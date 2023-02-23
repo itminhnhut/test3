@@ -52,6 +52,67 @@ const SwapHistory = ({ width }) => {
         setState({ page: state.page + delta });
     };
 
+    const columns = [
+        { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 140, fixed: 'left', align: 'left' },
+        {
+            key: 'swap_pair',
+            dataIndex: 'swap_pair',
+            title: t('common:swap_pair'),
+            width: 180,
+            align: 'left',
+            render: (v, item) => {
+                return (
+                    <div className="text-left flex items-center">
+                        {item.fromAsset}
+                        <SwapIcon className="mx-2" />
+                        {item.toAsset}
+                    </div>
+                );
+            }
+        },
+        {
+            key: 'fromQty',
+            dataIndex: 'fromQty',
+            title: t('common:from'),
+            width: 220,
+            align: 'left',
+            render: (v, item) => (
+                <span>
+                    {formatPrice(+v)} {item?.fromAsset}
+                </span>
+            )
+        },
+        {
+            key: 'toQty',
+            dataIndex: 'toQty',
+            title: t('common:to'),
+            width: 220,
+            align: 'left',
+            render: (v, item) => (
+                <span>
+                    {formatPrice(+v)} {item?.toAsset}
+                </span>
+            )
+        },
+        {
+            key: 'rate',
+            dataIndex: 'rate',
+            title: t('common:rate'),
+            width: 306,
+            align: 'left',
+            render: (v, item) => {
+                const { fromAsset, toAsset, displayingPrice, displayingPriceAsset } = item;
+                return (
+                    <span>
+                        1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
+                    </span>
+                );
+            }
+        },
+        { key: 'createdAt', dataIndex: 'createdAt', title: t('common:time'), width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
+    ];
+    auth = false;
+
     return (
         <div className="m-auto mt-20">
             <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">{t('convert:history')}</div>
@@ -99,65 +160,5 @@ const SwapHistory = ({ width }) => {
 };
 
 const LIMIT_ROW = 5;
-
-const columns = [
-    { key: 'displayingId', dataIndex: 'displayingId', title: 'ID', width: 140, fixed: 'left', align: 'left' },
-    {
-        key: 'swap_pair',
-        dataIndex: 'swap_pair',
-        title: 'Swap Pair',
-        width: 180,
-        align: 'left',
-        render: (v, item) => {
-            return (
-                <div className="text-left flex items-center">
-                    {item.fromAsset}
-                    <SwapIcon className="mx-2" />
-                    {item.toAsset}
-                </div>
-            );
-        }
-    },
-    {
-        key: 'fromQty',
-        dataIndex: 'fromQty',
-        title: 'From Quantity',
-        width: 220,
-        align: 'left',
-        render: (v, item) => (
-            <span>
-                {formatPrice(+v)} {item?.fromAsset}
-            </span>
-        )
-    },
-    {
-        key: 'toQty',
-        dataIndex: 'toQty',
-        title: 'To Quantity',
-        width: 220,
-        align: 'left',
-        render: (v, item) => (
-            <span>
-                {formatPrice(+v)} {item?.toAsset}
-            </span>
-        )
-    },
-    {
-        key: 'rate',
-        dataIndex: 'rate',
-        title: 'Rate',
-        width: 306,
-        align: 'left',
-        render: (v, item) => {
-            const { fromAsset, toAsset, displayingPrice, displayingPriceAsset } = item;
-            return (
-                <span>
-                    1 {displayingPriceAsset === fromAsset ? toAsset : fromAsset} = {formatPrice(+displayingPrice)} {displayingPriceAsset}
-                </span>
-            );
-        }
-    },
-    { key: 'createdAt', dataIndex: 'createdAt', title: 'Time', width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
-];
 
 export default SwapHistory;
