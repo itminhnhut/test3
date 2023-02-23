@@ -60,7 +60,7 @@ const HomeNews = () => {
 
     return (
         <section className="homepage-news relative z-10">
-            <div className="homepage-news___wrapper mal-container flex md:flex-col flex-col-reverse">
+            <div className="homepage-news___wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto flex md:flex-col flex-col-reverse">
                 {/* {state.news && <LastedNews data={state.news} lang={language} />} */}
                 {state.news && <LastedNews data={state.news} lang={language} />}
 

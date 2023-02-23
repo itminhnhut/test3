@@ -28,7 +28,7 @@ const HomeAdditional = ({ currentTheme, t, width }) => {
                 </div>
                 <HomeJourney t={t} width={width} currentTheme={currentTheme} />
                 <section className="homepage-trade3step">
-                    <div className="homepage-trade3step___wrapper relative mal-container">
+                    <div className="homepage-trade3step___wrapper relative max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                         <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                         <div className="homepage-trade3step___step___wrapper">
                             <div className="homepage-trade3step___step___item">

@@ -35,7 +35,7 @@ const HomeJourney = ({ t, width, currentTheme }) => {
     return (
         <section className="homepage-journey z-10">
             {/* <img src="/images/screen/homepage/journey_background.png" className="absolute w-full z-0 left-0" /> */}
-            <div className="homepage-journey__wrapper mal-container">
+            <div className="homepage-journey__wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                 <div className="homepage-journey__title">{t('home:journey.title')}</div>
                 <div className="homepage-journey__description">
                     {t('home:journey.description_desktop1')}

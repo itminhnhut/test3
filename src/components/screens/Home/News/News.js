@@ -30,6 +30,10 @@ const News = ({ data, lang }) => {
             '(min-width: 1024px)': {
                 slidesPerView: 4,
                 centered: false
+            },
+            '(min-width: 2160px)':{
+                slidesPerView: 5,
+                centered: false
             }
         }
     });

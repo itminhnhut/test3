@@ -11,7 +11,7 @@
   z-index: 1;
 
   .homepage-introduce___wrapper {
-    @apply flex flex-col md:mt-14 mt-10;
+    @apply flex flex-col md:mt-14 2xl:mt-20 mt-10;
     @media (min-width: 768px) {
       @apply flex-row flex-wrap items-end;
     }

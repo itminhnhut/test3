@@ -253,7 +253,7 @@ const HomeMarketTrend = ({ trendData }) => {
 
     return (
         <section className="homepage-markettrend">
-            <div className="homepage-markettrend__wrapper mal-container">
+            <div className="homepage-markettrend__wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                 <div className="homepage-markettrend__tab_and_title">
                     <div className="homepage-markettrend__title">{t('home:markettrend.title')}</div>
                     <div className="homepage-markettrend__tab">

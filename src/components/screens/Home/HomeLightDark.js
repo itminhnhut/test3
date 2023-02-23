@@ -60,7 +60,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
 
     return (
         <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
-            <div id="download_section" className="mal-container px-4 md:px-0 max-w-[1216px] relative">
+            <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 md:px-0 relative">
                 <div className="flex justify-center mb-[70px] z-1000">
                     <div>
                         <div className="text-sm tooltip-arrow-bottom mb-[30px] justify-center items-center py-3 px-6 inline-flex animate-bounce	 rounded-full">

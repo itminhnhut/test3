@@ -28,7 +28,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
             className="homepage-first_award relative"
             style={{ backgroundImage: `url('${getS3Url(`/images/screen/homepage/bg_first_award_${theme}.png`)}')` }}
         >
-            <div className="homepage-first_award__wrapper mal-container">
+            <div className="homepage-first_award__wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                 <div className="homepage-first_award___step relative">
                     <div className="homepage-first_award__title">{t('home:first_award.title')}</div>
                     <div className="homepage-first_award__manual">
