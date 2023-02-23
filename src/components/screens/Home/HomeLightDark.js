@@ -19,12 +19,12 @@ const SwitchTheme = ({ themeMode, onChangeTheme }) => {
     return (
         <div
             className={classNames(
-                'relative  w-[90px] h-[44px] rounded-full  cursor-pointer ',
+                'relative  w-[114px] h-[54px] rounded-full  cursor-pointer ',
                 {
                     'bg-dominant ': themeMode === THEME_MODE.DARK
                 },
                 {
-                    'bg-gray-11 dark:bg-darkBlue-3': themeMode === THEME_MODE.LIGHT
+                    'bg-gray-11 dark:bg-dark-2': themeMode === THEME_MODE.LIGHT
                 }
             )}
             onClick={() => {
@@ -39,12 +39,12 @@ const SwitchTheme = ({ themeMode, onChangeTheme }) => {
         >
             <div
                 className={classNames(
-                    'absolute w-[36px] h-[36px] top-1/2 -translate-y-1/2 rounded-full duration-100  flex items-center justify-center transition-all ease-in',
+                    'absolute w-[48px] h-[48px] top-1/2 -translate-y-1/2 rounded-full duration-100  flex items-center justify-center transition-all ease-in',
                     { 'left-1  bg-white text-dominant': themeMode === THEME_MODE.DARK },
                     { 'left-[calc(100%-4px)] -translate-x-full bg-dominant text-gray-11 dark:text-dark-2': themeMode === THEME_MODE.LIGHT }
                 )}
             >
-                {themeMode !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
+                {themeMode !== THEME_MODE.LIGHT ? <SvgMoon size={32} color="currentColor" /> : <SvgSun size={32} color="currentColor" />}
             </div>
         </div>
     );
@@ -60,19 +60,20 @@ const HomeLightDark = ({ onShowQr, t }) => {
     return (
         <div className="dark:bg-dark-dark bg-white m relative py-[120px]">
             <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 relative">
-                <div className="flex justify-center mb-[70px] z-1000">
-                    <div>
-                        <div className="text-sm tooltip-arrow-bottom mb-[30px] justify-center items-center py-3 px-6 inline-flex animate-bounce	 rounded-full">
-                            Thử ngay{' '}
-                        </div>
-                        <div className="flex justify-center ">
-                            <SwitchTheme onChangeTheme={onChange} themeMode={themeMode} />
-                        </div>
+                <div className="flex flex-col items-center justify-center mb-[70px] z-1000">
+                    <div className="text-xs tooltip-arrow-bottom mb-[30px] justify-center items-center w-[85px] h-[38px] inline-flex animate-bounce	 rounded-full">
+                        Thử ngay{' '}
+                    </div>
+                    <div className="flex justify-center ">
+                        <SwitchTheme onChangeTheme={onChange} themeMode={themeMode} />
                     </div>
                 </div>
 
                 <div className="relative bg-transparent">
-                    <div className="absolute left-[35%] top-1/2 -translate-x-1/2 w-full h-full -translate-y-1/2 ">
+                    <div
+                        className="absolute left-[35%] top-1/2 pointer-events-none -translate-x-1/2 w-full h-full -translate-y-1/2 "
+                        // style={{ background: `url('${getS3Url('/images/screen/homepage/splash_dark.png')}') no-repeat center`,backgroundSize:'cover' }}
+                    >
                         <Image src={getS3Url('/images/screen/homepage/splash_dark.png')} layout="fill" />
                     </div>
                     <Swiper
@@ -106,7 +107,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                     >
                         {[...Array(5).keys()].map((_, index) => (
                             <SwiperSlide key={index} className="">
-                                <div className="relative overflow-hidden w-full h-[650px] md:h-[450px]">
+                                <div className="relative overflow-hidden w-full h-[650px] md:h-[435px]">
                                     <Image
                                         src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`)}
                                         layout="fill"
