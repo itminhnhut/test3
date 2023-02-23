@@ -96,9 +96,9 @@ const TransferModal = ({
         i18n: { language }
     } = useTranslation(['common', 'wallet', 'error']);
 
-    useOutsideClick(fromWalletRef, () => state.openList?.fromWalletList && setState({}));
-    useOutsideClick(toWalletRef, () => state.openList?.toWalletList && setState({}));
-    useOutsideClick(assetListRef, () => state.openList?.assetList && setState({}));
+    useOutsideClick(fromWalletRef, () =>   state.openList?.fromWalletList && setState({openList: { ...state.openList, fromWalletList: false }}));
+    useOutsideClick(toWalletRef, () => state.openList?.toWalletList && setState({openList: { ...state.openList, toWalletList: false }}));
+    useOutsideClick(assetListRef, () => state.openList?.assetList && setState({openList: { ...state.openList, assetList: false }}));
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const {
@@ -288,10 +288,10 @@ const TransferModal = ({
                     onClick={() => setState({ openList: { fromWalletList: !state.openList?.fromWalletList } })}
                 >
                     <div
-                        className="font-medium text-center text-xs text-txtSecondary dark:text-txtSecondary-dark">{t('common:from')}</div>
+                        className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:from')}</div>
                     <div
                         className={
-                            'mt-2 sm:mt-3.5 text-sm font-bold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
+                            'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
                     >
                         {getWalletType(state.fromWallet)}
                         <ArrowDropDownIcon size={16} className={
@@ -307,7 +307,7 @@ const TransferModal = ({
                                 .map((walletType) => (
                                     <div
                                         key={`wallet_type_from__${walletType}`}
-                                        className="flex items-center justify-between font-medium text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('fromWallet', walletType)}
                                     >
                                         {getWalletType(ALLOWED_WALLET[walletType])}
@@ -330,10 +330,10 @@ const TransferModal = ({
                     onClick={() => setState({ openList: { toWalletList: !state.openList?.toWalletList } })}
                 >
                     <div
-                        className="font-medium text-center text-xs text-txtSecondary dark:text-txtSecondary-dark">{t('common:to')}</div>
+                        className="font-medium text-center text-base text-txtSecondary dark:text-txtSecondary-dark">{t('common:to')}</div>
                     <div
                         className={
-                            'mt-2 sm:mt-3.5 text-sm font-bold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
+                            'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}
                     >
                         {getWalletType(state.toWallet)}
                         <ArrowDropDownIcon
@@ -352,7 +352,7 @@ const TransferModal = ({
                                 .map((walletType) => (
                                     <div
                                         key={`wallet_type_to__${walletType}`}
-                                        className="flex items-center justify-between font-medium text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
+                                        className="flex items-center justify-between font-normal text-sm hover:bg-hover-1 dark:hover:bg-hover-dark py-3 px-4 sm:py-2.5 cursor-pointer"
                                         onClick={() => onSetWallet('toWallet', walletType)}
                                     >
                                         {getWalletType(ALLOWED_WALLET[walletType])}
@@ -373,16 +373,21 @@ const TransferModal = ({
 
     const renderAssetSelect = useCallback(() => {
         return (
-            <div className="flex items-center cursor-pointer select-none"
-                 onClick={() => setState({ openList: { assetList: !state.openList?.assetList } })}>
-                <AssetLogo assetCode={state.asset} size={20}/>
-                <div className="mx-2 font-bold">
+            <div
+                ref={assetListRef}
+                className="relative flex items-center cursor-pointer select-none"
+                 onClick={() => {
+                     setState({ openList: { assetList: !state.openList?.assetList } })
+                 }}>
+                <AssetLogo assetCode={state.asset} size={24}/>
+                <div className="mx-2 font-bold text-sm">
                     {state.asset}
                 </div>
                 <ArrowDropDownIcon
                     size={16}
                     className={state.openList?.assetList ? 'text-txtSecondary text-txtSecondary-dark rotate-180' : 'text-txtSecondary text-txtSecondary-dark'}
                 />
+                {renderAssetList()}
             </div>
         );
     }, [state.asset, state.openList]);
@@ -396,10 +401,7 @@ const TransferModal = ({
         if (!state.openList?.assetList) return null;
 
         return (
-            <div
-                ref={assetListRef}
-                className="absolute right-0 -top-[16px] z-20 py-4 rounded-lg border border-divider dark:border-divider-dark  w-[320px] overflow-hidden bg-bgPrimary dark:bg-bgPrimary-dark"
-            >
+            <div className="absolute right-0 top-[30px] z-20 py-4 rounded-lg border border-divider dark:border-divider-dark  w-[320px] overflow-hidden bg-bgPrimary dark:bg-bgPrimary-dark">
                 {state.allWallets?.map((wallet, index) => {
                     const available = wallet?.wallet?.value - wallet?.wallet?.locked_value;
                     const _assetDigit = assetConfig.find((i) => i.assetCode === wallet?.assetCode)?.assetDigit ?? 0;
@@ -408,7 +410,7 @@ const TransferModal = ({
                         <div
                             key={`transfer_asset__list_${wallet?.assetCode}_${state.asset}`}
                             className={
-                                `px-4 py-3 font-medium text-sm flex items-center justify-between cursor-pointer
+                                `px-4 py-3 font-normal text-md flex items-center justify-between cursor-pointer
                                 hover:bg-hover-1 dark:hover:bg-hover-dark 
                                 ${state.asset === wallet?.assetCode ? 'bg-hover-1 dark:bg-hover-dark' : ''}`
                             }
@@ -418,8 +420,8 @@ const TransferModal = ({
                             })}
                         >
                             <div className="flex justify-center">
-                                <AssetLogo assetCode={wallet?.assetCode} size={20}/>
-                                <span className="font-bold ml-2">{wallet?.assetCode}</span>
+                                <AssetLogo assetCode={wallet?.assetCode} size={24}/>
+                                <span className="ml-2">{wallet?.assetCode}</span>
                             </div>
                             <div className="flex items-center">
                                 <span className="text-txtSecondary dark:text-txtSecondary-dark">
@@ -479,7 +481,7 @@ const TransferModal = ({
             <div
                 className={
                     isErrors || isAmountEmpty || isInsufficient
-                        ? 'mt-10 py-3.5 font-bold text-center text-sm bg-gray-3 text-gray-1 dark:bg-darkBlue-3 dark:text-darkBlue-4 cursor-not-allowed rounded-xl'
+                        ? 'mt-10 py-3.5 font-bold text-center text-sm bg-gray-12 text-txtDisabled dark:bg-dark-2 dark:text-txtDisabled-dark cursor-not-allowed rounded-xl'
                         : 'mt-10 py-3.5 font-bold text-center text-sm bg-dominant text-white cursor-pointer rounded-xl hover:opacity-80'
                 }
                 onClick={() =>
@@ -640,7 +642,7 @@ const TransferModal = ({
             </div>
             {renderWalletSelect()}
             <div
-                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl ${
+                className={`mt-[50px] p-4 sm:py-3.5 sm:px-5 rounded-xl ${
                     state.focus?.amount
                         ? 'border border-dominant'
                         : 'border border-divider dark:border-divider-dark hover:!border-dominant'
@@ -667,7 +669,7 @@ const TransferModal = ({
                     {renderAssetSelect()}
 
                 </div>
-                {renderAssetList()}
+
             </div>
             {renderIssues()}
             {renderTransferButton()}
