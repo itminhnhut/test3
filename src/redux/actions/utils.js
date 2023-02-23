@@ -34,6 +34,7 @@ import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
+import { useRouter } from 'next/router';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -141,8 +142,10 @@ export const getDecimalSpotPrice = memoize(
 export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
     let params = {};
     if (typeof window !== 'undefined') {
+        const currentUrl = window.location.href
+
         const _options = defaults(options, {
-            redirect: window.location.href,
+            redirect: currentUrl,
             referral: null,
             utm_source: 'web',
             utm_medium: 'direct',
@@ -155,10 +158,15 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const theme = localStorage?.getItem('theme') ?? 'light';
 
+        let language = 'vi'
+        if(!currentUrl.includes('/vi')) language = 'en'
+
+
         params = {
             ..._options,
             referral,
-            theme
+            theme,
+            language
         };
         params = defaults(params, { redirect: process.env.APP_URL });
 
