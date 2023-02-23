@@ -2,15 +2,14 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
-import { useAsync, useBoolean } from 'react-use';
+import { useAsync } from 'react-use';
 import { API_GET_TRENDING } from 'redux/actions/apis';
-
 import colors from 'styles/colors';
 import CountUp from 'react-countup';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import classNames from 'classnames';
 
 const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
     ssr: false,
@@ -139,11 +138,17 @@ const HomeIntroduce = ({ trendData, t }) => {
                     </div>
                 </div>
                 <div className="homepage-introduce__banner ">
-                    <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
+                    <video
+                        src={getS3Url('/images/screen/homepage/banner_graphics.mp4')}
+                        loop
+                        muted
+                        autoPlay
+                        className={classNames(`pointer-events-none h-full`)}
+                    />
                 </div>
             </section>
         );
-    }, [state.loading, state.pairsLength, state.makedData, state.trending, isLoaded]);
+    }, [state.loading, state.pairsLength, state.makedData, state.trending]);
 
     useAsync(async () => {
         setState({ loading: true });
@@ -166,6 +171,7 @@ const HomeIntroduce = ({ trendData, t }) => {
         const inverval = setInterval(() => getTrending(), 60000);
         return () => inverval && clearInterval(inverval);
     }, []);
+
     return renderIntroduce();
 };
 
