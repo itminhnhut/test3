@@ -28,6 +28,7 @@ import { EXCHANGE_ACTION } from 'pages/wallet';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -79,8 +80,8 @@ const INITIAL_STATE = {
     allWallets: null,
     focus: {},
     errors: {},
-    isPlacingOrder: false
-
+    isPlacingOrder: false,
+    resultTransfer: null
     // ...
 };
 
@@ -142,8 +143,9 @@ const TransferModal = ({ isMobile, alert }) => {
 
             if (data.status === 'ok') {
                 const { amount } = data.data;
-                const fromWallet = utils?.fromWallet;
-                const toWallet = utils?.toWallet;
+                // const fromWallet = utils?.fromWallet;
+                // const toWallet = utils?.toWallet;
+                // console.log('___here: ', fromWallet, toWallet);
                 const message = t('wallet:transfer_success', {
                     amount: formatWallet(+amount, currentWallet?.assetDigit),
                     assetCode: utils?.assetName,
@@ -155,23 +157,28 @@ const TransferModal = ({ isMobile, alert }) => {
                 dispatch(getWallet());
                 dispatch(getUserFuturesBalance());
                 dispatch(getUserPartnersBalance());
+                onOpenAlertResultTransfer({
+                    msg: message,
+                    type: 'success',
+                    title: t('common:success'),
+                    duration: 1500
+                });
 
-                setTimeout(() => {
-                    onClose();
-                    if (isMobile && alert) {
-                        alert.show('success', t('common:success'), message);
-                    } else {
-                        showNotification({
-                            message,
-                            title: t('common:success'),
-                            type: 'success'
-                        });
-                    }
-                }, 300);
+                // setTimeout(() => {
+                //     onClose();
+                //     if (isMobile && alert) {
+                //         alert.show('success', t('common:success'), message);
+                //     } else {
+                //         showNotification({
+                //             message,
+                //             title: t('common:success'),
+                //             type: 'success'
+                //         });
+                //     }
+                // }, 300);
             } else {
                 // Process error
                 let message = 'Error occur, please try again';
-                console.log('data.status: ', data.status);
                 switch (data.status) {
                     case TransferWalletResult.INVALID_WALLET_TYPE: {
                         message = t('error:INVALID_USER');
@@ -186,15 +193,21 @@ const TransferModal = ({ isMobile, alert }) => {
                         break;
                     }
                 }
-                if (isMobile && alert) {
-                    alert.show('error', t('common:failure'), message);
-                } else {
-                    showNotification({
-                        message,
-                        title: t('common:failure'),
-                        type: 'failure'
-                    });
-                }
+                onOpenAlertResultTransfer({
+                    msg: message,
+                    type: 'warning',
+                    title: t('common:failure')
+                });
+
+                // if (isMobile && alert) {
+                //     alert.show('error', t('common:failure'), message);
+                // } else {
+                //     showNotification({
+                //         message,
+                //         title: t('common:failure'),
+                //         type: 'failure'
+                //     });
+                // }
             }
         } catch (e) {
             console.error('Swap error: ', e);
@@ -614,6 +627,32 @@ const TransferModal = ({ isMobile, alert }) => {
         return router.push(href);
     };
 
+    const renderAlertNotification = useCallback(() => {
+        if (!state?.resultTransfer) return null;
+
+        setTimeout(() => {
+            onCloseAlertResultTransfer();
+        }, state?.duration || 5000);
+
+        return (
+            <AlertModalV2
+                isVisible={!!state.resultTransfer}
+                onClose={onCloseAlertResultTransfer}
+                type={state?.resultTransfer?.type}
+                title={state?.resultTransfer?.title}
+                message={state?.resultTransfer?.msg}
+            />
+        );
+    }, [state.resultTransfer]);
+
+    const onOpenAlertResultTransfer = ({ msg, type, title, duration }) => {
+        set((prevState) => ({ ...prevState, resultTransfer: { msg, type, title, duration } }));
+    };
+
+    const onCloseAlertResultTransfer = () => {
+        if (state.resultTransfer) set((prevState) => ({ ...prevState, resultTransfer: null }));
+    };
+
     return (
         <ModalV2
             isVisible={!!isVisible}
@@ -661,6 +700,7 @@ const TransferModal = ({ isMobile, alert }) => {
             </div>
             {renderIssues()}
             {renderTransferButton()}
+            {renderAlertNotification()}
         </ModalV2>
     );
 };
