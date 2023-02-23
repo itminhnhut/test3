@@ -233,7 +233,7 @@ const OverviewWallet = (props) => {
                 break;
             case TRANSFER + PARTNERS:
                 flag.current = true;
-                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.PARTNERS, toWallet: WalletType.SPOT }));
+                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.BROKER, toWallet: WalletType.SPOT }));
                 break;
             case 'details_partners':
                 if (flag.current) {
@@ -327,21 +327,21 @@ const OverviewWallet = (props) => {
                             {/* </Link> */}
                         </div>
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
-                            <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick(DEPOSIT + EXCHANGE)}>
+                            <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => onHandleClick(DEPOSIT + EXCHANGE)}>
                                 {t('common:deposit')}
                             </ButtonV2>
                             {/* <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
                                     {t('common:deposit')}
                                 </HrefButton> */}
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                            <ButtonV2 variants="text" className="px-6" onClick={() => onHandleClick(WITHDRAW + EXCHANGE)}>
+                            <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => onHandleClick(WITHDRAW + EXCHANGE)}>
                                 {t('common:withdraw')}
                             </ButtonV2>
                             {/* <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
                                     {t('common:withdraw')}
                                 </HrefButton> */}
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
-                            <ButtonV2 variants="text" onClick={() => onHandleClick(TRANSFER + EXCHANGE)}>
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + EXCHANGE)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -363,7 +363,7 @@ const OverviewWallet = (props) => {
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
-                            <ButtonV2 variants="text" onClick={() => onHandleClick(TRANSFER + FUTURES)}>
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + FUTURES)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
@@ -385,7 +385,7 @@ const OverviewWallet = (props) => {
                             </div>
                         )}
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
-                            <ButtonV2 disabled variants="text" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
+                            <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + PARTNERS)}>
                                 {t('common:transfer')}
                             </ButtonV2>
                         </div>
