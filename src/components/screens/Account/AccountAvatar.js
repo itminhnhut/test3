@@ -57,25 +57,26 @@ const UploadAvatar = ({
         }
     };
 
-    return <Dropzone onDrop={onDropCustomAvatar}
-                     validator={onValidatingAvatarSize}
-                     maxFiles={1}
-                     maxSize={AVATAR_SIZE_LIMIT}
-                     multiple={false}
-                     accept='image/jpeg, image/png'
+    return <Dropzone
+        onDrop={onDropCustomAvatar}
+        validator={onValidatingAvatarSize}
+        maxFiles={1}
+        maxSize={AVATAR_SIZE_LIMIT}
+        multiple={false}
+        accept='image/jpeg, image/png'
     >
         {({
             getRootProps,
             getInputProps
         }) => (
             <DashBorder {...getRootProps({
-                className: 'w-full flex-1 flex flex-col items-center justify-center cursor-pointer text-center px-2 ' + className
+                className: 'w-full flex-1 flex flex-col items-center justify-center cursor-pointer text-center px-4 ' + className
             })}>
                 <input {...getInputProps()} />
                 <Upload size={32} />
                 <p className='mt-2 text-sm font-semibold mb-1'>{t('profile:drag_image')}</p>
                 <span
-                    className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:support_image_type')}</span>
+                    className='text-sm break-all text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:support_image_type')}</span>
                 {
                     avatarIssues && <div className='flex items-center mt-2'>
                         <WarningCircle />
@@ -204,7 +205,7 @@ const AccountAvatar = ({
     };
 
     const scrollCategoryTab = (categoryId) => {
-        const element = document.getElementById(`category_tab_${categoryId}`)
+        const element = document.getElementById(`category_tab_${categoryId}`);
         if (!element) return;
         const targetWidth = element.getBoundingClientRect().width;
 
@@ -212,7 +213,7 @@ const AccountAvatar = ({
             left: element.offsetLeft - targetWidth / 2,
             behavior: 'smooth'
         });
-    }
+    };
 
     const onScroll = throttle((event) => {
         const { offsetHeight } = event.target;
@@ -277,9 +278,8 @@ const AccountAvatar = ({
     }, []);
 
     useEffect(() => {
-        scrollCategoryTab(currentCategoryId)
-    }, [currentCategoryId])
-
+        scrollCategoryTab(currentCategoryId);
+    }, [currentCategoryId]);
 
     return <>
         <div className='relative w-[6.5rem] h-[6.5rem] md:w-[8.75rem] md:h-[8.75rem] -mt-14'>
@@ -345,10 +345,11 @@ const AccountAvatar = ({
                     className='flex flex-col flex-col-reverse md:flex-row md:pb-10 flex-1 min-h-0'>
                     <div
                         ref={avatarRef}
-                        className='overflow-y-auto relative -mr-3 pr-2 min-h-0 md:w-[25rem] pb-8 md:pr-2'
+                        className='overflow-y-auto relative -mr-3 pr-2 min-h-0 md:min-w-[25rem] md:w-[25rem] pb-8 md:pr-2'
                         onScroll={onScroll}
                     >
-                        {isMobile && <UploadAvatar t={t} className='h-44 mb-14' onDropCustomAvatar={onDropCustomAvatar} />}
+                        {isMobile &&
+                            <UploadAvatar t={t} className='h-44 mb-14' onDropCustomAvatar={onDropCustomAvatar} />}
                         <p className='font-semibold mb-6'>{t('profile:choose_in_collection')}</p>
                         <div
                             className='flex gap-2 my-3 py-3 overflow-x-auto sticky top-0 bg-white dark:bg-dark no-scrollbar'>
@@ -363,7 +364,7 @@ const AccountAvatar = ({
                                             'border-teal bg-teal/[.1] text-teal': currentCategoryId === category.id,
                                             'border-divider text-txtSecondary dark:text-txtSecondary-dark dark:border-divider-dark': currentCategoryId !== category.id
                                         })
-                                    } >{category.name[language]}</div>;
+                                    }>{category.name[language]}</div>;
                             })}
                         </div>
                         <div className='space-y-6'>
@@ -373,7 +374,8 @@ const AccountAvatar = ({
                                     data-id={avatarSet.category.id}
                                     key={avatarSet.category.id}
                                 >
-                                    <div className='bg-white dark:bg-darkBlue-3 border border-divider dark:border-none p-4 rounded-xl'>
+                                    <div
+                                        className='bg-white dark:bg-darkBlue-3 border border-divider dark:border-none p-4 rounded-xl'>
                                         <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{avatarSet.category.name[language]}</p>
                                         <div className='flex flex-wrap gap-x-6 gap-y-4'>
                                             {avatarSet.images.map((image, index) => {
@@ -409,7 +411,7 @@ const AccountAvatar = ({
                     <ButtonV2
                         disabled={!avatar}
                         onClick={() => setOpenConfirmModal(true)}
-                    >{t('common:confirm_2')}</ButtonV2>
+                    >{t('common:confirm')}</ButtonV2>
                 </div>
             </div>
         </ModalV2>
