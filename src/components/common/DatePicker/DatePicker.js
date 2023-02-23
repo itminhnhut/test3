@@ -81,7 +81,7 @@ const DatePicker = ({
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
                 className={classNames(
-                    'relative py-2 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer', {
+                    'relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer', {
                         '!border-teal': showPicker
                     }
                 )}

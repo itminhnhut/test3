@@ -64,7 +64,7 @@ export const TableFilter = ({
                         <div className='h-full w-full'>
                             <Popover.Button className='w-full'>
                                 <div
-                                    className='relative py-2 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
+                                    className='relative py-3 text-sm leading-5 px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
                                     {object.values.find(e => e.value === filter[key].value).title}
                                     <ArrowDown
                                         size={16}
@@ -125,7 +125,7 @@ export const TableFilter = ({
     };
     const filterArray = Object.keys(filters);
     return filterArray.map((key) => <div className='min-w-[240px]' key={key}>
-        <div className='text-txtSecondary mb-3 text-xs'>
+        <div className='text-txtSecondary dark:text-txtSecondary-dark mb-3 text-xs'>
             {filters[key].title}
         </div>
         <div className='w-full'>
