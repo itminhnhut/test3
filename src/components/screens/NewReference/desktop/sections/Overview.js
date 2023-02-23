@@ -44,6 +44,7 @@ import { getS3Url } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
+import toast from 'utils/toast';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -378,16 +379,10 @@ const RefDetail = ({
             }
         });
         if (status === 'ok') {
-            showNotification(
-                {
-                    title: t('reference:referral.update_success'),
-                    // title: t('common:success'),
-                    type: 'success',
-                    position: 'top',
-                    container: 'top-left'
-                },
-                1800
-            );
+            toast({
+                text: t('reference:referral.update_success'),
+                type: 'success'
+            });
             // setDoRefresh(!doRefresh)
             setRefs(
                 refs.map((e) => {
@@ -404,17 +399,13 @@ const RefDetail = ({
     }, 1000);
 
     return (
-        <ModalV2
-            isVisible={isShow}
-            onBackdropCb={onClose}
-            className='max-w-[884px] h-[90%]'
-            wrapClassName='px-6 flex flex-col'
-        >
-            <div
-                className='border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold'>
-                {t('reference:referral.referral_code_management')}
-            </div>
-            {showAddRef && (
+        <>
+            <ModalV2
+                isVisible={isShow}
+                onBackdropCb={onClose}
+                className='max-w-[884px] h-[90%]'
+                wrapClassName='px-6 flex flex-col'
+            >
                 <AddNewRef
                     // totalRate={commisionConfig?.[rank].direct.futures ?? 20}
                     isShow={showAddRef}
@@ -423,114 +414,121 @@ const RefDetail = ({
                     defaultRef={defaultRef}
                     isDesktop
                 />
-            )}
-            {showFriendList &&
-                <FriendList isDesktop isShow={showFriendList} onClose={() => setShowFriendList(false)}
-                            code={code} />}
-            {showEditNote && (
-                <EditNote
-                    isShow={showEditNote}
-                    currentNote={currentNote}
-                    onClose={() => setShowEditNote(false)}
-                    code={code}
-                    doRefresh={() => setDoRefresh(!doRefresh)}
-                    isDesktop
-                />
-            )}
-            <div className='overflow-y-auto flex-1 min-h-0 mb-8 py-6 px-6 -mx-6 bg-gray-10 dark:bg-transparent'>
-                {loading ? (
-                    <IconLoading color={colors.teal} />
-                ) : !refs.length ? (
-                    <NoData text='No data' className='my-auto' />
-                ) : (
-                    <div className='grid grid-cols-2 gap-4'>
-                        {refs.map((data, index) => (
-                            <div
-                                key={data.code}
-                                className='p-4 bg-white dark:bg-darkBlue-3 rounded-xl'
-                            >
-                                <div
-                                    className='flex w-full justify-between leading-6 items-center'>
-                                    <div className='flex gap-2 items-center font-semibold'>
-                                        {data.code}
-                                        <CopyIcon data={data.code} size={24} className='cursor-pointer' />
-                                    </div>
-                                    <div onClick={data.status ? null : () => handleSetDefault(data.code)}
-                                         className='text-sm cursor-pointer select-none'>
-                                        {
-                                            data.status ?
-                                                <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
-                                                : <div
-                                                    className='bg-gray-10 dark:bg-dark-2 font-semibold rounded-lg px-4 py-2 text-darkBlue dark:text-txtSecondary-dark'>
-                                                    {t('reference:referral.set_default')}
-                                                </div>
-                                        }
-                                    </div>
-                                </div>
-                                <div className='mt-6 leading-6 space-y-3'>
-                                    <div className='w-full flex justify-between items-center'>
-                                        <div
-                                            className='text-gray-1 text-sm'>{t('reference:referral.you_friends_get')}</div>
-                                        <div className='text-teal text-sm font-semibold'>
-                                            {100 - data.remunerationRate}%/{data.remunerationRate}%
-                                        </div>
-                                    </div>
-                                    <div className='w-full flex justify-between items-center'>
-                                        <div className='text-gray-1 text-sm'>{t('reference:referral.link')}</div>
-                                        <div
-                                            className='text-sm flex gap-2 justify-end items-center w-fit'>
-                                            <div
-                                                className='max-w-[140px] truncate'>https://nami.exchange/ref/{data.code}</div>
-                                            <CopyIcon color={colors.darkBlue5}
-                                                      data={`https://nami.exchange/ref/${data.code}`} size={16}
-                                                      className='cursor-pointer' />
-                                        </div>
-                                    </div>
-                                    <div className='w-full flex justify-between items-center'>
-                                        <div
-                                            className='text-gray-1 text-sm'>{t('reference:referral.friends')}</div>
-                                        <div
-                                            className='text-sm flex items-center gap-2'
-                                            onClick={() => {
-                                                setCode(data.code);
-                                                setShowFriendList(true);
-                                            }}
-                                        >
-                                            {data.invitedCount ?? 0}
-                                            <div className='cursor-pointer'>
-                                                <FriendListIcon size={16} color={colors.darkBlue5} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='w-full flex justify-between items-center'>
-                                        <div className='text-gray-1 text-sm'>{t('reference:referral.note')}</div>
-                                        <div
-                                            className='text-sm flex items-center gap-2'
-                                            onClick={() => {
-                                                setCode(data.code);
-                                                setCurrentNote(data.note ?? '');
-                                                setShowEditNote(true);
-                                            }}
-                                        >
-                                            {data.note}
-                                            <div className='cursor-pointer'>
-                                                <NoteIcon size={16} color={colors.darkBlue5} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+
+                {showFriendList &&
+                    <FriendList isDesktop isShow={showFriendList} onClose={() => setShowFriendList(false)}
+                                code={code} />}
+
+                {showEditNote && (
+                    <EditNote
+                        isShow={showEditNote}
+                        currentNote={currentNote}
+                        onClose={() => setShowEditNote(false)}
+                        code={code}
+                        doRefresh={() => setDoRefresh(!doRefresh)}
+                        isDesktop
+                    />
                 )}
-            </div>
-            <div className='z-20 w-full flex justify-center'>
-                <ButtonV2
-                    disabled={refs.length >= 20}
-                    onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}
-                >{t('reference:referral.add_ref_code')}</ButtonV2>
-            </div>
-        </ModalV2>
+                <div
+                    className='border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold'>
+                    {t('reference:referral.referral_code_management')}
+                </div>
+                <div className='overflow-y-auto flex-1 min-h-0 mb-8 py-6 px-6 -mx-6 bg-gray-10 dark:bg-transparent'>
+                    {loading ? (
+                        <IconLoading color={colors.teal} />
+                    ) : !refs.length ? (
+                        <NoData text='No data' className='my-auto' />
+                    ) : (
+                        <div className='grid grid-cols-2 gap-4'>
+                            {refs.map((data, index) => (
+                                <div
+                                    key={data.code}
+                                    className='p-4 bg-white dark:bg-darkBlue-3 rounded-xl'
+                                >
+                                    <div
+                                        className='flex w-full justify-between leading-6 items-center'>
+                                        <div className='flex gap-2 items-center font-semibold'>
+                                            {data.code}
+                                            <CopyIcon data={data.code} size={24} className='cursor-pointer' />
+                                        </div>
+                                        <div onClick={data.status ? null : () => handleSetDefault(data.code)}
+                                             className='text-sm cursor-pointer select-none'>
+                                            {
+                                                data.status ?
+                                                    <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
+                                                    : <div
+                                                        className='bg-gray-10 dark:bg-dark-2 font-semibold rounded-lg px-4 py-2 text-darkBlue dark:text-txtSecondary-dark'>
+                                                        {t('reference:referral.set_default')}
+                                                    </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div className='mt-6 leading-6 space-y-3'>
+                                        <div className='w-full flex justify-between items-center'>
+                                            <div
+                                                className='text-gray-1 text-sm'>{t('reference:referral.you_friends_get')}</div>
+                                            <div className='text-teal text-sm font-semibold'>
+                                                {100 - data.remunerationRate}%/{data.remunerationRate}%
+                                            </div>
+                                        </div>
+                                        <div className='w-full flex justify-between items-center'>
+                                            <div className='text-gray-1 text-sm'>{t('reference:referral.link')}</div>
+                                            <div
+                                                className='text-sm flex gap-2 justify-end items-center w-fit'>
+                                                <div
+                                                    className='max-w-[140px] truncate'>https://nami.exchange/ref/{data.code}</div>
+                                                <CopyIcon color={colors.darkBlue5}
+                                                          data={`https://nami.exchange/ref/${data.code}`} size={16}
+                                                          className='cursor-pointer' />
+                                            </div>
+                                        </div>
+                                        <div className='w-full flex justify-between items-center'>
+                                            <div
+                                                className='text-gray-1 text-sm'>{t('reference:referral.friends')}</div>
+                                            <div
+                                                className='text-sm flex items-center gap-2'
+                                                onClick={() => {
+                                                    setCode(data.code);
+                                                    setShowFriendList(true);
+                                                }}
+                                            >
+                                                {data.invitedCount ?? 0}
+                                                <div className='cursor-pointer'>
+                                                    <FriendListIcon size={16} color={colors.darkBlue5} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='w-full flex justify-between items-center'>
+                                            <div className='text-gray-1 text-sm'>{t('reference:referral.note')}</div>
+                                            <div
+                                                className='text-sm flex items-center gap-2'
+                                                onClick={() => {
+                                                    setCode(data.code);
+                                                    setCurrentNote(data.note ?? '');
+                                                    setShowEditNote(true);
+                                                }}
+                                            >
+                                                {data.note}
+                                                <div className='cursor-pointer'>
+                                                    <NoteIcon size={16} color={colors.darkBlue5} />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+                <div className='z-20 w-full flex justify-center'>
+                    <ButtonV2
+                        disabled={refs.length >= 20}
+                        onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}
+                    >{t('reference:referral.add_ref_code')}</ButtonV2>
+                </div>
+            </ModalV2>
+        </>
+
     );
 };
 

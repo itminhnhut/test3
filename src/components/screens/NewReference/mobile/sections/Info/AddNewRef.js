@@ -42,11 +42,8 @@ const AddNewRef = ({
         setRefCode(text.toUpperCase());
     };
     const [resultData, setResultData] = useState({
-        isSucess: false,
+        isSuccess: false,
         message: ''
-
-        // message: t('reference:referral.addref_success', { value: 'ACM' }),
-        // isSucess: true
     });
     const handleInputNote = (e) => {
         const text = e?.target?.value;
@@ -58,14 +55,15 @@ const AddNewRef = ({
     };
 
     const doClose = () => {
-        const elements = document.getElementsByTagName('input');
-        elements[0].value = '';
-        elements[1].value = '';
         onClose();
         setNote('');
         setRefCode('');
         setIsDefault(false);
         doRefresh();
+        setResultData({
+            message: '',
+            isSuccess: false
+        });
     };
 
     const handleInput = (e, length) => {
@@ -103,16 +101,17 @@ const AddNewRef = ({
                 note: note.length ? note : null
             }
         });
+
+        doClose()
         if (status === 'ok') {
             setResultData({
                 message: t('reference:referral.addref_success', { value: data.code ?? refCode }),
-                isSucess: true
+                isSuccess: true
             });
-            // doClose()
         } else {
             setResultData({
                 message: renderError(status ?? ''),
-                isSucess: false
+                isSuccess: false
             });
         }
     }, 1000), [refCode, percent, isDefault, note]);
@@ -146,22 +145,18 @@ const AddNewRef = ({
 
     const renderResult = useMemo(() => {
         if (!resultData.message.length) return null;
-        const Icon = resultData.isSucess ? <SuccessIcon /> : <ErrorIcon />;
-        const title = resultData.isSucess ? t('reference:referral.addref_success_title') : t('reference:referral.addref_error_title');
+        const Icon = resultData.isSuccess ? <SuccessIcon /> : <ErrorIcon />;
+        const title = resultData.isSuccess ? t('reference:referral.addref_success_title') : t('reference:referral.addref_error_title');
 
         return isDesktop ?
             <AlertModalV2
                 isVisible
-                onClose={onClose}
+                onClose={doClose}
                 title={title}
-                type={resultData.isSucess ? 'success' : 'error'}
-                textButton={resultData.isSucess ? t('common:confirm') : null}
+                type={resultData.isSuccess ? 'success' : 'error'}
+                textButton={resultData.isSuccess ? t('common:confirm') : null}
                 onConfirm={() => {
-                    setResultData({
-                        isSucess: false,
-                        message: ''
-                    });
-                    resultData.isSucess && doClose();
+                    resultData.isSuccess && doClose();
                 }}
                 // containerClassName='!px-6 !py-8 top-[50%]'
             >
@@ -192,7 +187,7 @@ const AddNewRef = ({
                     <div className='text-sm font-medium mt-3 text-gray-7'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
-                    {resultData.isSucess ?
+                    {resultData.isSuccess ?
                         null
                         :
                         <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
@@ -274,7 +269,8 @@ const AddNewRef = ({
                             active={isDefault}
                         ></CheckBox>
                     </div>
-                    <ButtonV2 className='mt-6' disabled={isError} onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
+                    <ButtonV2 className='mt-6' disabled={isError}
+                              onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
                 </div>
             </ModalV2> : <PopupModal
                 isVisible={isShow}
