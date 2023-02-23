@@ -37,7 +37,7 @@ import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
-import useDarkMode from 'hooks/useDarkMode';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 
 const instructionTransferLink = {
@@ -139,6 +139,8 @@ const ModalChangeReferee = ({
     const [submitting, setSubmitting] = useState(false);
     const dispatch = useDispatch();
 
+    const [theme] = useDarkMode();
+
     const handleClose = () => {
         setRefCode('');
         setSubmitting(false);
@@ -209,7 +211,12 @@ const ModalChangeReferee = ({
     };
 
     const suffixInput = useMemo(() => {
-        if (checking) return <Spinner size={20} />;
+        if (checking) {
+            return <Spinner
+                size={20}
+                color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
+            />;
+        }
         if (!!referrer) {
             return <span
                 className='text-txtSecondary dark:text-txtSecondary-dark'>{referrer?.username}</span>;
@@ -225,6 +232,7 @@ const ModalChangeReferee = ({
             label={t('profile:ref_code_optional')}
             placeholder={t('profile:enter_ref_code')}
             canPaste={!referrer && !checking}
+            allowClear={true}
             suffix={suffixInput}
             error={(!referrer && !!refCode) ? t('profile:error.REFERRAL_CODE_NOT_FOUND') : null}
         />
@@ -271,8 +279,10 @@ const UserInformation = ({
         <div>
             <span className='text-txtSecondary dark:text-txtSecondary-dark'>{t('profile:referrer')}</span>
             <div
-                className='flex items-end float-right cursor-pointer'
-                onClick={() => setShowSetReferrerModal(true)}
+                className={classnames('flex items-end float-right ', {
+                    'cursor-pointer': !user?.referal_id
+                })}
+                onClick={() => !user?.referal_id && setShowSetReferrerModal(true)}
             >
                 {
                     !user?.referal_id ?
@@ -435,8 +445,6 @@ const Profile = () => {
         >
             <div>
                 <p className='text-lg md:text-2xl font-semibold mb-2'>{t('profile:deposit_banner:title')}</p>
-                {/* <span */}
-                {/*     className='text-txtSecondary text-sm dark:text-txtSecondary-dark'>{t('profile:deposit_banner:description')}</span> */}
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-16 mt-9'>
                 {[

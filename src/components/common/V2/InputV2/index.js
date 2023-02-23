@@ -1,6 +1,9 @@
-import { useRef } from 'react';
+import { useRef, createElement } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
+import { X } from 'react-feather';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const ErrorTriangle = ({ size = 16 }) => {
     return <svg width={size} height={size} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -18,23 +21,36 @@ const InputV2 = ({
     onChange,
     placeholder,
     canPaste = false,
+    allowClear = true,
     prefix,
     suffix,
     error,
-    onHitEnterButton
+    onHitEnterButton,
+    type = 'text',
+    disable: disabled = false
 }) => {
     const { t } = useTranslation();
 
     const inputRef = useRef(null);
 
+    const [theme] = useDarkMode();
+    const isDark = theme === THEME_MODE.DARK;
+
+    const internalChange = (value) => {
+        if (onChange) onChange(value);
+    };
     const onInputChange = (e) => {
-        if (onChange) onChange(e?.target?.value);
+        internalChange(e?.target?.value);
+    };
+    const handleHitEnterButton = (e) => {
+        if (e?.nativeEvent?.code === 'Enter') {
+            if (onHitEnterButton) onHitEnterButton(e?.target?.value);
+        }
     };
 
-    const handleHitEnterButton = (e) => {
-        if (e?.nativeEvent?.code === 'Enter')
-            if (onHitEnterButton) onHitEnterButton(e?.target?.value)
-    }
+    const handleClear = () => {
+        internalChange('');
+    };
 
     const paste = () => {
         navigator.clipboard.readText()
@@ -47,19 +63,26 @@ const InputV2 = ({
 
     return <div className={classNames('relative pb-6', className)}>
         {label ? <p className='text-txtSecondary pb-2'>{label}</p> : null}
-        <div className={classNames('bg-gray-10 dark:bg-dark-2 border rounded-md flex p-3 dark:focus-within:border-teal focus-within:border-green-3 items-center gap-2 dark:border-dark-2', {
-            'border-red': !!error,
-        })}>
+        <div
+            className={classNames('bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex p-3 dark:focus-within:border-teal focus-within:border-green-3 items-center gap-2 dark:border-dark-2', {
+                'border-red': !!error,
+            })}>
             {prefix ? prefix : null}
             <input
                 ref={inputRef}
-                className='h-5 flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
-                type='text'
+                className='flex-1 text-sm sm:text-base !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark text-txtPrimary dark:text-txtPrimary-dark'
+                type={type}
                 placeholder={placeholder}
                 value={value}
+                disabled={disabled}
                 onChange={onInputChange}
                 onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
             />
+            <div className='flex items-center divide-x divide-divider dark:divide-divider-dark space-x-2'>
+                {allowClear &&
+                    <X className='cursor-pointer' size={16} onClick={handleClear} color={colors.darkBlue5} />}
+                <div className='pl-2'>{suffix ? suffix : null}</div>
+            </div>
             {
                 canPaste ?
                     <span
@@ -68,13 +91,12 @@ const InputV2 = ({
                     >{t('common:paste')}</span>
                     : null
             }
-            {suffix ? suffix : null}
         </div>
         <div className={classNames(
             'flex items-center h-4 mt-2 absolute bottom-0 inset-x', {
-            'opacity-0': !error,
-            'opacity-1': !!error
-        })
+                'opacity-0': !error,
+                'opacity-1': !!error
+            })
         }>
             <ErrorTriangle size={12} />
             <span className='text-red text-xs ml-1'>{error}</span>

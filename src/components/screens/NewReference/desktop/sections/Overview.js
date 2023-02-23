@@ -210,7 +210,7 @@ const Overview = ({
                             <div>{t('reference:referral.current_volume')}</div>
                             <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
                         </div>
-                        <div className='w-full bg-white rounded-full overflow-hidden flex'>
+                        <div className='w-full bg-gray-12 rounded-full overflow-hidden flex'>
                             <Progressbar
                                 background={colors.teal}
                                 percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
@@ -456,12 +456,12 @@ const RefDetail = ({
                                         <CopyIcon data={data.code} size={24} className='cursor-pointer' />
                                     </div>
                                     <div onClick={data.status ? null : () => handleSetDefault(data.code)}
-                                         className='text-sm'>
+                                         className='text-sm cursor-pointer select-none'>
                                         {
                                             data.status ?
                                                 <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
                                                 : <div
-                                                    className='bg-gray-10 dark:bg-dark-2 font-semibold rounded-lg px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark'>
+                                                    className='bg-gray-10 dark:bg-dark-2 font-semibold rounded-lg px-4 py-2 text-darkBlue dark:text-txtSecondary-dark'>
                                                     {t('reference:referral.set_default')}
                                                 </div>
                                         }

@@ -81,27 +81,28 @@ const DatePicker = ({
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
                 className={classNames(
-                    `relative py-2 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto`, {
+                    'relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer', {
                         '!border-teal': showPicker
                     }
                 )}
+                onClick={() => setShowPicker(!showPicker)}
             >
-                <div className='flex items-center w-auto' onClick={() => setShowPicker(!showPicker)}>
-                    <CalendarIcon />
-                    <div className={classNames('leading-6 px-2')}>
+                <div className='flex flex-1 items-center justify-between'>
+                    <div className='px-2 leading-5'>
                         {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
-
                         {!isCalendar &&
                             (date?.startDate
                                 ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
                                 : 'DD/MM/YYYY - DD/MM/YYYY')}
                     </div>
+                    {
+                        issetValue ?
+                            <div className='' onClick={onClear}>
+                                <X size={16} />
+                            </div>
+                            : <CalendarIcon color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
+                    }
                 </div>
-                {issetValue && (
-                    <div className='' onClick={onClear}>
-                        <X size={16} />
-                    </div>
-                )}
             </div>
             }
             <Transition
