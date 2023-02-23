@@ -66,6 +66,8 @@
     "filled": "Filled",
     "sign_in": "Sign In",
     "sign_up": "Sign Up",
+    "log_in": "Login",
+    "register": "Register",
     "sign_in_to_continue": "<span class='text-teal'>Sign in</span>&nbspor&nbsp<span class='text-teal'>Sign up</span>",
     "sign_up_to_continue": "Sign Up Now",
     "status": "Status",
