@@ -609,7 +609,7 @@
 }
 
 .mal-pocket-navbar__drawer {
-  @apply absolute top-0 right-0 bg-bgPrimary dark:bg-bgPrimary-dark;
+  @apply fixed top-0 right-0 bg-bgPrimary dark:bg-bgPrimary-dark;
 
   width: 100%;
   max-width: 375px;

@@ -5,7 +5,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import Div100vh from 'react-div-100vh';
 import { ChevronDown, X } from 'react-feather';
 import { useSelector } from 'react-redux';
@@ -35,6 +35,15 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
     const isVerifying = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
+
+    useEffect(() => {
+        if (isActive) {
+            document.getElementsByTagName('html')[0].classList.add('overflow-hidden');
+        } else {
+            document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
+        }
+        return () => document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
+    }, [isActive]);
 
     const { width } = useWindowSize();
     const {
@@ -148,7 +157,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     return (
         <>
-            <div className={`mal-overlay ${isActive ? 'mal-overlay__active' : ''}`} onClick={onClose} />
+            <div className={`mal-overlay !fixed ${isActive ? 'mal-overlay__active left' : ''}`} onClick={onClose} />
             <Div100vh className={`mal-pocket-navbar__drawer ${isActive ? 'mal-pocket-navbar__drawer__active' : ''}`}>
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
                     <div className="absolute right-4">

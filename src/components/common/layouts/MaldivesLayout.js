@@ -62,14 +62,14 @@ const MadivesLayout = ({
         <>
             <div
                 className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''} ${dark ? 'mal-layouts___dark' : ''}`}
-                style={
-                    state.isDrawer
-                        ? {
-                              height,
-                              overflow: 'hidden'
-                          }
-                        : {}
-                }
+                // style={
+                // state.isDrawer
+                //     ? {
+                //           height,
+                //           overflow: 'hidden'
+                //       }
+                //     : {}
+                // }
             >
                 <ToastContainer
                     position="top-center"
