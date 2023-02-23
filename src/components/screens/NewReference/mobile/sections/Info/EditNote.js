@@ -74,11 +74,11 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                             ref={refInput}
                             // autoFocus
                         />
-                        {note.length ? (
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setNote('')}>
-                                <path d="m6 6 12 12M6 18 18 6" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        ) : null}
+                        {/* {note.length ? ( */}
+                        {/*     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setNote('')}> */}
+                        {/*         <path d="m6 6 12 12M6 18 18 6" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" /> */}
+                        {/*     </svg> */}
+                        {/* ) : null} */}
                     </div>
                     <div className="w-10 text-txtSecondary dark:text-txtSecondary-dark">{note.length}/30</div>
                 </div>
