@@ -327,7 +327,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={fromAssetRef}
-                        className="w-full text-left  text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
+                        className="w-full text-left txtPri-3 placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                         value={state.fromAmount}
                         onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                         onBlur={() => setState({ inputHighlighted: null })}
@@ -419,7 +419,7 @@ const SwapModule = ({ width, pair }) => {
                         thousandSeparator
                         allowNegative={false}
                         getInputRef={toAssetRef}
-                        className="w-full text-left text-[22px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
+                        className="w-full text-left txtPri-3 placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
                         value={state.toAmount}
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
