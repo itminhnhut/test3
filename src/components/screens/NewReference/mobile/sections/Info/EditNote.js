@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { scrollFocusInput } from 'redux/actions/utils';
 import classNames from 'classnames';
 import ModalV2 from 'components/common/V2/ModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDesktop }) => {
     const { t } = useTranslation();
@@ -60,10 +61,10 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
             className='w-[30rem]'
             wrapClassName='px-8'
         >
-            <p className='text-[22px] font-semibold mb-6'>{t('reference:referral.modify_note')}</p>
+            <p className='text-2xl font-semibold mb-6'>{t('reference:referral.modify_note')}</p>
             <div>
                 <p className='text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2'>{t('reference:referral.note')}</p>
-                <div className="rounded px-3 h-12 flex justify-between items-center bg-gray-10 dark:bg-dark-2 gap-4">
+                <div className="rounded-md px-3 h-12 flex justify-between items-center bg-gray-10 dark:bg-dark-2 gap-4">
                     <div className="flex justify-between items-center w-full">
                         <input
                             onFocus={onFocus}
@@ -83,12 +84,12 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                     <div className="w-10 text-txtSecondary dark:text-txtSecondary-dark">{note.length}/30</div>
                 </div>
             </div>
-            <div
-                className="w-full h-12 mt-10 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer"
+            <ButtonV2
+                className='mt-10'
                 onClick={() => handleSubmitEditNote()}
             >
                 {t('common:confirm')}
-            </div>
+            </ButtonV2>
         </ModalV2>
         :
         <PopupModal

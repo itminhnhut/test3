@@ -12,6 +12,7 @@ import colors from 'styles/colors';
 import { emitWebViewEvent } from 'redux/actions/utils';
 import ModalV2 from 'components/common/V2/ModalV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import CheckBox from 'components/common/CheckBox';
 
 // goodluck for who maintain this code
@@ -50,7 +51,6 @@ const AddNewRef = ({
     const handleInputNote = (e) => {
         const text = e?.target?.value;
         if (text.length > 30) return;
-        console.log(text);
         setNote(text);
     };
     const handleCheckDefault = (e) => {
@@ -116,6 +116,8 @@ const AddNewRef = ({
             });
         }
     }, 1000), [refCode, percent, isDefault, note]);
+
+    const isError = error.length || (refCode.length && refCode.length !== 8);
 
     const checkRef = useCallback(_.debounce((refCode) => {
         FetchApi({
@@ -213,7 +215,7 @@ const AddNewRef = ({
             >
                 <div className={classNames('flex flex-col gap-4')}>
                     <div>
-                        <p className='text-[22px] font-semibold mb-6 mt-4'>
+                        <p className='text-2xl font-semibold mb-6 mt-4'>
                             {t('reference:referral.add_new_referral')}
                         </p>
                         <div className='mt-4 mb-2'>
@@ -233,7 +235,7 @@ const AddNewRef = ({
                     <div>
                         <p className='text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2'>{t('reference:referral.addref_title')}</p>
                         <div
-                            className={classNames('rounded px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2', { 'border-red border-[1px]': error.length })}>
+                            className={classNames('rounded-md px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='w-full' maxLength={8}
                                        placeholder={t('reference:referral.ref_placeholder')}
@@ -254,7 +256,7 @@ const AddNewRef = ({
                     <div>
                         <p className='text-txtSecondary dark:text-txtSecondary-dark text-sm mb-2'>{t('reference:referral.note')}</p>
                         <div
-                            className='rounded px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2'>
+                            className='rounded-md px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='w-full' value={note} maxLength={30}
                                        onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
@@ -271,14 +273,8 @@ const AddNewRef = ({
                             onChange={() => setIsDefault(!isDefault)}
                             active={isDefault}
                         ></CheckBox>
-                        {/* <input type="checkbox" className='rounded-sm h-4 w-4 font-medium' name="isDefault" /> */}
                     </div>
-                    <div
-                        className={classNames('w-full h-12 mt-8 bg-teal rounded-md text-white font-semibold text-sm leading-6 flex items-center justify-center cursor-pointer', { '!bg-gray-3': error.length || (refCode.length && refCode.length !== 8) })}
-                        onClick={error.length || (refCode.length > 0 && refCode.length !== 8) ? null : () => handleAddNewRef()}
-                    >
-                        {t('reference:referral.addref')}
-                    </div>
+                    <ButtonV2 className='mt-10' disabled={isError} onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
                 </div>
             </ModalV2> : <PopupModal
                 isVisible={isShow}
