@@ -10,22 +10,32 @@ import Button from 'components/common/Button';
 import { getMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find } from 'lodash';
 import { useSelector } from 'react-redux';
-const APP_URL = process.env.APP_URL || 'https://nami.exchange';
+import Skeleton from 'react-loading-skeleton';
 
+const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
 const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), { ssr: false });
 const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: false });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
-const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), { ssr: false });
-const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), { ssr: false });
+const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
+    ssr: false,
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+});
+const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), {
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
+});
 const HomeCommunity = dynamic(() => import('components/screens/Home/HomeCommunity'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 const HomeFirstAward = dynamic(() => import('components/screens/Home/HomeFirstAward'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDark'), {
-    ssr: false
+    ssr: false,
+    loading: () => <Skeletor width="100%" height="50vh" />
 });
 
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
@@ -34,6 +44,7 @@ import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import { X } from 'react-feather';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
+import Skeletor from '../components/common/Skeletor';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
