@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState  } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { TableFilter } from '.';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
@@ -14,12 +14,21 @@ import { KYC_STATUS } from 'redux/actions/const';
 import { map, omit } from 'lodash';
 import TagV2 from 'components/common/V2/TagV2';
 import { isValid } from 'date-fns';
+import Empty from 'components/common/Empty';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
-const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap' type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
-const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap' type='success'>{t('reference:referral.kyc')}</TagV2>;
+const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
+                                        type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
+const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
+                                         type='success'>{t('reference:referral.kyc')}</TagV2>;
 
-const ModalCommissionFriend = ({t, commissionConfig, friend = {}, onClose}) => {
+const ModalCommissionFriend = ({
+    t,
+    commissionConfig,
+    friend = {},
+    onClose
+}) => {
     const commissionType = {
         0: t('reference:referral.commission_types.spot'),
         1: t('reference:referral.commission_types.futures'),
@@ -30,7 +39,8 @@ const ModalCommissionFriend = ({t, commissionConfig, friend = {}, onClose}) => {
     return <ModalV2 isVisible={!!friend} className='w-[50rem]' onBackdropCb={onClose}>
         <div className='flex items-center justify-center border-b border-divider dark:border-divider-dark mb-4 pb-4'>
             <div className='font-medium'>
-                <span className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}: </span>
+                <span
+                    className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}: </span>
                 <span className='text-xl'>{friend?.byRefCode}</span>
             </div>
             <div className='rounded-full bg-gray-10 dark:bg-darkBlue-3 p-3 ml-6 cursor-pointer'>
@@ -51,15 +61,15 @@ const ModalCommissionFriend = ({t, commissionConfig, friend = {}, onClose}) => {
                     return <tr key={commissionKind}>
                         <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
                         {map(configs, (c, k) => {
-                            return <td key={k} className='text-center text-sm font-semibold text-teal py-2'>{c}%</td>
+                            return <td key={k} className='text-center text-sm font-semibold text-teal py-2'>{c}%</td>;
                         })}
-                    </tr>
+                    </tr>;
                 })}
                 </tbody>
             </table>
         </div>
-    </ModalV2>
-}
+    </ModalV2>;
+};
 
 const FriendList = ({
     t,
@@ -126,8 +136,7 @@ const FriendList = ({
         hasNext: false,
         total: 0
     });
-    const [commissionByFriendDetail, setCommissionByFriendDetail] = useState(null)
-
+    const [commissionByFriendDetail, setCommissionByFriendDetail] = useState(null);
 
     const getListFriends = _.throttle(async () => {
         const params = {
@@ -172,8 +181,8 @@ const FriendList = ({
         return skeletons;
     }, []);
 
-
-    const renderRefInfo = (data) => <div className='text-sm nami-underline-dotted' onClick={() => setCommissionByFriendDetail(data)}>
+    const renderRefInfo = (data) => <div className='text-sm nami-underline-dotted'
+                                         onClick={() => setCommissionByFriendDetail(data)}>
         {data?.code}
     </div>;
 
@@ -196,7 +205,8 @@ const FriendList = ({
                             {[72, 22, 1, 447, 86].map(assetId => {
                                 return <div key={assetId} className='flex items-center justify-between'>
                                     <span className='text-white'>{formatNumber(data?.[type]?.[assetId], 2)}</span>
-                                    <span className='text-white dark:text-txtSecondary-dark ml-2'>{assetCodeFromId(assetId)}</span>
+                                    <span
+                                        className='text-white dark:text-txtSecondary-dark ml-2'>{assetCodeFromId(assetId)}</span>
                                 </div>;
                             })}
                         </div>
@@ -221,7 +231,8 @@ const FriendList = ({
         align: 'left',
         width: 110,
         // preventSort: true,
-        render: (data, item) => <div className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
+        render: (data, item) => <div
+            className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
     }, {
         key: 'status',
         dataIndex: 'kycStatus',
@@ -272,9 +283,11 @@ const FriendList = ({
 
     return (
         <div className='flex w-full' id={id}>
-            <ModalCommissionFriend t={t} commissionConfig={commissionConfig} friend={commissionByFriendDetail} onClose={() => setCommissionByFriendDetail(null)}/>
+            <ModalCommissionFriend t={t} commissionConfig={commissionConfig} friend={commissionByFriendDetail}
+                                   onClose={() => setCommissionByFriendDetail(null)} />
 
-            <div className='w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8'>
+            <div
+                className='w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8'>
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
                     {t('reference:referral.friend_list')}
                 </div>
@@ -284,6 +297,7 @@ const FriendList = ({
                 <div className='border-t border-divider dark:border-divider-dark'>
                     <ReTable
                         // defaultSort={{ key: 'namiId', direction: 'desc' }}
+                        emptyText={<NoData />}
                         className='friendlist-table'
                         data={loading ? skeletons : dataSource?.results || []}
                         columns={columns}

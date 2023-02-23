@@ -273,7 +273,7 @@ const Overview = ({
                             </div>
                         </div>
                         <div className='flex-1 min-w-0'>
-                            <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}</p>
+                            <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.link')}</p>
                             <div
                                 className='relative flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
                                 <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
