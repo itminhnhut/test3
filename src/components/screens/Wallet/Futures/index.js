@@ -313,7 +313,6 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                             }}
                             onFocus={() => setState({ currentPage: 1 })}
                             wrapperClassname="w-[180px]"
-                            placeholder={t('common:search_asset')}
                             width={width}
                         />
                         <HideSmallBalance
@@ -346,7 +345,6 @@ const FuturesWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) 
                             }}
                             onFocus={() => setState({ currentPage: 1 })}
                             width={width}
-                            placeholder={t('common:search_asset')}
                         />
                     </div>
                 )}
