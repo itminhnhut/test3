@@ -227,6 +227,19 @@ const TransferModal = ({
             openList: {}
         });
     };
+    const revertWallet = () => {
+        console.log('__ vao day', 111);
+        if(state.fromWallet && state.toWallet){
+            const _newState = {
+                fromWallet: state.toWallet,
+                toWallet: state.fromWallet
+            }
+            setState({
+                ..._newState
+            })
+        }
+    };
+
 
     const onSetMax = useMemo(
         () => () => {
@@ -307,8 +320,8 @@ const TransferModal = ({
                         </div>
                     )}
                 </div>
-                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90">
-                    <SyncAltIcon size={20}/>
+                <div className="mx-2 p-2  rounded-full bg-bgSecondary dark:bg-[#1C232E] rotate-90 cursor-pointer" onClick={revertWallet}>
+                    <SyncAltIcon size={20} />
                 </div>
 
                 <div
@@ -364,7 +377,7 @@ const TransferModal = ({
                  onClick={() => setState({ openList: { assetList: !state.openList?.assetList } })}>
                 <AssetLogo assetCode={state.asset} size={20}/>
                 <div className="mx-2 font-bold">
-                    <AssetName assetCode={state.asset}/>
+                    {state.asset}
                 </div>
                 <ArrowDropDownIcon
                     size={16}
