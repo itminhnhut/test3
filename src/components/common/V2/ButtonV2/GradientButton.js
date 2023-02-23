@@ -26,7 +26,7 @@ const GradientButton = ({ className = '', disabled = false, children, onClick, l
             ) : (
                 <>
                     <div className="group-hover:mr-3 transition-all">{children}</div>
-                    <div className="group-hover:opacity-100 group-hover:right-4  absolute top-1/2 -translate-y-1/2 opacity-0 right-6">
+                    <div className="group-hover:opacity-100 group-hover:right-3  absolute top-1/2 -translate-y-1/2 opacity-0 right-6">
                         <ArrowRightIcon color="currentColor" size={16} />
                     </div>
                 </>

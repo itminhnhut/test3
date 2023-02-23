@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
-import { useAsync } from 'react-use';
+import { useAsync, useBoolean } from 'react-use';
 import { API_GET_TRENDING } from 'redux/actions/apis';
 
 import colors from 'styles/colors';
@@ -25,6 +25,7 @@ const HomeIntroduce = ({ trendData, t }) => {
         trending: null,
         loadingTrend: false
     });
+
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Use Hooks
@@ -142,7 +143,7 @@ const HomeIntroduce = ({ trendData, t }) => {
                 </div>
             </section>
         );
-    }, [state.loading, state.pairsLength, state.makedData, state.trending]);
+    }, [state.loading, state.pairsLength, state.makedData, state.trending, isLoaded]);
 
     useAsync(async () => {
         setState({ loading: true });
