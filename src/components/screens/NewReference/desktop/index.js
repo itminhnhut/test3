@@ -42,7 +42,7 @@ const RefDesktopScreen = () => {
     const isClickTab = useRef(false);
     const user = useSelector(state => state.auth.user) || null;
 
-    useEffect(() => {
+    const fetchData = () => {
         FetchApi({
             url: API_NEW_REFERRAL_OVERVIEW,
             options: {
@@ -93,6 +93,10 @@ const RefDesktopScreen = () => {
                 } else {
                 }
             });
+    };
+
+    useEffect(() => {
+        fetchData();
     }, [user]);
 
     const handleClickTab = (tabId) => {
@@ -102,7 +106,7 @@ const RefDesktopScreen = () => {
     return (
         <div className='h-auto w-full bg-gray-13 dark:bg-transparent' style={{ paddingTop: DESKTOP_NAV_HEIGHT }}>
             <div className='space-y-20' ref={contentRef}>
-                <Overview t={t} data={overviewData} commisionConfig={config} width={width} user={user} />
+                <Overview t={t} data={overviewData} refreshData={fetchData} commisionConfig={config} width={width} user={user} />
                 <div className='container !mb-[7.5rem]'>
                     <Tabs ref={tabRef} tab={tab} className='gap-6 border-b dark:border-divider-dark mb-12' isMobile>
                         <TabItem className='!text-left !px-0' value={tabs.Overview}

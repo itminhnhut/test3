@@ -20,6 +20,7 @@ const AddNewRef = ({
     isShow = false,
     onClose,
     doRefresh,
+    refreshData,
     defaultRef,
     isDesktop
 }) => {
@@ -28,7 +29,7 @@ const AddNewRef = ({
         i18n: { language }
     } = useTranslation();
     const totalRate = 100;
-    const [percent, setPercent] = useState(0);
+    const [percent, setpercent] = useState(0);
     const onPercentChange = ({ x }) => {
         setPercent(x);
     };
@@ -55,15 +56,18 @@ const AddNewRef = ({
     };
 
     const doClose = () => {
-        onClose();
+        setResultData({
+            isSuccess: false,
+            message: ''
+        })
+        if (resultData.isSuccess) {
+            if (refreshData) refreshData();
+            doRefresh();
+        }
         setNote('');
         setRefCode('');
         setIsDefault(false);
-        doRefresh();
-        setResultData({
-            message: '',
-            isSuccess: false
-        });
+        setpercent(0);
     };
 
     const handleInput = (e, length) => {
@@ -102,7 +106,7 @@ const AddNewRef = ({
             }
         });
 
-        doClose()
+        onClose()
         if (status === 'ok') {
             setResultData({
                 message: t('reference:referral.addref_success', { value: data.code ?? refCode }),
@@ -155,9 +159,7 @@ const AddNewRef = ({
                 title={title}
                 type={resultData.isSuccess ? 'success' : 'error'}
                 textButton={resultData.isSuccess ? t('common:confirm') : null}
-                onConfirm={() => {
-                    resultData.isSuccess && doClose();
-                }}
+                onConfirm={doClose}
                 // containerClassName='!px-6 !py-8 top-[50%]'
             >
                 <div className='text-txtSecondary dark:text-txtSecondary-dark'

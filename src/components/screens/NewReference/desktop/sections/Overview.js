@@ -55,6 +55,7 @@ const policyLinkEN = 'https://nami.exchange/support/announcement/nami-news/offic
 
 const Overview = ({
     data,
+    refreshData,
     commisionConfig,
     t,
     width,
@@ -141,8 +142,14 @@ const Overview = ({
                         onClose={() => setOpenShareModal(false)}
                     />
                     {showRef &&
-                        <RefDetail t={t} isShow={showRef} onClose={() => setShowRef(false)} rank={data?.rank ?? 1}
-                                   defaultRef={data?.defaultRefCode?.code} />}
+                        <RefDetail
+                            t={t}
+                            refreshData={refreshData}
+                            isShow={showRef}
+                            onClose={() => setShowRef(false)}
+                            rank={data?.rank ?? 1}
+                            defaultRef={data?.defaultRefCode?.code}
+                        />}
                     {showRegisterPartner ? (
                         <RegisterPartnerModal
                             isDesktop
@@ -334,6 +341,7 @@ export default Overview;
 const RefDetail = ({
     t,
     isShow = false,
+    refreshData,
     onClose,
     rank,
     defaultRef
@@ -394,6 +402,7 @@ const RefDetail = ({
                     return e;
                 })
             );
+            if (refreshData) refreshData();
         } else {
         }
     }, 1000);
@@ -411,6 +420,7 @@ const RefDetail = ({
                     isShow={showAddRef}
                     onClose={() => setShowAddRef(false)}
                     doRefresh={() => setDoRefresh(!doRefresh)}
+                    refreshData={refreshData}
                     defaultRef={defaultRef}
                     isDesktop
                 />
