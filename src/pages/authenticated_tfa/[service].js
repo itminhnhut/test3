@@ -132,10 +132,14 @@ const ExternalWithdrawal = (props) => {
                     <div id={`${PORTAL_MODAL_ID}`} />
                     <OtpModal
                         label={t('common:otp_verify')}
-                        isVisible={true} placeholder={'-'} value={state.value} onChange={onChange}
+                        isVisible={true} placeholder={'-'} 
+                        value={state?.value} 
+                        onChange={onChange}
                         renderUpper={() => <div className="font-bold text-xl sm:text-[22px] sm:leading-[30px]"> {t('common:tfa_authentication')}</div>}
                         isMobile={width < 640}
                         loading={loading}
+                        isError={state?.message?.length}
+                        router={router}
                     />
                 </div>
             </div>
