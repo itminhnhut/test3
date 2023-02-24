@@ -22,7 +22,7 @@ import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/Symb
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
 import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel'
 import _ from 'lodash';
-import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
+import FuturesOrderDetailModal from 'components/screens/Futures/FuturesModal/FuturesOrderDetailModal';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
@@ -317,7 +317,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         <>
             {/* {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />} */}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
-            <FuturesOrderDetail
+            <FuturesOrderDetailModal
                 order={rowData.current}
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}

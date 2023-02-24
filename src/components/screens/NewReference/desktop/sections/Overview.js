@@ -199,7 +199,7 @@ const Overview = ({
                                 <img src={user?.avatar || '/images/default_avatar.png'}
                                      className='h-full w-20 h-20 rounded-full object-fit' />
                                 <div
-                                    className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(5, 32)}</div>
+                                    className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                             </div>
                             <div className='h-full flex flex-col'>
                                 <p className='font-semibold text-2xl leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
@@ -594,7 +594,8 @@ const ModalShareRefCode = ({
             <div
                 className='absolute bottom-0 inset-x-0 h-[6.25rem] rounded-b-xl flex items-center justify-between px-6 py-4'
             >
-                <img className='absolute inset-x-0' src={getS3Url('/images/reference/bg_share_ref_code_2.png')} alt='' />
+                <img className='absolute inset-x-0' src={getS3Url('/images/reference/bg_share_ref_code_2.png')}
+                     alt='' />
                 <div className='flex-1 z-10'>
                     <div
                         className='text-txtSecondary-dark whitespace-nowrap'>{t('reference:referral.share.scan_and_join')}</div>

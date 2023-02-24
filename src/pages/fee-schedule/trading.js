@@ -479,15 +479,20 @@ const TradingFee = () => {
             </div>
 
             <div className='relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl'>
-                <div className='relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10'>
-                    <div
-                        className='space-y-4 border-b md:border-b-0 md:border-r border-divider dark:border-divider-dark pb-8 md:pr-10 md:pb-0'>
+                <div
+                    className={classnames(
+                        'relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10',
+                        'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
+                    )}>
+                    <div className='space-y-4'>
                         <div className='font-semibold'>
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
 
                         <div className='flex'>
-                            {renderUseAssetAsFeeBtn()}
+                            <div className='flex-none'>
+                                {renderUseAssetAsFeeBtn()}
+                            </div>
                             <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {renderExchangeDeduction()}
                             </span>
@@ -515,14 +520,15 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div
-                        className='space-y-4 border-b md:border-b-0 md:border-r border-divider dark:border-divider-dark pb-8 md:pr-10 md:pb-0'>
+                    <div className='space-y-4 pt-10 md:pt-0 md:pl-10'>
                         <div className='font-semibold'>
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
 
                         <div className='flex'>
-                            {renderUseAssetAsFeeBtn()}
+                            <div className='flex-none'>
+                                {renderUseAssetAsFeeBtn()}
+                            </div>
                             <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {renderFuturesDeduction()}
                             </span>
@@ -546,13 +552,15 @@ const TradingFee = () => {
                         </div>
                     </div>
 
-                    <div className='space-y-4'>
+                    <div className='space-y-4 pt-10 md:pt-0 md:pl-10'>
                         <div className='font-semibold'>
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                         </div>
 
                         <div className='flex'>
-                            {renderUseAssetAsFeeBtn()}
+                            <div className='flex-none'>
+                                {renderUseAssetAsFeeBtn()}
+                            </div>
                             <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {renderFuturesDeduction()}
                             </span>

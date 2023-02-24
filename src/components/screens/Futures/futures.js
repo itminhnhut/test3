@@ -247,7 +247,7 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowPairDetail && (
-                                    <div key={futuresGridKey.pairDetail} className={`relative z-20 border-b border-r border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.pairDetail} className={`relative z-20 border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPairDetail
                                             pairPrice={state.pairPrice}
                                             pairConfig={pairConfig}
@@ -258,7 +258,7 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowChart && (
-                                    <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-divider dark:border-divider-dark`}>
+                                    <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-l-0 border-divider dark:border-divider-dark`}>
                                         <FuturesChart
                                             chartKey="futures_containter_chart"
                                             pair={pairConfig?.pair}
@@ -281,7 +281,7 @@ const Futures = () => {
                                     </div>
                                 )}
                                 {filterLayout.isShowPlaceOrder && (
-                                    <div key={futuresGridKey.placeOrder} className={`border-l  border-divider dark:border-divider-dark`}>
+                                    <div key={futuresGridKey.placeOrder} className={`border-l border-r border-divider dark:border-divider-dark`}>
                                         <FuturesPlaceOrderVndc
                                             isAuth={!!auth}
                                             pairConfig={pairConfig}

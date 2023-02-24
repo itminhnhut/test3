@@ -1,6 +1,6 @@
 {
     "menu": {
-        "spot": "Spot",
+        "spot": "Spot Trading",
         "trade": "Trade",
         "swap": "Swap",
         "wallet": "Wallet",
@@ -111,7 +111,7 @@
     "unread_noti": "new notifications",
     "read_all_noti": "You have scrolled through all the notifications",
     "not_verified": "Not verified",
-    "pending_approval": "Pending approval",
+    "pending_approval": "Verifying",
     "verified": "Verified",
     "verify_account": "Verify account",
     "use": "Use",

@@ -546,7 +546,7 @@ export class TVChartContainer extends React.PureComponent {
                     >
                         <Spiner isDark={this.props.theme === 'dark'} />
                     </div>
-                    <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea ${isPro ? 'pl-6' : ''}`}>
+                    <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-5 pb-3 px-4 ${isPro ? 'pl-6' : ''}`}>
                         {this.state.chartStatus === ChartStatus.LOADED && (
                             <TimeFrame
                                 symbol={this.props.symbol}
