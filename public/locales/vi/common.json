@@ -68,7 +68,7 @@
     "sign_up": "Đăng kí",
     "log_in": "Đăng nhập",
     "register": "Đăng kí",
-    "sign_in_to_continue": "<span class='text-teal'>Đăng nhập</span>&nbsphoặc&nbsp<span class='text-teal'>Đăng ký</span>",
+    "sign_in_to_continue": "<span class='text-teal'>Đăng nhập</span><span class='font-normal'>&nbsphoặc&nbsp</span><span class='text-teal'>Đăng ký</span>",
     "sign_up_to_continue": "Đăng ký ngay",
     "status": "Trạng thái",
     "transaction_id": "Mã giao dịch",

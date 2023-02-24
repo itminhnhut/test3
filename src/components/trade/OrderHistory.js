@@ -81,7 +81,6 @@ const OrderHistory = (props) => {
         ];
 
         const label = arr.find((rs) => rs.value === status)?.label;
-        console.log(isOpen);
         return (
             <PopoverV2
                 ref={popover}
