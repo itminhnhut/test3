@@ -315,7 +315,6 @@ const OverviewWallet = (props) => {
                     <div className="flex flex-col lg:pl-4 xl:pl-7 sm:flex-row sm:items-center sm:justify-between flex-auto lg:border-l lg:border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6 group-hover:border-divider">
                         <div className={`flex items-center ${isSmallScreen && 'mt-6'}`}>
                             {renderExchangeAsset()}
-                            {/* <Link href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })} prefetch={false}> */}
                             <button onClick={() => onHandleClick('deposit_exchange')} className="mr-3">
                                 <div
                                     className="min-w-[32px] min-h-[32px] w-[32px] h-[32px] flex items-center justify-center text-medium text-xs rounded-full
@@ -324,22 +323,15 @@ const OverviewWallet = (props) => {
                                     +6
                                 </div>
                             </button>
-                            {/* </Link> */}
                         </div>
                         <div className={`flex items-center ${isSmallScreen && 'hidden'}`}>
                             <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => onHandleClick(DEPOSIT + EXCHANGE)}>
                                 {t('common:deposit')}
                             </ButtonV2>
-                            {/* <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' })}>
-                                    {t('common:deposit')}
-                                </HrefButton> */}
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
                             <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => onHandleClick(WITHDRAW + EXCHANGE)}>
                                 {t('common:withdraw')}
                             </ButtonV2>
-                            {/* <HrefButton variants="blank" href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' })}>
-                                    {t('common:withdraw')}
-                                </HrefButton> */}
                             <div className="h-9 mx-3 border-l border-divider dark:border-divider-dark dark:group-hover:border-darkBlue-6" />
                             <ButtonV2 variants="text" className="!text-sm" onClick={() => onHandleClick(TRANSFER + EXCHANGE)}>
                                 {t('common:transfer')}
