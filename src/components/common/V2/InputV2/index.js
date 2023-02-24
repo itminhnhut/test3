@@ -1,9 +1,10 @@
-import { useRef, createElement } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
 import { X } from 'react-feather';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
+import ErrorTriggers from 'components/svg/ErrorTriggers';
 
 const ErrorTriangle = ({ size = 16 }) => {
     return <svg width={size} height={size} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -27,15 +28,12 @@ const InputV2 = ({
     error,
     onHitEnterButton,
     type = 'text',
-    disable: disabled = false
+    disabled = false,
+    ...restProps
 }) => {
     const { t } = useTranslation();
 
     const inputRef = useRef(null);
-
-    const [theme] = useDarkMode();
-    const isDark = theme === THEME_MODE.DARK;
-
     const internalChange = (value) => {
         if (onChange) onChange(value);
     };
@@ -64,9 +62,13 @@ const InputV2 = ({
     return <div className={classNames('relative pb-6', className)}>
         {label ? <p className='text-txtSecondary pb-2'>{label}</p> : null}
         <div
-            className={classNames('bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex p-3 dark:focus-within:border-teal focus-within:border-green-3 items-center gap-2 dark:border-dark-2', {
-                'border-red': !!error,
-            })}>
+            className={classNames(
+                'bg-gray-10 dark:bg-dark-2 border border-transparent rounded-md flex items-center gap-2 p-[0.6875rem] transition',
+                'dark:focus-within:border-teal focus-within:border-green-3 dark:border-dark-2',
+                {
+                    'border-red': !!error,
+                    'text-txtDisabled dark:text-txtDisabled-dark select-none': disabled
+                })}>
             {prefix ? prefix : null}
             <input
                 ref={inputRef}
@@ -77,10 +79,15 @@ const InputV2 = ({
                 disabled={disabled}
                 onChange={onInputChange}
                 onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
+                {...restProps}
             />
             <div className='flex items-center divide-x divide-divider dark:divide-divider-dark space-x-2'>
-                {allowClear && value?.length ?
-                    <X className='cursor-pointer' size={16} onClick={handleClear} color={colors.darkBlue5} /> : null}
+                <X
+                    className={classNames('transition', allowClear && !!value ? 'opacity-1 cursor-pointer' : 'opacity-0')}
+                    size={16}
+                    onClick={handleClear}
+                    color={colors.darkBlue5}
+                />
                 <div className='pl-2'>{suffix ? suffix : null}</div>
             </div>
             {
@@ -92,14 +99,18 @@ const InputV2 = ({
                     : null
             }
         </div>
-        <div className={classNames(
-            'flex items-center h-4 mt-2 absolute bottom-0 inset-x', {
-                'opacity-0': !error,
-                'opacity-1': !!error
-            })
-        }>
-            <ErrorTriangle size={12} />
-            <span className='text-red text-xs ml-1'>{error}</span>
+
+        <div
+            className={classNames(
+                'overflow-hidden transition-[max-height_opacity] duration-300', {
+                    'max-h-0 opacity-0 ease-out': !error,
+                    'max-h-[5rem] opacity-1 ease-in': !!error
+                })}
+        >
+            <div className='flex items-center mt-2'>
+                <ErrorTriggers />
+                <div className='text-red text-xs leading-4 ml-1'>{error}</div>
+            </div>
         </div>
     </div>;
 };

@@ -287,7 +287,7 @@ const UserInformation = ({
                 {
                     !user?.referal_id ?
                         <>
-                            <div className='w-[10px] h-[1px] bg-white mr-[10px]' />
+                            <div className='w-[10px] h-[1px] bg-darkBlue-5 dark:bg-white mr-[10px]' />
                             <Edit className='' size={16} />
                         </>
                         : <span className='font-semibold'>{user?.referral_username}</span>
