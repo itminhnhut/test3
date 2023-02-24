@@ -596,7 +596,6 @@ const NavBar = ({
                     <Link href="/">
                         <a className="block mal-navbar__logo mr-10">
                             <Image
-                                // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                 src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
                                 width="94"
                                 height="30"
@@ -608,10 +607,6 @@ const NavBar = ({
 
                     {width >= 992 && (
                         <div className="mal-navbar__link__group">
-                            {/* <SvgIcon name="hexagon" size={18} */}
-                            {/*         className="ml-16" */}
-                            {/*         onClick={() => console.log('namidev-DEBUG: should open product board')}/> */}
-
                             {renderDesktopNavItem()}
 
                             {/* Link Spotlight */}
@@ -623,15 +618,17 @@ const NavBar = ({
                         </div>
                     )}
                     <div className="mal-navbar__hamburger">
+                        {width >= 1366 && <LanguageSetting />}
+
                         {!auth && (
-                            <div className="flex flex-row items-center">
+                            <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
                                 <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1090} />
                             </div>
                         )}
                         {auth && (
                             <>
                                 {width >= 992 && (
-                                    <div className="mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
+                                    <div className="mal-navbar__hamburger__spacing mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
                                         <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
@@ -669,8 +666,6 @@ const NavBar = ({
                                 ) : (
                                     renderThemeButton()
                                 )}
-
-                                <LanguageSetting />
                             </div>
                         )}
 
@@ -678,16 +673,14 @@ const NavBar = ({
 
                         {width < 1366 && (
                             <div
-                                className="relative text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark"
+                                className={`${
+                                    width >= 768 ? 'mal-navbar__hamburger__spacing ' : 'ml-3 '
+                                } relative text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark `}
                                 onClick={(e) => {
                                     onDrawerAction(true);
                                 }}
                             >
-                                <SvgMenu
-                                    size={25}
-                                    color="currentColor"
-                                    className={`${width >= 768 ? 'mal-navbar__hamburger__spacing' : 'ml-3'} cursor-pointer`}
-                                />
+                                <SvgMenu size={25} color="currentColor" className="cursor-pointer" />
                             </div>
                         )}
                     </div>
