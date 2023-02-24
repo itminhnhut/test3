@@ -15,7 +15,7 @@ import { debounce } from 'lodash';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const CONTAINER_ID = 'nami-tv';
-const CHART_VERSION = '1.0.6';
+const CHART_VERSION = '1.0.9';
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
