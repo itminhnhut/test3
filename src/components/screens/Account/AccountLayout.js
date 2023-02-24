@@ -2,8 +2,6 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useApp from 'hooks/useApp';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import WarningTriangle from 'components/svg/WarningTriangle';
-import CheckCircle from 'components/svg/CheckCircle';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import Button from 'components/common/V2/ButtonV2/Button';
 import TagV2 from 'components/common/V2/TagV2';
@@ -21,7 +19,6 @@ import colors from 'styles/colors';
 
 const KYCUnVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='default'>{t('profile:kyc_unverified')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='ml-3' type='warning'>{t('profile:kyc_wait')}</TagV2>;
-
 const KYCVerifiedTag = ({ t }) => <TagV2 className='ml-3' type='success'>{t('profile:kyc_verified')}</TagV2>;
 
 export default function AccountLayout({ children }) {
@@ -47,7 +44,7 @@ export default function AccountLayout({ children }) {
     >
         <div
             className='bg-black-800 h-24 md:h-44'
-            style={{ // TODO: image s3
+            style={{
                 backgroundImage: `url(${getS3Url('/images/screen/account/banner_2.png')})`,
                 backgroundSize: 'auto 100%',
                 backgroundPosition: 'center'
