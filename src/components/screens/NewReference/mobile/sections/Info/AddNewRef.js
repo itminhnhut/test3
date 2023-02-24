@@ -6,7 +6,6 @@ import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_ADD_REF, API_NEW_REFERRAL_CHECK_REF } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import classNames from 'classnames';
-import Modal from 'components/common/ReModal';
 import { useMemo } from 'react';
 import colors from 'styles/colors';
 import { emitWebViewEvent } from 'redux/actions/utils';
@@ -59,7 +58,7 @@ const AddNewRef = ({
         setResultData({
             isSuccess: false,
             message: ''
-        })
+        });
         if (resultData.isSuccess) {
             if (refreshData) refreshData();
             doRefresh();
@@ -106,7 +105,7 @@ const AddNewRef = ({
             }
         });
 
-        onClose()
+        onClose();
         if (status === 'ok') {
             setResultData({
                 message: t('reference:referral.addref_success', { value: data.code ?? refCode }),
@@ -234,13 +233,17 @@ const AddNewRef = ({
                         <div
                             className={classNames('rounded-md px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
-                                <input id='refCode' className='w-full' maxLength={8}
-                                       placeholder={t('reference:referral.ref_placeholder')}
-                                       onChange={handleInputRefCode} value={refCode}
-                                       onBlur={() => doCheckRef(refCode)}
-                                       onInput={(e) => {
-                                           handleInput(e, 8);
-                                       }} />
+                                <input
+                                    id='refCode'
+                                    className='w-full'
+                                    maxLength={8}
+                                    placeholder={t('reference:referral.ref_placeholder')}
+                                    onChange={handleInputRefCode} value={refCode}
+                                    onBlur={() => doCheckRef(refCode)}
+                                    onInput={(e) => {
+                                        handleInput(e, 8);
+                                    }}
+                                />
                             </div>
                             <div className='w-10 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {refCode.length}/8
