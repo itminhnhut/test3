@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState, useMemo } from 'react';
 import qs from 'qs';
 import format from 'date-fns/format';
 import numeral from 'numeral';
@@ -34,6 +34,8 @@ import { useTranslation } from 'next-i18next';
 import { createSelector } from 'reselect';
 import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
+import { useSelector } from 'react-redux';
+import utilsSelectors from 'redux/selectors/utilsSelectors';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1090,6 +1092,13 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
         if (value) setCopied(value === text);
     }, [value]);
 
+    useEffect(() => {
+        if (copied)
+            setTimeout(() => {
+                setCopied(false);
+            }, 3000);
+    }, [copied]);
+
     return (
         <div
             className={`flex items-center space-x-2 cursor-pointer ${className}`}
@@ -1105,3 +1114,56 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
         </div>
     );
 });
+
+export const ReasonClose = ({ order }) => {
+    const { t } = useTranslation();
+    switch (order?.reason_close_code) {
+        case 0:
+            return t('futures:order_history:normal');
+        case 1:
+            return t('futures:order_history:hit_sl');
+        case 2:
+            return t('futures:order_history:hit_tp');
+        case 3:
+            return t('futures:order_history:liquidate');
+        case 5:
+            return t('futures:mobile:adjust_margin:added_volume');
+        case 6:
+            return t('futures:mobile:adjust_margin:close_partially');
+        default:
+            return '-';
+    }
+};
+
+export const FeeMetaFutures = ({ order, mode = 'open_fee' }) => {
+    const allAssets = useSelector((state) => utilsSelectors.getAllAssets(state));
+    const convertObject = (obj) => {
+        if (obj?.currency) {
+            return [
+                {
+                    asset: +obj?.currency,
+                    value: obj?.value ?? 0
+                }
+            ];
+        } else {
+            const arr = [];
+            Object.keys(obj).map((key) => {
+                arr.push({
+                    asset: +key,
+                    value: obj[key]
+                });
+            });
+            return arr;
+        }
+    };
+
+    const fee_metadata = useMemo(() => {
+        const metadata = order?.fee_data ?? order?.fee_metadata;
+        const feeFilter = metadata?.[mode === 'open_fee' ? 'place_order' : 'close_order'];
+        const fee = feeFilter ? convertObject(feeFilter) : [];
+        return fee;
+    }, [order]);
+
+    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
+    return fee_metadata.length > 0 ? formatNumber(fee_metadata[0]?.value, decimal) + ' ' + allAssets[fee_metadata[0]?.asset]?.assetCode : '-';
+};

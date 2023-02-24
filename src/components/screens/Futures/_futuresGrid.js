@@ -62,7 +62,7 @@ export default {
         md: [
             {
                 w: 8,
-                h: 3,
+                h: 2.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
@@ -73,7 +73,7 @@ export default {
             },
             {
                 w: 8,
-                h: 4,
+                h: 3.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.pairDetail,
@@ -84,7 +84,7 @@ export default {
             },
             {
                 w: 8,
-                h: 29,
+                h: 23,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.chart,
@@ -106,7 +106,7 @@ export default {
             },
             {
                 w: 4,
-                h: 39,
+                h: 29,
                 x: 9,
                 y: 0,
                 i: futuresGridKey.placeOrder,
@@ -131,7 +131,7 @@ export default {
         lg: [
             {
                 w: 10,
-                h: 3,
+                h: 2.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
@@ -142,7 +142,7 @@ export default {
             },
             {
                 w: 10,
-                h: 4,
+                h: 3.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.pairDetail,
@@ -153,7 +153,7 @@ export default {
             },
             {
                 w: 10,
-                h: 32,
+                h: 23,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.chart,
@@ -175,7 +175,7 @@ export default {
             },
             {
                 w: 4,
-                h: 39,
+                h: 29,
                 x: 10,
                 y: 0,
                 i: futuresGridKey.placeOrder,
@@ -200,7 +200,7 @@ export default {
         xl: [
             {
                 w: 12,
-                h: 3,
+                h: 2.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
@@ -211,7 +211,7 @@ export default {
             },
             {
                 w: 12,
-                h: 4,
+                h: 3.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.pairDetail,
@@ -222,7 +222,7 @@ export default {
             },
             {
                 w: 12,
-                h: 33,
+                h: 23,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.chart,
@@ -244,7 +244,7 @@ export default {
             },
             {
                 w: 4,
-                h: 40,
+                h: 29,
                 x: 15,
                 y: 0,
                 i: futuresGridKey.placeOrder,
@@ -268,7 +268,7 @@ export default {
         '2xl': [
             {
                 w: 14,
-                h: 3,
+                h: 2.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.favoritePair,
@@ -279,7 +279,7 @@ export default {
             },
             {
                 w: 14,
-                h: 4,
+                h: 3.5,
                 x: 0,
                 y: 0,
                 i: futuresGridKey.pairDetail,
@@ -290,7 +290,7 @@ export default {
             },
             {
                 w: 14,
-                h: 32,
+                h: 23,
                 x: 0,
                 y: 5,
                 i: futuresGridKey.chart,
@@ -312,7 +312,7 @@ export default {
             },
             {
                 w: 4,
-                h: 39,
+                h: 29,
                 x: 15,
                 y: 0,
                 i: futuresGridKey.placeOrder,

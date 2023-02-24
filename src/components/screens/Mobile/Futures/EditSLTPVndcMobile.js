@@ -371,7 +371,7 @@ const EditSLTPVndcMobile = ({
                     percentage={i * size}
                     isDark
                     onusMode
-                    bgColorActive={colors.onus.slider}
+                    bgColorActive={'#418FFF'}
                     bgColorDot={colors.onus.bg3}
 
                 />

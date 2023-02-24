@@ -20,7 +20,7 @@ import classNames from 'classnames';
 import EditSLTPV2 from 'components/screens/Futures/PlaceOrder/EditOrderV2/EditSLTPV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import ModifyOrder from 'components/screens/Futures/PlaceOrder/EditOrderV2/ModifyOrder';
-import FuturesOrderDetail from 'components/screens/Futures/FuturesModal/FuturesOrderDetail';
+import FuturesOrderDetailModal from 'components/screens/Futures/FuturesModal/FuturesOrderDetailModal';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 import FuturesCloseOrder from 'components/screens/Futures/FuturesModal/FuturesCloseOrder';
 import Edit from 'components/svg/Edit';
@@ -574,7 +574,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             />
             {/* <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} /> */}
             {/* <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} /> */}
-            <FuturesOrderDetail
+            <FuturesOrderDetailModal
                 order={rowData.current}
                 isVisible={showOrderDetail}
                 onClose={() => setShowOrderDetail(false)}

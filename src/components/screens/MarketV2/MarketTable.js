@@ -477,6 +477,7 @@ const MarketTable = ({
                 limit={MARKET_ROW_LIMIT}
                 total={data?.length ?? 0}
                 scroll={{ x: true }}
+                showPaging={false}
                 height={'300px'}
                 tableStyle={{
                     padding: '20px 16px',
