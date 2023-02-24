@@ -34,7 +34,7 @@ const FututesShareModal = ({ isVisible, onClose, order }) => {
         window.URL.revokeObjectURL(url);
     };
 
-    const onDownLoad = () => {
+    const onDownLoad = async () => {
         setLoading(true);
         try {
             const scale = 2;
@@ -48,7 +48,7 @@ const FututesShareModal = ({ isVisible, onClose, order }) => {
                     height: content.current.offsetHeight + 'px'
                 }
             };
-            DomToImage.toBlob(content.current, option).then((blob) => {
+            await DomToImage.toBlob(content.current, option).then((blob) => {
                 return saveFile(new File([blob], `${refCode}.png`, { type: 'image/png' }), `${refCode}.png`);
             });
         } catch (error) {
@@ -100,9 +100,8 @@ const FututesShareModal = ({ isVisible, onClose, order }) => {
                     </div>
                 </div>
             </Background>
-            <Button disabled={loading} onClick={onDownLoad}>
+            <Button disabled={loading} loading={loading} onClick={onDownLoad}>
                 {t(`futures:${loading ? 'order_table:loading' : 'download'}`)}
-                {loading && <IconLoading color={colors.onus.white} className="!m-0" />}
             </Button>
         </ModalV2>
     );

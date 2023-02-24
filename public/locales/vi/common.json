@@ -355,5 +355,13 @@
     "no_results_found": "Không tìm thấy kết quả",
     "hide_other_symbols": "Ẩn các cặp khác",
     "load_more": "Xem thêm ...",
-    "term": "Điều khoản sử dụng"
+    "term": "Điều khoản sử dụng",
+    "reset_chart": {
+        "title": "Đặt lại dữ liệu",
+        "desc": "Thực hiện thao tác tương ứng:",
+        "step_1": "Chọn 'Đặt lại biểu đồ' để làm mới dữ liệu",
+        "step_2": "Chọn 'Xóa chỉ báo' để xóa các Chỉ báo và Phân tích",
+        "reset": "Đặt lại biểu đồ",
+        "delete": "Xóa chỉ báo"
+    }
 }

@@ -96,7 +96,7 @@
     "sub": "Sub",
     "search": "Search",
     "canceled": "Canceled",
-    "last_price": "Last price",
+    "last_price": "Last Price",
     "action": "Action",
     "transaction_history": "Transaction history",
     "max": "Max",
@@ -351,13 +351,21 @@
     "show_more": "Show More",
     "join_now": "Join Now",
     "close_order": "Close Order",
-    "close_all_orders": "Close all orders",
-    "cancel_all_orders": "Cancel all orders",
+    "close_all_orders": "Close All Orders",
+    "cancel_all_orders": "Cancel All Orders",
     "close_all_message": "Do you want to close all your orders?",
     "close_all_success": "Close orders successfully",
     "close_all_failed": "Close Orders failed",
     "no_results_found": "No records found",
     "hide_other_symbols": "Hide Other Symbols",
     "load_more": "View more ...",
-    "term": "Term of Use"
+    "term": "Term of Use",
+    "reset_chart": {
+        "title": "Reset Data",
+        "desc": "Take the appropriate action:",
+        "step_1": "Click 'Reset chart' to update data",
+        "step_2": "Click 'Delete indicator' to remove indicator and analysis",
+        "reset": "Reset Chart",
+        "delete": "Delete Indicator"
+    }
 }

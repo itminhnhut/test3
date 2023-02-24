@@ -5,7 +5,7 @@ const TextButton = ({ className = '', disabled = false, children, variants = 'pr
     return (
         <button
             className={classNames(
-                'flex whitespace-nowrap items-center justify-center rounded-md font-semibold text-base w-full py-3 px-6',
+                'flex whitespace-nowrap items-center justify-center font-semibold text-base w-full py-3 px-6',
                 {
                     'px-0 text-sm text-txtTextBtn hover:text-txtTextBtn-pressed active:text-txtTextBtn-pressed disabled:text-txtTextBtn-disabled dark:text-txtTextBtn-dark dark:hover:text-txtTextBtn-dark_pressed dark:active:text-txtTextBtn-dark_pressed dark:disabled:text-txtTextBtn-dark_disabled disabled:pointer-events-none':
                         variants === 'primary',
