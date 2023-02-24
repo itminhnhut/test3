@@ -29,14 +29,12 @@ import TableV2 from 'components/common/V2/TableV2';
 import Modal from 'components/common/ReModal';
 import Tooltip from 'components/common/Tooltip';
 import Button from 'components/common/Button';
-import AssetName from 'components/wallet/AssetName';
 import classNames from 'classnames';
 import NoData from 'components/common/V2/TableV2/NoData';
 import format from 'date-fns/format';
 import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
-import Select from 'components/screens/Wallet/Exchange/Select';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -62,11 +60,15 @@ const INITIAL_STATE = {
     // Add new state here
 };
 
-export const CryptoSelectContent = ({
-    search,
-    value = null,
-    setOpen
+const CryptoSelect = ({
+    t,
+    selected
 }) => {
+    const [open, setOpen] = useState(false);
+    const [search, setSearch] = useState('');
+    const refContent = useRef();
+    const [currentTheme] = useDarkMode();
+
     const paymentConfigs = useSelector((state) => state.wallet.paymentConfigs) || [];
     const spotWallets = useSelector((state) => state.wallet.SPOT) || {};
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
@@ -91,52 +93,102 @@ export const CryptoSelectContent = ({
 
     }, [paymentConfigs, spotWallets, search]);
 
-    return <>
-        <div className='overflow-y-auto flex-1 space-y-3'>
-            {
-                !items.length &&
-                <NoData />
-            }
-            {
-                items.map(c => {
-                    return <div
-                        key={c._id}
-                        onClick={() => {
-                            router.push(depositLinkBuilder(c.assetCode), null, {
-                                scroll: false
-                            })
-                                .finally(() => {
-                                    setOpen(false);
-                                });
-                        }}
-                        className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover', {
-                            'bg-hover': c._id === value?._id
-                        })}
-                    >
-                        <div className='flex'>
-                            <AssetLogo
-                                assetCode={c?.assetCode}
-                                size={24}
-                            />
-                            <span className='ml-2'>{c.assetCode}</span>
-                        </div>
-                        <span className='float-right text-txtSecondary'>
-                        {formatWallet(c.availableValue, mapAssetConfig[c.assetId]?.assetDigit || 0)}
-                    </span>
-                    </div>;
-                })
-            }
+    useOutsideClick(refContent, () => setOpen(!open));
+
+    return <div className='relative'>
+        <div
+            className='bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none'
+            onClick={() => setOpen(true)}
+        >
+            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6'>{t('wallet:crypto_select')}</p>
+            <div className='flex items-center justify-between'>
+                <div className='flex items-center'>
+                    <AssetLogo assetCode={selected?.assetCode} size={24} />
+                    <div className='ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
+                        {selected?.assetCode || '--'}
+                    </div>
+                </div>
+                <ChevronDown
+                    className={open ? 'rotate-0' : ''}
+                    size={16}
+                    color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue}
+                />
+            </div>
         </div>
-    </>;
+        {
+            open &&
+            <div
+                className={classNames(
+                    'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
+                    'rounded-xl shadow-common overflow-hidden',
+                    'bg-white nami-light-shadow',
+                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark '
+                )}
+                ref={refContent}
+            >
+                <div className='px-4'>
+                    <div className='bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md'>
+                        <Search color={colors.darkBlue5} size={16} className='mr-2' />
+                        <input
+                            type='text'
+                            value={search}
+                            placeholder='Tìm kiếm'
+                            onChange={e => setSearch(e.target.value)}
+                            autoFocus
+                        />
+                    </div>
+                </div>
+                <div className='overflow-y-auto flex-1 space-y-3'>
+                    {
+                        !items.length &&
+                        <NoData />
+                    }
+                    {
+                        items.map(c => {
+                            return <div
+                                key={c._id}
+                                onClick={() => {
+                                    router.push(depositLinkBuilder(c.assetCode), null, {
+                                        scroll: false
+                                    })
+                                        .finally(() => {
+                                            setOpen(false);
+                                        });
+                                }}
+                                className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover', {
+                                    'bg-hover': c._id === selected?._id
+                                })}
+                            >
+                                <div className='flex'>
+                                    <AssetLogo
+                                        assetCode={c?.assetCode}
+                                        size={24}
+                                    />
+                                    <span className='ml-2'>{c.assetCode}</span>
+                                </div>
+                                <span
+                                    className='float-right text-txtSecondary'> {formatWallet(c.availableValue, mapAssetConfig[c.assetId]?.assetDigit || 0)} </span>
+                            </div>;
+                        })
+                    }
+                </div>
+            </div>
+        }
+    </div>;
 };
 
-const NetworkSelectContent = ({
-    networkList = [],
-    value = {},
+const NetworkSelect = ({
+    t,
+    selected,
     onSelect,
-    setOpen,
-    search = ''
+    networkList = []
 }) => {
+    const [open, setOpen] = useState(false);
+    const [search, setSearch] = useState('');
+    const refContent = useRef();
+    const [currentTheme] = useDarkMode();
+
+    useOutsideClick(refContent, () => setOpen(!open));
 
     const items = useMemo(() => {
         return networkList.filter(nw => {
@@ -145,24 +197,74 @@ const NetworkSelectContent = ({
         });
     }, [networkList, search]);
 
-    return <div className='overflow-y-auto space-y-3'>
-        {items.map((item) => {
-            return <div
-                key={item._id}
-                className={classNames('flex items-center px-4 py-3 cursor-pointer hover:bg-hover', {
-                    'bg-hover': value._id === item._id
-                })}
-                onClick={() => {
-                    if (setOpen) setOpen(false);
-                    if (onSelect) onSelect(item);
-                }}
+    return <div className='relative'>
+        <div
+            className='bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none'
+            onClick={() => setOpen(true)}
+        >
+            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6'>{t('wallet:network')}</p>
+            <div className='flex items-center justify-between'>
+                <div
+                    className={classNames('flex items-center', {
+                        'opacity-40': !selected?.depositEnable
+                    })}
+                >
+                    <span className='font-semibold'>{selected?.network || '--'}</span>
+                    <span
+                        className='ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{selected?.name || '--'}</span>
+                </div>
+                <ChevronDown
+                    className={open ? 'rotate-0' : ''}
+                    size={16}
+                    color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue}
+                />
+            </div>
+        </div>
+        {
+            open &&
+            <div
+                className={classNames(
+                    'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
+                    'rounded-xl shadow-common overflow-hidden',
+                    'bg-white nami-light-shadow',
+                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark'
+                )}
+                ref={refContent}
             >
-                <p className='mr-2 font-semibold'>{item.network}</p>
-                <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>{item.name}</span>
-            </div>;
-        })}
+                <div className='px-4'>
+                    <div className='bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md'>
+                        <Search color={colors.darkBlue5} size={16} className='mr-2' />
+                        <input
+                            type='text'
+                            value={search}
+                            placeholder='Tìm kiếm'
+                            onChange={e => setSearch(e.target.value)}
+                            autoFocus
+                        />
+                    </div>
+                </div>
+                <div className='overflow-y-auto space-y-3'>
+                    {items.map((item) => {
+                        return <div
+                            key={item._id}
+                            className={classNames('flex items-center px-4 py-3 cursor-pointer hover:bg-hover', {
+                                'bg-hover': selected._id === item._id
+                            })}
+                            onClick={() => {
+                                if (setOpen) setOpen(false);
+                                if (onSelect) onSelect(item);
+                            }}
+                        >
+                            <p className='mr-2 font-semibold'>{item.network}</p>
+                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>{item.name}</span>
+                        </div>;
+                    })}
+                </div>
+            </div>
+        }
     </div>;
 };
+
 const ExchangeDeposit = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
@@ -851,43 +953,17 @@ const ExchangeDeposit = () => {
                                 'rounded-3xl p-6 space-y-4 nami-light-shadow bg-white',
                                 'dark:border dark:border-divider-dark dark:shadow-none dark:bg-dark-dark'
                             )}>
-                            <Select
-                                label={t('wallet:crypto_select')}
-                                content={(props) => <CryptoSelectContent {...props} />}
-                                value={state.selectedAsset}
-                            >
-                                <div className='flex items-center'>
-                                    <AssetLogo assetCode={state.selectedAsset?.assetCode} size={24} />
-                                    <div className='ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
-                                        {state.selectedAsset?.assetCode || '--'}
-                                    </div>
-                                </div>
-                            </Select>
-
-                            <Select
-                                label={t('wallet:network')}
-                                content={(props) => <NetworkSelectContent
-                                    networkList={state.selectedAsset?.networkList}
-                                    onSelect={(value) => {
-                                        setState({
-                                            selectedNetwork: value
-                                        });
-                                    }}
-                                    {...props}
-                                />}
-                                value={state.selectedNetwork}
-                            >
-                                <div
-                                    className={classNames('flex items-center', {
-                                        'opacity-40': !state.selectedNetwork?.depositEnable
-                                    })}
-                                >
-                                    <span
-                                        className='font-semibold'>{state.selectedNetwork?.network || '--'}</span>
-                                    <span
-                                        className='ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{state.selectedNetwork?.name || '--'}</span>
-                                </div>
-                            </Select>
+                            <CryptoSelect t={t} selected={state?.selectedAsset} />
+                            <NetworkSelect
+                                t={t}
+                                selected={state.selectedNetwork}
+                                networkList={state.selectedAsset?.networkList}
+                                onSelect={(value) => {
+                                    setState({
+                                        selectedNetwork: value
+                                    });
+                                }}
+                            />
 
                             <div
                                 className='relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer'>
@@ -934,7 +1010,8 @@ const ExchangeDeposit = () => {
                     <div className='text-2xl font-semibold mt-20'>
                         {t('wallet:dep_history')}
                     </div>
-                    <div className='bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32'>
+                    <div
+                        className='bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32'>
                         {renderDepHistory()}
                     </div>
                 </div>
