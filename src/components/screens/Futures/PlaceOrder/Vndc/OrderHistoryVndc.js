@@ -95,7 +95,21 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('common:status'),
             align: 'center',
             width: 178,
-            render: (_row, item) => <OrderStatusLabel type={item?.reason_close_code} t={t} />,
+            render: (_row, item) => {
+                const cancelled = (item.status === VndcFutureOrderType.Status.PENDING ||
+                    (item.status === VndcFutureOrderType.Status.CLOSED && !item?.close_price && item?.type !== VndcFutureOrderType.Type.MARKET));
+                const pending = item.status === VndcFutureOrderType.Status.PENDING || item.status === VndcFutureOrderType.Status.REQUESTING;
+                const orderStatus = {
+                    cancelled,
+                    pending
+                };
+
+                return orderStatus.cancelled || orderStatus.pending || item?.reason_close_code === 5 ?
+                    <OrderStatusLabel type={item?.reason_close_code} t={t} />
+                    :
+                    <div className='text-txtPrimary dark:text-txtPrimary-dark font-normal text-sm text-left'>_</div>
+
+            },
             sortable: true,
         },
         {
@@ -220,7 +234,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     return item;
                 })
                 setDataSource(data?.orders)
-                setPagination({ ...pagination, total: data?.total })
+                // setPagination({ ...pagination, total: data?.total })
                 hasNext.current = data?.hasNext
             } else {
                 setDataSource([])
@@ -323,12 +337,12 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 onClose={() => setShowOrderDetail(false)}
                 decimals={decimals}
             />
-              <FututesShareModal
+            <FututesShareModal
                 order={rowData.current}
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 decimals={decimals}
-                // pairTicker={marketWatch[rowData.current?.symbol]}
+            // pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <TableV2
                 data={loading ? [] : dataSource}
