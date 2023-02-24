@@ -121,7 +121,12 @@ const TradingRules = () => {
                             <div className="text-sm max-w-[300px] text-left">{t(tooltip)}</div>
                         </Tooltip>
                     )}
-                    <div className="text-sm flex items-center space-x-1 md:space-x-3" data-tip="" data-for={title} id={tooltip}>
+                    <div
+                        className="text-sm flex items-center space-x-1 md:space-x-3 border-b border-dashed border-divider dark:border-divider-dark"
+                        data-tip=""
+                        data-for={title}
+                        id={tooltip}
+                    >
                         {t(title)}
                     </div>
                 </>

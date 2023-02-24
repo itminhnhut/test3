@@ -146,8 +146,7 @@ const App = ({ Component, pageProps }) => {
             !router.pathname.includes('luckydraw') &&
             !router.pathname.includes('fee-schedule') &&
             !router.pathname.includes('support') &&
-            !isMobile &&
-            process.env.NODE_ENV === 'production'
+            !isMobile
         ) {
             function initFreshChat() {
                 window.fcWidget?.init({

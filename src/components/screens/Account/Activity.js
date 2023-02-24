@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { USER_DEVICES, USER_REVOKE_DEVICE } from 'redux/actions/apis';
 import Laptop from 'components/svg/Laptop';
@@ -70,10 +70,12 @@ function Activity({ t }) {
         return t('profile:last_logged_in', { duration: durationToText(duration) });
     };
 
+    const flag = useRef(false);
     const onRevoke = async (revokeId, isThisDevice = false) => {
         if (!revokeId) return;
         setRevoking(true);
         const id = revokeId === 'all' ? 'all' : revokeId;
+        flag.current = true;
 
         await Axios.post(USER_REVOKE_DEVICE, { id })
             .then(async ({ data }) => {
@@ -85,6 +87,7 @@ function Activity({ t }) {
                 console.log(`Can't revoke device ${revokeId} `, e);
             })
             .finally(() => {
+                flag.current = false;
                 getActivities();
                 setRevokeDevice(null);
                 closeRevokeModal();
@@ -93,7 +96,7 @@ function Activity({ t }) {
     };
 
     const closeRevokeModal = () => {
-        if (revoking) return;
+        if (flag.current || revokeId) return;
         setRevokeDevice(null);
         setOpenRevokeModal(false);
     };
