@@ -179,8 +179,8 @@ const MarketTable = ({
     const renderSuggested = useMemo(() => {
         const tradingMode = restProps?.favType + 1;
         const suggestionContent = {
-            vi: "Bạn chưa thêm cặp tiền điện tử nào. Bắt đầu thêm ngay các cặp giao dịch phổ biến dưới đây vào Yêu thích.",
-            en: 'You have not added any favorite pair. Start by adding these popular pairs below.'
+            vi: "Bắt đầu xây dựng danh sách yêu thích với những cặp giao dịch phổ biến ngay bây giờ!",
+            en: 'Start building your favorites list with popular trading pairs now!'
         }
         return <div className="px-0 sm:px-8 pb-4">
             <div className="text-base text-darkBlue-5 font-normal mb-6">
@@ -421,7 +421,7 @@ const MarketTable = ({
                 key: 'change_24h',
                 title: translater('change_24h'),
                 align: 'right',
-                width: 148,
+                width: 168,
                 sortable: false,
                 render: (_row, item) => render24hChange(item, false, 'justify-end !text-base !font-normal'),
                 sorter: (a, b) => {
@@ -435,7 +435,7 @@ const MarketTable = ({
                 dataIndex: 'vq',
                 title: translater('volume_24h'),
                 align: 'right',
-                width: 148,
+                width: 168,
                 sortable: true,
                 render: (row) => <span className="whitespace-nowrap">{formatCurrency(row, 0)}</span>
             },
@@ -444,7 +444,7 @@ const MarketTable = ({
                 dataIndex: 'h',
                 title: translater('24h_high'),
                 align: 'right',
-                width: 148,
+                width: 168,
                 sortable: true,
                 render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
             },
@@ -453,7 +453,7 @@ const MarketTable = ({
                 dataIndex: 'l',
                 title: translater('24h_low'),
                 align: 'right',
-                width: 148,
+                width: 168,
                 sortable: true,
                 render: (row) => <span className="whitespace-nowrap">{formatPrice(row, row < 1000 ? 2 : 0)}</span>
             },
@@ -641,8 +641,8 @@ const MarketTable = ({
                             }}
                         >
                             {isLoading ? <Spinner size={24} /> : {
-                                en: 'Add all',
-                                vi: 'Thêm tất cả'
+                                en: 'Select all',
+                                vi: 'Chọn tất cả'
                             }[language]}
                         </div>
                         :
@@ -866,11 +866,11 @@ const FavActionButton = ({
             await favoriteRefresher();
             if (lang === LANGUAGE_TAG.VI) {
                 title = 'Thành công';
-                message = `Đã ${method === 'delete' ? `xoá ${b?.b}/${q?.q} khỏi` : `thêm ${b?.b}/${q?.q} vào`} danh sách yêu thích`;
+                message = `Đã ${method === 'delete' ? `xóa khỏi` : `thêm vào`} danh sách yêu thích`;
             }
             if (lang === LANGUAGE_TAG.EN) {
                 title = 'Success';
-                message = `${method === 'delete' ? `Deleted ${b?.b}/${q?.q} from` : `Added ${b?.b}/${q?.q} to`} favorites`;
+                message = method === 'delete' ? `Removed from Favorites` : `Added to Favorites`
             }
             toast(
                 { text: message, type: 'success' },
@@ -980,15 +980,11 @@ const addTokensToFav = _.debounce(async ({
 
         if (lang === LANGUAGE_TAG.VI) {
             title = 'Thành công';
-            message = `Đã ${method === 'delete' ? `xoá ${symbols.join(', ')
-                .replace('_', '/')} khỏi` : `thêm ${symbols.join(', ')
-                    .replace('_', '/')} vào`} danh sách yêu thích`;
+            message = `Đã ${method === 'delete' ? `xóa khỏi` : `thêm vào`} danh sách yêu thích`;
         }
         if (lang === LANGUAGE_TAG.EN) {
             title = 'Success';
-            message = `${method === 'delete' ? `Deleted ${symbols.join(', ')
-                .replace('_', '/')} from` : `Added ${symbols.join(', ')
-                    .replace('_', '/')} to`} favorites`;
+            message = method === 'delete' ? `Removed from Favorites` : `Added to Favorites`
         }
         toast(
             { text: message, type: 'success' },
