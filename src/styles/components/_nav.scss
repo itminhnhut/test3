@@ -260,7 +260,7 @@
   .mal-navbar__hamburger {
     @apply flex items-center h-full;
 
-    .mal-navbar__hamburger__spacing {
+    .mal-navbar__hamburger__spacing:not(:first-child) {
       margin-left: 16px;
     }
 

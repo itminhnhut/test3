@@ -100,7 +100,7 @@
         "invalid_memo": "MEMO không hợp lệ",
         "invalid_min_amount": "Giá trị rút tối thiểu là {{ value }}",
         "invalid_max_amount": "Giá trị rút tối đa là {{ value }}",
-        "invalid_insufficient_balance": "Số dư của bạn không đủ",
+        "invalid_insufficient_balance": "Số dư không khả dụng",
         "network_not_support": "Chưa hỗ trợ rút {{ asset }} trên mạng {{ chain }}.",
         "network_not_support_dep": "Chưa hỗ trợ nạp {{ asset }} trên mạng {{ chain }}.",
         "wrong_otp": "Mã OTP không đúng",
