@@ -39,7 +39,6 @@ const RefDesktopScreen = () => {
     const [config, setConfig] = useState(commisionConfig);
     const contentRef = useRef(null);
     const tabRef = useRef(null);
-    const isClickTab = useRef(false);
     const user = useSelector(state => state.auth.user) || null;
 
     const fetchData = () => {

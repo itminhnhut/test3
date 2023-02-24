@@ -2,12 +2,12 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import styled from 'styled-components';
-import { CopyText, formatNumber, formatTime } from 'redux/actions/utils';
+import { CopyText, formatNumber, formatTime, ReasonClose, FeeMetaFutures } from 'redux/actions/utils';
 import MiniTickerData from 'components/screens/Futures/MiniTickerData';
 import { DefaultFuturesFee } from 'redux/actions/const';
 import { createSelector } from 'reselect';
 import { useSelector } from 'react-redux';
-import { fees, getTypesLabel, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import { fees, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import get from 'lodash/get';
 import Tooltip from 'components/common/Tooltip';
 
@@ -24,7 +24,7 @@ const getAllAssets = createSelector([(state) => state.utils, (utils, params) => 
         return assets;
     }, {});
 });
-const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) => {
+const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPrice }) => {
     const { t } = useTranslation();
     const allAssets = useSelector((state) => getAllAssets(state));
     const marketWatch = useSelector((state) => state.futures.marketWatch);
@@ -49,25 +49,6 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
             (size * row?.open_price + (row?.fee_data?.place_order?.['22'] || 0) + (row?.fee_data?.place_order?.['72'] || 0) + swap - row?.margin) /
             (row?.quantity * (number - DefaultFuturesFee.Nami));
         return liqPrice > 0 ? formatNumber(liqPrice, 0, decimals.price, false) : '-';
-    };
-
-    const renderReasonClose = () => {
-        switch (order?.reason_close_code) {
-            case 0:
-                return t('futures:order_history:normal');
-            case 1:
-                return t('futures:order_history:hit_sl');
-            case 2:
-                return t('futures:order_history:hit_tp');
-            case 3:
-                return t('futures:order_history:liquidate');
-            case 5:
-                return t('futures:mobile:adjust_margin:added_volume');
-            case 6:
-                return t('futures:mobile:adjust_margin:close_partially');
-            default:
-                return '-';
-        }
     };
 
     const renderFeeOther = (order, key, negative = false) => {
@@ -131,7 +112,12 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                             {order?.sl ? formatNumber(order?.sl, decimals.price) : '-'}
                         </Item>
                     </Row>
-                    <FeeMeta mode="open_fee" order={order} allAssets={allAssets} t={t} />
+                    <Row>
+                        <Item>{t('futures:mobile:open_fee')}</Item>
+                        <Item>
+                            <FeeMetaFutures order={order} mode="open_fee" />
+                        </Item>
+                    </Row>
                     <Row>
                         <Item data-tip={t('futures:mobile:info_liquidate_fee')} data-for="liquidate_fee" tooltip>
                             {t('futures:mobile:liquidate_fee')}
@@ -141,7 +127,7 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                 </div>
                 <div>
                     <Row>
-                        <Item>{t('common:leverage')}</Item>
+                        <Item>{t('futures:leverage:leverage')}</Item>
                         <Item className="text-teal">{order?.leverage}x</Item>
                     </Row>
                     <Row>
@@ -162,13 +148,20 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
                     </Row>
                     <Row>
                         <Item>{t('futures:mobile:reason_close')}</Item>
-                        <Item>{renderReasonClose()}</Item>
+                        <Item>
+                            <ReasonClose order={order} />
+                        </Item>
                     </Row>
                     <Row>
                         <Item>{t('futures:take_profit')}</Item>
                         <Item className="text-teal">{order?.tp ? formatNumber(order?.tp, decimals.price) : '-'}</Item>
                     </Row>
-                    <FeeMeta mode="close_fee" order={order} allAssets={allAssets} t={t} />
+                    <Row>
+                        <Item>{t('futures:mobile:close_fee')}</Item>
+                        <Item>
+                            <FeeMetaFutures order={order} mode="close_fee" />
+                        </Item>
+                    </Row>
                     <Row>
                         <Item data-tip={t('futures:funding_rate_des')} data-for="funding_fee" tooltip>
                             {t('futures:funding_fee')}
@@ -182,67 +175,6 @@ const FuturesOrderDetail = ({ isVisible, onClose, order, decimals, lastPrice }) 
         </ModalV2>
     );
 };
-
-const FeeMeta = ({ order, mode = 'open_fee', allAssets, t }) => {
-    const [visible, setVisible] = useState(false);
-
-    const convertObject = (obj) => {
-        if (obj?.currency) {
-            return [
-                {
-                    asset: +obj?.currency,
-                    value: obj?.value ?? 0
-                }
-            ];
-        } else {
-            const arr = [];
-            Object.keys(obj).map((key) => {
-                arr.push({
-                    asset: +key,
-                    value: obj[key]
-                });
-            });
-            return arr;
-        }
-    };
-
-    const fee_metadata = useMemo(() => {
-        const metadata = order?.fee_data ?? order?.fee_metadata;
-        const feeFilter = metadata?.[mode === 'open_fee' ? 'place_order' : 'close_order'];
-        const fee = feeFilter ? convertObject(feeFilter) : [];
-        return fee;
-    }, [order]);
-
-    const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
-
-    return (
-        <>
-            <Row className="flex items-center justify-between w-full">
-                <Item>{t(`futures:mobile:${mode}`)}</Item>
-                <Item onClick={() => fee_metadata.length > 1 && setVisible(!visible)}>
-                    {fee_metadata.length > 1
-                        ? visible
-                            ? t('common:global_btn:close')
-                            : t('common:view_all')
-                        : !fee_metadata[0]?.value
-                        ? '-'
-                        : formatNumber(fee_metadata[0]?.value, decimal) + ' ' + allAssets[fee_metadata[0]?.asset]?.assetCode}
-                </Item>
-            </Row>
-            {/* {visible && (
-                <div className="mt-3 text-sm font-medium w-full grid grid-cols-2 gap-2">
-                    {fee_metadata.map((rs, idx) => (
-                        <div className={idx % 2 === 0 ? 'text-left' : 'text-right'} key={idx}>
-                            {formatNumber(rs.value, rs.asset === 72 ? allAssets[rs.asset].assetDigit : allAssets[rs.asset].assetDigit + 2)}{' '}
-                            {allAssets[rs.asset].assetCode}
-                        </div>
-                    ))}
-                </div>
-            )} */}
-        </>
-    );
-};
-
 const Row = styled.div.attrs({
     className: `flex items-center justify-between`
 })``;
@@ -253,4 +185,4 @@ const Item = styled.div.attrs(({ tooltip }) => ({
     }`
 }))``;
 
-export default FuturesOrderDetail;
+export default FuturesOrderDetailModal;

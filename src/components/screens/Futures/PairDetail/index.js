@@ -468,7 +468,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     };
 
     return (
-        <div className="flex items-center h-full pl-5">
+        <div className="flex items-center h-full pl-5 w-full">
             {/* Pair */}
             <PopoverFunding visible={showPopover} onClose={() => setShowPopover(false)} isFunding={isFunding.current} />
             <div

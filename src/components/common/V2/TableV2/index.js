@@ -20,6 +20,7 @@ const index = ({
     total,
     pagingPrevNext,
     onRowClick,
+    showPaging = true,
     ...props
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -39,6 +40,10 @@ const index = ({
         const isAdd = !filterdData.find((rs) => rs.fixed) && ref.current?.offsetWidth < sumBy(filterdData, 'width');
         return !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
     }, [columns, ref.current]);
+
+    const totalPage = useMemo(() => {
+        return Math.ceil(total ?? data?.length / limit);
+    }, [total, data]);
 
     return (
         <div className={className}>
@@ -62,23 +67,8 @@ const index = ({
                 onRowClick={onRowClick}
                 {...props}
             />
-            {!pagingPrevNext ? (
-                total > 0 ||
-                (data?.length > 0 && (
-                    <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
-                        <RePagination
-                            total={total ?? data?.length}
-                            isNamiV2
-                            current={currentPage}
-                            pageSize={limit}
-                            onChange={_onChangePage}
-                            name="market_table___list"
-                            // pagingPrevNext={pagingPrevNext}
-                        />
-                    </div>
-                ))
-            ) : (
-                <div className={`pt-8 pb-8 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
+            {totalPage > 1 && limit > 0 && showPaging && (
+                <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination
                         total={total ?? data?.length}
                         isNamiV2
@@ -86,6 +76,7 @@ const index = ({
                         pageSize={limit}
                         name="market_table___list"
                         pagingPrevNext={pagingPrevNext}
+                        onChange={_onChangePage}
                     />
                 </div>
             )}

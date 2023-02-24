@@ -166,8 +166,8 @@ export const AmountInput = ({
                                             setOpenSelectAsset(false);
                                         });
                                 }}
-                                className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover', {
-                                    'bg-hover': asset._id === currentAsset?._id
+                                className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-gray-13 dark:hover:bg-dark-5', {
+                                    'bg-gray-13 dark:bg-dark-5': asset._id === currentAsset?._id
                                 })}
                             >
                                 <div className='flex'>
@@ -285,7 +285,7 @@ export const NetworkInput = ({
                             key={network._id}
                             className={classNames(
                                 'p-4 rounded-md border border-transparent cursor-pointer',
-                                'flex items-center',
+                                'flex items-center hover:bg-gray-13 dark:hover:bg-darkBlue-3',
                                 {
                                     '!cursor-not-allowed': !network?.withdrawEnable,
                                     '!border-teal bg-gray-13 dark:bg-darkBlue-3': isSelected
