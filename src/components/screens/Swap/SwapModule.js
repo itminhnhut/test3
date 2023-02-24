@@ -537,7 +537,7 @@ const SwapModule = ({ width, pair }) => {
         if (!auth) {
             return (
                 <HrefButton className="block mt-8 !w-full !max-w-none text-base !font-semibold" href={getLoginUrl('sso', 'login')} variants="primary">
-                    {t('common:sign_in')}
+                    {t('common:login_now')}
                 </HrefButton>
             );
         }

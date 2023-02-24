@@ -111,6 +111,7 @@ const SwapHistory = ({ width }) => {
         },
         { key: 'createdAt', dataIndex: 'createdAt', title: t('common:time'), width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
     ];
+
     return (
         <div className="m-auto mt-20">
             <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">{t('convert:history')}</div>
