@@ -272,10 +272,8 @@ const MarketTable = ({
             }
         };
 
-        let pairColumnsWidth = 220;
+        let pairColumnsWidth = 228;
         let starColumnWidth = 64;
-
-        if (width < 768) pairColumnsWidth = 174;
 
         if (!data?.length) pairColumnsWidth = 128;
 
@@ -571,9 +569,9 @@ const MarketTable = ({
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
-                            suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
-                                search: ''
-                            })} />) : null}
+                            // suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
+                            //     search: ''
+                            // })} />) : null}
                         />
                     </div>
                 </div>

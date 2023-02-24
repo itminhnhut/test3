@@ -3,7 +3,6 @@ import { formatNumber, formatTime, getLoginUrl, countDecimals, formatPrice } fro
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
 import { getRatioProfit, renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-
 import { useSelector } from 'react-redux';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
