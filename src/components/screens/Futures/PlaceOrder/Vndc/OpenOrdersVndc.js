@@ -79,12 +79,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const dataSource = useMemo(() => {
         const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
-        if (filteredData.length <= ((page + 1) * LIMIT)) {
-            hasNext.current = false
-        } else {
-            hasNext.current = true
-        }
-        return filteredData.slice(page * LIMIT, (page + 1) * LIMIT).map((item) => {
+    
+        return filteredData.map((item) => {
             const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
             const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
             const decimalScalePrice = getDecimalPrice(symbol);
@@ -92,7 +88,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             item['decimalScalePrice'] = decimalScalePrice;
             return item;
         });
-    }, [ordersList, status, page]);
+    }, [ordersList, status]);
 
     const dataFilter = useMemo(() => {
         const items = dataSource.filter((o) => {
@@ -116,8 +112,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             return conditions.every((e) => e);
         });
 
-        return filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
-    }, [hideOther, dataSource, filters, pair, status]);
+        let result = filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
+        if (result.length <= ((page + 1) * LIMIT)) {
+            hasNext.current = false
+        } else {
+            hasNext.current = true
+        }
+        result  = result.slice(page * LIMIT, (page + 1) * LIMIT)
+        return result
+    }, [hideOther, dataSource, filters, pair, status, page]);
 
     const closeTypes = useMemo(() => {
         return {
