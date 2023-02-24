@@ -357,12 +357,16 @@ const SpotComp = () => {
                             ></span>
                         )}
                     >
-                        {!(!state.isShowSymbolList || isPro || fullScreen) && (
-                            <div key="symbolList" className="border-l border-divider dark:border-divider-dark">
+                        {!isPro && (
+                            <div
+                                key="symbolList"
+                                className={classNames('border-l border-divider dark:border-divider-dark', {
+                                    hidden: !state.isShowSymbolList || fullScreen
+                                })}
+                            >
                                 <SymbolList publicSocket={publicSocket} symbol={symbol} />
                             </div>
                         )}
-
                         <div
                             key="chart"
                             id="spot_containter_chart"

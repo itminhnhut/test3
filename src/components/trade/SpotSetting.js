@@ -1,6 +1,5 @@
 import { Popover, Transition } from '@headlessui/react';
 import SvgMoon from 'src/components/svg/Moon';
-import Setting from 'src/components/svg/Setting';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
@@ -9,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
 import useLanguage from 'hooks/useLanguage';
-import Toggle from 'src/components/common/input/Toggle';
-import { getS3Url } from 'redux/actions/utils';
 import classnames from 'classnames';
 import Switch from 'components/common/V2/SwitchV2';
+import { SettingIcon } from 'components/svg/SvgIcon';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const SpotSetting = (props) => {
     const { spotState, onChangeSpotState, resetDefault } = props;
@@ -80,7 +79,7 @@ const SpotSetting = (props) => {
             {({ open }) => (
                 <>
                     <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-white group px-2`}>
-                        <Setting size={20} color={currentTheme === 'dark' ? colors.white : colors.darkBlue} />
+                        <SettingIcon size={20} color={currentTheme === 'dark' ? colors.darkBlue5 : colors.gray[1]} />
                     </Popover.Button>
                     <Transition
                         as={Fragment}
@@ -155,11 +154,9 @@ const SpotSetting = (props) => {
                                         );
                                     })}
                                 </div>
-                                <div className="pt-6 text-center">
-                                    <span className="text-sm sm:text-base text-teal font-semibold cursor-pointer py-[10px]" onClick={() => resetDefault()}>
-                                        {t('spot:setting.reset_default_layout')}
-                                    </span>
-                                </div>
+                                <TextButton className="pt-6 text-center" onClick={() => resetDefault()}>
+                                    {t('spot:setting.reset_default_layout')}
+                                </TextButton>
                             </div>
                         </Popover.Panel>
                     </Transition>

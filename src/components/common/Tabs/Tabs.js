@@ -96,16 +96,17 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     }, [tab, children]);
 
     const offset = useMemo(() => {
-        if (!mount) return null;
         const el = document.querySelector('#tab-item-' + tab);
+        if (!mount || !el) return null;
         scrollHorizontal(el, TabRef.current);
-        const width = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
+        const total = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
         return {
             l_after: `${el?.offsetLeft}px`,
             w_after: `${el?.offsetWidth}px` ?? '100%',
-            w_before: TabRef.current.offsetWidth > width ? '100%' : `${width}px`
+            w_before: TabRef.current.offsetWidth > total ? '100%' : `${total}px`
         };
-    }, [tab, mount, width]);
+    }, [tab, mount, width, children]);
+
     return (
         <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} active={active} className={className}>
             {children}
@@ -116,14 +117,14 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
 const Tab = styled.div.attrs(({ className }) => ({
     className: `h-full overflow-auto w-full no-scrollbar flex items-center relative ${className}`
 }))`
-    &:before {
+    :before {
         content: '';
         position: absolute;
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
         width: ${({ offset }) => `${offset?.w_before}`};
     }
-    &:after {
+    :after {
         content: '';
         position: absolute;
         bottom: 0;

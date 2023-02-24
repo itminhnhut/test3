@@ -5,7 +5,6 @@ const Spinner = ({
     return (
         <svg xmlns='http://www.w3.org/2000/svg'
              style={{
-                 margin: 'auto',
                  background: 'rgba(0, 0, 0, 0) none repeat scroll 0% 0%',
                  display: 'block',
                  shapeRendering: 'auto'
@@ -14,6 +13,7 @@ const Spinner = ({
              width={size}
              height={size}
              preserveAspectRatio='xMidYMid'
+             className="ml-1"
         >
             <g transform='rotate(0 50 50)'>
                 <rect x='44' y='9' rx='6' ry='7.2' width='12' height='28' fill={color}>

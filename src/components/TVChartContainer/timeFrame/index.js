@@ -8,6 +8,7 @@ import { TrendIcon, TuneIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FullScreen from 'components/svg/FullScreen';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -397,6 +398,18 @@ export default class TimeFrame extends Component {
         this.setState({ showModal: false });
     };
 
+    renderMsg = () => {
+        return (
+            <div className="text-left">
+                <div>{this.t('common:reset_chart:desc')}</div>
+                <ul className="list-disc pl-4">
+                    <li>{this.t('common:reset_chart:step_1')}</li>
+                    <li>{this.t('common:reset_chart:step_2')}</li>
+                </ul>
+            </div>
+        );
+    };
+
     render() {
         return (
             <div className="flex items-center justify-between w-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
@@ -404,16 +417,14 @@ export default class TimeFrame extends Component {
                     isVisible={this.state.showModal}
                     onClose={() => this.onAction()}
                     type="warning"
-                    title="Xoá dữ liệu biểu đồ"
-                    message="Bạn có muốn xoá hết dữ liệu Chỉ báo và Phân tích? Nếu bạn gặp lỗi với biểu đồ, nhấn “Đặt lại biểu đồ”."
+                    title={this.t('common:reset_chart:title')}
+                    message={this.renderMsg()}
                     customButton={
-                        <div className="space-y-6 w-full mt-10 text-center">
+                        <div className="space-y-3 w-full mt-10 text-center">
                             <Button variants="primary" onClick={() => this.onAction('remove')}>
-                                Xoá chỉ báo và phân tích
+                                {this.t('common:reset_chart:delete')}
                             </Button>
-                            <div onClick={() => this.onAction('reset')} className="font-semibold text-teal cursor-pointer">
-                                Đặt lại biểu đồ
-                            </div>
+                            <TextButton onClick={() => this.onAction('reset')}>{this.t('common:reset_chart:reset')}</TextButton>
                         </div>
                     }
                 />

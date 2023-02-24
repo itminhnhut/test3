@@ -3,7 +3,6 @@ import { BREAK_POINTS, LOCAL_STORAGE_KEY } from 'constants/constants';
 import { ApiStatus, PublicSocketEvent, UserSocketEvent } from 'redux/actions/const';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { useDispatch, useSelector } from 'react-redux';
-import { API_GET_FUTURES_MARK_PRICE } from 'redux/actions/apis';
 import { useRouter } from 'next/router';
 import FuturesPageTitle from 'components/screens/Futures/FuturesPageTitle';
 import FuturesChart from 'components/screens/Futures/FuturesChart';
@@ -17,13 +16,13 @@ import useWindowSize from 'hooks/useWindowSize';
 import DynamicNoSsr from 'components/DynamicNoSsr';
 import dynamic from 'next/dynamic';
 import Emitter from 'redux/actions/emitter';
-import Axios from 'axios';
 import 'react-grid-layout/css/styles.css';
 import { getOrdersList } from 'redux/actions/futures';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
+import classNames from 'classnames';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -125,8 +124,9 @@ const Futures = () => {
 
     const onLayoutChange = (layout, layouts, isVNDC) => {
         const _layouts = getLayouts(layouts);
+        console.log(layout, _layouts);
         setState({
-            layouts: _layouts,
+            layouts: futuresGridConfig.layoutsVndc,
             // favoritePairLayout: layout?.find((o) => o.i === futuresGridKey.favoritePair),
             // orderBookLayout: layout?.find((o) => o.i === futuresGridKey.orderBook),
             // tradeRecordLayout: layout?.find((o) => o.i === futuresGridKey.tradeRecord),
@@ -220,7 +220,7 @@ const Futures = () => {
                     page="futures"
                     spotState={filterLayout}
                     onChangeSpotState={setFilterLayout}
-                    // resetDefault={resetDefault}
+                    resetDefault={resetDefault}
                 >
                     <div className="w-full">
                         {isMediumDevices && (
@@ -234,76 +234,91 @@ const Futures = () => {
                                 rowHeight={24}
                                 // draggableHandle=".dragHandleArea"
                                 // draggableCancel=".dragCancelArea"
-                                onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
+                                // onLayoutChange={(_layout, _layouts) => onLayoutChange(_layout, _layouts)}
+                                onBreakpointChange={(e) => console.log(e)}
                                 onResize={(e) =>
                                     setState({
                                         forceUpdateState: state.forceUpdateState + 1
                                     })
                                 }
                             >
-                                {filterLayout.isShowFavorites && (
-                                    <div key={futuresGridKey.favoritePair} className={`border-b border-r border-divider dark:border-divider-dark`}>
-                                        <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
-                                    </div>
-                                )}
-                                {filterLayout.isShowPairDetail && (
-                                    <div key={futuresGridKey.pairDetail} className={`relative z-20 border-r border-divider dark:border-divider-dark`}>
-                                        <FuturesPairDetail
-                                            pairPrice={state.pairPrice}
-                                            pairConfig={pairConfig}
-                                            forceUpdateState={state.forceUpdateState}
-                                            isVndcFutures={state.isVndcFutures}
-                                            isAuth={!!auth}
-                                        />
-                                    </div>
-                                )}
-                                {filterLayout.isShowChart && (
-                                    <div id="futures_containter_chart" key={futuresGridKey.chart} className={`border border-l-0 border-divider dark:border-divider-dark`}>
-                                        <FuturesChart
-                                            chartKey="futures_containter_chart"
-                                            pair={pairConfig?.pair}
-                                            initTimeFrame="1D"
-                                            isVndcFutures={state.isVndcFutures}
-                                            ordersList={ordersList}
-                                        />
-                                    </div>
-                                )}
-                                {filterLayout.isShowOpenOrders && (
-                                    <div key={futuresGridKey.tradeRecord} className={`border-t border-r border-divider dark:border-divider-dark !h-auto`}>
-                                        <FuturesTradeRecord
-                                            isVndcFutures={true}
-                                            layoutConfig={state.tradeRecordLayout}
-                                            pairConfig={pairConfig}
-                                            pairPrice={state.pairPrice}
-                                            isAuth={!!auth}
-                                            pair={state.pair}
-                                        />
-                                    </div>
-                                )}
-                                {filterLayout.isShowPlaceOrder && (
-                                    <div key={futuresGridKey.placeOrder} className={`border-l border-r border-divider dark:border-divider-dark`}>
-                                        <FuturesPlaceOrderVndc
-                                            isAuth={!!auth}
-                                            pairConfig={pairConfig}
-                                            userSettings={userSettings}
-                                            assumingPrice={state.assumingPrice}
-                                            isVndcFutures={state.isVndcFutures}
-                                            pairPrice={state.pairPrice}
-                                            pair={state.pair}
-                                            decimals={decimals}
-                                        />
-                                    </div>
-                                )}
-                                {filterLayout.isShowAssets && !!auth && (
-                                    <div key={futuresGridKey.marginRatio} className={`border border-b-0 border-divider dark:border-divider-dark`}>
-                                        <FuturesMarginRatioVndc
-                                            pairConfig={pairConfig}
-                                            auth={auth}
-                                            lastPrice={state.pairPrice?.lastPrice}
-                                            decimals={decimals}
-                                        />
-                                    </div>
-                                )}
+                                <div
+                                    key={futuresGridKey.favoritePair}
+                                    className={classNames('border-b border-r border-divider dark:border-divider-dark', {
+                                        hidden: !filterLayout.isShowFavorites
+                                    })}
+                                >
+                                    <FuturesFavoritePairs favoritePairLayout={state.favoritePairLayout} pairConfig={pairConfig} />
+                                </div>
+                                <div
+                                    key={futuresGridKey.pairDetail}
+                                    className={classNames('relative z-20 border-r border-divider dark:border-divider-dark', {
+                                        hidden: !filterLayout.isShowPairDetail
+                                    })}
+                                >
+                                    <FuturesPairDetail
+                                        pairPrice={state.pairPrice}
+                                        pairConfig={pairConfig}
+                                        forceUpdateState={state.forceUpdateState}
+                                        isVndcFutures={state.isVndcFutures}
+                                        isAuth={!!auth}
+                                    />
+                                </div>
+                                <div
+                                    id="futures_containter_chart"
+                                    key={futuresGridKey.chart}
+                                    className={classNames('border border-l-0 border-divider dark:border-divider-dark', {
+                                        hidden: !filterLayout.isShowChart
+                                    })}
+                                >
+                                    <FuturesChart
+                                        chartKey="futures_containter_chart"
+                                        pair={pairConfig?.pair}
+                                        initTimeFrame="1D"
+                                        isVndcFutures={state.isVndcFutures}
+                                        ordersList={ordersList}
+                                    />
+                                </div>
+                                <div
+                                    key={futuresGridKey.tradeRecord}
+                                    className={classNames('border-t border-r border-divider dark:border-divider-dark !h-auto', {
+                                        hidden: !filterLayout.isShowOpenOrders
+                                    })}
+                                >
+                                    <FuturesTradeRecord
+                                        isVndcFutures={true}
+                                        layoutConfig={state.tradeRecordLayout}
+                                        pairConfig={pairConfig}
+                                        pairPrice={state.pairPrice}
+                                        isAuth={!!auth}
+                                        pair={state.pair}
+                                    />
+                                </div>
+                                <div
+                                    key={futuresGridKey.placeOrder}
+                                    className={classNames('border-l border-r border-divider dark:border-divider-dark', {
+                                        hidden: !filterLayout.isShowPlaceOrder
+                                    })}
+                                >
+                                    <FuturesPlaceOrderVndc
+                                        isAuth={!!auth}
+                                        pairConfig={pairConfig}
+                                        userSettings={userSettings}
+                                        assumingPrice={state.assumingPrice}
+                                        isVndcFutures={state.isVndcFutures}
+                                        pairPrice={state.pairPrice}
+                                        pair={state.pair}
+                                        decimals={decimals}
+                                    />
+                                </div>
+                                <div
+                                    key={futuresGridKey.marginRatio}
+                                    className={classNames('border border-b-0 border-divider dark:border-divider-dark', {
+                                        hidden: !filterLayout.isShowAssets || !auth
+                                    })}
+                                >
+                                    <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} decimals={decimals} />
+                                </div>
                             </GridLayout>
                         )}
                     </div>
