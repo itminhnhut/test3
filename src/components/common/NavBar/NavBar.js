@@ -618,8 +618,6 @@ const NavBar = ({
                         </div>
                     )}
                     <div className="mal-navbar__hamburger">
-                        {width >= 1366 && <LanguageSetting />}
-
                         {!auth && (
                             <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
                                 <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1090} />
@@ -648,25 +646,28 @@ const NavBar = ({
                         )}
                         {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} auth={auth} />}
                         {width >= 1366 && (
-                            <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
-                                {page === 'spot' ? (
-                                    <SpotSetting
-                                        changeLayoutCb={changeLayoutCb}
-                                        spotState={spotState}
-                                        resetDefault={resetDefault}
-                                        onChangeSpotState={onChangeSpotState}
-                                    />
-                                ) : page === 'futures' ? (
-                                    <FuturesSetting
-                                        changeLayoutCb={changeLayoutCb}
-                                        spotState={spotState}
-                                        resetDefault={resetDefault}
-                                        onChangeSpotState={onChangeSpotState}
-                                    />
-                                ) : (
-                                    renderThemeButton()
-                                )}
-                            </div>
+                            <>
+                                <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
+                                    {page === 'spot' ? (
+                                        <SpotSetting
+                                            changeLayoutCb={changeLayoutCb}
+                                            spotState={spotState}
+                                            resetDefault={resetDefault}
+                                            onChangeSpotState={onChangeSpotState}
+                                        />
+                                    ) : page === 'futures' ? (
+                                        <FuturesSetting
+                                            changeLayoutCb={changeLayoutCb}
+                                            spotState={spotState}
+                                            resetDefault={resetDefault}
+                                            onChangeSpotState={onChangeSpotState}
+                                        />
+                                    ) : (
+                                        renderThemeButton()
+                                    )}
+                                </div>
+                                <LanguageSetting />
+                            </>
                         )}
 
                         {useGridSettings && <GridLayoutSettings />}
