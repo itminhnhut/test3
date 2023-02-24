@@ -33,6 +33,8 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
     if (!_.isEmpty(pagingPrevNext)) {
         const { page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
+        if (page === 0 && !hasNext) return null
+
         return (
             <Wapper isDark>
                 <div className="w-full flex items-center justify-center select-none gap-8">
