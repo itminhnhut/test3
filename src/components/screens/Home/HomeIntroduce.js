@@ -37,7 +37,6 @@ const HomeIntroduce = ({ trendData, t }) => {
     useAsync(async () => {
         try {
             const stats = await axios.get(API_GET_OVERVIEW_STATISTIC);
-            console.log('stats:', stats);
             if (stats.data.status === 'ok' && stats.data.data.overview) {
                 setState({ statistic: stats.data.data.overview });
             }
@@ -139,7 +138,7 @@ const HomeIntroduce = ({ trendData, t }) => {
                     </div>
                 </div>
                 <div className="homepage-introduce___wrapper__right">
-                    <video loop muted autoPlay class="video" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
+                    <video loop muted autoPlay class="video max-h-[556px]" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
                         <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
                     </video>
                 </div>
