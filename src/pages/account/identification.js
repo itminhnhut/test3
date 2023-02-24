@@ -56,7 +56,7 @@ const KYCStepCard = ({
                         },
                         {
                             icon: IDCard,
-                            label: t('identification:kyc_step:step_2')
+                            label: t('identification:kyc_step:step_3')
                         },
                         {
                             icon: PlayFilled,
@@ -151,7 +151,7 @@ const CurrentFuturesCard = ({
                 <div className='ml-4'>
                     <p className='text-sm md:text-base font-semibold'>{t('identification:current_futures:deposit')}</p>
                     <span
-                        className='text-sm md:text-base text-txtSecondary'>{t('identification:current_futures:unlimited')}</span>
+                        className='text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark'>{t('identification:current_futures:unlimited')}</span>
                 </div>
             </div>
 
@@ -218,6 +218,7 @@ function Identification() {
                 <CurrentFuturesCard t={t} className='md:col-span-3' />
             </div>
         }
+
     </AccountLayout>;
 }
 

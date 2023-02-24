@@ -111,7 +111,6 @@ const SwapHistory = ({ width }) => {
         },
         { key: 'createdAt', dataIndex: 'createdAt', title: t('common:time'), width: 135, align: 'left', render: (v) => formatTime(v, 'dd/MM/yyyy') }
     ];
-
     return (
         <div className="m-auto mt-20">
             <div className="text-[24px] leading-[30px] font-semibold text-txtPrimary dark:text-txtPrimary-dark text-left">{t('convert:history')}</div>
@@ -141,14 +140,14 @@ const SwapHistory = ({ width }) => {
                             href={getLoginUrl('sso', 'login')}
                             className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
-                            {t('common:sign_in')}{' '}
+                            {t('common:log_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
                         <a
                             href={getLoginUrl('sso', 'register')}
                             className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
-                            {t('common:sign_up')}{' '}
+                            {t('common:register')}{' '}
                         </a>
                         {t('common:swap_history')}
                     </p>

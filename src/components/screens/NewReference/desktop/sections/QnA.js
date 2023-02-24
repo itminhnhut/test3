@@ -5,6 +5,11 @@ import RefCard from 'components/screens/NewReference/RefCard';
 import Link from 'next/link'
 import { theme } from '../../../../../../tailwind.config';
 
+const title = {
+    en: 'FAQ',
+    vi: 'Câu hỏi thường gặp'
+}
+
 const QnAData = [
     {
         q: {
@@ -106,7 +111,7 @@ const QnA = ({ id, t, language }) => {
     return (
         <div className="flex w-full gap-8" id={id}>
             <RefCard wrapperClassName="!p-8 w-full bg-light dark:bg-darkBlue-3">
-                <div className="font-semibold text-[20px] leading-6 mb-4">FAQ</div>
+                <div className="font-semibold text-[20px] leading-6 mb-4">{title[language]}</div>
                 {renderData(QnAData)}
                 <div className="text-teal underline font-medium text-sm text-center mt-8">
                     <Link href={policyLink}>
@@ -116,12 +121,6 @@ const QnA = ({ id, t, language }) => {
                     </Link>
                 </div>
             </RefCard>
-            {/* <RefCard wrapperClassName='!p-6 w-full'>
-                <div className='font-semibold text-[20px] leading-6 mb-6'>
-                    {t('reference:referral.friend_list')}
-                </div>
-                {renderData(TermData)}
-            </RefCard> */}
         </div>
     );
 };

@@ -1,16 +1,16 @@
 {
     "kyc_step": {
-        "title": "KYC steps",
-        "content": "To start the account verification process, please have the following documents ready:",
-        "step_1": "Personal information",
+        "title": "Account Verification",
+        "content": "For the account verification procedure to begin, please have the following documents available:",
+        "step_1": "Personal Information",
         "step_2": "Payment methods",
-        "step_3": "ID/Passport photo",
-        "step_4": "Record",
+        "step_3": "ID card / passport",
+        "step_4": "Scan your face",
         "scan": "Scan this code with Nami Exchange mobile app to start KYC process"
     },
     "current_futures": {
         "title": "Current Features",
-        "buy_sell": "Buy & Sell crypto via Partner Limit",
+        "buy_sell": "Buy & Sell Crypto via Partner",
         "price_daily": "200,000,000 VNDC Daily",
 
         "deposit": "Crypto Deposit Limit",
@@ -30,14 +30,14 @@
     "qr_2": "mobile app to start KYC process",
     "account": {
         "not_verified": "Your account is currently not verified.",
-        "not_verified_content": "Complete account KYC to access and use the unique features of Nami Exchange",
+        "not_verified_content": "Complete verification to access services on Nami.",
 
-        "process": "Your KYC process is under review.",
-        "process_content": "Your verification request will be processed as soon as possible. The system will send notification via email and application when the account is successfully authenticated.",
+        "process": "Your KYC process is reviewing.",
+        "process_content": "Your request for account verification is being reviewed and processed as quickly as possible. When your account has been successfully authenticated, the system will notify you through email and app.",
 
         "congratulations": "Congratulations!",
         "not_verified_2": "Complete verification to access services on Nami.",
-        "verified": "Your account was successfully verified."
+        "verified": "Your account has been verified."
     },
     "title_tab": "Identification"
 }

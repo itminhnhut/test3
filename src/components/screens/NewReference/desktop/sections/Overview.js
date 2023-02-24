@@ -125,15 +125,13 @@ const Overview = ({
 
     return (
         <>
-            <div
-                className='w-full h-[27.5rem] bg-[#0C0C0C]'
-                style={{
-                    backgroundImage: `url(/images/reference/background_desktop_2.png)`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center'
-                }}
-            >
+            <div className='w-full h-[27.5rem] bg-[#0C0C0C]'>
                 <div className='py-20 container h-full'
+                     style={{
+                         backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
+                         backgroundSize: 'cover',
+                         backgroundPosition: 'center'
+                     }}
                 >
                     <ModalShareRefCode
                         t={t}
@@ -206,7 +204,7 @@ const Overview = ({
                             <div className='h-full flex flex-col'>
                                 <p className='font-semibold text-2xl leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
                                 <span className='text-txtSecondary dark:text-txtSecondary-dark leading-6'>
-                                    {t('reference:referral.ranking')}:{' '}
+                                    <span className='uppercase'>{t('reference:referral.ranking')}:{' '}</span>
                                     <span
                                         className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
                                 </span>
@@ -234,9 +232,9 @@ const Overview = ({
                         </div>
                         <div className='w-full flex flex-col leading-5'>
                             <div className='w-full flex justify-between text-teal'>
-                                <div>Spot: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
+                                <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
                                 {data?.rank !== 5 ? (
-                                    <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                    <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                 ) : null}
                             </div>
                             <div className='w-full flex justify-between text-blue-crayola'>
@@ -584,36 +582,34 @@ const ModalShareRefCode = ({
                 <img width={99} src={getS3Url('/images/logo/nami-logo-v2.png')} alt='Nami exchange' />
                 <div className='mt-12'>
                     <p className='text-2xl text-teal font-semibold mb-4'>{t('reference:referral.share.title_2')}</p>
-                    <p className='leading-4'>
+                    <p className='mr-48'>
                         <span className='font-semibold text-white' dangerouslySetInnerHTML={{
-                            __html: t('reference:referral.share.content')
+                            __html: t('reference:referral.share.content', {
+                                percent: `<span class='font-semibold text-3xl text-teal'>20%</span>`
+                            })
                         }} />
-                        <span className='font-semibold text-3xl text-teal'> 40%</span>
                     </p>
                 </div>
             </div>
             <div
                 className='absolute bottom-0 inset-x-0 h-[6.25rem] rounded-b-xl flex items-center justify-between px-6 py-4'
-                style={{
-                    backgroundImage: `url(${getS3Url('/images/reference/bg_share_ref_code_2.png')})`,
-                    backgroundSize: 'cover'
-                }}
             >
-                <div className='flex-1'>
+                <img className='absolute inset-x-0' src={getS3Url('/images/reference/bg_share_ref_code_2.png')} alt='' />
+                <div className='flex-1 z-10'>
                     <div
                         className='text-txtSecondary-dark whitespace-nowrap'>{t('reference:referral.share.scan_and_join')}</div>
                     <p className='text-lg text-white font-semibold'>{t('reference:referral.share.id_referral')}: {code}</p>
                 </div>
-                <div className='p-[.375rem] bg-white rounded'>
+                <div className='p-[.375rem] bg-white rounded z-10'>
                     <QRCode
-                        value={code}
+                        value={'https://nami.exchange/ref/' + code}
                         size={68}
                     />
                 </div>
             </div>
         </div>
         <ButtonV2 className='mt-6' loading={downloading} onClick={() => downloadImage(code)}>
-            {t('reference:referral.share.download')}
+            {t('reference:referral.share.btn')}
         </ButtonV2>
     </ModalV2>;
 };

@@ -176,7 +176,7 @@ const ModalChangeReferee = ({
         })
             .then(async (res) => {
                 if (res.status === ApiStatus.SUCCESS) {
-                    await dispatch(getMe());
+                    await dispatch(getMe(true));
                     const referrer = res.data.referrer || {};
                     const referralName = referrer.name || referrer.username || referrer.email || '--';
 
@@ -304,7 +304,7 @@ const UserLevelSlice = ({
     level,
     namiBalance,
     currentPercent,
-    namiNextLevel
+    nextLevel
 }) => {
     return <div className={'mt-6 ' + className}>
         <div>
@@ -331,7 +331,7 @@ const UserLevelSlice = ({
             <span
                 className='text-teal text-sm'>VIP {level}: {formatNumber(namiBalance)} {ROOT_TOKEN} / {formatNumber(currentPercent)} %</span>
             <span
-                className='text-right float-right text-teal text-sm'>VIP {level}: {formatNumber(namiNextLevel, 0)} {ROOT_TOKEN}</span>
+                className='text-right float-right text-teal text-sm'>VIP {nextLevel?.level}: {formatNumber(nextLevel?.nami_holding, 0)} {ROOT_TOKEN}</span>
         </div>
     </div>;
 };
@@ -410,7 +410,7 @@ const Profile = () => {
                             level={state.level}
                             namiBalance={state.namiBalance}
                             currentPercent={currentPercent}
-                            namiNextLevel={nextLevel?.nami_holding}
+                            nextLevel={nextLevel}
                         />
                         <div
                             onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
@@ -428,7 +428,7 @@ const Profile = () => {
                 level={state.level}
                 namiBalance={state.namiBalance}
                 currentPercent={currentPercent}
-                namiNextLevel={nextLevel?.nami_holding}
+                nextLevel={nextLevel}
             />
         </div>
 

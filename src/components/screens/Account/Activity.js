@@ -74,6 +74,7 @@ function Activity({ t }) {
         if (!revokeId) return;
         setRevoking(true);
         const id = revokeId === 'all' ? 'all' : revokeId;
+
         await Axios.post(USER_REVOKE_DEVICE, { id })
             .then(async ({ data }) => {
                 if (data?.status === ApiStatus.SUCCESS && (id === 'all' || isThisDevice)) {
@@ -116,7 +117,7 @@ function Activity({ t }) {
                 className='w-96'
             />
             <div className='flex items-center justify-between mb-8'>
-                <span className='font-semibold text-xl md:text-2xl'>{t('profile:activity')}</span>
+                <span className='font-semibold text-xl md:text-2xl'>{t('profile:devices')}</span>
                 <div onClick={() => setOpenRevokeModal(true)}
                      className='font-medium text-teal cursor-pointer hover:underline'>
                     {t('profile:revoke_all_devices')}

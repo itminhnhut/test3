@@ -69,7 +69,7 @@
     "withdraw_success_desc_2": "from Nami Exchange.",
     "withdraw_to_vndc": "Transfer asset from Nami Spot to VNDC",
     "equity_value": "Equity value",
-    "transfer_success": "Transfer successfully {{amount}} {{assetCode}} from {{selectedSource}} to {{selectedDestination}}",
+    "transfer_success": "You have transfered {{amount}} {{assetCode}} from {{selectedSource}} to {{selectedDestination}} successfully",
     "transfer_no_support": "No supported transfer between 2 wallets",
     "transfer_min": "You need to transfer minimum {{data}}",
     "expired_token": "Your session has been expired. Please try again.",
@@ -114,7 +114,7 @@
         "minimum_amount": "Minimum amount is {{min}}",
         "maximum_amount": "Maximum amount is {{max}}"
     },
-    "est_balance": "Estimated Balance",
+    "est_balance": "Total Balance",
     "hide_asset": "Hide Asset",
     "asset_balance": "Asset Balance",
     "receive_address": "Withdraw Address",
@@ -166,7 +166,7 @@
         "apy": "Annual Interest Rate (APY)"
     },
     "futures_overview": "Trading Futures with leverage up to X125. <br/>Transfer funds to your Futures Wallet to start trading.",
-    "partners_overview": "Trading Partners with leverage up to X125. <br/>Transfer funds to your Partners Wallet to start trading.",
+    "partners_overview": "More friends, unlimited profit.",
     "staking_overview": "Staking NAMI to receive bonus interest up to 50%/year.",
     "farming_overview": "Farming NAMI and get many potential tokens.",
     "push_order": "Push Order",

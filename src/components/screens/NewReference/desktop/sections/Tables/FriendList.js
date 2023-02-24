@@ -8,14 +8,14 @@ import { formatNumber, formatTime } from 'redux/actions/utils';
 import { Tooltip } from 'components/screens/NewReference/mobile/sections/FriendList';
 import RePagination from 'components/common/ReTable/RePagination';
 import ModalV2 from 'components/common/V2/ModalV2';
-import Copy from 'components/svg/Copy';
+// import Copy from 'components/svg/Copy';
 import { assetCodeFromId } from 'utils/reference-utils';
 import { KYC_STATUS } from 'redux/actions/const';
 import { map, omit } from 'lodash';
 import TagV2 from 'components/common/V2/TagV2';
 import { isValid } from 'date-fns';
-import Empty from 'components/common/Empty';
 import NoData from 'components/common/V2/TableV2/NoData';
+import Copy from 'components/svg/Copy';
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
@@ -61,7 +61,10 @@ const ModalCommissionFriend = ({
                     return <tr key={commissionKind}>
                         <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
                         {map(configs, (c, k) => {
-                            return <td key={k} className='text-center text-sm font-semibold text-teal py-2'>{c}%</td>;
+                            return <td key={k}
+                                       className='text-center text-sm font-semibold text-teal py-2'>
+                                {c * (friend.remunerationRate / 100)}%
+                            </td>;
                         })}
                     </tr>;
                 })}
@@ -283,9 +286,11 @@ const FriendList = ({
 
     return (
         <div className='flex w-full' id={id}>
-            <ModalCommissionFriend t={t} commissionConfig={commissionConfig} friend={commissionByFriendDetail}
-                                   onClose={() => setCommissionByFriendDetail(null)} />
-
+            <ModalCommissionFriend
+                t={t} commissionConfig={commissionConfig}
+                friend={commissionByFriendDetail}
+                onClose={() => setCommissionByFriendDetail(null)}
+            />
             <div
                 className='w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8'>
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
