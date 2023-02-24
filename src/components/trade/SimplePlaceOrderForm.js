@@ -785,7 +785,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return !user ? (
             <Link href={getLoginUrl('sso')}>
                 <a className="w-full">
-                    <ButtonV2 disabled dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></ButtonV2>
+                    <ButtonV2 variants="secondary" dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></ButtonV2>
                 </a>
             </Link>
         ) : (

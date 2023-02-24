@@ -138,13 +138,20 @@ const HomeIntroduce = ({ trendData, t }) => {
                     </div>
                 </div>
                 <div className="homepage-introduce___wrapper__right">
-                    <video loop muted autoPlay class="video max-h-[556px]" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
+                    <video
+                        loop
+                        muted
+                        autoPlay
+                        class="video pointer-events-none max-h-[556px]"
+                        poster="/images/screen/homepage/banner_graphics_1.png"
+                        preload="none"
+                    >
                         <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
                     </video>
                 </div>
             </div>
             <div className="homepage-introduce__banner ">
-                <video loop muted autoPlay class="video" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
+                <video loop muted autoPlay class="video pointer-events-none" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
                     <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
                 </video>
             </div>
