@@ -10,6 +10,9 @@ import Button from 'components/common/Button';
 import { getMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find } from 'lodash';
 import { useSelector } from 'react-redux';
+import { isMobile } from 'react-device-detect';
+import LoadingPage from 'components/screens/Mobile/LoadingPage';
+import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), {
@@ -24,7 +27,7 @@ const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: fals
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
     ssr: false,
-    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+    loading: () => (isMobile ? <LoadingPage /> : <SkeletonHomeIntroduce />)
 });
 const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), {
     ssr: false,
@@ -100,7 +103,6 @@ const Index = () => {
             </ModalV2>
         );
     }, [state.showQR]);
-
 
     useEffect(async () => {
         if (!(exchangeConfig && exchangeConfig.length)) return;
