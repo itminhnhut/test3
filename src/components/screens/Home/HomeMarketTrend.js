@@ -193,7 +193,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
                                 <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
                                 </div>
                                 <div className="homepage-markettrend__market_table__coin__pair">
                                     <span>{_?.baseAsset}</span>
@@ -226,7 +226,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
                                 <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    <AssetLogo useNextImg={true}  size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
                                 </div>
                                 <div className="homepage-markettrend__market_table__coin__pair">
                                     <span>{_?.baseAsset}</span>
