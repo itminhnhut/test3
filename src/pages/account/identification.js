@@ -16,6 +16,8 @@ import { createElement } from 'react';
 import colors from 'styles/colors';
 import { KYC_STATUS } from 'redux/actions/const';
 
+const APP_URL = process.env.APP_URL || 'https://nami.exchange';
+
 const NotKycCard = ({
     t,
     className
@@ -82,7 +84,9 @@ const KYCStepCard = ({
         <div className='pb-6 md:pb-0'>
             <div
                 className='p-[.625rem] md:p-3 w-[7.75rem] h-[7.75rem] md:w-40 md:h-40 border border-teal bg-white rounded-lg mx-auto'>
-                <QRCode value='account_verification' className='!w-full !h-full' />
+                <QRCode
+                    value={`${APP_URL}#nami_exchange_download_app`}
+                    className='!w-full !h-full' />
             </div>
             <div className='text-center mt-5'>
                 <span

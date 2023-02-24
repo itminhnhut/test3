@@ -25,7 +25,9 @@ const OtpModal = ({
     renderLower,
     className,
     isMobile = false,
-    loading
+    loading,
+    isError = false,
+    router
 }) => {
     const { t } = useTranslation()
     const [pasted, setPasted] = useState(false)
@@ -58,6 +60,7 @@ const OtpModal = ({
                     </a>
                 </div>
             }
+            onBackdropCb={() => router && router.push(getLoginUrl('sso', 'login'))}
         >
             <div className={classNames({ 'mb-4 text-txtPrimary dark:text-gray-4 font-semibold text-[22px] leading-[30px] mt-6': !!renderUpper })}>
                 {typeof renderUpper === 'function'
@@ -72,7 +75,7 @@ const OtpModal = ({
                 placeholder={placeholder.repeat(otpLength)}
                 isInputNum={numberOnly}
                 containerStyle='mt-4 w-full justify-between'
-                inputStyle='!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal'
+                inputStyle={classNames('!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal', { 'border-red': isError })}
             />
             <div className='flex w-full justify-between items-center'>
                 <div className={classNames({ 'mt-4': !!renderLower })}>

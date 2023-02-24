@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { getUserFuturesBalance, getUserPartnersBalance, getWallet } from 'redux/actions/user';
-import { orderBy } from 'lodash';
+import { orderBy, setWith } from 'lodash';
 
 import Axios from 'axios';
 import useOutsideClick from 'hooks/useOutsideClick';
@@ -39,10 +39,6 @@ const ALLOWED_WALLET_FROM = {
     BROKER: WalletType.BROKER
 };
 
-const ALLOWED_TO_WALLET = {
-    SPOT: WalletType.SPOT,
-    FUTURES: WalletType.FUTURES
-};
 const ALLOWED_WALLET_TO = {
     SPOT: WalletType.SPOT,
     FUTURES: WalletType.FUTURES
@@ -84,6 +80,24 @@ const INITIAL_STATE = {
     isPlacingOrder: false,
     resultTransfer: null
     // ...
+};
+
+const getTitleWallet = (wallet, t) => {
+    let _strTitleWallet = '';
+    switch (wallet) {
+        case WalletType.PARTNERS:
+            _strTitleWallet = t('common:partners');
+            break;
+        case WalletType.BROKER:
+            _strTitleWallet = t('common:partners');
+            break;
+        default:
+            _strTitleWallet = wallet;
+            break;
+    }
+    _strTitleWallet = _strTitleWallet.charAt(0).toUpperCase() + _strTitleWallet.slice(1).toLowerCase();
+
+    return _strTitleWallet;
 };
 
 const TransferModal = ({ isMobile, alert }) => {
@@ -179,8 +193,8 @@ const TransferModal = ({ isMobile, alert }) => {
                 const message = t('wallet:transfer_success', {
                     amount: formatWallet(+amount, currentWallet?.assetDigit),
                     assetCode: utils?.assetName,
-                    selectedSource: state.fromWallet,
-                    selectedDestination: state.toWallet
+                    selectedSource: getTitleWallet(state.fromWallet, t),
+                    selectedDestination: getTitleWallet(state.toWallet, t)
                 });
 
                 setState({ message });
@@ -193,19 +207,6 @@ const TransferModal = ({ isMobile, alert }) => {
                     title: t('common:success'),
                     duration: 1500
                 });
-
-                // setTimeout(() => {
-                //     onClose();
-                //     if (isMobile && alert) {
-                //         alert.show('success', t('common:success'), message);
-                //     } else {
-                //         showNotification({
-                //             message,
-                //             title: t('common:success'),
-                //             type: 'success'
-                //         });
-                //     }
-                // }, 300);
             } else {
                 // Process error
                 let message = 'Error occur, please try again';
@@ -309,30 +310,6 @@ const TransferModal = ({ isMobile, alert }) => {
                 break;
         }
     }, [state.fromWallet]);
-
-    // useEffect(() => {
-    //     const _errors = {
-    //         fromWallet: null,
-    //         toWallet: null,
-    //         differenceWallet: null
-    //     };
-    //     if (!state.fromWallet) {
-    //         _errors.fromWallet = t('wallet:errors.transfer_source_wallet_issues');
-    //     }
-    //     if (!state.toWallet) {
-    //         _errors.toWallet = t('wallet:errors.transfer_destination_wallet_issues');
-    //     }
-    //     if (state.fromWallet && state.toWallet && state.fromWallet === state.toWallet) {
-    //         _errors.differenceWallet = t('wallet:errors.transfer_destination_wallet_issues');
-    //     }
-
-    //     setState({
-    //         errors: {
-    //             ...state.errors,
-    //             ..._errors
-    //         }
-    //     });
-    // }, [state.fromWallet, state.toWallet]);
 
     const getWalletType = (walletType, isDisable) => {
         let iconMode = 'normal';
@@ -631,12 +608,6 @@ const TransferModal = ({ isMobile, alert }) => {
     }, [asset]);
 
     useEffect(() => {
-        // if (state.fromWallet === state.toWallet) {
-        //     setState({ toWallet: null });
-        // }
-    }, [state.fromWallet, state.toWallet]);
-
-    useEffect(() => {
         if (allExchangeWallet && allExchangeWallet && assetConfig) {
             let allWallets;
             let currentWallets;
@@ -663,7 +634,6 @@ const TransferModal = ({ isMobile, alert }) => {
     useEffect(() => {
         const _errors = {};
         const minAmount = MinTransferFromBroker[state.asset];
-        console.log('state.amount: ', state.amount);
 
         if (state.fromWallet === WalletType.BROKER && +minAmount > 0 && +state.amount < minAmount) {
             _errors.minAmount = t('wallet:errors.minimum_amount', { min: `${formatNumber(minAmount)} ${state.asset}` });
@@ -754,7 +724,7 @@ const TransferModal = ({ isMobile, alert }) => {
             noButton
         >
             <div className="flex items-center justify-between">
-                <span className="capitalize font-semibold text-2xl">{t('common:transfer')}</span>
+                <span className="font-semibold text-2xl">{t('common:transfer')}</span>
             </div>
             {renderWalletSelect()}
             <div

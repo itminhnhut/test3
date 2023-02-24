@@ -3,6 +3,7 @@ import ReTable, { RETABLE_SORTBY } from 'components/common/ReTable';
 import RePagination from 'components/common/ReTable/RePagination';
 import NoData from './NoData';
 import sumBy from 'lodash/sumBy';
+import Skeletor from 'components/common/Skeletor';
 
 const index = ({
     data,
@@ -38,19 +39,33 @@ const index = ({
     const _columns = useMemo(() => {
         const filterdData = columns.filter((child) => child?.visible === true || child?.visible === undefined);
         const isAdd = !filterdData.find((rs) => rs.fixed) && ref.current?.offsetWidth < sumBy(filterdData, 'width');
-        return !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
-    }, [columns, ref.current]);
+        const cols = !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
+        return loading
+            ? columns.map((column) => ({
+                  ...column,
+                  render: () => <Skeletor width={100} height={20} />
+              }))
+            : cols;
+    }, [columns, ref.current, loading]);
 
     const totalPage = useMemo(() => {
         return Math.ceil(total ?? data?.length / limit);
     }, [total, data]);
+
+    const loader = useMemo(() => {
+        const arr = [];
+        for (let i = 1; i <= limit; i++) {
+            arr.push(i);
+        }
+        return arr;
+    }, [limit]);
 
     return (
         <div className={className}>
             <ReTable
                 reference={ref}
                 useRowHover={useRowHover}
-                data={data}
+                data={loading ? loader : data}
                 columns={_columns}
                 scroll={{ x: true }}
                 rowKey={(item, idx) => `row_${idx}`}
