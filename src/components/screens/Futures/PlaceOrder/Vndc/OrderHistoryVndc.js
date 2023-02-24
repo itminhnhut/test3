@@ -61,7 +61,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('common:pair'),
             align: 'left',
             width: 224,
-            render: (row, item) => {
+            render: (_row, item) => {
                 let specialOrder
                 if (item?.metadata?.dca_order_metadata) {
                     if (!item?.meta_data?.dca_order_metadata?.is_main_order) {
@@ -117,11 +117,11 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
             align: 'left',
             width: 224,
-            render: (row) => (
+            render: (_row, item) => (
                 <div className='flex items-center'>
                     <div className='flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5'>
-                        <div>SL: <span className='text-red-2 dark:text-red'>{row?.sl ? `${formatNumber(row?.sl, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
-                        <div>TP: <span className='text-green-3 dark:text-teal'>{row?.tp ? `${formatNumber(row?.tp, row?.decimalScalePrice, 0, true)}` : '_'}</span></div>
+                        <div>SL: <span className='text-red-2 dark:text-red'>{item?.sl ? `${formatNumber(item?.sl, item?.decimalScalePrice, 0, true)}` : '_'}</span></div>
+                        <div>TP: <span className='text-green-3 dark:text-teal'>{item?.tp ? `${formatNumber(item?.tp, item?.decimalScalePrice, 0, true)}` : '_'}</span></div>
                     </div>
                 </div>
             ),
@@ -132,13 +132,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: 'PNL (ROE%)',
             align: 'right',
             width: 148,
-            render: (row) => {
-                const isVndc = row?.symbol.indexOf('VNDC') !== -1
+            render: (_row, item) => {
+                const isVndc = item?.symbol?.indexOf('VNDC') !== -1
                 return <OrderProfit
                     className='w-full'
-                    key={row.displaying_id} order={row}
-                    initPairPrice={row.close_price} setShareOrderModal={() => setShareOrder(row)}
-                    decimal={isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2} />
+                    key={item.displaying_id} order={item}
+                    initPairPrice={item.close_price} setShareOrderModal={() => setShareOrder(item)}
+                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2} />
             },
             sortable: false,
         },
@@ -148,7 +148,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:volume'),
             align: 'right',
             width: 148,
-            render: (row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
+            render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {
@@ -157,7 +157,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:open_price'),
             align: 'right',
             width: 148,
-            render: (row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
+            render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {
@@ -166,7 +166,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             title: t('futures:order_table:close_price'),
             align: 'right',
             width: 148,
-            render: (row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
+            render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
             sortable: false,
         },
         {

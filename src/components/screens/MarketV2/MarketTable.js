@@ -127,7 +127,8 @@ const MarketTable = ({
     // Render Handler
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
-            const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null;
+            const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
+            console.log(item.localized)
             return (
                 <div
                     key={item.key}
@@ -256,7 +257,7 @@ const MarketTable = ({
                 case 'last_price':
                     return language === 'vi' ? 'Giá gần nhất' : 'Last Price';
                 case 'change_24h':
-                    return language === 'vi' ? 'Thay đổi 24h' : 'Change 24h';
+                    return language === 'vi' ? 'Biến động 24h' : '24h Change';
                 case 'market_cap':
                     return language === 'vi' ? 'Market Cap' : 'Market Cap';
                 case 'volume_24h':
@@ -659,8 +660,8 @@ const MarketTable = ({
 
 export const tab = [
     {
-        key: 'favorite',
-        localized: null
+        key: 'favorites',
+        localized: 'markets:favourite'
     },
     {
         key: 'exchange',
@@ -869,7 +870,7 @@ const FavActionButton = ({
             }
             if (lang === LANGUAGE_TAG.EN) {
                 title = 'Success';
-                message = method === 'delete' ? `Removed from Favorites` : `Added to Favorites`
+                message = method === 'delete' ? `Removed from favorites` : `Added to favorites`
             }
             toast(
                 { text: message, type: 'success' },
