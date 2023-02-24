@@ -1,21 +1,13 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { ChevronDown, Share2 } from 'react-feather';
-
-import DataTable from 'react-data-table-component';
+import { Share2 } from 'react-feather';
 import fetchApi from 'utils/fetch-api';
-import { API_GET_FUTURES_ORDER, API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
+import { API_GET_FUTURES_ORDER_HISTORY } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
-import Skeletor from 'src/components/common/Skeletor';
-import { formatNumber, formatTime, getLoginUrl, getPriceColor, getS3Url, countDecimals } from 'redux/actions/utils';
-import { getRatioProfit, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
-import FuturesTimeFilter2 from 'components/screens/Futures/TradeRecord/FuturesTimeFilter2';
-import { FilterTradeOrder } from 'components/screens/Futures/FilterTradeOrder';
-import { tableStyle } from 'config/tables';
+import { formatNumber, formatTime, getLoginUrl, getPriceColor, countDecimals } from 'redux/actions/utils';
+import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
-import Adjustmentdetails from 'components/screens/Futures/PlaceOrder/Vndc/Adjustmentdetails';
-import TableNoData from 'components/common/table.old/TableNoData';
 import Link from 'next/link';
 import TableV2 from 'components/common/V2/TableV2'
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
@@ -30,7 +22,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
     const assetConfig = useSelector(state => state.utils.assetConfig);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
     const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [shareOrder, setShareOrder] = useState(null)
     const [resetPage, setResetPage] = useState(false);
     const darkMode = useSelector(state => state.user.theme === 'dark');
@@ -83,7 +75,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         type={item?.type}
                         side={item?.side}
                         specialOrder={specialOrder}
-                        canShare={true}
+                        canShare={item?.reason_close_code !== 5}
                     />
                 )
             },
@@ -134,6 +126,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             width: 148,
             render: (_row, item) => {
                 const isVndc = item?.symbol?.indexOf('VNDC') !== -1
+                if(item.reason_close_code === 5) return "_"
                 return <OrderProfit
                     className='w-full'
                     key={item.displaying_id} order={item}
