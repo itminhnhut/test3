@@ -10,9 +10,10 @@
     "download_app":"Download App"
   },
   "markettrend": {
-    "title": "Market Trend",
-    "top_gainer": "Gainer",
-    "top_loser": "Loser",
+    "title": "Trending",
+    "most_traded":"Top Volume",
+    "top_gainer": "Gainers",
+    "top_loser": "Losers",
     "top_vol": "Hot 24h",
     "new_listing": "New Listing",
     "explore_market": "More"

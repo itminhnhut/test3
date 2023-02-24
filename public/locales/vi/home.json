@@ -10,7 +10,8 @@
         "download_app":"Tải ứng dụng"
     },
     "markettrend": {
-        "title": "Xếp hạng thị trường",
+        "title": "Xu hướng",
+        "most_traded":"Giao dịch nhiều nhất",
         "top_gainer": "Tăng giá",
         "top_loser": "Giảm giá",
         "top_vol": "Hot 24h",

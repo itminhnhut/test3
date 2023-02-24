@@ -27,7 +27,7 @@ const HomeCurrentActivity = () => {
                 <div key={i} className="homepage-activity__slide__item">
                     <div className="homepage-activity__item___wrapper">
                         <div className="homepage-activity__item__inner pr-4">
-                            <AssetLogo assetCode={item.symbol?.toUpperCase()} size={36} />
+                            <AssetLogo useNextImg={true} assetCode={item.symbol?.toUpperCase()} size={36} />
                         </div>
 
                         <div className="homepage-activity__item__inner">

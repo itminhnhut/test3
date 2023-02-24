@@ -17,9 +17,13 @@ import 'rc-pagination/assets/index.css';
 import React from 'react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import { useTranslation } from 'next-i18next';
 
 const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, ...restProps }) => {
     const [currentTheme] = useDarkMode();
+    const {
+        i18n: { language }
+    } = useTranslation();
 
     useEffect(() => {
         name && scrollAfterPageChange(name);
@@ -27,7 +31,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
 
     const Wapper = NamiV2PaginationWrapper;
     if (!_.isEmpty(pagingPrevNext)) {
-        const { language, page, hasNext, onChangeNextPrev } = pagingPrevNext;
+        const { page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
         return (
             <Wapper isDark>

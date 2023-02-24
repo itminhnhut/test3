@@ -15,7 +15,7 @@ import { debounce } from 'lodash';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const CONTAINER_ID = 'nami-tv';
-const CHART_VERSION = '1.0.6';
+const CHART_VERSION = '1.0.9';
 const ChartStatus = {
     NOT_LOADED: 1,
     LOADED: 2,
@@ -546,7 +546,7 @@ export class TVChartContainer extends React.PureComponent {
                     >
                         <Spiner isDark={this.props.theme === 'dark'} />
                     </div>
-                    <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-6 pb-3 px-4 dragHandleArea ${isPro ? 'pl-6' : ''}`}>
+                    <div className={`w-full border-b border-gray-4 dark:border-divider-dark pt-5 pb-3 px-4 ${isPro ? 'pl-6' : ''}`}>
                         {this.state.chartStatus === ChartStatus.LOADED && (
                             <TimeFrame
                                 symbol={this.props.symbol}

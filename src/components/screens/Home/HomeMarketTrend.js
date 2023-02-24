@@ -15,41 +15,24 @@ import classNames from 'classnames';
 const types = [
     {
         id: 'MOST_TRADED',
-        content: {
-            vi: (
-                <div className="flex space-x-2">
-                    <HotIcon />
-                    <div>Giao dịch nhiều</div>
-                </div>
-            ),
-            en: (
-                <div className="flex space-x-2">
-                    <HotIcon />
-                    <div>Most traded</div>
-                </div>
-            )
-        }
+        content: ({ t }) => (
+            <div className="flex space-x-2">
+                <HotIcon />
+                <div>{t('home:markettrend.most_traded')}</div>
+            </div>
+        )
     },
     {
         id: 'NEW_LISTING',
-        content: {
-            vi: 'Mới niêm yết',
-            en: 'New Listing'
-        }
+        content: ({ t }) => t('home:markettrend.new_listing')
     },
     {
         id: 'TOP_GAINER',
-        content: {
-            vi: 'Tăng giá',
-            en: 'Top gainer'
-        }
+        content: ({ t }) => t('home:markettrend.top_gainer')
     },
     {
         id: 'TOP_LOSER',
-        content: {
-            vi: 'Giảm giá',
-            en: 'Top loser'
-        }
+        content: ({ t }) => t('home:markettrend.top_loser')
     }
 ];
 
@@ -64,6 +47,7 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
                 types={types}
                 lang={'vi'}
                 setState={setState}
+                t={t}
             />
             {width >= 992 && (
                 <span className="flex flex-row items-center text-base font-semibold">
@@ -77,7 +61,7 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
     );
 };
 
-const TokenTypes = ({ type, setType, types, lang, width, setState }) => {
+const TokenTypes = ({ type, setType, types, lang, width, setState, t }) => {
     const isMobile = width < 992;
     return (
         <div
@@ -87,32 +71,36 @@ const TokenTypes = ({ type, setType, types, lang, width, setState }) => {
                     : 'flex space-x-3 h-12 font-normal text-sm overflow-auto no-scrollbar haha'
             }
         >
-            {types.map((e, index) => (
-                <div
-                    key={e.id}
-                    className={
-                        isMobile
-                            ? classNames(
-                                  'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                  {
-                                      '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                  }
-                              )
-                            : classNames(
-                                  'h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
-                                  {
-                                      '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
-                                  }
-                              )
-                    }
-                    onClick={() => {
-                        setType(e);
-                        setState({ marketTabIndex: index });
-                    }}
-                >
-                    {e?.content[lang]}
-                </div>
-            ))}
+            {types.map((e, index) => {
+                const Content = e?.content;
+                return (
+                    <div
+                        key={e.id}
+                        className={
+                            isMobile
+                                ? classNames(
+                                      'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                      {
+                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                      }
+                                  )
+                                : classNames(
+                                      'h-full px-4 py-3 text-base rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                      {
+                                          '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': e.id === type
+                                      }
+                                  )
+                        }
+                        onClick={() => {
+                            setType(e);
+                            setState({ marketTabIndex: index });
+                        }}
+                    >
+                        <Content t={t} />
+                        {/* {e?.content[lang]} */}
+                    </div>
+                );
+            })}
         </div>
     );
 };
@@ -193,7 +181,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
                                 <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
                                 </div>
                                 <div className="homepage-markettrend__market_table__coin__pair">
                                     <span>{_?.baseAsset}</span>
@@ -226,7 +214,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         <div className="homepage-markettrend__market_table__row__col1">
                             <div className="homepage-markettrend__market_table__coin">
                                 <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
                                 </div>
                                 <div className="homepage-markettrend__market_table__coin__pair">
                                     <span>{_?.baseAsset}</span>

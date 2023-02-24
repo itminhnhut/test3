@@ -1,15 +1,13 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
-import { getMarketWatch } from 'redux/actions/market';
 import { PulseLoader } from 'react-spinners';
 import { useAsync } from 'react-use';
-import { API_GET_TRENDING, API_GET_OVERVIEW_STATISTIC } from 'redux/actions/apis';
+import { API_GET_OVERVIEW_STATISTIC } from 'redux/actions/apis';
 import colors from 'styles/colors';
 import CountUp from 'react-countup';
 import GradientButton from 'components/common/V2/ButtonV2/GradientButton';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import classNames from 'classnames';
 
 const TrendingSlide = dynamic(() => import('./TrendingSlide'), {
     ssr: false,
@@ -140,11 +138,15 @@ const HomeIntroduce = ({ trendData, t }) => {
                     </div>
                 </div>
                 <div className="homepage-introduce___wrapper__right">
-                    <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className="pointer-events-none h-full" />
+                    <video loop muted autoPlay class="video max-h-[556px]" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
+                        <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
+                    </video>
                 </div>
             </div>
             <div className="homepage-introduce__banner ">
-                <video src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} loop muted autoPlay className={classNames(`pointer-events-none h-full`)} />
+                <video loop muted autoPlay class="video" poster="/images/screen/homepage/banner_graphics_1.png" preload="none">
+                    <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
+                </video>
             </div>
         </section>
     );
