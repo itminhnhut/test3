@@ -67,7 +67,8 @@ const SupportSearchBar = ({ containerClassNames = '', simpleMode = false, resetP
                 onChange={(value) => setSearchKey(value.toString())}
                 onHitEnterButton={(value) => onSearch(value.toString())}
                 placeholder={t('support-center:search_placeholder')}
-                suffix={searchKey?.length ? <CloseIcon size={16} onClick={() => setSearchKey("")} className='cursor-pointer' /> : null}
+                // suffix={searchKey?.length ? <CloseIcon size={16} onClick={() => setSearchKey("")} className='cursor-pointer' /> : null}
+                allowClear
             />
 
             {!simpleMode && (

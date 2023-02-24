@@ -79,8 +79,8 @@ const InputV2 = ({
                 onKeyPress={onHitEnterButton ? handleHitEnterButton : null}
             />
             <div className='flex items-center divide-x divide-divider dark:divide-divider-dark space-x-2'>
-                {allowClear &&
-                    <X className='cursor-pointer' size={16} onClick={handleClear} color={colors.darkBlue5} />}
+                {allowClear && value?.length ?
+                    <X className='cursor-pointer' size={16} onClick={handleClear} color={colors.darkBlue5} /> : null}
                 <div className='pl-2'>{suffix ? suffix : null}</div>
             </div>
             {

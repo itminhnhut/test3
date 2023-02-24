@@ -3,7 +3,6 @@ import { formatNumber, formatTime, getLoginUrl, countDecimals, formatPrice } fro
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
 import { getRatioProfit, renderCellTable, VndcFutureOrderType } from './VndcFutureOrderType';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-
 import { useSelector } from 'react-redux';
 import { API_GET_FUTURES_ORDER } from 'redux/actions/apis';
 import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
@@ -70,9 +69,22 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
+    const [page, setPage] = useState(0)
+    const LIMIT = 10
+    const hasNext = useRef(true)
+
+    useEffect(() => {
+        setPage(0)
+    }, [status])
+
     const dataSource = useMemo(() => {
         const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
-        return filteredData.map((item) => {
+        if (filteredData.length <= ((page + 1) * LIMIT)) {
+            hasNext.current = false
+        } else {
+            hasNext.current = true
+        }
+        return filteredData.slice(page * LIMIT, (page + 1) * LIMIT).map((item) => {
             const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
             const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
             const decimalScalePrice = getDecimalPrice(symbol);
@@ -80,7 +92,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             item['decimalScalePrice'] = decimalScalePrice;
             return item;
         });
-    }, [ordersList, status]);
+    }, [ordersList, status, page]);
 
     const dataFilter = useMemo(() => {
         const items = dataSource.filter((o) => {
@@ -415,7 +427,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: renderBtnCloseAll(),
                 align: 'center',
                 fixed: 'right',
-                width: 160,
+                width: 164,
                 render: (row) => <CloseButton onClick={() => onHandleClick('delete', row)}>{t('common:close')}</CloseButton>
             }
         ],
@@ -634,6 +646,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                         'padding-bottom': '0px !important'
                     }
                 }}
+                pagingPrevNext={{
+                    language,
+                    page: page,
+                    hasNext: hasNext.current,
+                    onChangeNextPrev: (e) => setPage(page + e)
+                }}
             />
         </>
     );
@@ -642,7 +660,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 const CloseButton = ({ children, onClick, disabled = false }) => {
     return (
         <button
-            className="w-[122px] h-[36px] flex items-center justify-center font-semibold text-sm text-txtPrimary dark:text-darkBlue-5 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark bg-gray-13 dark:bg-dark-2 cursor-pointer rounded-md"
+            className="w-full h-[36px] flex items-center justify-center font-semibold text-sm text-txtPrimary dark:text-darkBlue-5 disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark bg-gray-13 dark:bg-dark-2 cursor-pointer rounded-md"
             onClick={onClick}
             disabled={disabled}
         >

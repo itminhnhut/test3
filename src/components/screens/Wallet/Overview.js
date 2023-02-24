@@ -211,7 +211,7 @@ const OverviewWallet = (props) => {
                 break;
             case TRANSFER + EXCHANGE:
                 flag.current = true;
-                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.FUTURES, toWallet: WalletType.SPOT }));
+                dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }));
                 break;
             case 'details_exchange':
                 if (flag.current) {

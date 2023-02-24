@@ -38,7 +38,7 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
                 <div className="w-full flex items-center justify-center select-none gap-8">
                     <TextButton disabled={page === 0} className={`!text-base gap-2`} onClick={() => page !== 0 && onChangeNextPrev(-1)}>
                         <ChevronLeft size={16} />
-                        {language === LANGUAGE_TAG.VI ? 'Trước' : 'Prev'}
+                        {language === LANGUAGE_TAG.VI ? 'Trước đó' : 'Previous'}
                     </TextButton>
                     <TextButton disabled={!hasNext} className={`!text-base gap-2`} onClick={() => hasNext && onChangeNextPrev(+1)}>
                         {language === LANGUAGE_TAG.VI ? 'Kế tiếp' : 'Next'}
