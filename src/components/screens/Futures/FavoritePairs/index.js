@@ -63,7 +63,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
     }, [favoritePairs, refreshMarketWatch]);
 
     return (
-        <div className="h-full flex items-center pr-3">
+        <div className="h-full w-full flex items-center pr-3">
             <div className="flex items-center pl-6 h-full">{dataFilter.isFavorite ? <BxsStarIcon size={16} fill={colors.yellow[2]} /> : <FireIcon />}</div>
             <InfoSlider gutter={18} forceUpdateState={favoritePairLayout?.h} containerClassName="h-full">
                 {loading ? (

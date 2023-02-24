@@ -23,7 +23,7 @@ const getAvailable = createSelector([(state) => state.wallet?.FUTURES, (utils, p
     const _avlb = wallet?.[params.assetId];
     return _avlb ? Math.max(_avlb?.value, 0) - Math.max(_avlb?.locked_value, 0) : 0;
 });
-const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWatch }) => {
+const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWatch, forceFetchOrder }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const { t } = useTranslation();
@@ -58,6 +58,7 @@ const ModifyOrder = ({ isVisible, onClose, order, lastPrice, decimals, marketWat
     const _onConfirm = (msg) => {
         message.current = msg;
         setShowAlert(true);
+        if (forceFetchOrder) forceFetchOrder();
         if (onClose) onClose();
     };
 

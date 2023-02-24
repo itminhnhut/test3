@@ -135,7 +135,7 @@ const FuturesOrderButtonsGroupVndc = ({
             />
             <ModalV2
                 closeButton={!loading}
-                className="max-w-[448px] text-base"
+                className="!max-w-[448px] text-base"
                 isVisible={showModal === 'confirm'}
                 onBackdropCb={() => canBlur.current && setShowModal('')}
             >
