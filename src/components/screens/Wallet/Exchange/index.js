@@ -22,13 +22,10 @@ import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
-import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
-
-// import 'react-contexifpopovery/dist/ReactContexify.css';
 
 const INITIAL_STATE = {
     hideAsset: false,
@@ -478,7 +475,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     return (
         <>
             <MCard
-                addClass={`mt-5 !p-8 rounded-xl 
+                addClass={`mt-5 !p-8 rounded-xl
              ${currentTheme === THEME_MODE.DARK ? ' bg-bgTabInactive-dark border border-divider-dark' : ' bg-white shadow-card_light border-none'}`}
             >
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
@@ -693,7 +690,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
 
     let tradeButton = null;
     const cssLi = `w-full px-4 py-2 flex items-center justify-center cursor-pointer
-    hover:text-txtTabHover dark:hover:text-txtTextBtn-dark 
+    hover:text-txtTabHover dark:hover:text-txtTextBtn-dark
     hover:bg-gray-13 dark:hover:bg-hover-dark
     `;
     const cssPopover = () => {
@@ -745,7 +742,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
             {/* Popover */}
             <ul
                 ref={isShow ? popover : null}
-                className={`py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl 
+                className={`py-2 w-full max-w-[400px] min-w-[136px] z-50 rounded-xl
                 border-[0.5px] border-divider dark:border-divider-dark
                 bg-white dark:bg-listItemSelected-dark
                 text-gray-1 dark:text-txtPrimary-dark text-left text-base font-normal
