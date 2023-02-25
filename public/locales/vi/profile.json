@@ -17,7 +17,7 @@
     "verify_account": "Xác minh tài khoản",
     "avatar_change_btn": "Thêm ảnh đại diện",
     "ref_id": "ID người giới thiệu",
-    "name": "Tên",
+    "name": "Họ tên",
     "username": "Tên đăng nhập",
     "password": "Mật khẩu",
     "set_password_btn": "Đặt mật khẩu",
@@ -83,7 +83,7 @@
         "wait_for_authorize": "Đang xác minh"
     },
     "deposit_banner": {
-        "title": "Nạp tiền ngay, trading thật dễ dàng!",
+        "title": "Nạp tiền ngay, giao dịch thật dễ dàng!",
         "description": "Chọn một trong hai lựa chọn để nạp tiền vào ví Nami Exchange ngay!",
         "transfer": "Nạp tiền mã hoá",
         "transfer_description": "Nạp tiền mã hoá trực tiếp, không tốn phí.",

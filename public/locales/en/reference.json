@@ -47,12 +47,8 @@
             "total_of_traded_friends": "Total Number of Traded Friends",
             "total_of_friends": "Total Numbers of Friends"
         },
-        "friendslist": {
-
-        },
-        "commission": {
-
-        },
+        "friendslist": {},
+        "commission": {},
         "utils": {
             "export_friendslist": "Export Friends List",
             "export_commission_history": "Export Commission History"
@@ -63,7 +59,6 @@
             "commission": "Displays only last 7 days of data."
         }
     },
-
     "global_pagination": {
         "pages": "Pages",
         "of": "of"
