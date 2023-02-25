@@ -10,7 +10,6 @@
     "master_short": "Master",
     "margin_short": "Margin",
     "futures_short": "Futures",
-    "broker_short": "Broker",
     "earn_short": "Earn",
     "onus_short": "Onus",
     "pnl_analytic": "PNL",
@@ -166,7 +165,7 @@
         "apy": "Annual Interest Rate (APY)"
     },
     "futures_overview": "Trading Futures with leverage up to X125. <br/>Transfer funds to your Futures Wallet to start trading.",
-    "partners_overview": "More friends, unlimited profit.",
+    "partners_overview": "Introduce Nami to your friends - Earn unlimited passive income.",
     "staking_overview": "Staking NAMI to receive bonus interest up to 50%/year.",
     "farming_overview": "Farming NAMI and get many potential tokens.",
     "push_order": "Push Order",

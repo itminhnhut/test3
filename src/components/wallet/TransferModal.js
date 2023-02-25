@@ -341,7 +341,7 @@ const TransferModal = ({ isMobile, alert }) => {
                         <span>
                             <PartnersIcon size={20} mode={iconMode} />
                         </span>
-                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('wallet:broker_short')}</span>
+                        <span className={`mx-2 ${isDisable ? 'text-txtDisabled dark:text-txtDisabled-dark' : ''}`}>{t('common:partners')}</span>
                     </div>
                 );
             default:
