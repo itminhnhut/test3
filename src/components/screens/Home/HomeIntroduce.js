@@ -145,13 +145,22 @@ const HomeIntroduce = ({ trendData, t }) => {
                         class="video pointer-events-none max-h-[556px]"
                         poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
                         preload="none"
+                        playsInline
                     >
                         <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
                     </video>
                 </div>
             </div>
             <div className="homepage-introduce__banner ">
-                <video loop muted autoPlay class="video pointer-events-none" poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')} preload="none">
+                <video
+                    playsInline
+                    loop
+                    muted
+                    autoPlay
+                    class="video pointer-events-none"
+                    poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
+                    preload="none"
+                >
                     <source src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} type="video/mp4" />
                 </video>
             </div>
