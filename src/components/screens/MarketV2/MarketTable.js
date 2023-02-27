@@ -128,7 +128,6 @@ const MarketTable = ({
     const renderTab = useCallback(() => {
         return tab.map((item, index) => {
             const label = restProps?.tabLabelCount ? restProps.tabLabelCount?.[item.key] : null
-            console.log(item.localized)
             return (
                 <div
                     key={item.key}
@@ -550,6 +549,8 @@ const MarketTable = ({
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
+    console.log('tab[restProps.tabIndex]?.key', tab[restProps.tabIndex]?.key, restProps.auth, tab[restProps.tabIndex]?.key === 'favorite')
+
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
             <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
@@ -570,9 +571,9 @@ const MarketTable = ({
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
-                            // suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
-                            //     search: ''
-                            // })} />) : null}
+                        // suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
+                        //     search: ''
+                        // })} />) : null}
                         />
                     </div>
                 </div>
@@ -582,73 +583,74 @@ const MarketTable = ({
                     className="mt-[20px] flex items-center overflow-auto sm:px-8 border-b-[1px] border-divider dark:border-divider-dark">
                     {renderTab()}
                 </div>
-                {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ? <div className={classNames(
-                    'py-8 sm:py-6 border-divider dark:border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
-                    { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
-                }>
-                    {tab[restProps.tabIndex]?.key === 'favorite' ?
-                        <TokenTypes type={restProps.favType} setType={(index) => {
-                            parentState({ favType: index });
-                        }} types={[{
-                            id: 0,
-                            content: {
-                                vi: 'Exchange',
-                                en: 'Exchange'
-                            }
-                        }, {
-                            id: 1,
-                            content: {
-                                vi: 'Futures',
-                                en: 'Futures'
-                            }
-                        }]} lang={language} />
-                        :
-                        isMobile ?
-                            <div className='space-y-4 w-full'>
+                {restProps.auth || tab[restProps.tabIndex]?.key !== 'favorite' ?
+                    <div className={classNames(
+                        'py-8 sm:py-6 border-divider dark:border-divider-dark flex items-center sm:px-8 justify-between flex-wrap',
+                        { 'sm:border-b-[1px]': tab[restProps.tabIndex]?.key !== 'favorite' })
+                    }>
+                        {tab[restProps.tabIndex]?.key === 'favorite' ?
+                            <TokenTypes type={restProps.favType} setType={(index) => {
+                                parentState({ favType: index });
+                            }} types={[{
+                                id: 0,
+                                content: {
+                                    vi: 'Exchange',
+                                    en: 'Exchange'
+                                }
+                            }, {
+                                id: 1,
+                                content: {
+                                    vi: 'Futures',
+                                    en: 'Futures'
+                                }
+                            }]} lang={language} />
+                            :
+                            isMobile ?
+                                <div className='space-y-4 w-full'>
+                                    <TokenTypes type={type} setType={(index) => {
+                                        parentState({
+                                            type: index
+                                        })
+                                    }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
+                                    <TokenTypes type={type} setType={(index) => {
+                                        parentState({
+                                            type: index
+                                        })
+                                    }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
+                                </div>
+                                :
                                 <TokenTypes type={type} setType={(index) => {
                                     parentState({
                                         type: index
                                     })
-                                }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
-                                <TokenTypes type={type} setType={(index) => {
-                                    parentState({
-                                        type: index
+                                }} types={types} lang={language} />}
+
+                        {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
+                            <div
+                                className={classNames("h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer", {
+                                    'w-[164px]': language === 'vi',
+                                    'w-[124px]': language !== 'vi'
+                                })}
+                                onClick={async () => {
+                                    if (isLoading) return
+                                    await addTokensToFav({
+                                        symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
+                                        lang: language,
+                                        mode: restProps?.favType + 1,
+                                        favoriteRefresher: restProps.favoriteRefresher,
+                                        setIsLoading: setIsLoading
                                     })
-                                }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
+                                }}
+                            >
+                                {isLoading ? <Spinner size={24} /> : {
+                                    en: 'Select all',
+                                    vi: 'Chọn tất cả'
+                                }[language]}
                             </div>
                             :
-                            <TokenTypes type={type} setType={(index) => {
-                                parentState({
-                                    type: index
-                                })
-                            }} types={types} lang={language} />}
+                            null}
 
-                    {tab[restProps.tabIndex]?.key === 'favorite' && !data?.length ?
-                        <div
-                            className={classNames("h-10 px-4 sm:h-12 sm:px-6 hidden sm:flex justify-center items-center bg-teal rounded-md text-white text-base font-medium cursor-pointer", {
-                                'w-[164px]': language === 'vi',
-                                'w-[124px]': language !== 'vi'
-                            })}
-                            onClick={async () => {
-                                if (isLoading) return
-                                await addTokensToFav({
-                                    symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
-                                    lang: language,
-                                    mode: restProps?.favType + 1,
-                                    favoriteRefresher: restProps.favoriteRefresher,
-                                    setIsLoading: setIsLoading
-                                })
-                            }}
-                        >
-                            {isLoading ? <Spinner size={24} /> : {
-                                en: 'Select all',
-                                vi: 'Chọn tất cả'
-                            }[language]}
-                        </div>
-                        :
-                        null}
-
-                </div> : null}
+                    </div> : null}
                 {renderTable()}
                 <div className="sm:px-8">
                     {renderPagination()}
@@ -660,7 +662,7 @@ const MarketTable = ({
 
 export const tab = [
     {
-        key: 'favorites',
+        key: 'favorite',
         localized: 'markets:favourite'
     },
     {

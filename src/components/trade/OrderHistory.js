@@ -100,7 +100,7 @@ const OrderHistory = (props) => {
                                 setStatus(rs.value);
                                 popover.current?.close();
                             }}
-                            className={`px-4 py-2 dark:hover:bg-hover-dark ${status === rs.value ? 'text-white font-semibold' : ''}`}
+                            className={`hover:bg-gray-13 px-4 py-2 dark:hover:bg-hover-dark ${status === rs.value ? 'text-txtPrimary dark:text-white font-semibold' : ''}`}
                         >
                             {rs.label}
                         </div>
@@ -202,13 +202,13 @@ const OrderHistory = (props) => {
                     switch (v) {
                         case ExchangeOrderEnum.Status.CANCELED:
                             return (
-                                <span className="text-sm font-medium text-txtSecondary bg-divider-dark/[0.5] dark:text-txtSecondary-dark inline-block py-1 px-4 rounded-full">
+                                <span className="text-sm text-txtSecondary bg-gray-11 dark:bg-divider-dark/[0.5] dark:text-txtSecondary-dark inline-block py-1 px-4 rounded-full">
                                     {t('common:canceled')}
                                 </span>
                             );
                         case ExchangeOrderEnum.Status.FILLED:
                             return (
-                                <span className="text-sm font-medium text-teal bg-teal/[0.1] rounded-full inline-block py-1 px-4">{t('common:filled')}</span>
+                                <span className="text-sm text-teal bg-teal/[0.1] rounded-full inline-block py-1 px-4">{t('common:filled')}</span>
                             );
                         default:
                             return null;

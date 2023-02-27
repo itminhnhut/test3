@@ -56,12 +56,12 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             render: (_row, item) => {
                 let specialOrder
                 if (item?.metadata?.dca_order_metadata) {
-                    if (!item?.meta_data?.dca_order_metadata?.is_main_order) {
+                    if (!item?.metadata?.dca_order_metadata?.is_main_order) {
                         specialOrder = t('futures:mobile:adjust_margin:added_volume')
                     }
                 }
                 if (item?.metadata?.partial_close_metadata) {
-                    if (!item?.meta_data?.partial_close_metadata?.is_main_order) {
+                    if (!item?.metadata?.partial_close_metadata?.is_main_order) {
                         specialOrder = t('futures:mobile:adjust_margin:close_partially')
                     }
                 }
@@ -75,7 +75,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         type={item?.type}
                         side={item?.side}
                         specialOrder={specialOrder}
-                        canShare={item?.reason_close_code !== 5}
+                        canShare={item?.reason_close_code !== 5 && item?.profit}
                     />
                 )
             },
@@ -126,12 +126,15 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             width: 148,
             render: (_row, item) => {
                 const isVndc = item?.symbol?.indexOf('VNDC') !== -1
-                if(item.reason_close_code === 5) return "_"
+                if (item.reason_close_code === 5) return "_"
                 return <OrderProfit
                     className='w-full'
                     key={item.displaying_id} order={item}
-                    initPairPrice={item.close_price} setShareOrderModal={() => setShareOrder(item)}
-                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2} />
+                    initPairPrice={item.close_price}
+                    setShareOrderModal={() => setShareOrder(item)}
+                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2}
+                    isTabHistory
+                />
             },
             sortable: false,
         },
