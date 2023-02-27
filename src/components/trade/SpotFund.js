@@ -1,10 +1,13 @@
 import AssetLogo from 'src/components/wallet/AssetLogo';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import AuthSelector from 'redux/selectors/authSelectors';
-import { formatNumber } from 'src/redux/actions/utils';
-import TableV2 from '../common/V2/TableV2';
+import { formatNumber, walletLinkBuilder, setTransferModal } from 'src/redux/actions/utils';
+import TableV2 from 'components/common/V2/TableV2';
+import { WalletType } from 'redux/actions/const';
+import { EXCHANGE_ACTION } from 'pages/wallet';
+import router from 'next/router';
 
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -14,7 +17,7 @@ const TradeHistory = (props) => {
     const spotWallet = useSelector((state) => state?.wallet?.SPOT) || null;
     const [wallet, setWallet] = useState([]);
     const [loading, setLoading] = useState(false);
-    const isAuth = useSelector(AuthSelector.isAuthSelector);
+    const dispatch = useDispatch();
 
     const { currentPair, filterByCurrentPair, isPro } = props;
 
@@ -35,13 +38,59 @@ const TradeHistory = (props) => {
         }
     }, [spotWallet, assetConfig]);
 
-    const renderActions = () => {
+    const handleKycRequest = (key, assetCode) => {
+        let href = '';
+        switch (key) {
+            case 'buy':
+                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                    type: 'crypto',
+                    asset: assetCode
+                });
+                break;
+            case 'deposit':
+                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                    type: 'crypto',
+                    asset: assetCode
+                });
+                break;
+            case 'withdraw':
+                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
+                    type: 'crypto',
+                    asset: assetCode
+                });
+                break;
+            case 'convert':
+                dispatch(
+                    setTransferModal({
+                        isVisible: true,
+                        fromWallet: WalletType.SPOT,
+                        toWallet: WalletType.FUTURES,
+                        asset: assetCode
+                    })
+                );
+                return;
+            default:
+                break;
+        }
+        router.push(href);
+    };
+
+    const renderActions = (row) => {
+        const assetCode = row?.assetCode;
         return (
-            <div className={`flex items-center text-teal divide-x divide-divider dark:divide-divider-dark font-semibold`}>
-                <span className="cursor-pointer pr-3">Mua</span>
-                <span className="cursor-pointer px-3">Nạp</span>
-                <span className="cursor-pointer px-3">Rút</span>
-                <span className="cursor-pointer pl-3">Chuyển đổi</span>
+            <div className={`flex items-center text-teal divide-x divide-divider dark:divide-divider-dark font-semibold whitespace-nowrap`}>
+                <span onClick={() => handleKycRequest('buy', assetCode)} className="cursor-pointer pr-3">
+                    {t('common:buy')}
+                </span>
+                <span onClick={() => handleKycRequest('deposit', assetCode)} className="cursor-pointer px-3">
+                    {t('common:deposit')}
+                </span>
+                <span onClick={() => handleKycRequest('withdraw', assetCode)} className="cursor-pointer px-3">
+                    {t('common:withdraw')}
+                </span>
+                <span onClick={() => handleKycRequest('convert', assetCode)} className="cursor-pointer pl-3">
+                    {t('common:convert')}
+                </span>
             </div>
         );
     };
@@ -97,13 +146,13 @@ const TradeHistory = (props) => {
                 render: (v) => formatNumber(Math.max(v, 0))
             },
             {
-                title: 'Tác vụ',
-                width: isPro ? 300 : 150,
+                title: t('common:others'),
+                width: isPro ? 300 : 200,
                 align: 'left',
                 fixed: 'right',
                 preventSort: true,
                 visible: dataFilter.length > 0,
-                render: (v) => renderActions()
+                render: (v, row) => renderActions(row)
             }
         ],
         [exchangeConfig, isPro, dataFilter]

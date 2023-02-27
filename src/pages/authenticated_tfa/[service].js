@@ -1,7 +1,7 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import 'react-input-range/lib/css/index.css';
 import OtpModal from 'components/common/OtpModal';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import axios from 'axios';
 import { API_AUTH_USER_OTP } from 'redux/actions/apis';
@@ -14,29 +14,42 @@ import useWindowSize from 'hooks/useWindowSize';
 import useDarkMode from 'hooks/useDarkMode';
 import toast from 'utils/toast';
 import { ToastContainer } from 'react-toastify';
+import useLanguage from 'hooks/useLanguage';
+import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const INITIAL_STATE = {
     redirectTo: null,
     value: null,
     message: null
 };
-const ExternalWithdrawal = (props) => {
+const ExternalWithdrawal = ({ theme, language }) => {
     const router = useRouter();
     const {
         t,
-        i18n: { language },
+        i18n: { language: currentLanguage },
     } = useTranslation()
-
-    const [, , setTheme] = useDarkMode()
+    const [languageInitLoading, setLanguageInitLoading] = useState(true)
+    const [, onChangeLang] = useLanguage();
+    const [currentTheme, , setTheme] = useDarkMode()
     const [loading, setLoading] = useState(false)
     const { width } = useWindowSize()
     const {
         service,
-        theme
     } = router.query;
+
     useEffect(() => {
-        setTheme(theme ? theme : 'dark')
-    }, [theme])
+        setTheme(theme ?? 'dark')
+    }, [])
+
+    useEffect(() => {
+        if (language !== currentLanguage) onChangeLang(language)
+    }, [])
+
+    useEffect(() => {
+        const initLanguageTimeout = setTimeout(() => setLanguageInitLoading(false), 1500)
+        return () => clearTimeout(initLanguageTimeout)
+    }, [])
+
     const [state, set] = useState(INITIAL_STATE);
     const setState = state => set(prevState => ({ ...prevState, ...state }));
     const doLoginWithOtp = async (otp) => {
@@ -116,6 +129,7 @@ const ExternalWithdrawal = (props) => {
         }
     };
 
+    if (languageInitLoading) return <div className='w-screen h-screen flex justify-center items-center'><Spiner isDark={theme === 'dark'} /></div>
     return (
         <>
             <ToastContainer
@@ -123,7 +137,7 @@ const ExternalWithdrawal = (props) => {
                 autoClose={5000}
                 hideProgressBar
                 closeButton={false}
-                theme={theme}
+                theme={currentTheme}
                 className='nami-toast'
                 preventDuplicates
             />
@@ -132,14 +146,16 @@ const ExternalWithdrawal = (props) => {
                     <div id={`${PORTAL_MODAL_ID}`} />
                     <OtpModal
                         label={t('common:otp_verify')}
-                        isVisible={true} placeholder={'-'} 
-                        value={state?.value} 
+                        isVisible
+                        placeholder={'-'}
+                        value={state?.value}
                         onChange={onChange}
                         renderUpper={() => <div className="font-bold text-xl sm:text-[22px] sm:leading-[30px]"> {t('common:tfa_authentication')}</div>}
                         isMobile={width < 640}
                         loading={loading}
                         isError={state?.message?.length}
                         router={router}
+                        language={language}
                     />
                 </div>
             </div>
@@ -149,23 +165,20 @@ const ExternalWithdrawal = (props) => {
     );
 };
 
-export const getStaticProps = async ({ locale }) => ({
-    props: {
-        ...(await serverSideTranslations(locale, [
-            'common',
-            'navbar',
-            'modal',
-        ])),
-    },
-});
-
-export async function getStaticPaths() {
+export const getServerSideProps = async ({ locale, params, query }) => {
     return {
-        paths: [
-            { params: { service: 'nami' } },
-        ],
-        fallback: true,
-    };
-}
+        props: {
+            ...(await serverSideTranslations(locale, [
+                'common',
+                'navbar',
+                'modal',
+            ])),
+            theme: query?.theme || 'light',
+            language: query?.language || 'vi',
+            params: params
+        },
+    }
+};
+
 
 export default ExternalWithdrawal;

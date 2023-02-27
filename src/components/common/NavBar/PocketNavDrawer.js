@@ -161,7 +161,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
             <Div100vh className={`mal-pocket-navbar__drawer ${isActive ? 'mal-pocket-navbar__drawer__active' : ''}`}>
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
                     <div className="absolute right-4">
-                        <X style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose} />
+                        <X style={{ cursor: 'pointer' }} onClick={onClose} />
                     </div>
 
                     {!auth ? (
@@ -239,7 +239,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 onClick={themeToggle}
                             >
                                 <div className="flex flex-row items-center">{t('navbar:menu.mode')}</div>
-                                <div>{currentTheme !== 'dark' ? <SvgIcon name="sun" size={18} /> : <SvgIcon name="moon" size={18} />}</div>
+                                <div>{currentTheme !== 'dark' ? <SvgIcon name="sun" size={24} /> : <SvgIcon name="moon" size={24} />}</div>
                             </a>
                         )}
                         <a

@@ -55,7 +55,6 @@ const News = ({ data, lang }) => {
                             <Image
                                 src={img}
                                 alt={title}
-                                // layout="fill"
                                 width={280}
                                 height={146}
                             />

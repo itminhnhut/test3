@@ -82,7 +82,6 @@ const DepositWithdrawFee = () => {
                 fixed: 'left',
                 align: 'left',
                 preventSort: true
-
             },
             // {
             //     key: 'fullName',
@@ -184,7 +183,7 @@ const DepositWithdrawFee = () => {
         }
 
         if (!data?.length) {
-            tableStatus = <NoResult text={t('common:no_results_found')} /> //<Empty />;
+            tableStatus = <NoResult text={t('common:no_results_found')} />; //<Empty />;
         }
 
         return (
@@ -221,7 +220,7 @@ const DepositWithdrawFee = () => {
                         current: state.currentPage,
                         pageSize: ROW_LIMIT,
                         onChange: (currentPage) => {
-                            window.document.getElementById('#deposit_withdraw_table').scrollIntoView({
+                            window.document.getElementById('deposit_withdraw_table').scrollIntoView({
                                 behavior: 'smooth'
                             });
 
@@ -275,13 +274,13 @@ const DepositWithdrawFee = () => {
     }, []);
 
     return (
-        <div className="mt-10 lg:mt-20">
-            <div className="text-[20px] lg:text-[2rem] leading-8 font-semibold">{t('fee-structure:depwdl_fee')}</div>
-            <div className="lg:mt-3 mt-4  text-sm lg:text-base text-txtSecondary dark:text-txtSecondary-dark">{renderNotes()}</div>
+        <div className="mt-10 md:mt-20">
+            <div className="text-[20px] md:text-[2rem] leading-8 font-semibold">{t('fee-structure:depwdl_fee')}</div>
+            <div className="md:mt-3 mt-4  text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark">{renderNotes()}</div>
 
-            <div className="w-full lg:max-w-[23rem] mt-7 lg:mt-20">{renderSearchBox()}</div>
-            {width > BREAK_POINTS.lg ? (
-                <div id="#deposit_withdraw_table" className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">
+            <div className="w-full md:max-w-[23rem] mt-7 lg:mt-20">{renderSearchBox()}</div>
+            {width > BREAK_POINTS.md ? (
+                <div id="deposit_withdraw_table" className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">
                     {renderTable()}
                 </div>
             ) : (
@@ -308,4 +307,4 @@ export const getStaticProps = async ({ locale }) => ({
     }
 });
 
-export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE, containerClassname: 'lg:pt-20 fee-schedule ' })(DepositWithdrawFee);
+export default withTabLayout({ routes: TAB_ROUTES.FEE_STRUCTURE, containerClassname: 'px-4 md:pt-20 fee-schedule ' })(DepositWithdrawFee);

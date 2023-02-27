@@ -6,7 +6,8 @@ import useApp from 'hooks/useApp';
 import { useSelector } from 'react-redux';
 import { getS3Url } from 'redux/actions/utils';
 import SocialsLink from './SocialsLink';
-import useDarkMode,{THEME_MODE} from 'hooks/useDarkMode';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
 
 import LanguageSelect from './LanguageSelect';
 import { useTranslation } from 'next-i18next';
@@ -34,9 +35,13 @@ const Footer = memo(() => {
             <div className="px-4">
                 <div className="flex justify-between items-center mb-8">
                     <div className="">
-                        <img 
-                        // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`} width="113" alt="Nami Exchange" />
+                        <Image
+                            // src={getS3Url('/images/logo/nami-logo-v2.png')}
+                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            width={113}
+                            height={36}
+                            alt="Nami Exchange"
+                        />
                     </div>
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
@@ -54,10 +59,11 @@ const Footer = memo(() => {
                 <div className="flex justify-between items-center mb-6">
                     <div className="">
                         {/*  */}
-                        <img
+                        <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
                             src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
-                            width="251"
+                            width={251}
+                            height={80}
                             alt="Nami Exchange"
                         />
                     </div>

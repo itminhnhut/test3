@@ -46,14 +46,14 @@ const INITIAL_STATE = {
 const TradingFee = () => {
     // Init state
     const [state, set] = useState(INITIAL_STATE);
-    const setState = state => set(prevState => ({ ...prevState, ...state }));
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     // Rdx
-    const namiWallets = useSelector(state => state.wallet?.SPOT)?.['1'];
-    const allAssetConfigs = useSelector(state => state.utils?.assetConfig) || null;
+    const namiWallets = useSelector((state) => state.wallet?.SPOT)?.['1'];
+    const allAssetConfigs = useSelector((state) => state.utils?.assetConfig) || null;
 
     const assetConfig = useMemo(() => {
-        return allAssetConfigs?.find(item => item?.id === 1);
+        return allAssetConfigs?.find((item) => item?.id === 1);
     }, [allAssetConfigs]);
 
     // Use hooks
@@ -137,36 +137,43 @@ const TradingFee = () => {
 
     // Render Handler
     const renderNamiAvailable = useCallback(() => {
-        if (!namiWallets) return <span className='ml-1.5'><Skeletor width={105} /></span>;
+        if (!namiWallets)
+            return (
+                <span className="ml-1.5">
+                    <Skeletor width={105} />
+                </span>
+            );
 
         const available = namiWallets?.value - namiWallets?.locked_value;
-        return (
-            <span className='whitespace-nowrap ml-1.5'>
-                {available ? formatNumber(available, assetConfig?.assetDigit) : '0.0000'} NAMI
-            </span>
-        );
+        return <span className="whitespace-nowrap ml-1.5">{available ? formatNumber(available, assetConfig?.assetDigit) : '0.0000'} NAMI</span>;
     }, [namiWallets, assetConfig]);
 
     const renderUseAssetAsFeeBtn = useCallback(() => {
         const nextAssetFee = state.assetFee?.feeCurrency === 1 ? 0 : 1;
-        return <SwitchV2
-            disabled={state.loadingAssetFee}
-            checked={!!state.assetFee?.feeCurrency}
-            onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
-        />;
+        return (
+            <SwitchV2
+                disabled={state.loadingAssetFee}
+                checked={!!state.assetFee?.feeCurrency}
+                onChange={() => !state.loadingAssetFee && onUseAssetAsFee('set', nextAssetFee)}
+            />
+        );
     }, [state.assetFee, state.loadingAssetFee]);
 
     const renderFeeTab = useCallback(() => {
-        return <Tabs tab={state.tabIndex} className='space-x-6'>
-            {
-                TRADING_FEE_TAB.map(tab => <TabItem
-                    key={`trading_fee_Tab__${tab.dataIndex}`}
-                    value={tab.index}
-                    className='!text-left !px-0'
-                    onClick={() => setState({ tabIndex: tab.index })}
-                >{tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}</TabItem>)
-            }
-        </Tabs>;
+        return (
+            <Tabs tab={state.tabIndex} className="space-x-6">
+                {TRADING_FEE_TAB.map((tab) => (
+                    <TabItem
+                        key={`trading_fee_Tab__${tab.dataIndex}`}
+                        value={tab.index}
+                        className="!text-left !px-0"
+                        onClick={() => setState({ tabIndex: tab.index })}
+                    >
+                        {tab.localized ? t(tab.localized, { action: 'Exchange' }) : tab.title}
+                    </TabItem>
+                ))}
+            </Tabs>
+        );
     }, [state.tabIndex, TRADING_FEE_TAB]);
 
     const renderFuturesTableFee = useCallback(() => {
@@ -186,33 +193,41 @@ const TradingFee = () => {
                 dataIndex: 'max_leverage',
                 title: t('common:max_leverage'),
                 width: 100,
-                align: 'left'
+                align: 'right'
             },
             {
                 key: 'fee',
                 dataIndex: 'fee',
-                title: <span> {t('common:fee')}
-                    <span className='ml-1'>
-                        ({t('common:open')}/{t('common:close')})
+                title: (
+                    <span>
+                        {' '}
+                        {t('common:fee')}
+                        <span className="ml-1">
+                            ({t('common:open')}/{t('common:close')})
+                        </span>
                     </span>
-                </span>,
+                ),
                 width: 100,
-                align: 'left'
+                align: 'right'
             },
             {
                 key: 'fee_promote',
                 dataIndex: 'fee_promote',
-                title: <span> {t('common:fee')} NAMI
-                    <span className='ml-1'>
-                        ({t('common:open')}/{t('common:close')})
+                title: (
+                    <span>
+                        {' '}
+                        {t('common:fee')} NAMI
+                        <span className="ml-1">
+                            ({t('common:open')}/{t('common:close')})
+                        </span>
                     </span>
-                </span>,
+                ),
                 width: 100,
-                align: 'left'
+                align: 'right'
             }
         ];
 
-        const dataFilter = state.futuresFeeConfig?.filter(e => {
+        const dataFilter = state.futuresFeeConfig?.filter((e) => {
             const quote = e?.name.substring(e?.name?.length - 4);
             if (state.tabIndex === 1) {
                 return quote === 'USDT';
@@ -240,7 +255,7 @@ const TradingFee = () => {
                 useRowHover
                 data={data}
                 columns={columns}
-                rowKey={item => item?.key}
+                rowKey={(item) => item?.key}
                 tableStatus={tableStatus}
                 scroll={{ x: true }}
                 tableStyle={{
@@ -257,18 +272,17 @@ const TradingFee = () => {
                 paginationProps={{
                     current: state.currentFuturesFeePage,
                     pageSize: 10,
-                    onChange: (currentFuturesFeePage) => setState({ currentFuturesFeePage })
+                    onChange: (currentFuturesFeePage) => {
+                        window.document.getElementById('trading_fee').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        setState({ currentFuturesFeePage });
+                    }
                 }}
                 isNamiV2
             />
         );
-
-    }, [
-        state.tabIndex,
-        state.loadingFuturesFeeConfigs,
-        state.currentFuturesFeePage,
-        width
-    ]);
+    }, [state.tabIndex, state.loadingFuturesFeeConfigs, state.currentFuturesFeePage, width]);
 
     const renderExchangeTableFee = useCallback(() => {
         const columns = [
@@ -287,27 +301,33 @@ const TradingFee = () => {
                 dataIndex: 'nami_holding',
                 title: 'NAMI',
                 width: 100,
-                align: 'left'
+                align: 'right'
             },
             {
                 key: 'maker_taker',
                 dataIndex: 'maker_taker',
                 title: 'Maker/Taker',
                 width: 100,
-                align: 'left'
+                align: 'right'
             },
             {
                 key: 'maker_taker_deducted',
                 dataIndex: 'maker_taker_deducted',
-                title: <span>
-                    Maker/Taker
-                    <span className='ml-1 text-dominant'>({t('fee-structure:use_asset_deduction', {
-                        value: '25%',
-                        asset: 'NAMI'
-                    })})</span>
-                </span>,
+                title: (
+                    <span>
+                        Maker/Taker
+                        <span className="ml-1 text-dominant">
+                            (
+                            {t('fee-structure:use_asset_deduction', {
+                                value: '25%',
+                                asset: 'NAMI'
+                            })}
+                            )
+                        </span>
+                    </span>
+                ),
                 width: 100,
-                align: 'left'
+                align: 'right'
             }
         ];
         const data = dataHandler({
@@ -322,7 +342,7 @@ const TradingFee = () => {
                 useRowHover
                 data={data}
                 columns={columns}
-                rowKey={item => item?.key}
+                rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStyle={{
                     paddingHorizontal: width >= 768 ? '2rem' : '0.75rem',
@@ -342,7 +362,11 @@ const TradingFee = () => {
 
     const renderExchangeDeduction = useCallback(() => {
         if (!state.assetFee && state.loadingAssetFee) {
-            return <><Skeletor width={150} height={16} /></>;
+            return (
+                <>
+                    <Skeletor width={150} height={16} />
+                </>
+            );
         }
 
         const promote = state.promoteFee?.exchange;
@@ -352,22 +376,27 @@ const TradingFee = () => {
         }
 
         return (
-            <div className='flex flex-wrap items-center'>
-                {language === LANGUAGE_TAG.VI ?
+            <div className="flex flex-wrap items-center">
+                {language === LANGUAGE_TAG.VI ? (
                     <>
-                        Dùng NAMI để được giảm phí <span
-                        className='ml-1 whitespace-nowrap text-teal'>(chiết khấu {promote * 100}%)</span>
+                        Dùng NAMI để được giảm phí <span className="ml-1 whitespace-nowrap text-teal">(chiết khấu {promote * 100}%)</span>
                     </>
-                    : <>
-                        Using NAMI deduction <span className='ml-1 whitespace-nowrap text-teal'>({promote * 100}% discount)</span>
-                    </>}
+                ) : (
+                    <>
+                        Using NAMI deduction <span className="ml-1 whitespace-nowrap text-teal">({promote * 100}% discount)</span>
+                    </>
+                )}
             </div>
         );
     }, [state.promoteFee?.exchange, state.loadingAssetFee, state.assetFee, language]);
 
     const renderFuturesDeduction = useCallback(() => {
         if (!state.assetFee && state.loadingAssetFee) {
-            return <><Skeletor width={150} height={16} /></>;
+            return (
+                <>
+                    <Skeletor width={150} height={16} />
+                </>
+            );
         }
 
         const promote = state.promoteFee?.futures;
@@ -377,37 +406,41 @@ const TradingFee = () => {
         }
 
         return (
-            <div className='flex flex-wrap items-center'>
-                {language === LANGUAGE_TAG.VI ?
+            <div className="flex flex-wrap items-center">
+                {language === LANGUAGE_TAG.VI ? (
                     <>
-                        Dùng NAMI để được giảm phí <span
-                        className='ml-1 text-teal whitespace-nowrap'>(chiết khấu {promote * 100}%)</span>
+                        Dùng NAMI để được giảm phí <span className="ml-1 text-teal whitespace-nowrap">(chiết khấu {promote * 100}%)</span>
                     </>
-                    : <>
-                        Using NAMI deduction <span className='ml-1 text-teal whitespace-nowrap'>({promote * 100}% discount)</span>
-                    </>}
+                ) : (
+                    <>
+                        Using NAMI deduction <span className="ml-1 text-teal whitespace-nowrap">({promote * 100}% discount)</span>
+                    </>
+                )}
             </div>
         );
     }, [state.promoteFee?.futures, state.loadingAssetFee, state.assetFee, language]);
 
     const renderUsedNamiMsg = useCallback(() => {
         // if (state.assetFee?.feeCurrency !== 1) return null;
-        return <div
-            className='mt-6 text-teal'>(*) {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>;
+        return <div className="mt-6 text-teal">(*) {t('fee-structure:used_fee_deduction', { token: `${ROOT_TOKEN} tokens` })}</div>;
     }, [state.assetFee?.feeCurrency]);
 
-    const renderUserFeeConfig = useCallback((maker, taker) => {
-        return state.assetFee?.feeCurrency === 1 ?
-            (<>
-                <span className='mr-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark'>{maker}%</span>
-                <span>{taker}%</span>
-            </>)
-            :
-            (<>
-                <span>{maker}%</span>
-                <span className='ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark'>{taker}%</span>
-            </>);
-    }, [state.assetFee?.feeCurrency]);
+    const renderUserFeeConfig = useCallback(
+        (maker, taker) => {
+            return state.assetFee?.feeCurrency === 1 ? (
+                <>
+                    <span className="mr-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{maker}%</span>
+                    <span>{taker}%</span>
+                </>
+            ) : (
+                <>
+                    <span>{maker}%</span>
+                    <span className="ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{taker}%</span>
+                </>
+            );
+        },
+        [state.assetFee?.feeCurrency]
+    );
 
     useEffect(() => {
         getVip();
@@ -420,17 +453,21 @@ const TradingFee = () => {
 
     // useEffect(() => console.log('namidev-DEBUG: FEE STATE ', state), [state])
 
-    const buyNami = namiWallets && <Link href={PATHS.EXCHANGE.SWAP.getSwapPair({
-        fromAsset: 'VNDC',
-        toAsset: 'NAMI'
-    })}>
-        <a className='text-teal font-semibold whitespace-nowrap hover:!underline ml-4 mt-0'>{t('common:buy')} NAMI</a>
-    </Link>;
+    const buyNami = namiWallets && (
+        <Link
+            href={PATHS.EXCHANGE.SWAP.getSwapPair({
+                fromAsset: 'VNDC',
+                toAsset: 'NAMI'
+            })}
+        >
+            <a className="text-teal font-semibold whitespace-nowrap hover:!underline ml-4 mt-0">{t('common:buy')} NAMI</a>
+        </Link>
+    );
 
     return (
         <>
             <div
-                className='md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm'
+                className="md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm"
                 style={{
                     backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
                     backgroundSize: 'cover',
@@ -438,146 +475,147 @@ const TradingFee = () => {
                     backgroundPosition: 'center'
                 }}
             >
-                <span className='text-xl font-semibold'>
-                {t('fee-structure:your_fee_level')} <span className='text-teal'>VIP {state.vipLevel || 0}</span>
+                <span className="text-xl font-semibold">
+                    {t('fee-structure:your_fee_level')} <span className="text-teal">VIP {state.vipLevel || 0}</span>
                 </span>
 
-                <div className='whitespace-nowrap mt-3'>
-                    <span
-                        className='text-txtSecondary dark:text-txtSecondary-dark'>{t('common:available_balance')}: </span>
-                    <span className='font-semibold'>{renderNamiAvailable()}</span>
+                <div className="whitespace-nowrap mt-3">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>
+                    <span className="font-semibold">{renderNamiAvailable()}</span>
                     {buyNami}
                 </div>
 
-                <Link
-                    href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                    <ButtonV2 className='absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto'><span
-                        className='mr-2'>{t('fee-structure:vip_upgrade')}</span><Crown /></ButtonV2>
+                <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                    <ButtonV2 className="absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto">
+                        <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
+                        <Crown />
+                    </ButtonV2>
                 </Link>
             </div>
-            <div className='hidden md:flex flex-wrap items-center justify-between mt-20'>
+            <div className="hidden md:flex flex-wrap items-center justify-between mt-20">
                 <div>
-                    <div className='text-[2rem] leading-8 font-semibold'>
+                    <div className="text-[2rem] leading-8 font-semibold">
                         <span>{t('fee-structure:your_fee_level')}</span>
-                        <span className='ml-2 text-teal'>VIP {state.vipLevel || 0}</span>
+                        <span className="ml-2 text-teal">VIP {state.vipLevel || 0}</span>
                     </div>
 
-                    <div className='flex flex-wrap items-center mt-3'>
-                        <span className='flex items-center'>
-                            <span
-                                className='text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap'>{t('common:available_balance')}: </span>
-                            <span className='font-semibold'>{renderNamiAvailable()}</span>
+                    <div className="flex flex-wrap items-center mt-3">
+                        <span className="flex items-center">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
+                            <span className="font-semibold">{renderNamiAvailable()}</span>
                         </span>
                         {buyNami}
                     </div>
                 </div>
-                <Link
-                    href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                    <ButtonV2 className='!px-6 !w-auto'><span
-                        className='mr-2'>{t('fee-structure:vip_upgrade')}</span><Crown /></ButtonV2>
+                <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                    <ButtonV2 className="!px-6 !w-auto">
+                        <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
+                        <Crown />
+                    </ButtonV2>
                 </Link>
             </div>
 
-            <div className='relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl'>
+            <div className="relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl">
                 <div
                     className={classnames(
                         'relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10',
                         'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
-                    )}>
-                    <div className='space-y-4'>
-                        <div className='font-semibold'>
+                    )}
+                >
+                    <div className="space-y-4">
+                        <div className="font-semibold">
                             <div>{t('fee-structure:exchange_trading_fee')}</div>
                         </div>
 
-                        <div className='flex'>
-                            <div className='flex-none'>
-                                {renderUseAssetAsFeeBtn()}
-                            </div>
-                            <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
-                                {renderExchangeDeduction()}
-                            </span>
+                        <div className="flex">
+                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderExchangeDeduction()}</span>
                         </div>
 
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Maker</span>
-                                <span className='float-right'>
-                                    {state.vipLevel ?
-                                        renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''), FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')) :
-                                        renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''), FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', ''))}
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                <span className="float-right">
+                                    {state.vipLevel
+                                        ? renderUserFeeConfig(
+                                              FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                              FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
+                                          )
+                                        : renderUserFeeConfig(
+                                              FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                              FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
+                                          )}
                                 </span>
                             </div>
                         </div>
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Taker</span>
-                                <span className='float-right'>
-                                    {state.vipLevel ?
-                                        renderUserFeeConfig(FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''), FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')) :
-                                        renderUserFeeConfig(FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''), FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', ''))}
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                <span className="float-right">
+                                    {state.vipLevel
+                                        ? renderUserFeeConfig(
+                                              FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                              FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
+                                          )
+                                        : renderUserFeeConfig(
+                                              FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                              FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
+                                          )}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className='space-y-4 pt-10 md:pt-0 md:pl-10'>
-                        <div className='font-semibold'>
+                    <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                        <div className="font-semibold">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                         </div>
 
-                        <div className='flex'>
-                            <div className='flex-none'>
-                                {renderUseAssetAsFeeBtn()}
-                            </div>
-                            <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
-                                {renderFuturesDeduction()}
-                            </span>
+                        <div className="flex">
+                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
                         </div>
 
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Maker</span>
-                                <span className='float-right'>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                <span className="float-right">
                                     {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1])}
                                 </span>
                             </div>
                         </div>
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Taker</span>
-                                <span className='float-right'>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                <span className="float-right">
                                     {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1])}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div className='space-y-4 pt-10 md:pt-0 md:pl-10'>
-                        <div className='font-semibold'>
+                    <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                        <div className="font-semibold">
                             <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                         </div>
 
-                        <div className='flex'>
-                            <div className='flex-none'>
-                                {renderUseAssetAsFeeBtn()}
-                            </div>
-                            <span className='ml-3 text-txtSecondary dark:text-txtSecondary-dark'>
-                                {renderFuturesDeduction()}
-                            </span>
+                        <div className="flex">
+                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
                         </div>
 
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Maker</span>
-                                <span className='float-right'>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                <span className="float-right">
                                     {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1])}
                                 </span>
                             </div>
                         </div>
-                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                            <div className='flex justify-between sm:block'>
-                                <span className='inline-block min-w-[35px] mr-9'>Taker</span>
-                                <span className='float-right'>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                            <div className="flex justify-between sm:block">
+                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                <span className="float-right">
                                     {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1])}
                                 </span>
                             </div>
@@ -587,51 +625,51 @@ const TradingFee = () => {
                 {renderUsedNamiMsg()}
             </div>
 
-            <div className='mt-20 mb-8 text-2xl font-semibold'>
-                {t('fee-structure:fee_rate')}
-            </div>
+            <div className="mt-20 mb-8 text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
-            <div className='hidden md:block'>
-                <div
-                    className='flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-8'>
-                    {renderFeeTab()}
-                </div>
-                <div className='border border-divider dark:border-divider-dark rounded-b-xl pb-8'>
+            <div  id="trading_fee" className="hidden md:block">
+                <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-8">{renderFeeTab()}</div>
+                <div className="border border-divider dark:border-divider-dark rounded-b-xl pb-8">
                     {state.tabIndex === 0 && renderExchangeTableFee()}
                     {state.tabIndex !== 0 && renderFuturesTableFee()}
                 </div>
             </div>
 
-            <div className='md:hidden'>
-                <div className='flex gap-x-2 py-2 overflow-x-auto sticky top-0 bg-white dark:bg-dark-dark no-scrollbar'>
+            <div className="md:hidden">
+                <div className="flex gap-x-2 py-2 overflow-x-auto sticky top-0 bg-white dark:bg-dark-dark no-scrollbar">
                     {TRADING_FEE_TAB.map((tab) => {
-                        return <div
-                            key={tab.index}
-                            onClick={() => setState({ tabIndex: tab.index })}
-                            className={classnames(
-                                'px-4 py-2 text-sm border rounded-full font-semibold whitespace-nowrap cursor-pointer',
-                                'transition duration-100',
-                                {
-                                    'border-teal bg-teal/[.1] text-teal': state.tabIndex === tab.index,
-                                    'border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': state.tabIndex !== tab.index
-                                })
-                            }
-                        >{tab.title}</div>;
+                        return (
+                            <div
+                                key={tab.index}
+                                onClick={() => setState({ tabIndex: tab.index })}
+                                className={classnames(
+                                    'px-4 py-2 text-sm border rounded-full font-semibold whitespace-nowrap cursor-pointer',
+                                    'transition duration-100',
+                                    {
+                                        'border-teal bg-teal/[.1] text-teal': state.tabIndex === tab.index,
+                                        'border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': state.tabIndex !== tab.index
+                                    }
+                                )}
+                            >
+                                {tab.title}
+                            </div>
+                        );
                     })}
                 </div>
                 {state.tabIndex === 0 && <ExchangeFeeMobileList t={t} />}
-                {
-                    [1, 2].includes(state.tabIndex) &&
+                {[1, 2].includes(state.tabIndex) && (
                     <FuturesFeeMobileList
                         t={t}
-                        currentQuote={{
-                            1: 'VNDC',
-                            2: 'USDT'
-                        }[state.tabIndex]}
+                        currentQuote={
+                            {
+                                1: 'VNDC',
+                                2: 'USDT'
+                            }[state.tabIndex]
+                        }
                         loading={state.loadingFuturesFeeConfigs}
                         data={state.futuresFeeConfig}
                     />
-                }
+                )}
             </div>
 
             {/* <div className='mt-12 md:mt-8 space-y-2 nami-list-disc'> */}
@@ -677,12 +715,7 @@ const TRADING_FEE_TAB = [
 ];
 
 const dataHandler = (props) => {
-    const {
-        tabIndex,
-        data,
-        loading,
-        utils
-    } = props;
+    const { tabIndex, data, loading, utils } = props;
 
     const result = [];
     const skeleton = [];
@@ -708,12 +741,14 @@ const dataHandler = (props) => {
 
     switch (tabIndex) {
         case 0:
-            data.forEach(d => {
+            data.forEach((d) => {
                 result.push({
                     key: `trading_fee__item__${d.level}`,
-                    level: <span className='inline-flex items-center font-bold'>
-                        VIP {d.level} {utils?.currentLevel === d.level && <NamiCircle className='ml-2' />}
-                    </span>,
+                    level: (
+                        <span className="inline-flex items-center font-bold">
+                            VIP {d.level} {utils?.currentLevel === d.level && <NamiCircle className="ml-2" />}
+                        </span>
+                    ),
                     // vol_30d: <span className="text-sm">{d.vol_30d}</span>,
                     // andor: <span className="text-sm">{d.andor}</span>,
                     nami_holding: <span>≥ {formatNumber(d.nami_holding, 0)}</span>,
@@ -724,18 +759,27 @@ const dataHandler = (props) => {
             break;
         case 1:
         case 2:
-            data.forEach(d => {
+            data.forEach((d) => {
                 result.push({
                     key: `futures_fee__item__${d?.name}`,
-                    symbol: <span>
-                        <Link href={PATHS.FUTURES.TRADE.getPair(TRADING_MODE.FUTURES, { pair: d?.name })}>
-                            <a className='font-bold hover:!underline'>{d?.name}</a>
-                        </Link>
-                    </span>,
+                    symbol: (
+                        <span>
+                            <Link href={PATHS.FUTURES.TRADE.getPair(TRADING_MODE.FUTURES, { pair: d?.name })}>
+                                <a className="font-bold hover:!underline">{d?.name}</a>
+                            </Link>
+                        </span>
+                    ),
                     max_leverage: <span>x{d?.max_leverage}</span>,
-                    fee: <span>{d?.place_order_fee * 100}% / {d?.close_order_fee * 100}%</span>,
-                    fee_promote:
-                        <span>{d?.place_order_fee_promote * 100}% / {d?.close_order_fee_promote * 100}%</span>,
+                    fee: (
+                        <span>
+                            {d?.place_order_fee * 100}% / {d?.close_order_fee * 100}%
+                        </span>
+                    ),
+                    fee_promote: (
+                        <span>
+                            {d?.place_order_fee_promote * 100}% / {d?.close_order_fee_promote * 100}%
+                        </span>
+                    ),
                     [RETABLE_SORTBY]: {
                         symbol: d?.name,
                         max_leverage: d?.max_leverage,
@@ -771,11 +815,11 @@ const GRAPHICS_WIDTH = '200px';
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure'])
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure']))
     }
 });
 
 export default withTabLayout({
     routes: TAB_ROUTES.FEE_STRUCTURE,
-    containerClassname: 'px-4 md:px-0 md:pt-20'
+    containerClassname: 'px-4 md:pt-20  fee-schedule '
 })(TradingFee);

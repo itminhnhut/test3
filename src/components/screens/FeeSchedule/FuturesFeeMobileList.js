@@ -52,7 +52,7 @@ export default function FuturesFeeMobileList({
                                         <a className='font-semibold hover:!underline'>{item?.name}</a>
                                     </Link>
                                 </div>
-                                <div>
+                                <div className="text-right">
                                     <p className='text-xs text-txtSecondary dark:text-txtSecondary-dark mb-1'>{t('common:max_leverage')}</p>
                                     <span className='font-semibold'>{item.max_leverage}x</span>
                                 </div>

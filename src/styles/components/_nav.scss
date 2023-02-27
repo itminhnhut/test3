@@ -412,15 +412,16 @@
       }
 
       .mal-navbar__link__group___item___childen__lv1___item2 {
-        @apply w-1/2 flex items-center;
+        @apply w-1/2 flex items-center text-left;
 
         white-space: nowrap;
         padding: 8px;
         border-radius: 12px;
-
+        
         &:hover {
           @apply bg-hover-1 dark:bg-hover-dark;
         }
+       
 
         .mal-navbar__link__group___item___childen__lv1___item2__icon {
           // min-width: 32px;
