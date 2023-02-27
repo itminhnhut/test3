@@ -367,5 +367,7 @@
         "step_2": "Click 'Delete indicator' to remove indicator and analysis",
         "reset": "Reset Chart",
         "delete": "Delete Indicator"
-    }
+    },
+    "24h_change": "24h Change",
+    "select_intervals": "Select Intervals"
 }

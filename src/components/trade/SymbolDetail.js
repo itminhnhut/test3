@@ -218,7 +218,7 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
                 <ChevronLeft size={20} />
             </div>
             <div className="flex flex-col min-w-max space-y-1 !-ml-4">
-                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('change')} 24h</div>
+                <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('24h_change')}</div>
                 <div className="block text-xs font-semibold">{render24hChange(symbolTicker, true)}</div>
             </div>
             <div className="flex flex-col min-w-max space-y-1">
@@ -241,7 +241,7 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
             </div>
             <div className="2xl:flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
-                    {t('vol')} 24h ({symbolTicker?.q})
+                    {t('volume')} 24h ({symbolTicker?.q})
                 </div>
                 <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatPrice(symbolTicker?.vq, 2)}</div>
             </div>

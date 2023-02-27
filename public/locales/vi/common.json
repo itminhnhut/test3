@@ -363,5 +363,7 @@
         "step_2": "Chọn 'Xóa chỉ báo' để xóa các Chỉ báo và Phân tích",
         "reset": "Đặt lại biểu đồ",
         "delete": "Xóa chỉ báo"
-    }
+    },
+    "24h_change": "Biến động 24h",
+    "select_intervals": "Chọn khung thời gian"
 }

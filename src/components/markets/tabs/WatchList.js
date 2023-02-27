@@ -468,7 +468,7 @@ const WatchList = ({ favoriteList, symbolList, handleSetFavorite, quoteAsset, re
     return (
         <div className="flex flex-col items-center justify-center">
             <TableNoData />
-            <a href={getLoginUrl('sso')} className="btn button-common block text-center" dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}>
+            <a href={getLoginUrl('sso')} className="btn button-common block text-center" dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }}>
                 {/* {t('common:sign_in_to_continue')} */}
             </a>
         </div>

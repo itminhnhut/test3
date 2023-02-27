@@ -709,7 +709,7 @@ const PlaceOrderForm = ({ symbol }) => {
             <>
                 <div className="flex justify-between items-center">
                     <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark flex items-center space-x-1">
-                        <span>{t('spot:available_balance')}</span>
+                        <span>{t('common:available_balance')}</span>
                         <AddCircle onClick={onTransFer} className="cursor-pointer" />
                     </div>
                     <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark text-right">
