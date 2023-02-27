@@ -91,16 +91,16 @@ const ReTable = memo(
 
         const handleResize =
             (index) =>
-            (e, { size }) => {
-                setOwnColumns((prevState) => {
-                    const nextColumns = [...prevState];
-                    nextColumns[index] = {
-                        ...nextColumns[index],
-                        width: size.width
-                    };
-                    return nextColumns;
-                });
-            };
+                (e, { size }) => {
+                    setOwnColumns((prevState) => {
+                        const nextColumns = [...prevState];
+                        nextColumns[index] = {
+                            ...nextColumns[index],
+                            width: size.width
+                        };
+                        return nextColumns;
+                    });
+                };
 
         useEffect(() => {
             setOwnColumns(columns);
@@ -124,14 +124,15 @@ const ReTable = memo(
         const onRow = (item, i, a) => {
             return {
                 onClick: (e) => onRowClick && onRowClick({ ...item, rowIdx: i }, e), // click row
-                onDoubleClick: (e) => {}, // double click row
-                onContextMenu: (e) => {}, // right button click row
-                onMouseEnter: (e) => {}, // mouse enter row
-                onMouseLeave: (e) => {} // mouse leave row
+                onDoubleClick: (e) => { }, // double click row
+                onContextMenu: (e) => { }, // right button click row
+                onMouseEnter: (e) => { }, // mouse enter row
+                onMouseLeave: (e) => { } // mouse leave row
             };
         };
 
         const renderTable = useCallback(() => {
+
             let defaultSort =
                 sort && !sorted && restProps?.defaultSort
                     ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`])
@@ -463,7 +464,7 @@ const ReTableWrapperV2 = styled.div`
         tbody tr {
             &:hover td {
                 background: ${({ useRowHover, isDark, empty }) =>
-                    !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
+        !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
                 .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
                     border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};
