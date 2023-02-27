@@ -5,7 +5,7 @@ import NoData from './NoData';
 import sumBy from 'lodash/sumBy';
 import Skeletor from 'components/common/Skeletor';
 
-const index = ({
+const TableMix = ({
     data,
     columns,
     loading,
@@ -99,4 +99,4 @@ const index = ({
     );
 };
 
-export default index;
+export default TableMix;

@@ -1,8 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TableFilter } from '.';
 import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import ReTable from 'components/common/ReTable';
+import TableV2 from 'components/common/V2/TableV2';
+
+
 import Skeletor from 'components/common/Skeletor';
 import { formatNumber, formatTime } from 'redux/actions/utils';
 import { Tooltip } from 'components/screens/NewReference/mobile/sections/FriendList';
@@ -161,6 +164,8 @@ const FriendList = ({
                 }
             });
             if (data) {
+                console.log("here");
+
                 setdataSource(data);
             }
         } catch (e) {
@@ -221,70 +226,98 @@ const FriendList = ({
         );
     };
 
-    const columns = useMemo(() => [{
-        key: 'namiId',
-        dataIndex: 'code',
-        title: 'Nami ID',
-        align: 'left',
-        width: 200,
-        sorter: false,
-        render: (data, item) => renderRefInfo(item)
-    }, {
-        key: 'invitedAt',
-        dataIndex: 'invitedAt',
-        title: t('reference:referral.referral_date'),
-        align: 'left',
-        width: 110,
-        // preventSort: true,
-        render: (data, item) => <div
-            className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
-    }, {
-        key: 'status',
-        dataIndex: 'kycStatus',
-        title: t('reference:referral.status'),
-        align: 'left',
-        width: 90,
-        // preventSort: true,
-        render: (data) => {
-            return {
-                [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
-                [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                [KYC_STATUS.APPROVED]: <KYCApprovedTag t={t} />
-            }[data];
-        }
-    }, {
-        key: 'referred',
-        dataIndex: 'invitedCount',
-        title: t('reference:referral.referred'),
-        align: 'left',
-        width: 90,
-        // preventSort: true,
-        render: (data, item) => <div className='font-normal'>{data} {' '} {t('reference:referral.friends')}</div>
-    }, {
-        key: 'rank',
-        dataIndex: 'rank',
-        title: t('reference:referral.ranking'),
-        align: 'left',
-        width: 90,
-        // preventSort: true,
-        render: (data, item) => <div className='font-normal'>{rank[data?.toString() ?? '0']}</div>
-    }, {
-        key: 'directCommission',
-        dataIndex: 'directCommission',
-        title: t('reference:referral.total_direct_commissions'),
-        align: 'right',
-        width: 250,
-        // preventSort: true,
-        render: (data, item) => renderCommissionData(item, 'directCommission')
-    }, {
-        key: 'undirectCommission',
-        dataIndex: 'undirectCommission',
-        title: t('reference:referral.total_indirect_commissions'),
-        align: 'right',
-        width: 250,
-        // preventSort: true,
-        render: (data, item) => renderCommissionData(item, 'undirectCommission')
-    }], [dataSource]);
+    // const columns = useMemo(() => , [dataSource]);
+
+    const renderTable = useCallback(() => {
+        const columns = [{
+            key: 'code',
+            dataIndex: 'code',
+            title: 'Nami ID',
+            align: 'left',
+            width: 180,
+            sorter: false,
+            render: (data, item) => {
+
+                return renderRefInfo(item)
+            }
+        }, {
+            key: 'invitedAt',
+            dataIndex: 'invitedAt',
+            title: t('reference:referral.referral_date'),
+            align: 'left',
+            width: 160,
+            render: (data, item) => <div
+                className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
+        }, {
+            key: 'kycStatus',
+            dataIndex: 'kycStatus',
+            title: t('reference:referral.status'),
+            align: 'left',
+            width: 100,
+            render: (data) => {
+                return {
+                    [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
+                    [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                    [KYC_STATUS.APPROVED]: <KYCApprovedTag t={t} />
+                }[data];
+            }
+        }, {
+            key: 'invitedCount',
+            dataIndex: 'invitedCount',
+            title: t('reference:referral.referred'),
+            align: 'left',
+            width: 140,
+            render: (data, item) => <div className='font-normal'>{data} {' '} {t('reference:referral.friends')}</div>
+        }, {
+            key: 'rank',
+            dataIndex: 'rank',
+            title: t('reference:referral.ranking'),
+            align: 'left',
+            width: 120,
+            render: (data, item) => <div className='font-normal'>{rank[data?.toString() ?? '0']}</div>
+        }, {
+            key: 'directCommission.total',
+            dataIndex: ['directCommission', 'total'],
+            title: t('reference:referral.total_direct_commissions'),
+            align: 'right',
+            width: 230,
+            render: (data, item) => renderCommissionData(item, 'directCommission')
+        }, {
+            key: 'undirectCommission.total',
+            dataIndex: ['undirectCommission', 'total'],
+            title: t('reference:referral.total_indirect_commissions'),
+            align: 'right',
+            width: 230,
+            render: (data, item) => renderCommissionData(item, 'undirectCommission')
+        }]
+
+        return <TableV2
+            sort
+            defaultSort={{ key: 'code', direction: 'desc' }}
+            useRowHover
+            data={dataSource?.results || []}
+            page={page}
+            onChangePage={page => setPage(page)}
+            total={dataSource?.total ?? 0}
+            columns={columns}
+            rowKey={(item) => item?.key}
+            scroll={{ x: true }}
+            limit={limit}
+            skip={0}
+            noBorder={true}
+            // isSearch={!!state.search}
+            height={404}
+            pagingClassName="border-none"
+            className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
+            tableStyle={{ fontSize: '16px', padding: '16px' }}
+            paginationProps={{
+                hide: true,
+                current: 0,
+                pageSize: limit,
+                onChange: null
+            }}
+        />
+    }, [dataSource])
 
     return (
         <div className='flex w-full' id={id}>
@@ -301,7 +334,9 @@ const FriendList = ({
                 <div className='flex gap-6 flex-wrap mx-6 mb-6'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
-                <div className='border-t border-divider dark:border-divider-dark'>
+
+                {renderTable()}
+                {/* <div className='border-t border-divider dark:border-divider-dark'>
                     <ReTable
                         // defaultSort={{ key: 'namiId', direction: 'desc' }}
                         emptyText={<NoData />}
@@ -339,7 +374,7 @@ const FriendList = ({
                         pageSize={limit}
                         onChange={page => setPage(page)}
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     );
