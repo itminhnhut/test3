@@ -46,7 +46,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showCloseModal, setShowCloseModal] = useState(false);
     const [showCloseAll, setShowCloseAll] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true);
     const message = useRef({
         status: '',
         title: '',
@@ -62,11 +62,15 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     });
 
     useEffect(() => {
-        setLoading(true)
-        if (ordersList.length > 0) return
-        const timeOutLoading = setTimeout(() => setLoading(false), 700)
-        return () => clearTimeout(timeOutLoading)
-    }, [])
+        if (ordersList.length > 0) {
+            setLoading(false);
+            return;
+        }
+        const timeOutLoading = setTimeout(() => {
+            setLoading(false);
+        }, 700);
+        return () => clearTimeout(timeOutLoading);
+    }, []);
 
     const [closeType, setCloseType] = useState();
     const btnCloseAll = useRef();
@@ -78,13 +82,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
-    const [page, setPage] = useState(0)
-    const LIMIT = 10
-    const hasNext = useRef(true)
+    const [page, setPage] = useState(0);
+    const LIMIT = 10;
+    const hasNext = useRef(true);
 
     useEffect(() => {
-        setPage(0)
-    }, [status])
+        setPage(0);
+    }, [status]);
 
     const dataSource = useMemo(() => {
         const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
@@ -122,13 +126,13 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         });
 
         let result = filters.symbol ? items.filter((item) => item?.symbol === filters.symbol) : items;
-        if (result.length <= ((page + 1) * LIMIT)) {
-            hasNext.current = false
+        if (result.length <= (page + 1) * LIMIT) {
+            hasNext.current = false;
         } else {
-            hasNext.current = true
+            hasNext.current = true;
         }
-        result = result.slice(page * LIMIT, (page + 1) * LIMIT)
-        return result
+        result = result.slice(page * LIMIT, (page + 1) * LIMIT);
+        return result;
     }, [hideOther, dataSource, filters, pair, status, page]);
 
     const closeTypes = useMemo(() => {
@@ -598,18 +602,8 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             />
             {/* <OrderClose open={showModalDelete} onClose={() => setShowModalDelete(false)} onConfirm={onConfirm} data={rowData.current} /> */}
             {/* <ShareFuturesOrder isVisible={!!shareOrder} order={shareOrder} pairPrice={marketWatch[shareOrder?.symbol]} onClose={() => setShareOrder(null)} /> */}
-            <FuturesOrderDetailModal
-                order={rowData.current}
-                isVisible={showOrderDetail}
-                onClose={() => setShowOrderDetail(false)}
-                decimals={decimals}
-            />
-            <FututesShareModal
-                order={rowData.current}
-                isVisible={showShareModal}
-                onClose={() => setShowShareModal(false)}
-                decimals={decimals}
-            />
+            <FuturesOrderDetailModal order={rowData.current} isVisible={showOrderDetail} onClose={() => setShowOrderDetail(false)} decimals={decimals} />
+            <FututesShareModal order={rowData.current} isVisible={showShareModal} onClose={() => setShowShareModal(false)} decimals={decimals} />
             <FuturesCloseOrder
                 order={rowData.current}
                 isVisible={showCloseModal}
