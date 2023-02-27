@@ -18,13 +18,13 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
             {!user && !isSearch ? (
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
-                    <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 font-semibold truncate overflow-x-auto">
+                    <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
                         <a href={getLoginUrl('sso', 'login')}>
-                            <span className="text-teal hover:underline cursor-pointer" dangerouslySetInnerHTML={{ __html: t('common:sign_in') }} />
+                            <span className="text-teal hover:underline cursor-pointer font-semibold" dangerouslySetInnerHTML={{ __html: t('common:log_in') }} />
                         </a>
                         <div>{t('common:or')}</div>
                         <a href={getLoginUrl('sso', 'register')}>
-                            <span className="text-teal hover:underline cursor-pointer" dangerouslySetInnerHTML={{ __html: t('common:sign_up') }} />
+                            <span className="text-teal hover:underline cursor-pointer font-semibold" dangerouslySetInnerHTML={{ __html: t('common:register') }} />
                         </a>
                         <div>{t('common:to_experience')}</div>
                     </div>

@@ -344,10 +344,15 @@
     "countdown_tooltip": "Thời gian đếm ngược chỉ mang tính chất tham khảo, thời gian chi trả funding thực tế sẽ phụ thuộc vào giờ tiêu chuẩn của máy chủ",
     "close_order": "Đóng lệnh",
     "close_all_orders": "Đóng tất cả",
-    "cancel_all_orders": "Huỷ tất cả",
     "close_all_message": "Bạn có chắc chắn muốn đóng tất cả các lệnh đang mở?",
     "close_all_success": "Đóng lệnh thành công",
     "close_all_failed": "Đóng lệnh thất bại",
+    "cancel_open_order": "Huỷ",
+    "cancel_order": "Huỷ lệnh",
+    "cancel_all_orders": "Huỷ tất cả",
+    "cancel_all_message": "Bạn có chắc chắn muốn huỷ tất cả các lệnh đang mở?",
+    "cancel_all_success": "Huỷ lệnh thành công",
+    "cancel_all_failed": "Huỷ lệnh thất bại",
     "users": "{{value}} người",
     "level": "Cấp {{level}}",
     "show_more": "Xem thêm danh sách",
@@ -365,5 +370,10 @@
         "delete": "Xóa chỉ báo"
     },
     "24h_change": "Biến động 24h",
-    "select_intervals": "Chọn khung thời gian"
+    "select_intervals": "Chọn khung thời gian",
+    "chat_with_support": "Chat với hỗ trợ",
+    "others": "Tác vụ",
+    "convert": "Chuyển đổi",
+    "futures_short": "Futures",
+    "spot_short": "Exchange"
 }
