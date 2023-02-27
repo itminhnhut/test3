@@ -142,13 +142,36 @@ const ReTable = memo(
 
             if (Object.keys(sorter).length && !sorted) {
                 const _s = Object.entries(sorter)[0];
+
                 const customSort = ownColumns.find((e) => e.key === _s[0])?.sorter;
 
                 if (customSort) {
                     // chỉ cần sort theo asc
-                    defaultSort = data.sort((a, b) => (_s[1] ? customSort(a, b) : -customSort(a, b)));
+                    defaultSort = data.sort((a, b) => {
+                        return (_s[1] ? customSort(a, b) : -customSort(a, b))
+                    });
                 } else {
-                    defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+                    // defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+                    defaultSort = orderBy(data, [(o) => {
+                        const temp = _s[0].split('.')
+                        let value;
+                        switch (temp.length) {
+                            case 1:
+                                value = o[temp[0]]
+                                break;
+                            case 2:
+                                value = o?.[temp[0]]?.[temp[1]]
+                                break;
+                            case 3:
+                                value = o?.[temp[0]]?.[temp[1]]?.[temp[2]]
+                                break;
+                            default:
+                                value = null
+                                break;
+                        }
+                        const x = value ? value : _s[1] ? 1000000000 : -1000000000
+                        return x
+                    }], [`${_s[1] ? 'asc' : 'desc'}`]);
                 }
             }
 

@@ -41,7 +41,7 @@ const Reference = () => {
                         boxShadow: '0px 15px 20px rgba(0, 0, 0, 0.03)',
                     }}
                 >
-                    <div className={classNames("h-full ", { 'flex justify-center': !isMobile })}>
+                    <div className={classNames("h-full bg-gray-13 dark:bg-transparent ", { 'flex justify-center': !isMobile })}>
                         {!isMobile ? <RefDesktopScreen /> : <NewReference />}
                     </div>
                 </MaldivesLayout>

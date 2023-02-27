@@ -103,11 +103,11 @@ const RefDesktopScreen = () => {
     };
 
     return (
-        <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4  h-auto w-full bg-gray-13 dark:bg-transparent' style={{ paddingTop: DESKTOP_NAV_HEIGHT }}>
+        <div className='h-auto w-full bg-gray-13 dark:bg-transparent' style={{ paddingTop: DESKTOP_NAV_HEIGHT }}>
             <div className='space-y-20' ref={contentRef}>
                 <Overview t={t} data={overviewData} refreshData={fetchData} commisionConfig={config} width={width} user={user} />
-                <div className='container !mb-[7.5rem]'>
-                    <Tabs ref={tabRef} tab={tab} className='gap-6 border-b dark:border-divider-dark mb-12' isMobile>
+                <div className='w-full container max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 !mb-[7.5rem]'>
+                    <Tabs ref={tabRef} tab={tab} className='gap-6 border-b border-divider dark:border-divider-dark mb-12' isMobile>
                         <TabItem className='!text-left !px-0' value={tabs.Overview}
                             onClick={() => handleClickTab(tabs.Overview)}>
                             {t('reference:referral.info')}
