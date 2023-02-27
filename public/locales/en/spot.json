@@ -27,6 +27,8 @@
   "available_balance": "Available balance",
   "close_order_success": "Order #{{displayingId}} was closed successfully.",
   "close_order_failed": "Order #{{displayingId}} was failed to close.",
+  "cancel_order_success": "Order #{{displayingId}} was canceled successfully.",
+  "cancel_order_failed": "Order #{{displayingId}} was failed to cancel.",
   "filter_by_current_pair": "Hide Other Pair",
   "pair_under_maintenance": "{{base}}/{{quote}} is under maintenance",
   "setting": {

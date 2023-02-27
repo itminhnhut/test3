@@ -65,7 +65,7 @@ const SpotOrderList = (props) => {
                 alert.current = {
                     type: 'success',
                     title: t('common:success'),
-                    message: t('spot:close_order_success', {
+                    message: t('spot:cancel_order_success', {
                         displayingId,
                         side: data?.side,
                         type: data?.type,
@@ -82,8 +82,8 @@ const SpotOrderList = (props) => {
             } else {
                 alert.current = {
                     type: 'error',
-                    title: t('common:close_order'),
-                    message: t('spot:close_order_failed', {
+                    title: t('common:cancel_order'),
+                    message: t('spot:cancel_order_failed', {
                         displayingId,
                         side: order?.side,
                         type: order?.type,
@@ -133,13 +133,13 @@ const SpotOrderList = (props) => {
                 alert.current = {
                     type: 'success',
                     title: t('common:success'),
-                    message: t('common:close_all_success')
+                    message: t('common:cancel_all_success')
                 };
             } else {
                 alert.current = {
                     type: 'error',
                     title: t('common:failed'),
-                    message: t('common:close_all_failed')
+                    message: t('common:cancel_all_failed')
                 };
             }
         } catch (error) {
@@ -277,7 +277,7 @@ const SpotOrderList = (props) => {
                         }}
                         className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
                     >
-                        {t('common:close_all_orders')}
+                        {t('common:cancel_all_orders')}
                     </div>
                 ),
                 fixed: 'right',
@@ -292,7 +292,7 @@ const SpotOrderList = (props) => {
                         }}
                         className="bg-gray-10 dark:bg-dark-2 px-4 py-2 text-txtPrimary dark:text-txtSecondary-dark rounded-md cursor-pointer font-semibold"
                     >
-                        {t('common:close')}
+                        {t('common:cancel_open_order')}
                     </div>
                 )
             }
@@ -331,8 +331,8 @@ const SpotOrderList = (props) => {
                 isVisible={showCloseAll}
                 onClose={() => setShowCloseAll(false)}
                 type="warning"
-                title={t('common:close_all_orders')}
-                message={t('common:close_all_message')}
+                title={t('common:cancel_all_orders')}
+                message={t('common:cancel_all_message')}
                 textButton={t('common:confirm')}
                 onConfirm={onCloseAll}
                 loading={loaded}
