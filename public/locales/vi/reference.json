@@ -127,7 +127,7 @@
         "status": "Tình trạng",
         "kyc": "Đã KYC",
         "not_kyc": "Chưa KYC",
-        "pending_kyc": "Đang chờ xác minh ",
+        "pending_kyc": "Chờ KYC",
         "referred": "Đã giới thiệu",
         "total_direct_commissions": "Tổng hoa hồng trực tiếp",
         "total_indirect_commissions": "Tổng hoa hồng gián tiếp",

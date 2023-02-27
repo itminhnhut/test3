@@ -15,13 +15,14 @@ import { map, omit } from 'lodash';
 import TagV2 from 'components/common/V2/TagV2';
 import { isValid } from 'date-fns';
 import NoData from 'components/common/V2/TableV2/NoData';
-import Copy from 'components/svg/Copy';
+import { CopyIcon } from 'components/screens/NewReference/PopupModal';
+
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
-                                        type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
+    type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
 const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
-                                         type='success'>{t('reference:referral.kyc')}</TagV2>;
+    type='success'>{t('reference:referral.kyc')}</TagV2>;
 
 const ModalCommissionFriend = ({
     t,
@@ -44,30 +45,31 @@ const ModalCommissionFriend = ({
                 <span className='text-xl'>{friend?.byRefCode}</span>
             </div>
             <div className='rounded-full bg-gray-10 dark:bg-darkBlue-3 p-3 ml-6 cursor-pointer'>
-                <Copy size={14} />
+                {/* <Copy size={14} /> */}
+                <CopyIcon data={friend?.byRefCode} size={16} className='cursor-pointer' />
             </div>
         </div>
 
         <div className='bg-white dark:bg-darkBlue-3 p-4 border border-divider dark:border-transparent rounded-xl'>
             <table className='table-fixed w-full'>
                 <thead>
-                <tr className='text-sm'>
-                    <th className='py-2 font-normal'>{t('reference:referral.commission_rate')}</th>
-                    {map(commissionType, (v, k) => <th key={k} className='py-2 font-normal'>{v}</th>)}
-                </tr>
+                    <tr className='text-sm'>
+                        <th className='py-2 font-normal'>{t('reference:referral.commission_rate')}</th>
+                        {map(commissionType, (v, k) => <th key={k} className='py-2 font-normal'>{v}</th>)}
+                    </tr>
                 </thead>
                 <tbody>
-                {map(omit(commissionConfig[friend?.rank] || {}, ['commissionLevel']), (configs = {}, commissionKind) => {
-                    return <tr key={commissionKind}>
-                        <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
-                        {map(configs, (c, k) => {
-                            return <td key={k}
-                                       className='text-center text-sm font-semibold text-teal py-2'>
-                                {c * (friend.remunerationRate / 100)}%
-                            </td>;
-                        })}
-                    </tr>;
-                })}
+                    {map(omit(commissionConfig[friend?.rank] || {}, ['commissionLevel']), (configs = {}, commissionKind) => {
+                        return <tr key={commissionKind}>
+                            <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
+                            {map(configs, (c, k) => {
+                                return <td key={k}
+                                    className='text-center text-sm font-semibold text-teal py-2'>
+                                    {c * (friend.remunerationRate / 100)}%
+                                </td>;
+                            })}
+                        </tr>;
+                    })}
                 </tbody>
             </table>
         </div>
@@ -185,7 +187,7 @@ const FriendList = ({
     }, []);
 
     const renderRefInfo = (data) => <div className='text-sm nami-underline-dotted'
-                                         onClick={() => setCommissionByFriendDetail(data)}>
+        onClick={() => setCommissionByFriendDetail(data)}>
         {data?.code}
     </div>;
 
@@ -322,12 +324,12 @@ const FriendList = ({
                                 minWidth: '100px'
                             }
                         }}
-                        // paginationProps={{
-                        //     hide: true,
-                        //     current: page,
-                        //     pageSize: limit,
-                        //     onChange: (currentPage) => setPage(currentPage)
-                        // }}
+                    // paginationProps={{
+                    //     hide: true,
+                    //     current: page,
+                    //     pageSize: limit,
+                    //     onChange: (currentPage) => setPage(currentPage)
+                    // }}
                     />
                 </div>
                 <div className='w-full mt-6 flex justify-center'>
