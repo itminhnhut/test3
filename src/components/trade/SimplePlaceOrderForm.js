@@ -722,13 +722,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             <ButtonV2 variants="secondary">
                 <Link href={getLoginUrl('sso')}>
                     <a>
-                        <span className="text-teal hover:underline">{t('common:log_in')}</span>
+                        <span className="text-teal hover:underline">{t('common:sign_in')}</span>
                     </a>
                 </Link>
                 <div className="font-normal">{t('common:or')}</div>
                 <Link href={getLoginUrl('sso', 'register')}>
                     <a>
-                        <span className="text-teal hover:underline">{t('common:register')}</span>
+                        <span className="text-teal hover:underline">{t('common:sign_up')}</span>
                     </a>
                 </Link>
             </ButtonV2>
