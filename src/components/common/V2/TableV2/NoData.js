@@ -24,7 +24,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                             <a>
                                 <span
                                     className="text-teal hover:underline cursor-pointer font-semibold"
-                                    dangerouslySetInnerHTML={{ __html: t('common:log_in') }}
+                                    dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
                                 />
                             </a>
                         </Link>
@@ -33,7 +33,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                             <a>
                                 <span
                                     className="text-teal hover:underline cursor-pointer font-semibold"
-                                    dangerouslySetInnerHTML={{ __html: t('common:register') }}
+                                    dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
                                 />
                             </a>
                         </Link>
