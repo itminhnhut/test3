@@ -375,5 +375,9 @@
     },
     "24h_change": "24h Change",
     "select_intervals": "Select Intervals",
-    "chat_with_support": "Chat với hỗ trợ"
+    "chat_with_support": "Chat với hỗ trợ",
+    "others": "Others",
+    "convert": "Convert",
+    "futures_short": "Futures",
+    "spot_short": "Exchange"
 }

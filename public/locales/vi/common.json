@@ -371,5 +371,9 @@
     },
     "24h_change": "Biến động 24h",
     "select_intervals": "Chọn khung thời gian",
-    "chat_with_support": "Chat với hỗ trợ"
+    "chat_with_support": "Chat với hỗ trợ",
+    "others": "Tác vụ",
+    "convert": "Chuyển đổi",
+    "futures_short": "Futures",
+    "spot_short": "Exchange"
 }
