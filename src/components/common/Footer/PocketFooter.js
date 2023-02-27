@@ -11,6 +11,7 @@ import ButtonV2 from '../V2/ButtonV2/Button';
 import SvgIcon from 'src/components/svg';
 import colors from 'styles/colors';
 import { THEME_MODE } from 'hooks/useDarkMode';
+import Image from 'next/image';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
     return (
@@ -21,10 +22,11 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         width >= 1200 && (
                             <>
                                 <div className="mal-footer___pocket__logo mb-6">
-                                    <img
+                                    <Image
                                         // src={getS3Url('/images/logo/nami-logo-v2.png')}
                                         src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
-                                        width="188"
+                                        width={188}
+                                        height={60}
                                         alt="Nami Exchange"
                                     />
                                 </div>
@@ -61,9 +63,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { about: !active.about } })}
                         >
-                         
                             {language === LANGUAGE_TAG.VI ? 'Về Nami' : 'About Nami'} Foundation
-
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}

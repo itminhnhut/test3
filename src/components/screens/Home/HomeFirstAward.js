@@ -26,7 +26,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
     return (
         <section
             className="homepage-first_award relative"
-            style={{ backgroundImage: `url('${getS3Url(`/images/screen/homepage/bg_first_award_${theme}.png`)}')` }}
+            style={{ backgroundImage: `url('${getS3Url(`/images/screen/homepage/bg_first_award_${theme}.webp`)}')` }}
         >
             <div className="homepage-first_award__wrapper max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                 <div className="homepage-first_award___step relative flex-1">
@@ -97,7 +97,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                             theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
                         } absolute  z-[-10] w-[228px] `}
                     >
-                        <img src={getS3Url('/images/screen/homepage/first_award_corner.png')} />
+                        <Image width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
                     <div
                         className={`
@@ -105,7 +105,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
                     }    absolute z-[-10] w-[228px] `}
                     >
-                        <img src={getS3Url('/images/screen/homepage/first_award_corner.png')} />
+                        <Image width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
 
                     <div className="homepage-first_award___form___input_group">
