@@ -127,11 +127,11 @@ const Overview = ({
         <>
             <div className='w-full h-[27.5rem] bg-[#0C0C0C]'>
                 <div className='py-20 container h-full'
-                     style={{
-                         backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
-                         backgroundSize: 'cover',
-                         backgroundPosition: 'center'
-                     }}
+                    style={{
+                        backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
                 >
                     <ModalShareRefCode
                         t={t}
@@ -197,7 +197,7 @@ const Overview = ({
                         <div className='flex gap-4 items-center mb-10'>
                             <div className='flex relative items-center'>
                                 <img src={user?.avatar || '/images/default_avatar.png'}
-                                     className='h-full w-20 h-20 rounded-full object-fit' />
+                                    className='h-full w-20 h-20 rounded-full object-fit' />
                                 <div
                                     className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                             </div>
@@ -218,13 +218,13 @@ const Overview = ({
                         </div>
                         <div className='w-full bg-gray-12 rounded-full overflow-hidden flex'>
                             <Progressbar
-                                background={colors.teal}
+                                background={colors.green[3]}
                                 percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
                                 height={8}
                                 className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
                             />
                             <Progressbar
-                                background={colors.blue['1']}
+                                background={colors.blue[5]}
                                 percent={(data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100}
                                 height={8}
                                 className='!rounded-r-lg'
@@ -425,7 +425,7 @@ const RefDetail = ({
 
                 {showFriendList &&
                     <FriendList isDesktop isShow={showFriendList} onClose={() => setShowFriendList(false)}
-                                code={code} />}
+                        code={code} />}
 
                 {showEditNote && (
                     <EditNote
@@ -460,7 +460,7 @@ const RefDetail = ({
                                             <CopyIcon data={data.code} size={24} className='cursor-pointer' />
                                         </div>
                                         <div onClick={data.status ? null : () => handleSetDefault(data.code)}
-                                             className='text-sm cursor-pointer select-none'>
+                                            className='text-sm cursor-pointer select-none'>
                                             {
                                                 data.status ?
                                                     <TagV2 type='success'>{t('reference:referral.default')}</TagV2>
@@ -486,8 +486,8 @@ const RefDetail = ({
                                                 <div
                                                     className='max-w-[140px] truncate'>https://nami.exchange/ref/{data.code}</div>
                                                 <CopyIcon color={colors.darkBlue5}
-                                                          data={`https://nami.exchange/ref/${data.code}`} size={16}
-                                                          className='cursor-pointer' />
+                                                    data={`https://nami.exchange/ref/${data.code}`} size={16}
+                                                    className='cursor-pointer' />
                                             </div>
                                         </div>
                                         <div className='w-full flex justify-between items-center'>
@@ -595,7 +595,7 @@ const ModalShareRefCode = ({
                 className='absolute bottom-0 inset-x-0 h-[6.25rem] rounded-b-xl flex items-center justify-between px-6 py-4'
             >
                 <img className='absolute inset-x-0' src={getS3Url('/images/reference/bg_share_ref_code_2.png')}
-                     alt='' />
+                    alt='' />
                 <div className='flex-1 z-10'>
                     <div
                         className='text-txtSecondary-dark whitespace-nowrap'>{t('reference:referral.share.scan_and_join')}</div>
