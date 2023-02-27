@@ -122,10 +122,10 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.SpotTrading,
-                title: 'Giao dịch Spot',
+                title: 'Giao dịch Exchange',
                 slug: 'faq-vi-giao-dich-spot',
                 displaySlug: 'giao-dich-spot',
-                description: 'Hướng dẫn về giao dịch Spot trên Nami Exchange',
+                description: 'Hướng dẫn về giao dịch Exchange trên Nami Exchange',
                 iconUrl: '',
                 subCats: []
             },
@@ -314,10 +314,10 @@ export const SupportCategories = {
             },
             {
                 id: CatsKey.SpotTrading,
-                title: 'Spot Trading',
+                title: 'Exchange Trading',
                 slug: 'faq-en-spot-trading',
                 displaySlug: 'spot-trading',
-                description: 'Guide to spot trading on Nami Exchange',
+                description: 'Guide to exchange trading on Nami Exchange',
                 iconUrl: ''
             },
             {

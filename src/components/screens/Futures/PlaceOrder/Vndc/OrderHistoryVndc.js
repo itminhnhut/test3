@@ -96,7 +96,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     pending
                 };
 
-                return orderStatus.cancelled || orderStatus.pending || item?.reason_close_code === 5 ?
+                return (orderStatus.cancelled || orderStatus.pending || item?.reason_close_code === 5) ?
                     <OrderStatusLabel type={item?.reason_close_code} t={t} />
                     :
                     <div className='text-txtPrimary dark:text-txtPrimary-dark font-normal text-sm text-left'>_</div>
