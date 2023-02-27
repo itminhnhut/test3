@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, forwardRef, useImperativeHandle } from 'react';
 import Slider from 'components/trade/InputSlider';
 const initPercent = 0;
-const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty, pair }) => {
+const FuturesOrderSlider = forwardRef(({ quoteQty, onChange, isAuth, decimals, minQuoteQty, maxQuoteQty, pair }, ref) => {
     const [percent, setPercent] = useState(isAuth && initPercent);
+
+    useImperativeHandle(ref, () => ({
+        changePercent: changePercent
+    }));
+
+    const changePercent = (max) => {
+        const _percent = quoteQty ? (quoteQty * 100) / max : 0;
+        setPercent(_percent);
+    };
 
     const arrDot = useMemo(() => {
         const size = 100 / 4;
@@ -41,6 +50,6 @@ const FuturesOrderSlider = ({ quoteQty, onChange, isAuth, decimals, minQuoteQty,
     };
 
     return <Slider useLabel labelSuffix="%" positionLabel="top" axis="x" x={percent} xmax={100} onChange={onPercentChange} />;
-};
+});
 
 export default FuturesOrderSlider;
