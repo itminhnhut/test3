@@ -82,7 +82,6 @@ const DepositWithdrawFee = () => {
                 fixed: 'left',
                 align: 'left',
                 preventSort: true
-
             },
             // {
             //     key: 'fullName',
@@ -184,7 +183,7 @@ const DepositWithdrawFee = () => {
         }
 
         if (!data?.length) {
-            tableStatus = <NoResult text={t('common:no_results_found')} /> //<Empty />;
+            tableStatus = <NoResult text={t('common:no_results_found')} />; //<Empty />;
         }
 
         return (
@@ -221,7 +220,7 @@ const DepositWithdrawFee = () => {
                         current: state.currentPage,
                         pageSize: ROW_LIMIT,
                         onChange: (currentPage) => {
-                            window.document.getElementById('#deposit_withdraw_table').scrollIntoView({
+                            window.document.getElementById('deposit_withdraw_table').scrollIntoView({
                                 behavior: 'smooth'
                             });
 
@@ -281,7 +280,7 @@ const DepositWithdrawFee = () => {
 
             <div className="w-full md:max-w-[23rem] mt-7 lg:mt-20">{renderSearchBox()}</div>
             {width > BREAK_POINTS.md ? (
-                <div id="#deposit_withdraw_table" className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">
+                <div id="deposit_withdraw_table" className="mt-8 overflow-hidden border border-divider dark:border-divider-dark rounded-xl ">
                     {renderTable()}
                 </div>
             ) : (

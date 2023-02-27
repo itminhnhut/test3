@@ -272,7 +272,12 @@ const TradingFee = () => {
                 paginationProps={{
                     current: state.currentFuturesFeePage,
                     pageSize: 10,
-                    onChange: (currentFuturesFeePage) => setState({ currentFuturesFeePage })
+                    onChange: (currentFuturesFeePage) => {
+                        window.document.getElementById('trading_fee').scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        setState({ currentFuturesFeePage });
+                    }
                 }}
                 isNamiV2
             />
@@ -622,7 +627,7 @@ const TradingFee = () => {
 
             <div className="mt-20 mb-8 text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
-            <div className="hidden md:block">
+            <div  id="trading_fee" className="hidden md:block">
                 <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-8">{renderFeeTab()}</div>
                 <div className="border border-divider dark:border-divider-dark rounded-b-xl pb-8">
                     {state.tabIndex === 0 && renderExchangeTableFee()}

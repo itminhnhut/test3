@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Listbox, Transition } from '@headlessui/react';
 import axios from 'axios';
 import { IconLock } from 'src/components/common/Icons';
@@ -9,17 +8,15 @@ import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import NumberFormat from 'react-number-format';
 import { useSelector } from 'react-redux';
-import { useAsync, useDebounce, useLocalStorage } from 'react-use';
+import { useAsync } from 'react-use';
 import { getMarketWatch } from 'redux/actions/market';
 import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
-import { ApiStatus, EPS, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
+import { ApiStatus, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { formatBalance, formatPrice, getDecimalScale, getFilter, getLoginUrl, getSymbolString, formatNumber } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
-import showNotification from 'utils/notificationService';
 import { GET_SPOT_FEE_CONFIG } from 'redux/actions/apis';
 import { max, min } from 'lodash/math';
 import { isNumber } from 'lodash';
@@ -46,9 +43,6 @@ const useFocus = () => {
 const allSubTabs = [ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.Type.LIMIT];
 
 const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
-    const [priceRef, setPriceFocus] = useFocus();
-    const [quantityRef, setQuantityFocus] = useFocus();
-    const [quoteQtyRef, setQuoteQtyFocus] = useFocus();
     const { base, quote } = symbol;
     const { t } = useTranslation();
     const QuantityMode = [
@@ -65,8 +59,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const user = useSelector((state) => state.auth.user) || null;
     const balanceSpot = useSelector((state) => state.wallet.SPOT);
     const selectedOrder = useSelector((state) => state.spot?.selectedOrder);
-    const cancelButtonRef = useRef();
-    const [open, setOpen] = useState(false);
     const [quantityMode, setQuantityMode] = useState(QuantityMode[1]);
     const [buyPercentage, setBuyPercentage] = useState(0);
     const [sellPercentage, setSellPercentage] = useState(0);
@@ -77,32 +69,24 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const [sellQuantity, setSellQuantity] = useState(0);
     const [buyQuoteQty, setBuyQuoteQty] = useState(0);
     const [sellQuoteQty, setSellQuoteQty] = useState(0);
-    const [focus, setFocus] = useState('');
     const [buyPrice, setBuyPrice] = useState();
     const [sellPrice, setSellPrice] = useState();
-    const [loadingInitialPrice, setLoadingInitialPrice] = useState(true);
-    const [initialPrice, setInitialPrice] = useState();
-    const [needConfirm, setNeedConfirm] = useLocalStorage('spot:need_confirm', 'true');
+    // const [initialPrice, setInitialPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
-    const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
-    const [isLoadingMultiValueList, setIsLoadingMultiValueList] = useState(true);
-    const [multiValueList, setMultiValueList] = useState({});
-    const [multiValue, setMultiValue] = useState(0);
     const router = useRouter();
-    const [discountTransactionFee, setDiscountTransactionFee] = useState(0);
     const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
     const [state, set] = useState({ centerPrice: null, feeConfig: null });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
     const [showAlert, setShowAlert] = useState(false);
     const isFocus = useRef();
-    const mount = useRef(false);
     const alert = useRef({
         type: '',
         title: '',
         message: '',
         notes: ''
     });
+    const side = useRef();
 
     const getFeeConfig = async () => {
         try {
@@ -119,7 +103,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     useAsync(async () => {
         if (symbol) {
-            setMultiValue(symbol?.quote === 'VNDC' ? 24000 : 1);
             const newSymbolTicker = await getMarketWatch(getSymbolString(symbol));
             setSymbolTicker(newSymbolTicker?.[0]);
         }
@@ -249,45 +232,15 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return success;
     };
 
-    const getInitialPrice = async (assetId, source) => {
-        if (!assetId) return;
-        setLoadingInitialPrice(true);
-        const { data, status } = await fetchAPI({
-            url: '/api/v1/asset/initial_price',
-            options: {
-                method: 'GET'
-            },
-            params: {
-                assetId
-            },
-            cancelToken: source.token
-        });
-        setLoadingInitialPrice(false);
-
-        if (status === ApiStatus.SUCCESS) {
-            setInitialPrice(data);
-        }
-    };
-
-    const handleRouteCancel = (source) => () => {
-        source.cancel();
-    };
-
     useEffect(() => {
         const source = axios.CancelToken.source();
-        getInitialPrice(baseAssetId, source);
-        router.events.on('routeChangeStart', handleRouteCancel(source));
-
-        // If the component is unmounted, unsubscribe
-        // from the event with the `off` method:
         return () => {
-            router.events.off('routeChangeStart', handleRouteCancel(source));
+            source.cancel();
         };
     }, [baseAssetId, symbol]);
 
     const createOrder = async (_orderSide) => {
-        // console.log('__ check cerate', _orderSide);
-        // Filter input
+        side.current = _orderSide;
         try {
             const _quantity = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyQuantity : +sellQuantity;
             const _quoteOrderQty = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyQuoteQty : +sellQuoteQty;
@@ -302,19 +255,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 price: _price,
                 useQuoteQty: isUseQuoteQuantity
             };
-            // console.log('__ check params order', params);
-            // console.log(orderType, quantityMode.id, ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY);
-
-            // if (orderType === ExchangeOrderEnum.Type.MARKET && quantityMode.id === ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) {
-            //     params.useQuoteQty = true;
-            // }
-            // const filterResult = filterOrderInputApi(params);
-            // if (filterResult) {
-            //     const { code, message } = filterResult;
-            //     showNotification({ message: `(${code}) ${t(`error:${message}`)}`, title: 'Error', type: 'failure' }, 'bottom', 'bottom-right');
-            //     return;
-            // }
-
             const res = await fetchAPI({
                 url: '/api/v3/spot/order',
                 options: {
@@ -346,7 +286,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     title: t('common:success'),
                     message: message
                 };
-                // showNotification({ message, title: t('common:success'), type: 'success' }, 2500, 'bottom', 'bottom-right');
             } else {
                 const error = find(Error, { code: res?.code });
                 const { requestId } = data;
@@ -371,7 +310,6 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     message: content,
                     notes: `(${shortRequestId})`
                 };
-                // showNotification({ message: content, title: t('common:failure'), type: 'warning' }, 2500, 'bottom', 'bottom-right');
             }
         } catch (e) {
             console.log('createOrder web: ', e);
@@ -387,9 +325,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     };
 
     const confirmModal = async (_orderSide) => {
-        // console.log('__ chekc order', _orderSide);
         setPlacing(true);
-        // console.log('__ chekc order 2', _orderSide);
         await createOrder(_orderSide);
     };
 
@@ -783,18 +719,24 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             (!isMarket && !validator('price', _orderSide === ExchangeOrderEnum.Side.BUY ? buyPrice : sellPrice))?.isValid;
         const disabled = placing || currentExchangeConfig?.status === 'MAINTAIN' || isErorr;
         return !user ? (
-            <Link href={getLoginUrl('sso')}>
-                <a className="w-full">
-                    <ButtonV2 variants="secondary">
-                        <div dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
-                    </ButtonV2>
-                </a>
-            </Link>
+            <ButtonV2 variants="secondary">
+                <Link href={getLoginUrl('sso')}>
+                    <a>
+                        <span className="text-teal hover:underline">{t('common:log_in')}</span>
+                    </a>
+                </Link>
+                <div className="font-normal">{t('common:or')}</div>
+                <Link href={getLoginUrl('sso', 'register')}>
+                    <a>
+                        <span className="text-teal hover:underline">{t('common:register')}</span>
+                    </a>
+                </Link>
+            </ButtonV2>
         ) : (
             <ButtonV2
                 onClick={() => !disabled && confirmModal(_orderSide)}
                 disabled={disabled}
-                loading={placing}
+                loading={placing && side.current === _orderSide}
                 className={_orderSide === ExchangeOrderEnum.Side.BUY ? 'bg-teal' : 'bg-red'}
             >
                 {t(_orderSide)} {base}

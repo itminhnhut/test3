@@ -239,7 +239,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                 onClick={themeToggle}
                             >
                                 <div className="flex flex-row items-center">{t('navbar:menu.mode')}</div>
-                                <div>{currentTheme !== 'dark' ? <SvgIcon name="sun" size={18} /> : <SvgIcon name="moon" size={18} />}</div>
+                                <div>{currentTheme !== 'dark' ? <SvgIcon name="sun" size={24} /> : <SvgIcon name="moon" size={24} />}</div>
                             </a>
                         )}
                         <a
