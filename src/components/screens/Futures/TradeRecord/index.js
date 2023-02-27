@@ -100,6 +100,7 @@ const FuturesTradeRecord = ({
                     isAuth={isAuth}
                     onLogin={onLogin}
                     pair={pair}
+                    key={0}
                     status={VndcFutureOrderType.Status.ACTIVE}
                 />
 
@@ -111,6 +112,7 @@ const FuturesTradeRecord = ({
                     isAuth={isAuth}
                     onLogin={onLogin}
                     pair={pair}
+                    key={1}
                     status={VndcFutureOrderType.Status.PENDING}
                 />
             case FUTURES_RECORD_CODE.orderHistory:
