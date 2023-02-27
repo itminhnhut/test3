@@ -1,40 +1,19 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import SvgGlobe from 'components/svg/Globe';
 import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
-import { useClickAway, useHoverDirty, useToggle } from 'react-use';
-import colors from 'styles/colors';
 
 const LanguageSetting = () => {
-    const [isOpen, toggleOpen] = useToggle(false);
-
-    const ref = useRef(null);
-
-    // const isHovering = useHoverDirty(ref);
     const [currentLocale, onChangeLang] = useLanguage();
 
-    useClickAway(ref, () => {
-        if (isOpen) {
-            toggleOpen();
-        }
-    });
-
     return (
-        <div
-            //  ref={ref}
-            className=" flex items-center h-full"
-            //  onClick={toggleOpen}
-        >
-            {/* <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
+        <div className=" flex items-center group mal-navbar__hamburger__spacing relative">
+            <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark">
                 <SvgGlobe type={2} size={20} color="currentColor" />
-            </div> */}
-
-            <div onClick={onChangeLang} className="cursor-pointer text-dominant uppercase font-semibold hover:opacity-80 transition-opacity">
-                {currentLocale}
             </div>
 
-            {/* {isOpen && (
-                <div className="absolute mt-[1px] bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] top-full right-4 rounded-b-xl  ">
+            <div className="absolute hidden group-hover:block top-full pt-[29px] right-0 ">
+                <div className=" mt-[1px] bg-white dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] rounded-b-xl  ">
                     {Object.values(LANGUAGE_TAG).map((lang) => (
                         <button
                             key={lang}
@@ -47,7 +26,7 @@ const LanguageSetting = () => {
                         </button>
                     ))}
                 </div>
-            )} */}
+            </div>
         </div>
     );
 };

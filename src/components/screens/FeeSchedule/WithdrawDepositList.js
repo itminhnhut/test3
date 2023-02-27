@@ -1,8 +1,12 @@
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import AssetLogo from 'components/wallet/AssetLogo';
 import React, { useEffect, useState } from 'react';
-import { formatNumber } from 'redux/actions/utils';
 import NoResult from '../Support/NoResult';
+import { formatNumber, walletLinkBuilder } from 'redux/actions/utils';
+import Link from 'next/link';
+import { WalletType } from 'redux/actions/const';
+import { EXCHANGE_ACTION } from 'pages/wallet';
+
 const ROW_PER_PAGE = 6;
 const WithdrawDepositList = ({ t, paymentConfigs, search, configs }) => {
     const [paymentFees, setPaymentFees] = useState({ filteredData: [], data: [], page: 1, maxPage: 1 });
@@ -59,11 +63,19 @@ const PaymentFeeRow = ({ t, fee, assetDigit, lastIndex }) => (
                 <div>Coin / Token</div>
                 <div>{t('wallet:deposit_fee')}</div>
             </div>
-            <div className="flex mb-3 justify-between items-center">
-                <div className="text-base font-semibold flex items-center ">
-                    <AssetLogo assetCode={fee?.assetCode} size={20} />
-                    <div className="ml-2"> {fee?.assetCode}</div>
-                </div>
+            <div className="flex mb-3 justify-between items-center" passHref>
+                <Link
+                    href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                        type: 'crypto',
+                        asset: fee?.assetCode
+                    })}
+                >
+                    <div className="text-base font-semibold flex items-center hover:!underline">
+                        <AssetLogo assetCode={fee?.assetCode} size={20} />
+                        <div className="ml-2"> {fee?.assetCode}</div>
+                    </div>
+                </Link>
+
                 <div className="text-dominant text-sm font-semibold">{t('common:free')}</div>
             </div>
         </div>

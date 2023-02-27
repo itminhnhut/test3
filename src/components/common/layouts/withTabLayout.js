@@ -39,6 +39,8 @@ export default (props) => (WrappedComponent) => {
         const renderTabLink = useCallback(() => {
             if (!(routes || Object.keys(routes).length) || (hideInApp && isApp)) return null;
 
+          
+
             return Object.values(routes).map((route) => {
                 const path = getLastestSourcePath(route?.pathname);
                 const isActive = state.currentLastestPath === path;
@@ -93,7 +95,7 @@ export default (props) => (WrappedComponent) => {
 const Background = styled.div.attrs({ className: 'w-full h-full pt-5 pb-24 lg:pb-32 2xl:pb-44' })`
     background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
 
-    @media (max-width: 1024px) {
+    @media (max-width: 768px) {
         .fee-schedule {
             padding: 16px;
             a {

@@ -8,7 +8,6 @@ import { TrendIcon, TuneIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FullScreen from 'components/svg/FullScreen';
-import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -266,7 +265,7 @@ export default class TimeFrame extends Component {
                             >
                                 <Popover.Panel className="absolute z-10 mt-2">
                                     <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark p-4">
-                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">Select intervals</div>
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">{this.t('common:select_intervals')}</div>
                                         <div className="w-64 relative grid grid-cols-5 gap-3">
                                             {ListTimeFrame.map((item, index) => {
                                                 const { value, text } = item;
@@ -398,18 +397,6 @@ export default class TimeFrame extends Component {
         this.setState({ showModal: false });
     };
 
-    renderMsg = () => {
-        return (
-            <div className="text-left">
-                <div>{this.t('common:reset_chart:desc')}</div>
-                <ul className="list-disc pl-4">
-                    <li>{this.t('common:reset_chart:step_1')}</li>
-                    <li>{this.t('common:reset_chart:step_2')}</li>
-                </ul>
-            </div>
-        );
-    };
-
     render() {
         return (
             <div className="flex items-center justify-between w-full bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
@@ -417,14 +404,16 @@ export default class TimeFrame extends Component {
                     isVisible={this.state.showModal}
                     onClose={() => this.onAction()}
                     type="warning"
-                    title={this.t('common:reset_chart:title')}
-                    message={this.renderMsg()}
+                    title="Xoá dữ liệu biểu đồ"
+                    message="Bạn có muốn xoá hết dữ liệu Chỉ báo và Phân tích? Nếu bạn gặp lỗi với biểu đồ, nhấn “Đặt lại biểu đồ”."
                     customButton={
-                        <div className="space-y-3 w-full mt-10 text-center">
+                        <div className="space-y-6 w-full mt-10 text-center">
                             <Button variants="primary" onClick={() => this.onAction('remove')}>
-                                {this.t('common:reset_chart:delete')}
+                                Xoá chỉ báo và phân tích
                             </Button>
-                            <TextButton onClick={() => this.onAction('reset')}>{this.t('common:reset_chart:reset')}</TextButton>
+                            <div onClick={() => this.onAction('reset')} className="font-semibold text-teal cursor-pointer">
+                                Đặt lại biểu đồ
+                            </div>
                         </div>
                     }
                 />

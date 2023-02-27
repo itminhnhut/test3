@@ -166,7 +166,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
                             <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold" onClick={handleMarkAllRead}>
-                                {t('navbar:delete_noti')}
+                                {t('navbar:mark_read')}
                             </ButtonV2>
                             {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">

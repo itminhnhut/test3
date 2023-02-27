@@ -296,7 +296,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.placeOrder}
-                                    className={classNames('border-l border-r border-divider dark:border-divider-dark', {
+                                    className={classNames('border-l border-divider dark:border-divider-dark', {
                                         hidden: !filterLayout.isShowPlaceOrder
                                     })}
                                 >
@@ -313,7 +313,7 @@ const Futures = () => {
                                 </div>
                                 <div
                                     key={futuresGridKey.marginRatio}
-                                    className={classNames('border border-b-0 border-divider dark:border-divider-dark', {
+                                    className={classNames('border-t border-divider dark:border-divider-dark', {
                                         hidden: !filterLayout.isShowAssets || !auth
                                     })}
                                 >

@@ -785,7 +785,9 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return !user ? (
             <Link href={getLoginUrl('sso')}>
                 <a className="w-full">
-                    <ButtonV2 variants="secondary" dangerouslySetInnerHTML={{ __html: t('sign_in_to_continue') }}></ButtonV2>
+                    <ButtonV2 variants="secondary">
+                        <div dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
+                    </ButtonV2>
                 </a>
             </Link>
         ) : (
@@ -804,7 +806,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         return (
             <>
                 <div className="mb-4 flex items-center space-x-2">
-                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('spot:available_balance')}:</div>
+                    <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium ">{t('common:available_balance')}:</div>
                     <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-medium text-right">
                         {
                             // eslint-disable-next-line no-nested-ternary

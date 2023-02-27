@@ -161,7 +161,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
             <Div100vh className={`mal-pocket-navbar__drawer ${isActive ? 'mal-pocket-navbar__drawer__active' : ''}`}>
                 <div className="mal-pocket-navbar__drawer__content___wrapper">
                     <div className="absolute right-4">
-                        <X style={{ cursor: 'pointer', marginRight: 16 }} onClick={onClose} />
+                        <X style={{ cursor: 'pointer' }} onClick={onClose} />
                     </div>
 
                     {!auth ? (

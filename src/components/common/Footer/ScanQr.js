@@ -2,12 +2,6 @@ import React from 'react';
 import { QRCode } from 'react-qrcode-logo';
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
-{
-    /* <QRCode
-                        value={`${APP_URL}#nami_exchange_download_app`}
-                        size={128}
-                    /> */
-}
 
 const ScanQr = ({ t }) => {
     return (

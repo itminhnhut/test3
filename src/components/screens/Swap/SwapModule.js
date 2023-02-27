@@ -576,20 +576,20 @@ const SwapModule = ({ width, pair }) => {
         if (!Object.keys(state.fromErrors).length) error = null;
 
         if (state.fromErrors.hasOwnProperty('min')) {
-            error = t('convert:errors.min', { amount: formatPrice(state.fromErrors.min) }).toLowerCase() + ` ${state.fromAsset}`;
+            error = t('convert:errors.min', { amount: formatPrice(state.fromErrors.min) }) + ` ${state.fromAsset}`;
         }
         if (state.fromErrors.hasOwnProperty('max')) {
-            error = t('convert:errors.max', { amount: formatPrice(state.fromErrors.max) }).toLowerCase() + ` ${state.fromAsset}`;
+            error = t('convert:errors.max', { amount: formatPrice(state.fromErrors.max) }) + ` ${state.fromAsset}`;
         }
         if (state.fromErrors.hasOwnProperty('insufficient')) {
-            error = t('convert:errors.insufficient').toLowerCase();
+            error = t('convert:errors.insufficient');
         }
 
         if (!error) return null;
         return (
-            <div className="flex items-center text-red pt-3 text-xs text-left leading-4  gap-1">
+            <div className="flex items-center text-red pt-3 text-xs text-left leading-4 gap-1">
                 <SwapWarning size={12} fill={colors.red2} />
-                {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
+                {error}
             </div>
         );
     }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.fromErrors]);
@@ -599,14 +599,14 @@ const SwapModule = ({ width, pair }) => {
         if (!Object.keys(state.toErrors).length) error = null;
 
         if (state.toErrors.hasOwnProperty('not_found')) {
-            error = t('convert:errors.est_rate_not_found').toUpperCase();
+            error = t('convert:errors.est_rate_not_found');
         }
 
         if (!error) return null;
         return (
             <div className="flex items-center text-red pt-3 text-xs text-left leading-4  gap-1">
                 <SwapWarning size={12} fill={colors.red2} />
-                {error?.charAt(0)?.toUpperCase() + error?.slice(1)}
+                {error}
             </div>
         );
     }, [auth, state.fromAsset, state.toAsset, state.fromAmount, state.loadingPreOrder, state.estRate, state.toErrors]);

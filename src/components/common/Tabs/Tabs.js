@@ -96,8 +96,9 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     }, [tab, children]);
 
     const offset = useMemo(() => {
+        if (!mount) return null;
         const el = document.querySelector('#tab-item-' + tab);
-        if (!mount || !el) return null;
+        if (!el) return null;
         scrollHorizontal(el, TabRef.current);
         const total = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
         return {

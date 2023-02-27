@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import Spinner from 'components/svg/Spinner';
 
-const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, color, ...props }) => {
+const Button = ({ className = '', disabled = false, children, variants = 'primary', onClick, loading, ...props }) => {
     const extendClass = {
         primary: 'bg-green-3 hover:bg-green-4 dark:bg-green-2 dark:hover:bg-green-4 text-white',
         red: 'text-white bg-red',
@@ -21,9 +21,8 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
                 extendClass,
                 className
             )}
-            onClick={loading || disabled ? null : onClick}
+            onClick={onClick}
             disabled={loading || disabled}
-            {...props}
         >
             {children} {loading && <Spinner />}
         </button>

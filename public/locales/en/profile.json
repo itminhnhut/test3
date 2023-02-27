@@ -117,7 +117,7 @@
     "error": {
         "USER_IS_INVITED": "You have entered the referral code before. Please reload to update data",
         "SELF_INVITE": "Cannot enter your own referral code ",
-        "HAD_RELATION": "Mã giới thiệu không hợp lệ",
+        "HAD_RELATION": "Referral code is invalid.",
         "REFERRAL_CODE_NOT_FOUND": "Referral code does not exist.",
         "failed": "Add referral code failed."
     },

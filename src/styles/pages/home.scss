@@ -2,6 +2,12 @@
   @apply bg-homepageBg dark:bg-homepageBg-dark;
 }
 
+.qr-code {
+  canvas {
+    @apply rounded-md;
+  }
+}
+
 .homepage-introduce {
   @apply bg-[#000] relative;
   // bg-homepageBg dark:bg-[#000];
@@ -229,7 +235,7 @@
         }
 
         .homepage-introduce___statitics____item___description {
-          @apply text-txtPrimary-dark capitalize;
+          @apply text-txtPrimary-dark;
 
           font-size: 12px;
           font-weight: 500;
