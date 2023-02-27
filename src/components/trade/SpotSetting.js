@@ -117,10 +117,10 @@ const SpotSetting = (props) => {
                                         {t('spot:setting.layout')}
                                     </div>
                                     <div className="flex justify-around">
-                                        {layouts.map((rs) => {
+                                        {layouts.map((rs, i) => {
                                             const isActive = layoutMode === rs.value;
                                             return (
-                                                <div className="flex flex-col justify-center space-y-2">
+                                                <div key={i} className="flex flex-col justify-center space-y-2">
                                                     <div
                                                         className={classnames('p-1 bg-gray-10 dark:bg-dark-2 cursor-pointer rounded-[3px]', {
                                                             'border border-teal': isActive
