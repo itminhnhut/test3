@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
+import Image from 'next/image'
 
 import classNames from 'classnames';
 
@@ -160,7 +161,7 @@ const HomeMarketTrend = ({ trendData }) => {
         const tabMap = ['topView', 'newListings', 'topGainers', 'topLosers'];
         const pairs = trendData ? trendData?.[tabMap[state.marketTabIndex]] : null;
         if (!pairs) return null;
-        return pairs.map((pair) => {
+        return pairs.map((pair,index) => {
             let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair);
             const _24hChange = getExchange24hPercentageChange(pair);
@@ -199,7 +200,7 @@ const HomeMarketTrend = ({ trendData }) => {
                         </div>
                         <div className="homepage-markettrend__market_table__row__col4">
                             <div className="homepage-markettrend__market_table__chart">
-                                <img src={sparkLine} alt="Nami Exchange" />
+                                <Image width={100} height={37} src={sparkLine} alt="Nami Exchange" />
                             </div>
                         </div>
                     </a>

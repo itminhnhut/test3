@@ -70,11 +70,8 @@ const HomeLightDark = ({ onShowQr, t }) => {
                 </div>
 
                 <div className="relative bg-transparent">
-                    <div
-                        className="absolute left-[35%] top-1/2 pointer-events-none -translate-x-1/2 w-full h-full -translate-y-1/2 "
-                        // style={{ background: `url('${getS3Url('/images/screen/homepage/splash_dark.png')}') no-repeat center`,backgroundSize:'cover' }}
-                    >
-                        <Image src={getS3Url('/images/screen/homepage/splash_dark.png')} layout="fill" />
+                    <div className="absolute left-[35%] top-1/2 pointer-events-none -translate-x-1/2 w-full h-full -translate-y-1/2 ">
+                        <Image alt="splash" src={getS3Url('/images/screen/homepage/splash.webp')} layout="fill" />
                     </div>
                     <Swiper
                         spaceBetween={10}
@@ -109,10 +106,10 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             <SwiperSlide key={index} className="">
                                 <div className="relative overflow-hidden w-full h-[650px] md:h-[435px]">
                                     <Image
-                                        src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.png`)}
+                                        src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.webp`)}
                                         layout="fill"
                                         className="p-1"
-                                        alt="iphone"
+                                        alt={'iphone_' + index + 1}
                                         objectFit="contain"
                                     />
                                 </div>
@@ -149,7 +146,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         </Link>
 
                         <div onClick={onShowQr} className="cursor-pointer w-[54px]">
-                            <Image src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
+                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
                         </div>
                     </div>
                     <div className="text-left lg:text-right flex-1  p-3">
