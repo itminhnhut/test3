@@ -46,6 +46,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     const [showCloseModal, setShowCloseModal] = useState(false);
     const [showCloseAll, setShowCloseAll] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const [loading, setLoading] = useState(true)
     const message = useRef({
         status: '',
         title: '',
@@ -59,6 +60,14 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         status: '',
         side: ''
     });
+
+    useEffect(() => {
+        setLoading(true)
+        if (ordersList.length > 0) return
+        const timeOutLoading = setTimeout(() => setLoading(false), 700)
+        return () => clearTimeout(timeOutLoading)
+    }, [])
+
     const [closeType, setCloseType] = useState();
     const btnCloseAll = useRef();
 
@@ -79,7 +88,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const dataSource = useMemo(() => {
         const filteredData = [0, 1, 2].includes(status) ? ordersList.filter((e) => e.status === status) : ordersList;
-    
+
         return filteredData.map((item) => {
             const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
             const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
@@ -118,7 +127,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
         } else {
             hasNext.current = true
         }
-        result  = result.slice(page * LIMIT, (page + 1) * LIMIT)
+        result = result.slice(page * LIMIT, (page + 1) * LIMIT)
         return result
     }, [hideOther, dataSource, filters, pair, status, page]);
 
@@ -636,6 +645,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 marketWatch={marketWatch}
             />
             <TableV2
+                loading={loading}
                 data={dataFilter}
                 onRowClick={(e) => onHandleClick('detail', e)}
                 columns={columns}
