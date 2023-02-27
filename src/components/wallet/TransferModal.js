@@ -26,6 +26,7 @@ import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -112,6 +113,19 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const [currentTheme] = useDarkMode();
     const isDarkMode = currentTheme === THEME_MODE.DARK;
+
+    // Check Kyc before redirect to page Deposit / Withdraw
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+
+    const handleKycRequest = (href) => {
+        if (auth?.kyc_status !== 2) {
+            return setIsOpenModalKyc(true);
+        } else {
+            onClose();
+            return router.push(href);
+        }
+    };
+
     // Use Hooks
     const dispatch = useDispatch();
     const {
@@ -152,7 +166,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 }
             })
     );
-    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+    // const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
     const auth = useSelector((state) => state.auth?.user);
@@ -671,11 +685,6 @@ const TransferModal = ({ isMobile, alert }) => {
         });
     }, [state.amount, currentWallet]);
 
-    const handleKycRequest = (href) => {
-        onClose();
-        return router.push(href);
-    };
-
     const renderAlertNotification = useCallback(() => {
         if (!state?.resultTransfer) return null;
 
@@ -714,6 +723,8 @@ const TransferModal = ({ isMobile, alert }) => {
             }));
         }
     };
+
+
 
     return (
         <ModalV2
@@ -763,6 +774,14 @@ const TransferModal = ({ isMobile, alert }) => {
             {renderHelperText()}
             {renderTransferButton()}
             {renderAlertNotification()}
+            <ModalNeedKyc
+                isOpenModalKyc={isOpenModalKyc}
+                onBackdropCb={() => {
+                    setIsOpenModalKyc(false);
+                    // setCurAssetCodeAction(null);
+                }}
+            // isMobile={isSmallScreen}
+            />
         </ModalV2>
     );
 };
