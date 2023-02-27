@@ -75,7 +75,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         type={item?.type}
                         side={item?.side}
                         specialOrder={specialOrder}
-                        canShare={item?.reason_close_code !== 5}
+                        canShare={item?.reason_close_code !== 5 && item?.profit}
                     />
                 )
             },
