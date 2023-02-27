@@ -261,7 +261,7 @@ const NavBar = ({
                         );
                     } else {
                         itemsLevel1withIcon.push(
-                            <Link href={child.url} key={`${child.title}_${child.key}`}>
+                            <Link href={child.url} key={`${child.title}_${child.key}`} passHref>
                                 <a
                                     className={
                                         useOneCol
