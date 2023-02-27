@@ -30,6 +30,7 @@ const SymbolList = (props) => {
     const [selectedCategory, setSelectedCategory] = useState({ name: t('common:all'), value: CATEGORY_SPOT_SIGNAL.ALL });
     const [signals, setSignals] = useState([]);
     const [filteredSignals, setFilteredSignals] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const user = useSelector((state) => state.auth.user) || null;
@@ -48,6 +49,7 @@ const SymbolList = (props) => {
     useAsync(async () => {
         const result = await getMarketWatch();
         setSymbolList(result);
+        setLoading(false);
     }, []);
 
     useInterval(async () => {
@@ -176,7 +178,11 @@ const SymbolList = (props) => {
                         )}
                     </div>
                 </div>
-                <div className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'}`}>
+                <div
+                    className={`overflow-y-auto pb-4 -mx-4 ${isPro ? 'max-h-[200px]' : 'max-h-[calc(100%-8rem)]'} ${
+                        loading ? 'flex items-center justify-center h-full' : ''
+                    }`}
+                >
                     {/* <div className="overflow-y-scroll"> */}
                     {filteredSymbolList.length > 0 ? (
                         filteredSymbolList.map((ticker, index) => {
@@ -200,7 +206,7 @@ const SymbolList = (props) => {
                             );
                         })
                     ) : (
-                        <NoData isSearch={!!search} />
+                        <NoData className="w-full text-xs" loading={loading} isSearch={!!search} />
                     )}
                 </div>
             </>
@@ -313,7 +319,7 @@ const SymbolList = (props) => {
                             );
                         })
                     ) : (
-                        <NoData isSearch={!!search} />
+                        <NoData className="w-full text-xs" loading={loading} isSearch={!!search} />
                     )}
                 </div>
             </>
