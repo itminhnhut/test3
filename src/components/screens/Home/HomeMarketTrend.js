@@ -161,7 +161,7 @@ const HomeMarketTrend = ({ trendData }) => {
         const tabMap = ['topView', 'newListings', 'topGainers', 'topLosers'];
         const pairs = trendData ? trendData?.[tabMap[state.marketTabIndex]] : null;
         if (!pairs) return null;
-        return pairs.map((pair) => {
+        return pairs.map((pair,index) => {
             let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair);
             const _24hChange = getExchange24hPercentageChange(pair);
