@@ -126,12 +126,15 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
             width: 148,
             render: (_row, item) => {
                 const isVndc = item?.symbol?.indexOf('VNDC') !== -1
-                if(item.reason_close_code === 5) return "_"
+                if (item.reason_close_code === 5) return "_"
                 return <OrderProfit
                     className='w-full'
                     key={item.displaying_id} order={item}
-                    initPairPrice={item.close_price} setShareOrderModal={() => setShareOrder(item)}
-                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2} />
+                    initPairPrice={item.close_price}
+                    setShareOrderModal={() => setShareOrder(item)}
+                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2}
+                    isTabHistory
+                />
             },
             sortable: false,
         },
