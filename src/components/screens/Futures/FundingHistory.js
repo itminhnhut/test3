@@ -55,7 +55,7 @@ export default function FundingHistory(props) {
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
-                    <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')} Funding Rates</div>
+                    <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
                     <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
                         <span>{t('futures:funding_history_tab:to_learn_funding')}:</span>
                         <a
