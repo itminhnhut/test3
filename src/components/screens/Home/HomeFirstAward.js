@@ -97,7 +97,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                             theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
                         } absolute  z-[-10] w-[228px] `}
                     >
-                        <Image width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
+                        <Image alt="first_award_corner" width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
                     <div
                         className={`
@@ -105,7 +105,7 @@ const HomeFirstAward = ({ t, language, theme }) => {
                         theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
                     }    absolute z-[-10] w-[228px] `}
                     >
-                        <Image width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
+                        <Image alt="first_award_corner_replicate" width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
 
                     <div className="homepage-first_award___form___input_group">

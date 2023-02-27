@@ -25,7 +25,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://www.facebook.com/namifutures">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url('/images/icon/ic_facebook_v3.png')} />
+                                <Image alt="facebook_icon" width={52} height={52} src={getS3Url('/images/icon/ic_facebook_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Facebook</div>
@@ -34,7 +34,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://www.facebook.com/groups/nami.exchange">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url('/images/icon/ic_facebook_v3_plus.png')} />
+                                <Image alt="facebook_group_icon" width={52} height={52} src={getS3Url('/images/icon/ic_facebook_v3_plus.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Facebook Group</div>
@@ -43,7 +43,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://t.me/namitrade">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon ">
-                                <Image width={90} height={52} src={getS3Url('/images/icon/ic_telegram_v3_plus.png')} />
+                                <Image alt="telegram_global_icon" width={90} height={52} src={getS3Url('/images/icon/ic_telegram_v3_plus.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Telegram Global</div>
@@ -52,7 +52,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://t.me/namitradevn">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={78} height={58} src={getS3Url('/images/icon/ic_telegram_v3.png')} />
+                                <Image alt="telegram_icon" width={78} height={58} src={getS3Url('/images/icon/ic_telegram_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Telegram</div>
@@ -61,7 +61,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://twitter.com/NamiTrade">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url('/images/icon/ic_twitter_v3.png')} />
+                                <Image alt="twitter_icon" width={52} height={52} src={getS3Url('/images/icon/ic_twitter_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Twitter</div>
@@ -70,7 +70,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://www.reddit.com/r/NAMIcoin">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url('/images/icon/ic_reddit_v3.png')} />
+                                <Image alt="reddit_icon" width={52} height={52} src={getS3Url('/images/icon/ic_reddit_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Reddit</div>
@@ -79,7 +79,7 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href="https://nami.io">
                         <a className="group homepage-community___channel__group___item" target="_blank">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url('/images/icon/ic_globe_v3.png')} />
+                                <Image alt="blog_icon" width={52} height={52} src={getS3Url('/images/icon/ic_globe_v3.png')} />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">Blog</div>
@@ -88,7 +88,12 @@ const HomeCommunity = ({ width, t, language, currentTheme }) => {
                     <Link href={`https://www.coingecko.com/${language}/${language === LANGUAGE_TAG.VI ? 'ty_gia' : 'coins'}/nami-corporation-token`}>
                         <a className="group homepage-community___channel__group___item">
                             <div className="homepage-community___channel__group___item__icon">
-                                <Image width={52} height={52} src={getS3Url(`/images/icon/ic_coingecko_${currentTheme === THEME_MODE.DARK ? 'v4' : 'v3'}.png`)} />
+                                <Image
+                                    alt="coingecko_icon"
+                                    width={52}
+                                    height={52}
+                                    src={getS3Url(`/images/icon/ic_coingecko_${currentTheme === THEME_MODE.DARK ? 'v4' : 'v3'}.png`)}
+                                />
                             </div>
                             <div className="homepage-community___channel__group___item__bg" />
                             <div className="homepage-community___channel__group___item__label">CoinGecko</div>
