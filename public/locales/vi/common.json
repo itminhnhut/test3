@@ -350,7 +350,7 @@
     "cancel_open_order": "Huỷ",
     "cancel_order": "Huỷ lệnh",
     "cancel_all_orders": "Huỷ tất cả",
-    "cancel_all_message": "Bạn có chắc chắn muốn huỷ tất cả các lệnh đang mở?",
+    "cancel_all_message": "Bạn có chắc chắn muốn huỷ tất cả các lệnh đang chờ không?",
     "cancel_all_success": "Huỷ lệnh thành công",
     "cancel_all_failed": "Huỷ lệnh thất bại",
     "users": "{{value}} người",
