@@ -103,7 +103,7 @@ const FuturesTabColumn = ({ fee, translate, lastIndex }) => (
             </div>
             <div className="flex font-semibold justify-between items-center mb-2">
                 <div className="">{fee.name}</div>
-                <div>{fee.max_leverage}x</div>
+                <div className="">{fee.max_leverage}x</div>
             </div>
         </div>
         <div className="mb-4">
