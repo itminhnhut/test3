@@ -1,15 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { useTranslation } from 'next-i18next';
-import 'keen-slider/keen-slider.min.css';
 import { formatTime, formatWallet } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import numeral from 'numeral';
-
-// Import InfiniteLooper
 import InfiniteLooper from 'components/common/InfiniteLooper';
 
 const HomeCurrentActivity = () => {
-    // Initial State
 
     const { t } = useTranslation(['home', 'common']);
     // Inital Keen Slider
@@ -52,7 +48,9 @@ const HomeCurrentActivity = () => {
     return (
         <section className="homepage-activity">
             <div className="homepage-activity___wrapper">
-                <InfiniteLooper gap={104} loopSize={2} loopDuration={100}>{renderActivityItem()}</InfiniteLooper>
+                <InfiniteLooper gap={104} loopSize={2} loopDuration={100}>
+                    {renderActivityItem()}
+                </InfiniteLooper>
             </div>
         </section>
     );

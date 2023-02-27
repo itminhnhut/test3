@@ -95,8 +95,8 @@ const Index = () => {
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
                 </div>
                 <div className="flex items-center justify-center relative py-12 ">
-                    <div className="z-10 rounded-xl">
-                        <QRCode value={`${APP_URL}#nami_exchange_download_app`} style={{ borderRadius: 20 }} eyeRadius={6} size={150} />
+                    <div className="z-10 rounded-xl qr-code">
+                        <QRCode value={`${APP_URL}#nami_exchange_download_app`}eyeRadius={6} size={150} />
                     </div>
                     <img src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`} className="absolute w-full h-full z-0 rounded-xl" />
                 </div>

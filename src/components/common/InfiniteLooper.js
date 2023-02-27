@@ -1,10 +1,9 @@
 import React from 'react';
-import classNames from 'classnames';
 import styled, { css } from 'styled-components';
 
 // loopSize is the number of duplicates children.
 // loopDuration is the duration for one children to finish move on screen.
-const InfiniteLooper = ({ children, gap, loopSize = 3, loopDuration = 30, pausedOnHover = true }) => {
+const InfiniteLooper = ({ children, gap, loopSize, loopDuration, pausedOnHover }) => {
     return (
         <Looper pausedOnHover={pausedOnHover} gap={gap}>
             {[...Array(loopSize).keys()].map((listNumber, index) => (
@@ -16,10 +15,17 @@ const InfiniteLooper = ({ children, gap, loopSize = 3, loopDuration = 30, paused
     );
 };
 
+InfiniteLooper.defaultProps = {
+    loopDuration: 30,
+    loopSize: 3,
+    gap: 32,
+    pausedOnHover: true
+};
+
 export default InfiniteLooper;
 
 const Looper = styled.div`
-    --gap: ${({ gap }) => gap ?? 32}px;
+    --gap: ${({ gap }) => gap}px;
 
     @keyframes scroll {
         from {
@@ -52,5 +58,5 @@ const LooperList = styled.div`
     justify-content: space-around;
     min-width: 100%;
     gap: var(--gap);
-    animation: ${({ loopDuration }) => loopDuration ?? 25}s scroll linear infinite;
+    animation: ${({ loopDuration }) => loopDuration}s scroll linear infinite;
 `;
