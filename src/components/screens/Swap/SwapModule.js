@@ -351,7 +351,7 @@ const SwapModule = ({ width, pair }) => {
                     >
                         <AssetLogo assetCode={state.fromAsset} size={24} />
                         <span className="mx-2 uppercase">{state.fromAsset}</span>
-                        <span className={state.openAssetList?.from ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <span className={`transition-transform duration-50 ${state.openAssetList?.from && 'rotate-180'}`}>
                             <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
@@ -436,7 +436,7 @@ const SwapModule = ({ width, pair }) => {
                     </button>
                     <AssetLogo assetCode={state.toAsset} size={24} />
                     <span className="mx-2 uppercase text-txtPrimary dark:text-txtPrimary-dark">{state.toAsset}</span>
-                    <span className={state.openAssetList?.to ? 'transition-transform duration-50 rotate-180' : ''}>
+                    <span className={`transition-transform duration-50 ${state.openAssetList?.to && 'rotate-180'}`}>
                         <ArrowDropDownIcon size={16} />
                     </span>
                 </div>

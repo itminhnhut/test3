@@ -368,7 +368,7 @@ const TransferModal = ({ isMobile, alert }) => {
                     <div className="txtSecond-3 text-center">{t('common:from')}</div>
                     <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.fromWallet)}
-                        <span className={state.openList?.fromWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <span className={`transition-transform duration-50 ${state.openList?.fromWalletList && 'rotate-180'}`}>
                             <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
@@ -413,7 +413,7 @@ const TransferModal = ({ isMobile, alert }) => {
                     <div className="text-center txtSecond-3">{t('common:to')}</div>
                     <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.toWallet)}
-                        <span className={state.openList?.toWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <span className={`transition-transform duration-50 ${state.openList?.toWalletList && 'rotate-180'}`}>
                             <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
@@ -456,7 +456,7 @@ const TransferModal = ({ isMobile, alert }) => {
             >
                 <AssetLogo assetCode={state.asset} size={24} />
                 <div className="mx-2 font-semibold text-base">{state.asset}</div>
-                <span className={state.openList?.assetList ? 'transition-transform duration-50 rotate-180' : ''}>
+                <span className={`transition-transform duration-50 ${state.openList?.assetList && 'rotate-180'}`}>
                     <ArrowDropDownIcon size={16} />
                 </span>
                 {renderAssetList()}
@@ -728,13 +728,12 @@ const TransferModal = ({ isMobile, alert }) => {
             </div>
             {renderWalletSelect()}
             <div
-                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${
-                    state?.errors?.minAmount || state?.errors?.insufficient
-                        ? 'border-red-2'
-                        : state.focus?.amount
+                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${state?.errors?.minAmount || state?.errors?.insufficient
+                    ? 'border-red-2'
+                    : state.focus?.amount
                         ? ' border-dominant'
                         : ' border-divider dark:border-divider-dark hover:!border-dominant'
-                }
+                    }
                 `}
             >
                 <div className="flex items-center justify-between">
