@@ -167,7 +167,7 @@ const Index = () => {
                 <HomeLightDark t={t} onShowQr={() => setState({ showQR: true })} />
 
                 <HomeFirstAward theme={currentTheme} t={t} language={language} />
-                <HomeCommunity t={t} language={language} width={width} />
+                <HomeCommunity currentTheme={currentTheme} t={t} language={language} width={width} />
 
                 {renderQrCodeModal()}
             </div>
