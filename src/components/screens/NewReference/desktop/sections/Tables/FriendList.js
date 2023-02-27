@@ -164,8 +164,6 @@ const FriendList = ({
                 }
             });
             if (data) {
-                console.log("here");
-
                 setdataSource(data);
             }
         } catch (e) {
@@ -234,8 +232,8 @@ const FriendList = ({
             dataIndex: 'code',
             title: 'Nami ID',
             align: 'left',
+            fixed: 'left',
             width: 180,
-            sorter: false,
             render: (data, item) => {
 
                 return renderRefInfo(item)
@@ -245,7 +243,7 @@ const FriendList = ({
             dataIndex: 'invitedAt',
             title: t('reference:referral.referral_date'),
             align: 'left',
-            width: 160,
+            width: 130,
             render: (data, item) => <div
                 className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
         }, {
@@ -253,7 +251,7 @@ const FriendList = ({
             dataIndex: 'kycStatus',
             title: t('reference:referral.status'),
             align: 'left',
-            width: 100,
+            width: 150,
             render: (data) => {
                 return {
                     [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
@@ -288,7 +286,9 @@ const FriendList = ({
             title: t('reference:referral.total_indirect_commissions'),
             align: 'right',
             width: 230,
-            render: (data, item) => renderCommissionData(item, 'undirectCommission')
+            render: (data, item) => {
+                return renderCommissionData(item, 'undirectCommission')
+            }
         }]
 
         return <TableV2
