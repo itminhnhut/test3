@@ -198,13 +198,13 @@ const FuturesOrderButtonsGroupVndc = ({
                     <>
                         <Link href={getLoginUrl('sso', 'register')}>
                             <a>
-                                <ButtonV2>{t('common:register')}</ButtonV2>
+                                <ButtonV2>{t('common:sign_up')}</ButtonV2>
                             </a>
                         </Link>
                         <Link href={getLoginUrl('sso')}>
                             <a>
                                 <ButtonV2 className="mt-3" variants="secondary">
-                                    {t('common:log_in')}
+                                    {t('common:sign_in')}
                                 </ButtonV2>
                             </a>
                         </Link>
