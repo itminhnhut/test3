@@ -488,8 +488,8 @@ const Summary = (props) => {
             datasets: [{
                 type: 'bar',
                 data: chartData,
-                backgroundColor: colors.portfolio.teal[0],
-                borderColor: colors.portfolio.teal[0],
+                backgroundColor: colors.teal,
+                borderColor: colors.teal,
                 maxBarThickness: width >= 640 ? 32 : 8,
                 borderRadius: 2,
             }]
@@ -527,7 +527,7 @@ const Summary = (props) => {
         const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px`}} >
+                <div className='h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px` }} >
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex w-full justify-between items-center mb-6'>
                             <div className={`${titleText}`}>
@@ -578,8 +578,8 @@ const Summary = (props) => {
             labels,
             datasets: [{
                 data: chartData,
-                backgroundColor: [colors.portfolio.teal[0], '#C0F9EE'],
-                borderColor: [colors.portfolio.teal[0], '#C0F9EE'],
+                backgroundColor: [colors.teal, '#C0F9EE'],
+                borderColor: [colors.teal, '#C0F9EE'],
                 hoverOffset: 4,
                 spacing: 4,
                 rotation: 180,
@@ -628,7 +628,7 @@ const Summary = (props) => {
         const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-auto h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px`}}>
+                <div className='w-auto h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px` }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex w-full justify-between items-center '>
                             <div className={`${titleText}`}>
@@ -802,8 +802,8 @@ const Summary = (props) => {
             datasets: [{
                 label: 'Lệnh lời',
                 data: winData,
-                backgroundColor: colors.portfolio.teal[0],
-                borderColor: colors.portfolio.teal[0],
+                backgroundColor: colors.teal,
+                borderColor: colors.teal,
             }, {
                 label: 'Lệnh lỗ',
                 data: loseData,
@@ -926,8 +926,8 @@ const Summary = (props) => {
             labels,
             datasets: [{
                 data: chartData,
-                backgroundColor: colors.portfolio.teal[0],
-                borderColor: colors.portfolio.teal[0],
+                backgroundColor: colors.teal,
+                borderColor: colors.teal,
                 maxBarThickness: width >= 640 ? 32 : 8,
                 borderRadius: 2,
             }]
@@ -963,7 +963,7 @@ const Summary = (props) => {
         const contentWidth = width >= 1440 ? 1440 : width
         return width >= 640 ? (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width:`${(contentWidth - 96 - 24) / 2}px`}}>
+                <div className='w-full h-full' style={{ width: `${(contentWidth - 96 - 24) / 2}px` }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className='flex items-center justify-between w-full mb-6'>
                             <div className={titleText} >
@@ -981,7 +981,7 @@ const Summary = (props) => {
             </ChartLayout>
         ) : (
             <ChartLayout area={gridArea} >
-                <div className='w-full h-full' style={{ width: '100%'}}>
+                <div className='w-full h-full' style={{ width: '100%' }}>
                     <div className='w-full h-full p-6 border-[1px] border-[#E2E8F0] rounded-xl'>
                         <div className={titleText} >
                             Biến động khối lượng
@@ -1168,7 +1168,7 @@ const Summary = (props) => {
             {section6Data ? renderSection6('section6') : loadingPlaceHolder('section6')}
             {section7Data ? renderSection7('section7') : loadingPlaceHolder('section7')}
             {/* {true ? renderSection8('section8') : loadingPlaceHolder('section8')} */}
-            {section9Data ? renderSection9('section9') : loadingPlaceHolder('section9')}    
+            {section9Data ? renderSection9('section9') : loadingPlaceHolder('section9')}
         </div>
     )
 }

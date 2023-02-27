@@ -257,8 +257,8 @@ const Summary = (props) => {
             datasets: [{
                 type: 'bar',
                 data: chartData,
-                backgroundColor: colors.portfolio.teal[0],
-                borderColor: colors.portfolio.teal[0],
+                backgroundColor: colors.teal,
+                borderColor: colors.teal,
                 maxBarThickness: width >= 640 ? 32 : 8,
                 borderRadius: 2,
             }]
@@ -331,8 +331,8 @@ const Summary = (props) => {
             labels,
             datasets: [{
                 data: chartData,
-                backgroundColor: [colors.portfolio.teal[0], '#C0F9EE'],
-                borderColor: [colors.portfolio.teal[0], '#C0F9EE'],
+                backgroundColor: [colors.teal, '#C0F9EE'],
+                borderColor: [colors.teal, '#C0F9EE'],
                 hoverOffset: 4,
                 spacing: 4,
                 rotation: 180,

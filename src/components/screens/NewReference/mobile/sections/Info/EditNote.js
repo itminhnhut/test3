@@ -8,6 +8,8 @@ import { scrollFocusInput } from 'redux/actions/utils';
 import classNames from 'classnames';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { CloseIcon } from 'components/svg/SvgIcon';
+
 
 const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDesktop }) => {
     const { t } = useTranslation();
@@ -73,13 +75,11 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                             onChange={handleInputNote}
                             value={note ?? ''}
                             ref={refInput}
-                            // autoFocus
+                        // autoFocus
                         />
-                        {/* {note.length ? ( */}
-                        {/*     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setNote('')}> */}
-                        {/*         <path d="m6 6 12 12M6 18 18 6" stroke="#718096" strokeLinecap="round" strokeLinejoin="round" /> */}
-                        {/*     </svg> */}
-                        {/* ) : null} */}
+                        <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 ${!!note.length ? 'visible' : 'invisible'}`}>
+                            <CloseIcon onClick={() => setNote('')} size={16} className="cursor-pointer" />
+                        </button>
                     </div>
                     <div className="w-10 text-txtSecondary dark:text-txtSecondary-dark">{note.length}/30</div>
                 </div>
@@ -119,11 +119,9 @@ const EditNote = ({ isShow = false, onClose, doRefresh, code, currentNote, isDes
                                     outline: 'none'
                                 }}
                             />
-                            {note.length ? (
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={() => setNote('')}>
-                                    <path d="m6 6 12 12M6 18 18 6" stroke="#718096" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            ) : null}
+                            <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 ${!!note.length ? 'visible' : 'invisible'}`}>
+                                <CloseIcon onClick={() => setNote('')} size={16} className="cursor-pointer" />
+                            </button>
                         </div>
                         <div className="w-10">{note.length}/30</div>
                     </div>
