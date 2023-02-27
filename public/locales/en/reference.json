@@ -129,7 +129,7 @@
         "status": "Status",
         "kyc": "KYC",
         "not_kyc": "Not KYC yet",
-        "pending_kyc": "Pending KYC",
+        "pending_kyc": "KYC Pending",
         "referred": "Referred",
         "total_direct_commissions": "Total Direct Commissions",
         "total_indirect_commissions": "Total Indirect Commissions",

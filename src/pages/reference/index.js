@@ -45,7 +45,7 @@ const Reference = () => {
                     }}
                 >
                     <div className={classNames("h-full ", { 'flex justify-center': !isMobile })}>
-                        {!isMobile ? <RefDesktopScreen />  :<NewReference />}
+                        {!isMobile ? <RefDesktopScreen /> : <NewReference />}
                     </div>
                 </MaldivesLayout>
             </DynamicNoSsr>

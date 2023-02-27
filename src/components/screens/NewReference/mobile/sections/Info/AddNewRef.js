@@ -241,6 +241,7 @@ const AddNewRef = ({
                                 <input
                                     id='refCode'
                                     className='w-full'
+                                    autoComplete='off'
                                     maxLength={8}
                                     placeholder={t('reference:referral.ref_placeholder')}
                                     onChange={handleInputRefCode} value={refCode}
@@ -327,6 +328,7 @@ const AddNewRef = ({
                             className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8}
+                                    autoComplete='off'
                                     placeholder={t('reference:referral.ref_placeholder')}
                                     onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
