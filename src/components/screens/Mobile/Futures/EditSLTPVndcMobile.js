@@ -569,7 +569,7 @@ const EditSLTPVndcMobile = ({
                     />
                 </div>
             </div>
-            <div className="pt-8 pb-10">
+            <div className="pt-8 pb-12">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
                         <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
