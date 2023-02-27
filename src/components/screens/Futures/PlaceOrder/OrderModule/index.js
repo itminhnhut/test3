@@ -31,6 +31,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         sl: '',
         tp: ''
     });
+    const refSlider = useRef(null);
 
     useEffect(() => {
         mount.current = false;
@@ -76,6 +77,11 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             }
         }
     };
+
+    useEffect(() => {
+        const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
+        refSlider.current.changePercent(floor(_maxQuoteQty, decimals?.symbol));
+    }, [leverage]);
 
     const maxQuoteQty = useMemo(() => {
         const _maxQuoteQty = getMaxQuoteQty(price, type, side, leverage, availableAsset, pairPrice, pairConfig, true, isAuth);
@@ -343,23 +349,14 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             {/* Slider */}
             <div className="mt-4">
                 <FuturesOrderSlider
-                    availableAsset={availableAsset}
                     quoteQty={quoteQty}
                     onChange={(vol) => setQuoteQty(vol)}
-                    isVndcFutures={isVndcFutures}
-                    side={side}
-                    type={type}
                     isAuth={isAuth}
                     decimals={decimals}
-                    pairConfig={pairConfig}
-                    lastPrice={lastPrice}
-                    leverage={leverage}
-                    price={price}
-                    pairPrice={pairPrice}
-                    inputValidator={inputValidator}
                     minQuoteQty={minQuoteQty}
                     maxQuoteQty={maxQuoteQty}
                     pair={pair}
+                    ref={refSlider}
                 />
             </div>
 
