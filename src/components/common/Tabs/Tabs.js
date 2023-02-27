@@ -143,9 +143,9 @@ export const TabItems = styled.div.attrs(({ value, className = '', isMobile = fa
         {
             'text-gray-1': !isMobile,
             'text-darkBlue-5': isMobile,
-            'text-gray-9 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-14 text-base font-normal': !!V2,
+            'text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 text-base font-normal': !!V2,
             '!text-gray-15 dark:!text-gray-4 text-base font-semibold dark:font-semibold': isActive,
-            'text-gray-9 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-14 text-base font-normal dark:font-normal': !isActive
+            'text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 text-base font-normal dark:font-normal': !isActive
         },
         'text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12'
     ),

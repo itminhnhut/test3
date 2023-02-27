@@ -206,11 +206,10 @@ const Wallet = () => {
     const renderScreenTab = useCallback(() => {
         return (
             <div className="relative flex tracking-normal">
-                <Tabs tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
+                <Tabs isMobile tab={state.screenIndex} className="gap-6 border-b border-divider dark:border-divider-dark">
                     {SCREEN_TAB_SERIES.map((e, index) => {
                         return (
                             <TabItem
-                                isMobile
                                 isActive={e?.key === state.screenIndex}
                                 key={e?.key}
                                 className={`text-left !px-0 !text-base !w-auto first:ml-4 md:first:ml-0`}
