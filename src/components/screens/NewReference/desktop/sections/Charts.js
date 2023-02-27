@@ -39,7 +39,7 @@ const Charts = ({
     return (
         <div className='flex flex-col gap-8 w-full' id={id}>
             <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
-            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
+            {/* <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' /> */}
         </div>
     );
 };
@@ -214,14 +214,43 @@ const RenderContent = ({
                 x: {
                     stacked: true,
                     ticks: {
-                        color: baseColors.darkBlue5
-                    }
-                    // combined: true,
+                        color: baseColors.darkBlue5,
+                        showLabelBackdrop: false
+                    },
+                    grid: {
+                        display: false,
+                        // drawBorder: true,
+                    },
                 },
                 y: {
                     ticks: {
-                        color: baseColors.darkBlue5
-                    }
+                        color: baseColors.darkBlue5,
+                        showLabelBackdrop: false
+
+                    },
+                    grid: {
+                        borderDash: [1, 4],
+                        // color: baseColors.divider.DEFAULT,
+                        color: function (context) {
+                            if (context.tick.value === 0) {
+                                return 'rgba(0, 0, 0, 0)';
+                            }
+                            return baseColors.divider.DEFAULT;
+                        },
+                        drawBorder: false,
+                    },
+
+                    // ticks: {
+                    //     callback: function(value) {
+                    //         return value + 'k';
+                    //     }
+                    // }
+                    // grid: {
+                    //     color: 'magenta',
+                    // },
+                    // border: {
+                    //     dash: [2, 4],
+                    // },
                 }
             }
         };
@@ -242,9 +271,9 @@ const RenderContent = ({
                         return <div
                             key={t.value}
                             onClick={() => setTimeTab(t.value)}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-semibold', {
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
                                 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== t.value,
-                                'text-teal border-teal bg-teal/[.1]': timeTab === t.value,
+                                'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === t.value,
                             })}
                         >{t.title}</div>;
                     })}
@@ -261,9 +290,9 @@ const RenderContent = ({
                         hasShadow
                         text={<div
                             onClick={() => setTimeTab('custom')}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-semibold', {
+                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
                                 'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                'text-teal border-teal bg-teal/[.1]': timeTab === 'custom',
+                                'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
                             })}
                         >{t('reference:referral.custom')}</div>}
                     />
@@ -276,7 +305,7 @@ const RenderContent = ({
                 <div className='px-2 mt-4 flex flex-wrap items-center gap-4'>
                     {colors.map((color, index) => (
                         <div className='flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]'
-                             key={index}>
+                            key={index}>
                             <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
                         </div>
                     ))}

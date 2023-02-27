@@ -13,6 +13,9 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import CheckBox from 'components/common/CheckBox';
+import { CloseIcon } from 'components/svg/SvgIcon';
+import { X } from 'react-feather';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 // goodluck for who maintain this code
 const AddNewRef = ({
@@ -36,6 +39,8 @@ const AddNewRef = ({
     const [error, setError] = useState('');
     const [note, setNote] = useState('');
     const [isDefault, setIsDefault] = useState(false);
+    const [currentTheme] = useDarkMode();
+
     const handleInputRefCode = (e) => {
         const text = e?.target?.value;
         if (text.length > 8) return;
@@ -159,12 +164,12 @@ const AddNewRef = ({
                 type={resultData.isSuccess ? 'success' : 'error'}
                 textButton={resultData.isSuccess ? t('common:confirm') : null}
                 onConfirm={doClose}
-                // containerClassName='!px-6 !py-8 top-[50%]'
+            // containerClassName='!px-6 !py-8 top-[50%]'
             >
                 <div className='text-txtSecondary dark:text-txtSecondary-dark'
-                     dangerouslySetInnerHTML={{ __html: resultData.message }} />
+                    dangerouslySetInnerHTML={{ __html: resultData.message }} />
                 <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
-                     onClick={() => window.fcWidget.open()}
+                    onClick={() => window.fcWidget.open()}
                 >
                     {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                 </div>
@@ -192,7 +197,7 @@ const AddNewRef = ({
                         null
                         :
                         <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
-                             onClick={() => emitWebViewEvent('chat_with_support')}
+                            onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                         </div>
@@ -244,6 +249,9 @@ const AddNewRef = ({
                                         handleInput(e, 8);
                                     }}
                                 />
+                                <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 clear-both ${!!refCode.length ? 'visible' : 'invisible'}`}>
+                                    <CloseIcon onClick={() => setRefCode('')} size={16} className="cursor-pointer" />
+                                </button>
                             </div>
                             <div className='w-10 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {refCode.length}/8
@@ -259,7 +267,12 @@ const AddNewRef = ({
                             className='rounded-md px-3 h-12 flex justify-between items-center gap-4 bg-gray-10 dark:bg-dark-2'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='w-full' value={note} maxLength={30}
-                                       onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+                                    onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+
+                                {!!note.length && (<button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 clear-both`}>
+                                    <X color={currentTheme === THEME_MODE.DARK ? '#8694b2' : '#768394'} onClick={() => setNote('')} size={16} className="cursor-pointer" />
+                                </button>)}
+
                             </div>
                             <div className='w-10 text-txtSecondary dark:text-txtSecondary-dark'>
                                 {note.length}/30
@@ -275,7 +288,7 @@ const AddNewRef = ({
                         ></CheckBox>
                     </div>
                     <ButtonV2 className='mt-6' disabled={isError}
-                              onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
+                        onClick={handleAddNewRef}>{t('reference:referral.addref')}</ButtonV2>
                 </div>
             </ModalV2> : <PopupModal
                 isVisible={isShow}
@@ -296,8 +309,8 @@ const AddNewRef = ({
                         {t('reference:referral.commission_rate')}
                         <div className='mt-4 mb-2'>
                             <Slider axis='x' x={percent} xmax={totalRate} onChange={onPercentChange}
-                                    bgColorSlide={colors.teal} bgColorActive={colors.teal}
-                                    BgColorLine={colors.hover.DEFAULT} bgColorDot={colors.hover.DEFAULT} />
+                                bgColorSlide={colors.teal} bgColorActive={colors.teal}
+                                BgColorLine={colors.hover.DEFAULT} bgColorDot={colors.hover.DEFAULT} />
                         </div>
                         <div className='flex justify-between items-center font-medium text-xs leading-5'>
                             <div>
@@ -314,27 +327,27 @@ const AddNewRef = ({
                             className={classNames('mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4', { 'border-red border-[1px]': error.length })}>
                             <div className='flex w-full justify-between items-center'>
                                 <input id='refCode' className='text-gray-6 font-medium w-full' maxLength={8}
-                                       placeholder={t('reference:referral.ref_placeholder')}
-                                       onChange={handleInputRefCode} value={refCode}
-                                       onBlur={() => doCheckRef(refCode)}
-                                       onInput={(e) => {
-                                           handleInput(e, 8);
-                                       }}
-                                       style={{
-                                           outline: 'none'
-                                       }}
+                                    placeholder={t('reference:referral.ref_placeholder')}
+                                    onChange={handleInputRefCode} value={refCode}
+                                    onBlur={() => doCheckRef(refCode)}
+                                    onInput={(e) => {
+                                        handleInput(e, 8);
+                                    }}
+                                    style={{
+                                        outline: 'none'
+                                    }}
                                 />
                                 {refCode.length ? <svg width='20' height='20' viewBox='0 0 24 24' fill='none'
-                                                       xmlns='http://www.w3.org/2000/svg'
-                                                       onClick={() => {
-                                                           setRefCode('');
-                                                           setError('');
-                                                           document.getElementById('refCode')
-                                                               .focus();
-                                                       }}
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    onClick={() => {
+                                        setRefCode('');
+                                        setError('');
+                                        document.getElementById('refCode')
+                                            .focus();
+                                    }}
                                 >
                                     <path d='m6 6 12 12M6 18 18 6' stroke='#718096' strokeLinecap='round'
-                                          strokeLinejoin='round' />
+                                        strokeLinejoin='round' />
                                 </svg> : null}
                             </div>
                             <div className='w-10'>
@@ -351,20 +364,20 @@ const AddNewRef = ({
                             className='mt-1 rounded-[6px] px-3 h-11 flex justify-between items-center bg-hover-dark font-medium text-sm leading-6 gap-4'>
                             <div className='w-full justify-between items-center flex'>
                                 <input id='note' className='text-gray-6 font-medium w-full' value={note} maxLength={30}
-                                       onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
+                                    onChange={handleInputNote} onInput={(e) => handleInput(e, 30)} />
                                 {note.length ? <svg width='20' height='20' viewBox='0 0 24 24' fill='none'
-                                                    xmlns='http://www.w3.org/2000/svg'
-                                                    onClick={() => {
-                                                        setNote('');
-                                                        document.getElementById('note')
-                                                            .focus();
-                                                    }}
-                                                    style={{
-                                                        outline: 'none'
-                                                    }}
+                                    xmlns='http://www.w3.org/2000/svg'
+                                    onClick={() => {
+                                        setNote('');
+                                        document.getElementById('note')
+                                            .focus();
+                                    }}
+                                    style={{
+                                        outline: 'none'
+                                    }}
                                 >
                                     <path d='m6 6 12 12M6 18 18 6' stroke='#718096' stroke-linecap='round'
-                                          stroke-linejoin='round' />
+                                        stroke-linejoin='round' />
                                 </svg> : null}
                             </div>
                             <div className='w-10'>
@@ -374,11 +387,11 @@ const AddNewRef = ({
                     </div>
                     <div className='flex items-center gap-2 text-xs font-medium'>
                         <input type='checkbox' id='setdefault123'
-                               className='bg-teal rounded-sm h-4 w-4 text-darkBlue font-medium' name='isDefault'
-                               onChange={handleCheckDefault} checked={isDefault}
-                               style={{
-                                   outline: 'none'
-                               }}
+                            className='bg-teal rounded-sm h-4 w-4 text-darkBlue font-medium' name='isDefault'
+                            onChange={handleCheckDefault} checked={isDefault}
+                            style={{
+                                outline: 'none'
+                            }}
                         />
                         {t('reference:referral.set_default')}
                     </div>
