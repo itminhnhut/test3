@@ -335,7 +335,7 @@ const FuturesLeverageSettings = ({
                 <div className={`mt-10 mb-2`}>{renderConfirmButton()}</div>
             ) : (
                 <div className={`mt-10 h-full mb-2 cursor-pointer flex items-center justify-center w-full`}>
-                    <Link href={getLoginUrl('sso')}>
+                    <Link href={getLoginUrl('sso')} locale="en">
                         <a className="w-full">
                             <ButtonV2>{t('common:log_in')}</ButtonV2>
                         </a>
