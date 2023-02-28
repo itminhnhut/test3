@@ -26,8 +26,8 @@ import {
 import WithdrawHistory from 'components/screens/Wallet/Exchange/Withdraw/WithdrawHistory';
 import classNames from 'classnames';
 import WarningTriangle from 'components/svg/WarningTriangle';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
-const DEFAULT_ASSET = 'VNDC';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -314,47 +314,6 @@ const ExchangeWithdraw = () => {
                 return '';
         }
     }, [state.selectedNetwork, state.validator, assetConfig]);
-    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
-
-    useEffect(() => {
-        console.log('AUTH_WITHDRAW: ', auth);
-        setIsOpenModalKyc(auth?.kyc_status !== 2);
-    }, [auth]);
-
-    const renderKycRequiredModal = useCallback(() => {
-
-        return (
-            <ModalV2 isVisible={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} className='!max-w-[400px]'
-                     wrapClassName='px-6 flex flex-col'>
-                {/* <ReModal isVisible={isVisible} containerClassName="p-6 max-w-[400px]"> */}
-                <div className='mb-4 font-bold text-lg text-center capitalize'>{t('modal:notice')}</div>
-                <div className='text-center px-4'>{t('wallet:errors.invalid_kyc_status')}</div>
-                <div className='mt-6 flex items-center justify-between'>
-                    <div className='w-[47%]'>
-                        <HrefButton
-                            href={language === 'en' ? 'https://nami.exchange/support/announcement/announcement/important-update-about-nami-exchange-identity-verification-kyc' : 'https://nami.exchange/vi/support/announcement/thong-bao/cap-nhat-quy-dinh-ve-xac-thuc-tai-khoan-kyc'}
-                            target='_blank'
-                        >
-                            {t('common:view_manual')}
-                        </HrefButton>
-                    </div>
-                    <div className='w-[47%]'>
-                        <HrefButton href='https://nami.exchange/account/identification' target='_blank'>
-                            {t('common:kyc_now')}
-                        </HrefButton>
-                    </div>
-                </div>
-                {/* </ReModal> */}
-            </ModalV2>);
-    }, [isOpenModalKyc]);
-
-    // useEffect(() => {
-    //     let interval;
-    //     if (focused) {
-    //         interval = setInterval(() => getWithdrawHistory(state.historyPage, true), 30000);
-    //     }
-    //     return () => interval && clearInterval(interval);
-    // }, [focused, state.historyPage]);
 
     useEffect(() => {
         if (auth) {
@@ -392,6 +351,11 @@ const ExchangeWithdraw = () => {
         }
         return () => clearInterval(interval);
     }, [resendTimeOut]);
+
+    // Handle check KYC:
+    const isOpenModalKyc = useMemo(() => {
+        return auth?.kyc_status !== 2
+    }, [auth])
 
     return (<MaldivesLayout>
         <Background isDark={currentTheme === THEME_MODE.DARK}>
@@ -476,9 +440,9 @@ const ExchangeWithdraw = () => {
                     <div className='text-2xl font-semibold mb-6 mt-20'>{t('wallet:withdraw_history')}</div>
                     <WithdrawHistory />
                 </div>
-                {renderKycRequiredModal()}
             </div>
         </Background>
+        <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
     </MaldivesLayout>);
 };
 

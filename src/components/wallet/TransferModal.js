@@ -26,7 +26,6 @@ import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -115,15 +114,9 @@ const TransferModal = ({ isMobile, alert }) => {
     const isDarkMode = currentTheme === THEME_MODE.DARK;
 
     // Check Kyc before redirect to page Deposit / Withdraw
-    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
-
     const handleKycRequest = (href) => {
-        if (auth?.kyc_status !== 2) {
-            return setIsOpenModalKyc(true);
-        } else {
-            onClose();
-            return router.push(href);
-        }
+        onClose();
+        return router.push(href);
     };
 
     // Use Hooks
@@ -671,12 +664,6 @@ const TransferModal = ({ isMobile, alert }) => {
             _errors.insufficient = null;
         }
 
-        if (!state?.amount || state?.amount <= 0) {
-            _errors.curAmount = t('wallet:errors.invalid_amount');
-        } else {
-            _errors.curAmount = null;
-        }
-
         setState({
             errors: {
                 ...state.errors,
@@ -774,14 +761,6 @@ const TransferModal = ({ isMobile, alert }) => {
             {renderHelperText()}
             {renderTransferButton()}
             {renderAlertNotification()}
-            <ModalNeedKyc
-                isOpenModalKyc={isOpenModalKyc}
-                onBackdropCb={() => {
-                    setIsOpenModalKyc(false);
-                    // setCurAssetCodeAction(null);
-                }}
-            // isMobile={isSmallScreen}
-            />
         </ModalV2>
     );
 };
