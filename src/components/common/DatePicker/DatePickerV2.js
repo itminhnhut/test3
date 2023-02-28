@@ -13,7 +13,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
-const DatePicker = ({
+const DatePickerV2 = ({
     initDate,
     isCalendar,
     onChange,
@@ -32,6 +32,9 @@ const DatePicker = ({
     const [theme] = useDarkMode();
 
     const handleOutside = () => {
+        if (!isCalendar) {
+            setDate(initDate)
+        }
         setShowPicker(false);
     };
     useOutsideClick(wrapperRef, handleOutside);
@@ -60,9 +63,9 @@ const DatePicker = ({
         }
     };
 
-    const onConfirm = (e) => {
-        onChange(e);
-        handleOutside();
+    const onConfirm = () => {
+        onChange({ selection: date });
+        setShowPicker(false);
     }
 
     const navigatorRenderer = (focusedDate, changeShownDate, props) => {
@@ -172,4 +175,4 @@ const DatePicker = ({
         </div>
     );
 };
-export default DatePicker;
+export default DatePickerV2;

@@ -87,6 +87,7 @@ const ModalCommissionFriend = ({
 };
 
 const FriendList = ({
+    language,
     owner,
     t,
     commisionConfig: commissionConfig,
@@ -206,20 +207,13 @@ const FriendList = ({
     }, 300);
 
     useEffect(() => {
+        setPage(1)
         getListFriends();
-    }, [filter, page]);
+    }, [filter]);
 
-    const skeletons = useMemo(() => {
-        const skeletons = [];
-        for (let i = 0; i < limit; i++) {
-            skeletons.push({
-                ...ROW_SKELETON,
-                isSkeleton: true,
-                key: `asset__skeleton__${i}`
-            });
-        }
-        return skeletons;
-    }, []);
+    useEffect(() => {
+        getListFriends();
+    }, [page]);
 
     const renderRefInfo = (data) => <div className='text-sm nami-underline-dotted'
         onClick={() => setCommissionByFriendDetail(data)}>
@@ -255,8 +249,6 @@ const FriendList = ({
             </div>
         );
     };
-
-    // const columns = useMemo(() => , [dataSource]);
 
     const renderTable = useCallback(() => {
         const columns = [{
@@ -319,34 +311,60 @@ const FriendList = ({
                 return renderCommissionData(item, 'undirectCommission')
             }
         }]
-
+        console.log("loading: ", loading, page);
         return <TableV2
             sort
             defaultSort={{ key: 'code', direction: 'desc' }}
+            loading={loading}
             useRowHover
-            data={dataSource?.results || []}
-            page={page}
-            onChangePage={page => setPage(page)}
-            total={dataSource?.total ?? 0}
+            data={dataSource.results || []}
             columns={columns}
-            rowKey={(item) => item?.key}
+            rowKey={(item) => `${item?.key}`}
             scroll={{ x: true }}
             limit={limit}
             skip={0}
-            noBorder={true}
             // isSearch={!!state.search}
-            height={404}
             pagingClassName="border-none"
-            className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
-            tableStyle={{ fontSize: '16px', padding: '16px' }}
-            paginationProps={{
-                hide: true,
-                current: 0,
-                pageSize: limit,
-                onChange: null
+            height={350}
+            pagingPrevNext={{
+                page: page - 1,
+                hasNext: dataSource?.results?.length ? dataSource?.results?.length === limit : false,
+                onChangeNextPrev: (delta) => {
+                    setPage(page + delta);
+                },
+                language: language
             }}
+            tableStyle={{ fontSize: '16px', padding: '16px' }}
         />
-    }, [dataSource])
+        // Case paginatioin 1 2 3 4 ... 
+
+        // return <TableV2
+        //     sort
+        //     defaultSort={{ key: 'code', direction: 'desc' }}
+        //     useRowHover
+        //     data={dataSource?.results || []}
+        //     page={page}
+        //     onChangePage={page => setPage(page)}
+        //     total={dataSource?.total ?? 0}
+        //     columns={columns}
+        //     rowKey={(item) => item?.key}
+        //     scroll={{ x: true }}
+        //     limit={limit}
+        //     skip={0}
+        //     noBorder={true}
+        //     // isSearch={!!state.search}
+        //     height={404}
+        //     pagingClassName="border-none"
+        //     className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
+        //     tableStyle={{ fontSize: '16px', padding: '16px' }}
+        //     paginationProps={{
+        //         hide: true,
+        //         current: 0,
+        //         pageSize: limit,
+        //         onChange: null
+        //     }}
+        // />
+    }, [dataSource, loading])
 
     return (
         <div className='flex w-full' id={id}>
@@ -367,58 +385,9 @@ const FriendList = ({
                 </div>
 
                 {renderTable()}
-                {/* <div className='border-t border-divider dark:border-divider-dark'>
-                    <ReTable
-                        // defaultSort={{ key: 'namiId', direction: 'desc' }}
-                        emptyText={<NoData />}
-                        className='friendlist-table'
-                        data={loading ? skeletons : dataSource?.results || []}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        loading={!dataSource?.results?.length}
-                        scroll={{ x: true }}
-                        // tableStatus={}
-                        tableStyle={{
-                            // paddingHorizontal: '1.75rem',
-                            // tableStyle: { minWidth: '1300px !important' },
-                            headerStyle: { paddingTop: '8px' },
-                            shadowWithFixedCol: false,
-                            noDataStyle: {
-                                minHeight: '480px'
-                            },
-                            rowStyle: {
-                                minWidth: '100px'
-                            }
-                        }}
-                    // paginationProps={{
-                    //     hide: true,
-                    //     current: page,
-                    //     pageSize: limit,
-                    //     onChange: (currentPage) => setPage(currentPage)
-                    // }}
-                    />
-                </div>
-                <div className='w-full mt-6 flex justify-center'>
-                    <RePagination
-                        total={dataSource?.total ?? 0}
-                        current={page}
-                        pageSize={limit}
-                        onChange={page => setPage(page)}
-                    />
-                </div> */}
             </div>
         </div>
     );
 };
 
 export default FriendList;
-
-const ROW_SKELETON = {
-    code: <Skeletor width={200} />,
-    invitedAt: <Skeletor width={110} />,
-    kycStatus: <Skeletor width={90} />,
-    referred: <Skeletor width={90} />,
-    rank: <Skeletor width={90} />,
-    directCommission: <Skeletor width={250} />,
-    undirectCommission: <Skeletor width={250} />
-};

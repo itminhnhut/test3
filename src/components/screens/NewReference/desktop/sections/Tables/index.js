@@ -15,6 +15,7 @@ import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 
 
 const Tables = ({
+    language,
     t,
     commisionConfig,
     id1,
@@ -22,7 +23,7 @@ const Tables = ({
 }) => {
     return (
         <div className='flex flex-col gap-8'>
-            <FriendList t={t} commisionConfig={commisionConfig} id={id1} />
+            <FriendList language={language} t={t} commisionConfig={commisionConfig} id={id1} />
             <CommissionHistory t={t} commisionConfig={commisionConfig} id={id2} />
         </div>
     );
@@ -45,13 +46,14 @@ export const TableFilter = ({
                 [key]: object
             });
         };
+
         switch (object.type) {
             case 'daterange':
                 return (
                     <div className='flex justify-center w-full'>
                         <DatePickerV2
                             initDate={filter[key].value}
-                            onChange={e => onChange(e.selection)}
+                            onChange={e => onChange(e?.selection)}
                             month={2}
                             hasShadow
                             position={object?.position || 'center'}
