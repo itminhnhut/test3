@@ -9,7 +9,8 @@ import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
-import Image from 'next/image'
+import Image from 'next/image';
+import Link from 'next/link';
 
 import classNames from 'classnames';
 
@@ -52,9 +53,10 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
             />
             {width >= 992 && (
                 <span className="flex flex-row items-center text-base font-semibold">
-                    <a href="/market" className="!text-teal mr-3">
-                        {t('home:markettrend.explore_market')}
-                    </a>
+                    <Link href="/market">
+                        <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                    </Link>
+
                     <ArrowRightIcon size={16} />
                 </span>
             )}
@@ -136,9 +138,10 @@ const HomeMarketTrend = ({ trendData }) => {
                 />
                 {width >= 992 && (
                     <span className="flex flex-row items-center text-base font-semibold">
-                        <a href="/market" className="!text-teal mr-3">
-                            {t('home:markettrend.explore_market')}
-                        </a>
+                        <Link href="/market">
+                            <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                        </Link>
+
                         <ArrowRightIcon size={16} />
                     </span>
                 )}
@@ -161,7 +164,7 @@ const HomeMarketTrend = ({ trendData }) => {
         const tabMap = ['topView', 'newListings', 'topGainers', 'topLosers'];
         const pairs = trendData ? trendData?.[tabMap[state.marketTabIndex]] : null;
         if (!pairs) return null;
-        return pairs.map((pair,index) => {
+        return pairs.map((pair, index) => {
             let sparkLineColor = colors.teal;
             const _ = initMarketWatchItem(pair);
             const _24hChange = getExchange24hPercentageChange(pair);
@@ -174,67 +177,63 @@ const HomeMarketTrend = ({ trendData }) => {
 
             if (width >= 992) {
                 return (
-                    <a
-                        href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}
-                        className="homepage-markettrend__market_table__row"
-                        key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}
-                    >
-                        <div className="homepage-markettrend__market_table__row__col1">
-                            <div className="homepage-markettrend__market_table__coin">
-                                <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
-                                </div>
-                                <div className="homepage-markettrend__market_table__coin__pair">
-                                    <span>{_?.baseAsset}</span>
-                                    <span>/{_?.quoteAsset}</span>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                        <a className="homepage-markettrend__market_table__row">
+                            <div className="homepage-markettrend__market_table__row__col1">
+                                <div className="homepage-markettrend__market_table__coin">
+                                    <div className="homepage-markettrend__market_table__coin__icon">
+                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    </div>
+                                    <div className="homepage-markettrend__market_table__coin__pair">
+                                        <span>{_?.baseAsset}</span>
+                                        <span>/{_?.quoteAsset}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="homepage-markettrend__market_table__row__col2">
-                            <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
-                        </div>
-                        <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
-                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
-                                {render24hChange(pair, false, '!text-base')}
+                            <div className="homepage-markettrend__market_table__row__col2">
+                                <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
                             </div>
-                        </div>
-                        <div className="homepage-markettrend__market_table__row__col4">
-                            <div className="homepage-markettrend__market_table__chart">
-                                <Image width={100} height={37} src={sparkLine} alt="Nami Exchange" />
+                            <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                                <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                    {render24hChange(pair, false, '!text-base')}
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                            <div className="homepage-markettrend__market_table__row__col4">
+                                <div className="homepage-markettrend__market_table__chart">
+                                    <Image width={100} height={37} src={sparkLine} alt="Nami Exchange" />
+                                </div>
+                            </div>
+                        </a>
+                    </Link>
                 );
             } else {
                 return (
-                    <a
-                        href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`}
-                        className="homepage-markettrend__market_table__row"
-                        key={`markettrend_${_?.symbol}__${state.marketTabIndex}`}
-                    >
-                        <div className="homepage-markettrend__market_table__row__col1">
-                            <div className="homepage-markettrend__market_table__coin">
-                                <div className="homepage-markettrend__market_table__coin__icon">
-                                    <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
-                                </div>
-                                <div className="homepage-markettrend__market_table__coin__pair">
-                                    <span>{_?.baseAsset}</span>
-                                    <span>/{_?.quoteAsset}</span>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                        <a className="homepage-markettrend__market_table__row">
+                            <div className="homepage-markettrend__market_table__row__col1">
+                                <div className="homepage-markettrend__market_table__coin">
+                                    <div className="homepage-markettrend__market_table__coin__icon">
+                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                    </div>
+                                    <div className="homepage-markettrend__market_table__coin__pair">
+                                        <span>{_?.baseAsset}</span>
+                                        <span>/{_?.quoteAsset}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="homepage-markettrend__market_table__row__col2 ">
-                            <div className="homepage-markettrend__market_table__chart">
-                                <img src={sparkLine} alt="Nami Exchange" />
+                            <div className="homepage-markettrend__market_table__row__col2 ">
+                                <div className="homepage-markettrend__market_table__chart">
+                                    <img src={sparkLine} alt="Nami Exchange" />
+                                </div>
                             </div>
-                        </div>
-                        <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
-                            <div className={`homepage-markettrend__market_table__price text-sm`}>{formatPrice(_?.lastPrice)}</div>
-                            <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
-                                {render24hChange(pair, false, '!text-sm')}
+                            <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                                <div className={`homepage-markettrend__market_table__price text-sm`}>{formatPrice(_?.lastPrice)}</div>
+                                <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                    {render24hChange(pair, false, '!text-sm')}
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </Link>
                 );
             }
         });
@@ -257,9 +256,10 @@ const HomeMarketTrend = ({ trendData }) => {
                     </div>
                     {width < 992 && (
                         <span className="flex flex-row items-center justify-center text-sm font-semibold pt-6">
-                            <a href="/market" className="!text-teal mr-3">
-                                {t('home:markettrend.explore_market')}
-                            </a>
+                            <Link href="/market">
+                                <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                            </Link>
+
                             <ArrowRightIcon size={14} />
                         </span>
                     )}
