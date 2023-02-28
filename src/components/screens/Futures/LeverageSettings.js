@@ -9,12 +9,14 @@ import Button from 'components/common/Button';
 import Slider from 'components/trade/InputSlider';
 import colors from 'styles/colors';
 import axios from 'axios';
-import { formatNumber, scrollFocusInput, emitWebViewEvent } from 'redux/actions/utils';
+import { formatNumber, scrollFocusInput, emitWebViewEvent, getLoginUrl } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Modal from 'components/common/ReModal';
+import Link from 'next/link';
+
 const FuturesLeverageSettings = ({
     pair,
     isVisible,
@@ -332,13 +334,12 @@ const FuturesLeverageSettings = ({
             {isAuth ? (
                 <div className={`mt-10 mb-2`}>{renderConfirmButton()}</div>
             ) : (
-                <div className={`mt-10 h-full mb-2 cursor-pointer flex items-center justify-center `}>
-                    <div
-                        className={`bg-dominant font-medium w-full text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`}
-                        onClick={onLogin}
-                    >
-                        {t('futures:order_table:login_to_continue')}
-                    </div>
+                <div className={`mt-10 h-full mb-2 cursor-pointer flex items-center justify-center w-full`}>
+                    <Link href={getLoginUrl('sso')}>
+                        <a className="w-full">
+                            <ButtonV2>{t('common:log_in')}</ButtonV2>
+                        </a>
+                    </Link>
                 </div>
             )}
         </ModalV2>
