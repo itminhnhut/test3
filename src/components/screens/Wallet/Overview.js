@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState, useRef } from 'react';
 import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Trans, useTranslation } from 'next-i18next';
 import { SECRET_STRING } from 'utils';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import MCard from 'components/common/MCard';
@@ -15,13 +15,10 @@ import SvgWalletOverview from 'components/svg/SvgWalletOverview';
 import SvgWalletFutures from 'components/svg/SvgWalletFutures';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnersIcon, MoreHorizIcon, PortfolioIcon, FutureExchangeIcon } from 'components/svg/SvgIcon';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
-
-const { TASK_CATEGORY } = Types;
 
 const INITIAL_STATE = {
     hideAsset: false
@@ -168,16 +165,7 @@ const OverviewWallet = (props) => {
 
     // Check Kyc before redirect to page Deposit / Withdraw
     const router = useRouter();
-    const auth = useSelector((state) => state.auth.user) || null;
-    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
 
-    const handleKycRequest = (href) => {
-        if (auth?.kyc_status !== 2) {
-            return setIsOpenModalKyc(true);
-        } else {
-            return router.push(href);
-        }
-    };
 
     const [isShowAction, setIsShowAction] = useState({});
     const { EXCHANGE, FUTURES, PARTNERS } = ActionType;
@@ -200,14 +188,14 @@ const OverviewWallet = (props) => {
             case DEPOSIT + EXCHANGE:
                 flag.current = true;
                 if (href) {
-                    handleKycRequest(href);
+                    router.push(href);
                 } else {
-                    handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
+                    router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
                 }
                 break;
             case WITHDRAW + EXCHANGE:
                 flag.current = true;
-                handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
+                router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
                 break;
             case TRANSFER + EXCHANGE:
                 flag.current = true;
@@ -252,11 +240,11 @@ const OverviewWallet = (props) => {
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
                     {t('common:deposit')}
                 </ButtonV2>
                 <ButtonV2
-                    onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
                     className="px-6"
                     variants="secondary"
                 >
@@ -273,11 +261,10 @@ const OverviewWallet = (props) => {
         <div className="pb-32">
             <MCard
                 addClass={`mt-8 p-4 md:p-8 bg-cover 
-            ${
-                currentTheme === THEME_MODE.DARK
-                    ? ' bg-namiv2-linear-dark border border-divider-dark'
-                    : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
-            }`}
+            ${currentTheme === THEME_MODE.DARK
+                        ? ' bg-namiv2-linear-dark border border-divider-dark'
+                        : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
+                    }`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
                     <div>
@@ -427,7 +414,6 @@ const OverviewWallet = (props) => {
                     </div>
                 </Link> */}
             </MCard>
-            <ModalNeedKyc isMobile={isSmallScreen} isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
             <ModalAction isShowAction={isShowAction} onBackdropCb={() => setIsShowAction({})} onHandleClick={onHandleClick} t={t} />
         </div>
     );
@@ -460,11 +446,10 @@ const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen, onHandleCl
 
 const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
     className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
-     ${
-         isSmallScreen
-             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
-             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
-     }
+     ${isSmallScreen
+            ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
+            : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
+        }
      `,
     onClick: onClick
 }))``;
@@ -496,10 +481,10 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW
-                                ? t('common:withdraw')
-                                : item === TRANSFER
-                                ? t('common:transfer')
-                                : null}
+                                    ? t('common:withdraw')
+                                    : item === TRANSFER
+                                        ? t('common:transfer')
+                                        : null}
                         </ButtonV2>
                     </div>
                 ))}
