@@ -9,12 +9,12 @@ import colors from 'styles/colors';
 const PopoverSelect = (props, ref) => {
     return (
         <PopoverV2
-            containerClassName={props.containerClassName}
+            containerClassName={`${props.containerClassName} z-50 `}
             className={props.className}
             ref={ref}
             label={
                 <div className=" p-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between w-full">
-                    <div className="text-xs truncate flex">{props.labelValue}</div>
+                    <div className="leading-5 truncate flex">{props.labelValue}</div>
                     <div className="text-txtSecondary dark:text-gray-7">
                         <SvgIcon name="chevron_down" className=" " size={16} color="currentColor" />
                     </div>
@@ -23,7 +23,7 @@ const PopoverSelect = (props, ref) => {
         >
             <div className="py-4">
                 <div className="px-4 mb-6">
-                    <SearchBox width="100%" onChange={props.onChange} value={props.value} />
+                    <SearchBox inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
                 </div>
                 <div className="max-h-[300px] space-y-3 overflow-y-scroll">{props.children}</div>
             </div>
