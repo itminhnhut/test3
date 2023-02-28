@@ -40,7 +40,6 @@ const RefDesktopScreen = () => {
     const contentRef = useRef(null);
     const tabRef = useRef(null);
     const user = useSelector(state => state.auth.user) || null;
-
     const fetchData = () => {
         FetchApi({
             url: API_NEW_REFERRAL_OVERVIEW,
@@ -139,7 +138,7 @@ const RefDesktopScreen = () => {
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.FriendList })}>
-                            <FriendList t={t} commisionConfig={config} id={tabs.FriendList} />
+                            <FriendList owner={overviewData} t={t} commisionConfig={config} id={tabs.FriendList} />
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.CommissionHistory })}>

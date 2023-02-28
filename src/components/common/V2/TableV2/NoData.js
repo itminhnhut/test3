@@ -20,7 +20,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
                     <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
-                        <Link href={getLoginUrl('sso')}>
+                        <Link href={getLoginUrl('sso')} locale="en">
                             <a>
                                 <span
                                     className="text-teal hover:underline cursor-pointer font-semibold"
@@ -29,7 +29,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                             </a>
                         </Link>
                         <div>{t('common:or')}</div>
-                        <Link href={getLoginUrl('sso', 'register')}>
+                        <Link href={getLoginUrl('sso', 'register')} locale="en">
                             <a>
                                 <span
                                     className="text-teal hover:underline cursor-pointer font-semibold"
