@@ -82,15 +82,7 @@ const FUTURES_V2 = {
 
 const TRANSACTION_HISTORY = {
     DEFAULT: '/transaction-history',
-    DEPOSIT: '/transaction-history/deposit',
-    WITHDRAW: '/transaction-history/withdraw',
-    EXCHANGE: '/transaction-history/exchange',
-    FUTURES: '/transaction-history/futures',
-    TRANSFER: '/transaction-history/transfer',
-    WALLET_EXCHANGE: '/transaction-history/wallet-exchange',
-    DEPOSIT: '/transaction-history/deposit',
-    DAILY_STAKING: '/transaction-history/daily-staking',
-    REFERRAL: '/transaction-history/referral'
+    TYPE :(type) => `/transaction-history/${type}`
 };
 
 export const PATHS = {

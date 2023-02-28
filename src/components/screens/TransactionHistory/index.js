@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TabV2 from '../../common/V2/TabV2';
 import Link from 'next/link';
-import { TransactionTabs } from './constant';
+import { TransactionTabs, TRANSACTION_TYPES } from './constant';
 import { useRouter } from 'next/router';
 import TransactionFilter from './TransactionFilter';
 import TableV2 from 'components/common/V2/TableV2';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
+import { useTranslation } from 'next-i18next';
+
 
 const columns = [
     {
@@ -18,15 +22,62 @@ const columns = [
     }
 ];
 
+const LIMIT = 10
+
 const TransactionHistory = ({ id }) => {
+    const { t, i18n: { language } } = useTranslation()
     const router = useRouter();
+    const [loading, setLoading] = useState(true)
+    const [data, setData] = useState([])
+    const hasNext = useRef(false)
     const [filter, setFilter] = useState({
+        page: 0,
         range: {
             startDate: null,
             endDate: Date.now(),
             key: 'selection'
-        }
+        },
     });
+
+    const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
+
+
+    useEffect(() => {
+        setLoading(true)
+        const type = id?.length ? {
+            [id]: id,
+            [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+            [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+        }[id] : null
+        const from = filter?.range?.startDate
+        const to = filter?.range?.endDate
+
+        const isNegative = {
+            deposit: false,
+            withdraw: true
+        }[id]
+
+        const params = {
+            type,
+            from,
+            to,
+            isNegative,
+            limit: LIMIT,
+            skip: filter?.page * LIMIT,
+        }
+
+        FetchApi({
+            url: API_GET_WALLET_TRANSACTION_HISTORY,
+            params
+        }).then(({ data, statusCode }) => {
+            if (statusCode === 200) {
+                console.log('data', data)
+                hasNext.current = data?.hasNext
+                setData(data?.result)
+                setLoading(false)
+            }
+        });
+    }, [filter, id])
 
     return (
         <div className="min-h-[500px] max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl">
@@ -56,21 +107,17 @@ const TransactionHistory = ({ id }) => {
                         sort
                         defaultSort={{ key: 'code', direction: 'desc' }}
                         useRowHover
-                        data={[]}
-                        page={1}
-                        onChangePage={(page) => console.log('page:', page)}
-                        total={100}
+                        data={data}
                         columns={columns}
                         rowKey={(item) => item?.key}
                         scroll={{ x: true }}
-                        
+                        loading={loading}
                         // isSearch={!!state.search}
                         height={404}
                         pagingClassName="border-none"
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
-                       
-                        pagingPrevNext={{ page: 1, hasNext: false, onChangeNextPrev: () => {}, language: 'en' }}
+                        pagingPrevNext={{ page: filter?.page, hasNext: hasNext.current, onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }), language }}
                     />
                 </div>
             </div>
