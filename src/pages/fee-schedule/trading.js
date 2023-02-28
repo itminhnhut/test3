@@ -51,6 +51,7 @@ const TradingFee = () => {
     // Rdx
     const namiWallets = useSelector((state) => state.wallet?.SPOT)?.['1'];
     const allAssetConfigs = useSelector((state) => state.utils?.assetConfig) || null;
+    const { user: auth } = useSelector((state) => state.auth) || null;
 
     const assetConfig = useMemo(() => {
         return allAssetConfigs?.find((item) => item?.id === 1);
@@ -464,170 +465,189 @@ const TradingFee = () => {
         </Link>
     );
 
+    const userVipLevel = auth
+        ? null
+        : () => (
+              <>
+                  <div
+                      className="md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm"
+                      style={{
+                          backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
+                          backgroundSize: 'cover',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundPosition: 'center'
+                      }}
+                  >
+                      <span className="text-xl font-semibold">
+                          {t('fee-structure:your_fee_level')} <span className="text-teal">VIP {state.vipLevel || 0}</span>
+                      </span>
+
+                      <div className="whitespace-nowrap mt-3">
+                          <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>
+                          <span className="font-semibold">{renderNamiAvailable()}</span>
+                          {buyNami}
+                      </div>
+
+                      <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                          <ButtonV2 className="absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto">
+                              <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
+                              <Crown />
+                          </ButtonV2>
+                      </Link>
+                  </div>
+                  <div className="hidden md:flex flex-wrap items-center justify-between mt-20">
+                      <div>
+                          <div className="text-[2rem] leading-8 font-semibold">
+                              <span>{t('fee-structure:your_fee_level')}</span>
+                              <span className="ml-2 text-teal">VIP {state.vipLevel || 0}</span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center mt-3">
+                              <span className="flex items-center">
+                                  <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
+                                  <span className="font-semibold">{renderNamiAvailable()}</span>
+                              </span>
+                              {buyNami}
+                          </div>
+                      </div>
+                      <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
+                          <ButtonV2 className="!px-6 !w-auto">
+                              <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
+                              <Crown />
+                          </ButtonV2>
+                      </Link>
+                  </div>
+
+                  <div className="relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl">
+                      <div
+                          className={classnames(
+                              'relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10',
+                              'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
+                          )}
+                      >
+                          <div className="space-y-4">
+                              <div className="font-semibold">
+                                  <div>{t('fee-structure:exchange_trading_fee')}</div>
+                              </div>
+
+                              <div className="flex">
+                                  <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                                  <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderExchangeDeduction()}</span>
+                              </div>
+
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                      <span className="float-right">
+                                          {state.vipLevel
+                                              ? renderUserFeeConfig(
+                                                    FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                                    FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
+                                                )
+                                              : renderUserFeeConfig(
+                                                    FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                                    FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
+                                                )}
+                                      </span>
+                                  </div>
+                              </div>
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                      <span className="float-right">
+                                          {state.vipLevel
+                                              ? renderUserFeeConfig(
+                                                    FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                                    FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
+                                                )
+                                              : renderUserFeeConfig(
+                                                    FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                                    FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
+                                                )}
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                              <div className="font-semibold">
+                                  <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
+                              </div>
+
+                              <div className="flex">
+                                  <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                                  <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
+                              </div>
+
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                      <span className="float-right">
+                                          {renderUserFeeConfig(
+                                              FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0],
+                                              FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1]
+                                          )}
+                                      </span>
+                                  </div>
+                              </div>
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                      <span className="float-right">
+                                          {renderUserFeeConfig(
+                                              FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0],
+                                              FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1]
+                                          )}
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                              <div className="font-semibold">
+                                  <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
+                              </div>
+
+                              <div className="flex">
+                                  <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
+                                  <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
+                              </div>
+
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Maker</span>
+                                      <span className="float-right">
+                                          {renderUserFeeConfig(
+                                              FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0],
+                                              FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1]
+                                          )}
+                                      </span>
+                                  </div>
+                              </div>
+                              <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                  <div className="flex justify-between sm:block">
+                                      <span className="inline-block min-w-[35px] mr-9">Taker</span>
+                                      <span className="float-right">
+                                          {renderUserFeeConfig(
+                                              FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0],
+                                              FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1]
+                                          )}
+                                      </span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      {renderUsedNamiMsg()}
+                  </div>
+              </>
+          );
+
     return (
         <>
-            <div
-                className="md:hidden relative pt-[1.75rem] pb-[3.75rem] rounded-xl text-center text-sm"
-                style={{
-                    backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'center'
-                }}
-            >
-                <span className="text-xl font-semibold">
-                    {t('fee-structure:your_fee_level')} <span className="text-teal">VIP {state.vipLevel || 0}</span>
-                </span>
-
-                <div className="whitespace-nowrap mt-3">
-                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:available_balance')}: </span>
-                    <span className="font-semibold">{renderNamiAvailable()}</span>
-                    {buyNami}
-                </div>
-
-                <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                    <ButtonV2 className="absolute bottom-0 inset-x-6 translate-y-[40%] !px-6 !w-auto">
-                        <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
-                        <Crown />
-                    </ButtonV2>
-                </Link>
-            </div>
-            <div className="hidden md:flex flex-wrap items-center justify-between mt-20">
-                <div>
-                    <div className="text-[2rem] leading-8 font-semibold">
-                        <span>{t('fee-structure:your_fee_level')}</span>
-                        <span className="ml-2 text-teal">VIP {state.vipLevel || 0}</span>
-                    </div>
-
-                    <div className="flex flex-wrap items-center mt-3">
-                        <span className="flex items-center">
-                            <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('common:available_balance')}: </span>
-                            <span className="font-semibold">{renderNamiAvailable()}</span>
-                        </span>
-                        {buyNami}
-                    </div>
-                </div>
-                <Link href={language === LANGUAGE_TAG.VI ? PATHS.REFERENCE.HOW_TO_UPGRADE_VIP : PATHS.REFERENCE.HOW_TO_UPGRADE_VIP_EN}>
-                    <ButtonV2 className="!px-6 !w-auto">
-                        <span className="mr-2">{t('fee-structure:vip_upgrade')}</span>
-                        <Crown />
-                    </ButtonV2>
-                </Link>
-            </div>
-
-            <div className="relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl">
-                <div
-                    className={classnames(
-                        'relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10',
-                        'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
-                    )}
-                >
-                    <div className="space-y-4">
-                        <div className="font-semibold">
-                            <div>{t('fee-structure:exchange_trading_fee')}</div>
-                        </div>
-
-                        <div className="flex">
-                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderExchangeDeduction()}</span>
-                        </div>
-
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                <span className="float-right">
-                                    {state.vipLevel
-                                        ? renderUserFeeConfig(
-                                              FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                              FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
-                                          )
-                                        : renderUserFeeConfig(
-                                              FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                              FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
-                                          )}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                <span className="float-right">
-                                    {state.vipLevel
-                                        ? renderUserFeeConfig(
-                                              FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                              FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
-                                          )
-                                        : renderUserFeeConfig(
-                                              FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                              FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
-                                          )}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
-                        <div className="font-semibold">
-                            <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
-                        </div>
-
-                        <div className="flex">
-                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
-                        </div>
-
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                <span className="float-right">
-                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.MAKER[1])}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                <span className="float-right">
-                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.USDT.MAKER_TAKER.TAKER[1])}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
-                        <div className="font-semibold">
-                            <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
-                        </div>
-
-                        <div className="flex">
-                            <div className="flex-none">{renderUseAssetAsFeeBtn()}</div>
-                            <span className="ml-3 text-txtSecondary dark:text-txtSecondary-dark">{renderFuturesDeduction()}</span>
-                        </div>
-
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Maker</span>
-                                <span className="float-right">
-                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.MAKER[1])}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-txtSecondary dark:text-txtSecondary-dark">
-                            <div className="flex justify-between sm:block">
-                                <span className="inline-block min-w-[35px] mr-9">Taker</span>
-                                <span className="float-right">
-                                    {renderUserFeeConfig(FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[0], FEE_STRUCTURES.FUTURES.VNDC.MAKER_TAKER.TAKER[1])}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {renderUsedNamiMsg()}
-            </div>
-
+            {userVipLevel}
             <div className="mt-20 mb-8 text-2xl font-semibold">{t('fee-structure:fee_rate')}</div>
 
-            <div  id="trading_fee" className="hidden md:block">
+            <div id="trading_fee" className="hidden md:block">
                 <div className="flex items-center border border-b-0 border-divider dark:border-divider-dark rounded-t-xl px-8 pt-8">{renderFeeTab()}</div>
                 <div className="border border-divider dark:border-divider-dark rounded-b-xl pb-8">
                     {state.tabIndex === 0 && renderExchangeTableFee()}
