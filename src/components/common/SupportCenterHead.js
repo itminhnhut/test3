@@ -38,7 +38,7 @@ const SupportCenterHead = ({article}) => {
                     content={article?.feature_image || 'https://static.namifutures.com/nami.exchange/images/common-featured.png'}
                     key="twitter-image"
                 />
-                <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+                <link rel="icon" type="image/x-icon" href="/favicon_1.ico"/>
             </NextHead>
         </>
     );
