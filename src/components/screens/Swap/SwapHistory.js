@@ -141,14 +141,14 @@ const SwapHistory = ({ width }) => {
                             href={getLoginUrl('sso', 'login')}
                             className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
-                            {t('common:log_in')}{' '}
+                            {t('common:sign_in')}{' '}
                         </a>
                         {t('common:or')}{' '}
                         <a
                             href={getLoginUrl('sso', 'register')}
                             className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
                         >
-                            {t('common:register')}{' '}
+                            {t('common:sign_up')}{' '}
                         </a>
                         {t('common:swap_history')}
                     </p>

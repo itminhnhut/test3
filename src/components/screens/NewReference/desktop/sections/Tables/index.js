@@ -10,6 +10,8 @@ import classNames from 'classnames';
 import ArrowDown from 'components/svg/ArrowDown';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+
 
 const Tables = ({
     t,
@@ -64,13 +66,16 @@ export const TableFilter = ({
                         <div className='h-full w-full'>
                             <Popover.Button className='w-full'>
                                 <div
-                                    className='relative py-3 text-sm leading-5 px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
+                                    className='relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
                                     {object.values.find(e => e.value === filter[key].value).title}
-                                    <ArrowDown
+                                    {/* <ArrowDown
                                         size={16}
                                         color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
                                         className='ml-1'
-                                    />
+                                    /> */}
+                                    <span className={`transition-transform duration-50 ${open && 'rotate-180'}`}>
+                                        <ArrowDropDownIcon size={16} />
+                                    </span>
                                 </div>
                             </Popover.Button>
                             <Transition
@@ -89,15 +94,15 @@ export const TableFilter = ({
                                         className='h-full py-1 shadow-onlyLight text-sm flex flex-col'>
                                         {object.values.map((e, index) => (
                                             <div key={index}
-                                                 className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5', {
-                                                     'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
-                                                     'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
-                                                     'bg-gray-13 dark:bg-dark-5': e.value === filter[key].value
-                                                 })}
-                                                 onClick={() => {
-                                                     onChange(e.value);
-                                                     close();
-                                                 }}
+                                                className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5', {
+                                                    'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
+                                                    'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
+                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key].value
+                                                })}
+                                                onClick={() => {
+                                                    onChange(e.value);
+                                                    close();
+                                                }}
                                             >
                                                 {e.title}
                                             </div>

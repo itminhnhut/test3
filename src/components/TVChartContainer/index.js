@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { IconLoading } from 'src/components/common/Icons';
 import NamiExchangeSvg from 'src/components/svg/NamiExchangeSvg';
-import { getTradingViewTimezone } from 'src/redux/actions/utils';
+import { getTradingViewTimezone, formatNumber } from 'src/redux/actions/utils';
 import colors from '../../styles/colors';
 import { widget } from '../TradingView/charting_library/charting_library.min';
 import Datafeed from './api';
@@ -184,7 +183,6 @@ export class TVChartContainer extends React.PureComponent {
             // const base = this.props.symbol.includes('VNDC') ? this.props.symbol.replace('VNDC', '') : this.props.symbol.replace('USDT', '')
 
             const isDark = this.props?.theme === 'dark';
-
             const highArrow = this.widget
                 .chart()
                 .createExecutionShape({ disableUndo: false })
@@ -192,7 +190,7 @@ export class TVChartContainer extends React.PureComponent {
                 .setTime(high[0])
                 .setDirection('sell')
                 // .setText(formatPrice(high[2], this.props.exchangeConfig, base).toString())
-                .setText(high[2].toString())
+                .setText(formatNumber(high[2] ?? 0))
                 // .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setTooltip(high[2].toString())
                 .setArrowColor(!isDark ? colors.darkBlue2 : colors.gray[4])
@@ -205,7 +203,7 @@ export class TVChartContainer extends React.PureComponent {
                 .setTime(low[0])
                 .setDirection('buy')
                 // .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
-                .setText(low[3].toString())
+                .setText(formatNumber(low[3] ?? 0))
                 // .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setTooltip(low[3].toString())
                 .setArrowColor(!isDark ? colors.darkBlue2 : colors.gray[4])

@@ -70,7 +70,8 @@ const colors = {
         1: '#316ebd',
         2: '#4f95f0',
         3: '#87b9fa',
-        4: '#d9e9ff'
+        4: '#d9e9ff',
+        5: '#1e77eb'
     },
 
     onus: {

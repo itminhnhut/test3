@@ -26,6 +26,7 @@ import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -112,6 +113,19 @@ const TransferModal = ({ isMobile, alert }) => {
 
     const [currentTheme] = useDarkMode();
     const isDarkMode = currentTheme === THEME_MODE.DARK;
+
+    // Check Kyc before redirect to page Deposit / Withdraw
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+
+    const handleKycRequest = (href) => {
+        if (auth?.kyc_status !== 2) {
+            return setIsOpenModalKyc(true);
+        } else {
+            onClose();
+            return router.push(href);
+        }
+    };
+
     // Use Hooks
     const dispatch = useDispatch();
     const {
@@ -152,7 +166,7 @@ const TransferModal = ({ isMobile, alert }) => {
                 }
             })
     );
-    const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
+    // const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
     // Rdx
     const { isVisible, fromWallet, toWallet, asset } = useSelector((state) => state.utils.transferModal) || {};
     const auth = useSelector((state) => state.auth?.user);
@@ -368,7 +382,7 @@ const TransferModal = ({ isMobile, alert }) => {
                     <div className="txtSecond-3 text-center">{t('common:from')}</div>
                     <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.fromWallet)}
-                        <span className={state.openList?.fromWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <span className={`transition-transform duration-50 ${state.openList?.fromWalletList && 'rotate-180'}`}>
                             <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
@@ -413,7 +427,7 @@ const TransferModal = ({ isMobile, alert }) => {
                     <div className="text-center txtSecond-3">{t('common:to')}</div>
                     <div className={'mt-2 sm:mt-3.5 text-sm font-semibold flex items-center justify-center border-divider dark:border-divider-dark rounded-xl'}>
                         {getWalletType(state.toWallet)}
-                        <span className={state.openList?.toWalletList ? 'transition-transform duration-50 rotate-180' : ''}>
+                        <span className={`transition-transform duration-50 ${state.openList?.toWalletList && 'rotate-180'}`}>
                             <ArrowDropDownIcon size={16} />
                         </span>
                     </div>
@@ -456,7 +470,7 @@ const TransferModal = ({ isMobile, alert }) => {
             >
                 <AssetLogo assetCode={state.asset} size={24} />
                 <div className="mx-2 font-semibold text-base">{state.asset}</div>
-                <span className={state.openList?.assetList ? 'transition-transform duration-50 rotate-180' : ''}>
+                <span className={`transition-transform duration-50 ${state.openList?.assetList && 'rotate-180'}`}>
                     <ArrowDropDownIcon size={16} />
                 </span>
                 {renderAssetList()}
@@ -671,11 +685,6 @@ const TransferModal = ({ isMobile, alert }) => {
         });
     }, [state.amount, currentWallet]);
 
-    const handleKycRequest = (href) => {
-        onClose();
-        return router.push(href);
-    };
-
     const renderAlertNotification = useCallback(() => {
         if (!state?.resultTransfer) return null;
 
@@ -715,6 +724,8 @@ const TransferModal = ({ isMobile, alert }) => {
         }
     };
 
+
+
     return (
         <ModalV2
             isVisible={!!isVisible}
@@ -728,13 +739,12 @@ const TransferModal = ({ isMobile, alert }) => {
             </div>
             {renderWalletSelect()}
             <div
-                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${
-                    state?.errors?.minAmount || state?.errors?.insufficient
-                        ? 'border-red-2'
-                        : state.focus?.amount
+                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${state?.errors?.minAmount || state?.errors?.insufficient
+                    ? 'border-red-2'
+                    : state.focus?.amount
                         ? ' border-dominant'
                         : ' border-divider dark:border-divider-dark hover:!border-dominant'
-                }
+                    }
                 `}
             >
                 <div className="flex items-center justify-between">
@@ -764,6 +774,14 @@ const TransferModal = ({ isMobile, alert }) => {
             {renderHelperText()}
             {renderTransferButton()}
             {renderAlertNotification()}
+            <ModalNeedKyc
+                isOpenModalKyc={isOpenModalKyc}
+                onBackdropCb={() => {
+                    setIsOpenModalKyc(false);
+                    // setCurAssetCodeAction(null);
+                }}
+            // isMobile={isSmallScreen}
+            />
         </ModalV2>
     );
 };
