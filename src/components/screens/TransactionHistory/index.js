@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import TabV2 from '../../common/V2/TabV2';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import TabV2 from 'components/common/V2/TabV2/index';
 import Link from 'next/link';
 import { TransactionTabs, TRANSACTION_TYPES } from './constant';
 import { useRouter } from 'next/router';
@@ -9,18 +9,6 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 
-
-const columns = [
-    {
-        key: 'code',
-        dataIndex: 'code',
-        title: 'Nami ID',
-        align: 'left',
-        fixed: 'left',
-        width: 180,
-        render: (data, item) => <div>hahahahaha</div>
-    }
-];
 
 const LIMIT = 10
 
@@ -40,6 +28,39 @@ const TransactionHistory = ({ id }) => {
     });
 
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
+
+    const columns = useMemo(() => {
+        return {
+            _id: {
+                key: '_id',
+                dataIndex: '_id',
+                title: 'ID',
+                align: 'left',
+                fixed: 'left',
+                width: 160,
+                render: (data) => <div>{data.slice(0, 4) + '...' + data.slice(data.length - 4, data.length)}</div>
+            },
+            asset: {
+                key: 'asset',
+                dataIndex: 'currency',
+                title: 'Asset',
+                align: 'left',
+                fixed: 'left',
+                width: 160,
+                render: (data) => <div>{data}</div>
+            }
+        }
+    }, [t])
+
+
+    const columnsConfig = {
+        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset']
+    }
+
+
+    const filterdColumns = useMemo(() => {
+        return columnsConfig[id].map(key => columns[key]);
+    }, [columns, id])
 
 
     useEffect(() => {
@@ -108,7 +129,7 @@ const TransactionHistory = ({ id }) => {
                         defaultSort={{ key: 'code', direction: 'desc' }}
                         useRowHover
                         data={data}
-                        columns={columns}
+                        columns={filterdColumns}
                         rowKey={(item) => item?.key}
                         scroll={{ x: true }}
                         loading={loading}
