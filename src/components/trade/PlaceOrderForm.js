@@ -475,7 +475,7 @@ const PlaceOrderForm = ({ symbol }) => {
         return max < min;
     }, [price, orderSide, balance]);
 
-    const validator = (key, value, options) => {
+    const validator = (key, value, isText = false) => {
         let rs = { isValid: true, msg: '' };
         let validate = {};
         if (notEnough && (key === 'amount' || key === 'quote')) {
@@ -495,6 +495,9 @@ const PlaceOrderForm = ({ symbol }) => {
                 break;
             case 'amount':
                 validate = validateAmount(+price);
+                if (isText) {
+                    return { min: validate.min, max: validate.max };
+                }
                 if (value < validate.min || value > validate.max) {
                     rs = {
                         isValid: false,
@@ -504,6 +507,9 @@ const PlaceOrderForm = ({ symbol }) => {
                 break;
             case 'quote':
                 validate = validateTotal(+price);
+                if (isText) {
+                    return { min: validate.min, max: validate.max };
+                }
                 if (value < validate.min || value > validate.max) {
                     rs = {
                         isValid: false,
@@ -587,6 +593,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     decimalScale={decimals.price}
                     errorTooltip={false}
                     validator={!isMarket && validator('price', price)}
+                    textDescription={textDescription('price', { min: validatePrice.min, max: validatePrice.max })}
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
                     renderTail={() => <span className="flex items-center">{quote}</span>}
@@ -629,6 +636,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     allowNegative={false}
                     decimalScale={2}
                     validator={validator('quote', quoteQty)}
+                    textDescription={textDescription('quote', validator('quote', quoteQty, true))}
                     errorTooltip={false}
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"
@@ -652,6 +660,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     allowNegative={false}
                     decimalScale={decimals.qty}
                     validator={validator('amount', quantity)}
+                    textDescription={textDescription('amount', validator('amount', quoteQty, true))}
                     errorTooltip={false}
                     containerClassName="w-full dark:bg-dark-2"
                     tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark text-sm select-none"

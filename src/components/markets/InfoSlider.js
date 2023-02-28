@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import classNames from 'classnames';
+import useWindowSize from 'hooks/useWindowSize';
 
 const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, containerClassName, gradientColor }) => {
     const [rightControllable, setRightControllable] = useState(false);
     const [leftControllable, setLeftControllable] = useState(false);
+    const { width } = useWindowSize();
 
     let scrollStepSize = 80;
     const containerRef = useRef();
@@ -39,7 +41,7 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
 
     useEffect(() => {
         recheckSize();
-    }, [containerRef?.current?.offsetWidth]);
+    }, [containerRef?.current?.offsetWidth, width]);
 
     useEffect(() => {
         // recheckSize();

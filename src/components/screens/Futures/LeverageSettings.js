@@ -84,6 +84,21 @@ const FuturesLeverageSettings = ({
         return { isValid, msg, isError: !isValid };
     }, [_leverage]);
 
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'leverage':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, 0)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, 0) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            default:
+                break;
+        }
+        return '';
+    };
+
     const renderConfirmButton = useCallback(
         () =>
             onusMode ? (
@@ -263,17 +278,17 @@ const FuturesLeverageSettings = ({
             </div>
 
             <div className={`mb-1.5 font-medium text-txtSecondary dark:text-txtSecondary-dark text-sm`}>{t('futures:leverage:leverage')}</div>
-            <div className={`px-0 flex items-center relative bg-gray-10 dark:bg-dark-2 mb-4 h-[48px] rounded-[4px]`}>
+            <div className={`px-0 flex items-center relative mb-3`}>
                 <TradingInput
-                    onusMode={false}
-                    label=" "
                     value={_leverage}
                     suffix={'x'}
                     decimalScale={0}
-                    containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium  !bg-transparent h-[48px] w-full`}
+                    containerClassName="px-2.5 dark:!bg-dark-2 w-full"
                     inputClassName="!text-center !text-base"
                     onValueChange={({ value }) => _setLeverage(value)}
                     validator={getValidator}
+                    textDescription={textDescription('leverage', { min: pairConfig?.leverageConfig?.min ?? 0, max: pairConfig?.leverageConfig?.max ?? 0 })}
+                    errorTooltip={false}
                     inputMode="decimal"
                     allowedDecimalSeparators={[',', '.']}
                     clearAble

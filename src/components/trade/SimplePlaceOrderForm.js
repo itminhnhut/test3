@@ -720,13 +720,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         const disabled = placing || currentExchangeConfig?.status === 'MAINTAIN' || isErorr;
         return !user ? (
             <ButtonV2 variants="secondary">
-                <Link href={getLoginUrl('sso')}>
+                <Link href={getLoginUrl('sso')} locale="en">
                     <a>
                         <span className="text-teal hover:underline">{t('common:sign_in')}</span>
                     </a>
                 </Link>
                 <div className="font-normal">{t('common:or')}</div>
-                <Link href={getLoginUrl('sso', 'register')}>
+                <Link href={getLoginUrl('sso', 'register')} locale="en">
                     <a>
                         <span className="text-teal hover:underline">{t('common:sign_up')}</span>
                     </a>

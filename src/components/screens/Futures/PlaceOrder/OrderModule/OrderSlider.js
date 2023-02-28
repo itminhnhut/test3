@@ -33,6 +33,7 @@ const FuturesOrderSlider = forwardRef(({ quoteQty, onChange, isAuth, decimals, m
     }, [quoteQty]);
 
     const onPercentChange = ({ x }) => {
+        if (maxQuoteQty < minQuoteQty) return;
         if (!x) {
             onChange(minQuoteQty);
         } else {
@@ -49,7 +50,9 @@ const FuturesOrderSlider = forwardRef(({ quoteQty, onChange, isAuth, decimals, m
         }
     };
 
-    return <Slider useLabel labelSuffix="%" positionLabel="top" axis="x" x={percent} xmax={100} onChange={onPercentChange} />;
+    return (
+        <Slider disabled={maxQuoteQty < minQuoteQty} useLabel labelSuffix="%" positionLabel="top" axis="x" x={percent} xmax={100} onChange={onPercentChange} />
+    );
 });
 
 export default FuturesOrderSlider;

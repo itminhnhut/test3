@@ -123,7 +123,7 @@ const layoutPro = [
         x: 0,
         y: 25,
         w: 9,
-        h: 34,
+        h: 22,
         isDraggable: false,
         isResizable: false,
         isDroppable: false
@@ -153,7 +153,7 @@ const layoutPro = [
         x: 9,
         y: 17,
         w: 3.5,
-        h: 35,
+        h: 33,
         minW: 10,
         isDraggable: false,
         isResizable: false,
@@ -398,7 +398,7 @@ const SpotComp = () => {
                             key="placeOrderForm"
                             className={classNames(`border-b border-r border-divider dark:border-divider-dark`, {
                                 hidden: !state.isShowPlaceOrderForm || fullScreen,
-                                'border-b-0': isPro
+                                '!border-b-0': isPro
                             })}
                         >
                             {!isPro ? (
