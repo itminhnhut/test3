@@ -12,6 +12,7 @@ import ArrowDown from 'components/svg/ArrowDown';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 
 const Tables = ({
@@ -52,7 +53,7 @@ export const TableFilter = ({
                 return (
                     <div className='flex justify-center w-full'>
                         <DatePickerV2
-                            initDate={filter[key].value}
+                            initDate={filter[key]?.value}
                             onChange={e => onChange(e?.selection)}
                             month={2}
                             hasShadow
@@ -71,7 +72,7 @@ export const TableFilter = ({
                             <Popover.Button className='w-full'>
                                 <div
                                     className='relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
-                                    {object.values.find(e => e.value === filter[key].value).title}
+                                    {object.values.find(e => e.value === filter[key]?.value)?.title}
                                     {/* <ArrowDown
                                         size={16}
                                         color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
@@ -101,7 +102,7 @@ export const TableFilter = ({
                                                 className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5', {
                                                     'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
                                                     'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
-                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key].value
+                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key]?.value
                                                 })}
                                                 onClick={() => {
                                                     onChange(e.value);
@@ -120,13 +121,23 @@ export const TableFilter = ({
             case 'date':
                 return <div className='flex justify-center w-full'>
                     <DatePicker
-                        date={filter[key].value}
+                        date={filter[key]?.value}
                         onChange={e => onChange(e)}
                         month={1}
                         hasShadow
                         isCalendar
                         wrapperClassname='!w-full'
                     />
+                </div>;
+            case 'reset':
+                return <div className='flex'>
+                    <button
+                        onClick={() => setFilter(filters)}
+                        className="whitespace-nowrap bg-gray-10 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
+                        px-4 rounded-md px-auto py-auto font-semibold h-11"
+                    >
+                        Reset
+                    </button>
                 </div>;
             default:
                 return <></>;

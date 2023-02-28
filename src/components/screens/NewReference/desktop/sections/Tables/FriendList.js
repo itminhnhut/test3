@@ -165,6 +165,9 @@ const FriendList = ({
             },
             values: null,
             title: t('reference:referral.total_commissions')
+        },
+        reset: {
+            type: 'reset'
         }
 
     };
@@ -380,7 +383,7 @@ const FriendList = ({
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
                     {t('reference:referral.friend_list')}
                 </div>
-                <div className='flex gap-6 flex-wrap mx-6 mb-6'>
+                <div className='flex gap-6 flex-wrap mx-6 mb-6  items-end'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
 
