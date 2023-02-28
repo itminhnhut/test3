@@ -9,7 +9,7 @@ import colors from 'styles/colors';
 const PopoverSelect = (props, ref) => {
     return (
         <PopoverV2
-            containerClassName={`${props.containerClassName} z-50 `}
+            containerClassName={`${props.containerClassName} z-20 `}
             className={props.className}
             ref={ref}
             label={

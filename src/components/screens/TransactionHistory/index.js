@@ -59,7 +59,7 @@ const TransactionHistory = ({ id }) => {
 
 
     const filterdColumns = useMemo(() => {
-        return columnsConfig[id].map(key => columns[key]);
+        return columnsConfig?.[id].map(key => columns[key]);
     }, [columns, id])
 
 

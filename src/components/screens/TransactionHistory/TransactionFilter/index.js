@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 export const FilterWrapper = ({ children, label, className }) => (
     <div
-        className={classNames('text-txtSecondary dark:text-txtSecondary-dark w-full max-w-[240px] z-1000', {
+        className={classNames('text-txtSecondary dark:text-txtSecondary-dark w-full max-w-[240px]', {
             [className]: className,
         })}
     >
