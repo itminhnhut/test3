@@ -8,8 +8,9 @@ import { SmallCircle } from 'components/screens/NewReference/mobile/sections/Cha
 import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import baseColors from 'styles/colors';
 import { formatNumber } from 'redux/actions/utils';
-import DatePicker from 'components/common/DatePicker/DatePicker';
+import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const Charts = ({
     t,
@@ -39,7 +40,7 @@ const Charts = ({
     return (
         <div className='flex flex-col gap-8 w-full' id={id}>
             <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
-            {/* <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' /> */}
+            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
         </div>
     );
 };
@@ -53,6 +54,7 @@ const RenderContent = ({
     url,
     type
 }) => {
+    const [currentTheme] = useDarkMode();
     const [timeTab, setTimeTab] = useState(timeTabs[0].value);
     const [dataSource, setDataSource] = useState({
         data: [],
@@ -219,14 +221,13 @@ const RenderContent = ({
                     },
                     grid: {
                         display: false,
-                        // drawBorder: true,
+                        drawBorder: true,
+                        borderColor: currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT
                     },
                 },
                 y: {
                     ticks: {
                         color: baseColors.darkBlue5,
-                        showLabelBackdrop: false
-
                     },
                     grid: {
                         borderDash: [1, 4],
@@ -235,7 +236,7 @@ const RenderContent = ({
                             if (context.tick.value === 0) {
                                 return 'rgba(0, 0, 0, 0)';
                             }
-                            return baseColors.divider.DEFAULT;
+                            return currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT;
                         },
                         drawBorder: false,
                     },
@@ -261,7 +262,7 @@ const RenderContent = ({
         );
     };
     return (
-        <RefCard wrapperClassName='!p-8 w-full h-auto bg-white dark:bg-darkBlue-3' style={{ height: 'fit-content' }}>
+        <RefCard wrapperClassName='!p-8 w-full h-auto bg-white dark:bg-dark-4' style={{ height: 'fit-content' }}>
             <div className='mb-6 flex justify-between w-full'>
                 <div className='font-semibold text-[20px] leading-6'>
                     {title}
@@ -277,8 +278,8 @@ const RenderContent = ({
                             })}
                         >{t.title}</div>;
                     })}
-                    <DatePicker
-                        date={filter.range}
+                    <DatePickerV2
+                        initDate={filter.range}
                         onChange={e => setFilter({
                             range: {
                                 startDate: new Date(e?.selection?.startDate ?? null).getTime(),
@@ -288,6 +289,7 @@ const RenderContent = ({
                         })}
                         month={2}
                         hasShadow
+                        position='right'
                         text={<div
                             onClick={() => setTimeTab('custom')}
                             className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {

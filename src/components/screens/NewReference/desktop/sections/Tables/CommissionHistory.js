@@ -48,7 +48,8 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 key: 'selection'
             },
             values: null,
-            title: t('reference:referral.date')
+            title: t('reference:referral.date'),
+            position: 'left'
         },
         level: {
             type: 'popover',

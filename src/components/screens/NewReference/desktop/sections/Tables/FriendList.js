@@ -116,7 +116,8 @@ const FriendList = ({
             type: 'date',
             value: null,
             values: null,
-            title: t('reference:referral.referral_date')
+            title: t('reference:referral.referral_date'),
+            position: 'center'
         },
         status: {
             type: 'popover',

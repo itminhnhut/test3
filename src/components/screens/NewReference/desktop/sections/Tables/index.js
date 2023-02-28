@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import React, { Fragment, useMemo } from 'react';
 import { ChevronDown, ChevronLeft, ChevronRight } from 'react-feather';
 import DatePicker from 'components/common/DatePicker/DatePicker';
+import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import { useCallback } from 'react';
 import { Popover, Transition } from '@headlessui/react';
 import FriendList from 'components/screens/NewReference/desktop/sections/Tables/FriendList';
@@ -48,11 +49,12 @@ export const TableFilter = ({
             case 'daterange':
                 return (
                     <div className='flex justify-center w-full'>
-                        <DatePicker
-                            date={filter[key].value}
+                        <DatePickerV2
+                            initDate={filter[key].value}
                             onChange={e => onChange(e.selection)}
                             month={2}
                             hasShadow
+                            position={object?.position || 'center'}
                             wrapperClassname='!w-full'
                         />
                     </div>
