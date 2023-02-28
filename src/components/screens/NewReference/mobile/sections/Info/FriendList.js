@@ -11,13 +11,12 @@ import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
 
-const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
+const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation()
     const [friendList, setFriendList] = useState([])
     const [more, setMore] = useState(10)
     const [loading, setLoading] = useState(false)
     const hasNext = useRef(false)
-
     const doClose = () => {
         setFriendList([])
         onClose()
@@ -80,7 +79,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}
-            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-txtSecondary dark:text-txtSecondary-dark text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
+            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-txtSecondary dark:text-txtSecondary-dark text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120" /></div>}
         </ModalV2>
         :
         <PopupModal
@@ -121,7 +120,7 @@ const FriendList = ({ isShow, onClose, code, isDesktop = false }) => {
                 >
                     {t('reference:referral.show_more')}
                 </div> : null}
-            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120"/></div>}
+            </div> : <div className='w-full h-[300px] flex flex-col justify-center items-center text-gray-1 font-medium text-sm gap-2'><NoData text={t('reference:referral.no_friends')} width="120" height="120" /></div>}
         </PopupModal>
 }
 

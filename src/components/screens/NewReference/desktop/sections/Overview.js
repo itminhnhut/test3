@@ -45,6 +45,10 @@ import TagV2 from 'components/common/V2/TagV2';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
+import { useSelector } from 'react-redux';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { data } from 'autoprefixer';
+
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -75,6 +79,19 @@ const Overview = ({
     const [currentTheme] = useDarkMode();
     const router = useRouter();
 
+
+    // handle check KYC
+    const auth = useSelector((state) => state.auth?.user);
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+
+    const handleBtnRegisterPartner = () => {
+        auth?.kyc_status = 1;
+        if (auth?.kyc_status !== 2) {
+            return setIsOpenModalKyc(true);
+        } else {
+            setShowRegisterPartner(true)
+        }
+    }
     useEffect(() => {
         fetchAPI({
             url: API_KYC_STATUS,
@@ -125,9 +142,8 @@ const Overview = ({
 
     return (
         <>
-            <div className='w-full h-[27.5rem] bg-[#0C0C0C]'>
+            <div className='w-full h-[27.5rem] bg-[#0C0C0C] bg-cover bg-refferal-v2-banner'>
                 <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4'>
-
                     <div className='py-20  container h-full'
                         style={{
                             backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
@@ -174,11 +190,11 @@ const Overview = ({
                         <div className='flex gap-6 mt-7 select-none'>
                             {
                                 !isPartner &&
-                                <div
-                                    onClick={() => setShowRegisterPartner(true)}
-                                    className='flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'>
+                                <button
+                                    onClick={() => handleBtnRegisterPartner()}
+                                    className='flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold'>
                                     <Partner /><span className='ml-2'>{t('reference:referral.partner.button')}</span>
-                                </div>
+                                </button>
                             }
                             {/* { */}
                             {/*     (isPartner || !user) && */}
@@ -335,6 +351,11 @@ const Overview = ({
                     </div>
                 </div>
             </div>
+            <AlertModalV2
+                isVisible={isOpenModalKyc} type='error'
+                title={t('reference:referral.partner.no_kyc_title')}
+                onClose={() => setIsOpenModalKyc(false)}
+                message={t('reference:referral.partner.no_kyc')} />
         </>
     );
 };
@@ -409,6 +430,7 @@ const RefDetail = ({
         } else {
         }
     }, 1000);
+
 
     return (
         <>
