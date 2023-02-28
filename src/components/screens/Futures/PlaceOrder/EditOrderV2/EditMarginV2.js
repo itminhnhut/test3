@@ -106,8 +106,23 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
     const validator = () => {
         return {
             isValid: !(+amount > available && adjustType === ADJUST_TYPE.ADD),
-            msg: t('futures:maximum_price') + formatNumber(available, decimals.symbol)
+            msg: `${t('common:max')}: ${formatNumber(available, decimals.symbol)}`
         };
+    };
+
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'amount':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.symbol)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.symbol) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}`;
+            default:
+                break;
+        }
+        return '';
     };
 
     const _onConfirm = async () => {
@@ -156,7 +171,7 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
         }
     };
 
-    const isError = !validator().isValid || !amount;
+    const isError = !validator().isValid || !+amount;
     const ratioProfit = formatNumber((profit / newMargin) * 100, 2, 0, true);
 
     return (
@@ -205,6 +220,8 @@ const EditMarginV2 = ({ order, _lastPrice, available, decimals, quoteAsset, orde
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                                 validator={validator()}
+                                textDescription={textDescription('amount', { min: 1, max: available })}
+                                errorTooltip={false}
                                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                                 renderTail={() => quoteAsset}
                                 clearAble

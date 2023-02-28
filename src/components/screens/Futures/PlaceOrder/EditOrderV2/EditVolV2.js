@@ -112,10 +112,10 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
         }, []);
     }, [pairConfig, t]);
 
-    const _validator = (key) => {
+    const _validator = (key, isText = false) => {
         switch (key) {
             case 'price':
-                return validator('price', price, String(type).toUpperCase(), side, _lastPrice, pairConfig, decimals.symbol, t);
+                return validator('price', price, String(type).toUpperCase(), side, _lastPrice, pairConfig, decimals.symbol, t, isText);
             case 'quoteQty':
                 return {
                     isValid: !(volume && (volume < +minQuoteQty || volume > +maxQuoteQty)),
@@ -127,6 +127,9 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
             case 'leverage':
                 const min = pairConfig?.leverageConfig.min ?? 0;
                 const max = pairConfig?.leverageConfig.max ?? 0;
+                if (isText) {
+                    return { min, max };
+                }
                 return {
                     isValid: !(leverage < min || leverage > max),
                     msg:
@@ -137,6 +140,28 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
             default:
                 break;
         }
+    };
+
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'quoteQty':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.symbol)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.symbol) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}`;
+            case 'price':
+            case 'leverage':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.price) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            default:
+                break;
+        }
+        return '';
     };
 
     const _onConfirm = async () => {
@@ -229,7 +254,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                     </div>
                     <div className="relative">
                         <div className="text-sm text-txtSecondary dark:Ltext-txtSecondary-dark mb-2">{t('futures:mobile:adjust_margin:added_volume_2')}</div>
-                        <div className={classNames('mb-3 flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
+                        <div className={classNames('mb-3 flex items-center')}>
                             <TradingInput
                                 headContainerClassName="!border-0"
                                 renderHead={
@@ -264,6 +289,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                 disabled={!available}
                                 inputMode="decimal"
                                 validator={_validator('quoteQty')}
+                                textDescription={textDescription('quoteQty', { min: minQuoteQty, max: maxQuoteQty })}
+                                errorTooltip={false}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
                             />
@@ -316,7 +343,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                     </div>
                                     <div className="space-y-2">
                                         <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{t('futures:leverage:leverage')}</div>
-                                        <div className={classNames('flex items-center bg-gray-10 dark:bg-dark-2 rounded-md')}>
+                                        <div className={classNames('flex items-center')}>
                                             <TradingInput
                                                 headContainerClassName="!border-0"
                                                 renderHead={
@@ -353,6 +380,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                                 suffix={'x'}
                                                 allowedDecimalSeparators={[',', '.']}
                                                 validator={_validator('leverage')}
+                                                textDescription={textDescription('leverage', _validator('leverage', true))}
+                                                errorTooltip={false}
                                             />
                                         </div>
                                     </div>
@@ -369,6 +398,8 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                         onValueChange={({ value }) => setPrice(value)}
                                         disabled={type === VndcFutureOrderType.Type.MARKET}
                                         validator={_validator('price')}
+                                        textDescription={textDescription('price', _validator('price', true))}
+                                        errorTooltip={false}
                                         renderTail={() => <span className={`text-txtSecondary dark:text-txtSecondary-dark`}>{quoteAsset}</span>}
                                         allowedDecimalSeparators={[',', '.']}
                                         clearAble

@@ -64,8 +64,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         if (autoTypeInput) {
             autoTypeInput = JSON.parse(autoTypeInput);
             if (autoTypeInput.auto) {
-                const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
-                const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price);
+                const _sl = +getSuggestSl(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price) || '';
+                const _tp = +getSuggestTp(side, _lastPrice, leverage, leverage >= 100 ? 0.9 : 0.6).toFixed(decimals.price) || '';
                 if (leverage <= 10) {
                     setOrderSlTp({ tp: '', sl: '' });
                 } else if (leverage <= 20) {
@@ -92,12 +92,14 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         return pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
     }, [pairConfig]);
 
-    const inputValidator = (key) => {
+    const inputValidator = (key, isText = false) => {
         let isValid = true,
             msg = null;
         const { sl, tp } = orderSlTp;
         if (oldPair !== pair) return { isValid, msg };
         const stopPrice = price;
+        let min = 0,
+            max = 0;
         switch (key) {
             // input check
             case 'quoteQty':
@@ -105,10 +107,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 const _max = maxQuoteQty;
                 const _displayingMax = `${formatNumber(_max, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
                 const _displayingMin = `${formatNumber(_min, decimals.symbol, 0, true)} ${pairConfig?.quoteAsset}`;
-                if (_max < _min) {
-                    msg = t('futures:mobile:balance_insufficient');
-                    isValid = false;
-                } else if (quoteQty < +_min) {
+                if (quoteQty < +_min) {
                     msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
                 } else if (quoteQty > +Number(_max).toFixed(decimals.symbol)) {
@@ -123,7 +122,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             case 'stop_loss':
             case 'take_profit':
                 // Nếu không nhập thì ko cần validate luôn, cho phép đặt lệnh không cần SL, TP
-                if ((key === 'stop_loss' && !sl) || (key === 'take_profit' && !tp)) {
+                if ((key === 'stop_loss' && !sl && !isText) || (key === 'take_profit' && !tp && !isText)) {
                     return {
                         isValid,
                         msg
@@ -162,6 +161,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
 
                 if (key === 'stop_loss') {
                     bound = side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
+                    min = bound.min;
+                    max = bound.max;
                     // Modify bound base on type
                     if (sl < bound.min) {
                         isValid = false;
@@ -172,6 +173,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                     }
                 } else if (key === 'take_profit') {
                     bound = side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
+                    min = bound.min;
+                    max = bound.max;
                     if (tp < bound.min) {
                         isValid = false;
                         msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
@@ -180,10 +183,11 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
                     }
                 } else if (key === 'price' && (type === 'STOP_MARKET' || type === 'LIMIT')) {
-                    const _checkPrice = type === 'STOP_MARKET' ? stopPrice : price;
                     if (side === FuturesOrderEnum.Side.BUY) {
                         // Truong hop la buy thi gia limit phai nho hon gia hien tai
                         if (type === 'LIMIT') {
+                            min = lowerBound.min;
+                            max = lowerBound.max;
                             if (price < lowerBound.min) {
                                 isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
@@ -192,6 +196,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                                 msg = `${t('futures:maximum_price')} ${formatNumber(lowerBound.max, decimals.price, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
+                            min = upperBound.min;
+                            max = upperBound.max;
                             if (stopPrice < upperBound.min) {
                                 isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
@@ -202,6 +208,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         }
                     } else if (side === FuturesOrderEnum.Side.SELL) {
                         if (type === 'LIMIT') {
+                            min = upperBound.min;
+                            max = upperBound.max;
                             if (price < upperBound.min) {
                                 isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(upperBound.min, decimals.price, 0, true)}`;
@@ -210,6 +218,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                                 msg = `${t('futures:maximum_price')} ${formatNumber(upperBound.max, decimals.price, 0, true)}`;
                             }
                         } else if (type === 'STOP_MARKET') {
+                            min = lowerBound.min;
+                            max = lowerBound.max;
                             if (stopPrice < lowerBound.min) {
                                 isValid = false;
                                 msg = `${t('futures:minimum_price')} ${formatNumber(lowerBound.min, decimals.price, 0, true)}`;
@@ -246,14 +256,16 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                         msg = `${t('futures:liquidate_alert_greater')} ${formatNumber(liquidatePriceBound.lower, decimals.price, 0, true)}`;
                     }
                 }
-
+                if (isText) {
+                    return { min, max };
+                }
                 return {
                     isValid,
                     msg
                 };
             case 'leverage':
-                const min = pairConfig?.leverageConfig?.min ?? 0;
-                const max = pairConfig?.leverageConfig?.max ?? 0;
+                min = pairConfig?.leverageConfig?.min ?? 0;
+                max = pairConfig?.leverageConfig?.max ?? 0;
                 if (min > leverage) {
                     msg = `${t('futures:minimum_leverage')} ${min} `;
                     isValid = false;
@@ -272,22 +284,36 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
         }
     };
 
-    const isError = useMemo(() => {
-        const not_valid =
-            !inputValidator('price').isValid ||
-            !inputValidator('stop_loss').isValid ||
-            !inputValidator('take_profit').isValid ||
-            !inputValidator('quoteQty').isValid ||
-            !inputValidator('leverage').isValid;
-        // console.log(
-        //     !inputValidator('price', ArrStop.includes(type)).isValid,
-        //     !inputValidator('stop_loss').isValid,
-        //     !inputValidator('take_profit').isValid,
-        //     !inputValidator('quoteQty').isValid,
-        //     !inputValidator('leverage').isValid
-        // );
-        return not_valid;
-    }, [price, type, orderSlTp, isVndcFutures, leverage, quoteQty]);
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'quoteQty':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.symbol)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.symbol) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            case 'price':
+            case 'stop_loss':
+            case 'take_profit':
+                if ((key === 'stop_loss' || key === 'take_profit') && !price) return;
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.price) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            default:
+                break;
+        }
+        return '';
+    };
+
+    const isError =
+        !inputValidator('price').isValid ||
+        !inputValidator('stop_loss').isValid ||
+        !inputValidator('take_profit').isValid ||
+        !inputValidator('quoteQty').isValid ||
+        !inputValidator('leverage').isValid;
 
     const renderAvail = () => {
         const margin = quoteQty / leverage;
@@ -328,9 +354,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 onValueChange={({ value }) => setPrice(value)}
                 decimalScale={decimals.price}
                 validator={inputValidator('price')}
+                textDescription={textDescription('price', inputValidator('price', true))}
+                errorTooltip={false}
                 tailContainerClassName="text-txtSecondary dark:text-txtSecondary-dark select-none"
                 renderTail={() => pairConfig?.quoteAsset}
                 clearAble
+                errorEmpty
             />
             <TradingInput
                 label={t('futures:order_table:volume')}
@@ -338,6 +367,8 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 allowNegative={false}
                 onValueChange={({ value }) => setQuoteQty(value)}
                 validator={inputValidator('quoteQty')}
+                textDescription={textDescription('quoteQty', { min: minQuoteQty, max: maxQuoteQty })}
+                errorTooltip={false}
                 decimalScale={decimals.qty}
                 containerClassName="w-full dark:bg-dark-2"
                 labelClassName="whitespace-nowrap"
@@ -378,6 +409,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 isAuth={isAuth}
                 quoteQty={quoteQty}
                 isDark={isDark}
+                textDescription={textDescription}
             />
 
             {renderAvail()}
