@@ -3,17 +3,23 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import useLanguage from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
+import { WIDTH_MD } from 'components/screens/Wallet'
+import useWindowSize from 'hooks/useWindowSize';
+
 
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
     const { t } = useTranslation(['common', 'wallet']);
     const [currentLocale] = useLanguage();
+    const { width } = useWindowSize();
+
     return (
         <ModalV2
-            isMobile={true}
+            isMobile={isMobile || width < WIDTH_MD}
             isVisible={isOpenModalKyc}
             onBackdropCb={onBackdropCb}
             className="!max-w-[488px]"
             wrapClassName="p-8 flex flex-col tracking-normal"
+            customHeader={() => <></>}
         >
             <img width={isMobile ? 80 : 124} height={isMobile ? 80 : 124} src={getS3Url('/images/screen/account/kyc_require.png')} className="mx-auto mt-4" />
 

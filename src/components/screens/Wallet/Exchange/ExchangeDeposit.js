@@ -35,6 +35,7 @@ import format from 'date-fns/format';
 import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -512,19 +513,19 @@ const ExchangeDeposit = () => {
                     text={state.address.addressTag}
                     onCopy={() => !state.isCopying?.memo && onCopy('memo')}
                 >
-                        <span
-                            className={
-                                state.address.addressTag
-                                    ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
-                                    : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
-                            }
-                        >
-                            {state.isCopying?.memo ? (
-                                <Check size={16} />
-                            ) : (
-                                <Copy size={16} />
-                            )}
-                        </span>
+                    <span
+                        className={
+                            state.address.addressTag
+                                ? 'font-bold text-sm hover:opacity-80 cursor-pointer'
+                                : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
+                        }
+                    >
+                        {state.isCopying?.memo ? (
+                            <Check size={16} />
+                        ) : (
+                            <Copy size={16} />
+                        )}
+                    </span>
                 </CopyToClipboard>
             </div>
         );
@@ -931,6 +932,13 @@ const ExchangeDeposit = () => {
         return () => interval && clearInterval(interval);
     }, [focused, state.historyPage]);
 
+
+    // Handle check KYC:
+    const auth = useSelector((state) => state.auth.user) || null;
+    const isOpenModalKyc = useMemo(() => {
+        return auth?.kyc_status !== 2
+    }, [auth])
+
     return (
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
@@ -1018,6 +1026,7 @@ const ExchangeDeposit = () => {
             </Background>
             {renderMemoNotice()}
             {renderPushedOrderNotice()}
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
         </MaldivesLayout>
     );
 };

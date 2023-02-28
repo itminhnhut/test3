@@ -21,7 +21,6 @@ import useOutsideClick from 'hooks/useOutsideClick';
 import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import HideSmallBalance from 'components/common/HideSmallBalance';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
@@ -314,7 +313,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                 marketAvailable
                             }}
                             onMouseOut={() => (flag.current = false)}
-                            handleKycRequest={handleKycRequest}
+                            router={router}
                         />
                     );
                 }
@@ -344,25 +343,15 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
     // Check Kyc before redirect to page Deposit / Withdraw
     const router = useRouter();
-    const auth = useSelector((state) => state.auth.user) || null;
-    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
-
-    const handleKycRequest = (href) => {
-        if (auth?.kyc_status !== 2) {
-            return setIsOpenModalKyc(true);
-        } else {
-            return router.push(href);
-        }
-    };
 
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
                     {t('common:deposit')}
                 </ButtonV2>
                 <ButtonV2
-                    onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
                     className="px-6"
                     variants="secondary"
                 >
@@ -427,7 +416,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     </Link>
                     <button
                         onClick={() =>
-                            handleKycRequest(
+                            router.push(
                                 walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
                                     type: 'crypto',
                                     asset: curAssetCodeAction
@@ -439,7 +428,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     </button>
                     <button
                         onClick={() =>
-                            handleKycRequest(
+                            router.push(
                                 walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
                                     type: 'crypto',
                                     asset: curAssetCodeAction
@@ -619,8 +608,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                             {state.hideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
-                                                ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                : '0.0000'}
+                                                    ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                    : '0.0000'}
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
@@ -634,8 +623,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {state.hideAsset
                                                     ? SECRET_STRING
                                                     : available
-                                                    ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                         <div className="flex items-center justify-between mt-3">
@@ -644,8 +633,8 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                                                 {state.hideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
-                                                    ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
-                                                    : '0.0000'}
+                                                        ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)
+                                                        : '0.0000'}
                                             </span>
                                         </div>
                                     </div>
@@ -670,21 +659,13 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
 
             {renderMarketListContext()}
             {renderModalActionMobile()}
-            <ModalNeedKyc
-                isOpenModalKyc={isOpenModalKyc}
-                onBackdropCb={() => {
-                    setIsOpenModalKyc(false);
-                    // setCurAssetCodeAction(null);
-                }}
-                isMobile={isSmallScreen}
-            />
         </>
     );
 };
 
 const ASSET_ROW_LIMIT = 10;
 
-const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, handleKycRequest }) => {
+const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils, idx, isStickyColOperation, onMouseOut, router }) => {
     const markets = utils?.marketAvailable;
     const noMarket = !markets?.length;
 
@@ -762,7 +743,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li
                     className={cssLi}
                     onClick={() =>
-                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
                     }
                 >
                     {utils?.translator('common:deposit')}
@@ -770,7 +751,7 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li
                     className={cssLi}
                     onClick={() =>
-                        handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
                     }
                 >
                     {utils?.translator('common:withdraw')}
