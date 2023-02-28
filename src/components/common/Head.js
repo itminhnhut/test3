@@ -19,7 +19,7 @@ const Head = ({language = 'vi'}) => {
             <NextHead>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
                 <link rel="manifest" href="/site.webmanifest" key="site-manifest"/>
-                <link rel="icon" type="image/x-icon" href="/favicon_1.ico"/>
+                <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
                 <style>{dom.css()}</style>
             </NextHead>
             <SEO {...seoConfig}/>
