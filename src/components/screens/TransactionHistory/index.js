@@ -8,6 +8,8 @@ import TableV2 from 'components/common/V2/TableV2';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
+import AssetLogo from 'components/wallet/AssetLogo';
+import { getAssetName } from 'redux/actions/utils';
 
 
 const LIMIT = 10
@@ -26,8 +28,22 @@ const TransactionHistory = ({ id }) => {
             key: 'selection'
         },
     });
-
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
+    
+    const [categoryConfig, setCategoryConfig] = useState([])
+    useEffect(() => {
+        FetchApi({
+            url: API_GET_WALLET_TRANSACTION_HISTORY,
+            params
+        }).then(({ data, statusCode }) => {
+            if (statusCode === 200) {
+                console.log('data', data)
+                hasNext.current = data?.hasNext
+                setData(data?.result)
+                setLoading(false)
+            }
+        });
+    }, [])
 
     const columns = useMemo(() => {
         return {
@@ -38,7 +54,7 @@ const TransactionHistory = ({ id }) => {
                 align: 'left',
                 fixed: 'left',
                 width: 160,
-                render: (data) => <div>{data.slice(0, 4) + '...' + data.slice(data.length - 4, data.length)}</div>
+                render: (row) => <div title={row}>{row?.slice(0, 4) + '...' + row?.slice(row?.length - 5, row?.length)}</div>
             },
             asset: {
                 key: 'asset',
@@ -46,22 +62,19 @@ const TransactionHistory = ({ id }) => {
                 title: 'Asset',
                 align: 'left',
                 fixed: 'left',
-                width: 160,
-                render: (data) => <div>{data}</div>
+                width: 148,
+                render: (row) => <div className='flex items-center gap-2'><AssetLogo assetId={row} size={32} />{getAssetName(row)}</div>
             }
         }
     }, [t])
-
 
     const columnsConfig = {
         [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset']
     }
 
-
     const filterdColumns = useMemo(() => {
         return columnsConfig[id].map(key => columns[key]);
     }, [columns, id])
-
 
     useEffect(() => {
         setLoading(true)
