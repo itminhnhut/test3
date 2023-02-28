@@ -407,12 +407,27 @@
       border-top-right-radius: 0 !important;
       padding: 16px !important;
 
-      .mal-navbar__link__group___item___childen__lv1___item2:nth-child(odd) {
-        padding-right: 24px;
+      .mal-navbar__link__group___item___childen__lv1___col2:nth-child(odd) {
+        
+        padding-right:24px;
       }
 
+      .mal-navbar__link__group___item___childen__lv1___col2,.mal-navbar__link__group___item___childen__lv1___col1{
+        
+        padding-top:16px;
+      }
+
+    
+
+      .mal-navbar__link__group___item___childen__lv1___col2:nth-child(-n+2),.mal-navbar__link__group___item___childen__lv1___col1:first-child {
+        padding-top:0 !important;
+      }
+    
+
+
+
       .mal-navbar__link__group___item___childen__lv1___item2 {
-        @apply w-1/2 flex items-center text-left;
+        @apply w-full flex items-center text-left;
 
         white-space: nowrap;
         padding: 8px;

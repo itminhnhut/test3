@@ -136,7 +136,7 @@ export const NAV_DATA = [
                 localized: 'advance',
                 isNew: false,
                 url: '/trade/BTC-USDT?layout=pro',
-                child_lv1: []
+                child_lv2: []
             }
         ]
     },
@@ -287,7 +287,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'advance',
                 isNew: false,
                 url: '/trade/BTC-USDT?layout=pro',
-                child_lv1: []
+                child_lv2: []
             }
         ]
     },
