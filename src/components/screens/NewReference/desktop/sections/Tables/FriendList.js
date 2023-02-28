@@ -28,6 +28,7 @@ const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
     type='success'>{t('reference:referral.kyc')}</TagV2>;
 
 const ModalCommissionFriend = ({
+    owner,
     t,
     commissionConfig,
     friend = {},
@@ -39,7 +40,6 @@ const ModalCommissionFriend = ({
         2: t('reference:referral.commission_types.swap'),
         3: t('reference:referral.commission_types.staking')
     };
-
     return <ModalV2 isVisible={!!friend} className='w-[50rem]' onBackdropCb={onClose}>
         <div className='flex items-center justify-center border-b border-divider dark:border-divider-dark mb-4 pb-4'>
             <div className='font-medium'>
@@ -62,13 +62,13 @@ const ModalCommissionFriend = ({
                     </tr>
                 </thead>
                 <tbody>
-                    {map(omit(commissionConfig[friend?.rank] || {}, ['commissionLevel']), (configs = {}, commissionKind) => {
+                    {map(omit(commissionConfig[owner?.rank] || {}, ['commissionLevel']), (configs = {}, commissionKind) => {
                         return <tr key={commissionKind}>
                             <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
                             {map(configs, (c, k) => {
                                 return <td key={k}
                                     className='text-center text-sm font-semibold text-teal py-2'>
-                                    {c * (friend.remunerationRate / 100)}%
+                                    {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (owner?.defaultRefCode?.remunerationRate / 100) : c}%
                                 </td>;
                             })}
                         </tr>;
@@ -80,6 +80,7 @@ const ModalCommissionFriend = ({
 };
 
 const FriendList = ({
+    owner,
     t,
     commisionConfig: commissionConfig,
     id
@@ -234,10 +235,7 @@ const FriendList = ({
             align: 'left',
             fixed: 'left',
             width: 180,
-            render: (data, item) => {
-
-                return renderRefInfo(item)
-            }
+            render: (data, item) => renderRefInfo(item)
         }, {
             key: 'invitedAt',
             dataIndex: 'invitedAt',
@@ -322,6 +320,7 @@ const FriendList = ({
     return (
         <div className='flex w-full' id={id}>
             <ModalCommissionFriend
+                owner={owner}
                 t={t} commissionConfig={commissionConfig}
                 friend={commissionByFriendDetail}
                 onClose={() => setCommissionByFriendDetail(null)}

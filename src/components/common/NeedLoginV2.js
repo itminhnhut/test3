@@ -14,7 +14,7 @@ const NeedLoginV2 = ({ message, addClass, isNamiapp = false }) => {
     const _message = useMemo(() => {
         if (!message) {
             if (language === LANGUAGE_TAG.EN) {
-                return 'Login Now';
+                return 'Sign In Now';
             } else {
                 return 'Đăng nhập ngay';
             }
