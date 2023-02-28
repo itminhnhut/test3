@@ -4,6 +4,7 @@ import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import ReTable from 'components/common/ReTable';
 import TableV2 from 'components/common/V2/TableV2';
+import FetchApi from 'utils/fetch-api';
 
 
 import Skeletor from 'components/common/Skeletor';
@@ -20,6 +21,9 @@ import { isValid } from 'date-fns';
 import NoData from 'components/common/V2/TableV2/NoData';
 import { CopyIcon } from 'components/screens/NewReference/PopupModal';
 
+import {
+    API_NEW_REFERRAL
+} from 'redux/actions/apis';
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
@@ -29,6 +33,7 @@ const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
 
 const ModalCommissionFriend = ({
     owner,
+    refs,
     t,
     commissionConfig,
     friend = {},
@@ -40,6 +45,8 @@ const ModalCommissionFriend = ({
         2: t('reference:referral.commission_types.swap'),
         3: t('reference:referral.commission_types.staking')
     };
+    const rewardRatio = refs.find(obj => obj?.code === friend?.byRefCode)?.remunerationRate || 0
+
     return <ModalV2 isVisible={!!friend} className='w-[50rem]' onBackdropCb={onClose}>
         <div className='flex items-center justify-center border-b border-divider dark:border-divider-dark mb-4 pb-4'>
             <div className='font-medium'>
@@ -68,7 +75,7 @@ const ModalCommissionFriend = ({
                             {map(configs, (c, k) => {
                                 return <td key={k}
                                     className='text-center text-sm font-semibold text-teal py-2'>
-                                    {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (owner?.defaultRefCode?.remunerationRate / 100) : c}%
+                                    {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (rewardRatio / 100) : c}%
                                 </td>;
                             })}
                         </tr>;
@@ -85,6 +92,28 @@ const FriendList = ({
     commisionConfig: commissionConfig,
     id
 }) => {
+    const [refs, setRefs] = useState([]);
+
+    useEffect(() => {
+        FetchApi({
+            url: API_NEW_REFERRAL,
+            options: {
+                method: 'GET'
+            }
+        })
+            .then(({
+                data,
+                status
+            }) => {
+                if (status === 'ok') {
+                    data.sort((e) => e.status);
+                    setRefs(data);
+                } else {
+                    setRefs([]);
+                }
+            });
+    }, []);
+
     const rank = {
         '1': t('reference:referral.normal'),
         '2': t('reference:referral.official'),
@@ -92,6 +121,7 @@ const FriendList = ({
         '4': t('reference:referral.platinum'),
         '5': t('reference:referral.diamond')
     };
+
     const statuses = [
         {
             title: t('common:all'),
@@ -322,6 +352,7 @@ const FriendList = ({
         <div className='flex w-full' id={id}>
             <ModalCommissionFriend
                 owner={owner}
+                refs={refs}
                 t={t} commissionConfig={commissionConfig}
                 friend={commissionByFriendDetail}
                 onClose={() => setCommissionByFriendDetail(null)}
