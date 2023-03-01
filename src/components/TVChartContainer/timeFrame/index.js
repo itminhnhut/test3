@@ -8,6 +8,7 @@ import { TrendIcon, TuneIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FullScreen from 'components/svg/FullScreen';
+import TextButton from 'components/common/V2/ButtonV2/TextButton'
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
