@@ -278,8 +278,8 @@ export class TVChartContainer extends React.PureComponent {
     };
 
     getOrderType = (order) => {
-        const orderType = order.status === VndcFutureOrderType.ACTIVE ? '' : order.type;
-        return `${order.side} ${orderType}`.toUpperCase();
+        const orderType = order.type === VndcFutureOrderType.Type.MARKET || order.status === VndcFutureOrderType.Status.ACTIVE ? '' : order.type;
+        return `${order.side} ${orderType}`;
     };
 
     getTicket = ({ displaying_id: displayingId }) => {
@@ -295,36 +295,31 @@ export class TVChartContainer extends React.PureComponent {
 
     async newOrder(displayingId, order) {
         try {
-            const color = this.getOrderType(order).startsWith('BUY') ? colors.teal : colors.red2;
+            const color = this.getOrderType(order).startsWith('Buy') ? colors.teal : colors.red2;
             const colorSl = colors.red2;
             const colorTp = colors.teal;
+            const isMarket = order.type === VndcFutureOrderType.Type.MARKET;
             const line = this.widget
                 .chart()
                 .createOrderLine()
-                .onModify(() => {})
-                .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} ${this.getOrderType(order)} ${order?.quantity}`)
+                .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} ${this.getOrderType(order)}`)
                 .setPrice(order?.open_price || order?.price)
                 .setQuantity(null)
-                .setTooltip(`${this.getOrderType(order)} ${order?.quantity} ${order?.symbol} at price ${order?.open_price}`)
                 .setEditable(false)
                 .setLineColor(color)
-                .setBodyBorderColor(color)
-                .setBodyTextColor(color)
-                .setQuantityBackgroundColor(color)
-                .setQuantityBorderColor(color)
-                .setLineLength(120)
-                .setBodyBackgroundColor('rgba(0,0,0,0)')
-                .setBodyBorderColor('rgba(0,0,0,0)')
-                .setCancelButtonBorderColor('rgb(255,0,0)')
-                .setCancelButtonBackgroundColor('rgb(0,255,0)')
-                .setCancelButtonIconColor('rgb(0,0,255)');
+                .setBodyTextColor(isMarket ? colors.white : color)
+                .setEditable(false)
+                .setBodyBackgroundColor(isMarket ? color : colors.white)
+                .setBodyBorderColor(isMarket ? 'rgba(0,0,0,0)' : color)
+                .setLineLength(100)
+                .setLineStyle(1)
             line.setBodyFont(this.toNormalText(line));
             this.drawnOrder[displayingId] = line;
             if (order.sl > 0) {
                 const lineSl = this.widget
                     .chart()
                     .createOrderLine()
-                    .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} sl ${order.sl}`)
+                    .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} SL`)
                     .setPrice(order.sl)
                     .setQuantity(null)
                     .setEditable(false)
@@ -333,7 +328,7 @@ export class TVChartContainer extends React.PureComponent {
                     .setBodyBackgroundColor('rgba(0,0,0,0)')
                     .setBodyBorderColor('rgba(0,0,0,0)')
                     .setLineLength(100)
-                    .setLineStyle(1);
+                    .setLineStyle(0);
                 lineSl.setBodyFont(this.toNormalText(lineSl));
                 this.drawnSl[displayingId] = lineSl;
             }
@@ -341,7 +336,7 @@ export class TVChartContainer extends React.PureComponent {
                 const lineTp = this.widget
                     .chart()
                     .createOrderLine()
-                    .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} tp ${order.tp}`)
+                    .setText(`${!isMobile ? '#' + this.getTicket(order) : ''} TP`)
                     .setPrice(order.tp)
                     .setQuantity(null)
                     .setEditable(false)
@@ -350,7 +345,7 @@ export class TVChartContainer extends React.PureComponent {
                     .setBodyBackgroundColor('rgba(0,0,0,0)')
                     .setBodyBorderColor('rgba(0,0,0,0)')
                     .setLineLength(100)
-                    .setLineStyle(1);
+                    .setLineStyle(0);
                 lineTp.setBodyFont(this.toNormalText(lineTp));
                 this.drawnTp[displayingId] = lineTp;
             }
