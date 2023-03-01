@@ -180,8 +180,8 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 </div>
                 <TableV2
                     loading={loading}
-                    sort
-                    defaultSort={{ key: 'code', direction: 'desc' }}
+                    // sort
+                    // defaultSort={{ key: 'code', direction: 'desc' }}
                     useRowHover
                     data={dataSource?.results || []}
                     page={page}

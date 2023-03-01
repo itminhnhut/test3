@@ -40,7 +40,7 @@ import { ApiStatus } from 'redux/actions/const';
 import ReactDOM from 'react-dom';
 import domtoimage from 'dom-to-image-more';
 import { throttle } from 'lodash';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, getLoginUrl } from 'redux/actions/utils';
 import TagV2 from 'components/common/V2/TagV2';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
@@ -141,214 +141,230 @@ const Overview = ({
 
     return (
         <>
-            <div className='w-full h-[27.5rem] bg-[#0C0C0C] bg-cover bg-refferal-v2-banner'>
+            {/* Card banner slogan */}
+            <div className='w-full bg-[#0C0C0C] '>
                 <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4'>
-                    <div className='py-20  container h-full'
-                        style={{
-                            backgroundImage: `url(${getS3Url('/images/reference/background_desktop_2.png')})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center'
-                        }}
-                    >
-                        <ModalShareRefCode
-                            t={t}
-                            code={data?.defaultRefCode?.code}
-                            open={openShareModal}
-                            onClose={() => setOpenShareModal(false)}
-                        />
-                        {showRef &&
-                            <RefDetail
+                    <div className='h-full bg-cover bg-refferal-v2-banner bg-center' >
+                        <div className='py-20 container'>
+                            <ModalShareRefCode
                                 t={t}
-                                refreshData={refreshData}
-                                isShow={showRef}
-                                onClose={() => setShowRef(false)}
-                                rank={data?.rank ?? 1}
-                                defaultRef={data?.defaultRefCode?.code}
-                            />}
-                        {showRegisterPartner ? (
-                            <RegisterPartnerModal
-                                isDesktop
-                                setIsPartner={setIsPartner}
-                                t={t}
-                                kyc={kyc}
-                                user={user}
-                                isShow={showRegisterPartner}
-                                onClose={() => setShowRegisterPartner(false)}
+                                code={data?.defaultRefCode?.code}
+                                open={openShareModal}
+                                onClose={() => setOpenShareModal(false)}
                             />
-                        ) : null}
-                        <div className={classNames('font-semibold leading-[3.625rem] text-[2.75rem] text-gray-4')}>
-                            {t('reference:referral.introduce1')} <br />
-                            {t('reference:referral.introduce2')}
-                        </div>
-                        <div
-                            className='font-normal text-gray-6 mt-6 tracking-wide max-w-[800px] mr-[300px]'>
-                            <p>{t('reference:referral.introduce3')}</p>
-                            <p className='mt-1'>{t('reference:referral.readmore')}:</p>
-                        </div>
-
-                        <div className='flex gap-6 mt-7 select-none'>
-                            {
-                                !isPartner &&
-                                <button
-                                    onClick={() => handleBtnRegisterPartner()}
-                                    className='flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold'>
-                                    <Partner /><span className='ml-2'>{t('reference:referral.partner.button')}</span>
-                                </button>
-                            }
-                            {/* { */}
-                            {/*     (isPartner || !user) && */}
-                            <div
-                                className='px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'
-                                onClick={() => router.push(policyLink)}
-                            >
-                                <span>{t('reference:referral.referral_policy')}</span>
+                            {showRef &&
+                                <RefDetail
+                                    t={t}
+                                    refreshData={refreshData}
+                                    isShow={showRef}
+                                    onClose={() => setShowRef(false)}
+                                    rank={data?.rank ?? 1}
+                                    defaultRef={data?.defaultRefCode?.code}
+                                />}
+                            {showRegisterPartner ? (
+                                <RegisterPartnerModal
+                                    isDesktop
+                                    setIsPartner={setIsPartner}
+                                    t={t}
+                                    kyc={kyc}
+                                    user={user}
+                                    isShow={showRegisterPartner}
+                                    onClose={() => setShowRegisterPartner(false)}
+                                />
+                            ) : null}
+                            <div className={classNames('font-semibold leading-[3.625rem] text-[2.75rem] text-gray-4')}>
+                                {t('reference:referral.introduce1')} <br />
+                                {t('reference:referral.introduce2')}
                             </div>
-                            {/* } */}
+                            <div
+                                className='font-normal text-gray-6 mt-6 tracking-wide max-w-[800px] mr-[300px]'>
+                                <p>{t('reference:referral.introduce3')}</p>
+                                <p className='mt-1'>{t('reference:referral.readmore')}:</p>
+                            </div>
+
+                            <div className='flex gap-6 mt-7 select-none'>
+                                {
+                                    !isPartner &&
+                                    <button
+                                        onClick={() => handleBtnRegisterPartner()}
+                                        className='flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold'>
+                                        <Partner /><span className='ml-2'>{t('reference:referral.partner.button')}</span>
+                                    </button>
+                                }
+                                {/* { */}
+                                {/*     (isPartner || !user) && */}
+                                <div
+                                    className='px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold'
+                                    onClick={() => router.push(policyLink)}
+                                >
+                                    <span>{t('reference:referral.referral_policy')}</span>
+                                </div>
+                                {/* } */}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {/* Card infor general */}
+
             <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4'>
-                <div className='container  bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-8'>
-                    <div className='border-r dark:border-divider-dark pr-8'>
-                        <div className='w-full flex justify-between items-center'>
-                            <div className='flex gap-4 items-center mb-10'>
-                                <div className='flex relative items-center'>
-                                    <img src={user?.avatar || '/images/default_avatar.png'}
-                                        className='h-full w-20 h-20 rounded-full object-fit' />
-                                    <div
-                                        className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
-                                </div>
-                                <div className='h-full flex flex-col'>
-                                    <p className='font-semibold text-2xl leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
-                                    <span className='text-txtSecondary dark:text-txtSecondary-dark leading-6'>
-                                        <span className='uppercase'>{t('reference:referral.ranking')}:{' '}</span>
-                                        <span
-                                            className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='text-sm space-y-3'>
-                            <div className='w-full flex items-center justify-between text-gray-1'>
-                                <div>{t('reference:referral.current_volume')}</div>
-                                <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
-                            </div>
-                            <div className='w-full bg-gray-12 rounded-full overflow-hidden flex'>
-                                <Progressbar
-                                    background={colors.green[3]}
-                                    percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
-                                    height={8}
-                                    className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
-                                />
-                                <Progressbar
-                                    background={colors.blue[5]}
-                                    percent={(data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100}
-                                    height={8}
-                                    className='!rounded-r-lg'
-                                />
-                            </div>
-                            <div className='w-full flex flex-col leading-5'>
-                                <div className='w-full flex justify-between text-teal'>
-                                    <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
-                                    {data?.rank !== 5 ? (
-                                        <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
-                                    ) : null}
-                                </div>
-                                <div className='w-full flex justify-between text-blue-crayola'>
-                                    <div>Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT</div>
-                                    {data?.rank !== 5 ? (
-                                        <div>Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
-                                    ) : null}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='pl-8 space-y-5'>
-                        <div className='flex items-center justify-between py-3'>
-                            <p className='text-sm font-semibold'>
-                                {t('reference:referral.rate', {
-                                    value1: isNaN(youGet) ? '--' : youGet,
-                                    value2: isNaN(friendsGet) ? '--' : friendsGet
-                                })}
-                            </p>
-                            <ButtonV2
-                                className='!w-auto px-6'
-                                onClick={() => setShowRef(true)}
-                            >
-                                {t('reference:referral.referral_code_management')}
-                            </ButtonV2>
-                        </div>
-                        <div className='flex'>
-                            <div className='mr-6'>
-                                <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}</p>
-                                <div className='flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
-                                    <span
-                                        className='pr-4 font-semibold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
-                                    <CopyIcon data={data?.defaultRefCode?.code} size={16} className='cursor-pointer' />
-                                </div>
-                            </div>
-                            <div className='flex-1 min-w-0'>
-                                <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.link')}</p>
-                                <div
-                                    className='relative flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
-                                    <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
-                                        {refLink}
+                {auth ?
+                    <div className='container  bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-8'>
+                        <div className='border-r dark:border-divider-dark pr-8'>
+                            <div className='w-full flex justify-between items-center'>
+                                <div className='flex gap-4 items-center mb-10'>
+                                    <div className='flex relative items-center'>
+                                        <img src={user?.avatar || '/images/default_avatar.png'}
+                                            className='h-full w-20 h-20 rounded-full object-fit' />
+                                        <div
+                                            className='absolute bottom-[-1px] right-[-1px]'>{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                                     </div>
-                                    <CopyIcon data={refLink} size={16} className='cursor-pointer' />
+                                    <div className='h-full flex flex-col'>
+                                        <p className='font-semibold text-2xl leading-[30px] mb-2'>{data?.name ?? t('common:unknown')}</p>
+                                        <span className='text-txtSecondary dark:text-txtSecondary-dark leading-6'>
+                                            <span className='uppercase'>{t('reference:referral.ranking')}:{' '}</span>
+                                            <span
+                                                className='text-teal font-semibold'>{rank[data?.rank?.toString() ?? '0']}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='text-sm space-y-3'>
+                                <div className='w-full flex items-center justify-between text-gray-1'>
+                                    <div>{t('reference:referral.current_volume')}</div>
+                                    <div>{data?.rank !== 5 ? t('reference:referral.next_level') : null}</div>
+                                </div>
+                                <div className='w-full bg-gray-12 rounded-full overflow-hidden flex'>
+                                    <Progressbar
+                                        background={colors.green[3]}
+                                        percent={(data?.volume?.current?.spot / data?.volume?.target?.spot ?? 1) * 100}
+                                        height={8}
+                                        className={data?.volume?.current?.futures ? '!rounded-l-lg' : '!rounded-lg'}
+                                    />
+                                    <Progressbar
+                                        background={colors.blue[5]}
+                                        percent={(data?.volume?.current?.futures / data?.volume?.target?.futures ?? 1) * 100}
+                                        height={8}
+                                        className='!rounded-r-lg'
+                                    />
+                                </div>
+                                <div className='w-full flex flex-col leading-5'>
+                                    <div className='w-full flex justify-between text-teal'>
+                                        <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
+                                        {data?.rank !== 5 ? (
+                                            <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                        ) : null}
+                                    </div>
+                                    <div className='w-full flex justify-between text-blue-crayola'>
+                                        <div>Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT</div>
+                                        {data?.rank !== 5 ? (
+                                            <div>Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
+                                        ) : null}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className='grid grid-cols-5 gap-6'>
-                            <div
-                                className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
-                                onClick={() => setOpenShareModal(true)}>
-                                <QRCodeScanFilled
-                                    color={currentTheme === THEME_MODE.DARK ? colors.gray['10'] : colors.darkBlue} />
-                            </div>
-                            {[
-                                {
-                                    btn: FacebookShareButton,
-                                    icon: FacebookFilled,
-                                    link: '',
-                                    name: 'facebook'
-                                },
-                                {
-                                    btn: TwitterShareButton,
-                                    icon: TwitterFilled,
-                                    link: '',
-                                    name: 'twitter'
-                                },
-                                {
-                                    btn: TelegramShareButton,
-                                    icon: TelegramFilled,
-                                    link: '',
-                                    name: 'telegram'
-                                },
-                                {
-                                    btn: RedditShareButton,
-                                    icon: RedditFilled,
-                                    link: '',
-                                    name: 'reddit'
-                                }
-                            ].map(e => {
-                                return <div
-                                    key={e.name}
-                                    className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
-                                >
-                                    {React.createElement(e.btn, {
-                                        children: React.createElement(e.icon, {
-                                            color: currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray['10'],
-                                            color2: currentTheme === THEME_MODE.LIGHT ? colors.gray['10'] : colors.dark['2']
-                                        }),
-                                        url: refLink
+                        <div className='pl-8 space-y-5'>
+                            <div className='flex items-center justify-between py-3'>
+                                <p className='text-sm font-semibold'>
+                                    {t('reference:referral.rate', {
+                                        value1: isNaN(youGet) ? '--' : youGet,
+                                        value2: isNaN(friendsGet) ? '--' : friendsGet
                                     })}
-                                </div>;
-                            })}
+                                </p>
+                                <ButtonV2
+                                    className='!w-auto px-6'
+                                    onClick={() => setShowRef(true)}
+                                >
+                                    {t('reference:referral.referral_code_management')}
+                                </ButtonV2>
+                            </div>
+                            <div className='flex'>
+                                <div className='mr-6'>
+                                    <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.referral_code')}</p>
+                                    <div className='flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
+                                        <span
+                                            className='pr-4 font-semibold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
+                                        <CopyIcon data={data?.defaultRefCode?.code} size={16} className='cursor-pointer' />
+                                    </div>
+                                </div>
+                                <div className='flex-1 min-w-0'>
+                                    <p className='mb-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{t('reference:referral.link')}</p>
+                                    <div
+                                        className='relative flex justify-between items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
+                                        <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
+                                            {refLink}
+                                        </div>
+                                        <CopyIcon data={refLink} size={16} className='cursor-pointer' />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='grid grid-cols-5 gap-6'>
+                                <div
+                                    className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
+                                    onClick={() => setOpenShareModal(true)}>
+                                    <QRCodeScanFilled
+                                        color={currentTheme === THEME_MODE.DARK ? colors.gray['10'] : colors.darkBlue} />
+                                </div>
+                                {[
+                                    {
+                                        btn: FacebookShareButton,
+                                        icon: FacebookFilled,
+                                        link: '',
+                                        name: 'facebook'
+                                    },
+                                    {
+                                        btn: TwitterShareButton,
+                                        icon: TwitterFilled,
+                                        link: '',
+                                        name: 'twitter'
+                                    },
+                                    {
+                                        btn: TelegramShareButton,
+                                        icon: TelegramFilled,
+                                        link: '',
+                                        name: 'telegram'
+                                    },
+                                    {
+                                        btn: RedditShareButton,
+                                        icon: RedditFilled,
+                                        link: '',
+                                        name: 'reddit'
+                                    }
+                                ].map(e => {
+                                    return <div
+                                        key={e.name}
+                                        className='flex justify-center bg-gray-10 dark:bg-dark-2 rounded-md py-[10px] cursor-pointer'
+                                    >
+                                        {React.createElement(e.btn, {
+                                            children: React.createElement(e.icon, {
+                                                color: currentTheme === THEME_MODE.LIGHT ? colors.darkBlue : colors.gray['10'],
+                                                color2: currentTheme === THEME_MODE.LIGHT ? colors.gray['10'] : colors.dark['2']
+                                            }),
+                                            url: refLink
+                                        })}
+                                    </div>;
+                                })}
+                            </div>
                         </div>
                     </div>
-                </div>
+                    : <div className="container text-center bg-white dark:bg-darkBlue-3 rounded-xl py-[50px] ">
+                        <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                        <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
+                            <a href={getLoginUrl('sso')} className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4">
+                                {t('common:sign_in')}{' '}
+                            </a>
+                            {t('common:or')}{' '}
+                            <a
+                                href={getLoginUrl('sso', 'register')}
+                                className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
+                            >
+                                {t('common:sign_up')}{' '}
+                            </a>
+                            {t('common:swap_history')}
+                        </p>
+                    </div>}
             </div>
             <AlertModalV2
                 isVisible={isOpenModalKyc} type='error'

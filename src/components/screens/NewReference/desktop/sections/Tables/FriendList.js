@@ -315,8 +315,8 @@ const FriendList = ({
             }
         }]
         return <TableV2
-            sort
-            defaultSort={{ key: 'code', direction: 'desc' }}
+            // sort
+            // defaultSort={{ key: 'code', direction: 'desc' }}
             loading={loading}
             useRowHover
             data={dataSource.results || []}
