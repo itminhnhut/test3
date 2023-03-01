@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import TransactionFilter from './TransactionFilter';
 import TableV2 from 'components/common/V2/TableV2';
 import FetchApi from 'utils/fetch-api';
-import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
+import { API_GET_WALLET_TRANSACTION_HISTORY, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { getAssetName } from 'redux/actions/utils';
@@ -33,17 +33,15 @@ const TransactionHistory = ({ id }) => {
     const [categoryConfig, setCategoryConfig] = useState([])
     useEffect(() => {
         FetchApi({
-            url: API_GET_WALLET_TRANSACTION_HISTORY,
-            params
+            url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY,
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data', data)
-                hasNext.current = data?.hasNext
-                setData(data?.result)
-                setLoading(false)
+                console.log('data1', data)
+                setCategoryConfig(data)
             }
         });
     }, [])
+
 
     const columns = useMemo(() => {
         return {
@@ -66,7 +64,7 @@ const TransactionHistory = ({ id }) => {
                 render: (row) => <div className='flex items-center gap-2'><AssetLogo assetId={row} size={32} />{getAssetName(row)}</div>
             }
         }
-    }, [t])
+    }, [t, categoryConfig])
 
     const columnsConfig = {
         [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset']
@@ -105,7 +103,7 @@ const TransactionHistory = ({ id }) => {
             params
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data', data)
+                console.log('data2', data)
                 hasNext.current = data?.hasNext
                 setData(data?.result)
                 setLoading(false)

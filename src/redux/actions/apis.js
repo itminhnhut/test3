@@ -58,7 +58,7 @@ export const POST_WALLET_TRANSFER = API_PREFIX + 'wallet/transfer';
 export const API_PUSH_ORDER_BINANCE = API_PREFIX + 'request_check_deposit_binance'; // post => data: { currency }
 export const API_SET_ASSET_AS_FEE = API_PREFIX + 'user/set_fee_currency';
 export const API_GET_WALLET_TRANSACTION_HISTORY = API_V3_PREFIX + 'wallet/history/transaction';
-export const API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY = API_V3_PREFIX + 'wallet/history/transaction';
+export const API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY = API_V3_PREFIX + 'wallet/history/category';
 
 // Payment
 export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
