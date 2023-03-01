@@ -76,13 +76,13 @@ const TransactionHistory = ({ id }) => {
     }, [t, categoryConfig])
 
     const columnsConfig = {
-        'DEFAULT': ['_id', 'category'],
+        'all': ['_id', 'category'],
         [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
         [TRANSACTION_TYPES.CONVERT]: ['category']
     }
 
     const filterdColumns = useMemo(() => {
-        return columnsConfig?.[id || 'DEFAULT']?.map(key => columns?.[key]) ?? [];
+        return columnsConfig?.[id || 'all']?.map(key => columns?.[key]) ?? [];
     }, [columns, id, columnsConfig])
 
     useEffect(() => {
@@ -91,6 +91,7 @@ const TransactionHistory = ({ id }) => {
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length ? {
             [id]: id,
+            'all': null,
             [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
             [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
         }[id] : null

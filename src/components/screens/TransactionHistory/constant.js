@@ -22,7 +22,7 @@ export const TRANSACTION_TYPES = {
 
 export const TransactionTabs = [
     {
-        key: '',
+        key: 'all',
         localized: 'Tất cả',
         href: PATHS.TRANSACTION_HISTORY.DEFAULT
     },
