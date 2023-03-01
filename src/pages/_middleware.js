@@ -9,6 +9,7 @@ export async function middleware(req, event) {
         const _url = `${_locale}${req.nextUrl.pathname}${req.nextUrl.search}`;
         return NextResponse.redirect(_url);
     }
+    return NextResponse.next();
 }
 
 export const config = {

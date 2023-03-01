@@ -3,11 +3,9 @@ import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
-import useLanguage from 'hooks/useLanguage';
 import Switch from 'components/common/V2/SwitchV2';
 import { SettingIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
@@ -16,7 +14,6 @@ const FuturesSetting = (props) => {
     const { spotState, onChangeSpotState, resetDefault, className } = props;
 
     const [currentTheme, onThemeSwitch] = useDarkMode();
-    const [currentLocale, onChangeLang] = useLanguage();
     const router = useRouter();
     const { t } = useTranslation();
     const isVndcFutures = router.asPath.indexOf('VNDC') !== -1;
@@ -63,14 +60,6 @@ const FuturesSetting = (props) => {
             visible: true
         }
     ];
-    const { route, query } = router;
-    const { layout, id } = query;
-    const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
-
-    const onChangeLayout = (_layout) => {
-        const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
-        window.location = `${nextUrl}?layout=${_layout}`;
-    };
     const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
     const onChangeFuturesComponent = (key, value) => {
@@ -125,40 +114,6 @@ const FuturesSetting = (props) => {
                                         />
                                     </span>
                                 </div>
-
-                                {/* <div className="px-5 py-3">
-                                    <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark font-semibold mb-4">{t('spot:setting.layout')}</div>
-
-                                    <div className="flex justify-around">
-                                        <div className="flex flex-col justify-center items-center">
-                                            <div className="mb-[10px]">
-                                                <RadioBox id="pro" label={t('futures:order_mode')} checked={true} />
-                                            </div>
-                                            <img
-                                                className={'cursor-pointer' + (layoutMode === SPOT_LAYOUT_MODE.PRO ? 'border-2 border-teal' : '')}
-                                                src={getS3Url(`/images/icon/mode-advance${currentTheme === 'dark' ? '-dark' : ''}.png`)}
-                                                alt="Spot Advance"
-                                                width={82}
-                                                height={55}
-                                            />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium text-center">
-                                                {t('spot:setting.pro')}
-                                            </span>
-                                        </div>
-                                        <div className="text-center justify-center items-center">
-                                            <div className="mb-[10px]">
-                                                <RadioBox id="full-screen" label={t('futures:comming_soon')} checked={false} />
-                                            </div>
-                                            <img
-                                                src={getS3Url(`/images/icon/mode-fullscreen${currentTheme === 'dark' ? '-dark' : ''}.jpg`)}
-                                                alt="Spot Full Screen"
-                                                width={82}
-                                                height={55}
-                                            />
-                                            <span className="text-xs text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('futures:fullscreen')}</span>
-                                        </div>
-                                    </div>
-                                </div> */}
 
                                 <div className="py-6 text-center space-y-4">
                                     {FuturesComponents.map((item, index) => {
