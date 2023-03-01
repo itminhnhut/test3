@@ -11,15 +11,17 @@ import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { getAssetName } from 'redux/actions/utils';
 
-
-const LIMIT = 10
+const LIMIT = 10;
 
 const TransactionHistory = ({ id }) => {
-    const { t, i18n: { language } } = useTranslation()
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const router = useRouter();
-    const [loading, setLoading] = useState(true)
-    const [data, setData] = useState([])
-    const hasNext = useRef(false)
+    const [loading, setLoading] = useState(true);
+    const [data, setData] = useState([]);
+    const hasNext = useRef(false);
     const [filter, setFilter] = useState({
         page: 0,
         range: {
@@ -29,19 +31,18 @@ const TransactionHistory = ({ id }) => {
         },
     });
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
-    
-    const [categoryConfig, setCategoryConfig] = useState([])
+
+    const [categoryConfig, setCategoryConfig] = useState([]);
     useEffect(() => {
         FetchApi({
-            url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY,
+            url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data1', data)
-                setCategoryConfig(data)
+                console.log('data1', data);
+                setCategoryConfig(data);
             }
         });
-    }, [])
-
+    }, []);
 
     const columns = useMemo(() => {
         return {
@@ -61,7 +62,12 @@ const TransactionHistory = ({ id }) => {
                 align: 'left',
                 fixed: 'left',
                 width: 148,
-                render: (row) => <div className='flex items-center gap-2'><AssetLogo assetId={row} size={32} />{getAssetName(row)}</div>
+                render: (row) => (
+                    <div className="flex items-center gap-2">
+                        <AssetLogo assetId={row} size={32} />
+                        {getAssetName(row)}
+                    </div>
+                )
             },
             category: {
                 key: 'category',
@@ -70,39 +76,44 @@ const TransactionHistory = ({ id }) => {
                 align: 'left',
                 fixed: 'left',
                 width: 148,
-                render: (row) => {console.log(row); return <div>{categoryConfig?.find(e => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>}
+                render: (row) => {
+                    console.log(row);
+                    return <div>{categoryConfig?.find((e) => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>;
+                }
             }
-        }
-    }, [t, categoryConfig])
+        };
+    }, [t, categoryConfig]);
 
     const columnsConfig = {
-        'all': ['_id', 'category'],
+        all: ['_id', 'category'],
         [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
         [TRANSACTION_TYPES.CONVERT]: ['category']
-    }
+    };
 
     const filterdColumns = useMemo(() => {
-        return columnsConfig?.[id || 'all']?.map(key => columns?.[key]) ?? [];
-    }, [columns, id, columnsConfig])
+        return columnsConfig?.[id || 'all']?.map((key) => columns?.[key]) ?? [];
+    }, [columns, id, columnsConfig]);
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
 
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
-        const type = id?.length ? {
-            [id]: id,
-            'all': null,
-            [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-            [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-        }[id] : null
-        const from = filter?.range?.startDate
-        const to = filter?.range?.endDate
+        const type = id?.length
+            ? {
+                  [id]: id,
+                  all: null,
+                  [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                  [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+              }[id]
+            : null;
+        const from = filter?.range?.startDate;
+        const to = filter?.range?.endDate;
 
         // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
         const isNegative = {
             deposit: false,
             withdraw: true
-        }[id]
+        }[id];
 
         const params = {
             type,
@@ -110,21 +121,21 @@ const TransactionHistory = ({ id }) => {
             to,
             isNegative,
             limit: LIMIT,
-            skip: filter?.page * LIMIT,
-        }
+            skip: filter?.page * LIMIT
+        };
 
         FetchApi({
             url: API_GET_WALLET_TRANSACTION_HISTORY,
             params
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data2', data)
-                hasNext.current = data?.hasNext
-                setData(data?.result)
-                setLoading(false)
+                console.log('data2', data);
+                hasNext.current = data?.hasNext;
+                setData(data?.result);
+                setLoading(false);
             }
         });
-    }, [filter, id])
+    }, [filter, id]);
 
     return (
         <div className="min-h-[500px] max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl">
@@ -147,7 +158,7 @@ const TransactionHistory = ({ id }) => {
                     />
                 </div>
                 <div className="mb-12">
-                    <TransactionFilter filter={filter} setFilter={setFilter} />
+                    <TransactionFilter language={language} categoryConfig={categoryConfig} filter={filter} setFilter={changeFilter} />
                 </div>
                 <div>
                     <TableV2
@@ -164,7 +175,12 @@ const TransactionHistory = ({ id }) => {
                         pagingClassName="border-none"
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
-                        pagingPrevNext={{ page: filter?.page, hasNext: hasNext.current, onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }), language }}
+                        pagingPrevNext={{
+                            page: filter?.page,
+                            hasNext: hasNext.current,
+                            onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }),
+                            language
+                        }}
                     />
                 </div>
             </div>

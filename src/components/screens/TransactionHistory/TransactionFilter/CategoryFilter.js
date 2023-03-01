@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { FilterWrapper } from '.';
 import PopoverSelect from '../PopoverSelect';
 
-const TradingTypeFilter = ({ search, setSearch }) => {
+const CategoryFilter = ({ search, setSearch, categoryConfig, language }) => {
     const popoverRef = useRef(null);
 
     return (
@@ -14,11 +14,12 @@ const TradingTypeFilter = ({ search, setSearch }) => {
                 value={search}
                 onChange={(value) => setSearch(value)}
             >
-                {[...Array(10).keys()].map((e) => (
-                    <div key={e} className="flex items-center px-4 py-3 space-x-2">
-                        <div className="text-txtPrimary dark:text-txtPrimary-dark">BNB</div>
-
-                        <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">Avocado DAO token</div>
+                {categoryConfig.filter(cate => cate.content[language].toLowerCase().includes(search.toLowerCase())).map((cate) => (
+                    <div
+                        key={cate.category_id}
+                        className="cursor-pointer hover:bg-hover dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark flex items-center px-4 py-3"
+                    >
+                        {cate.content[language]}
                     </div>
                 ))}
             </PopoverSelect>
@@ -26,4 +27,4 @@ const TradingTypeFilter = ({ search, setSearch }) => {
     );
 };
 
-export default TradingTypeFilter;
+export default CategoryFilter;
