@@ -8,7 +8,7 @@ const TransactionHistory = dynamic(() => import('components/screens/TransactionH
 const index = ({ id }) => {
     return (
         <MaldivesLayout>
-            <TransactionHistory id={id} />
+            <TransactionHistory id={id} key={id}/>
         </MaldivesLayout>
     );
 };
@@ -20,7 +20,7 @@ export const getServerSideProps = async (context) => {
     return {
         props: {
             id: id ?? '',
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal']))
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'reference']))
         }
     };
 };

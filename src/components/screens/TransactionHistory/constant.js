@@ -16,6 +16,7 @@ export const TRANSACTION_TYPES = {
     CONVERTSMALLBALANCE: 'convertsmallbalance',
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
+    COMMISSION: 'commision'
 }
 
 
@@ -62,8 +63,8 @@ export const TransactionTabs = [
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.STAKING)
     },
     {
-        key: TRANSACTION_TYPES.REWARD,
+        key: TRANSACTION_TYPES.COMMISSION,
         localized: 'Hoa hồng',
-        href: PATHS.TRANSACTION_HISTORY.TYPE( TRANSACTION_TYPES.REWARD)
+        href: PATHS.TRANSACTION_HISTORY.TYPE( TRANSACTION_TYPES.COMMISSION)
     }
 ];
