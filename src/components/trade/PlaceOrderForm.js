@@ -682,18 +682,14 @@ const PlaceOrderForm = ({ symbol }) => {
                 <div className="mt-8">
                     {!user ? (
                         <>
-                            <Link href={getLoginUrl('sso', 'register')} locale="en">
-                                <a>
-                                    <ButtonV2>{t('common:sign_up')}</ButtonV2>
-                                </a>
-                            </Link>
-                            <Link href={getLoginUrl('sso')} locale="en">
-                                <a>
-                                    <ButtonV2 className="mt-3" variants="secondary">
-                                        {t('common:sign_in')}
-                                    </ButtonV2>
-                                </a>
-                            </Link>
+                            <a href={getLoginUrl('sso', 'register')}>
+                                <ButtonV2>{t('common:sign_up')}</ButtonV2>
+                            </a>
+                            <a href={getLoginUrl('sso')}>
+                                <ButtonV2 className="mt-3" variants="secondary">
+                                    {t('common:sign_in')}
+                                </ButtonV2>
+                            </a>
                         </>
                     ) : (
                         <ButtonV2

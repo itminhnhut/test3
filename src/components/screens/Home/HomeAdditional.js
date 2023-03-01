@@ -33,7 +33,7 @@ const HomeAdditional = ({ currentTheme, t, width }) => {
                             <div className="homepage-trade3step___title">{t('home:trade3step.title')}</div>
                             <div className="homepage-trade3step___step___wrapper">
                                 <div className="homepage-trade3step___step___item">
-                                    <Link href={getLoginUrl('sso', 'register')} passHref locale="en">
+                                    <a href={getLoginUrl('sso', 'register')} passHref locale="en">
                                         <div className="homepage-trade3step___step___item___inner">
                                             <Image
                                                 alt={`create_account_${currentTheme}`}
@@ -43,7 +43,7 @@ const HomeAdditional = ({ currentTheme, t, width }) => {
                                             />
                                             <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_1')}</div>
                                         </div>
-                                    </Link>
+                                    </a>
 
                                     <div className="homepage-trade3step__vertial_dot_line" />
                                     <div className="homepage-trade3step__horizontal_dot_line" />

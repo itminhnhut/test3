@@ -582,11 +582,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     if (!isAuth)
         return (
             <div className="cursor-pointer flex items-center justify-center h-full">
-                <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                    <a className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80">
-                        {t('futures:order_table:login_to_continue')}
-                    </a>
-                </Link>
+                <a
+                    href={getLoginUrl('sso', 'login')}
+                    className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80"
+                >
+                    {t('futures:order_table:login_to_continue')}
+                </a>
             </div>
         );
 

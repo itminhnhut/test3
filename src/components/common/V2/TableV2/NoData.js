@@ -4,7 +4,6 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector } from 'react-redux';
 import { getLoginUrl } from 'src/redux/actions/utils';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
-import Link from 'next/link';
 
 const NoData = ({ text, loading = false, isSearch = false, className = '' }) => {
     const { t } = useTranslation();
@@ -20,23 +19,19 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                 <>
                     <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
                     <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
-                        <Link href={getLoginUrl('sso')} locale="en">
-                            <a>
-                                <span
-                                    className="text-teal hover:underline cursor-pointer font-semibold"
-                                    dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
-                                />
-                            </a>
-                        </Link>
+                        <a href={getLoginUrl('sso')}>
+                            <span
+                                className="text-teal hover:underline cursor-pointer font-semibold"
+                                dangerouslySetInnerHTML={{ __html: t('common:sign_in') }}
+                            />
+                        </a>
                         <div>{t('common:or')}</div>
-                        <Link href={getLoginUrl('sso', 'register')} locale="en">
-                            <a>
-                                <span
-                                    className="text-teal hover:underline cursor-pointer font-semibold"
-                                    dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
-                                />
-                            </a>
-                        </Link>
+                        <a href={getLoginUrl('sso', 'register')}>
+                            <span
+                                className="text-teal hover:underline cursor-pointer font-semibold"
+                                dangerouslySetInnerHTML={{ __html: t('common:sign_up') }}
+                            />
+                        </a>
                         <div>{t('common:to_experience')}</div>
                     </div>
                 </>
