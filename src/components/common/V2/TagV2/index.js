@@ -19,16 +19,19 @@ const typeStyles = {
     [types.SUCCESS]: {
         backgroundColor: 'rgba(71,204,133,0.1)',
         color: colors.teal,
+        colorContent: 'text-green-3 dark:text-teal',
         icon: CheckCircle
     },
     [types.FAILED]: {
         backgroundColor: 'rgba(249,54,54 0.1)',
-        color: '#F93636'
+        color: '#F93636',
+        colorContent: 'text-[#8694b2]',
     },
     [types.WARNING]: {
         backgroundColor: 'rgba(255,198,50,0.15)',
         color: colors.yellow['1'],
-        icon: WarningTriangle
+        icon: WarningTriangle,
+        colorContent: 'text-yellow-1',
     }
 };
 
@@ -58,8 +61,8 @@ function TagV2({
                 size: isMobile ? 12 : 16
             })}
             <span
-                style={{ color: style.color || defaultColor }}
-                className='text-xs md:text-sm'
+                // style={{ color: style.color || defaultColor }}
+                className={`text-xs md:text-sm ${style?.colorContent ? style.colorContent : 'text-gray-1 dark:text-gray-7'}`}
             >{children}</span>
         </span>
     );

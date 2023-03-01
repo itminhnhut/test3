@@ -70,6 +70,9 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             values: assetTabs,
             title: t('reference:referral.asset_type')
         },
+        reset: {
+            type: 'reset'
+        }
     }
     const limit = 10
     const [loading, setLoading] = useState(false)
