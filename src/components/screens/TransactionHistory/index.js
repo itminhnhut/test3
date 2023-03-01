@@ -62,20 +62,33 @@ const TransactionHistory = ({ id }) => {
                 fixed: 'left',
                 width: 148,
                 render: (row) => <div className='flex items-center gap-2'><AssetLogo assetId={row} size={32} />{getAssetName(row)}</div>
+            },
+            category: {
+                key: 'category',
+                dataIndex: 'category_id',
+                title: 'Category',
+                align: 'left',
+                fixed: 'left',
+                width: 148,
+                render: (row) => <div>{categoryConfig?.find(e => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>
             }
         }
     }, [t, categoryConfig])
 
     const columnsConfig = {
-        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset']
+        'DEFAULT': ['_id'],
+        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset'],
+        [TRANSACTION_TYPES.CONVERT]: ['category']
     }
 
     const filterdColumns = useMemo(() => {
-        return columnsConfig?.[id].map(key => columns[key]);
-    }, [columns, id])
+        return columnsConfig?.[id || 'DEFAULT']?.map(key => columns?.[key]) ?? [];
+    }, [columns, id, columnsConfig])
 
     useEffect(() => {
         setLoading(true)
+
+        // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length ? {
             [id]: id,
             [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
@@ -84,6 +97,7 @@ const TransactionHistory = ({ id }) => {
         const from = filter?.range?.startDate
         const to = filter?.range?.endDate
 
+        // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
         const isNegative = {
             deposit: false,
             withdraw: true
