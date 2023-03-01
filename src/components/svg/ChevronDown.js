@@ -1,3 +1,5 @@
+import classNames from "classnames";
+
 const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick }) => {
     return (
         <svg
@@ -5,13 +7,13 @@ const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick }) =
             width={size}
             height={size}
             onClick={onClick}
-            className={`transition ease-in-out rotate-180 ${className}`}
+            className={classNames(`transition ease-in-out rotate-180`, className)}
             viewBox="0 0 17 16"
             fill={fill || 'none'}
             style={style}
         >
             <g clip-path="url(#clip0_2093_28978)">
-                <path d="M11.026 8.83333H6.77351L8.89974 6.70711L11.026 8.83333Z" fill={color || '#8694B3'} stroke="#8694B3" />
+                <path d="M11.026 8.83333H6.77351L8.89974 6.70711L11.026 8.83333Z" fill={color || '#8694B3'} stroke={color || '#8694B3'} />
             </g>
             <defs>
                 <clipPath id="clip0_2093_28978">
