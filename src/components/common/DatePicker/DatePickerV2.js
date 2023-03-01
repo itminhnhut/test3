@@ -92,13 +92,21 @@ const DatePickerV2 = ({
     };
 
     const onClear = () => {
-        isCalendar ? onDatesChange(null) : onDatesChange({
+        isCalendar ? onDatesChange(null) :  onDatesChange({
             [date['key']]: {
                 startDate: null,
                 endDate: new Date(),
                 key: date['key']
             }
         });
+       !isCalendar  && 
+        onChange({
+            selection:{
+                startDate: null,
+                endDate: new Date(),
+                key: date['key']
+            }
+        })
     };
 
     const issetValue = isCalendar ? date : date?.startDate;
