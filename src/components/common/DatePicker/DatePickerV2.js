@@ -13,7 +13,7 @@ import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
-const DatePicker = ({
+const DatePickerV2 = ({
     initDate,
     isCalendar,
     onChange,
@@ -32,6 +32,9 @@ const DatePicker = ({
     const [theme] = useDarkMode();
 
     const handleOutside = () => {
+        if (!isCalendar) {
+            setDate(initDate)
+        }
         setShowPicker(false);
     };
     useOutsideClick(wrapperRef, handleOutside);
@@ -60,9 +63,9 @@ const DatePicker = ({
         }
     };
 
-    const onConfirm = (e) => {
-        onChange(e);
-        handleOutside();
+    const onConfirm = () => {
+        onChange({ selection: date });
+        setShowPicker(false);
     }
 
     const navigatorRenderer = (focusedDate, changeShownDate, props) => {
@@ -104,7 +107,7 @@ const DatePicker = ({
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
                 className={classNames(
-                    'relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer', {
+                    'relative py-3 text-sm px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-auto cursor-pointer', {
                     '!border-teal': showPicker
                 }
                 )}
@@ -163,6 +166,7 @@ const DatePicker = ({
                         navigatorRenderer={navigatorRenderer}
                         locale={language === 'vi' ? vi : en}
                         color={colors.teal}
+                        monthDisplayFormat='MMMM yyyy'
                     />
                     <ButtonV2 onClick={onConfirm} className='mx-6 mt-2 mb-8 w-auto'>
                         {t('common:global_btn.confirm')}
@@ -172,4 +176,4 @@ const DatePicker = ({
         </div>
     );
 };
-export default DatePicker;
+export default DatePickerV2;

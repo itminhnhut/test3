@@ -136,7 +136,7 @@ export const NAV_DATA = [
                 localized: 'advance',
                 isNew: false,
                 url: '/trade/BTC-USDT?layout=pro',
-                child_lv1: []
+                child_lv2: []
             }
         ]
     },
@@ -287,7 +287,7 @@ export const MOBILE_NAV_DATA = [
                 localized: 'advance',
                 isNew: false,
                 url: '/trade/BTC-USDT?layout=pro',
-                child_lv1: []
+                child_lv2: []
             }
         ]
     },
@@ -452,7 +452,7 @@ export const USER_CP = [
         key: 3,
         title: 'RewardCenter',
         localized: 'reward_center',
-        // hide: true,
+        hide: true,
         isNew: true,
         url: '/account/reward-center',
         child_lv1: []

@@ -280,13 +280,15 @@ const RenderContent = ({
                     })}
                     <DatePickerV2
                         initDate={filter.range}
-                        onChange={e => setFilter({
-                            range: {
-                                startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                                endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                                key: 'selection'
-                            }
-                        })}
+                        onChange={e => {
+                            setFilter({
+                                range: {
+                                    startDate: new Date(e?.selection?.startDate ?? null).getTime(),
+                                    endDate: new Date(e?.selection?.endDate ?? null).getTime(),
+                                    key: 'selection'
+                                }
+                            })
+                        }}
                         month={2}
                         hasShadow
                         position='right'

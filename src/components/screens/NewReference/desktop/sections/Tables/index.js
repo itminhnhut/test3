@@ -12,9 +12,11 @@ import ArrowDown from 'components/svg/ArrowDown';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 
 const Tables = ({
+    language,
     t,
     commisionConfig,
     id1,
@@ -22,7 +24,7 @@ const Tables = ({
 }) => {
     return (
         <div className='flex flex-col gap-8'>
-            <FriendList t={t} commisionConfig={commisionConfig} id={id1} />
+            <FriendList language={language} t={t} commisionConfig={commisionConfig} id={id1} />
             <CommissionHistory t={t} commisionConfig={commisionConfig} id={id2} />
         </div>
     );
@@ -45,13 +47,14 @@ export const TableFilter = ({
                 [key]: object
             });
         };
+
         switch (object.type) {
             case 'daterange':
                 return (
                     <div className='flex justify-center w-full'>
                         <DatePickerV2
-                            initDate={filter[key].value}
-                            onChange={e => onChange(e.selection)}
+                            initDate={filter[key]?.value}
+                            onChange={e => onChange(e?.selection)}
                             month={2}
                             hasShadow
                             position={object?.position || 'center'}
@@ -68,13 +71,8 @@ export const TableFilter = ({
                         <div className='h-full w-full'>
                             <Popover.Button className='w-full'>
                                 <div
-                                    className='relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md h-full w-full leading-6'>
-                                    {object.values.find(e => e.value === filter[key].value).title}
-                                    {/* <ArrowDown
-                                        size={16}
-                                        color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
-                                        className='ml-1'
-                                    /> */}
+                                    className='relative h-11 text-sm px-3 flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-full leading-6'>
+                                    {object.values.find(e => e.value === filter[key]?.value)?.title}
                                     <span className={`transition-transform duration-50 ${open && 'rotate-180'}`}>
                                         <ArrowDropDownIcon size={16} />
                                     </span>
@@ -99,7 +97,7 @@ export const TableFilter = ({
                                                 className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5', {
                                                     'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
                                                     'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
-                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key].value
+                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key]?.value
                                                 })}
                                                 onClick={() => {
                                                     onChange(e.value);
@@ -118,7 +116,7 @@ export const TableFilter = ({
             case 'date':
                 return <div className='flex justify-center w-full'>
                     <DatePicker
-                        date={filter[key].value}
+                        date={filter[key]?.value}
                         onChange={e => onChange(e)}
                         month={1}
                         hasShadow
@@ -126,18 +124,24 @@ export const TableFilter = ({
                         wrapperClassname='!w-full'
                     />
                 </div>;
+            case 'reset':
+                return <button
+                    onClick={() => setFilter(filters)}
+                    className="whitespace-nowrap bg-gray-12 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
+                        px-4 rounded-md px-auto py-auto font-semibold h-11"
+                >
+                    Reset
+                </button>
             default:
                 return <></>;
         }
     };
     const filterArray = Object.keys(filters);
-    return filterArray.map((key) => <div className='min-w-[240px]' key={key}>
+    return filterArray.map((key) => <div className='flex flex-col items-start justify-end w-auto flex-auto last:flex-none' key={key}>
         <div className='text-txtSecondary dark:text-txtSecondary-dark mb-3 text-xs'>
             {filters[key].title}
         </div>
-        <div className='w-full'>
-            {renderFilter(filters[key], key)}
-        </div>
+        {renderFilter(filters[key], key)}
     </div>);
 };
 

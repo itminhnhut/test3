@@ -13,16 +13,17 @@ import _ from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useSelector } from 'react-redux';
 import NoData from 'components/common/V2/TableV2/NoData';
+import TableV2 from 'components/common/V2/TableV2';
 
 const CommissionHistory = ({ t, commisionConfig, id }) => {
     const assetConfig = useSelector(state => state.utils.assetConfig)
     const levelTabs = [
         { title: t('common:all'), value: null },
-        { title: '01', value: 1 },
-        { title: '02', value: 2 },
-        { title: '03', value: 3 },
-        { title: '04', value: 4 },
-        { title: '05', value: 5 }
+        { title: '1', value: 1 },
+        { title: '2', value: 2 },
+        { title: '3', value: 3 },
+        { title: '4', value: 4 },
+        { title: '5', value: 5 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
@@ -69,6 +70,9 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             values: assetTabs,
             title: t('reference:referral.asset_type')
         },
+        reset: {
+            type: 'reset'
+        }
     }
     const limit = 10
     const [loading, setLoading] = useState(false)
@@ -120,32 +124,27 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     }, []);
 
     const columns = useMemo(() => [{
-        key: 'date',
+        key: 'createdAt',
         dataIndex: 'createdAt',
         title: t('reference:referral.date'),
         align: 'left',
         width: 200,
-        sorter: false,
-        render: (data, item) => <div>{formatTime(data, 'dd/MM/yyyy hh:mm:ss')}</div>
+        fixed: 'left',
+        render: data => formatTime(data, 'dd/MM/yyyy hh:mm:ss')
     }, {
         key: 'level',
         dataIndex: 'level',
         title: t('reference:referral.level'),
         align: 'left',
         width: 100,
-        sorter: false,
-        render: (data, item) => <div>{data}</div>
     }, {
         key: 'kind',
         dataIndex: 'kind',
         title: t('reference:referral.commission_type'),
         align: 'left',
-        width: 150,
+        width: 160,
         sorter: false,
-        render: (data, item) => {
-            const type = typeTabs.find((rs) => rs.value === data)?.title;
-            return <div>{type}</div>
-        }
+        render: (data) => typeTabs.find((rs) => rs.value === data)?.title
     }, {
         key: 'currency',
         dataIndex: 'currency',
@@ -153,7 +152,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 150,
         sorter: false,
-        render: (data, item) => <div className='flex items-center gap-2'>
+        render: (data) => <div className='flex items-center gap-2'>
             <AssetLogo size={36} assetId={data} />
             <div>{assetTabs.find(e => e.value === data)?.title}</div>
         </div>
@@ -179,7 +178,34 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 <div className='flex gap-6 flex-wrap mx-6 mb-6'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
-                <div className='border-t border-divider dark:border-divider-dark'>
+                <TableV2
+                    loading={loading}
+                    sort
+                    defaultSort={{ key: 'code', direction: 'desc' }}
+                    useRowHover
+                    data={dataSource?.results || []}
+                    page={page}
+                    onChangePage={page => setPage(page)}
+                    total={dataSource?.total ?? 0}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    scroll={{ x: true }}
+                    limit={limit}
+                    skip={0}
+                    noBorder={true}
+                    // isSearch={!!state.search}
+                    height={404}
+                    pagingClassName="border-none"
+                    className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
+                    tableStyle={{ fontSize: '16px', padding: '16px' }}
+                    paginationProps={{
+                        hide: true,
+                        current: 0,
+                        pageSize: limit,
+                        onChange: null
+                    }}
+                />
+                {/* <div className='border-t border-divider dark:border-divider-dark'>
                     <ReTable
                         // defaultSort={{ key: 'namiId', direction: 'desc' }}
                         className="friendlist-table"
@@ -218,7 +244,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                         pageSize={limit}
                         onChange={page => setPage(page)}
                     />
-                </div>
+                </div> */}
             </div>
         </div>
     )

@@ -168,7 +168,7 @@ const AddNewRef = ({
             >
                 <div className='text-txtSecondary dark:text-txtSecondary-dark'
                     dangerouslySetInnerHTML={{ __html: resultData.message }} />
-                <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
+                <div className='w-full flex justify-center text-teal font-medium mt-10 cursor-pointer'
                     onClick={() => window.fcWidget.open()}
                 >
                     {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
