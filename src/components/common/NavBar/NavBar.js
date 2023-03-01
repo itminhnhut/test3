@@ -215,7 +215,7 @@ const NavBar = ({
 
                 // DROPDOWN WITH ICON
                 child_lv1.map((child) => {
-                    const shouldReload = false //child?.localized === 'advance';
+                    const shouldReload = false; //child?.localized === 'advance';
 
                     const Icon = NavbarIcons[child?.localized];
                     if (shouldReload) {

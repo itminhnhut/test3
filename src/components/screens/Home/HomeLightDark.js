@@ -62,7 +62,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
             <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 relative">
                 <div className="flex flex-col items-center justify-center mb-[70px] z-1000">
                     <div className="text-xs tooltip-arrow-bottom mb-[30px] justify-center items-center w-[85px] h-[38px] inline-flex animate-bounce	 rounded-full">
-                        Thử ngay{' '}
+                        {t('home:intro_app.try_now')}
                     </div>
                     <div className="flex justify-center ">
                         <SwitchTheme onChangeTheme={onChange} themeMode={themeMode} />
@@ -146,7 +146,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         </Link>
 
                         <div onClick={onShowQr} className="cursor-pointer w-[54px]">
-                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
+                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" />
                         </div>
                     </div>
                     <div className="text-left lg:text-right flex-1  p-3">
