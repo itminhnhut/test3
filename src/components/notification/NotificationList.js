@@ -103,7 +103,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
                             <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full w-[58px] h-[58px]">
-                                {IconNoti?.[notification?.category] || <IconBell color={colors.teal} />}
+                                {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
                                 <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
@@ -144,7 +144,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                             isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
                         } hover:!text-dominant relative`}
                     >
-                        <BxsBellIcon size={20} />
+                        <BxsBellIcon size={24} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
                     </div>
 
