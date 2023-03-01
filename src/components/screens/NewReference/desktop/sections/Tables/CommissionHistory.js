@@ -19,11 +19,11 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
     const assetConfig = useSelector(state => state.utils.assetConfig)
     const levelTabs = [
         { title: t('common:all'), value: null },
-        { title: '01', value: 1 },
-        { title: '02', value: 2 },
-        { title: '03', value: 3 },
-        { title: '04', value: 4 },
-        { title: '05', value: 5 }
+        { title: '1', value: 1 },
+        { title: '2', value: 2 },
+        { title: '3', value: 3 },
+        { title: '4', value: 4 },
+        { title: '5', value: 5 }
     ];
     const typeTabs = [
         { title: t('common:all'), value: null },
