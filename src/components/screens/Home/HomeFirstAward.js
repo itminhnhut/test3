@@ -12,7 +12,7 @@ import Image from 'next/image';
 import CheckBox from 'components/common/CheckBox';
 import { PATHS } from '../../../constants/paths';
 
-const HomeFirstAward = ({ t, language, theme }) => {
+const HomeFirstAward = ({ t, theme }) => {
     const [state, set] = useState({
         focus: null,
         checkedTermAndPolicy: false,
@@ -203,4 +203,4 @@ const HomeFirstAward = ({ t, language, theme }) => {
     );
 };
 
-export default HomeFirstAward;
+export default React.memo(HomeFirstAward);

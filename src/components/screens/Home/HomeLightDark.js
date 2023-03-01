@@ -161,4 +161,4 @@ const HomeLightDark = ({ onShowQr, t }) => {
     );
 };
 
-export default HomeLightDark;
+export default React.memo(HomeLightDark);

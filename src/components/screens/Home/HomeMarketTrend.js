@@ -269,4 +269,4 @@ const HomeMarketTrend = ({ trendData }) => {
     );
 };
 
-export default HomeMarketTrend;
+export default HomeMarketTrend

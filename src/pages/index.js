@@ -6,7 +6,6 @@ import { useTranslation } from 'next-i18next';
 import { QRCode } from 'react-qrcode-logo';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
-import Button from 'components/common/Button';
 import { getMarketWatch } from 'redux/actions/market';
 import { compact, uniqBy, find } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -23,7 +22,6 @@ const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditio
     ssr: false,
     loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
 });
-const Modal = dynamic(() => import('src/components/common/ReModal'), { ssr: false });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
     ssr: false,
