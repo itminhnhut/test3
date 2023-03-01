@@ -85,7 +85,6 @@ const Overview = ({
     const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
 
     const handleBtnRegisterPartner = () => {
-        auth?.kyc_status = 1;
         if (auth?.kyc_status !== 2) {
             return setIsOpenModalKyc(true);
         } else {
