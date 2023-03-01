@@ -452,7 +452,7 @@ export const USER_CP = [
         key: 3,
         title: 'RewardCenter',
         localized: 'reward_center',
-        // hide: true,
+        hide: true,
         isNew: true,
         url: '/account/reward-center',
         child_lv1: []

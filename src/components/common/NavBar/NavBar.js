@@ -352,7 +352,6 @@ const NavBar = ({
     const renderUserControl = useCallback(() => {
         const { avatar, code, kyc_status } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
-        const isVerifying = kyc_status === KYC_STATUS.PENDING_APPROVAL;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
 
