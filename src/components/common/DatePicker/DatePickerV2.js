@@ -1,4 +1,4 @@
-import React, { useRef, useState, Fragment, useMemo, useEffect } from 'react';
+import React, { useRef, useState, Fragment, useMemo, useEffect, useCallback } from 'react';
 import colors from 'styles/colors';
 import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
@@ -32,11 +32,14 @@ const DatePickerV2 = ({
     const [theme] = useDarkMode();
 
     const handleOutside = () => {
-        if (!isCalendar) {
-            setDate(initDate)
+        if (showPicker) {
+            if (!isCalendar) {
+                setDate(initDate)
+            }
+            setShowPicker(false);
         }
-        setShowPicker(false);
     };
+
     useOutsideClick(wrapperRef, handleOutside);
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
@@ -46,6 +49,7 @@ const DatePickerV2 = ({
         startDate: null, endDate: null,
         key: 'selection'
     })
+
     useState(() => {
         if (initDate) setDate(initDate)
     }, [])
@@ -91,17 +95,49 @@ const DatePickerV2 = ({
         );
     };
 
-    const onClear = () => {
-        isCalendar ? onDatesChange(null) : onDatesChange({
-            [date['key']]: {
+    const issetValue = isCalendar ? date : date?.startDate;
+
+    const clearInputData = () => {
+        setDate({
+            selection: {
                 startDate: null,
                 endDate: new Date(),
                 key: date['key']
             }
-        });
-    };
+        })
+        if (!showPicker)
+            onChange({
+                selection: {
+                    startDate: null,
+                    endDate: new Date(),
+                    key: date['key']
+                }
+            });
+    }
+    // Handle X Close button
+    const flag = useRef(false);
 
-    const issetValue = isCalendar ? date : date?.startDate;
+    const onHandleClick = (key) => {
+        switch (key) {
+            case 'clear':
+                flag.current = true;
+
+                if (isCalendar) onDatesChange(null)
+                else {
+                    clearInputData()
+                }
+                break;
+            case 'show_modal':
+                if (flag.current) {
+                    flag.current = false;
+                    return;
+                }
+                setShowPicker(!showPicker)
+                break;
+            default:
+                break;
+        }
+    };
 
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
@@ -111,7 +147,8 @@ const DatePickerV2 = ({
                     '!border-teal': showPicker
                 }
                 )}
-                onClick={() => setShowPicker(!showPicker)}
+                // onClick={() => setShowPicker(!showPicker)}
+                onClick={() => onHandleClick('show_modal')}
             >
                 <div className='flex flex-1 items-center justify-between'>
                     <div className='px-2 leading-5'>
@@ -123,7 +160,7 @@ const DatePickerV2 = ({
                     </div>
                     {
                         issetValue ?
-                            <div className='' onClick={onClear}>
+                            <div className='' onClick={() => onHandleClick('clear')}>
                                 <X size={16} />
                             </div>
                             : <CalendarIcon color={theme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
