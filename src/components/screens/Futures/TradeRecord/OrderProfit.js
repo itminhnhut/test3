@@ -47,8 +47,6 @@ const OrderProfit = ({ order, initPairPrice, setShareOrderModal, className = '',
         }
     }
 
-    console.log('profit', profit, profit < 0 ? colors.red2 : colors.teal, profit < 0 ? '' : '!rotate-0')
-
     // const profit = isTabHistory ? order?.profit : getProfitVndc(order, pairPrice?.lastPrice,);
     const ratio = profit / order.margin;
     const percent = formatNumber(((onusMode ? Math.abs(ratio) : ratio) * 100), 2, 0, true);

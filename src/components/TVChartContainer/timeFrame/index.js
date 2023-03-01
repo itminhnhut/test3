@@ -390,7 +390,7 @@ export default class TimeFrame extends Component {
                 this.props.handleRemoveAllStudies();
                 break;
             case 'reset':
-                this.props.reNewComponentKey();
+                this.props?.reNewComponentKey();
                 break;
             default:
                 break;

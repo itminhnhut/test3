@@ -310,12 +310,12 @@ const ExchangeWithdraw = () => {
         switch (state.validator?.amount) {
             case AMOUNT.LESS_THAN_MIN:
                 return t('wallet:errors.invalid_min_amount', {
-                    value: formatNumber(Math.max(state.selectedNetwork?.withrawFee, state.selectedNetwork?.withdrawMin), assetConfig?.assetDigit),
+                    value: formatNumber(informationData.min, assetConfig?.assetDigit),
                     asset: state.selectedNetwork?.coin
                 });
             case AMOUNT.OVER_THAN_MAX:
                 return t('wallet:errors.invalid_max_amount', {
-                    value: formatNumber(state.selectedNetwork?.withdrawMax?.value, assetConfig?.assetDigit),
+                    value: formatNumber(informationData.max, assetConfig?.assetDigit),
                     asset: state.selectedNetwork?.coin
                 });
             case AMOUNT.OVER_BALANCE:
@@ -325,7 +325,7 @@ const ExchangeWithdraw = () => {
             default:
                 return '';
         }
-    }, [state.selectedNetwork, state.validator, assetConfig]);
+    }, [state.selectedNetwork, state.validator, assetConfig, informationData]);
 
     useEffect(() => {
         if (auth) {

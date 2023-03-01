@@ -94,7 +94,7 @@ export const AmountInput = ({
                 <div className="flex justify-between text-txtSecondary dark:text-txtSecondary-dark mb-4">
                     <p>{t('common:amount')}</p>
                     <p>
-                        {t('common:available_balance')}: {formatWallet(available, currentAssetConfig.assetDigit)} {currentAsset?.assetCode}
+                        {t('common:available_balance')}: {formatNumber(available, currentAssetConfig.assetDigit)} {currentAsset?.assetCode}
                     </p>
                 </div>
                 <div className="flex items-center overflow-hidden select-none">
@@ -161,9 +161,9 @@ export const AmountInput = ({
                                             });
                                     }}
                                     className={classNames(
-                                        'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-gray-13 dark:hover:bg-dark-5',
+                                        'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover dark:hover:bg-hover-dark',
                                         {
-                                            'bg-gray-13 dark:bg-dark-5': asset._id === currentAsset?._id
+                                            'bg-hover dark:bg-hover-dark': asset._id === currentAsset?._id
                                         }
                                     )}
                                 >

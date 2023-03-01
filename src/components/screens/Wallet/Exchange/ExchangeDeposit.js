@@ -102,12 +102,8 @@ const CryptoSelect = ({ t, selected }) => {
                         <AssetLogo assetCode={selected?.assetCode} size={24} />
                         <div className="ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark">{selected?.assetCode || '--'}</div>
                     </div>
+                    <ChevronDown className={open ? '!rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
-                <ChevronDown
-                    className={open ? '!rotate-0' : ''}
-                    size={16}
-                    color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue}
-                />
             </div>
             {open && (
                 <div

@@ -52,13 +52,13 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
     };
 
     const renderFeeOther = (order, key, negative = false) => {
-        if (!order) return '-';
-        const currency = order?.fee_metadata[key]?.currency ?? order?.margin_currency;
+        const currency = get(order, `fee_metadata[${key}].currency`, get(order, 'margin_currency', null));
+        if (!order || !currency) return '-';
         const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
         const decimalFunding = currency === 72 ? 0 : 6;
         const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
         const assetCode = allAssets?.[currency]?.assetCode ?? '';
-        const data = order?.fee_metadata[key] ? order?.fee_metadata[key]['value'] : get(order, key, 0);
+        const data = get(order, `fee_metadata[${key}].value`, get(order, key, 0));
         const prefix = negative ? (data < 0 ? '-' : '+') : '';
         return data ? prefix + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
     };

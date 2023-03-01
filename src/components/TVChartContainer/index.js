@@ -562,7 +562,7 @@ export class TVChartContainer extends React.PureComponent {
                                 priceChartType={this.state.priceChartType}
                                 clearExtendsIndicators={this.props.clearExtendsIndicators}
                                 isVndcFutures={this.props.isVndcFutures}
-                                reNewComponentKey={this.props.reNewComponentKey}
+                                reNewComponentKey={this.props?.reNewComponentKey}
                                 fullscreen={this.state.fullscreen}
                                 handleFullScreen={this.handleFullScreen}
                             />

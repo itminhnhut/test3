@@ -64,7 +64,7 @@ export default function () {
         {
             key: 'asset',
             dataIndex: 'assetId',
-            title: 'Asset',
+            title: t('common:asset'),
             align: 'left',
             render: (assetId) => {
                 const assetConfig = mapAssetConfig[assetId];
@@ -99,7 +99,7 @@ export default function () {
         {
             key: 'withdraw_to',
             dataIndex: ['to', 'address'],
-            title: t('wallet:withdraw_To'),
+            title: t('common:to'),
             align: 'right',
             render: (address) => {
                 return address ? shortHashAddress(address, 6, 6) : '--';
