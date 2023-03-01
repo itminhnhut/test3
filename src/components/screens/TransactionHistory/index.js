@@ -65,19 +65,19 @@ const TransactionHistory = ({ id }) => {
             },
             category: {
                 key: 'category',
-                dataIndex: 'category_id',
+                dataIndex: 'category',
                 title: 'Category',
                 align: 'left',
                 fixed: 'left',
                 width: 148,
-                render: (row) => <div>{categoryConfig?.find(e => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>
+                render: (row) => {console.log(row); return <div>{categoryConfig?.find(e => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>}
             }
         }
     }, [t, categoryConfig])
 
     const columnsConfig = {
-        'DEFAULT': ['_id'],
-        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset'],
+        'DEFAULT': ['_id', 'category'],
+        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
         [TRANSACTION_TYPES.CONVERT]: ['category']
     }
 
