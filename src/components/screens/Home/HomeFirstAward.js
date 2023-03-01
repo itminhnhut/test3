@@ -8,6 +8,7 @@ import { Eye, EyeOff } from 'react-feather';
 import { getLoginUrl, getS3Url } from 'redux/actions/utils';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import CheckBox from 'components/common/CheckBox';
 import { PATHS } from '../../../constants/paths';
@@ -192,9 +193,9 @@ const HomeFirstAward = ({ t, theme }) => {
                         </div>
                         <div className="text-center text-txtSecondary dark:text-txtSecondary-dark mt-6">
                             {t('home:first_award.already_have_account')}
-                            <a href={getLoginUrl('sso', 'login')} className="ml-2 font-semibold text-dominant">
-                                {t('home:first_award.login')}
-                            </a>
+                            <Link href={getLoginUrl('sso', 'login')}>
+                                <a className="ml-2 font-semibold text-dominant">{t('home:first_award.login')}</a>
+                            </Link>
                         </div>
                     </div>
                 </div>
