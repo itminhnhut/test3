@@ -3,7 +3,7 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import classNames from 'classnames';
 import useWindowSize from 'hooks/useWindowSize';
 
-const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, containerClassName, gradientColor }) => {
+const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, containerClassName }) => {
     const [rightControllable, setRightControllable] = useState(false);
     const [leftControllable, setLeftControllable] = useState(false);
     const { width } = useWindowSize();
@@ -25,7 +25,6 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
         position <= 0 ? setLeftControllable(false) : setLeftControllable(true);
 
         const isMaxScroll = ref?.current?.offsetWidth + position >= ref.current?.scrollWidth - 1;
-
         if (isMaxScroll) {
             position >= gutter ? setRightControllable(false) : setRightControllable(true);
         } else {
@@ -34,14 +33,13 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
     };
 
     const recheckSize = () => {
-        const scaleButOverflow = ref.current.scrollWidth > containerRef?.current?.clientWidth - 14 - 8;
-        if (scaleButOverflow) setRightControllable(true);
-        else setRightControllable(false);
+        const scaleButOverflow = ref.current.scrollWidth + 18 * 2 > containerRef?.current?.clientWidth - 8;
+        setRightControllable(scaleButOverflow);
     };
 
     useEffect(() => {
         recheckSize();
-    }, [containerRef?.current?.offsetWidth, width]);
+    }, [width, children]);
 
     useEffect(() => {
         // recheckSize();
@@ -78,11 +76,12 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
     // }, [forceUpdateState, gutter]);
 
     return (
-        <div ref={containerRef} className={classNames('flex items-center overflow-hidden h-full px-2', className)}>
+        <div ref={containerRef} className={classNames('flex items-center overflow-hidden h-full px-2 w-full', className)}>
             <div
                 onClick={() => onScroll(-scrollStepSize)}
-                className={`pr-[2px] h-full items-center justify-center flex pointer-events-auto cursor-pointer hover:text-dominant 
-                    ${!leftControllable && 'invisible pointer-events-none'}`}
+                className={classNames(`pr-[2px] h-full items-center justify-center flex pointer-events-auto cursor-pointer hover:text-dominant`, {
+                    'invisible pointer-events-none': !leftControllable
+                })}
             >
                 <ChevronLeft color="#8694B3" size={16} />
             </div>
@@ -91,8 +90,9 @@ const InfoSlider = ({ forceUpdateState, children, gutter = 12, className, contai
             </div>
             <div
                 onClick={() => onScroll(scrollStepSize)}
-                className={`pl-[2px] h-full items-center justify-end flex pointer-events-auto cursor-pointer hover:text-dominant 
-                    ${!rightControllable && 'invisible pointer-events-none'}`}
+                className={classNames('pl-[2px] h-full items-center justify-end flex pointer-events-auto cursor-pointer hover:text-dominant ', {
+                    'invisible pointer-events-none': !rightControllable
+                })}
             >
                 <ChevronRight color="#8694B3" size={16} />
             </div>
