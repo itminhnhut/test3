@@ -64,7 +64,11 @@ const SpotOrderList = (props) => {
         <>
             <div className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark pb-6 h-full" ref={elementRef}>
                 <div className="flex items-center justify-between relative dragHandleArea">{_renderTab}</div>
-                <div className={`${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'}`}>
+                <div
+                    className={`${currentTheme === THEME_MODE.LIGHT ? 'rdt_light' : 'rdt_dark'} ${
+                        props.isPro ? 'border-b border-divider dark:border-divider-dark' : ''
+                    }`}
+                >
                     {activeTab === 'open' && (
                         <OpeningOrder
                             filterByCurrentPair={hideOther}

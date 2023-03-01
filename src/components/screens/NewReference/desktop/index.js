@@ -138,7 +138,7 @@ const RefDesktopScreen = () => {
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.FriendList })}>
-                            <FriendList owner={overviewData} t={t} commisionConfig={config} id={tabs.FriendList} />
+                            <FriendList owner={overviewData} t={t} language={language} commisionConfig={config} id={tabs.FriendList} />
                         </div>
 
                         <div className={classnames('hidden', { '!block': tab === tabs.CommissionHistory })}>

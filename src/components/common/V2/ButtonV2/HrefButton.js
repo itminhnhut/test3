@@ -2,9 +2,9 @@ import React from 'react';
 import classNames from 'classnames';
 import Link from 'next/link';
 
-const HrefButton = ({ className = '', disabled = false, href = '/', children, variants = 'primary', target }) => {
+const HrefButton = ({ className = '', disabled = false, href = '/', children, variants = 'primary', target, locale = 'en' }) => {
     return (
-        <Link href={href} prefetch={false}>
+        <Link href={href} locale={locale}>
             <a
                 target={target}
                 className={classNames(

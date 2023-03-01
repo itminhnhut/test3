@@ -907,7 +907,7 @@ const renderTradeLink = (b, q, lang, mode) => {
     let url;
     let swapurl;
     if (mode === TRADING_MODE.FUTURES) {
-        url = getV1Url(`/futures/${b}${q}`);
+        url = `/futures/${b}${q}`;
     } else {
         url = `/trade/${b}-${q}`;
         // swapurl = `/swap/${b}-${q}`
