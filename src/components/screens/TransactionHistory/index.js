@@ -28,7 +28,7 @@ const TransactionHistory = ({ id }) => {
             startDate: null,
             endDate: Date.now(),
             key: 'selection'
-        },
+        }
     });
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
 
