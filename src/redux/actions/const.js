@@ -873,3 +873,5 @@ export const rateCurrency = {
     VNDC: 23415,
     USDT: 1
 };
+
+export const DefaultAvatar = 'https://nami-dev.sgp1.digitaloceanspaces.com/nami.exchange/images/preset_avatar/2/Len_cung_trang_11.png';
