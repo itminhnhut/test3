@@ -128,6 +128,7 @@
     "will_receive": "Thực nhận",
     "withdraw_confirmation": "Xác nhận rút",
     "network": "Mạng lưới",
+    "withdraw_To": "Đến",
     "select_network_warning": "Đảm bảo mạng lưới trùng khớp với địa chỉ rút tiền và nền tảng nạp tiền hỗ trợ đồng tiền rút, nếu không bạn sẽ mất tài sản.",
     "withdraw_prompt": {
         "email_description": "Kiểm tra email để lấy mã xác thực {{ email }}",

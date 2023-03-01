@@ -413,7 +413,7 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
             />
 
             {renderAvail()}
-            {maxQuoteQty < minQuoteQty && mount.current && (
+            {maxQuoteQty < minQuoteQty && minQuoteQty > availableAsset && mount.current && (
                 <div className="text-red text-xs flex items-center space-x-1">
                     <ErrorTriggersIcon />
                     <span>{t('futures:mobile:balance_insufficient')}</span>
