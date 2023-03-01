@@ -25,7 +25,7 @@ import classNames from 'classnames';
 import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
-import { KYC_STATUS } from 'redux/actions/const';
+import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
@@ -414,7 +414,7 @@ const NavBar = ({
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img src={avatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
+                                <img src={avatar || DefaultAvatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
