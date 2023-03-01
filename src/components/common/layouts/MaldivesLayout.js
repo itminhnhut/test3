@@ -1,10 +1,7 @@
-import Footer from 'src/components/common/Footer/Footer';
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT } from 'src/components/common/NavBar/constants';
-import NavBar from 'src/components/common/NavBar/NavBar';
 import { useEffect, useMemo, useState } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
-import TransferModal from 'components/wallet/TransferModal';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
 import { NavBarBottomShadow } from '../NavBar/NavBar';
@@ -12,9 +9,21 @@ import { ToastContainer } from 'react-toastify';
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+import { isMobile } from 'react-device-detect';
 
 import { useSelector } from 'react-redux';
 import { THEME_MODE } from 'hooks/useDarkMode';
+import Skeletor from '../Skeletor';
+
+const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
+    ssr: false,
+    loading: () => <Skeletor width="100%" height={isMobile ? MOBILE_NAV_HEIGHT : DESKTOP_NAV_HEIGHT} />
+});
+const Footer = dynamic(() => import('components/common/Footer/Footer'), { ssr: false });
+const TransferModal = dynamic(() => import('components/wallet/TransferModal'), { ssr: false });
+
+
 const MadivesLayout = ({
     navOverComponent,
     navMode = false,
@@ -102,7 +111,7 @@ const MadivesLayout = ({
                     }}
                     className="relative flex-1"
                 >
-                    {useNavShadow && <NavBarBottomShadow />}
+                    {/* {useNavShadow && <NavBarBottomShadow />} */}
                     {children}
                 </div>
                 {!hideFooter && !hideInApp && <Footer />}

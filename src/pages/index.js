@@ -1,4 +1,3 @@
-import MaldivesLayout from 'src/components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -14,6 +13,9 @@ import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
+
+const MaldivesLayout = dynamic(() => import('src/components/common/layouts/MaldivesLayout'), { ssr: false });
+
 const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), {
     ssr: false,
     loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
@@ -94,7 +96,7 @@ const Index = () => {
                 </div>
                 <div className="flex items-center justify-center relative py-12 ">
                     <div className="z-10 rounded-xl qr-code">
-                        <QRCode value={`${APP_URL}#nami_exchange_download_app`}eyeRadius={6} size={150} />
+                        <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
                     <img src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`} className="absolute w-full h-full z-0 rounded-xl" />
                 </div>
