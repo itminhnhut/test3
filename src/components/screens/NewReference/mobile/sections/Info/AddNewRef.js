@@ -31,7 +31,7 @@ const AddNewRef = ({
         i18n: { language }
     } = useTranslation();
     const totalRate = 100;
-    const [percent, setpercent] = useState(0);
+    const [percent, setPercent] = useState(0);
     const onPercentChange = ({ x }) => {
         setPercent(x);
     };

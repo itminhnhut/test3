@@ -252,7 +252,7 @@ export default class TimeFrame extends Component {
                         <>
                             <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-white group`}>
                                 {!isCommonTimeframe && <span className="cursor-pointer text-xs font-medium h-5 text-teal">{selectedTimeframeData.text}</span>}
-                                <ChevronDown className={`${open ? 'rotate-0' : ''}`} />
+                                <ChevronDown className={`${open ? '!rotate-0' : ''}`} />
                             </Popover.Button>
                             <Transition
                                 as={Fragment}

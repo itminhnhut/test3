@@ -118,7 +118,7 @@ export const AmountInput = ({
                     <span className='font-semibold'>{currentAsset?.assetCode}</span>
                     <ChevronDown
                         size={16}
-                        className={openSelectAsset ? '!rotate-0' : ''}
+                        className={openSelectAsset ? '!!rotate-0' : ''}
                         color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
                     />
                 </div>
@@ -259,7 +259,7 @@ export const NetworkInput = ({
                     {selected?.name}
                 </div>
                 <ChevronDown
-                    className={open ? '!rotate-0' : ''}
+                    className={open ? '!!rotate-0' : ''}
                     size={16}
                     color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
                 />

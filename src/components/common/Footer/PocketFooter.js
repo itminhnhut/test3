@@ -67,7 +67,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.about ? '!rotate-0 ' : ' '}`}
+                                className={`${active?.about ? '!!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
                         </div>
@@ -117,7 +117,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.product ? '!rotate-0 ' : ' '}`}
+                                className={`${active?.product ? '!!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
                         </div>
@@ -221,7 +221,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.support ? '!rotate-0 ' : ' '}`}
+                                className={`${active?.support ? '!!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
 

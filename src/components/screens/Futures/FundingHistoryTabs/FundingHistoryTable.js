@@ -337,7 +337,7 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
                             <span className="font-semibold sm:font-medium text-sm sm:text-xl">
                                 {pairConfig?.baseAsset ? pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset : '-/-'}
                             </span>
-                            <ChevronDown color={colors.darkBlue5} size={16} className={classNames('ml-2', { 'rotate-0': activePairList })} />
+                            <ChevronDown color={colors.darkBlue5} size={16} className={classNames('ml-2', { '!rotate-0': activePairList })} />
                             <div className="absolute z-30 pt-8 sm:pt-4 left-0 top-full">
                                 <PairList
                                     activePairList={activePairList}

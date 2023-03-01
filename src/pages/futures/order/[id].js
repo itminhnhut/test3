@@ -384,7 +384,7 @@ const OrderDetail = ({ id }) => {
                                                         >
                                                             <ChevronDown
                                                                 color={general.percent < 0 ? colors.red2 : colors.teal}
-                                                                className={`${general.percent >= 0 ? 'rotate-0' : ''}`}
+                                                                className={`${general.percent >= 0 ? '!rotate-0' : ''}`}
                                                             />
                                                             {formatNumber(Math.abs(general.percent), 2, 0, true)}%
                                                         </span>

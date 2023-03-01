@@ -320,7 +320,7 @@ const EditVolV2 = ({ order, pairConfig, _lastPrice, pairTicker, available, decim
                                     onClick={() => setShowCustomized(!showCustomized)}
                                 >
                                     <span>{t('futures:mobile:adjust_margin:advanced_custom')}</span>
-                                    <ChevronDown size={16} className={`${showCustomized ? 'rotate-0' : ''} transition-all`} />
+                                    <ChevronDown size={16} className={`${showCustomized ? '!rotate-0' : ''} transition-all`} />
                                 </div>
                             }
                         >
