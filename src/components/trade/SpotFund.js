@@ -8,6 +8,7 @@ import TableV2 from 'components/common/V2/TableV2';
 import { WalletType } from 'redux/actions/const';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 import router from 'next/router';
+import { PATHS } from 'constants/paths';
 
 const TradeHistory = (props) => {
     const { t } = useTranslation(['common', 'spot']);
@@ -42,9 +43,9 @@ const TradeHistory = (props) => {
         let href = '';
         switch (key) {
             case 'buy':
-                href = walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                    type: 'crypto',
-                    asset: assetCode
+                href = PATHS.EXCHANGE?.SWAP?.getSwapPair({
+                    fromAsset: 'USDT',
+                    toAsset: assetCode
                 });
                 break;
             case 'deposit':
@@ -89,7 +90,7 @@ const TradeHistory = (props) => {
                     {t('common:withdraw')}
                 </span>
                 <span onClick={() => handleKycRequest('convert', assetCode)} className="cursor-pointer pl-3">
-                    {t('common:convert')}
+                    {t('common:transfer')}
                 </span>
             </div>
         );
