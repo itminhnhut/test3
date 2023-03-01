@@ -4,9 +4,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { find, isNumber } from 'lodash';
-import {
-    countDecimals, eToNumber, formatWallet, shortHashAddress
-} from 'redux/actions/utils';
+import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
 import { PATHS } from 'constants/paths';
 
@@ -20,14 +18,12 @@ import colors from 'styles/colors';
 import useWindowFocus from 'hooks/useWindowFocus';
 import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import {
-    AddressInput, AmountInput, ErrorMessage, Information, MemoInput, NetworkInput
-} from 'components/screens/Wallet/Exchange/Withdraw';
+import { AddressInput, AmountInput, ErrorMessage, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
 import WithdrawHistory from 'components/screens/Wallet/Exchange/Withdraw/WithdrawHistory';
 import classNames from 'classnames';
 import WarningTriangle from 'components/svg/WarningTriangle';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
-
+import { roundToDown } from 'round-to';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -104,8 +100,8 @@ const ModalConfirm = ({
         return result;
     };
 
-    const onConfirmInfo = () => postData()
-        .then(() => {
+    const onConfirmInfo = () =>
+        postData().then(() => {
             setPhase(PHASE_CONFIRM.OTP);
         });
 
@@ -119,112 +115,128 @@ const ModalConfirm = ({
         }
     };
 
-    return <ModalV2
-        isVisible={open}
-        className='!max-w-[488px]'
-        onBackdropCb={onClose}
-    >
-        { // CONFIRM PHASE
-            phase === PHASE_CONFIRM.INFO && <>
-                <div className='text-center mb-4'>
-                    <p className='text-xl font-semibold'>{t('wallet:withdraw_confirmation')}</p>
-                </div>
-                <div className='space-y-2'>
-                    {[{
-                        title: t('common:withdraw'),
-                        value: assetCode
-                    }, {
-                        title: t('wallet:receive_address'),
-                        value: shortHashAddress(address, 8, 8)
-                    }, {
-                        title: 'MEMO',
-                        value: shortHashAddress(memo, 8, 8)
-                    }, {
-                        title: t('common:amount'),
-                        value: `${formatWallet(amount, assetDigit)} ${assetCode}`
-                    }, {
-                        title: t('common:fee'),
-                        value: `${formatWallet(selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
-                    }, {
-                        title: t('wallet:will_receive'),
-                        value: `${formatWallet(amount - selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
-                    }, {
-                        title: t('wallet:network'),
-                        value: selectedNetwork?.name
-                    }].map((item, index) => {
-                        return <div key={index}>
-                            <span className='text-sm text-txtSecondary dark:text-txtSecondary-dark'>{item.title}</span>
-                            <span className='float-right font-semibold'>{item.value || '--'}</span>
-                        </div>;
-                    })}
-
-                    {!memo && <div className='!mt-6 text-xs text-red'>{t('wallet:notes.memo_wdl_tips')}</div>}
-                </div>
-                <div className='grid grid-cols-2 gap-4 mt-6'>
-                    <ButtonV2 variants='none' onClick={onClose}>{t('common:cancel')}</ButtonV2>
-                    <ButtonV2
-                        loading={loading}
-                        onClick={onConfirmInfo}
-                    >{t('common:continue')}</ButtonV2>
-                </div>
-            </>}
-
-        { // OTP PHASE
-            phase === PHASE_CONFIRM.OTP && <div className='space-y-6'>
-                <p className='text-xl font-semibold'>Xác minh 2FA</p>
-                <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
-                    <div className='font-medium'>{t('common:email_authentication')}</div>
-                    <span
-                        className='text-txtSecondary dark:text-txtSecondary'> {t('wallet:withdraw_prompt.email_description')}
-                    </span>
-                    <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                        <OtpInput
-                            value={otp?.email}
-                            onChange={(value) => setOtp({
-                                ...otp,
-                                'email': value
+    return (
+        <ModalV2 isVisible={open} className="!max-w-[488px]" onBackdropCb={onClose}>
+            {
+                // CONFIRM PHASE
+                phase === PHASE_CONFIRM.INFO && (
+                    <>
+                        <div className="text-center mb-4">
+                            <p className="text-xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
+                        </div>
+                        <div className="space-y-2">
+                            {[
+                                {
+                                    title: t('common:withdraw'),
+                                    value: assetCode
+                                },
+                                {
+                                    title: t('wallet:receive_address'),
+                                    value: shortHashAddress(address, 8, 8)
+                                },
+                                {
+                                    title: 'MEMO',
+                                    value: shortHashAddress(memo, 8, 8)
+                                },
+                                {
+                                    title: t('common:amount'),
+                                    value: `${formatNumber(amount, assetDigit)} ${assetCode}`
+                                },
+                                {
+                                    title: t('common:fee'),
+                                    value: `${formatNumber(selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
+                                },
+                                {
+                                    title: t('wallet:will_receive'),
+                                    value: `${formatNumber(amount - selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
+                                },
+                                {
+                                    title: t('wallet:network'),
+                                    value: selectedNetwork?.name
+                                }
+                            ].map((item, index) => {
+                                return (
+                                    <div key={index}>
+                                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
+                                        <span className="float-right font-semibold">{item.value || '--'}</span>
+                                    </div>
+                                );
                             })}
-                            numInputs={6}
-                            placeholder='------'
-                            isInputNum
-                        />
-                    </OtpWrapper>
-                </div>
-                <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
-                    <div className='font-medium'>{t('common:tfa_authentication')}</div>
-                    <div
-                        className='text-txtSecondary dark:text-txtSecondary'>{t('wallet:withdraw_prompt.google_description')}</div>
-                    <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                        <OtpInput
-                            value={otp?.tfa}
-                            onChange={(value) => setOtp({
-                                ...otp,
-                                'tfa': value
-                            })}
-                            numInputs={6}
-                            placeholder='------'
-                            isInputNum
-                        />
-                    </OtpWrapper>
-                </div>
-                <ErrorMessage
-                    message={errorMessageMapper(t, withdrawResult?.data)}
-                    show={errorShowOnlyMessage.includes(withdrawResult?.data)}
-                />
-                <ButtonV2
-                    className='!mt-10'
-                    onClick={onConfirmOTP}
-                    loading={loading}
-                >{t('common:confirm')}</ButtonV2>
-            </div>}
-        { // RESULT PHASE
-            phase === PHASE_CONFIRM.RESULT && <div className='flex flex-col items-center text-center'>
-                <WarningTriangle size={64} />
-                <p className='text-2xl mt-8 mb-4 font-semibold'>{t('wallet:withdraw_failed_title')}</p>
-                <span
-                    className='text-txtSecondary dark:text-txtSecondary-dark'>{errorMessageMapper(t, withdrawResult?.data)}</span>
-            </div>}
-    </ModalV2>;
+
+                            {!memo && <div className="!mt-6 text-xs text-red">{t('wallet:notes.memo_wdl_tips')}</div>}
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 mt-6">
+                            <ButtonV2 variants="none" onClick={onClose}>
+                                {t('common:cancel')}
+                            </ButtonV2>
+                            <ButtonV2 loading={loading} onClick={onConfirmInfo}>
+                                {t('common:continue')}
+                            </ButtonV2>
+                        </div>
+                    </>
+                )
+            }
+
+            {
+                // OTP PHASE
+                phase === PHASE_CONFIRM.OTP && (
+                    <div className="space-y-6">
+                        <p className="text-xl font-semibold">Xác minh 2FA</p>
+                        <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
+                            <div className="font-medium">{t('common:email_authentication')}</div>
+                            <span className="text-txtSecondary dark:text-txtSecondary"> {t('wallet:withdraw_prompt.email_description')}</span>
+                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                <OtpInput
+                                    value={otp?.email}
+                                    onChange={(value) =>
+                                        setOtp({
+                                            ...otp,
+                                            email: value
+                                        })
+                                    }
+                                    numInputs={6}
+                                    placeholder="------"
+                                    isInputNum
+                                />
+                            </OtpWrapper>
+                        </div>
+                        <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
+                            <div className="font-medium">{t('common:tfa_authentication')}</div>
+                            <div className="text-txtSecondary dark:text-txtSecondary">{t('wallet:withdraw_prompt.google_description')}</div>
+                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                <OtpInput
+                                    value={otp?.tfa}
+                                    onChange={(value) =>
+                                        setOtp({
+                                            ...otp,
+                                            tfa: value
+                                        })
+                                    }
+                                    numInputs={6}
+                                    placeholder="------"
+                                    isInputNum
+                                />
+                            </OtpWrapper>
+                        </div>
+                        <ErrorMessage message={errorMessageMapper(t, withdrawResult?.data)} show={errorShowOnlyMessage.includes(withdrawResult?.data)} />
+                        <ButtonV2 className="!mt-10" onClick={onConfirmOTP} loading={loading}>
+                            {t('common:confirm')}
+                        </ButtonV2>
+                    </div>
+                )
+            }
+            {
+                // RESULT PHASE
+                phase === PHASE_CONFIRM.RESULT && (
+                    <div className="flex flex-col items-center text-center">
+                        <WarningTriangle size={64} />
+                        <p className="text-2xl mt-8 mb-4 font-semibold">{t('wallet:withdraw_failed_title')}</p>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{errorMessageMapper(t, withdrawResult?.data)}</span>
+                    </div>
+                )
+            }
+        </ModalV2>
+    );
 };
 
 const INITIAL_STATE = {
@@ -272,7 +284,7 @@ const ExchangeWithdraw = () => {
 
     const selectedAsset = useMemo(() => find(paymentConfigs, { assetCode: router?.query?.asset }), [paymentConfigs, router.query]);
     const assetBalance = useMemo(() => walletAssets[selectedAsset?.assetId], [walletAssets, selectedAsset]);
-    const assetConfig = useMemo(() => find(assetConfigs, { id: selectedAsset?.assetId }), [assetConfigs.selectedAsset]);
+    const assetConfig = useMemo(() => find(assetConfigs, { id: selectedAsset?.assetId }), [assetConfigs, selectedAsset]);
 
     const otpModes = useMemo(() => {
         const modes = [];
@@ -283,8 +295,8 @@ const ExchangeWithdraw = () => {
 
     const informationData = useMemo(() => {
         const available = assetBalance?.value - assetBalance?.locked_value;
-        const min = Math.max(state.selectedNetwork?.withdrawFee, state.selectedNetwork?.withdrawMin);
-        const max = Math.min(+state.selectedNetwork?.withdrawMax, available);
+        const min = roundToDown(Math.max(state.selectedNetwork?.withdrawFee, state.selectedNetwork?.withdrawMin), assetConfig?.assetDigit ?? 0);
+        const max = roundToDown(Math.min(+state.selectedNetwork?.withdrawMax, available), assetConfig?.assetDigit ?? 0);
         const fee = state.selectedNetwork?.withdrawFee;
         return {
             min,
@@ -292,18 +304,18 @@ const ExchangeWithdraw = () => {
             fee,
             available
         };
-    }, [state.selectedNetwork, state.amount, assetBalance]);
+    }, [state.selectedNetwork, state.amount, assetBalance, assetConfig]);
 
     const amountErrorMessage = useMemo(() => {
         switch (state.validator?.amount) {
             case AMOUNT.LESS_THAN_MIN:
                 return t('wallet:errors.invalid_min_amount', {
-                    value: formatWallet(Math.max(state.selectedNetwork?.withrawFee, state.selectedNetwork?.withdrawMin), assetConfig?.assetDigit),
+                    value: formatNumber(Math.max(state.selectedNetwork?.withrawFee, state.selectedNetwork?.withdrawMin), assetConfig?.assetDigit),
                     asset: state.selectedNetwork?.coin
                 });
             case AMOUNT.OVER_THAN_MAX:
                 return t('wallet:errors.invalid_max_amount', {
-                    value: formatWallet(state.selectedNetwork?.withdrawMax?.value, assetConfig?.assetDigit),
+                    value: formatNumber(state.selectedNetwork?.withdrawMax?.value, assetConfig?.assetDigit),
                     asset: state.selectedNetwork?.coin
                 });
             case AMOUNT.OVER_BALANCE:
@@ -326,6 +338,7 @@ const ExchangeWithdraw = () => {
 
     useEffect(() => {
         const defaultNetwork = find(selectedAsset?.networkList, 'isDefault') || find(selectedAsset?.networkList, 'withdrawEnable');
+        setState({ amount: 0 });
         if (defaultNetwork) {
             setState({ selectedNetwork: defaultNetwork });
         }
@@ -333,7 +346,23 @@ const ExchangeWithdraw = () => {
 
     useEffect(() => {
         setState({
-            validator: withdrawValidator(selectedAsset?.assetCode, +state.amount, countDecimals(+state.selectedNetwork?.withdrawIntegerMultiple), state.address, state.selectedNetwork?.addressRegex, state.memo, state.selectedNetwork?.memoRegex, state.selectedNetwork?.network, state.selectedNetwork?.tokenType, state.selectedNetwork?.withdrawFee >= state.selectedNetwork?.withdrawMin ? state.selectedNetwork?.withdrawFee : state.selectedNetwork?.withdrawMin, state.selectedNetwork?.withdrawMax?.value, assetBalance?.value - assetBalance?.locked_value, state.selectedNetwork?.withdrawEnable)
+            validator: withdrawValidator(
+                selectedAsset?.assetCode,
+                +state.amount,
+                countDecimals(+state.selectedNetwork?.withdrawIntegerMultiple),
+                state.address,
+                state.selectedNetwork?.addressRegex,
+                state.memo,
+                state.selectedNetwork?.memoRegex,
+                state.selectedNetwork?.network,
+                state.selectedNetwork?.tokenType,
+                state.selectedNetwork?.withdrawFee >= state.selectedNetwork?.withdrawMin
+                    ? state.selectedNetwork?.withdrawFee
+                    : state.selectedNetwork?.withdrawMin,
+                state.selectedNetwork?.withdrawMax?.value,
+                assetBalance?.value - assetBalance?.locked_value,
+                state.selectedNetwork?.withdrawEnable
+            )
         });
     }, [selectedAsset, state.amount, state.address, state.memo, state.selectedNetwork, state.selectedNetwork?.withdrawFee, assetBalance]);
 
@@ -354,96 +383,101 @@ const ExchangeWithdraw = () => {
 
     // Handle check KYC:
     const isOpenModalKyc = useMemo(() => {
-        return auth?.kyc_status !== 2
-    }, [auth])
+        return auth ? auth?.kyc_status !== 2 : false;
+    }, [auth]);
 
-    return (<MaldivesLayout>
-        <Background isDark={currentTheme === THEME_MODE.DARK}>
-            <div className='mal-container px-4'>
-                <div className='flex items-center justify-between mb-10'>
-                    <span className='font-semibold text-[2rem] leading-[3rem]'>{t('common:withdraw')}</span>
+    return (
+        <MaldivesLayout>
+            <Background isDark={currentTheme === THEME_MODE.DARK}>
+                <div className="mal-container px-4">
+                    <div className="flex items-center justify-between mb-10">
+                        <span className="font-semibold text-[2rem] leading-[3rem]">{t('common:withdraw')}</span>
+                        <div
+                            className="flex items-center font-semibold text-teal cursor-pointer"
+                            onClick={() => {
+                                router.push(PATHS.WALLET.EXCHANGE.DEPOSIT + '?asset=' + selectedAsset?.assetCode);
+                            }}
+                        >
+                            <span className="mr-2">{t('wallet:deposit_crypto')}</span>
+                            <ChevronRight size={16} color={colors.teal} />
+                        </div>
+                    </div>
                     <div
-                        className='flex items-center font-semibold text-teal cursor-pointer'
-                        onClick={() => {
-                            router.push(PATHS.WALLET.EXCHANGE.DEPOSIT + '?asset=' + selectedAsset?.assetCode);
-                        }}
+                        className={classNames(
+                            'w-full mx-auto pt-8 p-6 rounded-3xl sm:w-[453px] space-y-4 bg-white nami-light-shadow',
+                            'dark:border dark:border-divider-dark dark:bg-dark-dark dark:shadow-none'
+                        )}
                     >
-                        <span className='mr-2'>{t('wallet:deposit_crypto')}</span>
-                        <ChevronRight size={16} color={colors.teal} />
+                        <AmountInput
+                            t={t}
+                            amount={state.amount}
+                            onAmountChange={(amount) => setState({ amount })}
+                            currentAsset={selectedAsset}
+                            errorMessage={amountErrorMessage}
+                            available={assetBalance?.value - assetBalance?.locked_value}
+                            min={informationData.min}
+                            max={informationData.max}
+                            currentTheme={currentTheme}
+                        />
+
+                        <AddressInput t={t} value={state.address} onChange={(address) => setState({ address })} isValid={state.validator?.address} />
+
+                        <NetworkInput
+                            t={t}
+                            networkList={selectedAsset?.networkList}
+                            selected={state.selectedNetwork}
+                            onChange={(network) => setState({ selectedNetwork: network })}
+                            currentTheme={currentTheme}
+                        />
+
+                        {state?.selectedNetwork?.memoRegex && (
+                            <MemoInput
+                                t={t}
+                                value={state.memo}
+                                onChange={(memo) => setState({ memo })}
+                                errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
+                            />
+                        )}
+
+                        <Information
+                            className="!mt-6"
+                            assetCode={selectedAsset?.assetCode}
+                            min={formatNumber(informationData.min, assetConfig?.assetDigit)}
+                            max={formatNumber(informationData.max, assetConfig?.assetDigit)}
+                            fee={formatNumber(informationData.fee, assetConfig?.assetDigit)}
+                            receive={formatNumber(+state.amount - state.selectedNetwork?.withdrawFee, assetConfig?.assetDigit)}
+                        />
+
+                        <ButtonV2
+                            className="!mt-10"
+                            disabled={!state.validator?.allPass}
+                            onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}
+                        >
+                            {t('common:withdraw')}
+                        </ButtonV2>
+                    </div>
+                    <ModalConfirm
+                        otpModes={otpModes}
+                        selectedAsset={selectedAsset}
+                        selectedNetwork={state.selectedNetwork}
+                        open={state.openWithdrawConfirm}
+                        closeModal={() => setState({ openWithdrawConfirm: false })}
+                        address={state.address}
+                        memo={state.memo}
+                        amount={state.amount}
+                        assetDigit={assetConfig?.assetDigit}
+                        assetCode={assetConfig?.assetCode}
+                        currentTheme={currentTheme}
+                    />
+                    <div className="mb-32">
+                        <div className="text-2xl font-semibold mb-6 mt-20">{t('wallet:withdraw_history')}</div>
+                        <WithdrawHistory />
                     </div>
                 </div>
-                <div
-                    className={classNames('w-full mx-auto pt-8 p-6 rounded-3xl w-[453px] space-y-4 bg-white nami-light-shadow', 'dark:border dark:border-divider-dark dark:bg-dark-dark dark:shadow-none')}>
-                    <AmountInput
-                        t={t}
-                        amount={state.amount}
-                        onAmountChange={(amount) => setState({ amount })}
-                        currentAsset={selectedAsset}
-                        errorMessage={amountErrorMessage}
-                        available={assetBalance?.value - assetBalance?.locked_value}
-                        min={informationData.min}
-                        max={informationData.max}
-                        currentTheme={currentTheme}
-                    />
-
-                    <AddressInput
-                        t={t}
-                        value={state.address}
-                        onChange={(address) => setState({ address })}
-                        isValid={state.validator?.address}
-                    />
-
-                    <NetworkInput
-                        t={t}
-                        networkList={selectedAsset?.networkList}
-                        selected={state.selectedNetwork}
-                        onChange={(network) => setState({ selectedNetwork: network })}
-                        currentTheme={currentTheme}
-                    />
-
-                    {state?.selectedNetwork?.memoRegex && <MemoInput
-                        t={t}
-                        value={state.memo}
-                        onChange={(memo) => setState({ memo })}
-                        errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
-                    />}
-
-                    <Information
-                        className='!mt-6'
-                        assetCode={selectedAsset?.assetCode}
-                        min={formatWallet(informationData.min, assetConfig?.assetDigit)}
-                        max={formatWallet(informationData.max, assetConfig?.assetDigit)}
-                        fee={formatWallet(informationData.fee, assetConfig?.assetDigit)}
-                        receive={formatWallet(+state.amount - state.selectedNetwork?.withdrawFee, assetConfig?.assetDigit)}
-                    />
-
-                    <ButtonV2
-                        className='!mt-10'
-                        disabled={!state.validator?.allPass}
-                        onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}
-                    >{t('common:withdraw')}</ButtonV2>
-                </div>
-                <ModalConfirm
-                    otpModes={otpModes}
-                    selectedAsset={selectedAsset}
-                    selectedNetwork={state.selectedNetwork}
-                    open={state.openWithdrawConfirm}
-                    closeModal={() => setState({ openWithdrawConfirm: false })}
-                    address={state.address}
-                    memo={state.memo}
-                    amount={state.amount}
-                    assetDigit={assetConfig?.assetDigit}
-                    assetCode={assetConfig?.assetCode}
-                    currentTheme={currentTheme}
-                />
-                <div className='mb-32'>
-                    <div className='text-2xl font-semibold mb-6 mt-20'>{t('wallet:withdraw_history')}</div>
-                    <WithdrawHistory />
-                </div>
-            </div>
-        </Background>
-        <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
-    </MaldivesLayout>);
+            </Background>
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
+        </MaldivesLayout>
+    );
 };
 
 const OtpWrapper = styled.div.attrs({ className: 'mt-4' })`
@@ -476,7 +510,16 @@ const OtpWrapper = styled.div.attrs({ className: 'mt-4' })`
     }
 `;
 
-const IGNORE_TOKEN = ['XBT_PENDING', 'TURN_CHRISTMAS_2017_FREE', 'USDT_BINANCE_FUTURES', 'SPIN_SPONSOR', 'SPIN_BONUS', 'SPIN_CONQUEST', 'TURN_CHRISTMAS_2017', 'SPIN_CLONE'];
+const IGNORE_TOKEN = [
+    'XBT_PENDING',
+    'TURN_CHRISTMAS_2017_FREE',
+    'USDT_BINANCE_FUTURES',
+    'SPIN_SPONSOR',
+    'SPIN_BONUS',
+    'SPIN_CONQUEST',
+    'TURN_CHRISTMAS_2017',
+    'SPIN_CLONE'
+];
 
 const AMOUNT = {
     LESS_THAN_MIN: 0,
@@ -487,10 +530,24 @@ const AMOUNT = {
 };
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-20' })`
-    background-color: ${({ isDark }) => isDark ? colors.dark.dark : colors.gray['13']};
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : colors.gray['13'])};
 `;
 
-function withdrawValidator(asset, amount, decimalLimit, address, addressRegex, memo = undefined, memoRegex, network, networkType, min, max, available, isAllow) {
+function withdrawValidator(
+    asset,
+    amount,
+    decimalLimit,
+    address,
+    addressRegex,
+    memo = undefined,
+    memoRegex,
+    network,
+    networkType,
+    min,
+    max,
+    available,
+    isAllow
+) {
     const result = {};
     const _addressRegex = new RegExp(addressRegex);
     const _memoRegex = new RegExp(memoRegex);

@@ -15,6 +15,8 @@ import { Search } from 'react-feather';
 import NoData from 'components/common/V2/TableV2/NoData';
 import CheckCircle from 'components/svg/CheckCircle';
 import { PATHS } from 'constants/paths';
+import { roundToDown } from 'round-to';
+import { useTranslation } from 'next-i18next';
 
 export const ErrorMessage = ({
     message,
@@ -86,107 +88,100 @@ export const AmountInput = ({
         return mapAssetConfig[currentAsset?.assetId] || {};
     }, [currentAsset, mapAssetConfig]);
 
-    return <div className='relative'>
-        <div className='bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl'>
-            <div className='flex justify-between text-txtSecondary dark:text-txtSecondary-dark mb-4'>
-                <p>{t('common:amount')}</p>
-                <p>{t('common:available_balance')}: {formatWallet(available, currentAssetConfig.assetDigit)} {currentAsset?.assetCode}</p>
-            </div>
-            <div className='flex items-center overflow-hidden select-none'>
-                <div className='flex items-center flex-1'>
-                    <div className='flex-1'>
-                        <NumberFormat
-                            thousandSeparator
-                            decimalScale={currentAssetConfig?.assetDigit || 0}
-                            allowNegative={false}
-                            className='w-full text-2xl font-semibold'
-                            value={amount}
-                            onValueChange={({ value }) => internalAmountChange(value)}
+    return (
+        <div className="relative">
+            <div className="bg-gray-13 dark:bg-darkBlue-3 px-4 py-5 rounded-xl">
+                <div className="flex justify-between text-txtSecondary dark:text-txtSecondary-dark mb-4">
+                    <p>{t('common:amount')}</p>
+                    <p>
+                        {t('common:available_balance')}: {formatWallet(available, currentAssetConfig.assetDigit)} {currentAsset?.assetCode}
+                    </p>
+                </div>
+                <div className="flex items-center overflow-hidden select-none">
+                    <div className="flex items-center flex-1">
+                        <div className="flex-1">
+                            <NumberFormat
+                                thousandSeparator
+                                decimalScale={currentAssetConfig?.assetDigit || 0}
+                                allowNegative={false}
+                                className="w-full text-2xl font-semibold"
+                                value={amount}
+                                onValueChange={({ value }) => internalAmountChange(value)}
+                            />
+                        </div>
+                        {+amount < max && (
+                            <div className="cursor-pointer text-teal" onClick={() => internalAmountChange(max)}>
+                                {t('common:max')}
+                            </div>
+                        )}
+                    </div>
+                    <div className="w-[1px] h-6 dark:bg-divider-dark mx-2" />
+                    <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setOpenSelectAsset(!openSelectAsset)}>
+                        <AssetLogo assetCode={currentAsset?.assetCode} size={24} />
+                        <span className="font-semibold">{currentAsset?.assetCode}</span>
+                        <ChevronDown
+                            size={16}
+                            className={openSelectAsset ? '!rotate-0' : ''}
+                            color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
                         />
                     </div>
-                    <div
-                        className='cursor-pointer text-teal'
-                        onClick={() => internalAmountChange(formatNumber(max, currentAssetConfig.assetDigit))}
-                    >{t('common:max')}</div>
                 </div>
-                <div className='w-[1px] h-6 dark:bg-divider-dark mx-2' />
+            </div>
+            <ErrorMessage message={errorMessage} show={!!errorMessage && !!amount} />
+            {openSelectAsset && (
                 <div
-                    className='flex items-center space-x-2 cursor-pointer'
-                    onClick={() => setOpenSelectAsset(!openSelectAsset)}
+                    ref={ref}
+                    className={classNames(
+                        'absolute z-10 right-0 left-16 mt-2 flex flex-col py-4 space-y-6 max-h-[436px] min-h-[200px]',
+                        'rounded-xl shadow-common overflow-hidden',
+                        'bg-white nami-light-shadow',
+                        'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark ',
+                        contentClassName
+                    )}
                 >
-                    <AssetLogo assetCode={currentAsset?.assetCode} size={24} />
-                    <span className='font-semibold'>{currentAsset?.assetCode}</span>
-                    <ChevronDown
-                        size={16}
-                        className={openSelectAsset ? '!!rotate-0' : ''}
-                        color={currentTheme === THEME_MODE.DARK ? colors.grey4 : colors.darkBlue}
-                    />
-                </div>
-            </div>
-        </div>
-        <ErrorMessage message={errorMessage} show={!!errorMessage && !!amount} />
-        {
-            openSelectAsset &&
-            <div
-                ref={ref}
-                className={classNames(
-                    'absolute z-10 right-0 left-16 mt-2 flex flex-col py-4 space-y-6 max-h-[436px] min-h-[200px]',
-                    'rounded-xl shadow-common overflow-hidden',
-                    'bg-white nami-light-shadow',
-                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark ',
-                    contentClassName
-                )}
-            >
-                <div className='px-4'>
-                    <div className='bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md'>
-                        <Search color={colors.darkBlue5} size={16} className='mr-2' />
-                        <input
-                            type='text'
-                            value={search}
-                            placeholder={t('common:search')}
-                            onChange={e => setSearch(e.target.value)}
-                            autoFocus
-                        />
+                    <div className="px-4">
+                        <div className="bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md">
+                            <Search color={colors.darkBlue5} size={16} className="mr-2" />
+                            <input type="text" value={search} placeholder={t('common:search')} onChange={(e) => setSearch(e.target.value)} autoFocus />
+                        </div>
+                    </div>
+                    <div className="overflow-y-auto flex-1 space-y-3">
+                        {!assetOptions.length && <NoData />}
+                        {assetOptions.map((asset) => {
+                            return (
+                                <div
+                                    key={asset._id}
+                                    onClick={() => {
+                                        router
+                                            .push(withdrawLinkBuilder(asset.assetCode), null, {
+                                                scroll: false
+                                            })
+                                            .finally(() => {
+                                                setOpenSelectAsset(false);
+                                            });
+                                    }}
+                                    className={classNames(
+                                        'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-gray-13 dark:hover:bg-dark-5',
+                                        {
+                                            'bg-gray-13 dark:bg-dark-5': asset._id === currentAsset?._id
+                                        }
+                                    )}
+                                >
+                                    <div className="flex">
+                                        <AssetLogo assetCode={asset?.assetCode} size={24} />
+                                        <span className="ml-2">{asset.assetCode}</span>
+                                    </div>
+                                    <span className="float-right text-txtSecondary">
+                                        {formatWallet(asset.availableValue, mapAssetConfig[asset.assetId]?.assetDigit || 0)}
+                                    </span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
-                <div className='overflow-y-auto flex-1 space-y-3'>
-                    {
-                        !assetOptions.length &&
-                        <NoData />
-                    }
-                    {
-                        assetOptions.map(asset => {
-                            return <div
-                                key={asset._id}
-                                onClick={() => {
-                                    router.push(withdrawLinkBuilder(asset.assetCode), null, {
-                                        scroll: false
-                                    })
-                                        .finally(() => {
-                                            setOpenSelectAsset(false);
-                                        });
-                                }}
-                                className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-gray-13 dark:hover:bg-dark-5', {
-                                    'bg-gray-13 dark:bg-dark-5': asset._id === currentAsset?._id
-                                })}
-                            >
-                                <div className='flex'>
-                                    <AssetLogo
-                                        assetCode={asset?.assetCode}
-                                        size={24}
-                                    />
-                                    <span className='ml-2'>{asset.assetCode}</span>
-                                </div>
-                                <span className='float-right text-txtSecondary'>
-                                    {formatWallet(asset.availableValue, mapAssetConfig[asset.assetId]?.assetDigit || 0)}
-                                </span>
-                            </div>;
-                        })
-                    }
-                </div>
-            </div>
-        }
-    </div>;
+            )}
+        </div>
+    );
 };
 
 export const AddressInput = ({
@@ -253,7 +248,7 @@ export const NetworkInput = ({
                  setOpen(true);
              }}
         >
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>Mạng lưới</p>
+            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-4'>{t('wallet:network')}</p>
             <div className='flex justify-between font-semibold'>
                 <div className='flex-1'>
                     {selected?.name}
@@ -342,33 +337,38 @@ export const Information = ({
     assetCode,
     className = ''
 }) => {
-    return <div className={classNames('space-y-2', className)}>
-        {
-            [
+    const { t } = useTranslation();
+    return (
+        <div className={classNames('space-y-2', className)}>
+            {[
                 {
-                    title: 'Số lượng rút tối thiểu',
+                    title: t('wallet:min_withdraw'),
                     value: min
                 },
                 {
-                    title: 'Số lượng rút tối đa',
+                    title: t('wallet:max_withdraw'),
                     value: max
                 },
                 {
-                    title: 'Phí rút',
+                    title: t('wallet:withdraw_fee'),
                     value: fee
                 },
                 {
-                    title: 'Số lượng nhận được',
+                    title: t('wallet:will_receive'),
                     value: receive
                 }
             ].map((item, index) => {
-                return <div key={index}>
-                    <span className='text-txtSecondary dark:text-txtSecondary-dark'>{item.title}</span>
-                    <span className='float-right font-semibold'>{item.value || '--'} {assetCode}</span>
-                </div>;
-            })
-        }
-    </div>;
+                return (
+                    <div key={index}>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
+                        <span className="float-right font-semibold">
+                            {item.value || '--'} {assetCode}
+                        </span>
+                    </div>
+                );
+            })}
+        </div>
+    );
 };
 
 const withdrawLinkBuilder = (asset) => {
