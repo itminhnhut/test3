@@ -28,7 +28,7 @@ import {
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
     type='warning'>{t('reference:referral.pending_kyc')}</TagV2>;
-const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
+const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap text-green-3 dark:text-teal'
     type='success'>{t('reference:referral.kyc')}</TagV2>;
 
 const ModalCommissionFriend = ({
@@ -74,7 +74,7 @@ const ModalCommissionFriend = ({
                             <td className='text-center text-txtSecondary dark:text-txtSecondary-dark text-sm'>{t(`reference:referral.${commissionKind}`)}</td>
                             {map(configs, (c, k) => {
                                 return <td key={k}
-                                    className='text-center text-sm font-semibold text-teal py-2'>
+                                    className='text-center text-sm font-semibold text-green-3 dark:text-teal py-2'>
                                     {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (rewardRatio / 100) : c}%
                                 </td>;
                             })}
@@ -227,7 +227,7 @@ const FriendList = ({
         return (
             <div>
                 <p
-                    className='text-teal inline-block font-semibold nami-underline-dotted'
+                    className='text-green-3 dark:text-teal inline-block font-semibold nami-underline-dotted'
                     data-tip=''
                     data-for={type + data?.code}
                 >
@@ -314,7 +314,6 @@ const FriendList = ({
                 return renderCommissionData(item, 'undirectCommission')
             }
         }]
-        console.log("loading: ", loading, page);
         return <TableV2
             sort
             defaultSort={{ key: 'code', direction: 'desc' }}
