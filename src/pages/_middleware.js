@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function middleware(req, event) {
-    const excludes = ['/library', '/images', '/css', '/icon'];
+    const excludes = ['/library', '/images', '/css', '/icon', '/fav'];
     const locale = req.cookies['NAMI_LOCALE'];
     if (excludes.find((rs) => req.nextUrl.pathname.startsWith(rs))) return NextResponse.next();
     if (!!locale && req.nextUrl.locale !== locale) {
