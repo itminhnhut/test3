@@ -344,7 +344,7 @@ const NavBar = ({
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
         return (
             <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant" onClick={onThemeSwitch}>
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
+                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={24} color="currentColor" /> : <SvgSun size={24} color="currentColor" />}
             </div>
         );
     }, [name, currentTheme, navTheme.color]);
@@ -630,7 +630,7 @@ const NavBar = ({
                                     <div className="mal-navbar__hamburger__spacing mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
-                                        <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
+                                        <SvgIcon name="chevron_down" size={16} color={colors.gray[7]} className="chevron__down" />
                                         {renderWallet()}
                                     </div>
                                 )}
