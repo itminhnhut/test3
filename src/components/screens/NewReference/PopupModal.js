@@ -9,6 +9,8 @@ import React from 'react';
 import { useState } from 'react';
 import { MobileFont } from './mobile'
 import Copy from 'components/svg/Copy';
+import Spinner from 'components/svg/Spinner';
+import colors from 'styles/colors';
 
 const PopupModal = ({
     isVisible,
@@ -202,7 +204,7 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
                 fill="#47cc85"
             />
         </svg>
-    ) : <Copy onClick={onClick} className={className} size={size}/>
+    ) : <Copy onClick={onClick} className={className} size={size} />
     // (
     //     <svg onClick={() => onClick()} className={className} width={size} height={size} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
     //         <path
@@ -221,16 +223,20 @@ export const CopyIcon = ({ size = 12, color = '#718096', className = '', data })
     // );
 };
 
-export const renderRefInfo = (text, className = '', size = 15, originalText) => {
+export const renderRefInfo = (text, className = '', size = 15, loading = false, originalText) => {
     return (
         <div className={classNames('w-full h-11 px-3 rounded-[3px] flex justify-between items-center bg-[#f5f6f7]', className)}>
             <div className="font-medium text-sm text-shadow-3 w-3/4">{text}</div>
             <div>
-                <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />
+                {loading ? <Spinner size={16}
+                    color={colors.gray['1']}
+                /> :
+                    <CopyIcon data={originalText ?? text} size={size} className="cursor-pointer" />}
             </div>
         </div>
     );
 };
+
 export default PopupModal;
 
 

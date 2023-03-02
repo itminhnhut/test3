@@ -29,7 +29,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 const Overview = ({
     data,
     commisionConfig,
-    user
+    user,
+    loading
 }) => {
     const {
         t,
@@ -100,7 +101,7 @@ const Overview = ({
         >
             {showInvite ?
                 <InviteModal isShow={showInvite} onClose={() => setShowInvite(false)} code={data?.defaultRefCode?.code}
-                             isMobile /> : null}
+                    isMobile /> : null}
             {showRegisterPartner ? (
                 <RegisterPartnerModal
                     setIsPartner={setIsPartner}
@@ -133,7 +134,7 @@ const Overview = ({
                         <RefButton className='w-3/5' onClick={() => setShowRegisterPartner(true)}>
                             <div className='flex gap-2 items-center'>
                                 <svg width='24' height='24' viewBox='0 0 24 24' fill='none'
-                                     xmlns='http://www.w3.org/2000/svg'>
+                                    xmlns='http://www.w3.org/2000/svg'>
                                     <g clipPath='url(#jf4gphlj7a)'>
                                         <path
                                             d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z'
@@ -173,7 +174,7 @@ const Overview = ({
                                     })}
                                 </div>
                             </div>
-                            <div className='mt-1'>{renderRefInfo(data?.defaultRefCode?.code, null, 16)}</div>
+                            <div className='mt-1'>{renderRefInfo(data?.defaultRefCode?.code, null, 16, loading)}</div>
                             <div className='flex w-full justify-between text-xs font-medium mt-4'>
                                 <div>{t('reference:referral.ref_link')}</div>
                                 <div>
@@ -190,6 +191,7 @@ const Overview = ({
                                         : '---',
                                     null,
                                     16,
+                                    loading,
                                     'https://nami.exchange/ref/' + data?.defaultRefCode?.code
                                 )}
                             </div>
@@ -234,12 +236,12 @@ export const renderSocials = (size = 32, className = '', url) => {
                         />
                         <defs>
                             <linearGradient id='19bujivjka' x1='16.328' y1='1.333' x2='16.328' y2='30.323'
-                                            gradientUnits='userSpaceOnUse'>
+                                gradientUnits='userSpaceOnUse'>
                                 <stop stopColor='#18ACFE' />
                                 <stop offset='1' stopColor='#0165E1' />
                             </linearGradient>
                             <linearGradient id='zbznv6hl9b' x1='16.328' y1='1.333' x2='16.328' y2='30.323'
-                                            gradientUnits='userSpaceOnUse'>
+                                gradientUnits='userSpaceOnUse'>
                                 <stop stopColor='#18ACFE' />
                                 <stop offset='1' stopColor='#0165E1' />
                             </linearGradient>
@@ -280,7 +282,7 @@ export const renderSocials = (size = 32, className = '', url) => {
                     <svg width={size} height={size} viewBox='0 0 33 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <g clipPath='url(#eyolc5yyoa)'>
                             <path d='M16.5 32c8.837 0 16-7.163 16-16s-7.163-16-16-16S.5 7.163.5 16s7.163 16 16 16z'
-                                  fill='url(#h9i9wa6jeb)' />
+                                fill='url(#h9i9wa6jeb)' />
                             <path
                                 fillRule='evenodd'
                                 clipRule='evenodd'
@@ -290,7 +292,7 @@ export const renderSocials = (size = 32, className = '', url) => {
                         </g>
                         <defs>
                             <linearGradient id='h9i9wa6jeb' x1='16.5' y1='0' x2='16.5' y2='31.763'
-                                            gradientUnits='userSpaceOnUse'>
+                                gradientUnits='userSpaceOnUse'>
                                 <stop stopColor='#2CA4E0' />
                                 <stop offset='1' stopColor='#0D83BF' />
                             </linearGradient>
@@ -311,7 +313,7 @@ export const renderSocials = (size = 32, className = '', url) => {
             {icons.map((icon, index) => {
                 return (
                     <div className={classNames('h-12 w-12 p-2 rounded-md bg-[#f5f6f7] cursor-pointer', className)}
-                         key={index}>
+                        key={index}>
                         {icon.svg}
                     </div>
                 );
@@ -482,7 +484,7 @@ export const RegisterPartnerModal = ({
                         <div dangerouslySetInnerHTML={{ __html: result?.message }} />
                     </div>
                     <div className='w-full flex justify-center text-teal font-medium mt-4 cursor-pointer'
-                         onClick={() => window?.fcWidget?.open()}
+                        onClick={() => window?.fcWidget?.open()}
                     >
                         {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                     </div>
@@ -524,7 +526,7 @@ export const RegisterPartnerModal = ({
                         null
                         :
                         <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
-                             onClick={() => emitWebViewEvent('chat_with_support')}
+                            onClick={() => emitWebViewEvent('chat_with_support')}
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                         </div>
@@ -537,7 +539,7 @@ export const RegisterPartnerModal = ({
     if (isDesktop && !isKyc) {
         return (
             <AlertModalV2 isVisible type='error' title={t('reference:referral.partner.no_kyc_title')}
-                          message={t('reference:referral.partner.no_kyc')} />
+                message={t('reference:referral.partner.no_kyc')} />
         );
     }
 
@@ -714,7 +716,7 @@ const RefInput = ({
                 ) : null}
                 {canPaste && !isDesktop ?
                     <div className='font-semibold text-teal text-sm leading-[18px] cursor-pointer ml-2'
-                         onClick={handlePaste}>{t('common:paste')}</div>
+                        onClick={handlePaste}>{t('common:paste')}</div>
                     : null}
             </div>
             {error.length ? (

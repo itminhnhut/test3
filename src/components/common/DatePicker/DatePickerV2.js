@@ -46,12 +46,15 @@ const DatePickerV2 = ({
 
     // Handle custom
     const [date, setDate] = useState({
-        startDate: null, endDate: null,
+        startDate: null,
+        endDate: null,
         key: 'selection'
     })
 
     useState(() => {
-        if (initDate) setDate(initDate)
+        if (initDate) {
+            setDate(initDate)
+        }
     }, [])
 
     const onDatesChange = (e) => {
@@ -139,7 +142,6 @@ const DatePickerV2 = ({
         }
     };
 
-    console.log("_____", date);
 
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
@@ -149,7 +151,6 @@ const DatePickerV2 = ({
                     '!border-teal': showPicker
                 }
                 )}
-                // onClick={() => setShowPicker(!showPicker)}
                 onClick={() => onHandleClick('show_modal')}
             >
                 <div className='flex flex-1 items-center justify-between'>
@@ -192,7 +193,7 @@ const DatePickerV2 = ({
                     <Component
                         className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
                         date={date}
-                        ranges={!isCalendar ? [date] : []}
+                        ranges={!isCalendar ? [{ ...date, startDate: date?.startDate || new Date(), endDate: date?.endDate || new Date() }] : []}
                         months={month ?? 1}
                         onChange={onDatesChange}
                         moveRangeOnFirstSelection={isCalendar}
