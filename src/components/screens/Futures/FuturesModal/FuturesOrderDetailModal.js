@@ -71,7 +71,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                 place="top"
                 effect="solid"
                 isV3
-                className="max-w-[300px]"
+                className="max-w-[300px] after:!left-[25%]"
                 overridePosition={(e) => ({
                     left: 0,
                     top: e.top

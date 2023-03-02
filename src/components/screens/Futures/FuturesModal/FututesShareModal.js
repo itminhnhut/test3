@@ -74,7 +74,7 @@ const FututesShareModal = ({ isVisible, onClose, order }) => {
                     <span className="text-white">{order?.symbol}</span>
                 </div>
                 <div className={`${negative ? 'text-red' : 'text-teal'} text-[2.25rem] font-semibold flex items-center space-x-1`}>
-                    <ChevronDown size={30} color={negative ? colors.red2 : colors.teal} className={!negative ? '!!rotate-0' : ''} />
+                    <ChevronDown size={30} color={negative ? colors.red2 : colors.teal} className={!negative ? '!rotate-0' : ''} />
                     <span>{String(percent).substr(1, String(percent).length)}</span>
                 </div>
                 <div className="w-1/2 space-y-1 mt-6">
