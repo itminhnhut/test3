@@ -153,10 +153,10 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         let symbol = urlParams.get('symbol');
-        if (!symbol?.includes(currency)) {
-            symbol = currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT';
+        if (!symbol?.includes(currency) && !router.query.symbol) {
+            urlParams.set('symbol', currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT');
         }
-        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
         window.history.pushState(null, null, url);
         setFilter({ ...filter, symbol: symbol });
     }, [currency, router]);
@@ -310,7 +310,10 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
 
     const onChangeSymbol = (pair) => {
         const symbol = pair?.baseAsset + pair?.quoteAsset;
-        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        urlParams.set('symbol', symbol);
+        const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
         window.history.pushState(null, null, url);
         setFilter({ ...filter, symbol: symbol });
         setActivePairList(false);

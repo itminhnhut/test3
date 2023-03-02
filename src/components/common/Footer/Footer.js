@@ -29,7 +29,6 @@ const Footer = memo(() => {
     const isApp = useApp();
     const [currentTheme] = useDarkMode();
 
-    if (isApp) return null;
     const MobileCopyright = useCallback(
         () => (
             <div className="px-4">
@@ -76,7 +75,8 @@ const Footer = memo(() => {
         ),
         [t, language, currentTheme]
     );
-
+    
+    if (isApp) return null;
     return (
         <section className="mal-footer border-t border-divider dark:border-divider-dark">
             <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>
