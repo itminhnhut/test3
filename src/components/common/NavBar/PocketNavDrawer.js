@@ -38,11 +38,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     useEffect(() => {
         if (isActive) {
-            document.getElementsByTagName('html')[0].classList.add('overflow-hidden');
-        } else {
-            document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
-        }
-        return () => document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
+            document.body.classList.add('overflow-hidden');
+        } 
+        return () => document.body.classList.remove('overflow-hidden');
     }, [isActive]);
 
     const { width } = useWindowSize();

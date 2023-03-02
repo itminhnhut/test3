@@ -1,14 +1,12 @@
 import { DESKTOP_NAV_HEIGHT, MOBILE_NAV_HEIGHT } from 'src/components/common/NavBar/constants';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { ReactNotifications } from 'react-notifications-component';
 import { useWindowSize } from 'utils/customHooks';
 import useApp from 'hooks/useApp';
 import { PORTAL_MODAL_ID } from 'constants/constants';
-import { NavBarBottomShadow } from '../NavBar/NavBar';
 import { ToastContainer } from 'react-toastify';
 import { useStore } from 'src/redux/store';
 import { setTheme } from 'redux/actions/user';
-import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { isMobile } from 'react-device-detect';
 
@@ -23,6 +21,12 @@ const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
 const Footer = dynamic(() => import('components/common/Footer/Footer'), { ssr: false });
 const TransferModal = dynamic(() => import('components/wallet/TransferModal'), { ssr: false });
 
+// NOTE: Apply this style for NavBar on this layout.
+const navbarStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0
+};
 
 const MadivesLayout = ({
     navOverComponent,
@@ -42,35 +46,20 @@ const MadivesLayout = ({
     useNavShadow = false,
     useGridSettings = false
 }) => {
-    // * Initial State
-    const [state, set] = useState({ isDrawer: false });
-    const setState = (_state) => set((prevState) => ({ ...prevState, ..._state }));
-
     // Use Hooks
-    const { width, height } = useWindowSize();
-    const router = useRouter();
+    const { width } = useWindowSize();
     const theme = useSelector((state) => state.user.theme);
     const isApp = useApp();
-
-    // NOTE: Apply this style for NavBar on this layout.
-    const navbarStyle = {
-        position: 'fixed',
-        top: 0,
-        left: 0
-    };
-    const isHomePage = useMemo(() => router.pathname === '/', [router]);
 
     const store = useStore();
     useEffect(() => {
         store.dispatch(setTheme());
     }, []);
 
-    const dark = theme === THEME_MODE.DARK;
-    const light = theme !== THEME_MODE.DARK;
     return (
         <>
             <div
-                className={`mal-layouts flex flex-col ${light ? 'mal-layouts___light' : ''} ${dark ? 'mal-layouts___dark' : ''}`}
+                className={`mal-layouts flex flex-col `}
                 // style={
                 // state.isDrawer
                 //     ? {
@@ -85,7 +74,7 @@ const MadivesLayout = ({
                     autoClose={5000}
                     hideProgressBar
                     closeButton={false}
-                    theme={light ? 'light' : 'dark'}
+                    theme={theme === THEME_MODE.LIGHT ? 'light' : 'dark'}
                     className="nami-toast"
                 />
                 <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full" />
@@ -98,7 +87,6 @@ const MadivesLayout = ({
                         spotState={spotState}
                         onChangeSpotState={onChangeSpotState}
                         resetDefault={resetDefault}
-                        layoutStateHandler={setState}
                         page={page}
                         changeLayoutCb={changeLayoutCb}
                         useGridSettings={useGridSettings}
