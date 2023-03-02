@@ -20,22 +20,22 @@ export default function () {
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
 
     const [status, setStatus] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [histories, setHistories] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
-    const getWithdrawHistory = (page) => {
-        setLoading(true);
+    const getWithdrawHistory = () => {
         Axios.get(API_GET_DEPWDL_HISTORY, {
             params: {
-                type: status,
-                page,
-                pageSize: HISTORY_SIZE
+                type: 2
+                // page,
+                // pageSize: HISTORY_SIZE,
+                // status: status
             }
         })
             .then(({ data: res }) => {
@@ -113,17 +113,17 @@ export default function () {
             render: (status) =>
                 ({
                     [DepWdlStatus.Success]: (
-                        <TagV2 className="ml-auto" type="success">
+                        <TagV2 icon={false} className="ml-auto" type="success">
                             {t('common:success')}
                         </TagV2>
                     ),
                     [DepWdlStatus.Pending]: (
-                        <TagV2 className="ml-auto" type="warning">
+                        <TagV2 icon={false} className="ml-auto" type="warning">
                             {t('common:pending')}
                         </TagV2>
                     ),
                     [DepWdlStatus.Declined]: (
-                        <TagV2 className="ml-auto" type="failed">
+                        <TagV2 icon={false} className="ml-auto" type="failed">
                             {t('common:declined')}
                         </TagV2>
                     )
@@ -144,8 +144,8 @@ export default function () {
     }
 
     useEffect(() => {
-        getWithdrawHistory(currentPage);
-    }, [currentPage, status]);
+        getWithdrawHistory();
+    }, []);
 
     const listStatus = [
         {
@@ -166,36 +166,41 @@ export default function () {
         }
     ];
 
+    const dataFilter = useMemo(() => {
+        return status ? histories.filter((rs) => rs.status === status) : histories;
+    }, [status, histories]);
+
     return (
         <>
-            {/* <div className="space-x-3 flex items-center my-6">
+            <div className="space-x-3 flex items-center my-6">
                 {listStatus.map((rs, i) => (
                     <div
                         key={i}
-                        onClick={() => setStatus(rs.value)}
-                        className={`px-5 py-3 border text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark w-max rounded-full cursor-pointer ${
-                            status === rs.value ? '!text-teal font-semibold !border-teal' : ''
+                        onClick={() => {
+                            setStatus(rs.value);
+                            setCurrentPage(1);
+                        }}
+                        className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
+                            status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
                         }`}
                     >
                         {rs.label}
                     </div>
                 ))}
-            </div> */}
+            </div>
             <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark pb-2 rounded-xl pt-4">
                 <TableV2
                     useRowHover
-                    data={loading ? range(0, 6) : histories}
+                    data={dataFilter}
+                    loading={loading}
                     columns={columns}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
                     tableStatus={tableStatus}
                     pagingClassName="border-none"
-                    pagingPrevNext={{
-                        page: currentPage,
-                        hasNext: histories.length === HISTORY_SIZE,
-                        onChangeNextPrev: (delta) => setCurrentPage(currentPage + delta),
-                        language
-                    }}
+                    limit={10}
+                    page={currentPage}
+                    onChangePage={setCurrentPage}
                 />
             </div>
         </>

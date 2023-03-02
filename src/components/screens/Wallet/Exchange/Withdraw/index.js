@@ -110,7 +110,7 @@ export const AmountInput = ({
                             />
                         </div>
                         {+amount < max && (
-                            <div className="cursor-pointer text-teal" onClick={() => internalAmountChange(max)}>
+                            <div className="cursor-pointer text-teal uppercase" onClick={() => internalAmountChange(max)}>
                                 {t('common:max')}
                             </div>
                         )}
@@ -146,7 +146,7 @@ export const AmountInput = ({
                         </div>
                     </div>
                     <div className="overflow-y-auto flex-1 space-y-3">
-                        {!assetOptions.length && <NoData />}
+                        {!assetOptions.length && <NoData isSearch={!!search} />}
                         {assetOptions.map((asset) => {
                             return (
                                 <div

@@ -12,6 +12,10 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import ModalV2 from 'components/common/V2/ModalV2';
+import useApp from 'hooks/useApp';
+import { ChevronLeft } from 'react-feather';
+import router from 'next/router';
+
 export const CURRENCIES = [
     {
         name: 'VNDC',
@@ -78,6 +82,7 @@ const initColumns = [
 const TradingRules = () => {
     const { t } = useTranslation();
     const { width } = useWindowSize();
+    const isApp = useApp();
     const isMobile = width < 820;
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
     const assetConfig = useSelector((state) => state.utils.assetConfig);
@@ -122,7 +127,9 @@ const TradingRules = () => {
                         </Tooltip>
                     )}
                     <div
-                        className="text-sm flex items-center space-x-1 md:space-x-3 border-b border-dashed border-divider dark:border-divider-dark"
+                        className={`text-sm flex items-center space-x-1 md:space-x-3 ${
+                            isMobile ? '' : 'border-b border-dashed border-divider dark:border-divider-dark'
+                        }`}
                         data-tip=""
                         data-for={title}
                         id={tooltip}
@@ -233,8 +240,13 @@ const TradingRules = () => {
 
     return (
         <MaldivesLayout>
+            {isApp && (
+                <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+                    <ChevronLeft onClick={() => router.back()} />
+                </div>
+            )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
-            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20')}>
+            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
