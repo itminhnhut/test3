@@ -317,7 +317,7 @@ const FuturesCloseOrder = ({ isVisible, onClose, order, marketWatch, lastPrice, 
                 </ModalV2>
             ) : (
                 <ModalV2 className="!max-w-[800px]" isVisible={isVisible} onBackdropCb={onClose}>
-                    <div className="flex items-center justify-between mt-4 mb-8">
+                    <div className="flex items-center justify-between mb-8">
                         <div className="text-2xl font-semibold">{t('futures:close_order:title')}</div>
                         <div className="flex items-center space-x-2">
                             <span className="text-txtSecondary dark:text-txtSecondary">{t('futures:mobile:adjust_margin:close_partially')}</span>
