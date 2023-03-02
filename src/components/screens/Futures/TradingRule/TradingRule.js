@@ -127,7 +127,9 @@ const TradingRules = () => {
                         </Tooltip>
                     )}
                     <div
-                        className="text-sm flex items-center space-x-1 md:space-x-3 border-b border-dashed border-divider dark:border-divider-dark"
+                        className={`text-sm flex items-center space-x-1 md:space-x-3 ${
+                            isMobile ? '' : 'border-b border-dashed border-divider dark:border-divider-dark'
+                        }`}
                         data-tip=""
                         data-for={title}
                         id={tooltip}
@@ -238,13 +240,13 @@ const TradingRules = () => {
 
     return (
         <MaldivesLayout>
-            {!isApp && (
-                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+            {isApp && (
+                <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
                     <ChevronLeft onClick={() => router.back()} />
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
-            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20')}>
+            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
