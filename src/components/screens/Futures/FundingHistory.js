@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import Tab from 'components/common/Tab';
 import FundingTab from 'components/screens/Futures/FundingHistoryTabs/FundingTab';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
@@ -10,6 +9,8 @@ import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import useApp from 'hooks/useApp';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { ChevronLeft } from 'react-feather';
+import router from 'next/router';
 
 export const CURRENCIES = [
     {
@@ -53,6 +54,11 @@ export default function FundingHistory(props) {
 
     return (
         <MaldivesLayout>
+            {isApp && (
+                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+                    <ChevronLeft onClick={() => router.back()} />
+                </div>
+            )}
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
                     <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
