@@ -287,8 +287,8 @@ const TradingRules = () => {
                                                 <div className="text-sm leading-6 space-y-4 flex flex-col ">
                                                     {initColumns.map((c) => (
                                                         <div className="flex items-center justify-between">
-                                                            <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
-                                                            <div className="text-gray-4">{renderContent(c.title, item)} </div>
+                                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
+                                                            <div className="text-txtPrimary dark:text-gray-4">{renderContent(c.title, item)} </div>
                                                         </div>
                                                     ))}
                                                 </div>
