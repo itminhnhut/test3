@@ -41,8 +41,11 @@ function NewReference() {
     const [swiper, setSwiper] = useState(null);
     const slideTo = (index) => swiper.slideTo(index);
     const user = useSelector(state => state.auth.user) || null;
+    const [loadingOverviewData, setLoadingOverviewData] = useState(false)
 
     useEffect(() => {
+        setLoadingOverviewData(true)
+
         FetchApi({
             url: API_NEW_REFERRAL_OVERVIEW,
             options: {
@@ -54,7 +57,10 @@ function NewReference() {
             } else {
                 setOverviewData(null);
             }
+        }).finally(() => {
+            setLoadingOverviewData(false)
         });
+
         FetchApi({
             url: API_NEW_REFERRAL_CONFIG,
             options: {
@@ -115,7 +121,7 @@ function NewReference() {
             >
                 <SwiperSlide id={tabs.Overview} key={0}>
                     <div className='overflow-y-auto overflow-x-hidden no-scrollbar max-h-[calc(100vh-45px)] w-screen pb-12'>
-                        <Overview data={overviewData} commisionConfig={config} user={user} />
+                        <Overview data={overviewData} commisionConfig={config} user={user} loading={loadingOverviewData} />
                         <div className='h-8'></div>
                         <Info data={overviewData} user={user} />
                         <div className='h-8'></div>
@@ -144,7 +150,7 @@ function NewReference() {
                 </SwiperSlide>
             </Swiper>
         )
-    }, [overviewData])
+    }, [overviewData, loadingOverviewData])
 
     return (
         <MobileFont>
