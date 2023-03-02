@@ -100,7 +100,7 @@ const CryptoSelect = ({ t, selected }) => {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center">
                         <AssetLogo assetCode={selected?.assetCode} size={24} />
-                        <div className="ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark">{selected?.assetCode || '--'}</div>
+                        <div className="ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{selected?.assetCode || '--'}</div>
                     </div>
                     <ChevronDown className={open ? '!rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
@@ -122,7 +122,7 @@ const CryptoSelect = ({ t, selected }) => {
                         </div>
                     </div>
                     <div className="overflow-y-auto flex-1 space-y-3">
-                        {!items.length && <NoData />}
+                        {!items.length && <NoData isSearch={!!search} />}
                         {items.map((c) => {
                             return (
                                 <div
@@ -209,6 +209,7 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
                         </div>
                     </div>
                     <div className="overflow-y-auto space-y-3">
+                        {!items.length && <NoData isSearch={!!search} />}
                         {items.map((item) => {
                             return (
                                 <div
@@ -236,9 +237,9 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
 const ExchangeDeposit = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
-    const [status, setStatus] = useState('all');
+    const [status, setStatus] = useState(null);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
+    const [currentPage, setCurrentPage] = useState(1);
     // Rdx
     const paymentConfigs = useSelector((state) => state.wallet.paymentConfigs);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
@@ -430,7 +431,7 @@ const ExchangeDeposit = () => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.address ? <Check size={16} color={colors.teal} /> : <Copy size={16} />}
+                        {state.isCopying?.address ? <Check size={24} color={colors.teal} /> : <Copy size={24} />}
                     </span>
                 </CopyToClipboard>
             </div>
@@ -615,6 +616,8 @@ const ExchangeDeposit = () => {
 
     const renderDepHistory = useCallback(() => {
         const data = state.histories || [];
+        const dataFilter = status ? data.filter((rs) => rs.status === status) : data;
+
         let tableStatus;
 
         const columns = [
@@ -683,17 +686,17 @@ const ExchangeDeposit = () => {
                 render: (status) =>
                     ({
                         [DepWdlStatus.Success]: (
-                            <TagV2 className="ml-auto" type="success">
+                            <TagV2 icon={false} className="ml-auto" type="success">
                                 {t('common:success')}
                             </TagV2>
                         ),
                         [DepWdlStatus.Pending]: (
-                            <TagV2 className="ml-auto" type="warning">
+                            <TagV2 icon={false} className="ml-auto" type="warning">
                                 {t('common:pending')}
                             </TagV2>
                         ),
                         [DepWdlStatus.Declined]: (
-                            <TagV2 className="ml-auto" type="failed">
+                            <TagV2 icon={false} className="ml-auto" type="failed">
                                 {t('common:declined')}
                             </TagV2>
                         )
@@ -708,19 +711,15 @@ const ExchangeDeposit = () => {
         return (
             <TableV2
                 useRowHover
-                data={data}
+                data={dataFilter}
                 columns={columns}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
                 pagingClassName="border-none"
-                pagingPrevNext={{
-                    page: state.historyPage,
-                    histories: state.histories, // TODO: change this to hasNext
-                    onChangeNextPrev: (delta) => setState({ historyPage: state.historyPage + delta }),
-                    language
-                }}
-                isNamiV2
+                limit={10}
+                page={currentPage}
+                onChangePage={setCurrentPage}
             />
         );
     }, [state.loadingHistory, state.histories, state.blockConfirm, width, status]);
@@ -811,7 +810,7 @@ const ExchangeDeposit = () => {
     const listStatus = [
         {
             label: t('common:all'),
-            value: 'all'
+            value: null
         },
         {
             label: t('common:success'),
@@ -894,19 +893,19 @@ const ExchangeDeposit = () => {
                     </div>
 
                     <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
-                    {/* <div className="space-x-3 flex items-center my-6">
+                    <div className="space-x-3 flex items-center my-6">
                         {listStatus.map((rs, i) => (
                             <div
                                 key={i}
                                 onClick={() => setStatus(rs.value)}
-                                className={`px-5 py-3 border text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark w-max rounded-full cursor-pointer ${
-                                    status === rs.value ? '!text-teal font-semibold !border-teal' : ''
+                                className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
+                                    status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
                                 }`}
                             >
                                 {rs.label}
                             </div>
                         ))}
-                    </div> */}
+                    </div>
                     <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32">{renderDepHistory()}</div>
                 </div>
             </Background>

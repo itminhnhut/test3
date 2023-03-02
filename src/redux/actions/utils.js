@@ -144,7 +144,7 @@ export const getDecimalSpotPrice = memoize(
 export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
     let params = {};
     if (typeof window !== 'undefined') {
-        const currentUrl = window.location.href
+        const currentUrl = window.location.href;
 
         const _options = defaults(options, {
             redirect: currentUrl,
@@ -160,9 +160,8 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const theme = localStorage?.getItem('theme') ?? 'light';
 
-        let language = 'vi'
-        if(!currentUrl.includes('/vi')) language = 'en'
-
+        let language = 'vi';
+        if (!currentUrl.includes('/vi')) language = 'en';
 
         params = {
             ..._options,
@@ -1118,7 +1117,7 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
             }
         >
             <span>{title}</span>
-            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} />}
+            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} color={colors.teal} />}
         </div>
     );
 });
