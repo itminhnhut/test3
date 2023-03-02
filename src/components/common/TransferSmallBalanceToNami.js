@@ -27,7 +27,7 @@ const TransferSmallBalanceToNami = ({ width, className }) => {
                 wrapClassName='py-[30px]'
             >
                 <div className='pt-4'>
-                    <span>Chuyển đối số dư nhỏ</span>
+                    <span>{t('wallet:convert_small_balance')}</span>
                 </div>
             </ModalV2>
         </>
