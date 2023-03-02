@@ -476,7 +476,7 @@ const CloseOrderModalMobile = ({
                         }
                     </div>
                 }
-                <div className="mt-6">
+                <div className="mt-12">
                     <Button
                         onusMode={true}
                         title={

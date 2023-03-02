@@ -138,14 +138,14 @@ export const SupportCategories = {
                 iconUrl: '',
                 subCats: []
             },
-            {
-                id: CatsKey.TokenPrediction,
-                title: 'Token dự đoán',
-                slug: 'faq-vi-token-prediction',
-                displaySlug: 'token-prediction',
-                description: 'Các thông tin liên quan đến Token Dự đoán - sản phẩm đột phá mới của Nami Exchange',
-                iconUrl: ''
-            },
+            // {
+            //     id: CatsKey.TokenPrediction,
+            //     title: 'Token dự đoán',
+            //     slug: 'faq-vi-token-prediction',
+            //     displaySlug: 'token-prediction',
+            //     description: 'Các thông tin liên quan đến Token Dự đoán - sản phẩm đột phá mới của Nami Exchange',
+            //     iconUrl: ''
+            // },
             {
                 id: CatsKey.FuturesTrading,
                 title: 'Giao dịch Futures',
@@ -190,22 +190,22 @@ export const SupportCategories = {
                 description: 'Chương trình trả lãi ngày với lãi suất năm 12.79% với VNDC và 6% với USDT',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.Others,
-                title: 'Chuyên mục khác',
-                slug: 'faq-vi-chuyen-muc-khac',
-                displaySlug: 'chuyen-muc-khac',
-                description: 'Thông tin về điều khoản sử dụng sản phẩm dịch vụ',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'rules_condition',
-                        title: 'Điều khoản và điều kiện',
-                        slug: 'faq-vi-dieu-khoan-va-dieu-kien',
-                        displaySlug: 'dieu-khoan-va-dieu-kien'
-                    }
-                ]
-            },
+            // {
+            //     id: CatsKey.Others,
+            //     title: 'Chuyên mục khác',
+            //     slug: 'faq-vi-chuyen-muc-khac',
+            //     displaySlug: 'chuyen-muc-khac',
+            //     description: 'Thông tin về điều khoản sử dụng sản phẩm dịch vụ',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'rules_condition',
+            //             title: 'Điều khoản và điều kiện',
+            //             slug: 'faq-vi-dieu-khoan-va-dieu-kien',
+            //             displaySlug: 'dieu-khoan-va-dieu-kien'
+            //         }
+            //     ]
+            // },
             {
                 id: CatsKey.BusinessPartner,
                 title: 'Hợp tác kinh doanh',
@@ -328,14 +328,14 @@ export const SupportCategories = {
                 description: 'Information about Swap product on Nami Exchange',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.TokenPrediction,
-                title: 'Token Prediction',
-                slug: 'faq-en-token-prediction',
-                displaySlug: 'token-prediction',
-                description: "Information about Token Prediction - Nami Exchange's new breakthrough product",
-                iconUrl: ''
-            },
+            // {
+            //     id: CatsKey.TokenPrediction,
+            //     title: 'Token Prediction',
+            //     slug: 'faq-en-token-prediction',
+            //     displaySlug: 'token-prediction',
+            //     description: "Information about Token Prediction - Nami Exchange's new breakthrough product",
+            //     iconUrl: ''
+            // },
             {
                 id: CatsKey.FuturesTrading,
                 title: 'Futures Trading',
@@ -380,22 +380,22 @@ export const SupportCategories = {
                 description: 'Information about Daily Staking program with APY 12.79% for VNDC and 6% for USDT',
                 iconUrl: ''
             },
-            {
-                id: CatsKey.Others,
-                title: 'Other topics',
-                slug: 'faq-en-other-topics',
-                displaySlug: 'other-topics',
-                description: 'Information about Terms of use of products and services',
-                iconUrl: '',
-                subCats: [
-                    {
-                        id: 'rules_condition',
-                        title: 'Nami Terms of Use',
-                        slug: 'faq-en-nami-terms-of-use',
-                        displaySlug: 'nami-terms-of-use'
-                    }
-                ]
-            },
+            // {
+            //     id: CatsKey.Others,
+            //     title: 'Other topics',
+            //     slug: 'faq-en-other-topics',
+            //     displaySlug: 'other-topics',
+            //     description: 'Information about Terms of use of products and services',
+            //     iconUrl: '',
+            //     subCats: [
+            //         {
+            //             id: 'rules_condition',
+            //             title: 'Nami Terms of Use',
+            //             slug: 'faq-en-nami-terms-of-use',
+            //             displaySlug: 'nami-terms-of-use'
+            //         }
+            //     ]
+            // },
             {
                 id: CatsKey.BusinessPartner,
                 title: 'Business Cooperation',
