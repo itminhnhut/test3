@@ -454,6 +454,28 @@ const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
     onClick: onClick
 }))``;
 
+const ModalConvertSmallBalance = ({ isShowModalConvertSmallBalance }) => {
+    return (
+        <ModalV2 isVisible={keys.length !== 0 && isShowAction[keys[0]]} onBackdropCb={onBackdropCb} wrapClassName="px-6" isMobile={true} onHandleClick>
+            <div className="mt-2 text-left">
+                {listActions.map((item, idx) => (
+                    <div key={`action_btn_` + item + '_'} className="first:mt-0 mt-3">
+                        <ButtonV2 variants="text" className="w-auto" onClick={() => onHandleClick(item + keys[0])}>
+                            {item === DEPOSIT
+                                ? t('common:deposit')
+                                : item === WITHDRAW
+                                    ? t('common:withdraw')
+                                    : item === TRANSFER
+                                        ? t('common:transfer')
+                                        : null}
+                        </ButtonV2>
+                    </div>
+                ))}
+            </div>
+        </ModalV2>
+    )
+}
+
 const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
     const keys = Object.keys(isShowAction);
     const { DEPOSIT, WITHDRAW, TRANSFER } = ActionCategory;
