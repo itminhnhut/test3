@@ -3,7 +3,7 @@ import { LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useState } from 'react';
 
-const TransferSmallBalanceToNami = ({ width, className }) => {
+const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
     const [isShowPoppup, setIsShowPoppup] = useState(false)
 
@@ -26,8 +26,17 @@ const TransferSmallBalanceToNami = ({ width, className }) => {
                 className="!max-w-[488px]"
                 wrapClassName='py-[30px]'
             >
-                <div className='pt-4'>
-                    <span>{t('wallet:convert_small_balance')}</span>
+                <div className='pt-4 text-gray-15 dark:text-gray-4 tracking-normal text-base'>
+                    <span className='txtPri-3'>{t('wallet:convert_small_balance')}</span>
+                    <div className='bg-white mt-6 max-w-[508px] overflow-hidden overflow-y-auto'>
+                        {allAssets.map(item => {
+                            console.log("allAssets", item);
+                            const { assetCode } = item
+                            return <div className='py-2'>
+                                {assetCode}
+                            </div>
+                        })}
+                    </div>
                 </div>
             </ModalV2>
         </>
