@@ -51,16 +51,14 @@ export const TableFilter = ({
         switch (object.type) {
             case 'daterange':
                 return (
-                    <div className='flex justify-center w-full'>
-                        <DatePickerV2
-                            initDate={filter[key]?.value}
-                            onChange={e => onChange(e?.selection)}
-                            month={2}
-                            hasShadow
-                            position={object?.position || 'center'}
-                            wrapperClassname='!w-full'
-                        />
-                    </div>
+                    <DatePickerV2
+                        initDate={filter[key]?.value}
+                        onChange={e => onChange(e?.selection)}
+                        month={2}
+                        hasShadow
+                        position={object?.position || 'center'}
+                        wrapperClassname='!w-full'
+                    />
                 );
             case 'popover':
                 return <Popover className='relative w-full'>
@@ -90,14 +88,14 @@ export const TableFilter = ({
                             >
                                 <Popover.Panel
                                     className='absolute z-10 bg-white dark:bg-darkBlue-3 rounded-md border border-divider dark:border-divider-dark w-full mt-2'>
-                                    <div
-                                        className='h-full py-1 shadow-onlyLight text-sm flex flex-col'>
+                                    <ul
+                                        className='h-full py-4 shadow-onlyLight flex flex-col txtSecond-3'>
                                         {object.values.map((e, index) => (
-                                            <div key={index}
-                                                className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5', {
-                                                    'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
-                                                    'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
-                                                    'bg-gray-13 dark:bg-dark-5': e.value === filter[key]?.value
+                                            <li key={index}
+                                                className={classNames('h-10 px-4 py-2 flex items-center cursor-pointer hover:bg-gray-13 dark:hover:bg-dark-5 mt-2 first:mt-0', {
+                                                    // 'font-semibold text-txtPrimary dark:text-txtPrimary-dark': e.value === null, // Is `All` option
+                                                    // 'text-txtSecondary dark:text-txtSecondary-dark': e.value !== null,
+                                                    'bg-gray-13 dark:bg-dark-5 font-semibold text-gray-15 dark:text-gray-4': e.value === filter[key]?.value
                                                 })}
                                                 onClick={() => {
                                                     onChange(e.value);
@@ -105,9 +103,9 @@ export const TableFilter = ({
                                                 }}
                                             >
                                                 {e.title}
-                                            </div>
+                                            </li>
                                         ))}
-                                    </div>
+                                    </ul>
                                 </Popover.Panel>
                             </Transition>
                         </div>
@@ -137,7 +135,7 @@ export const TableFilter = ({
         }
     };
     const filterArray = Object.keys(filters);
-    return filterArray.map((key) => <div className='flex flex-col items-start justify-end w-auto flex-auto last:flex-none' key={key}>
+    return filterArray.map((key) => <div className={`flex flex-col items-start justify-end w-auto ${filters[key]?.childClassName || ''}`} key={key}>
         <div className='text-txtSecondary dark:text-txtSecondary-dark mb-3 text-xs'>
             {filters[key].title}
         </div>

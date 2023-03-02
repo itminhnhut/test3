@@ -34,40 +34,40 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
             mode === ''
                 ? pairConfigs
                 : pairConfigs?.filter((i) => {
-                      if (mode === 'Starred') return favoritePairs.find((rs) => rs.replace('_', '') === i.symbol);
-                      return i.quoteAsset === mode;
-                  });
+                    if (mode === 'Starred') return favoritePairs.find((rs) => rs.replace('_', '') === i.symbol);
+                    return i.quoteAsset === mode;
+                });
 
         data = data.map((item) => pick(item, ['pair', 'symbol', 'baseAsset', 'quoteAsset', 'pricePrecision']));
 
         data.forEach((item) => {
             const pairTicker = marketWatch[item?.pair]
-            if(pairTicker){
+            if (pairTicker) {
                 item?.lastPrice = pairTicker?.lastPrice
                 item?.priceChangePercent = pairTicker?.priceChangePercent
             }
         });
-         // sort by field
-         if (Object.keys(sortBy)?.length) {
+        // sort by field
+        if (Object.keys(sortBy)?.length) {
             const _s = Object.entries(sortBy)[0];
-            if(_s[1] !== undefined) {
+            if (_s[1] !== undefined) {
                 data = orderBy(data, [(o) => {
-                    const value =  o[`${_s[0]}`]
-                    return value ? value : _s[1] ? 1000000 : -1000000} ], [`${_s[1] ? 'asc' : 'desc'}`]
+                    const value = o[`${_s[0]}`]
+                    return value ? value : _s[1] ? 1000000 : -1000000
+                }], [`${_s[1] ? 'asc' : 'desc'}`]
                 );
             }
         }
 
         // filter search
         if (search) {
-            console.log("search: ", search);
             const _search = search?.replace('/', '').toLowerCase();
             data = data?.filter((o) => o?.pair?.toLowerCase().includes(_search));
         }
 
         setDataTable(data);
     }, [mode, favoritePairs, pairConfigs, marketWatch, sortBy, search]);
-    
+
     // End sort function,
     const renderPairListItemsV2 = useCallback(() => {
         return dataTable?.map((pair) => {
@@ -118,14 +118,13 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     );
 
     const setSorter = (key) => {
-        setSortBy(prev => prev?.[key] === undefined ? { [key]:true } : prev?.[key] ? { [key]:false } : { [key]:undefined })
+        setSortBy(prev => prev?.[key] === undefined ? { [key]: true } : prev?.[key] ? { [key]: false } : { [key]: undefined })
     }
 
     return (
         <div
-            className={`${
-                !activePairList ? 'hidden' : ''
-            } py-4 min-w-[400px] border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
+            className={`${!activePairList ? 'hidden' : ''
+                } py-4 min-w-[400px] border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
             shadow-card_light dark:shadow-popover rounded-md ${className}`}
         >
             <div className="max-h-[352px] flex flex-col">
@@ -157,16 +156,16 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     }}
                     className="px-4 mt-7 mb-4 flex items-center justify-between font-normal text-xs text-txtSecondary dark:text-txtSecondary-dark"
                 >
-                    <div onClick={() =>setSorter('symbol') } style={{ flex: '1 1 0%' }} className="flex justify-start items-center select-none">
+                    <div onClick={() => setSorter('symbol')} style={{ flex: '1 1 0%' }} className="flex justify-start items-center select-none">
                         {t('common:asset')}
                         <Sorter isUp={sortBy?.[`symbol`]} />
                     </div>
-                    <div onClick={() =>setSorter('lastPrice') } style={{ flex: '1 1 0%' }} className="flex justify-end items-center select-none">
+                    <div onClick={() => setSorter('lastPrice')} style={{ flex: '1 1 0%' }} className="flex justify-end items-center select-none">
                         {t('common:last_price')}
                         <Sorter isUp={sortBy?.[`lastPrice`]} />
                     </div>
                     <div onClick={() => setSorter('priceChangePercent')} style={{ flex: '1 1 0%' }} className="flex justify-end items-center select-none">
-                    {t('futures:24h_change')}
+                        {t('futures:24h_change')}
                         <Sorter isUp={sortBy?.[`priceChangePercent`]} />
                     </div>
                 </div>

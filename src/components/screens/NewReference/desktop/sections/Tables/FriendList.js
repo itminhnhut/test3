@@ -148,23 +148,26 @@ const FriendList = ({
             value: null,
             values: null,
             title: t('reference:referral.referral_date'),
-            position: 'center'
+            position: 'center',
+            childClassName: 'min-w-[240px]'
         },
         status: {
             type: 'popover',
             value: null,
             values: statuses,
-            title: t('reference:referral.status')
+            title: t('reference:referral.status'),
+            childClassName: 'min-w-[240px]'
         },
         total_commissions: {
             type: 'daterange',
             value: {
                 startDate: null,
-                endDate: new Date(),
+                endDate: null,
                 key: 'selection'
             },
             values: null,
-            title: t('reference:referral.total_commissions')
+            title: t('reference:referral.total_commissions'),
+            childClassName: 'min-w-[240px]'
         },
         reset: {
             type: 'reset'
@@ -269,7 +272,7 @@ const FriendList = ({
             align: 'left',
             width: 130,
             render: (data, item) => <div
-                className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd-MM-yyyy') : null}</div>
+                className='font-normal'>{(data && isValid(new Date(data))) ? formatTime(new Date(data), 'dd/MM/yyyy') : null}</div>
         }, {
             key: 'kycStatus',
             dataIndex: 'kycStatus',
