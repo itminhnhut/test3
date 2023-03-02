@@ -34,7 +34,8 @@ const RefDesktopScreen = () => {
         i18n: { language }
     } = useTranslation();
     const { width } = useWindowSize();
-    const [tab, setTab] = useState(tabs.Overview);
+    // const [tab, setTab] = useState(tabs.Overview);
+    const [tab, setTab] = useState(tabs.FriendList);
     const [overviewData, setOverviewData] = useState();
     const [config, setConfig] = useState(commisionConfig);
     const contentRef = useRef(null);
