@@ -139,6 +139,8 @@ const DatePickerV2 = ({
         }
     };
 
+    console.log("_____", date);
+
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? <div onClick={() => setShowPicker(!showPicker)}>{text}</div> : <div
@@ -154,9 +156,10 @@ const DatePickerV2 = ({
                     <div className='px-2 leading-5'>
                         {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
                         {!isCalendar &&
-                            (date?.startDate
-                                ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
-                                : 'DD/MM/YYYY - DD/MM/YYYY')}
+                            (date?.startDate ? formatTime(date?.startDate, 'dd/MM/yyyy') : 'DD/MM/YYYY')
+                            + ' - ' +
+                            (date?.endDate ? formatTime(date?.endDate, 'dd/MM/yyyy') : 'DD/MM/YYYY')
+                        }
                     </div>
                     {
                         issetValue ?

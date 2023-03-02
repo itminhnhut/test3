@@ -45,30 +45,34 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
             type: 'daterange',
             value: {
                 startDate: null,
-                endDate: new Date(),
+                endDate: null,
                 key: 'selection'
             },
             values: null,
             title: t('reference:referral.date'),
-            position: 'left'
+            position: 'left',
+            childClassName: 'min-w-[240px]'
         },
         level: {
             type: 'popover',
             value: null,
             values: levelTabs,
-            title: t('reference:referral.level')
+            title: t('reference:referral.level'),
+            childClassName: 'flex-1'
         },
         commission_type: {
             type: 'popover',
             value: null,
             values: typeTabs,
-            title: t('reference:referral.commission_type')
+            title: t('reference:referral.commission_type'),
+            childClassName: 'flex-1'
         },
         asset_type: {
             type: 'popover',
             value: null,
             values: assetTabs,
-            title: t('reference:referral.asset_type')
+            title: t('reference:referral.asset_type'),
+            childClassName: 'flex-1'
         },
         reset: {
             type: 'reset'
