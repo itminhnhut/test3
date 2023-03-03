@@ -549,6 +549,8 @@ const MarketTable = ({
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
+    console.log(restProps.futuresConfigs)
+
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
             <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
@@ -632,7 +634,10 @@ const MarketTable = ({
                                 onClick={async () => {
                                     if (isLoading) return
                                     await addTokensToFav({
-                                        symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
+                                        symbols: restProps?.favType + 1 === 1  ? restProps?.suggestedSymbols?.map(e => {
+                                            const pairConfig = restProps.futuresConfigs.find(config => config.pair == (e.b + e.q))
+                                            return pairConfig?.baseAssetId + '_' + pairConfig?.quoteAssetId
+                                        }) : restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
                                         lang: language,
                                         mode: restProps?.favType + 1,
                                         favoriteRefresher: restProps.favoriteRefresher,
