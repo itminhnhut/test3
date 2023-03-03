@@ -15,7 +15,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 // import Copy from 'components/svg/Copy';
 import { assetCodeFromId } from 'utils/reference-utils';
 import { KYC_STATUS } from 'redux/actions/const';
-import { map, omit } from 'lodash';
+import { map, omit, result } from 'lodash';
 import TagV2 from 'components/common/V2/TagV2';
 import { isValid } from 'date-fns';
 import NoData from 'components/common/V2/TableV2/NoData';
@@ -24,6 +24,7 @@ import { CopyIcon } from 'components/screens/NewReference/PopupModal';
 import {
     API_NEW_REFERRAL
 } from 'redux/actions/apis';
+
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
@@ -184,12 +185,11 @@ const FriendList = ({
         total: 0
     });
     const [commissionByFriendDetail, setCommissionByFriendDetail] = useState(null);
-
     const getListFriends = _.throttle(async () => {
         const params = {
             invitedAt: filter.introduced_on.value ? new Date(filter.introduced_on.value).getTime() : null,
             from: filter?.total_commissions?.value?.startDate ? new Date(filter?.total_commissions?.value?.startDate).getTime() : null,
-            to: new Date(filter?.total_commissions?.value?.endDate).getTime() ?? new Date().getTime(),
+            to: filter?.total_commissions?.value?.endDate ? new Date(filter?.total_commissions?.value?.endDate).getTime() + 86400000 : new Date().getTime(),
             kycStatus: filter.status.value
         };
         try {
@@ -214,7 +214,9 @@ const FriendList = ({
 
     useEffect(() => {
         setPage(1)
-        getListFriends();
+        if (page === 1) {
+            getListFriends();
+        }
     }, [filter]);
 
     useEffect(() => {

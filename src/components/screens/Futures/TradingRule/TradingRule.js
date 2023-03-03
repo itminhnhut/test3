@@ -127,7 +127,9 @@ const TradingRules = () => {
                         </Tooltip>
                     )}
                     <div
-                        className="text-sm flex items-center space-x-1 md:space-x-3 border-b border-dashed border-divider dark:border-divider-dark"
+                        className={`text-sm flex items-center space-x-1 md:space-x-3 ${
+                            isMobile ? '' : 'border-b border-dashed border-divider dark:border-divider-dark'
+                        }`}
                         data-tip=""
                         data-for={title}
                         id={tooltip}
@@ -238,13 +240,13 @@ const TradingRules = () => {
 
     return (
         <MaldivesLayout>
-            {!isApp && (
-                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+            {isApp && (
+                <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
                     <ChevronLeft onClick={() => router.back()} />
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
-            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20')}>
+            <div className={classNames('mt-10 sm:mt-20 mx-4 pb-20', { 'pt-12': isApp })}>
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto">
                     <div className="flex justify-between mb-7 sm:mb-20">
                         <div className="text-xl sm:text-[2rem] sm;leading-[2.375rem] font-semibold ">{t('futures:trading_rules')}</div>
@@ -285,8 +287,10 @@ const TradingRules = () => {
                                                 <div className="text-sm leading-6 space-y-4 flex flex-col ">
                                                     {initColumns.map((c) => (
                                                         <div className="flex items-center justify-between">
-                                                            <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
-                                                            <div className="text-gray-4">{renderContent(c.title, item)} </div>
+                                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                                {renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}
+                                                            </div>
+                                                            <div className="text-txtPrimary dark:text-gray-4">{renderContent(c.title, item)} </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -345,12 +349,12 @@ const GlossaryModal = ({ isVisible, onClose }) => {
     const { t } = useTranslation();
     return (
         <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose} isMobile>
-            <div className="text-xl mb-8">{t('futures:the_glossary')}</div>
-            <div className="divide-y divide-divider-dark">
+            <div className="text-2xl font-semibold mb-8">{t('futures:the_glossary')}</div>
+            <div className="divide-y divide-divider dark:divide-divider-dark">
                 {initColumns.map((rs) => (
                     <div className="flex items-center justify-between text-sm space-x-7 w-full py-3">
                         <lable className="font-semibold min-w-[120px] max-w-[120px]">{t(`futures:${rs.title}`)}</lable>
-                        <span className="text-txtSecondary-dark w-full">{t(`futures:${rs.tooltip}`)}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark w-full">{t(`futures:${rs.tooltip}`)}</span>
                     </div>
                 ))}
             </div>

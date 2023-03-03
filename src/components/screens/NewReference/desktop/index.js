@@ -40,7 +40,9 @@ const RefDesktopScreen = () => {
     const contentRef = useRef(null);
     const tabRef = useRef(null);
     const user = useSelector(state => state.auth.user) || null;
+    const [loadingOverviewData, setLoadingOverviewData] = useState(false)
     const fetchData = () => {
+        setLoadingOverviewData(true)
         FetchApi({
             url: API_NEW_REFERRAL_OVERVIEW,
             options: {
@@ -56,6 +58,9 @@ const RefDesktopScreen = () => {
                 } else {
                     setOverviewData(null);
                 }
+            })
+            .finally(() => {
+                setLoadingOverviewData(false)
             });
         FetchApi({
             url: API_NEW_REFERRAL_CONFIG,
@@ -104,7 +109,7 @@ const RefDesktopScreen = () => {
     return (
         <div className='h-auto w-full bg-gray-13 dark:bg-transparent' style={{ paddingTop: DESKTOP_NAV_HEIGHT }}>
             <div className='space-y-20' ref={contentRef}>
-                <Overview t={t} data={overviewData} refreshData={fetchData} commisionConfig={config} width={width} user={user} />
+                <Overview t={t} data={overviewData} refreshData={fetchData} commisionConfig={config} width={width} user={user} loading={loadingOverviewData} />
                 <div className='w-full container max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 !mb-[7.5rem]'>
                     <Tabs ref={tabRef} tab={tab} className='gap-6 border-b border-divider dark:border-divider-dark mb-12' isMobile>
                         <TabItem className='!text-left !px-0' value={tabs.Overview}

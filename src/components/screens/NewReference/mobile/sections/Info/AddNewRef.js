@@ -41,6 +41,42 @@ const AddNewRef = ({
     const [isDefault, setIsDefault] = useState(false);
     const [currentTheme] = useDarkMode();
 
+    useEffect(() => {
+        initCode();
+    }, []);
+
+    const initCode = async () => {
+        let result = generateCharacters();
+        if (result) {
+            const { data } = await FetchApi({
+                url: API_NEW_REFERRAL_CHECK_REF,
+                options: {
+                    method: 'GET'
+                },
+                params: {
+                    code: result
+                }
+            })
+            if (data) {
+                initCode();
+            } else {
+                setRefCode(result)
+            }
+        }
+    };
+
+    const generateCharacters = (length = 8) => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            counter += 1;
+        }
+        return result;
+    };
+
     const handleInputRefCode = (e) => {
         const text = e?.target?.value;
         if (text.length > 8) return;

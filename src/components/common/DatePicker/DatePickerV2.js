@@ -12,6 +12,7 @@ import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import styled from 'styled-components';
 
 const DatePickerV2 = ({
     initDate,
@@ -43,16 +44,12 @@ const DatePickerV2 = ({
     useOutsideClick(wrapperRef, handleOutside);
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
-
     // Handle custom
     const [date, setDate] = useState({
-        startDate: null, endDate: null,
+        startDate: null,
+        endDate: null,
         key: 'selection'
     })
-
-    useState(() => {
-        if (initDate) setDate(initDate)
-    }, [])
 
     const onDatesChange = (e) => {
         if (isCalendar) {
@@ -68,7 +65,8 @@ const DatePickerV2 = ({
     };
 
     const onConfirm = () => {
-        onChange({ selection: date });
+        if (initDate?.startDate !== date?.startDate || initDate !== date?.endDate)
+            onChange({ selection: date });
         setShowPicker(false);
     }
 
@@ -95,7 +93,21 @@ const DatePickerV2 = ({
         );
     };
 
-    const issetValue = isCalendar ? date : date?.startDate;
+    const issetValue = isCalendar ? date : date?.startDate || date?.endDate;
+
+    console.log("___date: ", date.startDate, date.endDate);
+    useEffect(() => {
+        if (!date?.endDate && date?.startDate) {
+            console.log("___here: ");
+            setDate(
+                {
+                    ...date,
+                    startDate: null,
+                    endDate: date.startDate
+                }
+            )
+        }
+    }, [date.startDate])
 
     const clearInputData = () => {
         setDate({
@@ -139,7 +151,6 @@ const DatePickerV2 = ({
         }
     };
 
-    console.log("_____", date);
 
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
@@ -149,7 +160,6 @@ const DatePickerV2 = ({
                     '!border-teal': showPicker
                 }
                 )}
-                // onClick={() => setShowPicker(!showPicker)}
                 onClick={() => onHandleClick('show_modal')}
             >
                 <div className='flex flex-1 items-center justify-between'>
@@ -189,25 +199,32 @@ const DatePickerV2 = ({
                             'absolute left-1/2 z-20 !w-auto -translate-x-1/2': position === 'center'
                         })}
                 >
-                    <Component
-                        className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
-                        date={date}
-                        ranges={!isCalendar ? [date] : []}
-                        months={month ?? 1}
-                        onChange={onDatesChange}
-                        moveRangeOnFirstSelection={isCalendar}
-                        direction='horizontal'
-                        staticRanges={[]}
-                        inputRanges={[]}
-                        weekStartsOn={0}
-                        rangeColors={[colors.teal]}
-                        editableDateInputs={true}
-                        retainEndDateOnFirstSelection
-                        navigatorRenderer={navigatorRenderer}
-                        locale={language === 'vi' ? vi : en}
-                        color={colors.teal}
-                        monthDisplayFormat='MMMM yyyy'
-                    />
+                    <DatePickerWrapper
+                        noDatePicked={date.startDate === date.endDate}
+                        isDark={theme === THEME_MODE.DARK}
+                    >
+                        <Component
+                            className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
+                            date={date}
+                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date(0) : date?.endDate }] : []}
+                            months={month ?? 1}
+                            onChange={onDatesChange}
+                            // moveRangeOnFirstSelection={isCalendar}
+                            direction='horizontal'
+                            staticRanges={[]}
+                            inputRanges={[]}
+                            weekStartsOn={0}
+                            rangeColors={[colors.teal]}
+                            editableDateInputs={true}
+                            retainEndDateOnFirstSelection
+                            navigatorRenderer={navigatorRenderer}
+                            locale={language === 'vi' ? vi : en}
+                            color={colors.teal}
+                            monthDisplayFormat='MMMM yyyy'
+                            moveRangeOnFirstSelection={false}
+                            showSelectionPreview={true}
+                        />
+                    </DatePickerWrapper>
                     <ButtonV2 onClick={onConfirm} className='mx-6 mt-2 mb-8 w-auto'>
                         {t('common:global_btn.confirm')}
                     </ButtonV2>
@@ -217,3 +234,15 @@ const DatePickerV2 = ({
     );
 };
 export default DatePickerV2;
+
+const DatePickerWrapper = styled.div`
+        ${({ noDatePicked, isDark }) => noDatePicked ? `
+            .rdrInRange {
+                background-color: transparent !important;
+            }
+            .rdrDayNumber {
+                color: ${isDark ? colors.gray['4'] : colors.gray['15']} !important;
+            }
+
+` : null};
+`
