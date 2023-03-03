@@ -242,7 +242,7 @@ const TradingRules = () => {
         <MaldivesLayout>
             {isApp && (
                 <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
-                    <ChevronLeft onClick={() => router.back()} />
+                    <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
