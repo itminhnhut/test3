@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
+import { getS3Url } from 'redux/actions/utils';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
