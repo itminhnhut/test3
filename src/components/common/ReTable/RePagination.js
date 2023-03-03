@@ -19,7 +19,7 @@ import { ChevronLeft, ChevronRight } from 'react-feather';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import { useTranslation } from 'next-i18next';
 
-const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, ...restProps }) => {
+const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNamiV2 = false, pagingPrevNext = {}, onusMode, ...restProps }) => {
     const [currentTheme] = useDarkMode();
     const {
         i18n: { language }
@@ -29,11 +29,11 @@ const RePagination = ({ name, total, current, pageSize, onChange, fromZero, isNa
         name && scrollAfterPageChange(name);
     }, [current, name]);
 
-    const Wapper = NamiV2PaginationWrapper;
+    const Wapper = onusMode ? PaginationWrapper : NamiV2PaginationWrapper;
     if (!_.isEmpty(pagingPrevNext)) {
         const { page, hasNext, onChangeNextPrev } = pagingPrevNext;
 
-        if (page === 0 && !hasNext) return null
+        if (page === 0 && !hasNext) return null;
 
         return (
             <Wapper isDark>
@@ -62,6 +62,72 @@ const scrollAfterPageChange = (id) => {
     const element = document.getElementById(id);
     if (element) window.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
 };
+
+const PaginationWrapper = styled.div`
+    .rc-pagination-item,
+    .rc-pagination-prev button,
+    .rc-pagination-next button {
+        border: none;
+        background-color: transparent;
+
+        a {
+            font-family: Barlow, serif !important;
+            font-weight: 500 !important;
+        }
+
+        @media (min-width: 1366px) {
+            a {
+                font-size: 16px;
+            }
+        }
+    }
+
+    .rc-pagination-item a,
+    .rc-pagination-prev button,
+    .rc-pagination-next button {
+        color: ${({ isDark }) => (isDark ? '#F2F4F6' : '#223050')};
+    }
+
+    .rc-pagination-item-active a,
+    .rc-pagination-item:focus a,
+    .rc-pagination-item:hover a {
+        color: #093dd1 !important;
+    }
+
+    .rc-pagination-jump-prev button:after,
+    .rc-pagination-jump-next button:after {
+        content: '...';
+    }
+
+    .rc-pagination-next button:after,
+    .rc-pagination-prev button:after {
+        margin-top: -0.3rem;
+    }
+
+    .rc-pagination-prev .rc-pagination-item-link,
+    .rc-pagination-next .rc-pagination-item-link {
+        font-size: 28px;
+    }
+
+    .rc-pagination-disabled .rc-pagination-item-link,
+    .rc-pagination-disabled:hover .rc-pagination-item-link,
+    .rc-pagination-disabled:focus .rc-pagination-item-link {
+        color: ${({ isDark }) => (isDark ? '#F2F4F6' : '#223050')};
+    }
+
+    .rc-pagination-prev:focus .rc-pagination-item-link,
+    .rc-pagination-next:focus .rc-pagination-item-link,
+    .rc-pagination-prev:hover .rc-pagination-item-link,
+    .rc-pagination-next:hover .rc-pagination-item-link {
+        color: #093dd1;
+        border-color: #093dd1;
+    }
+    .rc-pagination-item a,
+    .rc-pagination-prev button,
+    .rc-pagination-next button {
+        color: #fff;
+    }
+`;
 
 const NamiV2PaginationWrapper = styled.div`
     .rc-pagination-item-link,
