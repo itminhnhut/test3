@@ -91,14 +91,20 @@ const ModalV2 = ({
                             className
                         )}
                     >
-                        <div className={classnames(`px-8 pb-8 h-full bg-white dark:bg-dark text-base`, { '!px-6 pb-6': isMobile }, wrapClassName)}>
+                        <div
+                            className={classnames(
+                                `px-8 pb-8 h-full bg-white dark:bg-dark text-base`,
+                                { '!px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton },
+                                wrapClassName
+                            )}
+                        >
                             <>
                                 {customHeader
                                     ? customHeader()
                                     : closeButton && (
                                           <div
                                               className={classnames(
-                                                  'flex items-end justify-end sticky top-0 z-10 py-6',
+                                                  'flex items-end justify-end sticky top-0 z-10 py-6 sm:pt-8',
                                                   { 'bg-white dark:bg-dark': isMobile },
                                                   btnCloseclassName
                                               )}

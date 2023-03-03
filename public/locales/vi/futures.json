@@ -432,7 +432,7 @@
     "minimum_leverage": "Đòn bẩy tối thiểu",
     "maximum_leverage": "Đòn bẩy tối đa",
     "positions": "Vị thế",
-    "open_orders": "Lệnh mở",
+    "open_orders": "Lệnh chờ",
     "load_more": "Xem thêm",
     "transaction_histories": "Lịch sử giao dịch",
     "countdown": "Đếm ngược",

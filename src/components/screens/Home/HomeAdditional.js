@@ -51,13 +51,13 @@ const HomeAdditional = ({ currentTheme, t, width }) => {
                                     <div className="homepage-trade3step__horizontal_dot_line" />
                                 </div>
                                 <div className="homepage-trade3step___step___item">
-                                    <Link href={auth ? PATHS.WALLET.EXCHANGE.DEPOSIT : getLoginUrl('sso','login')} passHref>
+                                    <a href={auth ? PATHS.WALLET.EXCHANGE.DEPOSIT : getLoginUrl('sso','login')} passHref>
                                         <div className="homepage-trade3step___step___item___inner">
                                             <Image alt="fiat_crypto" src={getS3Url('/images/screen/homepage/fiat_crypto.webp')} width="48px" height="48px" />
 
                                             <div className="homepage-trade3step___step___item__sublabel">{t('home:trade3step.step_2')}</div>
                                         </div>
-                                    </Link>
+                                    </a>
 
                                     <div className="homepage-trade3step__vertial_dot_line" />
                                     <div className="homepage-trade3step__horizontal_dot_line" />

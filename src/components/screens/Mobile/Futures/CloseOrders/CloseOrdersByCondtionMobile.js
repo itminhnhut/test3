@@ -263,7 +263,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}
                 </div>
-                <div className="w-full flex justify-between gap-[10px] mt-8 h-12">
+                <div className="w-full flex justify-between gap-[10px] mt-12 h-12">
                     <Button
                         onusMode
                         onClick={() => doShow('choose')}

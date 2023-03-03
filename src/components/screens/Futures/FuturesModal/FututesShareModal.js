@@ -3,14 +3,13 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import Button from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
-import { formatTime, TypeTable } from 'redux/actions/utils';
+import { formatTime, TypeTable, getS3Url } from 'redux/actions/utils';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 import ChevronDown from 'components/svg/ChevronDown';
 import colors from 'styles/colors';
 import QRCode from 'qrcode.react';
 import { useSelector } from 'react-redux';
 import DomToImage from 'dom-to-image';
-import { IconLoading } from 'components/common/Icons';
 
 const FututesShareModal = ({ isVisible, onClose, order }) => {
     const marketWatch = useSelector((state) => state.futures.marketWatch);
@@ -88,7 +87,7 @@ const FututesShareModal = ({ isVisible, onClose, order }) => {
                     </Row>
                 </div>
                 <div id="section_bottom" className="absolute bottom-0 left-0 py-3 w-full flex items-center justify-between px-4">
-                    <img className="max-h-6" src="/images/logo/nami-logo-v2.png" />
+                    <img className="max-h-6" src={getS3Url('/images/logo/nami-logo-v2.png')} />
                     <div className="flex items-center space-x-6">
                         <div className="flex flex-col text-white">
                             <span className="text-xs">{t('futures:share:ref_id')}</span>
@@ -118,13 +117,13 @@ const Item = styled.div.attrs({
 const Background = styled.div.attrs({
     className: 'min-h-[380px] bg-dark mb-10 rounded-xl relative p-6 overflow-hidden'
 })`
-    background-image: ${({ negative }) => `url(${`/images/screen/futures/bg_share_${negative ? 'down' : 'up'}.png`})`};
+    background-image: ${({ negative }) => `url(${getS3Url(`/images/screen/futures/bg_share_${negative ? 'down' : 'up'}.png`)})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 
     #section_bottom {
-        background-image: ${({}) => `url(${`/images/screen/futures/bg_share_bottom.png`})`};
+        background-image: ${({}) => `url(${getS3Url(`/images/screen/futures/bg_share_bottom.png`)})`};
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;

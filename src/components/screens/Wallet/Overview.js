@@ -260,10 +260,14 @@ const OverviewWallet = (props) => {
     return (
         <div className="pb-32">
             <MCard
+                style={{
+                    backgroundImage:
+                        `url(${getS3Url(`/images/screen/wallet/overview_background${currentTheme === THEME_MODE.DARK ? '_dark' : ''}.png`)})`
+                }}
                 addClass={`mt-8 p-4 md:p-8 bg-cover 
             ${currentTheme === THEME_MODE.DARK
-                        ? ' bg-namiv2-linear-dark border border-divider-dark'
-                        : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
+                        ? ' border border-divider-dark'
+                        : '  shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
                     }`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">

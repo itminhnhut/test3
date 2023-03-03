@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import React from 'react';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector } from 'react-redux';
-import { getLoginUrl } from 'src/redux/actions/utils';
+import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const NoData = ({ text, loading = false, isSearch = false, className = '' }) => {
@@ -17,7 +17,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
         <div className={`flex flex-col space-y-3 items-center justify-center ${className}`}>
             {!user && !isSearch ? (
                 <>
-                    <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
+                    <img className="max-h-[124px]" src={getS3Url('/images/icon/ic_login.png')} />
                     <div className="flex space-x-1 text-txtSecondary dark:text-darkBlue-5 truncate overflow-x-auto">
                         <a href={getLoginUrl('sso')}>
                             <span

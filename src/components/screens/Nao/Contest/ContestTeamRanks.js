@@ -402,7 +402,7 @@ const ContestTeamRanks = ({
                 </div>
             )}
             <div className="w-full flex justify-center mt-6">
-                <RePagination total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
+                <RePagination onusMode total={total} current={page} pageSize={10} onChange={(page) => setPage(page)} name="" />
             </div>
         </section>
     );

@@ -401,7 +401,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t('futures:mobile:adjust_margin:add_volume')}
-                            className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
+                            className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowAddVol(true)}
@@ -412,7 +412,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
-                            className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
+                            className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={onOpenModify}
@@ -422,7 +422,7 @@ const OrderOpenDetail = ({
                 <div className="w-full">
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] bg-onus-bg3 !text-onus-grey !font-semibold"
+                        className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

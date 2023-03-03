@@ -13,14 +13,14 @@ const FuturesFavoritePairItem = memo(({ pair }) => {
     const negative = pair?.priceChangePercent < 0;
     return (
         <div
-            className="flex flex-col items-center justify-center font-semibold pl-[22px] pr-[22px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
+            className="flex flex-col items-start justify-center font-semibold pl-[22px] pr-[22px] h-full hover:bg-hover dark:hover:bg-hover-dark cursor-pointer select-none"
             onClick={() => !active && router.push(PATHS.FUTURES_V2.DEFAULT + `/${pair?.symbol}`)}
         >
             <div className="text-sm mb-[2px]">
                 {pair?.baseAsset}/{pair?.quoteAsset}
             </div>
             <div
-                className={classNames('tracking-wide text-xs flex items-center', {
+                className={classNames('tracking-wide text-xs flex', {
                     'text-red': negative,
                     'text-dominant': !negative
                 })}
