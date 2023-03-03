@@ -250,7 +250,7 @@ const TransferModal = ({ isMobile, alert }) => {
         } catch (e) {
             console.error('Swap error: ', e);
         } finally {
-            setState({ isPlacingOrder: false });
+            setState({ isPlacingOrder: false, amount: '' });
         }
     };
 
