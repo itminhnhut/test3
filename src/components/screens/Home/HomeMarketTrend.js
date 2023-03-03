@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -53,11 +54,14 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
             />
             {width >= 992 && (
                 <span className="flex flex-row items-center text-base font-semibold">
-                    <Link href="/market">
-                        <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                    <Link href="/market" passHref>
+                        <ButtonV2 variants="text" className="capitalize">
+                            <span className="mr-3">{t('home:markettrend.explore_market')}</span>
+                            <div className="!ml-0">
+                                <ArrowRightIcon size={16} />
+                            </div>
+                        </ButtonV2>
                     </Link>
-
-                    <ArrowRightIcon size={16} />
                 </span>
             )}
         </div>
@@ -125,29 +129,6 @@ const HomeMarketTrend = ({ trendData }) => {
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
 
     // * Render Handler
-    const renderTrendTab = useCallback(() => {
-        return (
-            <div className="w-full flex justify-between">
-                <TokenTypes
-                    type={type?.id}
-                    setType={(i) => {
-                        setType(i);
-                    }}
-                    types={types}
-                    lang={'vi'}
-                />
-                {width >= 992 && (
-                    <span className="flex flex-row items-center text-base font-semibold">
-                        <Link href="/market">
-                            <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
-                        </Link>
-
-                        <ArrowRightIcon size={16} />
-                    </span>
-                )}
-            </div>
-        );
-    }, [width, state, type]);
 
     const renderMarketHeader = useCallback(() => {
         return (
@@ -256,11 +237,14 @@ const HomeMarketTrend = ({ trendData }) => {
                     </div>
                     {width < 992 && (
                         <span className="flex flex-row items-center justify-center text-sm font-semibold pt-6">
-                            <Link href="/market">
-                                <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                            <Link href="/market" passHref>
+                                <ButtonV2 variants="text" className="capitalize">
+                                    <span className="mr-3">{t('home:markettrend.explore_market')}</span>
+                                    <div className="!ml-0">
+                                        <ArrowRightIcon size={16} />
+                                    </div>
+                                </ButtonV2>
                             </Link>
-
-                            <ArrowRightIcon size={14} />
                         </span>
                     )}
                 </div>
@@ -269,4 +253,4 @@ const HomeMarketTrend = ({ trendData }) => {
     );
 };
 
-export default HomeMarketTrend
+export default HomeMarketTrend;
