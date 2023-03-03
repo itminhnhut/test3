@@ -89,8 +89,9 @@ const Index = () => {
                     <div className="z-10 rounded-xl qr-code">
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150}/>
                     </div>
-                    <img src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
-                         className="absolute w-full h-full z-0 rounded-xl"/>
+                    <div className="absolute w-full h-full z-0">
+                        <Image layout="fill" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
+                    </div>
                 </div>
             </ModalV2>
         );

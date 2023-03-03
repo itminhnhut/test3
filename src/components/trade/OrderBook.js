@@ -58,7 +58,7 @@ const OrderBook = (props) => {
         if (ref.current) {
             setHeight(ref.current.clientHeight);
         }
-    }, [ref.current, layoutConfig?.h]);
+    }, [ref.current, layoutConfig?.h, isPro]);
 
     useAsync(async () => {
         // Get symbol list
@@ -288,7 +288,7 @@ const OrderBook = (props) => {
                     </div>
                     {renderTickSizeOptions()}
                 </div>
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 over">
                     <div className="">
                         <div className="flex justify-between items-center">
                             <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs">

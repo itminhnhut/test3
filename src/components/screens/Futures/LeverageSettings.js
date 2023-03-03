@@ -15,7 +15,8 @@ import TradingInput from 'components/trade/TradingInput';
 import WarningCircle from '../../svg/WarningCircle';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Modal from 'components/common/ReModal';
-import Link from 'next/link';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import { BxsInfoCircle } from 'components/svg/SvgIcon';
 
 const FuturesLeverageSettings = ({
     pair,
@@ -32,10 +33,12 @@ const FuturesLeverageSettings = ({
     onusMode = false,
     containerStyle
 }) => {
+    const [currentTheme] = useDarkMode();
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     const [_leverage, _setLeverage] = useState(leverage);
     const [_leverageBracket, _setLeverageBracket] = useState(pairConfig?.leverageBracket?.[0]);
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     // reset leverage on modal toggle
     useEffect(() => {
@@ -339,11 +342,9 @@ const FuturesLeverageSettings = ({
                 </>
             )}
 
-            <div className="mt-2.5 flex items-center bg-hover-1 dark:bg-darkBlue-3 text-txtPrimary px-6 py-4 rounded-md">
-                <div className="pt-1">
-                    <SvgWarning size={24} fill={colors.darkBlue5} fillInside={'currentColor'} />
-                </div>
-                <div className={`pl-4 font-medium text-sm  text-txtSecondary`}>{t('futures:leverage:description')}</div>
+            <div className="mt-2.5 flex bg-hover-1 dark:bg-darkBlue-3 px-6 py-4 rounded-md">
+                <BxsInfoCircle size={24} fill={isDark ? colors.darkBlue5 : colors.gray[1]} fillInside={'currentColor'} />
+                <div className={`pl-4 font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark`}>{t('futures:leverage:description')}</div>
             </div>
 
             {isAuth ? (
