@@ -223,7 +223,7 @@ const HomeMarketTrend = ({ trendData }) => {
                             </div>
                             <div className="homepage-markettrend__market_table__row__col2 ">
                                 <div className="homepage-markettrend__market_table__chart">
-                                    <img src={sparkLine} alt="Nami Exchange" />
+                                    <Image width={100} height={37} src={sparkLine} alt="Nami Exchange" />
                                 </div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">

@@ -146,7 +146,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                         </Link>
 
                         <div onClick={onShowQr} className="cursor-pointer w-[54px]">
-                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" />
+                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width={54} height={54} />
                         </div>
                     </div>
                     <div className="text-left lg:text-right flex-1  p-3">
