@@ -371,7 +371,7 @@ export default function Transfer() {
                 <div className="mt-7 mb-8 space-y-4">
                     <div className="flex justify-between text-xs">
                         <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:mobile:time')}</span>
-                        <span className="font-semibold">{format(Date.now(), 'yyyy-M-d hh:mm:ss')}</span>
+                        <span className="font-semibold">{format(Date.now(), 'yyyy-M-d HH:mm:ss')}</span>
                     </div>
                     <div className="flex justify-between text-xs">
                         <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:mobile:amount')}</span>
