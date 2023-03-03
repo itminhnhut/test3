@@ -184,6 +184,7 @@
     "convert_small_balance": "Chuyển đối số dư nhỏ",
     "asset": "Tài sản",
     "value": "Giá trị",
+    "selected": "Đã chọn",
     "mobile": {
         "spot": "Nami Spot",
         "futures": "Nami Futures",

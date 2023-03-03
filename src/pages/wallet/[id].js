@@ -14,7 +14,7 @@ const Wallet = () => isMobile ? <LayoutMobile ><WalletComponent /></LayoutMobile
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet'])
+        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'convert'])
     }
 })
 

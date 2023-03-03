@@ -182,6 +182,7 @@
     "convert_small_balance": "Convert small balance",
     "asset": "Asset",
     "value": "Value",
+    "selected": "Selected",
     "mobile": {
         "spot": "Nami Spot",
         "futures": "Nami Futures",

@@ -1,48 +1,44 @@
 import { useTranslation } from 'next-i18next';
 import { LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CheckBox from 'components/common/CheckBox';
 import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
-
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) => {
     const { t } = useTranslation();
     const [isShowPoppup, setIsShowPoppup] = useState(false)
     const [listCheck, setListCheck] = useState({})
-    const getUsdRate = (id) => {
-        const x = usdRate?.[id + ''] || 0;
-        // console.log("__x: ", id, x);
-    }
-    // console.log("____", usdRate);
+    const [isCheckAll, setIsCheckAll] = useState(false)
 
-    useState(() => {
+    useEffect(() => {
         if (allAssets) {
-            const namiUsdRate = usdRate?.['1'] || 0;
-
             const parseArray = _.reduce(
                 allAssets,
-                (acc, { id, wallet }) => ({
-                    ...acc, [id]: {
-                        // value: wallet?.value
-                        //     ? formatWallet(wallet?.value, assetCode === 'USDT' ? 2 : assetDigit)
-                        //     : '0.0000',
-                        isCheck: false,
-                        namiValue: wallet?.value * usdRate?.[id] / namiUsdRate
+                (acc, { id, wallet }) => {
+                    if (id === 1) return acc
+                    return {
+                        ...acc, [id]: false
                     }
-                }),
+                },
                 {}
             )
+
             setListCheck(parseArray)
         }
-    }, [allAssets, usdRate])
+    }, [allAssets])
 
-    console.log("______listCheck", listCheck);
+    useEffect(() => {
+        setListCheck(prev => _.mapValues(prev, () => !!isCheckAll))
+    }, [isCheckAll])
+
+    const namiUsdRate = usdRate?.['1'] || 0;
 
     return (
         <>
             <button
-                onClick={() => setIsShowPoppup(!isShowPoppup)}
+                onClick={() => setIsShowPoppup(prev => !prev)}
                 className={`bg-gray-10 dark:bg-dark-2 flex items-center justify-between text-txtTabHover dark:text-white 
            text-sm gap-3 rounded-md px-4 py-3 cursor-pointer ${className}`}
             >
@@ -54,7 +50,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
             </button>
 
             <ModalV2
-                isVisible={true}
+                isVisible={isShowPoppup}
                 onBackdropCb={() => setIsShowPoppup(false)}
                 className="!max-w-[488px]"
                 wrapClassName='py-[30px] px-0'
@@ -64,8 +60,16 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                     <div className='txtPri-3 px-8'>{t('wallet:convert_small_balance')}</div>
                     <div className='mt-6 max-h-[508px] h-full overflow-y-scroll px-8'>
                         {allAssets.map(item => {
-                            const { assetCode, assetDigit, assetName, id, status, wallet, walletTypes } = item
-                            const { locked_value, type, value } = wallet
+                            if (item?.id === 1)
+                                return null; // Token Nami
+
+                            const { assetCode, assetDigit, assetName, id, status, wallet, walletTypes, available } = item
+
+                            const assetUsdRate = usdRate?.[item?.id] || 0;
+                            const totalUsd = available * assetUsdRate;
+                            const totalNami = totalUsd / namiUsdRate;
+
+                            const namiValue = formatWallet(totalNami, 1)
 
                             return <div key={'convert_small_ballance_' + id} className='py-3 flex items-center gap-2'>
                                 <CheckBox
@@ -73,19 +77,43 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                                     boxContainerClassName='w-5 h-5'
                                     labelClassName='text-gray-15 dark:text-gray-4 tracking-normal text-base'
                                     label={assetCode}
-                                    // onChange={() => setIsDefault(!isDefault)}
+                                    onChange={() => setListCheck({ ...listCheck, [id]: !listCheck[id] })}
                                     active={listCheck[id]}
                                 />
                                 <span className="flex-auto text-right">
-                                    {value
-                                        ? formatWallet(value, assetCode === 'USDT' ? 2 : assetDigit)
+                                    {available
+                                        ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
                                         : '0.0000'}
                                 </span>
                                 <div className="w-[154px] text-right overflow-hidden">
-                                    {value}
+                                    {namiValue}
                                 </div>
                             </div>
                         })}
+                    </div>
+                    <div className='px-8 border-t border-divider dark:border-divider-dark'>
+                        <div className='py-6 flex items-center justify-between select-none'>
+                            <CheckBox
+                                className="w-[100px]"
+                                boxContainerClassName='w-5 h-5'
+                                labelClassName='text-gray-15 dark:text-gray-4 tracking-normal text-base font-semibold'
+                                label={t('common:all')}
+                                onChange={() => setIsCheckAll(prev => !prev)}
+                                active={isCheckAll}
+                            />
+                            <span className="flex-auto text-right">
+                                {'6 ' + t('wallet:selected')}
+                            </span>
+                        </div>
+                        <div className='flex items-center justify-between'>
+                            <span className='txtSecond-1'>{t('convert:you_will_get')}</span>
+                            <span className='text-gray-15 dark:text-gray-4 tracking-normal text-[18px] leading-[26px] font-semibold'>
+                                {2462346}
+                            </span>
+                        </div>
+                        <ButtonV2 className="px-6 !text-sm w-full mt-10" onClick={() => console.log("Hello world")}>
+                            {t('common:convert')}
+                        </ButtonV2>
                     </div>
                 </div>
             </ModalV2>
