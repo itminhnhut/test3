@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { formatTime, formatWallet, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Check, ChevronLeft, ChevronRight, Search, Slash, X } from 'react-feather';
@@ -551,7 +551,7 @@ const ExchangeDeposit = () => {
                 <div className="relative flex items-center justify-between mb-4">
                     <span className="font-semibold">{t('common:important_notes')}</span>
                     <div>
-                        <Tooltip id="wrongthings" place="left" effect="solid">
+                        <Tooltip isV3 id="wrongthings" place="left" effect="solid">
                             <div className="w-[320px]">{noteObj.runItBackNotes}</div>
                         </Tooltip>
                         <span
@@ -883,7 +883,9 @@ const ExchangeDeposit = () => {
                         <div
                             className="rounded-xl flex flex-col justify-between px-8 pt-12 pb-10"
                             style={{
-                                backgroundImage: `url(/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png)`,
+                                backgroundImage: `url(${getS3Url(
+                                    `/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
+                                )})`,
                                 backgroundSize: 'cover'
                             }}
                         >

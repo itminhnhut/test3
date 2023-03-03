@@ -74,7 +74,7 @@ const FuturesSetting = (props) => {
 
     const settingLayout = useMemo(() => {
         const settings = localStorage.getItem('settingLayoutFutures');
-        return settings ? JSON.parse(settings) : {};
+        return settings ? JSON.parse(settings) : spotState;
     }, [spotState]);
 
     return (
@@ -118,12 +118,11 @@ const FuturesSetting = (props) => {
                                 <div className="py-6 text-center space-y-4">
                                     {FuturesComponents.map((item, index) => {
                                         const { value, key, visible } = item;
-
                                         if (!visible) return null;
                                         return (
                                             <div className="h-6 my-1 flex justify-between" key={key + index}>
                                                 <span className="font-medium text-sm text-txtPrimary dark:text-txtPrimary-dark">{value}</span>
-                                                <Switch checked={settingLayout?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
+                                                <Switch checked={spotState?.[key]} onChange={(value) => onChangeFuturesComponent(key, value)} />
                                             </div>
                                         );
                                     })}
