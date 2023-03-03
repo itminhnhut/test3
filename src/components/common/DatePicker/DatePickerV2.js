@@ -93,7 +93,21 @@ const DatePickerV2 = ({
         );
     };
 
-    const issetValue = isCalendar ? date : date?.startDate;
+    const issetValue = isCalendar ? date : date?.startDate || date?.endDate;
+
+    console.log("___date: ", date.startDate, date.endDate);
+    useEffect(() => {
+        if (!date?.endDate && date?.startDate) {
+            console.log("___here: ");
+            setDate(
+                {
+                    ...date,
+                    startDate: null,
+                    endDate: date.startDate
+                }
+            )
+        }
+    }, [date.startDate])
 
     const clearInputData = () => {
         setDate({
@@ -192,7 +206,7 @@ const DatePickerV2 = ({
                         <Component
                             className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
                             date={date}
-                            ranges={!isCalendar ? [date] : []}
+                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date(0) : date?.endDate }] : []}
                             months={month ?? 1}
                             onChange={onDatesChange}
                             // moveRangeOnFirstSelection={isCalendar}
