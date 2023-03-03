@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
+import { getS3Url } from 'redux/actions/utils';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -88,7 +89,7 @@ const Index = () => {
                     <div className="z-10 rounded-xl qr-code">
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
-                    <img src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`} className="absolute w-full h-full z-0 rounded-xl" />
+                    <img src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} className="absolute w-full h-full z-0 rounded-xl" />
                 </div>
             </ModalV2>
         );
