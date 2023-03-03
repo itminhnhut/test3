@@ -145,7 +145,9 @@ const Overview = ({
             {/* Card banner slogan */}
             <div className='w-full bg-[#0C0C0C] '>
                 <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4'>
-                    <div className='h-full bg-cover bg-refferal-v2-banner bg-center' >
+                    <div style={{
+                        backgroundImage: `url(${getS3Url(`/images/reference/background_desktop_2.png`)})`
+                    }} className='h-full bg-cover bg-center' >
                         <div className='py-20 container'>
                             <ModalShareRefCode
                                 t={t}
@@ -356,7 +358,7 @@ const Overview = ({
                         </div>
                     </div>
                     : <div className="container text-center bg-white dark:bg-darkBlue-3 rounded-xl py-[50px] ">
-                        <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                        <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
                         <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
                             <a href={getLoginUrl('sso')} className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4">
                                 {t('common:sign_in')}{' '}

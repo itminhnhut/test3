@@ -549,8 +549,6 @@ const MarketTable = ({
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
 
-    console.log('tab[restProps.tabIndex]?.key', tab[restProps.tabIndex]?.key, restProps.auth, tab[restProps.tabIndex]?.key === 'favorite')
-
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
             <div className="w-full sm:w-auto flex flex-col justify-start sm:justify-between sm:flex-row sm:items-center sm-6 sm:mb-8">
