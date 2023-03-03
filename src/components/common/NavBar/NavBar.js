@@ -387,7 +387,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         </div>
                         {!isNotVerified && (
                             <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
-                                <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
+                                <div className={`text-sm text-center ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
                                     {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                                 </div>
                             </TagV2>
