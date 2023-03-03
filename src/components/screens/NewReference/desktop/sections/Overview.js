@@ -145,7 +145,9 @@ const Overview = ({
             {/* Card banner slogan */}
             <div className='w-full bg-[#0C0C0C] '>
                 <div className='max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4'>
-                    <div className='h-full bg-cover bg-refferal-v2-banner bg-center' >
+                    <div style={{
+                        backgroundImage: `url(${getS3Url(`/images/reference/background_desktop_2.png`)})`
+                    }} className='h-full bg-cover bg-center' >
                         <div className='py-20 container'>
                             <ModalShareRefCode
                                 t={t}
