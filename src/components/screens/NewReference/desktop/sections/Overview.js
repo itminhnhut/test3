@@ -356,7 +356,7 @@ const Overview = ({
                         </div>
                     </div>
                     : <div className="container text-center bg-white dark:bg-darkBlue-3 rounded-xl py-[50px] ">
-                        <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                        <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
                         <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
                             <a href={getLoginUrl('sso')} className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4">
                                 {t('common:sign_in')}{' '}
