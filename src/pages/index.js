@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
@@ -53,6 +54,7 @@ import { X } from 'react-feather';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
 import Skeletor from '../components/common/Skeletor';
+import { getS3Url } from 'redux/actions/utils';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
@@ -80,16 +82,6 @@ const Index = () => {
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
                 className="!max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
-                customHeader={() => (
-                    <div className="flex justify-end mb-6">
-                        <div
-                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={() => setState({ showQR: false })}
-                        >
-                            <X size={24} />
-                        </div>
-                    </div>
-                )}
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
@@ -98,7 +90,9 @@ const Index = () => {
                     <div className="z-10 rounded-xl qr-code">
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
-                    <img src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`} className="absolute w-full h-full z-0 rounded-xl" />
+                    <div className="absolute w-full h-full z-0">
+                        <Image layout="fill" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
+                    </div>
                 </div>
             </ModalV2>
         );
