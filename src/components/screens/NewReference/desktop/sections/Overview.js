@@ -49,6 +49,7 @@ import { useSelector } from 'react-redux';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { data } from 'autoprefixer';
 
+import Spinner from 'components/svg/Spinner';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -63,7 +64,8 @@ const Overview = ({
     commisionConfig,
     t,
     width,
-    user
+    user,
+    loading
 }) => {
     const [showRef, setShowRef] = useState(false);
     const friendsGet = data?.defaultRefCode?.remunerationRate;
@@ -78,7 +80,6 @@ const Overview = ({
     } = useTranslation();
     const [currentTheme] = useDarkMode();
     const router = useRouter();
-
 
     // handle check KYC
     const auth = useSelector((state) => state.auth?.user);
@@ -286,7 +287,9 @@ const Overview = ({
                                     <div className='flex items-center p-3 rounded-md bg-gray-10 dark:bg-dark-2'>
                                         <span
                                             className='pr-4 font-semibold leading-6'>{data?.defaultRefCode?.code ?? '---'}</span>
-                                        <CopyIcon data={data?.defaultRefCode?.code} size={16} className='cursor-pointer' />
+                                        {loading ? <Spinner size={16}
+                                            color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
+                                        /> : <CopyIcon data={data?.defaultRefCode?.code} size={16} className='cursor-pointer' />}
                                     </div>
                                 </div>
                                 <div className='flex-1 min-w-0'>
@@ -296,7 +299,10 @@ const Overview = ({
                                         <div className='w-full relative flex flex-1 min-w-0 pr-2 leading-6 font-semibold'>
                                             {refLink}
                                         </div>
-                                        <CopyIcon data={refLink} size={16} className='cursor-pointer' />
+                                        {loading ? <Spinner size={16}
+                                            color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']}
+                                        /> :
+                                            <CopyIcon data={refLink} size={16} className='cursor-pointer' />}
                                     </div>
                                 </div>
                             </div>
@@ -350,7 +356,7 @@ const Overview = ({
                         </div>
                     </div>
                     : <div className="container text-center bg-white dark:bg-darkBlue-3 rounded-xl py-[50px] ">
-                        <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                        <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
                         <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
                             <a href={getLoginUrl('sso')} className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4">
                                 {t('common:sign_in')}{' '}
@@ -395,6 +401,7 @@ const RefDetail = ({
     const [code, setCode] = useState('');
     const [currentNote, setCurrentNote] = useState('');
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         if (!isShow) return;
         setLoading(true);

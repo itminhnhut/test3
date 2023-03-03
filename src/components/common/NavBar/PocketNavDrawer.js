@@ -38,11 +38,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     useEffect(() => {
         if (isActive) {
-            document.getElementsByTagName('html')[0].classList.add('overflow-hidden');
-        } else {
-            document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
-        }
-        return () => document.getElementsByTagName('html')[0].classList.remove('overflow-hidden');
+            document.body.classList.add('overflow-hidden');
+        } 
+        return () => document.body.classList.remove('overflow-hidden');
     }, [isActive]);
 
     const { width } = useWindowSize();
@@ -176,7 +174,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
                             <div className="flex flex-row justify-center items-center user__button py-4 mx-4 relative">
                                 <img
-                                    src={`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`}
+                                    src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
                                     className="rounded-md w-full h-full left-0 absolute z-[-1]"
                                 />
                                 <AuthButton t={t} />

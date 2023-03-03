@@ -41,6 +41,42 @@ const AddNewRef = ({
     const [isDefault, setIsDefault] = useState(false);
     const [currentTheme] = useDarkMode();
 
+    useEffect(() => {
+        initCode();
+    }, []);
+
+    const initCode = async () => {
+        let result = generateCharacters();
+        if (result) {
+            const { data } = await FetchApi({
+                url: API_NEW_REFERRAL_CHECK_REF,
+                options: {
+                    method: 'GET'
+                },
+                params: {
+                    code: result
+                }
+            })
+            if (data) {
+                initCode();
+            } else {
+                setRefCode(result)
+            }
+        }
+    };
+
+    const generateCharacters = (length = 8) => {
+        let result = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        const charactersLength = characters.length;
+        let counter = 0;
+        while (counter < length) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            counter += 1;
+        }
+        return result;
+    };
+
     const handleInputRefCode = (e) => {
         const text = e?.target?.value;
         if (text.length > 8) return;
@@ -71,13 +107,15 @@ const AddNewRef = ({
         setNote('');
         setRefCode('');
         setIsDefault(false);
-        setpercent(0);
+        setPercent(0);
     };
 
-    const handleInput = (e, length) => {
+    const handleInput = (e, length, type) => {
         if (e.target.value.length > length) e.target.value = e.target.value.slice(0, length);
         e.target.value = e.target.value.toUpperCase();
-        setError('');
+        if (type === 'refCode') {
+            setError('');
+        }
     };
 
     const renderError = (error) => {
@@ -162,17 +200,12 @@ const AddNewRef = ({
                 onClose={doClose}
                 title={title}
                 type={resultData.isSuccess ? 'success' : 'error'}
-                textButton={resultData.isSuccess ? t('common:confirm') : null}
-                onConfirm={doClose}
+            // textButton={resultData.isSuccess ? t('common:confirm') : null}
+            // onConfirm={doClose}
             // containerClassName='!px-6 !py-8 top-[50%]'
             >
-                <div className='text-txtSecondary dark:text-txtSecondary-dark'
+                <div className={`text-txtSecondary dark:text-txtSecondary-dark text-center ${!resultData.isSuccess && 'mb-10'}`}
                     dangerouslySetInnerHTML={{ __html: resultData.message }} />
-                <div className='w-full flex justify-center text-teal font-medium mt-10 cursor-pointer'
-                    onClick={() => window.fcWidget.open()}
-                >
-                    {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
-                </div>
             </AlertModalV2>
             :
             <PopupModal
@@ -193,7 +226,7 @@ const AddNewRef = ({
                     <div className='text-sm font-medium mt-3 text-gray-7'>
                         <div dangerouslySetInnerHTML={{ __html: resultData.message }} />
                     </div>
-                    {resultData.isSuccess ?
+                    {/* {resultData.isSuccess ?
                         null
                         :
                         <div className='w-full flex justify-center text-txtTextBtn font-semibold mt-6 cursor-pointer'
@@ -201,7 +234,7 @@ const AddNewRef = ({
                         >
                             {language === 'vi' ? 'Liên hệ hỗ trợ' : 'Chat with support'}
                         </div>
-                    }
+                    } */}
                 </div>
             </PopupModal>;
     }, [resultData]);
@@ -247,7 +280,7 @@ const AddNewRef = ({
                                     onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
                                     onInput={(e) => {
-                                        handleInput(e, 8);
+                                        handleInput(e, 8, 'refCode');
                                     }}
                                 />
                                 <button className={`border-r border-r-divider dark:border-r-divider-dark pr-3 clear-both ${!!refCode.length ? 'visible' : 'invisible'}`}>
@@ -283,6 +316,7 @@ const AddNewRef = ({
                     <div className='flex items-center gap-2 mt-2 text-xs font-medium'>
                         <CheckBox
                             boxContainerClassName='w-5 h-5'
+                            labelClassName='text-base font-normal'
                             label={t('reference:referral.set_default')}
                             onChange={() => setIsDefault(!isDefault)}
                             active={isDefault}
@@ -333,7 +367,7 @@ const AddNewRef = ({
                                     onChange={handleInputRefCode} value={refCode}
                                     onBlur={() => doCheckRef(refCode)}
                                     onInput={(e) => {
-                                        handleInput(e, 8);
+                                        handleInput(e, 8, 'refCode');
                                     }}
                                     style={{
                                         outline: 'none'

@@ -80,16 +80,6 @@ const Index = () => {
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
                 className="!max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
-                customHeader={() => (
-                    <div className="flex justify-end mb-6">
-                        <div
-                            className="flex items-center justify-center w-6 h-6 rounded-md hover:bg-bgHover dark:hover:bg-bgHover-dark cursor-pointer"
-                            onClick={() => setState({ showQR: false })}
-                        >
-                            <X size={24} />
-                        </div>
-                    </div>
-                )}
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
