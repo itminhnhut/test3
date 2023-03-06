@@ -26,7 +26,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 <div className="mal-footer___pocket__logo mb-6">
                                     <Image
                                         // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                        src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                         width={188}
                                         height={60}
                                         alt="Nami Exchange"
