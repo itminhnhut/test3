@@ -1,28 +1,22 @@
-import showNotification from 'utils/notificationService';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import NumberFormat from 'react-number-format';
 import AssetLogo from 'src/components/wallet/AssetLogo';
 import fetchAPI from 'utils/fetch-api';
 import colors from 'styles/colors';
-import Link from 'next/link';
 import * as Error from '../../../redux/actions/apiError';
 import Skeletor from 'src/components/common/Skeletor';
 import useOutsideClick from 'hooks/useOutsideClick';
-import Modal from 'src/components/common/SwapReModal';
 import { WalletType } from 'redux/actions/const';
 import { EXCHANGE_ACTION } from 'pages/wallet';
 
 import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
-import { divide, find, orderBy, uniqBy } from 'lodash';
+import { find, orderBy, uniqBy } from 'lodash';
 import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, countDecimals, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
-import { Search, X, XCircle } from 'react-feather';
 import { ApiStatus } from 'redux/actions/const';
 import { PATHS } from 'constants/paths';
 import { roundToDown } from 'round-to';
-import Button from 'components/common/Button';
 import router from 'next/router';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -32,7 +26,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 // import SVG
 import SvgAddCircle from 'components/svg/SvgAddCircle';
 import SwapWarning from 'components/svg/SwapWarning';
-import { CheckCircleIcon, CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import { CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
@@ -114,7 +108,6 @@ const SwapModule = ({ width, pair }) => {
         t,
         i18n: { language }
     } = useTranslation(['navbar', 'common', 'error', 'convert', 'wallet']);
-    const [currentTheme] = useDarkMode();
 
     useOutsideClick(fromAssetListRef, () => state.openAssetList?.from && setState({ openAssetList: { from: false }, search: '' }));
     useOutsideClick(toAssetListRef, () => state.openAssetList?.to && setState({ openAssetList: { to: false }, search: '' }));
@@ -718,12 +711,12 @@ const SwapModule = ({ width, pair }) => {
     //     console.log('namidev-DEBUG => ', state)
     // }, [state])
 
-    useEffect(() => {
-        if (config?.filters) {
-            const fromAmount = +config.filters?.[0]?.minQty;
-            fromAmount && setState({ fromAmount });
-        }
-    }, [config]);
+    // useEffect(() => {
+    //     if (config?.filters) {
+    //         const fromAmount = +config.filters?.[0]?.minQty;
+    //         fromAmount && setState({ fromAmount });
+    //     }
+    // }, [config]);
 
     useEffect(() => {
         fromAssetRef?.current?.focus();
@@ -836,7 +829,7 @@ const SwapModule = ({ width, pair }) => {
     return (
         <>
             <div className="flex items-center justify-center w-full h-full lg:block lg:w-auto lg:h-auto">
-                <div className="relative min-w-[350px] rounded-xl">
+                <div className="relative min-w-[350px] max-w-[508px] rounded-xl">
                     <div className="flex flex-col justify-center items-center">
                         <span className="text-[32px] leading-[38px] font-semibold">{t('navbar:submenu.swap')}</span>
                     </div>
@@ -891,26 +884,11 @@ const SwapModule = ({ width, pair }) => {
 
                         {/*SWAP RATE*/}
                         <div className="flex items-center justify-between mt-4">
-                            {/* <div className="text-sm flex items-center"></div> */}
                             <span className="text-txtSecondary dark:text-txtSecondary-dark text-left">{t('common:rate')}:</span>
 
                             {renderRate()}
-                            {/* <div
-                            className={
-                                state.estRate && state.fromAmount
-                                    ? 'ml-2 p-1 rounded-md cursor-pointer ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
-                                    : 'ml-2 p-1 rounded-md cursor-not-allowed ease-in duration-100 hover:bg-bgSecondary dark:hover:bg-bgSecondary-dark'
-                            }
-                            onClick={() => setState({ changeEstRatePosition: !state.changeEstRatePosition })}
-                            onMouseOver={() => setState({ onHoverEstRateBtn: true })}
-                            onMouseOut={() => setState({ onHoverEstRateBtn: false })}
-                        >
-                            <RefreshCw className={state?.onHoverEstRateBtn ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'} size={16} />
-                        </div> */}
                         </div>
                         {/*END:SWAP RATE*/}
-
-                        {/*{renderErrors()}*/}
 
                         {/*SWAP BUTTON*/}
                         {renderSwapBtn()}
@@ -922,11 +900,6 @@ const SwapModule = ({ width, pair }) => {
                             </Trans>
                         </div>
                     </div>
-
-                    {/* <div className="flex mb-3 items-center justify-between font-bold">
-                        {t('navbar:submenu.swap')}
-                        {renderDepositLink()}
-                    </div> */}
                 </div>
             </div>
             {renderPreOrderModal()}

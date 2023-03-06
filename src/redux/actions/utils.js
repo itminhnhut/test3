@@ -1070,7 +1070,7 @@ export const getType = (type) => {
         case FuturesOrderTypes.StopMarket:
             return VndcFutureOrderType.Type.STOP;
         default:
-            return VndcFutureOrderType.Limit;
+            return null;
     }
 };
 
