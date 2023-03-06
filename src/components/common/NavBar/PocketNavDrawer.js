@@ -160,24 +160,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
                     {!auth ? (
                         <>
-<<<<<<< HEAD
                             <div className="pl-4">
                                 <Image
                                     // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                    src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                    src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                     width={94}
                                     height={30}
                                 />
                             </div>
-=======
-                            <img
-                                // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
-                                className="pl-4"
-                                width="94"
-                                height="36"
-                            />
->>>>>>> fix/release-hawaii-bugs
 
                             <div className="flex flex-row justify-center items-center user__button py-4 mx-4 relative">
                                 <div className="rounded-md w-full h-full left-0 absolute z-[-1]">
