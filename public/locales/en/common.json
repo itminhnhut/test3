@@ -377,5 +377,9 @@
     "others": "Others",
     "convert": "Convert",
     "futures_short": "Futures",
-    "spot_short": "Exchange"
+    "spot_short": "Exchange",
+    "favourite": "Favorites",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "trending": "Trending"
 }

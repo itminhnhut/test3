@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect } from 'react';
+import { memo, useCallback, useState, useEffect, useRef } from 'react';
 import { Search, X } from 'react-feather';
 import { useSelector } from 'react-redux';
 
@@ -14,6 +14,9 @@ import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { orderBy, pick } from 'lodash';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
+import { API_GET_TRENDING } from '../../../../redux/actions/apis';
+import Axios from 'axios';
+import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -29,16 +32,38 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     // const [pairTicker, setPairTicker] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [dataTable, setDataTable] = useState([]);
-    useEffect(() => {
-        let data =
-            mode === ''
-                ? pairConfigs
-                : pairConfigs?.filter((i) => {
-                    if (mode === 'Starred') return favoritePairs.find((rs) => rs.replace('_', '') === i.symbol);
-                    return i.quoteAsset === mode;
-                });
 
-        data = data.map((item) => pick(item, ['pair', 'symbol', 'baseAsset', 'quoteAsset', 'pricePrecision']));
+    // Handle trendings:
+    const [trendingPairs, setTrendingPairs] = useState([])
+
+    const getTrending = async () => {
+        try {
+            const { data } = await Axios.get(API_GET_TRENDING)
+            if (data && data.status === 'ok' && data?.data) {
+                const trending = []
+                data.data.forEach(item => {
+                    if (item.key === 'top_gainers' || item.key === 'top_losers') {
+                        if (item.pairs) trending.push(item.pairs)
+                    }
+                })
+
+                if (trending.length === 2) {
+                    setTrendingPairs([...trending[0], ...trending[1]].map(item => item?.s))
+                }
+            }
+        } catch (e) {
+            console.log('Cant get top trending data: ', e)
+        } 
+    }
+
+    useEffect(() => {
+        getTrending();
+    }, [])
+
+    // end handle trendings
+
+    useEffect(() => {
+        let data = pairConfigs.map((item) => pick(item, ['pair', 'symbol', 'baseAsset', 'quoteAsset', 'pricePrecision']));
 
         data.forEach((item) => {
             const pairTicker = marketWatch[item?.pair]
@@ -47,6 +72,31 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 item?.priceChangePercent = pairTicker?.priceChangePercent
             }
         });
+
+        if(mode === 'USDT' || mode === 'VNDC') {
+            data = data.filter(item => item?.quoteAsset === mode)
+        }
+
+        switch (curTab) {
+            case TABS.FAVOURITE:
+                data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+                break;
+            case TABS.FUTURES:
+                data = data;
+                break;
+            case TABS.TRENDING:
+                data = data?.filter((i) => trendingPairs.find((rs) => rs === i?.symbol));
+                break;
+            case TABS.GAINERS:
+                data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent > 0);
+                break;
+            case TABS.LOSERS:
+                data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent < 0);
+                break;
+            default:
+                break;
+        }
+
         // sort by field
         if (Object.keys(sortBy)?.length) {
             const _s = Object.entries(sortBy)[0];
@@ -64,7 +114,6 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
             const _search = search?.replace('/', '').toLowerCase();
             data = data?.filter((o) => o?.pair?.toLowerCase().includes(_search));
         }
-
         setDataTable(data);
     }, [mode, favoritePairs, pairConfigs, marketWatch, sortBy, search]);
 
@@ -90,65 +139,71 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         setMode(key !== mode ? key : '');
     };
 
-    const renderModes = useCallback(
-        () => (
-            <div className="px-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark hover:text-gray-15 dark:hover:text-gray-14 select-none">
-                {isAuth && (
-                    <BxsStarIcon
-                        onClick={() => onHandleMode('Starred')}
-                        fill={mode === 'Starred' ? colors.yellow[2] : isDark ? colors.gray[7] : colors.gray[1]}
-                        className="cursor-pointer"
-                    />
-                )}
-                <div
-                    onClick={() => onHandleMode('USDT')}
-                    className={mode === 'USDT' && 'text-green-3 font-semibold'}
-                >
-                    USDT
-                </div>
-                <div
-                    onClick={() => onHandleMode('VNDC')}
-                    className={mode === 'VNDC' && 'text-green-3 font-semibold'}
-                >
-                    VNDC
-                </div>
-            </div>
-        ),
-        [mode, isDark, isAuth]
-    );
-
     const setSorter = (key) => {
         setSortBy(prev => prev?.[key] === undefined ? { [key]: true } : prev?.[key] ? { [key]: false } : { [key]: undefined })
     }
 
+    // Hanlde tabs
+    const [curTab, setCurTab] = useState(TABS.FAVOURITE)
+
+    const tabTitles = {
+        [TABS.FAVOURITE]: t('common:favourite'),
+        [TABS.FUTURES]: t('common:all'),
+        [TABS.TRENDING]: t('common:trending'),
+        [TABS.GAINERS]: t('common:gainers'),
+        [TABS.LOSERS]: t('common:losers'),
+    }
+
     return (
         <div
-            className={`${!activePairList ? 'hidden' : ''
+            className={`${!activePairList ? '' : ''
                 } py-4 min-w-[400px] border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
             shadow-card_light dark:shadow-popover rounded-md ${className}`}
         >
             <div className="max-h-[352px] flex flex-col">
-                <div className="px-4 mb-7">
+                <div className="px-4 mb-7 flex items-center">
                     <SearchBoxV2
                         value={search}
                         onChange={(value) => {
                             setSearch(value);
                         }}
-                        wrapperClassname='py-2'
+                        wrapperClassname='py-2 flex-1'
                     />
-                    {/* <div className="py-2 px-3 flex items-center rounded-md bg-gray-5 dark:bg-dark-2 border border-transparent focus-within:border-teal">
-                        <Search size={16} className="text-txtSecondary dark:text-txtSecondary-dark" />
-                        <input
-                            className="text-sm w-full px-2.5 text-txtPrimary dark:text-txtPrimary-dark placeholder-shown:text-txtSecondary dark:placeholder-shown:text-txtSecondary-dark"
-                            value={search}
-                            onChange={(e) => setSearch(e.target?.value.trim())}
-                            placeholder={t('common:search')}
-                        />
-                        {search && <X size={16} className="cursor-pointer" color="#8694b2" onClick={() => setSearch('')} />}
-                    </div> */}
+                    <div className="pl-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark  select-none">
+                        <button 
+                            onClick={() => onHandleMode('VNDC')}
+                            className={`${mode === 'VNDC' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
+                        >
+                            VNDC
+                        </button>
+                        <button
+                            onClick={() => onHandleMode('USDT')}
+                            className={`${mode === 'USDT' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
+                        >
+                            USDT
+                        </button>
+                    </div>
                 </div>
 
-                {renderModes()}
+                <div className="relative flex tracking-normal mx-4">
+                    <Tabs isMobile tab={curTab} className="border-b border-divider dark:border-divider-dark">
+                        {Object.values(TABS).map((t) => {
+                            return <TabItem
+                                isActive={curTab === t}
+                                key={"tab_" + t}
+                                className={`!px-2 !text-sm`}
+                                value={t}
+                                onClick={() => {
+                                    if(curTab !== t) setCurTab(t)
+                                }}
+                                >
+                                    {tabTitles[t]}
+                            </TabItem>
+                        })}
+                    </Tabs>
+                </div>
+
+                {/* {renderModes()} */}
 
                 <div
                     style={{
@@ -216,5 +271,14 @@ const SorterWrapper = styled.span`
 `;
 
 const ORDERS_HEADER_HEIGHT = 20;
+
+
+const TABS = {
+    FAVOURITE: 'FAVOURITE',
+    FUTURES: 'FUTURES',
+    TRENDING: 'TRENDING',
+    GAINERS: 'GAINERS',
+    LOSERS: 'LOSERS',
+}
 
 export default FuturesPairList;

@@ -373,5 +373,9 @@
     "others": "Tác vụ",
     "convert": "Chuyển đổi",
     "futures_short": "Futures",
-    "spot_short": "Exchange"
+    "spot_short": "Exchange",
+    "trending": "Xu hướng",
+    "favourite": "Yêu thích",
+    "gainers": "Tăng giá",
+    "losers": "Giảm giá"
 }
