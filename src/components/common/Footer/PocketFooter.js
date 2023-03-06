@@ -45,11 +45,11 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 >
                                     {t('common:create_account')}
                                 </ButtonV2>
-                                {width < 1200 && (
+                                {/* {width < 1200 && (
                                     <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
                                         {t('common:sign_in')}
                                     </ButtonV2>
-                                )}
+                                )} */}
                             </div>
 
                             {width < 1200 && <hr className="border-divider dark:border-divider-dark mt-6" />}
