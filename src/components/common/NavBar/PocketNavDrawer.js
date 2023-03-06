@@ -1,27 +1,24 @@
-import Button from 'src/components/common/Button';
 import { MOBILE_NAV_DATA } from 'src/components/common/NavBar/constants';
 import SvgIcon from 'src/components/svg';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import Div100vh from 'react-div-100vh';
-import { ChevronDown, X } from 'react-feather';
+import { X } from 'react-feather';
 import { useSelector } from 'react-redux';
-import { getLoginUrl, getS3Url } from 'redux/actions/utils';
+import { getS3Url } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { useWindowSize } from 'utils/customHooks';
-import SvgCheckSuccess from 'components/svg/CheckSuccess';
 import { PulseLoader } from 'react-spinners';
 import { PATHS } from 'constants/paths';
-import { buildLogoutUrl } from 'utils';
 import FuturesSetting from '../../screens/Futures/FuturesSetting';
 import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
 import { KYC_STATUS } from 'redux/actions/const';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
-import HrefButton from '../V2/ButtonV2/HrefButton';
+import Image from 'next/image';
 import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 
@@ -33,13 +30,12 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
 
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
-    const isVerifying = auth?.kyc_status === KYC_STATUS.PENDING_APPROVAL;
     const isVerified = auth?.kyc_status >= KYC_STATUS.APPROVED;
 
     useEffect(() => {
         if (isActive) {
             document.body.classList.add('overflow-hidden');
-        } 
+        }
         return () => document.body.classList.remove('overflow-hidden');
     }, [isActive]);
 
@@ -166,7 +162,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         <>
                             <img
                                 // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                 className="pl-4"
                                 width="94"
                                 height="36"
@@ -247,9 +243,9 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             <div className="flex flex-row items-center">{t('navbar:menu.lang')}</div>
                             <div className="rounded-full">
                                 {language === LANGUAGE_TAG.EN ? (
-                                    <img src={getS3Url('/images/icon/ic_us_flag.png')} width="20" height="20" />
+                                    <Image src={getS3Url('/images/icon/ic_us_flag.png')} width="20" height="20" />
                                 ) : (
-                                    <img src={getS3Url('/images/icon/ic_vn_flag.png')} width="20" height="20" />
+                                    <Image src={getS3Url('/images/icon/ic_vn_flag.png')} width="20" height="20" />
                                 )}
                             </div>
                         </a>
@@ -297,21 +293,21 @@ const getIcon = (code) => {
         case 'market':
             return <SvgIcon name="activity" size={20} style={{ marginRight: 8 }} />;
         case 'spot':
-            return <img src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_exchange.png')} width="32" height="32" />;
         case 'swap':
-            return <img src={getS3Url('/images/icon/ic_swap.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_swap.png')} width="32" height="32" />;
         case 'futures':
-            return <img src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_futures.png')} width="32" height="32" />;
         case 'launchpad':
-            return <img src={getS3Url('/images/icon/ic_rocket.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_rocket.png')} width="32" height="32" />;
         case 'copytrade':
-            return <img src={getS3Url('/images/icon/ic_copytrade.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_copytrade.png')} width="32" height="32" />;
         case 'staking':
-            return <img src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_staking.png')} width="32" height="32" />;
         case 'farming':
-            return <img src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_farming.png')} width="32" height="32" />;
         case 'referral':
-            return <img src={getS3Url('/images/icon/ic_referral.png')} width="32" height="32" />;
+            return <Image src={getS3Url('/images/icon/ic_referral.png')} width="32" height="32" />;
         case 'language':
             return <SvgIcon name="globe" size={18} style={{ marginRight: 8, marginLeft: 2 }} />;
         case 'moon':

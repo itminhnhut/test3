@@ -1040,7 +1040,7 @@ export const TypeTable = ({ type, data }) => {
         case 'side':
             return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;
         case 'type':
-            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : str;
+            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : getType(str);
         default:
             return null;
     }
@@ -1070,7 +1070,7 @@ export const getType = (type) => {
         case FuturesOrderTypes.StopMarket:
             return VndcFutureOrderType.Type.STOP;
         default:
-            return VndcFutureOrderType.Limit;
+            return null;
     }
 };
 

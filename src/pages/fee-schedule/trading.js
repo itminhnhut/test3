@@ -540,13 +540,13 @@ const TradingFee = () => {
                                     <span className="float-right">
                                         {state.vipLevel
                                             ? renderUserFeeConfig(
-                                                  FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                                  FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
-                                              )
+                                                FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                                FEE_TABLE[state.vipLevel].maker_taker.split(' ')[0].replace('%', '')
+                                            )
                                             : renderUserFeeConfig(
-                                                  FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
-                                                  FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
-                                              )}
+                                                FEE_TABLE[0].maker_taker_deducted.split(' ')[0].replace('%', ''),
+                                                FEE_TABLE[0].maker_taker.split(' ')[0].replace('%', '')
+                                            )}
                                     </span>
                                 </div>
                             </div>
@@ -556,13 +556,13 @@ const TradingFee = () => {
                                     <span className="float-right">
                                         {state.vipLevel
                                             ? renderUserFeeConfig(
-                                                  FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                                  FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
-                                              )
+                                                FEE_TABLE[state.vipLevel].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                                FEE_TABLE[state.vipLevel].maker_taker.split(' ')[2].replace('%', '')
+                                            )
                                             : renderUserFeeConfig(
-                                                  FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
-                                                  FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
-                                              )}
+                                                FEE_TABLE[0].maker_taker_deducted.split(' ')[2].replace('%', ''),
+                                                FEE_TABLE[0].maker_taker.split(' ')[2].replace('%', '')
+                                            )}
                                     </span>
                                 </div>
                             </div>
@@ -691,25 +691,25 @@ const TradingFee = () => {
                 )}
             </div>
 
-            {/* <div className='mt-12 md:mt-8 space-y-2 nami-list-disc'> */}
-            {/*     <div> */}
-            {/*         {t('fee-structure:maker_taker_description')}<span */}
-            {/*         className='ml-2'>{t('fee-structure:maker_taker_description_2')}</span> */}
-            {/*         <Link href={PATHS.REFERENCE.MAKER_TAKER}> */}
-            {/*             <a className='ml-3 text-teal font-semibold hover:!underline' */}
-            {/*                target='_blank'>{t('common:read_more')}</a> */}
-            {/*         </Link> */}
-            {/*     </div> */}
-            {/*     <div> */}
-            {/*         {t('fee-structure:referral_description_value', { value: '20%' })} */}
-            {/*         <Link href={PATHS.ACCOUNT.REFERRAL}> */}
-            {/*             <a className='ml-3 text-teal font-semibold hover:!underline'>{t('common:read_more')}</a> */}
-            {/*         </Link> */}
-            {/*     </div> */}
-            {/*     <div> */}
-            {/*         {t('fee-structure:swap_fee_description')} */}
-            {/*     </div> */}
-            {/* </div> */}
+            <div className='mt-12 md:mt-8 space-y-2 nami-list-disc'>
+                <div>
+                    {t('fee-structure:maker_taker_description')}<span
+                        className='ml-2'>{t('fee-structure:maker_taker_description_2')}</span>
+                    <Link href={PATHS.REFERENCE.MAKER_TAKER}>
+                        <a className='ml-3 text-teal font-semibold hover:!underline'
+                            target='_blank'>{t('common:read_more')}</a>
+                    </Link>
+                </div>
+                <div>
+                    {t('fee-structure:referral_description_value', { value: '20%' })}
+                    <Link href={PATHS.ACCOUNT.REFERRAL}>
+                        <a className='ml-3 text-teal font-semibold hover:!underline'>{t('common:read_more')}</a>
+                    </Link>
+                </div>
+                <div>
+                    {t('fee-structure:swap_fee_description')}
+                </div>
+            </div>
         </>
     );
 };
