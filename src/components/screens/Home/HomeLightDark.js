@@ -106,6 +106,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             <SwiperSlide key={index} className="">
                                 <div className="relative overflow-hidden w-full h-[650px] md:h-[435px]">
                                     <Image
+                                        priority
                                         src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.webp`)}
                                         layout="fill"
                                         className="p-1"
