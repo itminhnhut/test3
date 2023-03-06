@@ -366,7 +366,7 @@ const TransferModal = ({ isMobile, alert }) => {
     // Render Handler
     const renderWalletSelect = useCallback(() => {
         return (
-            <div className="mt-6 flex flex-col items-center justify-center sm:mt-8 sm:flex-row sm:items-center ">
+            <div className="flex flex-col items-center justify-center sm:mt-8 sm:flex-row sm:items-center ">
                 <div
                     className="relative w-full p-4 sm:w-1/2 sm:pr-3.5 cursor-pointer select-none border border-divider dark:border-divider-dark rounded-xl"
                     ref={fromWalletRef}

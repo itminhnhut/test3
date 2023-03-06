@@ -7,7 +7,7 @@ import { QRCode } from 'react-qrcode-logo';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
 import { getMarketWatch } from 'redux/actions/market';
-import { compact, find, uniqBy } from 'lodash';
+import { compact, uniqBy, find, filter } from 'lodash';
 import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
@@ -79,7 +79,7 @@ const Index = () => {
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="!max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
+                className="!max-w-[488px]  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div
@@ -114,6 +114,8 @@ const Index = () => {
                 return null;
             })
         );
+        pairs = filter(pairs, { q: 'VNDC' });
+
         pairs = uniqBy(pairs, 'b');
 
         const topView = _.sortBy(pairs, [
@@ -142,7 +144,7 @@ const Index = () => {
                 topView: topView.slice(0, 5),
                 topGainers: topGainers.slice(0, 5),
                 topLosers: topLosers.slice(0, 5),
-                newListings: newListings.slice(0, 5)
+                newListings: newListings.slice(0, 5),
             },
             streamLineData: {
                 total: originPairs.length

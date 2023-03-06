@@ -86,7 +86,8 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
             'nami.io',
             'datav2.nami.exchange',
             'blog.nami.today',
-            'data-test.bitbattle.io'
+            'data-test.bitbattle.io',
+            'nami-dev.sgp1.digitaloceanspaces.com',
         ]
     },
     distDir: process.env.BUILD_DIR || 'build'
