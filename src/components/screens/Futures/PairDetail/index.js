@@ -500,7 +500,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     {t('futures:tp_sl:perpetual')}
                     <BxsBookIcon />
                 </div>
-                <div className="absolute left-0 z-30  group-hover:block top-full" ref={pairListRef}>
+                <div className="absolute left-0 z-30 hidden group-hover:block top-full" ref={pairListRef}>
                     <FuturesPairList mode={pairListMode} setMode={setPairListMode} isAuth={isAuth} activePairList={activePairList} />
                 </div>
                 {/* )} */}
