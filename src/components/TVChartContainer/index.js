@@ -441,6 +441,7 @@ export class TVChartContainer extends React.PureComponent {
                 'volume_force_overlay',
                 'header_interval_dialog_button',
                 'header_settings',
+                'source_selection_markers',
                 'header_symbol_search',
                 'header_compare',
                 'header_undo_redo',
@@ -450,8 +451,7 @@ export class TVChartContainer extends React.PureComponent {
                 'header_widget',
                 'axis_pressed_mouse_move_scale'
             ],
-            // hide_left_toolbar_by_default
-            enabled_features: ['move_logo_to_main_pane', 'edit_buttons_in_legend'],
+            enabled_features: ['move_logo_to_main_pane', 'edit_buttons_in_legend', 'hide_left_toolbar_by_default'],
             charts_storage_url: this.props.chartsStorageUrl,
             charts_storage_api_version: this.props.chartsStorageApiVersion,
             client_id: this.props.clientId,

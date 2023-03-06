@@ -3,23 +3,22 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { useTranslation } from 'next-i18next';
 import Button from 'components/common/V2/ButtonV2/Button';
 import styled from 'styled-components';
-import { formatTime, TypeTable, getS3Url, formatNumber } from 'redux/actions/utils';
+import { formatTime, TypeTable, getS3Url } from 'redux/actions/utils';
 import { getShareModalData } from 'components/screens/Mobile/Futures/TabOrders/ShareFutureMobile';
 import ChevronDown from 'components/svg/ChevronDown';
 import colors from 'styles/colors';
 import QRCode from 'qrcode.react';
 import { useSelector } from 'react-redux';
 import DomToImage from 'dom-to-image';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 
-const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
+const FututesShareModal = ({ isVisible, onClose, order }) => {
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const pairTicker = marketWatch[order?.symbol];
     const refCode = useSelector((state) => state.auth?.user?.code_refer);
     const content = useRef();
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
-    const isHistory = order?.status === VndcFutureOrderType.Status.CLOSED;
+
     const { price, closePrice, percent, leverage, id } = getShareModalData({ order, pairPrice: pairTicker });
     const negative = +String(percent).substr(0, String(percent).length - 1) < 0;
 
@@ -35,13 +34,12 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
     };
 
     const onDownLoad = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
             const scale = 2;
             const option = {
                 height: content.current.offsetHeight * scale,
                 width: content.current.offsetWidth * scale,
-                cacheBust: true,
                 style: {
                     transform: 'scale(' + scale + ')',
                     transformOrigin: 'top left',
@@ -60,7 +58,7 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
     };
 
     return (
-        <ModalV2 loading={loading} wrapClassName="dark:!bg-dark-4" className="!max-w-[588px]" isVisible={isVisible} onBackdropCb={onClose}>
+        <ModalV2 wrapClassName="dark:!bg-dark-4" className="!max-w-[588px]" isVisible={isVisible} onBackdropCb={onClose}>
             <div className="text-2xl font-semibold mb-6">{t('futures:share:title')}</div>
             <Background ref={content} negative={negative}>
                 <div className="flex flex-col space-y-1 text-txtSecondary-dark text-xs leading-4">
@@ -84,8 +82,8 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
                         <Item>{price}</Item>
                     </Row>
                     <Row>
-                        <Item>{isHistory ? t('futures:order_table:close_price') : t('common:last_price')}</Item>
-                        <Item>{isHistory ? closePrice : formatNumber(pairTicker?.lastPrice, decimals?.price ?? 2)}</Item>
+                        <Item>{t('futures:order_table:close_price')}</Item>
+                        <Item>{closePrice}</Item>
                     </Row>
                 </div>
                 <div id="section_bottom" className="absolute bottom-0 left-0 py-3 w-full flex items-center justify-between px-4">

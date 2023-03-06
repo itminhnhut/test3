@@ -37,7 +37,7 @@ const AlertModalV2 = ({
 
     return (
         <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
-            <div className="flex flex-col items-center">
+            <div className="mt-6 flex flex-col items-center">
                 {getIcon()}
                 <div className="mt-6 mb-4 font-semibold text-2xl">{title}</div>
                 {message && <span className="text-txtSecondary dark:text-txtSecondary-dark text-center text-base">{message}</span>}

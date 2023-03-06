@@ -24,7 +24,7 @@ const Button = ({ className = '', disabled = false, children, variants = 'primar
             onClick={onClick}
             disabled={loading || disabled}
         >
-            {!loading ? children : <Spinner />}
+            {children} {loading && <Spinner />}
         </button>
     );
 };
