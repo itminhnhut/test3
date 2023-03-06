@@ -36,12 +36,13 @@
   // Re-used simple dropdown
   .mal-navbar__with__dropdown {
     .mal-navbar__dropdown {
+      @apply border border-t-0 border-divider dark:border-divider-dark;
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer dark:bg-darkBlue-2 dark:shadow-none
-        border-l border-r border-b dark:border-divider-dark #{!important};
+        border border-t-0 border-divider shadow-card_light  dark:border-divider-dark #{!important};
 
         box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
-        border-color: transparent;
+      
 
         .mal-navbar__dropdown___item {
           @apply text-txtPrimary dark:text-txtPrimary-dark text-right #{!important};
@@ -117,6 +118,7 @@
   // Re-used simple dropdown
   .mal-navbar__with__dropdown {
     .mal-navbar__dropdown {
+
       .mal-navbar__dropdown__wrapper {
         @apply bg-darkBlue-2 shadow-none border-l border-r border-b border-divider-dark #{!important};
 
@@ -354,7 +356,7 @@
     @apply h-full flex flex-grow items-center;
 
     .mal-navbar__link__group___item {
-      @apply flex items-center h-full text-sm font-semibold dark:font-normal text-txtPrimary dark:text-txtPrimary-dark
+      @apply h-full flex items-center text-sm font-semibold dark:font-normal text-txtPrimary dark:text-txtPrimary-dark
       relative mr-10;
       letter-spacing: normal;
       cursor: pointer;
@@ -477,15 +479,10 @@
 
     .mal-navbar__link__group___item___childen__lv1 {
       @apply absolute hidden left-0 z-50 bg-white dark:bg-darkBlue-3
-      border shadow-card_light dark:shadow-none  border-divider dark:border-divider-dark;
-
-      top: 100%;
-      border-bottom-right-radius: 12px;
-      border-bottom-left-radius: 12px;
+      border shadow-card_light dark:shadow-none  border-divider dark:border-divider-dark rounded-b-xl top-full px-4;
+     
       overflow: hidden;
-      transition: max-height 0.3s ease;
-      padding-right: 16px;
-      padding-left: 16px;
+      transition: max-height 0.3s ease;   
     }
 
     .mal-navbar__link__group___item___childen__lv1___item {
@@ -587,14 +584,9 @@
       gap:12px;
       .mal-navbar__dropdown__wrapper {
         @apply bg-bgContainer dark:bg-darkBlue-3 dark:shadow-none
-        border-l border-r border-b border-divider dark:border-divider-dark;
+        border-l border-r border-b border-divider shadow-card_light dark:border-divider-dark py-2 rounded-b-xl;
 
-        border-color: transparent;
-        padding: 8px 0;
-        border-bottom-right-radius: 12px;
-        border-bottom-left-radius: 12px;
-        box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
-        //min-width: 200px;
+       
 
         .mal-navbar__dropdown___item {
           @apply flex items-center text-txtPrimary dark:text-txtPrimary-dark text-right;

@@ -159,6 +159,7 @@ export const NAV_DATA = [
 ];
 
 export const MOBILE_NAV_DATA = [
+    
     // {
     //     key: 10,
     //     title: 'Profile',
@@ -340,6 +341,14 @@ export const MOBILE_NAV_DATA = [
         isNew: false,
         url: '/',
         child_lv1: [
+            {
+                key: 2,
+                title: 'Overview',
+                localized: 'overview_wallet',
+                isNew: false,
+                url: PATHS.WALLET.OVERVIEW,
+                child_lv2: []
+            },
             {
                 key: 0,
                 title: 'Spot Wallet',

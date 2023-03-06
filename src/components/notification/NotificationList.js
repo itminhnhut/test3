@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import Image from 'next/image';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
@@ -11,7 +11,7 @@ import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
-import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
+import classNames from 'classnames';
 
 const NOTI_READ = 2;
 
@@ -45,15 +45,15 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
     const unreadCount = useSelector((state) => state.notification.unreadCount);
     const user = useSelector((state) => state.auth.user) || null;
 
+    useEffect(() => {
+        dispatch(getNotifications({ lang: i18n.language }));
+    }, [i18n, dispatch]);
+
     const [notificationLoading, setNotificationLoading] = useState(false);
 
     const markAsRead = async (ids) => {
         dispatch(await markAllAsRead(ids));
     };
-
-    const fetchNotificationsOnOpen = _.throttle(() => {
-        dispatch(getNotifications({ lang: i18n.language }));
-    }, 1000);
 
     const loadMoreNotification = () => {
         let prevId;
@@ -66,7 +66,6 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
 
     const openDropdownPopover = () => {
         setPopover(true);
-        fetchNotificationsOnOpen();
     };
 
     const closeDropdownPopover = () => {
@@ -165,9 +164,16 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold" onClick={handleMarkAllRead}>
+                            <div
+                                onClick={handleMarkAllRead}
+                                className={classNames('text-sm font-semibold', {
+                                    'cursor-pointer   text-teal': unreadCount > 0,
+                                    'pointer-events-none text-txtDisabled dark:text-txtDisabled-dark': !unreadCount
+                                })}
+                            >
                                 {t('navbar:mark_read')}
-                            </ButtonV2>
+                            </div>
+
                             {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}
@@ -185,10 +191,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                                 {t('loading')}
                                             </span>
                                         ) : (
-                                            <span
-                                                onClick={loadMoreNotification}
-                                                className="text-dominant dark:text-txtPrimary-dark hover:text-teal cursor-pointer"
-                                            >
+                                            <span onClick={loadMoreNotification} className="text-dominant  hover:text-teal cursor-pointer">
                                                 {t('load_more')}
                                             </span>
                                         )}

@@ -399,23 +399,25 @@
           }
 
           .homepage-markettrend__market_table__row__col1 {
-            @apply flex-grow;
-            width: 40%;
+            @apply w-1/3;
+            
           }
 
           .homepage-markettrend__market_table__row__col2 {
-            @apply text-right;
+          
             width: 30%;
             @media (min-width: 992px) {
-              width: calc(60% / 3);
+              // width: calc(60% / 3);
+              @apply w-1/3;
             }
           }
 
           .homepage-markettrend__market_table__row__col3 {
-            @apply text-right;
+            // @apply text-right;
             width: 30%;
             @media (min-width: 992px) {
-              width: calc(60% / 3);
+              // width: calc(60% / 3);
+              @apply w-1/3;
             }
           }
 
@@ -1070,7 +1072,7 @@
 
         .homepage-journey__group_content___left {
           .homepage-journey__group_content___left__item {
-            padding: 24px 32px;
+            padding: 24px;
 
             .homepage-journey__group_content___left__item___content__title {
               font-size: 18px;
@@ -1233,26 +1235,25 @@
 
 }
 
+.dark .homepage-trade3step__inner {
+  background:linear-gradient(184.08deg, rgba(30, 32, 40, 0.15) 3.33%, rgba(30, 128, 110, 0.15) 69%, rgba(30, 255, 201, 0.15) 130.36%)!important ;
+}
+
 .homepage-trade3step {
   // background: linear-gradient(102.6deg, #233074 1.59%, #223050 79.79%);
   @apply  bg-white dark:bg-dark-dark pb-12 md:pb-[120px];
 
 
-  .homepage-trade3step__bubble {
-    width: 300px;
-    height: 400px;
-    transform: rotate(-278.39deg);
-    opacity: 0.8;
-    -webkit-filter: blur(72.4px);
-    filter: blur(72.4px);
-    background-image: linear-gradient(283deg, #46c984 140%, rgba(70, 201, 132, 0.63) 128%, rgba(70, 201, 132, 0) 17%);
-  }
+
 
   .homepage-trade3step___wrapper {
+   
     .homepage-trade3step__inner {
-      @apply py-12 dark:text-txtPrimary-dark dark:bg-darkBlue-3/50 bg-white/40 text-txtPrimary border dark:border-divider-dark border-dominant rounded-[24px];
+      @apply py-12 dark:text-txtPrimary-dark  text-txtPrimary border dark:border-divider-dark border-divider md:border-teal rounded-[24px] ;
       -webkit-backdrop-filter: blur(20px);
       backdrop-filter: blur(20px);
+      background:rgba(255,255,255,0.4);
+      
       .homepage-trade3step___title {
         @apply text-center;
         font-size:28px;

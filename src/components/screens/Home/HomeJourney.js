@@ -3,6 +3,7 @@ import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { getS3Url } from 'redux/actions/utils';
 import Link from 'next/link';
 import Image from 'next/image';
+import classNames from 'classnames';
 
 const JOURNEY_DESCRIPTIONS = [
     {
@@ -44,10 +45,10 @@ const HomeJourney = ({ t, width, currentTheme }) => {
                 </div>
 
                 <div className="homepage-journey__group_content">
-                    <div className="homepage-journey__group_content___left -m-2">
-                        {JOURNEY_DESCRIPTIONS.map((item) => (
+                    <div className="homepage-journey__group_content___left -my-2 -mx-11">
+                        {JOURNEY_DESCRIPTIONS.map((item, index) => (
                             // <Link key={item.key} href={item.href} passHref>
-                            <div key={item.key} className="p-2 w-full md:w-1/2 relative group">
+                            <div key={item.key} className={classNames(' py-2 px-11 w-full md:w-1/2 relative group', {})}>
                                 <div className="homepage-journey__group_content___left__item ">
                                     <div className="homepage-journey__group_content___left__item___icon">
                                         <Image
