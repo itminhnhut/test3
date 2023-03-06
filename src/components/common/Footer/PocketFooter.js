@@ -12,8 +12,10 @@ import SvgIcon from 'src/components/svg';
 import colors from 'styles/colors';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
+    const router = useRouter();
     return (
         <>
             <div className="mal-footer___pocket">
@@ -40,7 +42,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
-                                    onClick={() => window.open(getLoginUrl('sso', 'register'))}
+                                    onClick={() => router.push(getLoginUrl('sso', 'register'))}
                                     className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm"
                                 >
                                     {t('common:create_account')}
