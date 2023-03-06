@@ -58,8 +58,9 @@
         "referral_description": "Receive up to 20% commission from friends' trades",
         "transfer": "Transfer",
         "transfer_description": "",
-        "spot_wallet": "Exchange Wallet",
-        "futures_wallet": "Futures Wallet",
+        "overview_wallet": "Overview",
+        "spot_wallet": "Exchange",
+        "futures_wallet": "Futures",
         "staking_wallet": "Staking Wallet",
         "farming_wallet": "Farming Wallet",
         "classic": "Classic",
@@ -119,5 +120,5 @@
     "trade_on": "Download on the",
     "scan_qr": "Scan the QR code to download Nami Exchange",
     "down_with_qr": "Down Nami Exchange",
-    "footer_title": "Secure Exchanges and Futures Exchange"
+    "footer_title": "Secure Spot and Futures Exchange"
 }
