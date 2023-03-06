@@ -262,7 +262,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             return (
                 <div
                     key={`pairPrice_items_${key}`}
-                // style={{ minWidth: minWidth || 0 }}
+                    // style={{ minWidth: minWidth || 0 }}
                 >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}

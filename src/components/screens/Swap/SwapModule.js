@@ -301,10 +301,8 @@ const SwapModule = ({ width, pair }) => {
     // Render Handler
     const handleDepositIconBtn = useCallback(() => {
         if (!auth) {
-            console.log('not auth: ', auth);
             router.push(getLoginUrl('sso', 'login'));
         } else {
-            console.log('auth: ', auth);
             // if (!state.fromAsset) return null;
             // router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
             // router.push(`/wallet/exchange/deposit?type=crypto&asset=${state.fromAsset}`);
