@@ -10,11 +10,10 @@ import CheckBox from 'components/common/CheckBox';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useDispatch, useSelector } from 'react-redux';
-import Link from 'next/link';
 
 export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
-    // if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
+    if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
     return Number(price);
 };
 
@@ -38,7 +37,7 @@ const FuturesOrderButtonsGroupVndc = ({
     const dispatch = useDispatch();
     const settings = useSelector((state) => state.futures.settings);
     const [loading, setLoading] = useState(false);
-    const _price = getPrice(getType(type), side, price, ask, bid);
+    const _price = getPrice(getType(type), side, price, ask, bid, price);
     const [showModal, setShowModal] = useState('');
     const [hidden, setHidden] = useState(false);
     const messages = useRef(null);
@@ -213,7 +212,7 @@ const FuturesOrderButtonsGroupVndc = ({
                         variants={isBuy ? 'primary' : 'red'}
                     >
                         <span>{(isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</span>
-                        <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
+                        <span className="text-xs">{formatNumber(_price, decimals.price)}</span>
                     </ButtonV2>
                 )}
             </div>

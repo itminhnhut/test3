@@ -56,7 +56,7 @@ export default function FundingHistory(props) {
         <MaldivesLayout>
             {isApp && (
                 <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
-                    <ChevronLeft onClick={() => router.back()} />
+                    <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
             <Background className={isApp ? 'mt-12' : ''} isDark={currentTheme === THEME_MODE.DARK}>

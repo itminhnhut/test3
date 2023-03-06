@@ -167,7 +167,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             <div className="pl-4">
                                 <Image
                                     // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                    src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                    src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                     width={94}
                                     height={30}
                                 />

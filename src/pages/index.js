@@ -12,6 +12,11 @@ import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
+import { getS3Url } from 'redux/actions/utils';
+import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
+import useDarkMode from 'hooks/useDarkMode';
+import { useRefWindowSize } from 'hooks/useWindowSize';
+import Skeletor from '../components/common/Skeletor';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -19,42 +24,35 @@ const MaldivesLayout = dynamic(() => import('src/components/common/layouts/Maldi
 
 const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), {
     ssr: false,
-    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh"/>
 });
 const HomeAdditional = dynamic(() => import('components/screens/Home/HomeAdditional'), {
     ssr: false,
-    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh" />
+    loading: () => <Skeletor baseColor="#000" width="100%" height="50vh"/>
 });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const HomeIntroduce = dynamic(() => import('components/screens/Home/HomeIntroduce'), {
     ssr: false,
-    loading: () => (isMobile ? <LoadingPage /> : <SkeletonHomeIntroduce />)
+    loading: () => (isMobile ? <LoadingPage/> : <SkeletonHomeIntroduce/>)
 });
 const HomeMarketTrend = dynamic(() => import('components/screens/Home/HomeMarketTrend'), {
     ssr: false,
-    loading: () => <Skeletor width="100%" height="50vh" />
+    loading: () => <Skeletor width="100%" height="50vh"/>
 });
 const HomeCommunity = dynamic(() => import('components/screens/Home/HomeCommunity'), {
     ssr: false,
-    loading: () => <Skeletor width="100%" height="50vh" />
+    loading: () => <Skeletor width="100%" height="50vh"/>
 });
 const HomeFirstAward = dynamic(() => import('components/screens/Home/HomeFirstAward'), {
     ssr: false,
-    loading: () => <Skeletor width="100%" height="50vh" />
+    loading: () => <Skeletor width="100%" height="50vh"/>
 });
 const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDark'), {
     ssr: false,
-    loading: () => <Skeletor width="100%" height="50vh" />
+    loading: () => <Skeletor width="100%" height="50vh"/>
 });
 
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
-
-import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
-import { X } from 'react-feather';
-import useDarkMode from 'hooks/useDarkMode';
-import { useRefWindowSize } from 'hooks/useWindowSize';
-import Skeletor from '../components/common/Skeletor';
-import { getS3Url } from 'redux/actions/utils';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
@@ -84,11 +82,12 @@ const Index = () => {
                 className="!max-w-[488px]  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
-                    <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
+                    <div
+                        className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
                 </div>
                 <div className="flex items-center justify-center relative py-12 ">
                     <div className="z-10 rounded-xl qr-code">
-                        <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
+                        <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150}/>
                     </div>
                     <div className="absolute w-full h-full z-0">
                         <Image layout="fill" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
@@ -156,14 +155,14 @@ const Index = () => {
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce trendData={state.trendData} t={t} />
-                <HomeMarketTrend trendData={state.trendData} />
-                <HomeNews />
-                <HomeAdditional t={t} width={width} currentTheme={currentTheme} />
-                <HomeLightDark t={t} onShowQr={() => setState({ showQR: true })} />
+                <HomeIntroduce trendData={state.trendData} t={t}/>
+                <HomeMarketTrend trendData={state.trendData}/>
+                <HomeNews/>
+                <HomeAdditional t={t} width={width} currentTheme={currentTheme}/>
+                <HomeLightDark t={t} onShowQr={() => setState({ showQR: true })}/>
 
-                <HomeFirstAward theme={currentTheme} t={t} language={language} />
-                <HomeCommunity currentTheme={currentTheme} t={t} language={language} width={width} />
+                <HomeFirstAward theme={currentTheme} t={t} language={language}/>
+                <HomeCommunity currentTheme={currentTheme} t={t} language={language} width={width}/>
 
                 {renderQrCodeModal()}
             </div>

@@ -158,7 +158,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
-                    1<span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
+                    <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
                     <Countdown
                         now={() => (timesync ? timesync.now() : Date.now())}
                         date={pairPrice?.fundingTime}
@@ -262,7 +262,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             return (
                 <div
                     key={`pairPrice_items_${key}`}
-                    // style={{ minWidth: minWidth || 0 }}
+                // style={{ minWidth: minWidth || 0 }}
                 >
                     <FuturesPairDetailItem
                         label={code === 'fundingCountdown' ? renderFunding() : localized}
@@ -439,7 +439,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                             </div>
                             <div className="z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">{t('futures:tp_sl:perpetual')}</div>
                         </div>
-                        <div className="flex flex-col items-end justify-end flex-1">
+                        <div className="flex flex-col items-end justify-start flex-1">
                             {renderLastPrice(true)}
                             <PriceChangePercent priceChangePercent={priceFromMarketWatch?.priceChangePercent} className="mt-2 text-sm" />
                         </div>
@@ -470,7 +470,12 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     return (
         <div className="flex items-center h-full pl-5 w-full">
             {/* Pair */}
-            <PopoverFunding visible={showPopover} onClose={() => setShowPopover(false)} isFunding={isFunding.current} />
+            <PopoverFunding
+                visible={showPopover}
+                onClose={() => setShowPopover(false)}
+                isFunding={isFunding.current}
+                symbol={pairPrice?.baseAsset + pairPrice?.quoteAsset}
+            />
             <div
                 className="relative cursor-pointer group pr-4 mr-4 border-r border-divider dark:border-divider-dark"
                 onMouseOver={() => setActivePairList(true)}
@@ -528,13 +533,13 @@ const MARK_PRICE_ITEMS = [
     }
 ];
 
-const PopoverFunding = ({ visible, onClose, isFunding }) => {
+const PopoverFunding = ({ visible, onClose, isFunding, symbol }) => {
     const router = useRouter();
     const [currentTheme] = useDarkMode();
     const { t } = useTranslation();
 
     const onRedirect = () => {
-        window.open(`/${router.locale}/futures/funding-history?theme=${currentTheme}`);
+        window.open(`/${router.locale}/futures/funding-history?symbol=${symbol}`);
     };
 
     const onDetail = () => {
@@ -552,7 +557,7 @@ const PopoverFunding = ({ visible, onClose, isFunding }) => {
             </div> */}
             <ModalV2 className="!max-w-[342px]" isVisible={visible} onBackdropCb={onClose}>
                 {/* <Modal isVisible={visible} onBackdropCb={onClose} containerClassName="max-w-[342px]"> */}
-                <div className="font-semibold text-2xl mt-4">{isFunding ? 'Funding' : t('futures:countdown')}</div>
+                <div className="font-semibold text-2xl">{isFunding ? 'Funding' : t('futures:countdown')}</div>
                 <div className="text-gray-9 dark:text-gray-7 text-sm mt-4">
                     {isFunding ? t('futures:funding_rate_des') : t('common:countdown_tooltip')}{' '}
                     {isFunding && (

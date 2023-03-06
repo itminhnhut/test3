@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import { useSelector } from 'react-redux';
-import { getLoginUrl } from 'src/redux/actions/utils';
+import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 
 const NoData = ({ text, loading = false }) => {
     const { t } = useTranslation();
@@ -23,7 +23,7 @@ const NoData = ({ text, loading = false }) => {
         <div className="flex flex-col space-y-3 items-center justify-center">
             {!user ? (
                 <>
-                    <img className="max-h-[124px]" src="/images/icon/ic_login.png" />
+                    <img className="max-h-[124px]" src={getS3Url('/images/icon/ic_login.png')} />
                     <a href={getLoginUrl('sso')}>
                         <span dangerouslySetInnerHTML={{ __html: t('common:sign_in_to_continue') }} />
                     </a>

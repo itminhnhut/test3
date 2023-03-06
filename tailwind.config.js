@@ -86,7 +86,7 @@ module.exports = {
             '2xl': [
                 '1.5rem',
                 {
-                    lineHeight: '2.25rem'
+                    lineHeight: '1.875rem'
                 }
             ], // Heading 5 24px
             '3xl': [
@@ -418,8 +418,7 @@ module.exports = {
                     'linear-gradient(285.88deg, rgba(98, 255, 104, 0.24) 6.52%, rgba(50, 244, 110, 0.59) 38.97%, rgba(45, 225, 96, 0.53) 65.02%, #3BE29C 91.4%)',
                 'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
-                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
-                'home-3step': 'linear-gradient(184.08deg, rgba(30, 32, 40, 0.15) 3.33%, rgba(30, 128, 110, 0.15) 69%, rgba(30, 255, 201, 0.15) 130.36%)'
+                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')"
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',
