@@ -110,12 +110,12 @@ export const AmountInput = ({
                             />
                         </div>
                         {+amount < max && (
-                            <div className="cursor-pointer text-teal uppercase" onClick={() => internalAmountChange(max)}>
+                            <div className="cursor-pointer text-teal uppercase font-semibold" onClick={() => internalAmountChange(max)}>
                                 {t('common:max')}
                             </div>
                         )}
                     </div>
-                    <div className="w-[1px] h-6 dark:bg-divider-dark mx-2" />
+                    <div className="w-[1px] h-6 bg-divider dark:bg-divider-dark mx-2" />
                     <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setOpenSelectAsset(!openSelectAsset)}>
                         <AssetLogo assetCode={currentAsset?.assetCode} size={24} />
                         <span className="font-semibold">{currentAsset?.assetCode}</span>
