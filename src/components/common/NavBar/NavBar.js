@@ -525,7 +525,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <Link href="/">
                         <a className="block mal-navbar__logo mr-10">
                             <Image
-                                src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                 width="94"
                                 height="30"
                                 className="navbar__logo"

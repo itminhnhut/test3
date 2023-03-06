@@ -197,7 +197,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                    <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal">
                                         {t('navbar:read_all_noti')}
                                     </span>
                                 )}
