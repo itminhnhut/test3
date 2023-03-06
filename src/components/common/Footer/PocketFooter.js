@@ -37,7 +37,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         )
                     ) : (
                         <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
-                            <div className="font-semibold text-3xl lg:text-2xl mb-6">{t('navbar:footer_title')}</div>
+                            <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
                                     onClick={() => window.open(getLoginUrl('sso', 'register'))}
@@ -45,11 +45,11 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 >
                                     {t('common:create_account')}
                                 </ButtonV2>
-                                {width < 1200 && (
+                                {/* {width < 1200 && (
                                     <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
                                         {t('common:sign_in')}
                                     </ButtonV2>
-                                )}
+                                )} */}
                             </div>
 
                             {width < 1200 && <hr className="border-divider dark:border-divider-dark mt-6" />}
@@ -67,7 +67,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.about ? '!!rotate-0 ' : ' '}`}
+                                className={`${active?.about ? '!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
                         </div>
@@ -117,7 +117,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.product ? '!!rotate-0 ' : ' '}`}
+                                className={`${active?.product ? '!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
                         </div>
@@ -221,7 +221,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
-                                className={`${active?.support ? '!!rotate-0 ' : ' '}`}
+                                className={`${active?.support ? '!rotate-0 ' : ' '}`}
                                 color={currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue}
                             />
 

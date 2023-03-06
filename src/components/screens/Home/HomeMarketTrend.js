@@ -174,7 +174,7 @@ const HomeMarketTrend = ({ trendData }) => {
                             <div className="homepage-markettrend__market_table__row__col2">
                                 <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
                             </div>
-                            <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                            <div className="homepage-markettrend__market_table__row__col3">
                                 <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                                     {render24hChange(pair, false, '!text-base')}
                                 </div>

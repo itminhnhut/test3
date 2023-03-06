@@ -46,6 +46,7 @@ padding-block:48px;
 
           canvas {
             border-radius:6px;
+            box-shadow:0 23.2px 32.5px 0 rgba(0, 0, 0, 0.03), 0 0 4.6px 0 rgba(0, 0, 0, 0.05);
           }
           .mal-footer___pocket__links___group__item__expander {
             @apply dark:text-txtPrimary-dark text-txtPrimary flex flex-row items-center justify-between px-4 py-3;
@@ -91,13 +92,13 @@ padding-block:48px;
               @apply text-sm  py-3 block;
                   padding-left:48px;
 
-
+              
               @media screen and (min-width:1200px) {
                 @apply  py-0 pl-0;
 
                 }
 
-              margin-top: 8px;
+              margin-top:8px;
               font-weight: 500;
               font-size: 12px;
               line-height: 20px;
@@ -156,26 +157,21 @@ padding-block:48px;
         .mal-footer___pocket__links___group__item {
 
           .mal-footer___pocket__links___group__item__expander {
-            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize text-sm font-semibold;
-
-
+            @apply text-txtPrimary dark:text-txtPrimary-dark capitalize text-sm font-semibold py-0 mb-4;
             pointer-events: none;
-
             svg {
               @apply hidden;
             }
           }
-
           .mal-footer___pocket__links___group__item__links {
             @apply text-txtSecondary dark:text-txtSecondary-dark;
             max-height: 40em !important;
-
             a {
-              // @apply w-full;
-          display:block;
-
+              @apply mt-0 mb-3;
+              display:block;
               font-size: 14px;
-              margin-top: 14px;
+            
+              
             }
           }
         }

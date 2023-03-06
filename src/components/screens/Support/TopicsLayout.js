@@ -169,6 +169,7 @@ const TopicsLayout = ({
                             <a
                                 className={classNames(
                                     'block pl-[72px] text-sm font-semibold sm:text-base sm:font-normal cursor-pointer text-txtSecondary dark:text-darkBlue-5',
+                                    'hover:font-semibold hover:text-txtPrimary dark:hover:text-gray-4 hover:leading-6',
                                     {
                                         '!font-semibold !text-txtPrimary dark:!text-gray-4 leading-6':
                                             subCats?.displaySlug ===

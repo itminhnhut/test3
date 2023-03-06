@@ -21,12 +21,16 @@ import AuthButton from './AuthButton';
 import Image from 'next/image';
 import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
+import { buildLogoutUrl } from 'src/utils';
+import { useRouter } from 'next/router';
+
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
         navActiveLv1: {}
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    const router = useRouter()
 
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
@@ -163,7 +167,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             <div className="pl-4">
                                 <Image
                                     // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                    src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                    src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                     width={94}
                                     height={30}
                                 />
@@ -186,7 +190,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
                             <a className="flex items-center px-4 mb-6">
-                                <img src={auth?.avatar} alt="avatar_user" className="w-[58px] h-[58px] rounded-full object-cover" />
+                                <Image width={58} height={58} objectFit="cover" src={auth?.avatar} alt="avatar_user" className="rounded-full" />
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
                                         {auth?.username || auth?.name || auth?.email}
@@ -228,23 +232,17 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     <hr className="border-divider dark:border-divider-dark my-6" />
                     <div>
                         {page === 'futures' ? (
-                            <div className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant">
+                            <div className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark ">
                                 <div>{t('navbar:menu.mode')}</div>
                                 <FuturesSetting spotState={spotState} resetDefault={resetDefault} onChangeSpotState={onChangeSpotState} className="px-0" />
                             </div>
                         ) : (
-                            <a
-                                className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant"
-                                onClick={themeToggle}
-                            >
+                            <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark " onClick={themeToggle}>
                                 <div className="flex flex-row items-center">{t('navbar:menu.mode')}</div>
                                 <div>{currentTheme !== 'dark' ? <SvgIcon name="sun" size={24} /> : <SvgIcon name="moon" size={24} />}</div>
                             </a>
                         )}
-                        <a
-                            className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark hover:text-dominant"
-                            onClick={onChangeLang}
-                        >
+                        <a className="mal-pocket-navbar__drawer__navlink__group___item text-txtPrimary dark:text-txtPrimary-dark " onClick={onChangeLang}>
                             <div className="flex flex-row items-center">{t('navbar:menu.lang')}</div>
                             <div className="rounded-full">
                                 {language === LANGUAGE_TAG.EN ? (
@@ -281,7 +279,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                         </div>
                         {auth && (
                             <div className="mal-pocket-navbar__drawer__navlink__group___item mt-8">
-                                <ButtonV2 variants="secondary" className=" font-semibold text-txtPrimary">
+                                <ButtonV2 onClick={() => router.push(buildLogoutUrl())} variants="secondary" className=" font-semibold text-txtPrimary">
                                     {t('navbar:menu.user.logout')}
                                 </ButtonV2>
                             </div>

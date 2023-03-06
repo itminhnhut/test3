@@ -61,7 +61,6 @@ const Market = () => {
     const [referencePrice, setReferencePrice] = useState([])
 
     useEffect(() => {
-        // TODO: move this logic to redux store
         FetchApi({
             url: API_GET_REFERENCE_CURRENCY,
             params: { base: 'VNDC,USDT', quote: 'USD' },

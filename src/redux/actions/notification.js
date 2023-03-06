@@ -1,7 +1,8 @@
 import compact from 'lodash/compact';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_NOTIFICATIONS, API_MARK_NOTIFICATIONS_READ } from './apis';
-import { ADD_NOTIFICATION, ADD_NOTIFICATION_UNREAD_COUNT, NOTIFICATION_MARK_ALL_AS_READ, SET_NOTIFICATION } from './types';
+import { filter } from 'lodash';
+import { ADD_NOTIFICATION, ADD_NOTIFICATION_UNREAD_COUNT, NOTIFICATION_MARK_ALL_AS_READ, SET_NOTIFICATION, SET_NOTIFICATION_UNREAD_COUNT } from './types';
 import { ApiStatus, NotificationCategory } from './const';
 import Axios from 'axios';
 
@@ -38,6 +39,12 @@ export function getNotifications({ lang, limit = 10, prevId }, cb) {
                         hasNext: data?.hasNext
                     });
                 }
+                console.log('find(data?.results || [], { status: 1 }):',filter(data?.results || [], { status: 1 }).length)
+
+                dispatch({
+                    type: SET_NOTIFICATION_UNREAD_COUNT,
+                    payload: filter(data?.results || [], { status: 1 }).length
+                });
             } else {
                 dispatch({
                     type: SET_NOTIFICATION,
