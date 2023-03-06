@@ -421,7 +421,7 @@ export const SupportCategories = {
                 title: 'Tin tức về Nami',
                 slug: 'noti-vi-tin-tuc-ve-nami',
                 displaySlug: 'tin-tuc-ve-nami',
-                description: 'Các thông tin cập nhật về Nami Corp. và Nami Exchange',
+                description: 'Các thông tin cập nhật về Nami Foundation. và Nami Exchange',
                 iconUrl: ''
             },
             {
@@ -455,7 +455,7 @@ export const SupportCategories = {
                 title: 'Nami News',
                 slug: 'noti-en-nami-news',
                 displaySlug: 'nami-news',
-                description: 'Latest news about Nami Corp. and Nami Exchange',
+                description: 'Latest news about Nami Foundation. and Nami Exchange',
                 iconUrl: ''
             },
             {

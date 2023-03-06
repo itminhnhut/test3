@@ -135,7 +135,7 @@ const Terms = () => {
                                 and/or blockchain technologies and offered via Nami.Exchange websites, mobile applications, clients and other forms (including
                                 new ones enabled by future technological development). Nami.Exchange Services include but are not limited to such Nami.Exchange
                                 ecosystem components as Digital Asset Trading Platforms, the financing sector, Nami Labs, Nami Academy, Nami Today, Nami
-                                Launchpad, Nami Mining, Nami Newsroom&nbsp; and novel services to be provided by Nami Corporation.
+                                Launchpad, Nami Mining, Nami Newsroom&nbsp; and novel services to be provided by Nami Foundation.
                             </Paragraph>
 
                             <Paragraph>

@@ -88,7 +88,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="flex items-center justify-center bg-darkBlue text-[#83859E] text-xs py-3">
-                Copyright © 2019 Nami Corp. All rights reserved.
+                Copyright © 2019 Nami Foundation. All rights reserved.
             </div>
         </footer>
     ), [],
