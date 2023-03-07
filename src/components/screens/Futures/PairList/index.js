@@ -13,13 +13,15 @@ import Axios from 'axios';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import NoData from 'components/common/V2/TableV2/NoData';
 
+import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
+
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
     const [search, setSearch] = useState('');
     const favoritePairs = useSelector((state) => state.futures.favoritePairs);
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
-    const [curTab, setCurTab] = useState(TABS.FUTURES);
+    const [curTab, setCurTab] = useState(TABS.FAVOURITE);
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
 
     // Sort function:
@@ -75,7 +77,11 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
             switch (curTab) {
                 case TABS.FAVOURITE:
-                    data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+                    if (favoritePairs?.length > 0) {
+                        data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+                    } else {
+                        data = data?.filter((i) => SUGGESTED_SYMBOLS?.find((rs) => rs.includes(i?.baseAsset)));
+                    }
                     break;
                 case TABS.FUTURES:
                     data = data;
@@ -170,13 +176,13 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     />
                     <div className="pl-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark  select-none">
                         <button
-                            onClick={() => onHandleMode('VNDC')}
+                            onClick={() => setMode('VNDC')}
                             className={`${mode === 'VNDC' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
                         >
                             VNDC
                         </button>
                         <button
-                            onClick={() => onHandleMode('USDT')}
+                            onClick={() => setMode('USDT')}
                             className={`${mode === 'USDT' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
                         >
                             USDT
