@@ -98,7 +98,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                 key: date['key']
             }
         });
-        if (!showPicker)
+        // if (!showPicker)
             onChange({
                 selection: {
                     startDate: null,

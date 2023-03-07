@@ -7,6 +7,8 @@ import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
 
 const DateFilter = ({ filter, setFilter }) => {
+    console.log('filter.range.startDate && filter.range.endDate:', filter.range.startDate, filter.range.endDate);
+
     return (
         <FilterWrapper label="Thời gian" className="!max-w-[300px]">
             <DatePickerV2

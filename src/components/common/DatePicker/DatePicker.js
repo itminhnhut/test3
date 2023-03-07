@@ -91,7 +91,6 @@ const DatePicker = ({ date, isCalendar, onChange, month, wrapperClassname, class
                                     ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
                                     : 'DD/MM/YYYY - DD/MM/YYYY')}
                         </div>
-
                         {issetValue ? (
                             <div className="" onClick={onClear}>
                                 <X size={16} />

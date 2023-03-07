@@ -21,7 +21,7 @@ const INITAL_FILTER = {
     page: 0,
     range: {
         startDate: null,
-        endDate: Date.now(),
+        endDate:  Date.now(),
         key: 'selection'
     },
 }
