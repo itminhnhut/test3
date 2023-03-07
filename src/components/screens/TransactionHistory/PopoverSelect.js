@@ -31,7 +31,8 @@ const PopoverSelect = (props, ref) => {
                 <div className="px-4 mb-6">
                     <SearchBox inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
                 </div>
-                <div className="max-h-[300px] space-y-3 overflow-y-scroll">{props.children}</div>
+                {props.children}
+                {/* <div className="max-h-[300px] space-y-3 overflow-y-scroll"></div> */}
             </div>
         </PopoverV2>
     );

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 
 import classNames from 'classnames';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { INITAL_FILTER } from '../constant'
 
 const DateFilter = dynamic(() => import('./DateFilter', { ssr: false }));
 const AssetFilter = dynamic(() => import('./AssetFilter', { ssr: false }));
@@ -32,10 +33,17 @@ const TransactionFilter = ({ filter, setFilter, categoryConfig, language }) => {
                 <DateFilter filter={filter} setFilter={setFilter} />
             </div>
             <div className="w-1/2 p-3 lg:w-1/4">
-                <CategoryFilter language={language} categoryConfig={categoryConfig} search={search} setSearch={setSearch} />
+                <CategoryFilter
+                    language={language}
+                    category={filter.category}
+                    setCategory={(category) => setFilter({ category })}
+                    categoryConfig={categoryConfig}
+                    search={search}
+                    setSearch={setSearch}
+                />
             </div>
             <div className="w-1/2 p-3 lg:w-1/4">
-                <ButtonV2 variants="secondary" className="!leading-5 !h-auto !w-[85px] ">
+                <ButtonV2 onClick={() => setFilter(INITAL_FILTER)} variants="secondary" className="!leading-5 !h-auto !w-[85px] ">
                     Reset
                 </ButtonV2>
             </div>

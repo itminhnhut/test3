@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TabV2 from 'components/common/V2/TabV2/index';
 import Link from 'next/link';
-import { TransactionTabs, TRANSACTION_TYPES } from './constant';
+import { TransactionTabs, TRANSACTION_TYPES, INITAL_FILTER } from './constant';
 import { useRouter } from 'next/router';
 import TransactionFilter from './TransactionFilter';
 import TableV2 from 'components/common/V2/TableV2';
@@ -16,15 +16,9 @@ import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
 
 const LIMIT = 10
+const MILLISEC_ONE_DAY = 86400000
 
-const INITAL_FILTER = {
-    page: 0,
-    range: {
-        startDate: null,
-        endDate:  Date.now(),
-        key: 'selection'
-    },
-}
+
 
 const namiSystem = {
     en: 'Nami system',
@@ -42,7 +36,9 @@ const TransactionHistory = ({ id }) => {
     const [data, setData] = useState([])
     const hasNext = useRef(false)
     const [filter, setFilter] = useState(INITAL_FILTER);
+
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
+
 
     const [categoryConfig, setCategoryConfig] = useState([]);
     useEffect(() => {
@@ -50,7 +46,8 @@ const TransactionHistory = ({ id }) => {
             url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data1', data);
+                console.log('data1:', data)
+
                 setCategoryConfig(data);
             }
         });
@@ -281,9 +278,12 @@ const TransactionHistory = ({ id }) => {
                 [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
             }[id]
             : null;
-        const from = filter?.range?.startDate;
-        const to = filter?.range?.endDate;
 
+        const {startDate,endDate} = filter.range;
+        const from = startDate;
+            
+        // Plus 1 more day on endDate if endDate !== null
+        const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
         // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
         const isNegative = {
             deposit: false,
@@ -302,7 +302,8 @@ const TransactionHistory = ({ id }) => {
             to,
             isNegative,
             limit: LIMIT,
-            skip: filter?.page * LIMIT
+            skip: filter?.page * LIMIT,
+            category:filter?.category?.category_id ?? undefined
         };
 
         FetchApi({

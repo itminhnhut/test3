@@ -1,5 +1,15 @@
 import { PATHS } from 'constants/paths';
 
+export const INITAL_FILTER = {
+    page: 0,
+    range: {
+        startDate: null,
+        endDate: null, // Date.now(),
+        key: 'selection'
+    },
+    category: null
+};
+
 export const TRANSACTION_TYPES = {
     CONVERT: 'convert',
     DEPOSITWITHDRAW: 'depositwithdraw',
@@ -17,9 +27,7 @@ export const TRANSACTION_TYPES = {
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
     COMMISSION: 'commision'
-}
-
-
+};
 
 export const TransactionTabs = [
     {
@@ -65,6 +73,6 @@ export const TransactionTabs = [
     {
         key: TRANSACTION_TYPES.COMMISSION,
         localized: 'Hoa hồng',
-        href: PATHS.TRANSACTION_HISTORY.TYPE( TRANSACTION_TYPES.COMMISSION)
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.COMMISSION)
     }
 ];

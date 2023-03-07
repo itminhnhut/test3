@@ -90,6 +90,16 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         }
     }, [date.startDate]);
 
+    useEffect(() => {
+        if (initDate) {
+            setDate({
+                ...date,
+                startDate: initDate.startDate,
+                endDate: initDate.endDate
+            });
+        }
+    }, [initDate]);
+
     const clearInputData = () => {
         setDate({
             selection: {
@@ -99,13 +109,13 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             }
         });
         // if (!showPicker)
-            onChange({
-                selection: {
-                    startDate: null,
-                    endDate: new Date(),
-                    key: date['key']
-                }
-            });
+        onChange({
+            selection: {
+                startDate: null,
+                endDate: new Date(),
+                key: date['key']
+            }
+        });
     };
     // Handle X Close button
     const flag = useRef(false);
