@@ -84,8 +84,8 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             <Link
                                 href={
                                     language === LANGUAGE_TAG.VI
-                                        ? 'https://nami.exchange/vi/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
-                                        : 'https://nami.exchange/en/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program'
+                                        ? '/support/announcement/thong-bao/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
+                                        : '/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program'
                                 }
                             >
                                 <a className="">{language === LANGUAGE_TAG.VI ? 'Hợp tác kinh doanh' : 'Business Cooperation'}</a>

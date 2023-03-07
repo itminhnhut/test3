@@ -22,7 +22,8 @@ const FuturesOrderSLTP = ({
     isAuth,
     inputValidator,
     quoteQty,
-    isDark
+    isDark,
+    textDescription
 }) => {
     const { t } = useTranslation();
     const [showEditSLTP, setShowEditSLTP] = useState(false);
@@ -84,6 +85,8 @@ const FuturesOrderSLTP = ({
                 renderTail={
                     canShowChangeTpSL && <AddCircleIcon className="cursor-pointer" color={isDark ? colors.gray[1] : colors.gray[7]} onClick={onChangeTpSL} />
                 }
+                errorTooltip={false}
+                textDescription={textDescription('take_profit', inputValidator('take_profit', true))}
             />
 
             <TradingInput
@@ -100,6 +103,8 @@ const FuturesOrderSLTP = ({
                 renderTail={
                     canShowChangeTpSL && <AddCircleIcon className="cursor-pointer" color={isDark ? colors.gray[1] : colors.gray[7]} onClick={onChangeTpSL} />
                 }
+                errorTooltip={false}
+                textDescription={textDescription('stop_loss', inputValidator('stop_loss', true))}
             />
         </div>
     );

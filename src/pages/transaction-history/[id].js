@@ -2,8 +2,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { PATHS } from 'src/constants/paths';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
+import Skeleton from 'components/screens/TransactionHistory/Skeleton';
 
-const TransactionHistory = dynamic(() => import('components/screens/TransactionHistory'), { ssr: false });
+const TransactionHistory = dynamic(() => import('components/screens/TransactionHistory'), { ssr: false, loading: () => <Skeleton /> });
 
 const index = ({ id }) => {
     return (

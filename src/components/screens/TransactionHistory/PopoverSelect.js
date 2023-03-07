@@ -13,10 +13,10 @@ const PopoverSelect = (props, ref) => {
             className={props.className}
             ref={ref}
             label={
-                <div className=" p-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between w-full">
+              (open) =>  <div className=" p-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between w-full">
                     <div className="leading-5 truncate flex">{props.labelValue}</div>
                     <div className="text-txtSecondary dark:text-gray-7">
-                        <SvgIcon name="chevron_down" className=" " size={16} color="currentColor" />
+                        <SvgIcon name="chevron_down" className={`${open ? '!rotate-0 ' : ' '} transition-transform duration-150`} size={16} color="currentColor" />
                     </div>
                 </div>
             }

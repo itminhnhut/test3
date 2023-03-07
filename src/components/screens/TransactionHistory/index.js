@@ -32,7 +32,10 @@ const namiSystem = {
 }
 
 const TransactionHistory = ({ id }) => {
-    const { t, i18n: { language } } = useTranslation()
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
     const router = useRouter();
     const assetConfig = useSelector((state) => state.utils.assetConfig);
     const [loading, setLoading] = useState(true)
@@ -40,17 +43,18 @@ const TransactionHistory = ({ id }) => {
     const hasNext = useRef(false)
     const [filter, setFilter] = useState(INITAL_FILTER);
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
-    const [categoryConfig, setCategoryConfig] = useState([])
 
+    const [categoryConfig, setCategoryConfig] = useState([]);
     useEffect(() => {
         FetchApi({
-            url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY,
+            url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                setCategoryConfig(data)
+                console.log('data1', data);
+                setCategoryConfig(data);
             }
         });
-    }, [])
+    }, []);
 
     const columns = useMemo(() => {
         return {
@@ -68,7 +72,12 @@ const TransactionHistory = ({ id }) => {
                 title: 'Asset',
                 align: 'left',
                 width: 148,
-                render: (row) => <div className='flex items-center gap-2'><AssetLogo assetId={row} size={32} />{getAssetName(row)}</div>
+                render: (row) => (
+                    <div className="flex items-center gap-2">
+                        <AssetLogo assetId={row} size={32} />
+                        {getAssetName(row)}
+                    </div>
+                )
             },
             category: {
                 key: 'category',
@@ -242,11 +251,11 @@ const TransactionHistory = ({ id }) => {
                     return <div className=''>{t('reference:referral.direct')}</div>
                 }
             }
-        }
-    }, [t, categoryConfig])
+        };
+    }, [t, categoryConfig]);
 
     const columnsConfig = {
-        'all': ['_id', 'category'],
+        all: ['_id', 'category'],
         [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
         [TRANSACTION_TYPES.CONVERT]: ['category', '_id', 'convert_pair', 'created_at', 'fromAsset', 'toAsset', 'convert_rate', 'status'],
         [TRANSACTION_TYPES.TRANSFER]: ['category', 'asset', 'created_at', 'amount', 'fromWallet', 'toWallet', 'status'],
@@ -255,27 +264,29 @@ const TransactionHistory = ({ id }) => {
     }
 
     const filterdColumns = useMemo(() => {
-        return columnsConfig?.[id || 'all']?.map(key => columns?.[key]) ?? [];
-    }, [columns, id, columnsConfig])
+        return columnsConfig?.[id || 'all']?.map((key) => columns?.[key]) ?? [];
+    }, [columns, id, columnsConfig]);
 
     useEffect(() => {
         setLoading(true)
         // custom type phai dat ben duoi [id] de overwrite lai
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
-        const type = id?.length ? {
-            [id]: id,
-            'all': null,
-            [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-            [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-        }[id] : null
-        const from = filter?.range?.startDate
-        const to = filter?.range?.endDate
+        const type = id?.length
+            ? {
+                  [id]: id,
+                  all: null,
+                  [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                  [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+              }[id]
+            : null;
+        const from = filter?.range?.startDate;
+        const to = filter?.range?.endDate;
 
         // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
         const isNegative = {
             deposit: false,
             withdraw: true
-        }[id]
+        }[id];
 
         const url = {
             [id]: API_GET_WALLET_TRANSACTION_HISTORY,
@@ -289,8 +300,8 @@ const TransactionHistory = ({ id }) => {
             to,
             isNegative,
             limit: LIMIT,
-            skip: filter?.page * LIMIT,
-        }
+            skip: filter?.page * LIMIT
+        };
 
         FetchApi({
             url,
@@ -339,7 +350,7 @@ const TransactionHistory = ({ id }) => {
                     />
                 </div>
                 <div className="mb-12">
-                    <TransactionFilter filter={filter} setFilter={setFilter} />
+                    <TransactionFilter language={language} categoryConfig={categoryConfig} filter={filter} setFilter={changeFilter} />
                 </div>
                 <div>
                     <TableV2
@@ -353,7 +364,12 @@ const TransactionHistory = ({ id }) => {
                         height={404}
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
-                        pagingPrevNext={{ page: filter?.page, hasNext: hasNext.current, onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }), language }}
+                        pagingPrevNext={{
+                            page: filter?.page,
+                            hasNext: hasNext.current,
+                            onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }),
+                            language
+                        }}
                     />
                 </div>
             </div>

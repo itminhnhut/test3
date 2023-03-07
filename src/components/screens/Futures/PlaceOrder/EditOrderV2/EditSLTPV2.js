@@ -285,14 +285,16 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
         return value === 0 ? 'dark:text-white' : value > 0 ? 'text-teal' : 'text-red';
     };
 
-    const inputValidator = (type) => {
+    const inputValidator = (type, isText = false) => {
         let isValid = true,
             msg = null;
         const { sl, tp } = data;
+        let min = 0,
+            max = 0;
         switch (type) {
             case 'stop_loss':
             case 'take_profit':
-                if ((type === 'stop_loss' && !sl) || (type === 'take_profit' && !tp)) {
+                if ((type === 'stop_loss' && !sl && !isText) || (type === 'take_profit' && !tp && !isText)) {
                     return {
                         isValid,
                         msg
@@ -323,6 +325,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
 
                 if (type === 'stop_loss') {
                     bound = order?.side === FuturesOrderEnum.Side.BUY ? lowerBound : upperBound;
+                    min = bound.min;
+                    max = bound.max;
                     // Modify bound base on type
                     if (sl < bound.min) {
                         isValid = false;
@@ -333,6 +337,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     }
                 } else if (type === 'take_profit') {
                     bound = order?.side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
+                    min = bound.min;
+                    max = bound.max;
                     if (tp < bound.min) {
                         isValid = false;
                         msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.symbol, 0, true)}`;
@@ -340,6 +346,9 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         isValid = false;
                         msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.symbol, 0, true)}`;
                     }
+                }
+                if (isText) {
+                    return { min, max };
                 }
                 return {
                     isValid,
@@ -351,6 +360,22 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     msg
                 };
         }
+    };
+
+    const textDescription = (key, data) => {
+        let rs = {};
+        switch (key) {
+            case 'stop_loss':
+            case 'take_profit':
+                rs = {
+                    min: `${t('common:min')}: ${formatNumber(data?.min, decimals.price)}`,
+                    max: `${t('common:max')}: ${data?.max ? formatNumber(data?.max, decimals.price) : '-'}`
+                };
+                return `${rs.min}. ${rs.max}.`;
+            default:
+                break;
+        }
+        return '';
     };
 
     const _onConfirm = () => {
@@ -421,6 +446,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('stop_loss')}
+                                        textDescription={textDescription('stop_loss', inputValidator('stop_loss', true))}
+                                        errorTooltip={false}
                                         clearAble
                                     />
                                     <div
@@ -478,6 +505,8 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                                         decimalScale={decimals.price}
                                         inputClassName="!text-left !ml-0"
                                         validator={inputValidator('take_profit')}
+                                        textDescription={textDescription('take_profit', inputValidator('take_profit', true))}
+                                        errorTooltip={false}
                                         clearAble
                                     />
                                     <div

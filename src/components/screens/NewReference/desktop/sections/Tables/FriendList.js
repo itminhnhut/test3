@@ -4,6 +4,7 @@ import { API_GET_LIST_FRIENDS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import ReTable from 'components/common/ReTable';
 import TableV2 from 'components/common/V2/TableV2';
+import FetchApi from 'utils/fetch-api';
 
 
 import Skeletor from 'components/common/Skeletor';
@@ -20,6 +21,9 @@ import { isValid } from 'date-fns';
 import NoData from 'components/common/V2/TableV2/NoData';
 import { CopyIcon } from 'components/screens/NewReference/PopupModal';
 
+import {
+    API_NEW_REFERRAL
+} from 'redux/actions/apis';
 
 const NoKYCTag = ({ t }) => <TagV2 className='whitespace-nowrap'>{t('reference:referral.not_kyc')}</TagV2>;
 const KYCPendingTag = ({ t }) => <TagV2 className='whitespace-nowrap'
@@ -29,6 +33,7 @@ const KYCApprovedTag = ({ t }) => <TagV2 className='whitespace-nowrap'
 
 const ModalCommissionFriend = ({
     owner,
+    refs,
     t,
     commissionConfig,
     friend = {},
@@ -40,6 +45,8 @@ const ModalCommissionFriend = ({
         2: t('reference:referral.commission_types.swap'),
         3: t('reference:referral.commission_types.staking')
     };
+    const rewardRatio = refs.find(obj => obj?.code === friend?.byRefCode)?.remunerationRate || 0
+
     return <ModalV2 isVisible={!!friend} className='w-[50rem]' onBackdropCb={onClose}>
         <div className='flex items-center justify-center border-b border-divider dark:border-divider-dark mb-4 pb-4'>
             <div className='font-medium'>
@@ -68,7 +75,7 @@ const ModalCommissionFriend = ({
                             {map(configs, (c, k) => {
                                 return <td key={k}
                                     className='text-center text-sm font-semibold text-teal py-2'>
-                                    {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (owner?.defaultRefCode?.remunerationRate / 100) : c}%
+                                    {commissionKind === 'direct' && owner?.defaultRefCode?.remunerationRate ? c - c * (rewardRatio / 100) : c}%
                                 </td>;
                             })}
                         </tr>;
@@ -80,11 +87,34 @@ const ModalCommissionFriend = ({
 };
 
 const FriendList = ({
+    language,
     owner,
     t,
     commisionConfig: commissionConfig,
     id
 }) => {
+    const [refs, setRefs] = useState([]);
+
+    useEffect(() => {
+        FetchApi({
+            url: API_NEW_REFERRAL,
+            options: {
+                method: 'GET'
+            }
+        })
+            .then(({
+                data,
+                status
+            }) => {
+                if (status === 'ok') {
+                    data.sort((e) => e.status);
+                    setRefs(data);
+                } else {
+                    setRefs([]);
+                }
+            });
+    }, []);
+
     const rank = {
         '1': t('reference:referral.normal'),
         '2': t('reference:referral.official'),
@@ -92,6 +122,7 @@ const FriendList = ({
         '4': t('reference:referral.platinum'),
         '5': t('reference:referral.diamond')
     };
+
     const statuses = [
         {
             title: t('common:all'),
@@ -116,7 +147,8 @@ const FriendList = ({
             type: 'date',
             value: null,
             values: null,
-            title: t('reference:referral.referral_date')
+            title: t('reference:referral.referral_date'),
+            position: 'center'
         },
         status: {
             type: 'popover',
@@ -133,6 +165,9 @@ const FriendList = ({
             },
             values: null,
             title: t('reference:referral.total_commissions')
+        },
+        reset: {
+            type: 'reset'
         }
 
     };
@@ -175,20 +210,13 @@ const FriendList = ({
     }, 300);
 
     useEffect(() => {
+        setPage(1)
         getListFriends();
-    }, [filter, page]);
+    }, [filter]);
 
-    const skeletons = useMemo(() => {
-        const skeletons = [];
-        for (let i = 0; i < limit; i++) {
-            skeletons.push({
-                ...ROW_SKELETON,
-                isSkeleton: true,
-                key: `asset__skeleton__${i}`
-            });
-        }
-        return skeletons;
-    }, []);
+    useEffect(() => {
+        getListFriends();
+    }, [page]);
 
     const renderRefInfo = (data) => <div className='text-sm nami-underline-dotted'
         onClick={() => setCommissionByFriendDetail(data)}>
@@ -224,8 +252,6 @@ const FriendList = ({
             </div>
         );
     };
-
-    // const columns = useMemo(() => , [dataSource]);
 
     const renderTable = useCallback(() => {
         const columns = [{
@@ -288,39 +314,66 @@ const FriendList = ({
                 return renderCommissionData(item, 'undirectCommission')
             }
         }]
-
+        console.log("loading: ", loading, page);
         return <TableV2
             sort
             defaultSort={{ key: 'code', direction: 'desc' }}
+            loading={loading}
             useRowHover
-            data={dataSource?.results || []}
-            page={page}
-            onChangePage={page => setPage(page)}
-            total={dataSource?.total ?? 0}
+            data={dataSource.results || []}
             columns={columns}
-            rowKey={(item) => item?.key}
+            rowKey={(item) => `${item?.key}`}
             scroll={{ x: true }}
             limit={limit}
             skip={0}
-            noBorder={true}
             // isSearch={!!state.search}
-            height={404}
             pagingClassName="border-none"
-            className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
-            tableStyle={{ fontSize: '16px', padding: '16px' }}
-            paginationProps={{
-                hide: true,
-                current: 0,
-                pageSize: limit,
-                onChange: null
+            height={350}
+            pagingPrevNext={{
+                page: page - 1,
+                hasNext: dataSource?.results?.length ? dataSource?.results?.length === limit : false,
+                onChangeNextPrev: (delta) => {
+                    setPage(page + delta);
+                },
+                language: language
             }}
+            tableStyle={{ fontSize: '16px', padding: '16px' }}
         />
-    }, [dataSource])
+        // Case paginatioin 1 2 3 4 ... 
+
+        // return <TableV2
+        //     sort
+        //     defaultSort={{ key: 'code', direction: 'desc' }}
+        //     useRowHover
+        //     data={dataSource?.results || []}
+        //     page={page}
+        //     onChangePage={page => setPage(page)}
+        //     total={dataSource?.total ?? 0}
+        //     columns={columns}
+        //     rowKey={(item) => item?.key}
+        //     scroll={{ x: true }}
+        //     limit={limit}
+        //     skip={0}
+        //     noBorder={true}
+        //     // isSearch={!!state.search}
+        //     height={404}
+        //     pagingClassName="border-none"
+        //     className="border-t border-divider dark:border-divider-dark pt-4 mt-8"
+        //     tableStyle={{ fontSize: '16px', padding: '16px' }}
+        //     paginationProps={{
+        //         hide: true,
+        //         current: 0,
+        //         pageSize: limit,
+        //         onChange: null
+        //     }}
+        // />
+    }, [dataSource, loading])
 
     return (
         <div className='flex w-full' id={id}>
             <ModalCommissionFriend
                 owner={owner}
+                refs={refs}
                 t={t} commissionConfig={commissionConfig}
                 friend={commissionByFriendDetail}
                 onClose={() => setCommissionByFriendDetail(null)}
@@ -330,63 +383,14 @@ const FriendList = ({
                 <div className='font-semibold text-[22px] leading-7 mx-6 mb-8'>
                     {t('reference:referral.friend_list')}
                 </div>
-                <div className='flex gap-6 flex-wrap mx-6 mb-6'>
+                <div className='flex gap-6 flex-wrap mx-6 mb-6  items-end'>
                     <TableFilter filters={filters} filter={filter} setFilter={setFilter} />
                 </div>
 
                 {renderTable()}
-                {/* <div className='border-t border-divider dark:border-divider-dark'>
-                    <ReTable
-                        // defaultSort={{ key: 'namiId', direction: 'desc' }}
-                        emptyText={<NoData />}
-                        className='friendlist-table'
-                        data={loading ? skeletons : dataSource?.results || []}
-                        columns={columns}
-                        rowKey={(item) => item?.key}
-                        loading={!dataSource?.results?.length}
-                        scroll={{ x: true }}
-                        // tableStatus={}
-                        tableStyle={{
-                            // paddingHorizontal: '1.75rem',
-                            // tableStyle: { minWidth: '1300px !important' },
-                            headerStyle: { paddingTop: '8px' },
-                            shadowWithFixedCol: false,
-                            noDataStyle: {
-                                minHeight: '480px'
-                            },
-                            rowStyle: {
-                                minWidth: '100px'
-                            }
-                        }}
-                    // paginationProps={{
-                    //     hide: true,
-                    //     current: page,
-                    //     pageSize: limit,
-                    //     onChange: (currentPage) => setPage(currentPage)
-                    // }}
-                    />
-                </div>
-                <div className='w-full mt-6 flex justify-center'>
-                    <RePagination
-                        total={dataSource?.total ?? 0}
-                        current={page}
-                        pageSize={limit}
-                        onChange={page => setPage(page)}
-                    />
-                </div> */}
             </div>
         </div>
     );
 };
 
 export default FriendList;
-
-const ROW_SKELETON = {
-    code: <Skeletor width={200} />,
-    invitedAt: <Skeletor width={110} />,
-    kycStatus: <Skeletor width={90} />,
-    referred: <Skeletor width={90} />,
-    rank: <Skeletor width={90} />,
-    directCommission: <Skeletor width={250} />,
-    undirectCommission: <Skeletor width={250} />
-};

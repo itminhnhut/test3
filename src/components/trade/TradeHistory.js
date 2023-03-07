@@ -105,7 +105,7 @@ const TradeHistory = (props) => {
             data = histories.filter((hist) => `${hist?.baseAsset}-${hist?.quoteAsset}` === currentPair);
         }
 
-        return <TableV2 useRowHover data={data} columns={columns} loading={loading} scroll={{ x: true }} limit={10} skip={0} />;
+        return <TableV2 useRowHover data={data} columns={columns} loading={loading} scroll={{ x: true }} limit={10} skip={0} noBorder />;
     }, [filteredHistories, isAuth, columns, loading, filterByCurrentPair, currentPair]);
 
     return renderTable();
