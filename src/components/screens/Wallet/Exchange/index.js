@@ -581,7 +581,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             </div>
             <div className="hidden md:block">{renderAssetTable()}</div>
             <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
-                {state?.tableData && state?.tableData?.length > 0 ? (
+                {state?.tableData && state?.tableData?.length > 0 && isSmallScreen ? (
                     <>
                         {state.tableData.map((item, index) => {
                             const { assetCode, assetDigit, assetName, available, id, wallet } = item;
@@ -590,7 +590,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             const hidden = index + 1 > state.currentPage * ASSET_ROW_LIMIT;
 
                             return (
-                                <div className={`w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl ${hidden && 'hidden'}`}>
+                                <div
+                                    key={'mobile_row_' + item.id}
+                                    className={`w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl ${hidden && 'hidden'}`}
+                                >
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center">
                                             <AssetLogo assetCode={assetCode} size={32} />

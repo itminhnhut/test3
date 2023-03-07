@@ -49,7 +49,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
 
 export default NoData;
 
-const NoDataDarkIcon = () => (
+export const NoDataDarkIcon = () => (
     <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             opacity="0.8"
@@ -95,7 +95,7 @@ const NoDataDarkIcon = () => (
     </svg>
 );
 
-const NoDataLightIcon = () => (
+export const NoDataLightIcon = () => (
     <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="m100.083 93.545-85.637 4.874-2.051-50.126-.342-8.132v-.194c0-.043-.021-.108-.021-.172l-.257-6.04c-.064-1.294.94-2.394 2.223-2.437L50 29.808a2.34 2.34 0 0 1 2.414 2.243l.172 4.098 24.87-1.035v8.692h20.79l.192 6.104 1.645 43.635z"

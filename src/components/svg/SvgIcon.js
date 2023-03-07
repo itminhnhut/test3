@@ -160,7 +160,7 @@ const FutureWalletIcon = ({ size = 36, ...props }) => (
     <svg width={size} height={size} xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none" {...props}>
         <path
             fill-rule="evenodd"
-            clip-rule="evenodd"
+            clipRule="evenodd"
             d="M12.3843 8.87444H16.7535C17.2935 7.04862 16.8435 5.00994 15.4117 3.57713C13.3252 1.48113 9.93788 1.47294 7.84327 3.56075C6.40323 4.99357 5.94504 7.04862 6.48505 8.87444H10.8543L11.6152 9.63587L12.3843 8.87444ZM12.3836 8.86211L13.9065 7.34641L11.6222 5.06056L9.33787 7.33821L10.8526 8.86211L11.6058 9.62407L12.3836 8.86211Z"
             fill="#9FF2C6"
         />

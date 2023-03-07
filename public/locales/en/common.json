@@ -381,5 +381,11 @@
     "favourite": "Favorites",
     "gainers": "Gainers",
     "losers": "Losers",
-    "trending": "Trending"
+    "trending": "Trending",
+    "no_assets_available": "No assets available for conversion",
+    "confirm_convert": "Confirm transfer",
+    "convert_success": "Convert success",
+    "amount_of_asset": "Amount of asset",
+    "amount_of_estimate_nami": "Amount of NAMI estimated",
+    "view_detail": "View details"
 }
