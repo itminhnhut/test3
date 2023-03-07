@@ -392,7 +392,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         )}
                     </div>
                     {isNotVerified && (
-                        <Button onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
+                        <Button onClick={() => router.push(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
                             {t('navbar:verify_account')}
                         </Button>
                     )}
