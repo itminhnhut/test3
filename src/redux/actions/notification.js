@@ -39,7 +39,6 @@ export function getNotifications({ lang, limit = 10, prevId }, cb) {
                         hasNext: data?.hasNext
                     });
                 }
-                console.log('find(data?.results || [], { status: 1 }):',filter(data?.results || [], { status: 1 }).length)
 
                 dispatch({
                     type: SET_NOTIFICATION_UNREAD_COUNT,
