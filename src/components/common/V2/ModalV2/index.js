@@ -3,8 +3,9 @@ import { X } from 'react-feather';
 import { useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
 import Portal from 'components/hoc/Portal';
-import { useOutside } from 'components/screens/Nao/NaoStyle';
+import useOnClickOutside from 'hooks/useOnClickOutside';
 import useWindowSize from 'hooks/useWindowSize';
+import useLockedBody from 'hooks/useLockedBody';
 
 const ModalV2 = ({
     isVisible,
@@ -17,21 +18,23 @@ const ModalV2 = ({
     className = '',
     customHeader,
     closeButton = true,
-    btnCloseclassName = ''
+    btnCloseclassName = '',
+    loading = false
 }) => {
     const wrapperRef = useRef(null);
     const container = useRef(null);
     const timer = useRef(null);
     const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
-    const top = useRef(0);
+    const [locked, setLocked] = useState(false);
+    useLockedBody(locked);
 
     const handleOutside = () => {
         if (isVisible && onBackdropCb) onBackdropCb();
     };
 
     if (canBlur) {
-        useOutside(wrapperRef, handleOutside, container);
+        useOnClickOutside(wrapperRef, handleOutside, loading);
     }
 
     useEffect(() => {
@@ -42,20 +45,7 @@ const ModalV2 = ({
             },
             isVisible ? 10 : 200
         );
-        const hidding = document.body.classList.contains('overflow-hidden');
-        if (hidding) return;
-        if (isVisible) {
-            // setTimeout(() => {
-            //     top.current = scroll_pause();
-            // }, 100);
-            document.body.classList.add('overflow-hidden');
-        } else {
-            document.body.classList.remove('overflow-hidden');
-            // if (top.current) scroll_resume(top.current);
-        }
-        return () => {
-            document.body.classList.remove('no-scroll', 'overflow-hidden');
-        };
+        setLocked(isVisible);
     }, [isVisible]);
 
     if (!isVisible && !mount) return null;
@@ -94,14 +84,15 @@ const ModalV2 = ({
                         <div
                             className={classnames(
                                 `px-8 pb-8 h-full bg-white dark:bg-dark text-base`,
-                                { '!px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton },
+                                { '!px-6 pb-6': isMobile, 'pt-6 sm:pt-8': !closeButton || loading },
                                 wrapClassName
                             )}
                         >
                             <>
                                 {customHeader
                                     ? customHeader()
-                                    : closeButton && (
+                                    : closeButton &&
+                                      !loading && (
                                           <div
                                               className={classnames(
                                                   'flex items-end justify-end sticky top-0 z-10 py-6 sm:pt-8',
@@ -123,19 +114,3 @@ const ModalV2 = ({
 };
 
 export default ModalV2;
-
-const scroll_pause = () => {
-    const top = document.body.scrollTop || document.scrollingElement?.scrollTop || 0;
-    document.body.classList.add('no-scroll');
-    document.body.style.top = -1 * top + 'px';
-    return top;
-};
-
-const scroll_resume = (top) => {
-    document.body.classList.remove('no-scroll');
-    document.body.removeAttribute('style');
-    if (top)
-        window.scrollTo({
-            top: top
-        });
-};

@@ -41,7 +41,6 @@ const FuturesOrderButtonsGroupVndc = ({
     const [showModal, setShowModal] = useState('');
     const [hidden, setHidden] = useState(false);
     const messages = useRef(null);
-    const canBlur = useRef(true);
 
     const isShowConfirm = useMemo(() => {
         return settings?.user_setting ? settings?.user_setting?.show_place_order_confirm_modal : true;
@@ -66,7 +65,6 @@ const FuturesOrderButtonsGroupVndc = ({
 
     const onSave = () => {
         setLoading(true);
-        canBlur.current = false;
         placeFuturesOrder(
             handleParams(side),
             {
@@ -76,7 +74,6 @@ const FuturesOrderButtonsGroupVndc = ({
             },
             t,
             (data) => {
-                canBlur.current = true;
                 messages.current = data;
                 setLoading(false);
                 setShowModal('alert');
@@ -132,12 +129,7 @@ const FuturesOrderButtonsGroupVndc = ({
                 notes={messages.current?.notes}
                 className="max-w-[448px]"
             />
-            <ModalV2
-                closeButton={!loading}
-                className="!max-w-[448px] text-base"
-                isVisible={showModal === 'confirm'}
-                onBackdropCb={() => canBlur.current && setShowModal('')}
-            >
+            <ModalV2 loading={loading} className="!max-w-[448px] text-base" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
                 <div className="text-2xl mb-6 font-semibold">{t('futures:preferences:order_confirm')}</div>
                 <div className="p-4 mb-6 rounded-md border border-divider dark:border-divider-dark divide-y divide-divider dark:divide-divider-dark space-y-3">
                     <div className="flex items-center justify-between">
