@@ -5,6 +5,7 @@ import SearchBox from 'components/common/SearchBoxV2';
 import { ChevronDown } from 'react-feather';
 import SvgIcon from 'src/components/svg';
 import colors from 'styles/colors';
+import { isFunction } from 'redux/actions/utils';
 
 const PopoverSelect = (props, ref) => {
     return (
@@ -12,16 +13,21 @@ const PopoverSelect = (props, ref) => {
             containerClassName={`${props.containerClassName} z-20 `}
             className={props.className}
             ref={ref}
-            label={
-              (open) =>  <div className=" p-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between w-full">
-                    <div className="leading-5 truncate flex">{props.labelValue}</div>
+            label={(open) => (
+                <div className=" z-0 p-3 bg-gray-10 dark:bg-dark-2 rounded-md flex items-center justify-between w-full">
+                    <div className="leading-5 truncate flex"> {props.labelValue && isFunction(props.labelValue) ? props.labelValue() : props.labelValue}</div>
                     <div className="text-txtSecondary dark:text-gray-7">
-                        <SvgIcon name="chevron_down" className={`${open ? '!rotate-0 ' : ' '} transition-transform duration-150`} size={16} color="currentColor" />
+                        <SvgIcon
+                            name="chevron_down"
+                            className={`${open ? '!rotate-0 ' : ' '} transition-transform duration-150`}
+                            size={16}
+                            color="currentColor"
+                        />
                     </div>
                 </div>
-            }
+            )}
         >
-            <div className="py-4">
+            <div className="py-4 z-50">
                 <div className="px-4 mb-6">
                     <SearchBox inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
                 </div>
