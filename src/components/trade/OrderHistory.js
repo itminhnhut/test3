@@ -87,7 +87,7 @@ const OrderHistory = (props) => {
                 label={
                     <div onClick={() => setIsOpen(!isOpen)} className="w-full space-x-2 flex items-center justify-center">
                         <span>{status === 'all' ? t('common:status') : label}</span>
-                        <ChevronDown className={isOpen ? '!rotate-0' : ''} />
+                        <ChevronDown className={isOpen ? '!!rotate-0' : ''} />
                     </div>
                 }
                 className="w-max py-4 text-xs !mt-6 z-20"

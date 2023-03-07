@@ -14,7 +14,7 @@ import {
     getV1Url,
     render24hChange
 } from 'redux/actions/utils';
-import { initMarketWatchItem, log, sparkLineBuilder } from 'utils';
+import { initMarketWatchItem, sparkLineBuilder } from 'utils';
 import { useTranslation } from 'next-i18next';
 import { IconStarFilled } from 'components/common/Icons';
 import { Search, X } from 'react-feather';
@@ -56,7 +56,6 @@ const MarketTable = ({
         i18n: { language }
     } = useTranslation(['common', 'table']);
     const [currentTheme] = useDarkMode();
-    const isDark = currentTheme === THEME_MODE.DARK;
     const { width } = useWindowSize();
     const isMobile = width < 640;
     const [isLoading, setIsLoading] = useState(false)
@@ -89,17 +88,17 @@ const MarketTable = ({
             }
         },
         {
-            id: 'TOP_GAINER',
-            content: {
-                vi: 'Tăng giá',
-                en: 'Top gainer'
-            }
-        },
-        {
             id: 'NEW_LISTING',
             content: {
                 vi: 'Mới niêm yết',
                 en: 'New Listing'
+            }
+        },
+        {
+            id: 'TOP_GAINER',
+            content: {
+                vi: 'Tăng giá',
+                en: 'Top gainer'
             }
         },
         {
@@ -532,12 +531,7 @@ const MarketTable = ({
         return (
             <div className="my-3 sm:my-5 flex items-center justify-center">
                 <RePagination
-                    // total={total}
                     isNamiV2
-                    // current={restProps.currentPage}
-                    // pageSize={MARKET_ROW_LIMIT}
-                    // onChange={(currentPage) => parentState({ currentPage })}
-                    name="market_table___list" fromZero={undefined}
                     pagingPrevNext={{
                         language,
                         page: restProps.currentPage - 1,
@@ -548,8 +542,6 @@ const MarketTable = ({
             </div>
         )
     }, [data, language, restProps.currentPage, restProps.tabIndex, restProps.subTabIndex, isMobile])
-
-    console.log('tab[restProps.tabIndex]?.key', tab[restProps.tabIndex]?.key, restProps.auth, tab[restProps.tabIndex]?.key === 'favorite')
 
     return (
         <div className="px-4 sm:px-0 text-darkBlue-5">
@@ -571,9 +563,6 @@ const MarketTable = ({
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
-                        // suffix={restProps?.search?.length ? (<X size={16} className="text-txtSecondary dark:text-txtSecondary-dark cursor-pointer" onClick={() => parentState({
-                        //     search: ''
-                        // })} />) : null}
                         />
                     </div>
                 </div>
@@ -634,7 +623,10 @@ const MarketTable = ({
                                 onClick={async () => {
                                     if (isLoading) return
                                     await addTokensToFav({
-                                        symbols: restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
+                                        symbols: restProps?.favType + 1 === 1  ? restProps?.suggestedSymbols?.map(e => {
+                                            const pairConfig = restProps.futuresConfigs.find(config => config.pair == (e.b + e.q))
+                                            return pairConfig?.baseAssetId + '_' + pairConfig?.quoteAssetId
+                                        }) : restProps?.suggestedSymbols?.map(e => e.b + '_' + e.q),
                                         lang: language,
                                         mode: restProps?.favType + 1,
                                         favoriteRefresher: restProps.favoriteRefresher,

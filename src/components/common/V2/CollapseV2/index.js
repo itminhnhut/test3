@@ -50,7 +50,7 @@ const index = ({ children, className, label, isCustom, active, reload }) => {
                 className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', { 'mb-4': open && !isCustom })}
             >
                 <label className="cursor-pointer select-none">{label}</label>
-                {!isCustom && <ChevronDown size={16} className={`${open ? 'rotate-0' : ''} transition-all`} />}
+                {!isCustom && <ChevronDown size={16} className={`${open ? '!rotate-0' : ''} transition-all`} />}
             </div>
             <Wraper className={classNames({ 'overflow-hidden': !flag })} ref={wraper}>
                 <div ref={list}>{children}</div>

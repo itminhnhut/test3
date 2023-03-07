@@ -58,7 +58,7 @@ const OrderBook = (props) => {
         if (ref.current) {
             setHeight(ref.current.clientHeight);
         }
-    }, [ref.current, layoutConfig?.h]);
+    }, [ref.current, layoutConfig?.h, isPro]);
 
     useAsync(async () => {
         // Get symbol list
@@ -238,7 +238,7 @@ const OrderBook = (props) => {
                 label={(open) => (
                     <div className="flex min-w-[63px] justify-between items-center h-6 rounded-[3px] bg-gray-10 dark:bg-dark-2 pl-2 pr-1 ">
                         <span className="text-xs font-semibold text-txtPrimary dark:text-txtSecondary-dark mr-2 ">{tickSize}</span>
-                        <SvgChevronDown className={`${open ? 'rotate-0' : ''}`} size={16} />
+                        <SvgChevronDown className={`${open ? '!rotate-0' : ''}`} size={16} />
                     </div>
                 )}
             >
@@ -288,7 +288,7 @@ const OrderBook = (props) => {
                     </div>
                     {renderTickSizeOptions()}
                 </div>
-                <div className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 over">
                     <div className="">
                         <div className="flex justify-between items-center">
                             <div className="flex flex-1 justify-start text-txtSecondary dark:text-txtSecondary-dark text-xs">

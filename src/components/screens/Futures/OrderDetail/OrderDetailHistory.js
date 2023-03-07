@@ -7,16 +7,35 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 import { fees, getTypesLabel, renderCellTable, VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
+import utilsSelectors from 'redux/selectors/utilsSelectors';
+import get from 'lodash/get';
+import Tooltip from 'components/common/Tooltip';
 
-const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, general, pairConfig }) => {
+const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, general, pairConfig, renderLiqPrice, getValue, isVndcFutures }) => {
     const { t } = useTranslation();
+    const allAssets = useSelector((state) => utilsSelectors.getAllAssets(state));
+    const quoteAsset = pairConfig?.quoteAsset;
+    const baseAsset = pairConfig?.baseAsset;
+
+    const renderFeeOther = (order, key, negative = false) => {
+        const currency = get(order, `fee_metadata[${key}].currency`, get(order, 'margin_currency', null));
+        if (!order || !currency) return '-';
+        const assetDigit = allAssets?.[currency]?.assetDigit ?? 0;
+        const decimalFunding = currency === 72 ? 0 : 6;
+        const decimal = key === 'funding_fee.total' ? decimalFunding : currency === 72 ? assetDigit : assetDigit + 2;
+        const assetCode = allAssets?.[currency]?.assetCode ?? '';
+        const data = get(order, `fee_metadata[${key}].value`, get(order, key, 0));
+        const prefix = negative ? (data < 0 ? '-' : '+') : '';
+        return data ? prefix + formatNumber(Math.abs(data), decimal) + ' ' + assetCode : '-';
+    };
 
     const renderDetailAddedVol = () => {
         const id_to = orderDetail?.metadata?.dca_order_metadata?.dca_order?.[0]?.displaying_id;
         const price = +orderDetail?.status === VndcFutureOrderType.Status.PENDING ? orderDetail?.price : orderDetail?.open_price;
         return (
-            <>
+            <div className="grid grid-cols-3 gap-8">
                 <div>
                     <Row>
                         <Item>ID</Item>
@@ -77,14 +96,14 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
                         <Item>{formatNumber(orderDetail?.margin, decimals.symbol)}</Item>
                     </Row>
                 </div>
-            </>
+            </div>
         );
     };
     const renderDetailPartialClose = () => {
         const price = orderDetail?.status === VndcFutureOrderType.Status.PENDING ? orderDetail?.price : orderDetail?.open_price;
         const from_id = orderDetail?.metadata?.partial_close_metadata?.partial_close_from;
         return (
-            <>
+            <div>
                 <div>
                     <Row>
                         <Item>ID</Item>
@@ -101,12 +120,6 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
                     <Row>
                         <Item>{t('futures:order_table:open_price')}</Item>
                         <Item>{formatNumber(orderDetail?.open_price, decimals.price)}</Item>
-                    </Row>
-                    <Row>
-                        <Item>{t('common:order_type')}</Item>
-                        <Item>
-                            <TypeTable type="type" data={orderDetail} />
-                        </Item>
                     </Row>
                     <Row>
                         <Item>{t('futures:margin')}</Item>
@@ -131,10 +144,10 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
                         <Item>{price ? formatNumber(price, decimals.price) : '-'}</Item>
                     </Row>
                     <Row>
-                        <Item>{t('futures:order_table:volume')}</Item>
-                        <Item>{`${formatNumber(orderDetail?.order_value, decimals.symbol)} (${formatNumber(orderDetail?.quantity, 6)} ${
-                            pairConfig?.baseAsset
-                        })`}</Item>
+                        <Item>{t('futures:mobile:open_fee')}</Item>
+                        <Item>
+                            <FeeMetaFutures order={orderDetail} mode="open_fee" />
+                        </Item>
                     </Row>
                 </div>
                 <div>
@@ -143,15 +156,146 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
                         <Item>{formatTime(orderDetail?.opened_at, 'HH:mm:ss dd/MM/yyyy')}</Item>
                     </Row>
                     <Row>
-                        <Item>{t('futures:order_table:close_price')}</Item>
-                        <Item>{price ? formatNumber(orderDetail?.close_price, decimals.price) : '-'}</Item>
+                        <Item>{t('common:order_type')}</Item>
+                        <Item>
+                            <TypeTable type="type" data={orderDetail} />
+                        </Item>
                     </Row>
+                    <Row>
+                        <Item>{t('futures:order_table:volume')}</Item>
+                        <Item>{`${formatNumber(orderDetail?.order_value, decimals.symbol)} (${formatNumber(orderDetail?.quantity, 6)} ${
+                            pairConfig?.baseAsset
+                        })`}</Item>
+                    </Row>
+                    <Row>
+                        <Item>{t('futures:mobile:close_fee')}</Item>
+                        <Item>
+                            <FeeMetaFutures order={orderDetail} mode="close_fee" />
+                        </Item>
+                    </Row>
+                </div>
+            </div>
+        );
+    };
+
+    const renderDetail = () => {
+        const price = orderDetail?.status === VndcFutureOrderType.Status.PENDING ? orderDetail?.price : orderDetail?.open_price;
+        return (
+            <>
+                <Tooltip id="funding_fee" place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id="opening_volume" place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id="closed_volume" place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id="liq_price" place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <Tooltip id="liquidate_fee" place="top" effect="solid" isV3 className="max-w-[300px]" />
+                <div className="grid grid-cols-3 gap-8">
+                    <div>
+                        <Row>
+                            <Item>ID</Item>
+                            <Item>
+                                <CopyText text={orderDetail?.displaying_id} />
+                            </Item>
+                        </Row>
+                        <Row>
+                            <Item data-tip={t('futures:order_table:opening_volume_tooltips')} data-for="opening_volume" tooltip>
+                                {t('futures:order_table:opening_volume')}
+                            </Item>
+                            <Item>{`${formatNumber(orderDetail.order_value, decimals.symbol)} (${formatNumber(orderDetail.quantity, 6)} ${baseAsset})`}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:open_time')}</Item>
+                            <Item>{formatTime(orderDetail?.opened_at, 'HH:mm:ss dd/MM/yyyy')}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:order_table:close_price')}</Item>
+                            <Item>{orderDetail?.close_price ? formatNumber(orderDetail?.close_price, decimals.price) : '-'}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:stop_loss')}</Item>
+                            <Item className={'text-red'}>{getValue(orderDetail?.sl, decimals.symbol)}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:close_fee')}</Item>
+                            <Item>
+                                <FeeMetaFutures order={orderDetail} mode="close_fee" />
+                            </Item>
+                        </Row>
+                    </div>
+                    <div>
+                        <Row>
+                            <Item>{t('futures:leverage:leverage')}</Item>
+                            <Item className="text-teal">{orderDetail?.leverage}x</Item>
+                        </Row>
+                        <Row>
+                            <Item data-tip={t('futures:order_table:closed_volume_tooltips')} data-for="closed_volume" tooltip>
+                                {t('futures:order_table:closed_volume')}
+                            </Item>
+                            <Item>{`${formatNumber(
+                                orderDetail?.close_order_value || orderDetail?.quantity * orderDetail?.close_price || 0,
+                                decimals.symbol
+                            )} (${formatNumber(orderDetail?.quantity, 6)} ${baseAsset})`}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:order_table:open_price')}</Item>
+                            <Item>{price ? formatNumber(price, decimals.price) : '-'}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:reason_close')}</Item>
+                            <Item>
+                                <ReasonClose order={orderDetail} />
+                            </Item>
+                        </Row>
+                        <Row>
+                            <Item data-tip={t('futures:mobile:info_liquidate_price')} data-for="liq_price" tooltip>
+                                {t('futures:mobile:liq_price')}
+                            </Item>
+                            <Item>{renderLiqPrice(orderDetail)}</Item>
+                        </Row>
+                        <Row>
+                            <Item data-tip={t('futures:mobile:info_liquidate_fee')} data-for="liquidate_fee" tooltip>
+                                {t('futures:mobile:liquidate_fee')}
+                            </Item>
+                            <Item>{renderFeeOther(orderDetail, 'liquidate_order')}</Item>
+                        </Row>
+                    </div>
+                    <div>
+                        <Row>
+                            <Item>PNL</Item>
+                            <Item className={+orderDetail?.profit > 0 ? 'text-teal' : 'text-red'}>
+                                {formatNumber(orderDetail?.profit, decimals.symbol, 0, true)} (
+                                {formatNumber((orderDetail?.profit / orderDetail?.margin) * 100, 2, 0, true)}%)
+                            </Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:margin')}</Item>
+                            <Item>{formatNumber(orderDetail?.margin, decimals.symbol)}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:close_time')}</Item>
+                            <Item>{orderDetail?.closed_at ? formatTime(orderDetail?.closed_at, 'HH:mm:ss dd/MM/yyyy') : '-'}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:take_profit')}</Item>
+                            <Item className={'text-teal'}>{getValue(orderDetail?.sl, decimals.symbol)}</Item>
+                        </Row>
+                        <Row>
+                            <Item>{t('futures:mobile:open_fee')}</Item>
+                            <Item>
+                                <FeeMetaFutures order={orderDetail} mode="open_fee" />
+                            </Item>
+                        </Row>
+                        <Row>
+                            <Item data-tip={t('futures:funding_rate_des')} data-for="funding_fee" tooltip>
+                                {t('futures:funding_fee')}
+                            </Item>
+                            <Item className={orderDetail?.funding_fee?.total ? (orderDetail?.funding_fee?.total > 0 ? 'text-teal' : 'text-red') : ''}>
+                                {renderFeeOther(orderDetail, 'funding_fee.total', true)}
+                            </Item>
+                        </Row>
+                    </div>
                 </div>
             </>
         );
     };
-
-    const renderDetail = () => {};
 
     const renderDetails = () => {
         const mainOrder = orderDetail?.metadata?.dca_order_metadata?.is_main_order || orderDetail?.metadata?.partial_close_metadata?.is_main_order;
@@ -166,7 +310,7 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
 
     return (
         <div className="grid grid-cols-12 rounded-md border border-divider dark:border-divider-dark">
-            <div className="col-span-4 px-8 py-6 border-r border-divider dark:border-divider-dark">
+            <div className="col-span-3 px-8 py-6 border-r border-divider dark:border-divider-dark">
                 {orderDetail?.metadata?.dca_order_metadata && (
                     <div className="text-teal text-sm bg-teal/[0.1] px-4 py-1 mb-6 w-max rounded-full">{t('futures:mobile:adjust_margin:order_completed')}</div>
                 )}
@@ -202,12 +346,12 @@ const OrderDetailHistory = ({ orderDetail, decimals, setShowShareModal, isDark, 
                 )}
                 {!orderDetail?.metadata?.dca_order_metadata && (
                     <ButtonV2 className="space-x-2 mt-6" onClick={() => setShowShareModal(true)}>
-                        <ShareIcon color={isDark ? colors.white : colors.darkBlue} className="cursor-pointer" />
+                        <ShareIcon color={colors.white} className="cursor-pointer" />
                         <span>{t('common:share')}</span>
                     </ButtonV2>
                 )}
             </div>
-            <div className="col-span-8 p-6 grid grid-cols-3 gap-8 text-sm bg-dark-4 rounded-r-md">{renderDetails()}</div>
+            <div className="col-span-9 p-6 text-sm bg-gray-13 dark:bg-dark-4 rounded-r-md">{renderDetails()}</div>
         </div>
     );
 };

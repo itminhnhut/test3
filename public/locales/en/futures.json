@@ -432,7 +432,7 @@
     "minimum_leverage": "Minimum Leverage is",
     "maximum_leverage": "Maximum Leverage is",
     "positions": "Positions",
-    "open_orders": "Open Orders",
+    "open_orders": "Pending Orders",
     "load_more": "Load more",
     "countdown": "Countdown",
     "funding_fee": "Funding Fee",

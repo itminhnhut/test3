@@ -5,7 +5,7 @@
 // Reference: https://table-react-component.vercel.app/
 // **********************************
 
-// >>> Columns Defs should look like
+// Columns Defs should look like
 // [
 //     { key: 'coin', dataIndex: 'coin', title: 'Coin', width: 100, fixed: 'left', preventSort: <boolean> },
 //     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', width: 100, preventSort: <boolean> },
@@ -15,7 +15,7 @@
 //     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', width: 100, preventSort: <boolean> }
 // ]
 
-// >>> Data Source should look like
+// Data Source should look like
 // [
 //     { coin: 'BTC/USDT', last_price: 600000, change_24h: 50%, volume_24h: 1000000, ... },
 //     ...
@@ -91,16 +91,16 @@ const ReTable = memo(
 
         const handleResize =
             (index) =>
-                (e, { size }) => {
-                    setOwnColumns((prevState) => {
-                        const nextColumns = [...prevState];
-                        nextColumns[index] = {
-                            ...nextColumns[index],
-                            width: size.width
-                        };
-                        return nextColumns;
-                    });
-                };
+            (e, { size }) => {
+                setOwnColumns((prevState) => {
+                    const nextColumns = [...prevState];
+                    nextColumns[index] = {
+                        ...nextColumns[index],
+                        width: size.width
+                    };
+                    return nextColumns;
+                });
+            };
 
         useEffect(() => {
             setOwnColumns(columns);
@@ -124,15 +124,14 @@ const ReTable = memo(
         const onRow = (item, i, a) => {
             return {
                 onClick: (e) => onRowClick && onRowClick({ ...item, rowIdx: i }, e), // click row
-                onDoubleClick: (e) => { }, // double click row
-                onContextMenu: (e) => { }, // right button click row
-                onMouseEnter: (e) => { }, // mouse enter row
-                onMouseLeave: (e) => { } // mouse leave row
+                onDoubleClick: (e) => {}, // double click row
+                onContextMenu: (e) => {}, // right button click row
+                onMouseEnter: (e) => {}, // mouse enter row
+                onMouseLeave: (e) => {} // mouse leave row
             };
         };
 
         const renderTable = useCallback(() => {
-
             let defaultSort =
                 sort && !sorted && restProps?.defaultSort
                     ? orderBy(data, [restProps?.defaultSort?.key], [`${restProps?.defaultSort?.direction || 'asc'}`])
@@ -148,30 +147,36 @@ const ReTable = memo(
                 if (customSort) {
                     // chỉ cần sort theo asc
                     defaultSort = data.sort((a, b) => {
-                        return (_s[1] ? customSort(a, b) : -customSort(a, b))
+                        return _s[1] ? customSort(a, b) : -customSort(a, b);
                     });
                 } else {
                     // defaultSort = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
-                    defaultSort = orderBy(data, [(o) => {
-                        const temp = _s[0].split('.')
-                        let value;
-                        switch (temp.length) {
-                            case 1:
-                                value = o[temp[0]]
-                                break;
-                            case 2:
-                                value = o?.[temp[0]]?.[temp[1]]
-                                break;
-                            case 3:
-                                value = o?.[temp[0]]?.[temp[1]]?.[temp[2]]
-                                break;
-                            default:
-                                value = null
-                                break;
-                        }
-                        const x = value ? value : _s[1] ? 1000000000 : -1000000000
-                        return x
-                    }], [`${_s[1] ? 'asc' : 'desc'}`]);
+                    defaultSort = orderBy(
+                        data,
+                        [
+                            (o) => {
+                                const temp = _s[0].split('.');
+                                let value;
+                                switch (temp.length) {
+                                    case 1:
+                                        value = o[temp[0]];
+                                        break;
+                                    case 2:
+                                        value = o?.[temp[0]]?.[temp[1]];
+                                        break;
+                                    case 3:
+                                        value = o?.[temp[0]]?.[temp[1]]?.[temp[2]];
+                                        break;
+                                    default:
+                                        value = null;
+                                        break;
+                                }
+                                const x = value ? value : _s[1] ? 1000000000 : -1000000000;
+                                return x;
+                            }
+                        ],
+                        [`${_s[1] ? 'asc' : 'desc'}`]
+                    );
                 }
             }
 
@@ -353,7 +358,7 @@ const ReTableWrapperV2 = styled.div`
     table {
         overflow: ${({ loading }) => (loading ? 'hidden' : 'auto')};
         .rc-table-expanded-row-fixed {
-            width: ${({ loading }) => (loading ? '100% !important' : '100%')};
+            width: ${({ loading }) => '100% !important'};
         }
     }
     .rc-table {
@@ -487,7 +492,7 @@ const ReTableWrapperV2 = styled.div`
         tbody tr {
             &:hover td {
                 background: ${({ useRowHover, isDark, empty }) =>
-        !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
+                    !empty && (useRowHover ? (isDark ? colors.hover.dark : colors.hover.DEFAULT) : undefined)} !important;
                 cursor: ${({ useRowHover }) => (useRowHover ? 'pointer' : 'normal')} !important;
                 .divide-divider-dark > :not([hidden]) ~ :not([hidden]) {
                     border-color: ${({ isDark }) => (isDark ? colors.dark[1] : colors.white)};

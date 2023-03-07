@@ -29,7 +29,6 @@ const Footer = memo(() => {
     const isApp = useApp();
     const [currentTheme] = useDarkMode();
 
-    if (isApp) return null;
     const MobileCopyright = useCallback(
         () => (
             <div className="px-4">
@@ -37,7 +36,7 @@ const Footer = memo(() => {
                     <div className="">
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={113}
                             height={36}
                             alt="Nami Exchange"
@@ -61,7 +60,7 @@ const Footer = memo(() => {
                         {/*  */}
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={251}
                             height={80}
                             alt="Nami Exchange"
@@ -76,7 +75,8 @@ const Footer = memo(() => {
         ),
         [t, language, currentTheme]
     );
-
+    
+    if (isApp) return null;
     return (
         <section className="mal-footer border-t border-divider dark:border-divider-dark">
             <div className={`${width >= 1200 ? 'mal-footer___desktop ' : ''}  mal-footer__wrapper  mal-container`}>

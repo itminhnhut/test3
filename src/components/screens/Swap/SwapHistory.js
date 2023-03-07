@@ -3,7 +3,7 @@ import { useAsync } from 'react-use';
 import { API_GET_SWAP_HISTORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import { ApiStatus } from 'redux/actions/const';
-import { formatPrice, formatTime, getLoginUrl } from 'redux/actions/utils';
+import { formatPrice, formatTime, getLoginUrl ,getS3Url} from 'redux/actions/utils';
 import { RETABLE_SORTBY } from 'src/components/common/ReTable';
 import fetchApi from '../../../utils/fetch-api';
 import Skeletor from 'src/components/common/Skeletor';
@@ -136,23 +136,18 @@ const SwapHistory = ({ width }) => {
                 </div>
             ) : (
                 <div className="flex flex-col justify-center items-center mt-[60px]">
-                    <img src={'/images/screen/swap/login-success.png'} alt="" className="mx-auto h-[124px] w-[124px]" />
+                    <img src={getS3Url('/images/screen/swap/login-success.png')} alt="" className="mx-auto h-[124px] w-[124px]" />
                     <p className="!text-base text-txtSecondary dark:text-txtSecondary-dark mt-3">
-                        <Link href={getLoginUrl('sso')} locale="en">
-                            <a
-                                className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
-                            >
-                                {t('common:sign_in')}{' '}
-                            </a>
-                        </Link>
+                        <a href={getLoginUrl('sso')} className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4">
+                            {t('common:sign_in')}{' '}
+                        </a>
                         {t('common:or')}{' '}
-                        <Link href={getLoginUrl('sso', 'register')} locale="en">
-                            <a
-                                className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
-                            >
-                                {t('common:sign_up')}{' '}
-                            </a>
-                        </Link>
+                        <a
+                            href={getLoginUrl('sso', 'register')}
+                            className="font-semibold text-green-3 hover:text-green-4 dark:text-green-2 dark:hover:text-green-4"
+                        >
+                            {t('common:sign_up')}{' '}
+                        </a>
                         {t('common:swap_history')}
                     </p>
                 </div>

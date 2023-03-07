@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-
+import { setCookie } from 'cookies-next';
 export const LANGUAGE_TAG = {
     VI: 'vi',
     EN: 'en'
@@ -13,6 +13,7 @@ const useLanguage = () => {
         const nextLang = typeof nextLanguage === 'string' ? nextLanguage : currentLocale === LANGUAGE_TAG.VI ? LANGUAGE_TAG.EN : LANGUAGE_TAG.VI;
 
         const isSupportScreen = router.pathname.includes('support');
+        setCookie('NAMI_LOCALE', nextLang);
         localStorage.setItem('local_lang', nextLang);
         if (isSupportScreen) {
             if (router.pathname.includes('/support/faq')) {

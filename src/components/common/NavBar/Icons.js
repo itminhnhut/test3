@@ -4,6 +4,8 @@ import {
     FutureSwapIcon as swap,
     FutureLaunchpadIcon as launchpad,
     FutureReferralIcon as referral,
+    FuturePortfolioIcon as overview_wallet,
+
     FutureIcon as futures_wallet,
     FutureExchangeIcon as spot_wallet,
     FutureTransferIcon as transfer,
@@ -20,6 +22,7 @@ export default {
     swap,
     launchpad,
     referral,
+    overview_wallet,
     futures_wallet,
     spot_wallet,
     transfer,

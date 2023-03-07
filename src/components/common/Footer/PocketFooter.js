@@ -12,8 +12,10 @@ import SvgIcon from 'src/components/svg';
 import colors from 'styles/colors';
 import { THEME_MODE } from 'hooks/useDarkMode';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, language }) => {
+    const router = useRouter();
     return (
         <>
             <div className="mal-footer___pocket">
@@ -24,7 +26,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                                 <div className="mal-footer___pocket__logo mb-6">
                                     <Image
                                         // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                                        src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                        src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                         width={188}
                                         height={60}
                                         alt="Nami Exchange"
@@ -37,19 +39,19 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                         )
                     ) : (
                         <div className={`${width >= 1200 ? ' ' : 'px-4 w-full'}`}>
-                            <div className="font-semibold text-3xl lg:text-2xl mb-6">{t('navbar:footer_title')}</div>
+                            <div className="font-semibold text-3xl lg:text-xl mb-6">{t('navbar:footer_title')}</div>
                             <div className="flex items-center">
                                 <ButtonV2
-                                    onClick={() => window.open(getLoginUrl('sso', 'register'))}
+                                    onClick={() => router.push(getLoginUrl('sso', 'register'))}
                                     className=" w-[151px] !h-[48px] !py-[13px] rounded-md !text-sm"
                                 >
                                     {t('common:create_account')}
                                 </ButtonV2>
-                                {width < 1200 && (
+                                {/* {width < 1200 && (
                                     <ButtonV2 variants="text" onClick={() => window.open(getLoginUrl('sso', 'login'), '_self')} className="ml-4 w-[171px]">
                                         {t('common:sign_in')}
                                     </ButtonV2>
-                                )}
+                                )} */}
                             </div>
 
                             {width < 1200 && <hr className="border-divider dark:border-divider-dark mt-6" />}

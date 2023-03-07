@@ -36,13 +36,16 @@ export default (state = INITIAL_STATE, action) => {
             let mix = state.notificationsMix;
 
             if (!ids) {
+                // case mark read all
                 if (mix && Array.isArray(mix)) {
                     mix.forEach((e) => {
                         e.status = NotificationStatus.DELETED;
                     });
                     mix = [...mix];
                 }
+                return { ...state, notificationsMix: mix, unreadCount: 0 };
             } else {
+                // case mark read on 1 noti
                 if (mix && Array.isArray(mix)) {
                     mix.forEach((e) => {
                         if (ids === e._id) {
@@ -50,9 +53,11 @@ export default (state = INITIAL_STATE, action) => {
                         }
                     });
                     mix = [...mix];
+                    
                 }
+                return { ...state, notificationsMix: mix, unreadCount: state.unreadCount === 0 ? state.unreadCount :  state.unreadCount - 1 };
+
             }
-            return { ...state, notificationsMix: mix, unreadCount: 0 };
         }
         default:
             return state;

@@ -76,12 +76,9 @@ const DatePicker = ({ date, isCalendar, onChange, month, wrapperClassname, class
             ) : (
                 <div
                     className={classNames(
-                        'relative py-3 text-sm px-3 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer',
+                        'relative py-3 text-sm px-3 flex items-center justify-between rounded-md w-auto cursor-pointer  bg-gray-12 dark:bg-dark-2',
                         {
                             '!border-teal': showPicker
-                        },
-                        {
-                            [dateRangeClassName]: dateRangeClassName
                         }
                     )}
                     onClick={() => setShowPicker(!showPicker)}
@@ -94,6 +91,7 @@ const DatePicker = ({ date, isCalendar, onChange, month, wrapperClassname, class
                                     ? formatTime(date?.startDate, 'dd/MM/yyyy') + ' - ' + formatTime(date?.endDate, 'dd/MM/yyyy')
                                     : 'DD/MM/YYYY - DD/MM/YYYY')}
                         </div>
+
                         {issetValue ? (
                             <div className="" onClick={onClear}>
                                 <X size={16} />
@@ -142,6 +140,7 @@ const DatePicker = ({ date, isCalendar, onChange, month, wrapperClassname, class
                         navigatorRenderer={navigatorRenderer}
                         locale={language === 'vi' ? vi : en}
                         color={colors.teal}
+                        monthDisplayFormat="MMMM yyyy"
                     />
 
                     {showConfirmButton &&

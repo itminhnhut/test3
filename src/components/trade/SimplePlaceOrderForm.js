@@ -24,7 +24,6 @@ import TradingInput from 'components/trade/TradingInput';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { roundToDown } from 'round-to';
-import Link from 'next/link';
 
 let initPrice = '';
 
@@ -720,17 +719,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         const disabled = placing || currentExchangeConfig?.status === 'MAINTAIN' || isErorr;
         return !user ? (
             <ButtonV2 variants="secondary">
-                <Link href={getLoginUrl('sso')} locale="en">
-                    <a>
-                        <span className="text-teal hover:underline">{t('common:sign_in')}</span>
-                    </a>
-                </Link>
+                <a href={getLoginUrl('sso')}>
+                    <span className="text-teal hover:underline">{t('common:sign_in')}</span>
+                </a>
                 <div className="font-normal">{t('common:or')}</div>
-                <Link href={getLoginUrl('sso', 'register')} locale="en">
-                    <a>
-                        <span className="text-teal hover:underline">{t('common:sign_up')}</span>
-                    </a>
-                </Link>
+                <a href={getLoginUrl('sso', 'register')}>
+                    <span className="text-teal hover:underline">{t('common:sign_up')}</span>
+                </a>
             </ButtonV2>
         ) : (
             <ButtonV2

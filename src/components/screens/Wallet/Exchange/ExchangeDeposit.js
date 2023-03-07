@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { formatTime, formatWallet, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Check, ChevronLeft, ChevronRight, Search, Slash, X } from 'react-feather';
@@ -61,10 +61,7 @@ const INITIAL_STATE = {
     // Add new state here
 };
 
-const CryptoSelect = ({
-    t,
-    selected
-}) => {
+const CryptoSelect = ({ t, selected }) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const refContent = useRef();
@@ -79,8 +76,9 @@ const CryptoSelect = ({
     const router = useRouter();
 
     const items = useMemo(() => {
-        return paymentConfigs.filter(c => c.assetCode?.includes(search.toUpperCase()))
-            .map(config => {
+        return paymentConfigs
+            .filter((c) => c.assetCode?.includes(search.toUpperCase()))
+            .map((config) => {
                 const wallet = spotWallets[config.assetId] || {
                     value: 0,
                     locked_value: 0
@@ -91,99 +89,79 @@ const CryptoSelect = ({
                     availableValue: wallet.value - wallet.locked_value
                 };
             });
-
     }, [paymentConfigs, spotWallets, search]);
 
     useOutsideClick(refContent, () => setOpen(!open));
 
-    return <div className='relative'>
-        <div
-            className='bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none'
-            onClick={() => setOpen(true)}
-        >
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6'>{t('wallet:crypto_select')}</p>
-            <div className='flex items-center justify-between'>
-                <div className='flex items-center'>
-                    <AssetLogo assetCode={selected?.assetCode} size={24} />
-                    <div className='ml-2 font-bold text-sm text-txtPrimary dark:text-txtPrimary-dark'>
-                        {selected?.assetCode || '--'}
+    return (
+        <div className="relative">
+            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none" onClick={() => setOpen(true)}>
+                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6">{t('wallet:crypto_select')}</p>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                        <AssetLogo assetCode={selected?.assetCode} size={24} />
+                        <div className="ml-2 font-semibold text-txtPrimary dark:text-txtPrimary-dark">{selected?.assetCode || '--'}</div>
                     </div>
+                    <ChevronDown className={open ? '!rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
-                <ChevronDown
-                    className={open ? 'rotate-0' : ''}
-                    size={16}
-                    color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue}
-                />
             </div>
-        </div>
-        {
-            open &&
-            <div
-                className={classNames(
-                    'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
-                    'rounded-xl shadow-common overflow-hidden',
-                    'bg-white nami-light-shadow',
-                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark '
-                )}
-                ref={refContent}
-            >
-                <div className='px-4'>
-                    <div className='bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md'>
-                        <Search color={colors.darkBlue5} size={16} className='mr-2' />
-                        <input
-                            type='text'
-                            value={search}
-                            placeholder='Tìm kiếm'
-                            onChange={e => setSearch(e.target.value)}
-                            autoFocus
-                        />
+            {open && (
+                <div
+                    className={classNames(
+                        'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
+                        'rounded-xl shadow-common overflow-hidden',
+                        'bg-white nami-light-shadow',
+                        'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark '
+                    )}
+                    ref={refContent}
+                >
+                    <div className="px-4">
+                        <div className="bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md">
+                            <Search color={colors.darkBlue5} size={16} className="mr-2" />
+                            <input type="text" value={search} placeholder={t('common:search')} onChange={(e) => setSearch(e.target.value)} autoFocus />
+                        </div>
                     </div>
-                </div>
-                <div className='overflow-y-auto flex-1 space-y-3'>
-                    {
-                        !items.length &&
-                        <NoData />
-                    }
-                    {
-                        items.map(c => {
-                            return <div
-                                key={c._id}
-                                onClick={() => {
-                                    router.push(depositLinkBuilder(c.assetCode), null, {
-                                        scroll: false
-                                    })
-                                        .finally(() => {
-                                            setOpen(false);
-                                        });
-                                }}
-                                className={classNames('flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover', {
-                                    'bg-hover': c._id === selected?._id
-                                })}
-                            >
-                                <div className='flex'>
-                                    <AssetLogo
-                                        assetCode={c?.assetCode}
-                                        size={24}
-                                    />
-                                    <span className='ml-2'>{c.assetCode}</span>
+                    <div className="overflow-y-auto flex-1 space-y-3">
+                        {!items.length && <NoData isSearch={!!search} />}
+                        {items.map((c) => {
+                            return (
+                                <div
+                                    key={c._id}
+                                    onClick={() => {
+                                        router
+                                            .push(depositLinkBuilder(c.assetCode), null, {
+                                                scroll: false
+                                            })
+                                            .finally(() => {
+                                                setOpen(false);
+                                            });
+                                    }}
+                                    className={classNames(
+                                        'flex items-center justify-between px-4 py-3 cursor-pointer transition hover:bg-hover dark:hover:bg-hover-dark',
+                                        {
+                                            'bg-hover dark:bg-hover-dark': c._id === selected?._id
+                                        }
+                                    )}
+                                >
+                                    <div className="flex">
+                                        <AssetLogo assetCode={c?.assetCode} size={24} />
+                                        <span className="ml-2">{c.assetCode}</span>
+                                    </div>
+                                    <span className="float-right text-txtSecondary">
+                                        {' '}
+                                        {formatWallet(c.availableValue, mapAssetConfig[c.assetId]?.assetDigit || 0)}{' '}
+                                    </span>
                                 </div>
-                                <span
-                                    className='float-right text-txtSecondary'> {formatWallet(c.availableValue, mapAssetConfig[c.assetId]?.assetDigit || 0)} </span>
-                            </div>;
-                        })
-                    }
+                            );
+                        })}
+                    </div>
                 </div>
-            </div>
-        }
-    </div>;
+            )}
+        </div>
+    );
 };
 
-const NetworkSelect = ({
-    t,
-    selected,
-    onSelect,
-    networkList = []
-}) => {
+const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const refContent = useRef();
@@ -192,85 +170,76 @@ const NetworkSelect = ({
     useOutsideClick(refContent, () => setOpen(!open));
 
     const items = useMemo(() => {
-        return networkList.filter(nw => {
+        return networkList.filter((nw) => {
             const name = nw.name?.toLowerCase() || '';
             return name.includes(search.toLowerCase());
         });
     }, [networkList, search]);
 
-    return <div className='relative'>
-        <div
-            className='bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none'
-            onClick={() => setOpen(true)}
-        >
-            <p className='text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6'>{t('wallet:network')}</p>
-            <div className='flex items-center justify-between'>
-                <div
-                    className={classNames('flex items-center', {
-                        'opacity-40': !selected?.depositEnable
-                    })}
-                >
-                    <span className='font-semibold'>{selected?.network || '--'}</span>
-                    <span
-                        className='ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark'>{selected?.name || '--'}</span>
+    return (
+        <div className="relative">
+            <div className="bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer select-none" onClick={() => setOpen(true)}>
+                <p className="text-txtSecondary dark:text-txtSecondary-dark mb-2 leading-6">{t('wallet:network')}</p>
+                <div className="flex items-center justify-between">
+                    <div
+                        className={classNames('flex items-center', {
+                            'opacity-40': !selected?.depositEnable
+                        })}
+                    >
+                        <span className="font-semibold">{selected?.network || '--'}</span>
+                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{selected?.name || '--'}</span>
+                    </div>
+                    <ChevronDown className={open ? 'rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
-                <ChevronDown
-                    className={open ? 'rotate-0' : ''}
-                    size={16}
-                    color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue}
-                />
             </div>
-        </div>
-        {
-            open &&
-            <div
-                className={classNames(
-                    'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
-                    'rounded-xl shadow-common overflow-hidden',
-                    'bg-white nami-light-shadow',
-                    'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark'
-                )}
-                ref={refContent}
-            >
-                <div className='px-4'>
-                    <div className='bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md'>
-                        <Search color={colors.darkBlue5} size={16} className='mr-2' />
-                        <input
-                            type='text'
-                            value={search}
-                            placeholder='Tìm kiếm'
-                            onChange={e => setSearch(e.target.value)}
-                            autoFocus
-                        />
+            {open && (
+                <div
+                    className={classNames(
+                        'absolute z-10 inset-x-0 mt-2 flex flex-col bg-white py-4 space-y-6 max-h-[436px] min-h-[200px]',
+                        'rounded-xl shadow-common overflow-hidden',
+                        'bg-white nami-light-shadow',
+                        'dark:bg-darkBlue-3 dark:shadow-none dark:border dark:border-divider-dark'
+                    )}
+                    ref={refContent}
+                >
+                    <div className="px-4">
+                        <div className="bg-gray-10 dark:bg-dark-2 h-12 flex items-center px-3 rounded-md">
+                            <Search color={colors.darkBlue5} size={16} className="mr-2" />
+                            <input type="text" value={search} placeholder={t('common:search')} onChange={(e) => setSearch(e.target.value)} autoFocus />
+                        </div>
+                    </div>
+                    <div className="overflow-y-auto space-y-3">
+                        {!items.length && <NoData isSearch={!!search} />}
+                        {items.map((item) => {
+                            return (
+                                <div
+                                    key={item._id}
+                                    className={classNames('flex items-center px-4 py-3 cursor-pointer hover:bg-hover dark:hover:bg-hover-dark', {
+                                        'bg-hover dark:bg-hover-dark': selected._id === item._id
+                                    })}
+                                    onClick={() => {
+                                        if (setOpen) setOpen(false);
+                                        if (onSelect) onSelect(item);
+                                    }}
+                                >
+                                    <p className="mr-2 font-semibold">{item.network}</p>
+                                    <span className="text-txtSecondary dark:text-txtSecondary-dark text-xs">{item.name}</span>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
-                <div className='overflow-y-auto space-y-3'>
-                    {items.map((item) => {
-                        return <div
-                            key={item._id}
-                            className={classNames('flex items-center px-4 py-3 cursor-pointer hover:bg-hover', {
-                                'bg-hover': selected._id === item._id
-                            })}
-                            onClick={() => {
-                                if (setOpen) setOpen(false);
-                                if (onSelect) onSelect(item);
-                            }}
-                        >
-                            <p className='mr-2 font-semibold'>{item.network}</p>
-                            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs'>{item.name}</span>
-                        </div>;
-                    })}
-                </div>
-            </div>
-        }
-    </div>;
+            )}
+        </div>
+    );
 };
 
 const ExchangeDeposit = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
+    const [status, setStatus] = useState(null);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
+    const [currentPage, setCurrentPage] = useState(1);
     // Rdx
     const paymentConfigs = useSelector((state) => state.wallet.paymentConfigs);
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
@@ -365,8 +334,7 @@ const ExchangeDeposit = () => {
         setState({ isCopying: { [key]: true } });
         try {
             setTimeout(() => setState({ isCopying: { [key]: false } }), 1000);
-        } catch (err) {
-        }
+        } catch (err) {}
     };
 
     const onPushOrder = async (currency) => {
@@ -399,8 +367,8 @@ const ExchangeDeposit = () => {
     const renderAddressInput = useCallback(() => {
         if (!state.selectedNetwork?.depositEnable) {
             return (
-                <div className='flex flex-col items-center justify-center py-3'>
-                    <div className='text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
+                <div className="flex flex-col items-center justify-center py-3">
+                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">
                         {t('wallet:errors.network_not_support_dep', {
                             asset: state.selectedNetwork?.coin,
                             chain: state.selectedNetwork?.network
@@ -412,20 +380,12 @@ const ExchangeDeposit = () => {
 
         if (!state.address) {
             return (
-                <div className='flex flex-col items-center justify-center py-3'>
-                    <div className='text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark'>
-                        {t('wallet:address_not_available')}
-                    </div>
+                <div className="flex flex-col items-center justify-center py-3">
+                    <div className="text-sm font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:address_not_available')}</div>
                     <div
-                        className='bg-dominant px-3 py-1.5 rounded-lg text-sm font-medium text-white mt-3 cursor-pointer
-                                     hover:opacity-80'
-                        onClick={() =>
-                            getDepositTokenAddress(
-                                true,
-                                state.selectedAsset?.assetId,
-                                state.selectedNetwork?.network
-                            )
-                        }
+                        className="bg-dominant px-3 py-1.5 rounded-lg text-sm font-medium text-white mt-3 cursor-pointer
+                                     hover:opacity-80"
+                        onClick={() => getDepositTokenAddress(true, state.selectedAsset?.assetId, state.selectedNetwork?.network)}
                     >
                         {t('wallet:reveal_address')}
                     </div>
@@ -435,44 +395,35 @@ const ExchangeDeposit = () => {
 
         if (!state.address?.address && state.errors?.addressNotFound) {
             return (
-                <div className='flex flex-col items-center justify-center py-3'>
-                    <div className='text-sm font-medium text-red text-center'>
-                        {t('wallet:errors.address_not_found')}
-                    </div>
+                <div className="flex flex-col items-center justify-center py-3">
+                    <div className="text-sm font-medium text-red text-center">{t('wallet:errors.address_not_found')}</div>
                 </div>
             );
         }
 
         return (
-            <div className='flex items-center justify-between hover:!border-dominant'>
-                <p className='pr-3 font-medium cursor-text break-all'>
-                    {state.address?.address}
-                </p>
+            <div className="flex items-center justify-between hover:!border-dominant">
+                <p className="pr-3 font-medium cursor-text break-all">{state.address?.address}</p>
                 {state.selectedNetwork?.shouldShowPushDeposit && (
                     <span
-                        className={
-                            classNames('mr-3 md:mr-5 font-medium text-xs md:text-sm',
-                                state.address.address ?
-                                    {
-                                        'text-gray-2 dark:text-darkBlue-4 select-none whitespace-nowrap cursor-not-allowed': (state.pushingOrder || state.pushingOrder === 1),
-                                        'text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer': !(state.pushingOrder || state.pushingOrder === 1)
-                                    } : 'text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'
-                            )
-                        }
-                        onClick={() =>
-                            (!state.pushingOrder || state.pushingOrder !== 1) &&
-                            onPushOrder(state.selectedAsset?.id)
-                        }
+                        className={classNames(
+                            'mr-3 md:mr-5 font-medium text-xs md:text-sm',
+                            state.address.address
+                                ? {
+                                      'text-gray-2 dark:text-darkBlue-4 select-none whitespace-nowrap cursor-not-allowed':
+                                          state.pushingOrder || state.pushingOrder === 1,
+                                      'text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer': !(
+                                          state.pushingOrder || state.pushingOrder === 1
+                                      )
+                                  }
+                                : 'text-dominant whitespace-nowrap select-none hover:opacity-80 cursor-pointer invisible'
+                        )}
+                        onClick={() => (!state.pushingOrder || state.pushingOrder !== 1) && onPushOrder(state.selectedAsset?.id)}
                     >
                         {t('wallet:push_order')}
                     </span>
                 )}
-                <CopyToClipboard
-                    text={state.address?.address}
-                    onCopy={() =>
-                        !state.isCopying?.address && onCopy('address')
-                    }
-                >
+                <CopyToClipboard text={state.address?.address} onCopy={() => !state.isCopying?.address && onCopy('address')}>
                     <span
                         className={
                             state.address.address
@@ -480,39 +431,21 @@ const ExchangeDeposit = () => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.address ? (
-                            <Check size={16} color={colors.teal} />
-                        ) : (
-                            <Copy size={16} />
-                        )}
+                        {state.isCopying?.address ? <Check size={24} color={colors.teal} /> : <Copy size={24} />}
                     </span>
                 </CopyToClipboard>
             </div>
         );
-    }, [
-        state.address,
-        state.selectedAsset,
-        state.selectedNetwork,
-        state.errors,
-        state.isCopying?.address,
-        state.pushingOrder
-    ]);
+    }, [state.address, state.selectedAsset, state.selectedNetwork, state.errors, state.isCopying?.address, state.pushingOrder]);
 
     const renderMemoInput = useCallback(() => {
         if (!state.selectedNetwork?.memoRegex || !state.address?.addressTag) {
             return null;
         }
         return (
-            <div
-                className={'flex items-center justify-between rounded-xl'}
-            >
-                <div className='cursor-text break-all'>
-                    {state.address.addressTag}
-                </div>
-                <CopyToClipboard
-                    text={state.address.addressTag}
-                    onCopy={() => !state.isCopying?.memo && onCopy('memo')}
-                >
+            <div className={'flex items-center justify-between rounded-xl'}>
+                <div className="cursor-text break-all">{state.address.addressTag}</div>
+                <CopyToClipboard text={state.address.addressTag} onCopy={() => !state.isCopying?.memo && onCopy('memo')}>
                     <span
                         className={
                             state.address.addressTag
@@ -520,16 +453,11 @@ const ExchangeDeposit = () => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.memo ? (
-                            <Check size={16} />
-                        ) : (
-                            <Copy size={16} />
-                        )}
+                        {state.isCopying?.memo ? <Check size={16} /> : <Copy size={16} />}
                     </span>
                 </CopyToClipboard>
             </div>
         );
-
     }, [state.address, state.selectedNetwork, state.isCopying?.memo]);
 
     const renderQrAddress = useCallback(() => {
@@ -540,7 +468,7 @@ const ExchangeDeposit = () => {
         if (!state.address?.address) {
             return (
                 <div
-                    className='flex items-center justify-center'
+                    className="flex items-center justify-center"
                     style={{
                         width: qrSize,
                         height: qrSize
@@ -553,12 +481,8 @@ const ExchangeDeposit = () => {
 
         return (
             <>
-                <div className='p-2 w-[200px] bg-white rounded-lg'>
-                    <QRCodeSVG
-                        value={state.address?.address}
-                        size='100%'
-                        bgColor={colors.white}
-                    />
+                <div className="p-2 w-[200px] bg-white rounded-lg">
+                    <QRCodeSVG value={state.address?.address} size="100%" bgColor={colors.white} />
                 </div>
             </>
         );
@@ -574,35 +498,22 @@ const ExchangeDeposit = () => {
         if (language === LANGUAGE_TAG.EN) {
             noteObj.common = (
                 <>
-                    Please carefully check the information about the token, the
-                    token network before transferring the token. Only send{' '}
-                    <span className='font-medium text-dominant'>
-                        {tokenName}
-                    </span>{' '}
-                    to this address, sending any other tokens may result in the
-                    loss of tokens.
+                    Please carefully check the information about the token, the token network before transferring the token. Only send{' '}
+                    <span className="font-medium text-dominant">{tokenName}</span> to this address, sending any other tokens may result in the loss of tokens.
                 </>
             );
             noteObj.pushOrder = (
                 <>
-                    If your Deposit Order has not been updated on Nami, use the{' '}
-                    <span className='font-medium text-dominant'>
-                        Push Order
-                    </span>{' '}
-                    button to have Nami update the balance automatically.
+                    If your Deposit Order has not been updated on Nami, use the <span className="font-medium text-dominant">Push Order</span> button to have
+                    Nami update the balance automatically.
                 </>
             );
             noteObj.runItBackTitle = <>Having a mistake?</>;
             noteObj.runItBackNotes = (
                 <>
-                    Depending on the case, Nami Exchange can support to recover
-                    tokens when users send wrong token, wrong wallet address or
-                    wrong network, the minimum fee for recovery support is 100
-                    USDT, please{' '}
-                    <span
-                        onClick={() => window?.fcWidget.open()}
-                        className='text-dominant cursor-pointer hover:!underline'
-                    >
+                    Depending on the case, Nami Exchange can support to recover tokens when users send wrong token, wrong wallet address or wrong network, the
+                    minimum fee for recovery support is 100 USDT, please{' '}
+                    <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline">
                         contact support
                     </span>{' '}
                     for specific advice.
@@ -611,34 +522,22 @@ const ExchangeDeposit = () => {
         } else {
             noteObj.common = (
                 <>
-                    Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng
-                    lưới token trước khi chuyển token. Chỉ gửi{' '}
-                    <span className='font-medium text-dominant'>
-                        {tokenName}
-                    </span>{' '}
-                    đến địa chỉ này, gửi bất cứ token nào khác có thể dẫn đến
-                    việc mất mát token.
+                    Người dùng vui lòng kiểm tra kỹ các thông tin về token, mạng lưới token trước khi chuyển token. Chỉ gửi{' '}
+                    <span className="font-medium text-dominant">{tokenName}</span> đến địa chỉ này, gửi bất cứ token nào khác có thể dẫn đến việc mất mát token.
                 </>
             );
             noteObj.pushOrder = (
                 <>
-                    Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng
-                    click vào nút{' '}
-                    <span className='font-medium text-dominant'>Đẩy lệnh</span>{' '}
-                    để Nami cập nhật số dư tự động.
+                    Nếu lệnh nạp của bạn chưa được cập nhật trên Nami, vui lòng click vào nút <span className="font-medium text-dominant">Đẩy lệnh</span> để
+                    Nami cập nhật số dư tự động.
                 </>
             );
             noteObj.runItBackTitle = <>Gặp sự cố nhầm lẫn?</>;
             noteObj.runItBackNotes = (
                 <>
-                    Tùy từng trường hợp, NamiExchange có thể hỗ trợ khôi phục
-                    token khi người dùng gửi nhầm token, sai địa chỉ ví hoặc
-                    nhầm mạng, phí hỗ trợ khôi phục tối thiểu là 100 USDT, vui
-                    lòng liên hệ{' '}
-                    <span
-                        onClick={() => window?.fcWidget.open()}
-                        className='text-dominant cursor-pointer hover:!underline'
-                    >
+                    Tùy từng trường hợp, NamiExchange có thể hỗ trợ khôi phục token khi người dùng gửi nhầm token, sai địa chỉ ví hoặc nhầm mạng, phí hỗ trợ
+                    khôi phục tối thiểu là 100 USDT, vui lòng liên hệ{' '}
+                    <span onClick={() => window?.fcWidget.open()} className="text-dominant cursor-pointer hover:!underline">
                         {' '}
                         bộ phận hỗ trợ
                     </span>{' '}
@@ -649,30 +548,28 @@ const ExchangeDeposit = () => {
 
         return (
             <>
-                <div className='relative flex items-center justify-between mb-4'>
-                    <span className='font-semibold'>{t('common:important_notes')}</span>
+                <div className="relative flex items-center justify-between mb-4">
+                    <span className="font-semibold">{t('common:important_notes')}</span>
                     <div>
-                        <Tooltip id='wrongthings' place='left' effect='solid'>
-                            <div className='w-[320px]'>
-                                {noteObj.runItBackNotes}
-                            </div>
+                        <Tooltip isV3 id="wrongthings" place="left" effect="solid">
+                            <div className="w-[320px]">{noteObj.runItBackNotes}</div>
                         </Tooltip>
                         <span
-                            data-tip=''
-                            data-for='wrongthings'
-                            className='inline-block text-sm cursor-pointer text-teal'
+                            data-tip=""
+                            data-for="wrongthings"
+                            className="inline-block text-sm cursor-pointer text-teal"
                             onClick={() => window?.fcWidget?.open()}
                         >
                             {noteObj?.runItBackTitle}
                         </span>
                     </div>
                 </div>
-                <div className='text-txtSecondary dark:text-txtSecondary-dark'>
-                    <div className='flex'>
+                <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex">
                         <div>{noteObj?.common}</div>
                     </div>
                     {isPushOrder && (
-                        <div className='flex mt-1.5'>
+                        <div className="flex mt-1.5">
                             <div>{noteObj?.pushOrder}</div>
                         </div>
                     )}
@@ -682,66 +579,45 @@ const ExchangeDeposit = () => {
     }, [language, state.selectedAsset, state.selectedNetwork]);
 
     const renderMemoNotice = useCallback(() => {
-        const isMemoNotice =
-            WITH_MEMO.includes(state.selectedNetwork?.network) &&
-            state.selectedNetwork?.depositEnable;
+        const isMemoNotice = WITH_MEMO.includes(state.selectedNetwork?.network) && state.selectedNetwork?.depositEnable;
         if (!isMemoNotice) return null;
 
         let msg;
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Cần cả 2 trường{' '}
-                    <span className='text-dominant font-medium'>MEMO</span> và{' '}
-                    <span className='text-dominant font-medium'>Địa chỉ</span>{' '}
-                    để nạp thành công {state.selectedAsset?.assetCode}.<br />{' '}
-                    Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
+                    Cần cả 2 trường <span className="text-dominant font-medium">MEMO</span> và <span className="text-dominant font-medium">Địa chỉ</span> để nạp
+                    thành công {state.selectedAsset?.assetCode}.<br /> Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.
                 </>
             );
         } else {
             msg = (
                 <>
-                    Both a{' '}
-                    <span className='text-dominant font-medium'>MEMO</span> and
-                    an{' '}
-                    <span className='text-dominant font-medium'>Address</span>{' '}
-                    are required to successfully deposit your{' '}
-                    {state.selectedAsset?.assetCode}.
+                    Both a <span className="text-dominant font-medium">MEMO</span> and an <span className="text-dominant font-medium">Address</span> are
+                    required to successfully deposit your {state.selectedAsset?.assetCode}.
                     <br />
-                    NamiExchange will not handle any deposit which lacks
-                    information.
+                    NamiExchange will not handle any deposit which lacks information.
                 </>
             );
         }
 
         return (
-            <ModalV2 isVisible={state.openModal?.memoNotice} className='w-[320px]'>
-                <div className='text-center text-sm font-medium w-full'>
-                    <div className='my-2 text-center font-bold text-[18px]'>
-                        {t('common:important_notes')}
-                    </div>
-                    <div className='text-txtSecondary dark:text-txtSecondary-dark'>{msg}</div>
-                    <div className='mt-4 w-full flex flex-row items-center justify-between'>
-                        <Button
-                            title={t('common:confirm')}
-                            type='primary'
-                            componentType='button'
-                            className='!py-2'
-                            onClick={closeModal}
-                        />
+            <ModalV2 isVisible={state.openModal?.memoNotice} className="w-[320px]">
+                <div className="text-center text-sm font-medium w-full">
+                    <div className="my-2 text-center font-bold text-[18px]">{t('common:important_notes')}</div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{msg}</div>
+                    <div className="mt-4 w-full flex flex-row items-center justify-between">
+                        <Button title={t('common:confirm')} type="primary" componentType="button" className="!py-2" onClick={closeModal} />
                     </div>
                 </div>
             </ModalV2>
         );
-    }, [
-        state.selectedNetwork,
-        state.selectedAsset?.assetCode,
-        state.openModal?.memoNotice,
-        language
-    ]);
+    }, [state.selectedNetwork, state.selectedAsset?.assetCode, state.openModal?.memoNotice, language]);
 
     const renderDepHistory = useCallback(() => {
         const data = state.histories || [];
+        const dataFilter = status ? data.filter((rs) => rs.status === status) : data;
+
         let tableStatus;
 
         const columns = [
@@ -750,7 +626,7 @@ const ExchangeDeposit = () => {
                 dataIndex: 'txId',
                 title: 'TxHash',
                 align: 'left',
-                render: txHash => {
+                render: (txHash) => {
                     return txHash ? shortHashAddress(txHash, 6, 6) : '--';
                 }
             },
@@ -761,10 +637,12 @@ const ExchangeDeposit = () => {
                 align: 'left',
                 render: (assetId) => {
                     const config = mapAssetConfig[assetId] || {};
-                    return <div className='flex items-center whitespace-nowrap'>
-                        <AssetLogo size={30} assetId={assetId} />
-                        <span className='ml-2'>{config.assetCode}</span>
-                    </div>;
+                    return (
+                        <div className="flex items-center whitespace-nowrap">
+                            <AssetLogo size={30} assetId={assetId} />
+                            <span className="ml-2">{config.assetCode}</span>
+                        </div>
+                    );
                 }
             },
             {
@@ -795,7 +673,7 @@ const ExchangeDeposit = () => {
                 dataIndex: ['metadata', 'address'],
                 title: t('common:address_wallet'),
                 align: 'right',
-                render: address => {
+                render: (address) => {
                     return address ? shortHashAddress(address, 6, 6) : '--';
                 }
             },
@@ -805,11 +683,24 @@ const ExchangeDeposit = () => {
                 title: t('common:status'),
                 // width: 160,
                 align: 'right',
-                render: (status) => ({
-                    [DepWdlStatus.Success]: <TagV2 className='ml-auto' type='success'>{t('common:success')}</TagV2>,
-                    [DepWdlStatus.Pending]: <TagV2 className='ml-auto' type='warning'>{t('common:pending')}</TagV2>,
-                    [DepWdlStatus.Declined]: <TagV2 className='ml-auto' type='failed'>{t('common:declined')}</TagV2>
-                }[status])
+                render: (status) =>
+                    ({
+                        [DepWdlStatus.Success]: (
+                            <TagV2 icon={false} className="ml-auto" type="success">
+                                {t('common:success')}
+                            </TagV2>
+                        ),
+                        [DepWdlStatus.Pending]: (
+                            <TagV2 icon={false} className="ml-auto" type="warning">
+                                {t('common:pending')}
+                            </TagV2>
+                        ),
+                        [DepWdlStatus.Declined]: (
+                            <TagV2 icon={false} className="ml-auto" type="failed">
+                                {t('common:declined')}
+                            </TagV2>
+                        )
+                    }[status])
             }
         ];
 
@@ -820,22 +711,18 @@ const ExchangeDeposit = () => {
         return (
             <TableV2
                 useRowHover
-                data={data}
+                data={dataFilter}
                 columns={columns}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 tableStatus={tableStatus}
-                pagingClassName='border-none'
-                pagingPrevNext={{
-                    page: state.historyPage,
-                    histories: state.histories, // TODO: change this to hasNext
-                    onChangeNextPrev: (delta) => setState({ historyPage: state.historyPage + delta }),
-                    language
-                }}
-                isNamiV2
+                pagingClassName="border-none"
+                limit={10}
+                page={currentPage}
+                onChangePage={setCurrentPage}
             />
         );
-    }, [state.loadingHistory, state.histories, state.blockConfirm, width]);
+    }, [state.loadingHistory, state.histories, state.blockConfirm, width, status]);
 
     const renderPushedOrderNotice = useCallback(() => {
         if (!state.pushedOrder) return null;
@@ -843,32 +730,26 @@ const ExchangeDeposit = () => {
         if (language === LANGUAGE_TAG.VI) {
             msg = (
                 <>
-                    Yêu cầu đẩy lệnh đã được ghi nhận, <br /> vui lòng chờ trong
-                    giây lát.
+                    Yêu cầu đẩy lệnh đã được ghi nhận, <br /> vui lòng chờ trong giây lát.
                 </>
             );
         } else {
             msg = (
                 <>
-                    Your push request has been record, <br /> please wait a
-                    moment.
+                    Your push request has been record, <br /> please wait a moment.
                 </>
             );
         }
 
         return (
-            <Modal
-                isVisible={!!state.pushedOrder}
-                title={t('modal:notice')}
-                onBackdropCb={() => setState({ pushedOrder: null })}
-            >
-                <div className='text-sm text-center mt-5'>{msg}</div>
-                <div className='mt-4 w-full flex flex-row items-center justify-between'>
+            <Modal isVisible={!!state.pushedOrder} title={t('modal:notice')} onBackdropCb={() => setState({ pushedOrder: null })}>
+                <div className="text-sm text-center mt-5">{msg}</div>
+                <div className="mt-4 w-full flex flex-row items-center justify-between">
                     <Button
                         title={t('common:confirm')}
-                        type='primary'
-                        componentType='button'
-                        className='!py-2'
+                        type="primary"
+                        componentType="button"
+                        className="!py-2"
                         onClick={() => setState({ pushedOrder: null })}
                     />
                 </div>
@@ -892,11 +773,7 @@ const ExchangeDeposit = () => {
     }, [state.historyPage]);
 
     useEffect(() => {
-        getDepositTokenAddress(
-            false,
-            state.selectedAsset?.assetId,
-            state.selectedNetwork?.network
-        );
+        getDepositTokenAddress(false, state.selectedAsset?.assetId, state.selectedNetwork?.network);
 
         if (WITH_MEMO.includes(state.selectedNetwork?.network)) {
             setState({ openModal: { memoNotice: true } });
@@ -909,13 +786,8 @@ const ExchangeDeposit = () => {
         const asset = get(router?.query, 'asset', 'VNDC');
 
         if (paymentConfigs && asset) {
-            const selectedAsset = find(
-                paymentConfigs,
-                (o) => o?.assetCode === asset
-            );
-            const defaultNetwork =
-                selectedAsset?.networkList?.find((o) => o.isDefault) ||
-                selectedAsset?.networkList?.[0];
+            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === asset);
+            const defaultNetwork = selectedAsset?.networkList?.find((o) => o.isDefault) || selectedAsset?.networkList?.[0];
             selectedAsset && setState({ selectedAsset });
             defaultNetwork && setState({ selectedNetwork: defaultNetwork });
         }
@@ -924,43 +796,59 @@ const ExchangeDeposit = () => {
     useEffect(() => {
         let interval;
         if (focused) {
-            interval = setInterval(
-                () => getDepositHistory(state.historyPage, true),
-                30000
-            );
+            interval = setInterval(() => getDepositHistory(state.historyPage, true), 30000);
         }
         return () => interval && clearInterval(interval);
     }, [focused, state.historyPage]);
 
-
     // Handle check KYC:
     const auth = useSelector((state) => state.auth.user) || null;
     const isOpenModalKyc = useMemo(() => {
-        return auth?.kyc_status !== 2
-    }, [auth])
+        return auth ? auth?.kyc_status !== 2 : false;
+    }, [auth]);
+
+    const listStatus = [
+        {
+            label: t('common:all'),
+            value: null
+        },
+        {
+            label: t('common:success'),
+            value: DepWdlStatus.Success
+        },
+        {
+            label: t('common:pending'),
+            value: DepWdlStatus.Pending
+        },
+        {
+            label: t('common:declined'),
+            value: DepWdlStatus.Declined
+        }
+    ];
 
     return (
         <MaldivesLayout>
             <Background isDark={currentTheme === THEME_MODE.DARK}>
-                <div className='mal-container px-4'>
-                    <div className='flex items-center justify-between mb-10'>
-                        <span className='font-semibold text-[2rem] leading-[3rem]'>{t('common:deposit')}</span>
+                <div className="mal-container px-4">
+                    <div className="flex items-center justify-between mb-10">
+                        <span className="font-semibold text-[2rem] leading-[3rem]">{t('common:deposit')}</span>
                         <div
-                            className='flex items-center font-semibold text-teal cursor-pointer'
+                            className="flex items-center font-semibold text-teal cursor-pointer"
                             onClick={() => {
                                 router.push(PATHS.WALLET.EXCHANGE.WITHDRAW + '?asset=' + state.selectedAsset?.assetCode);
                             }}
                         >
-                            <span className='mr-2'>{t('wallet:withdraw_crypto')}</span>
+                            <span className="mr-2">{t('wallet:withdraw_crypto')}</span>
                             <ChevronRight size={16} color={colors.teal} />
                         </div>
                     </div>
-                    <div className='grid grid-cols-2 gap-6'>
+                    <div className="grid grid-cols-2 gap-6">
                         <div
                             className={classNames(
                                 'rounded-3xl p-6 space-y-4 nami-light-shadow bg-white',
                                 'dark:border dark:border-divider-dark dark:shadow-none dark:bg-dark-dark'
-                            )}>
+                            )}
+                        >
                             <CryptoSelect t={t} selected={state?.selectedAsset} />
                             <NetworkSelect
                                 t={t}
@@ -973,55 +861,54 @@ const ExchangeDeposit = () => {
                                 }}
                             />
 
-                            <div
-                                className='relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer'>
-                                <p className='mb-2 text-txtSecondary dark:text-txtSecondary-dark'>
-                                    {t('wallet:deposit_address')}
-                                </p>
+                            <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                                <p className="mb-2 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:deposit_address')}</p>
                                 {renderAddressInput()}
                             </div>
-                            {state.address?.addressTag &&
-                                state.selectedNetwork
-                                    ?.memoRegex && (
-                                    <div className='relative bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer'>
-                                        <p className='mb-2 dark:text-txtSecondary-dark'>Memo</p>
-                                        {renderMemoInput()}
-                                    </div>
-                                )}
+                            {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
+                                <div className="relative bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                                    <p className="mb-2 dark:text-txtSecondary-dark">Memo</p>
+                                    {renderMemoInput()}
+                                </div>
+                            )}
 
-                            <div className='flex items-center justify-between !mt-6'>
-                                <span
-                                    className='text-txtSecondary dark:text-txtSecondary-dark'> {t('wallet:expected_unlock')}</span>
-                                <span className='font-semibold'>
-                                    <span
-                                        className='mr-2'>{Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm)}
-                                    </span>
+                            <div className="flex items-center justify-between !mt-6">
+                                <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}</span>
+                                <span className="font-semibold">
+                                    <span className="mr-2">{Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm)}</span>
                                     <span>{t('wallet:network_confirmation')}</span>
                                 </span>
                             </div>
-
                         </div>
                         <div
-                            className='rounded-xl flex flex-col justify-between px-8 pt-12 pb-10'
+                            className="rounded-xl flex flex-col justify-between px-8 pt-12 pb-10"
                             style={{
-                                backgroundImage: `url(/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png)`,
+                                backgroundImage: `url(${getS3Url(
+                                    `/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
+                                )})`,
                                 backgroundSize: 'cover'
                             }}
                         >
-                            <div className='flex items-start justify-center flex-1'>
-                                {renderQrAddress()}
-                            </div>
-                            <div className='mt-8'>{renderNotes()}</div>
+                            <div className="flex items-start justify-center flex-1">{renderQrAddress()}</div>
+                            <div className="mt-8">{renderNotes()}</div>
                         </div>
                     </div>
 
-                    <div className='text-2xl font-semibold mt-20'>
-                        {t('wallet:dep_history')}
+                    <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
+                    <div className="space-x-3 flex items-center my-6">
+                        {listStatus.map((rs, i) => (
+                            <div
+                                key={i}
+                                onClick={() => setStatus(rs.value)}
+                                className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
+                                    status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
+                                }`}
+                            >
+                                {rs.label}
+                            </div>
+                        ))}
                     </div>
-                    <div
-                        className='bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32'>
-                        {renderDepHistory()}
-                    </div>
+                    <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32">{renderDepHistory()}</div>
                 </div>
             </Background>
             {renderMemoNotice()}
@@ -1032,8 +919,7 @@ const ExchangeDeposit = () => {
 };
 
 const Background = styled.div.attrs({ className: 'w-full h-full pt-20' })`
-    background-color: ${({ isDark }) =>
-        isDark ? colors.dark.dark : colors.gray['13']};
+    background-color: ${({ isDark }) => (isDark ? colors.dark.dark : colors.gray['13'])};
 `;
 
 const IGNORE_TOKEN = [

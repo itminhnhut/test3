@@ -36,4 +36,4 @@ const TrendingSlide = ({ trending }) => {
     );
 };
 
-export default TrendingSlide;
+export default React.memo(TrendingSlide);

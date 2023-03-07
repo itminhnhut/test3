@@ -183,11 +183,16 @@ const initSpotComponent = {
 
 const SpotComp = () => {
     const router = useRouter();
-    const { t } = useTranslation();
     const { id, timeframe, indicator, layout } = router.query;
     const [layoutConfig, setLayoutConfig] = useState(layout === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple);
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
     const [currentTheme] = useDarkMode();
+
+    useEffect(() => {
+        setLayoutConfig(layout === SPOT_LAYOUT_MODE.PRO ? layoutPro : layoutSimple);
+        setLayoutMode(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
+    }, [router.query]);
+
     // Check pattern
     let symbolFromUrl = null;
     if (typeof id === 'string' && id.length) {

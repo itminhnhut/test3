@@ -250,7 +250,7 @@ const TransferModal = ({ isMobile, alert }) => {
         } catch (e) {
             console.error('Swap error: ', e);
         } finally {
-            setState({ isPlacingOrder: false });
+            setState({ isPlacingOrder: false, amount: '' });
         }
     };
 
@@ -366,7 +366,7 @@ const TransferModal = ({ isMobile, alert }) => {
     // Render Handler
     const renderWalletSelect = useCallback(() => {
         return (
-            <div className="mt-6 flex flex-col items-center justify-center sm:mt-8 sm:flex-row sm:items-center ">
+            <div className="flex flex-col items-center justify-center sm:mt-8 sm:flex-row sm:items-center ">
                 <div
                     className="relative w-full p-4 sm:w-1/2 sm:pr-3.5 cursor-pointer select-none border border-divider dark:border-divider-dark rounded-xl"
                     ref={fromWalletRef}
@@ -711,14 +711,13 @@ const TransferModal = ({ isMobile, alert }) => {
         }
     };
 
-
-
     return (
         <ModalV2
             isVisible={!!isVisible}
             onBackdropCb={onClose}
             wrapClassName={'p-8 h-full bg-white dark:bg-dark text-base rounded-xl'}
             className="!w-[488px] bg-bgPrimary dark:bg-bgPrimary-dark !overflow-visible"
+            btnCloseclassName="!pt-0"
             noButton
         >
             <div className="flex items-center justify-between">
@@ -726,12 +725,13 @@ const TransferModal = ({ isMobile, alert }) => {
             </div>
             {renderWalletSelect()}
             <div
-                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${state?.errors?.minAmount || state?.errors?.insufficient
-                    ? 'border-red-2'
-                    : state.focus?.amount
+                className={`mt-[50px] relative p-4 sm:py-3.5 sm:px-5 rounded-xl border ${
+                    state?.errors?.minAmount || state?.errors?.insufficient
+                        ? 'border-red-2'
+                        : state.focus?.amount
                         ? ' border-dominant'
                         : ' border-divider dark:border-divider-dark hover:!border-dominant'
-                    }
+                }
                 `}
             >
                 <div className="flex items-center justify-between">

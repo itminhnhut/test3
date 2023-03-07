@@ -6,7 +6,6 @@ import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -22,10 +21,9 @@ import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
-import { KYC_STATUS } from 'redux/actions/const';
+import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 
 import TagV2 from '../V2/TagV2';
 import { ChevronRight } from 'react-feather';
@@ -51,19 +49,7 @@ export const NAVBAR_USE_TYPE = {
 
 const NAV_HIDE_THEME_BUTTON = ['maldives_landingpage'];
 
-const NavBar = ({
-    style,
-    layoutStateHandler,
-    useOnly,
-    name,
-    page,
-    changeLayoutCb,
-    useGridSettings,
-
-    spotState,
-    resetDefault,
-    onChangeSpotState
-}) => {
+const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, spotState, resetDefault, onChangeSpotState }) => {
     // * Initial State
     const [state, set] = useState({
         isDrawer: false,
@@ -76,9 +62,7 @@ const NavBar = ({
 
     // * Use hooks
     const [currentTheme, onThemeSwitch] = useDarkMode();
-    const [currentLocale, onChangeLang] = useLanguage();
     const router = useRouter();
-    const isHomePage = useMemo(() => router.pathname === '/', [router]);
     const { user: auth } = useSelector((state) => state.auth) || null;
     const { width } = useWindowSize();
     const { t } = useTranslation(['navbar', 'common', 'profile']);
@@ -120,7 +104,6 @@ const NavBar = ({
     // * Helper
     const onDrawerAction = (status) => {
         setState({ isDrawer: status });
-        layoutStateHandler && layoutStateHandler({ isDrawer: status });
     };
 
     const getVip = async () => {
@@ -215,7 +198,7 @@ const NavBar = ({
 
                 // DROPDOWN WITH ICON
                 child_lv1.map((child) => {
-                    const shouldReload = false //child?.localized === 'advance';
+                    const shouldReload = false; //child?.localized === 'advance';
 
                     const Icon = NavbarIcons[child?.localized];
                     if (shouldReload) {
@@ -344,7 +327,7 @@ const NavBar = ({
         if (NAV_HIDE_THEME_BUTTON.includes(name)) return null;
         return (
             <div className="mal-navbar__svg_dominant cursor-pointer text-txtSecondary dark:text-txtSecondary-dark hover:text-dominant" onClick={onThemeSwitch}>
-                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={20} color="currentColor" /> : <SvgSun size={20} color="currentColor" />}
+                {currentTheme !== THEME_MODE.LIGHT ? <SvgMoon size={24} color="currentColor" /> : <SvgSun size={24} color="currentColor" />}
             </div>
         );
     }, [name, currentTheme, navTheme.color]);
@@ -365,29 +348,6 @@ const NavBar = ({
         } else {
             color = currentTheme === THEME_MODE.DARK ? colors.gray[4] : colors.darkBlue;
         }
-
-        // const getUserControlSvg = (localized) => {
-        //     switch (localized) {
-        //         case 'profile':
-        //             return <SvgUser type={2} color={color} />;
-        //         case 'identify':
-        //             return <SvgIdentifyCard color={color} />;
-        //         case 'referral':
-        //             return <SvgUserPlus color={color} />;
-        //         case 'reward_center':
-        //             return <SvgReward color={color} />;
-        //         case 'task_center':
-        //             return <SvgDocument color={color} />;
-        //         case 'logout':
-        //             return <SvgExit color={color} />;
-        //         case 'api_mng':
-        //             return <SvgLayout color={color} />;
-        //         case 'security':
-        //             return <SvgLock color={color} />;
-        //         default:
-        //             return null;
-        //     }
-        // };
 
         USER_CP.map((item) => {
             if (item.hide) return null;
@@ -414,17 +374,17 @@ const NavBar = ({
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img src={avatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
+                                <Image objectFit="cover" width={48} height={48} src={avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
-                                <div className="text-txtSecondary items-center flex">
+                                <div className="text-txtSecondary items-center font-normal flex">
                                     <TextCopyable text={code} />
                                 </div>
                             </div>
                         </div>
                         {!isNotVerified && (
-                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center">
                                 <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
                                     {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                                 </div>
@@ -432,13 +392,12 @@ const NavBar = ({
                         )}
                     </div>
                     {isNotVerified && (
-                        <Button onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
+                        <Button onClick={() => router.push(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
                             {t('navbar:verify_account')}
                         </Button>
                     )}
 
                     <hr className="border-divider dark:border-divider-dark mb-6" />
-                    {/* <UserVip loadingVipLevel={state.loadingVipLevel} vipLevel={state.vipLevel} t={t} /> */}
                     <Link href={PATHS.FEE_STRUCTURES.TRADING}>
                         <div className="flex items-center px-4 justify-between mb-6">
                             <div className="flex items-center ">
@@ -483,53 +442,22 @@ const NavBar = ({
                     <Link href={PATHS.WALLET.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <FuturePortfolioIcon size={24} />
-                            {/* <img src={getS3Url('/images/icon/ic_overview.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
                             <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('common:overview')}</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <FutureExchangeIcon size={24} />
-                            {/* <img src={getS3Url('/images/icon/ic_exchange.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Exchange</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.spot_wallet')}</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.FUTURES}>
                         <a className="mal-navbar__dropdown___item">
                             <FutureIcon size={24} />
 
-                            {/* <img src={getS3Url('/images/icon/ic_futures.png')} width="28" height="28" alt="" className="mr-3 my-0.5" /> */}
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Futures</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.futures_wallet')}</span>
                         </a>
                     </Link>
-                    {/* <Link href={PATHS.WALLET.STAKING}>
-                        <a className='mal-navbar__dropdown___item'>
-                            <img
-                                src={getS3Url('/images/icon/ic_staking.png')}
-                                width='28'
-                                height='28'
-                                alt=''
-                                className='mr-3 my-0.5'
-                            />
-                            <span className='text-txtPrimary dark:text-txtPrimary-dark'>
-                                {t('navbar:menu.wallet')} Staking
-                            </span>
-                        </a>
-                    </Link>
-                    <Link href={PATHS.WALLET.FARMING}>
-                        <a className='mal-navbar__dropdown___item'>
-                            <img
-                                src={getS3Url('/images/icon/ic_farming.png')}
-                                width='28'
-                                height='28'
-                                alt=''
-                                className='mr-3 my-0.5'
-                            />
-                            <span className='text-txtPrimary dark:text-txtPrimary-dark'>
-                                {t('navbar:menu.wallet')} Farming
-                            </span>
-                        </a>
-                    </Link> */}
                 </div>
             </div>
         );
@@ -597,7 +525,7 @@ const NavBar = ({
                     <Link href="/">
                         <a className="block mal-navbar__logo mr-10">
                             <Image
-                                src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                 width="94"
                                 height="30"
                                 className="navbar__logo"
@@ -630,7 +558,7 @@ const NavBar = ({
                                     <div className="mal-navbar__hamburger__spacing mal-navbar__user___wallet mal-navbar__with__dropdown mal-navbar__svg_dominant">
                                         <FutureWalletIcon size={24} />
 
-                                        <SvgIcon name="chevron_down" size={24} color={colors.gray[7]} className="chevron__down" />
+                                        <SvgIcon name="chevron_down" size={16} color={colors.gray[7]} className="chevron__down" />
                                         {renderWallet()}
                                     </div>
                                 )}
@@ -639,13 +567,12 @@ const NavBar = ({
                                         <div className="text-txtSecondary dark:text-txtSecondary-dark hover:!text-dominant">
                                             <BxsUserIcon className="user__svg" size={24} />
                                         </div>
-                                        // <SvgUser type={2} size={30} className="cursor-pointer user__svg" style={{ marginTop: -3 }} color={navTheme.color} />
                                     )}
                                     {width >= 992 && renderUserControl()}
                                 </div>
                             </>
                         )}
-                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} auth={auth} />}
+                        {auth && <NotificationList btnClass="!mr-0" />}
                         {width >= 1366 && (
                             <>
                                 <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
@@ -670,8 +597,6 @@ const NavBar = ({
                                 <LanguageSetting />
                             </>
                         )}
-
-                        {useGridSettings && <GridLayoutSettings />}
 
                         {width < 1366 && (
                             <div
