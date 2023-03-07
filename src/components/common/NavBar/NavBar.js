@@ -378,13 +378,13 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
-                                <div className="text-txtSecondary items-center flex">
+                                <div className="text-txtSecondary items-center font-normal flex">
                                     <TextCopyable text={code} />
                                 </div>
                             </div>
                         </div>
                         {!isNotVerified && (
-                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center">
                                 <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
                                     {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                                 </div>
