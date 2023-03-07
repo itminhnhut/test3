@@ -95,9 +95,12 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                 <>
                     {mix.map((notification) => (
                         <div
-                            className={`py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1  ${
-                                notification?.status === NotificationStatus.READ ? 'cursor-pointer ' : ' '
-                            }`}
+                            className={classNames(
+                                'py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1',
+                                {
+                                    'cursor-pointer ': notification?.status === NotificationStatus.READ
+                                }
+                            )}
                             key={notification?._id || notification?.created_at}
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
