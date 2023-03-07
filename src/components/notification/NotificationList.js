@@ -36,9 +36,9 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
         closeDropdownPopover();
     });
 
-    const truncateNotificationsDebounce = debounce(() => {
-        dispatch(truncateNotifications());
-    }, 60000);
+    // const truncateNotificationsDebounce = debounce(() => {
+    //     dispatch(truncateNotifications());
+    // }, 60000);
 
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
@@ -70,7 +70,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
 
     const closeDropdownPopover = () => {
         if (isPopover) {
-            truncateNotificationsDebounce();
+            // truncateNotificationsDebounce();
             setPopover(false);
         }
     };
@@ -95,7 +95,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                 <>
                     {mix.map((notification) => (
                         <div
-                            className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
+                            className={`py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
                                 notification?.status === NotificationStatus.READ ? '' : ''
                             }`}
                             key={notification?._id || notification?.created_at}
@@ -167,7 +167,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                             <div
                                 onClick={handleMarkAllRead}
                                 className={classNames('text-sm font-semibold', {
-                                    'cursor-pointer   text-teal': unreadCount > 0,
+                                    'cursor-pointer  hover:opacity-70 transition-opacity text-teal': unreadCount > 0,
                                     'pointer-events-none text-txtDisabled dark:text-txtDisabled-dark': !unreadCount
                                 })}
                             >
@@ -180,24 +180,24 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[488px]  min-h-[400px] overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[488px]  min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
-                        <div className="font-semibold px-6">
-                            <div className="flex items-center py-3 justify-center">
+                        <div className="font-semibold px-6 mb-2">
+                            <div className="flex items-center justify-center">
                                 {hasNextNotification ? (
                                     <>
                                         {notificationLoading ? (
-                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark">
                                                 {t('loading')}
                                             </span>
                                         ) : (
-                                            <span onClick={loadMoreNotification} className="text-dominant  hover:text-teal cursor-pointer">
+                                            <span onClick={loadMoreNotification} className="text-dominant hover:opacity-70 transition-opacity  hover:text-teal cursor-pointer">
                                                 {t('load_more')}
                                             </span>
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal">
+                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
                                         {t('navbar:read_all_noti')}
                                     </span>
                                 )}
