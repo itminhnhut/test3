@@ -106,7 +106,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
             w_after: `${el?.offsetWidth}px` ?? '100%',
             w_before: TabRef.current.offsetWidth > total ? '100%' : `${total}px`
         };
-    }, [tab, mount, width, children]);
+    }, [tab, mount, width, active]);
 
     return (
         <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} active={active} className={className}>
@@ -147,7 +147,7 @@ export const TabItems = styled.div.attrs(({ value, className = '', isMobile = fa
             '!text-gray-15 dark:!text-gray-4 text-base font-semibold dark:font-semibold': isActive,
             'text-gray-1 dark:text-gray-7 hover:text-gray-15 dark:hover:text-gray-4 text-base font-normal dark:font-normal': !isActive
         },
-        'text-sm font-semibold dark:font-medium p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12'
+        'text-sm font-semibold dark:font-semibold p-4 whitespace-nowrap text-center cursor-pointer w-full sm:w-max tab-item sm:px-12'
     ),
     id: `tab-item-${value}`
 }))``;

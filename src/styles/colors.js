@@ -41,7 +41,7 @@ const colors = {
         15: '#1e1e1e'
     },
 
-    white: 'white',
+    white: '#fff',
     teal: '#47cc85',
     lightTeal: '#E2F6F5',
 

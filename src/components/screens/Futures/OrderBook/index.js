@@ -101,7 +101,7 @@ const FuturesOrderBook = ({
                             {
                                 '!rotate-180 !opacity-100':
                                     lastPrice < prevLastPrice,
-                                '!rotate-0 !opacity-100':
+                                '!!rotate-0 !opacity-100':
                                     lastPrice > prevLastPrice,
                             }
                         )}

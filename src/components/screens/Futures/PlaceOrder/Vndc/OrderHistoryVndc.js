@@ -9,201 +9,220 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import ShareFuturesOrder from 'components/screens/Futures/ShareFuturesOrder';
 import Link from 'next/link';
-import TableV2 from 'components/common/V2/TableV2'
+import TableV2 from 'components/common/V2/TableV2';
 import FuturesRecordSymbolItem from 'components/screens/Futures/TradeRecord/SymbolItem';
 import OrderProfit from 'components/screens/Futures/TradeRecord/OrderProfit';
-import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel'
+import OrderStatusLabel from 'components/screens/Futures/OrderStatusLabel';
 import _ from 'lodash';
 import FuturesOrderDetailModal from 'components/screens/Futures/FuturesModal/FuturesOrderDetailModal';
 import FututesShareModal from 'components/screens/Futures/FuturesModal/FututesShareModal';
 
 const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOther, isAuth, onLogin, pair }) => {
-    const { t, i18n: { language } } = useTranslation()
-    const assetConfig = useSelector(state => state.utils.assetConfig);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
     const allPairConfigs = useSelector((state) => state.futures.pairConfigs);
-    const [dataSource, setDataSource] = useState([])
-    const [loading, setLoading] = useState(true)
-    const [shareOrder, setShareOrder] = useState(null)
+    const [dataSource, setDataSource] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [shareOrder, setShareOrder] = useState(null);
     const [resetPage, setResetPage] = useState(false);
-    const darkMode = useSelector(state => state.user.theme === 'dark');
+    const darkMode = useSelector((state) => state.user.theme === 'dark');
     const [showDetail, setShowDetail] = useState(false);
     const rowData = useRef(null);
     const hasNext = useRef(true);
     const [showOrderDetail, setShowOrderDetail] = useState(false);
     const [showShareModal, setShowShareModal] = useState(false);
 
-    const columns = useMemo(() => [
-        {
-            key: 'id',
-            dataIndex: 'id',
-            title: 'ID / ' + t('common:time'),
-            align: 'left',
-            width: 192,
-            render: (_row, item) => (
-                <div className='text-txtPrimary dark:text-gray-4 font-normal text-sm h-full'>
-                    <div>{formatTime(item.closed_at, 'HH:mm:ss dd/MM/yyyy')}</div>
-                    <div>ID #{item.displaying_id}</div>
-                </div>
-            ),
-            sortable: true,
-        },
-        {
-            key: 'pair',
-            dataIndex: 'symbol',
-            title: t('common:pair'),
-            align: 'left',
-            width: 224,
-            render: (_row, item) => {
-                let specialOrder
-                if (item?.metadata?.dca_order_metadata) {
-                    if (!item?.metadata?.dca_order_metadata?.is_main_order) {
-                        specialOrder = t('futures:mobile:adjust_margin:added_volume')
-                    }
-                }
-                if (item?.metadata?.partial_close_metadata) {
-                    if (!item?.metadata?.partial_close_metadata?.is_main_order) {
-                        specialOrder = t('futures:mobile:adjust_margin:close_partially')
-                    }
-                }
-
-                return (
-                    <FuturesRecordSymbolItem
-                        onShareModal={() => onHandleClick('share', item)}
-                        onSymbolClick={pairConfig?.pair !== item?.symbol ? () => onHandleClick('router', item) : undefined}
-                        symbol={item?.symbol}
-                        leverage={item?.leverage}
-                        type={item?.type}
-                        side={item?.side}
-                        specialOrder={specialOrder}
-                        canShare={item?.reason_close_code !== 5 && item?.profit}
-                    />
-                )
-            },
-            sortable: true
-        },
-        {
-            key: 'status',
-            dataIndex: 'reason_close_code',
-            title: t('common:status'),
-            align: 'left',
-            width: 178,
-            render: (_row, item) => {
-                const cancelled = (item.status === VndcFutureOrderType.Status.PENDING ||
-                    (item.status === VndcFutureOrderType.Status.CLOSED && !item?.close_price && item?.type !== VndcFutureOrderType.Type.MARKET));
-                const pending = item.status === VndcFutureOrderType.Status.PENDING || item.status === VndcFutureOrderType.Status.REQUESTING;
-                const orderStatus = {
-                    cancelled,
-                    pending
-                };
-
-                return (orderStatus.cancelled || orderStatus.pending || item?.reason_close_code === 5) ?
-                    <OrderStatusLabel type={item?.reason_close_code} t={t} />
-                    :
-                    <div className='text-txtPrimary dark:text-txtPrimary-dark font-normal text-sm text-left'>_</div>
-
-            },
-            sortable: true,
-        },
-        {
-            key: 'sltp',
-            title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
-            align: 'left',
-            width: 224,
-            render: (_row, item) => (
-                <div className='flex items-center'>
-                    <div className='flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5'>
-                        <div>SL: <span className='text-red-2 dark:text-red'>{item?.sl ? `${formatNumber(item?.sl, item?.decimalScalePrice, 0, true)}` : '_'}</span></div>
-                        <div>TP: <span className='text-green-3 dark:text-teal'>{item?.tp ? `${formatNumber(item?.tp, item?.decimalScalePrice, 0, true)}` : '_'}</span></div>
+    const columns = useMemo(
+        () => [
+            {
+                key: 'id',
+                dataIndex: 'id',
+                title: 'ID / ' + t('common:time'),
+                align: 'left',
+                width: 192,
+                render: (_row, item) => (
+                    <div className="text-txtPrimary dark:text-gray-4 font-normal text-sm h-full">
+                        <div>{formatTime(item.closed_at, 'HH:mm:ss dd/MM/yyyy')}</div>
+                        <div>ID #{item.displaying_id}</div>
                     </div>
-                </div>
-            ),
-            sortable: false,
-        },
-        {
-            key: 'pnl',
-            title: 'PNL (ROE%)',
-            align: 'right',
-            width: 148,
-            render: (_row, item) => {
-                const isVndc = item?.symbol?.indexOf('VNDC') !== -1
-                if (item.reason_close_code === 5) return "_"
-                return <OrderProfit
-                    className='w-full'
-                    key={item.displaying_id} order={item}
-                    initPairPrice={item.close_price}
-                    setShareOrderModal={() => setShareOrder(item)}
-                    decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2}
-                    isTabHistory
-                />
+                ),
+                sortable: true
             },
-            sortable: false,
-        },
-        {
-            key: 'volume',
-            dataIndex: 'order_value',
-            title: t('futures:order_table:volume'),
-            align: 'right',
-            width: 148,
-            render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
-            sortable: false,
-        },
-        {
-            key: 'open_price',
-            dataIndex: 'open_price',
-            title: t('futures:order_table:open_price'),
-            align: 'right',
-            width: 148,
-            render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
-            sortable: false,
-        },
-        {
-            key: 'close_price',
-            dataIndex: 'close_price',
-            title: t('futures:order_table:close_price'),
-            align: 'right',
-            width: 148,
-            render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
-            sortable: false,
-        },
-        {
-            key: 'reason_close',
-            title: t('futures:mobile:reason_close'),
-            align: 'right',
-            width: 148,
-            render: (_row, item) => renderReasonClose(item),
-            sortable: false,
-        },
-    ], [loading, pair])
+            {
+                key: 'pair',
+                dataIndex: 'symbol',
+                title: t('common:pair'),
+                align: 'left',
+                width: 224,
+                render: (_row, item) => {
+                    let specialOrder;
+                    if (item?.metadata?.dca_order_metadata) {
+                        if (!item?.metadata?.dca_order_metadata?.is_main_order) {
+                            specialOrder = t('futures:mobile:adjust_margin:added_volume');
+                        }
+                    }
+                    if (item?.metadata?.partial_close_metadata) {
+                        if (!item?.metadata?.partial_close_metadata?.is_main_order) {
+                            specialOrder = t('futures:mobile:adjust_margin:close_partially');
+                        }
+                    }
+
+                    return (
+                        <FuturesRecordSymbolItem
+                            onShareModal={() => onHandleClick('share', item)}
+                            onSymbolClick={pairConfig?.pair !== item?.symbol ? () => onHandleClick('router', item) : undefined}
+                            symbol={item?.symbol}
+                            leverage={item?.leverage}
+                            type={item?.type}
+                            side={item?.side}
+                            specialOrder={specialOrder}
+                            canShare={item?.reason_close_code !== 5 && item?.profit}
+                        />
+                    );
+                },
+                sortable: true
+            },
+            {
+                key: 'status',
+                dataIndex: 'reason_close_code',
+                title: t('common:status'),
+                align: 'left',
+                width: 178,
+                render: (_row, item) => {
+                    const cancelled =
+                        item.status === VndcFutureOrderType.Status.PENDING ||
+                        (item.status === VndcFutureOrderType.Status.CLOSED && !item?.close_price && item?.type !== VndcFutureOrderType.Type.MARKET);
+                    const pending = item.status === VndcFutureOrderType.Status.PENDING || item.status === VndcFutureOrderType.Status.REQUESTING;
+                    const orderStatus = {
+                        cancelled,
+                        pending
+                    };
+
+                    return orderStatus.cancelled || orderStatus.pending || item?.reason_close_code === 5 ? (
+                        <OrderStatusLabel type={item?.reason_close_code} t={t} />
+                    ) : (
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-normal text-sm text-left">_</div>
+                    );
+                },
+                sortable: true
+            },
+            {
+                key: 'sltp',
+                title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
+                align: 'left',
+                width: 224,
+                render: (_row, item) => (
+                    <div className="flex items-center">
+                        <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
+                            <div>
+                                SL:{' '}
+                                <span className="text-red-2 dark:text-red">
+                                    {item?.sl ? `${formatNumber(item?.sl, item?.decimalScalePrice, 0, true)}` : '_'}
+                                </span>
+                            </div>
+                            <div>
+                                TP:{' '}
+                                <span className="text-green-3 dark:text-teal">
+                                    {item?.tp ? `${formatNumber(item?.tp, item?.decimalScalePrice, 0, true)}` : '_'}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                ),
+                sortable: false
+            },
+            {
+                key: 'pnl',
+                title: 'PNL (ROE%)',
+                align: 'right',
+                width: 148,
+                render: (_row, item) => {
+                    const isVndc = item?.symbol?.indexOf('VNDC') !== -1;
+                    if (item.reason_close_code === 5) return '_';
+                    return (
+                        <OrderProfit
+                            className="w-full"
+                            key={item.displaying_id}
+                            order={item}
+                            initPairPrice={item.close_price}
+                            setShareOrderModal={() => setShareOrder(item)}
+                            decimal={isVndc ? item?.decimalSymbol : item?.decimalSymbol + 2}
+                            isTabHistory
+                        />
+                    );
+                },
+                sortable: false
+            },
+            {
+                key: 'volume',
+                dataIndex: 'order_value',
+                title: t('futures:order_table:volume'),
+                align: 'right',
+                width: 148,
+                render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
+                sortable: false
+            },
+            {
+                key: 'open_price',
+                dataIndex: 'open_price',
+                title: t('futures:order_table:open_price'),
+                align: 'right',
+                width: 148,
+                render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
+                sortable: false
+            },
+            {
+                key: 'close_price',
+                dataIndex: 'close_price',
+                title: t('futures:order_table:close_price'),
+                align: 'right',
+                width: 148,
+                render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
+                sortable: false
+            },
+            {
+                key: 'reason_close',
+                title: t('futures:mobile:reason_close'),
+                align: 'right',
+                width: 148,
+                render: (_row, item) => renderReasonClose(item),
+                sortable: false
+            }
+        ],
+        [loading, pair]
+    );
 
     const [filters, setFilters] = useState({
         timeFrom: null,
         timeTo: null,
         symbol: '',
-        side: '',
-    })
+        side: ''
+    });
 
     const [pagination, setPagination] = useState({
         total: 0,
         page: 1,
         pageSize: 10
-    })
+    });
 
     useEffect(() => {
-        setFilters({ ...filters, symbol: hideOther ? pairConfig?.symbol : '' })
-    }, [hideOther])
-
+        setFilters({ ...filters, symbol: hideOther ? pairConfig?.symbol : '' });
+    }, [hideOther]);
 
     useEffect(() => {
         getOrders();
-    }, [pagination.page, pagination.pageSize])
+    }, [pagination.page, pagination.pageSize]);
 
     const getDecimalPrice = (config) => {
-        const decimalScalePrice = config?.filters.find(rs => rs.filterType === 'PRICE_FILTER') ?? 1;
+        const decimalScalePrice = config?.filters.find((rs) => rs.filterType === 'PRICE_FILTER') ?? 1;
         return countDecimals(decimalScalePrice?.tickSize);
     };
 
     const getOrders = _.debounce(async () => {
-        setLoading(true)
+        setLoading(true);
         try {
             const { status, data } = await fetchApi({
                 url: API_GET_FUTURES_ORDER_HISTORY,
@@ -216,52 +235,54 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     // ...filters,
                     // timeFrom: filters.timeFrom?.valueOf(),
                     // timeTo: filters.timeTo?.valueOf(),
-                },
-            })
+                }
+            });
 
             if (status === ApiStatus.SUCCESS) {
-                data?.orders.map(item => {
-                    const symbol = allPairConfigs.find(rs => rs.symbol === item.symbol);
-                    const decimalSymbol = assetConfig.find(rs => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
+                data?.orders.map((item) => {
+                    const symbol = allPairConfigs.find((rs) => rs.symbol === item.symbol);
+                    const decimalSymbol = assetConfig.find((rs) => rs.id === symbol?.quoteAssetId)?.assetDigit ?? 0;
                     const decimalScalePrice = getDecimalPrice(symbol);
                     item['decimalSymbol'] = decimalSymbol;
                     item['decimalScalePrice'] = decimalScalePrice;
                     item['quoteAsset'] = symbol?.quoteAsset;
                     return item;
-                })
-                setDataSource(data?.orders)
+                });
+                setDataSource(data?.orders);
                 // setPagination({ ...pagination, total: data?.total })
-                hasNext.current = data?.hasNext
+                hasNext.current = data?.hasNext;
             } else {
-                setDataSource([])
+                setDataSource([]);
             }
         } catch (e) {
-            console.log(e)
+            console.log(e);
         } finally {
-            setLoading(false)
-            onForceUpdate()
+            setLoading(false);
+            onForceUpdate();
             setResetPage(false);
         }
-    }, 300)
+    }, 300);
 
     const cellRenderRevenue = (row) => {
-        const isVndc = row?.symbol.indexOf('VNDC') !== -1
-        const profit = formatNumber(row?.profit, isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2, 0, true)
-        const percent = formatNumber(((row?.profit / row?.margin) * 100), 2, 0, true);
-        if (!row?.profit) return '-'
-        return <div className='flex flex-row'>
-            <div className={getPriceColor(Number(row?.profit))}>
-                <div>
-                    {profit} {row?.quoteAsset}
+        const isVndc = row?.symbol.indexOf('VNDC') !== -1;
+        const profit = formatNumber(row?.profit, isVndc ? row?.decimalSymbol : row?.decimalSymbol + 2, 0, true);
+        const percent = formatNumber((row?.profit / row?.margin) * 100, 2, 0, true);
+        if (!row?.profit) return '-';
+        return (
+            <div className="flex flex-row">
+                <div className={getPriceColor(Number(row?.profit))}>
+                    <div>
+                        {profit} {row?.quoteAsset}
+                    </div>
+                    <div>
+                        ({percent > 0 ? '+' : ''}
+                        {percent + '%'})
+                    </div>
                 </div>
-                <div>
-                    ({percent > 0 ? '+' : ''}
-                    {percent + '%'})
-                </div>
+                <Share2 size={16} onClick={() => setShareOrder(row)} className="ml-1 cursor-pointer hover:opacity-60" />
             </div>
-            <Share2 size={16} onClick={() => setShareOrder(row)} className='ml-1 cursor-pointer hover:opacity-60' />
-        </div>
-    }
+        );
+    };
 
     const renderReasonClose = (row) => {
         switch (row?.reason_close_code) {
@@ -282,19 +303,22 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         }
     };
 
-
-    if (!isAuth) return <div className="cursor-pointer flex items-center justify-center h-full">
-        <Link href={getLoginUrl('sso', 'login')} locale={false}>
-            <a className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
-                {t('futures:order_table:login_to_continue')}
-            </a>
-        </Link>
-    </div>
+    if (!isAuth)
+        return (
+            <div className="cursor-pointer flex items-center justify-center h-full">
+                <a
+                    href={getLoginUrl('sso', 'login')}
+                    className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80"
+                >
+                    {t('futures:order_table:login_to_continue')}
+                </a>
+            </div>
+        );
 
     const onShowDetail = (row) => {
         rowData.current = row;
         setShowDetail(!showDetail);
-    }
+    };
 
     const flag = useRef(false);
     const onHandleClick = (key, data) => {
@@ -327,18 +351,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
         <>
             {/* {showDetail && <Adjustmentdetails rowData={rowData.current} onClose={onShowDetail} />} */}
             <ShareFuturesOrder isClosePrice isVisible={!!shareOrder} order={shareOrder} pairPrice={pairPrice} onClose={() => setShareOrder(null)} />
-            <FuturesOrderDetailModal
-                order={rowData.current}
-                isVisible={showOrderDetail}
-                onClose={() => setShowOrderDetail(false)}
-                decimals={decimals}
-            />
+            <FuturesOrderDetailModal order={rowData.current} isVisible={showOrderDetail} onClose={() => setShowOrderDetail(false)} decimals={decimals} />
             <FututesShareModal
                 order={rowData.current}
                 isVisible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 decimals={decimals}
-            // pairTicker={marketWatch[rowData.current?.symbol]}
+                // pairTicker={marketWatch[rowData.current?.symbol]}
             />
             <TableV2
                 data={loading ? [] : dataSource}
@@ -357,13 +376,13 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                     headerFontStyle: {
                         height: '68px !important',
                         'padding-top': '0px !important',
-                        'padding-bottom': '0px !important',
+                        'padding-bottom': '0px !important'
                     },
-                    padding: '14px 16px',
+                    padding: '14px 16px'
                 }}
             />
         </>
-    )
-}
+    );
+};
 
-export default FuturesOrderHistoryVndc
+export default FuturesOrderHistoryVndc;

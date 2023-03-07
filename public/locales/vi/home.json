@@ -49,8 +49,10 @@
         "reason_4_description": "Nami Explaied - Nơi mang đến câu trả lời cho câu hỏi tại sao trong thị trường Crypto"
     },
     "intro_app": {
+        "try_now":"Thử ngay",
         "title": "Giao dịch mọi lúc, mọi nơi",
-        "description": "Nạp, rút và giao dịch 24/7 trên ứng dụng dành cho IOS và Android"
+        "description": "Nạp, rút và giao dịch 24/7 trên ứng dụng dành cho IOS và Android",
+        "get_it":"Tải qua"
     },
     "trade3step": {
         "title": "Giao dịch ngay chỉ với 3 bước",

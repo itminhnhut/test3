@@ -120,7 +120,6 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         pageSize: days[0].value,
         symbol: null
     });
-
     const [flag, setFlag] = useState(false);
 
     const pairConfig = useMemo(() => {
@@ -153,10 +152,11 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
         let symbol = urlParams.get('symbol');
-        if (!symbol?.includes(currency)) {
+        if (!symbol?.includes(currency) && !router.query.symbol) {
             symbol = currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT';
+            urlParams.set('symbol', currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT');
         }
-        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
         window.history.pushState(null, null, url);
         setFilter({ ...filter, symbol: symbol });
     }, [currency, router]);
@@ -310,7 +310,10 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
 
     const onChangeSymbol = (pair) => {
         const symbol = pair?.baseAsset + pair?.quoteAsset;
-        const url = `/${router.locale}/futures/funding-history?symbol=${symbol}`;
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        urlParams.set('symbol', symbol);
+        const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;
         window.history.pushState(null, null, url);
         setFilter({ ...filter, symbol: symbol });
         setActivePairList(false);
@@ -337,7 +340,7 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
                             <span className="font-semibold sm:font-medium text-sm sm:text-xl">
                                 {pairConfig?.baseAsset ? pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset : '-/-'}
                             </span>
-                            <ChevronDown color={colors.darkBlue5} size={16} className={classNames('ml-2', { 'rotate-0': activePairList })} />
+                            <ChevronDown color={colors.darkBlue5} size={16} className={classNames('ml-2', { '!rotate-0': activePairList })} />
                             <div className="absolute z-30 pt-8 sm:pt-4 left-0 top-full">
                                 <PairList
                                     activePairList={activePairList}

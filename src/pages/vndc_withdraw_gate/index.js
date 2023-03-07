@@ -181,7 +181,6 @@ const ExternalWithdrawal = (props) => {
             available: getAvailableToken(WalletCurrency.NAC, balance),
         })
 
-        // console.log('>>> setWalletArr ', cloner)
 
         setWalletArr(cloner.reverse())
     }
@@ -316,12 +315,10 @@ const ExternalWithdrawal = (props) => {
         // console.log('>> walletArr ', walletArr)
         return walletArr.slice(0, range).map((item) => {
             const { currency, alias, des, available } = item
-            // console.log('>>> ', item)
             const availableRounded = roundToDown(
                 available,
                 DECIMAL_SCALES[currency]
             )
-            // console.log('>>> ', availableRounded, DECIMAL_SCALES[currency])
             const converted = formatNumber(availableRounded)
 
             // handle loading

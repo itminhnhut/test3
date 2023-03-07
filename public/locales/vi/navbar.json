@@ -58,6 +58,7 @@
         "referral_description": "Nhận hoa hồng lên tới 20% từ giao dịch của bạn bè",
         "transfer": "Chuyển đổi",
         "transfer_description": "Chuyển đổi nhanh từ ví Exchange sang ví Futures chỉ với một lần chạm",
+        "overview_wallet": "Tổng quan",
         "spot_wallet": "Ví Exchange",
         "futures_wallet": "Ví Futures",
         "staking_wallet": "Ví Staking",
@@ -119,5 +120,5 @@
     "trade_on": "Giao dịch trên",
     "scan_qr": "Quét mã QR để tải ứng dụng",
     "down_with_qr": "Tải Nami Exchange ngay nào!",
-    "footer_title": "Sàn giao dịch Exchange và Futures an toàn"
+    "footer_title": "Giao dịch Spot và Futures an toàn"
 }

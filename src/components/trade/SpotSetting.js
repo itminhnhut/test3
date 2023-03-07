@@ -3,7 +3,7 @@ import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import colors from 'styles/colors';
@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import Switch from 'components/common/V2/SwitchV2';
 import { SettingIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import { getS3Url } from 'src/redux/actions/utils';
 
 const SpotSetting = (props) => {
     const { spotState, onChangeSpotState, resetDefault } = props;
@@ -50,13 +51,15 @@ const SpotSetting = (props) => {
             key: 'isShowPlaceOrderForm'
         }
     ];
-    const { route, query } = router;
-    const { layout, id } = query;
+    const { layout, id } = router.query;
     const [layoutMode, setLayoutMode] = useState(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
 
+    useEffect(() => {
+        setLayoutMode(layout === SPOT_LAYOUT_MODE.PRO ? SPOT_LAYOUT_MODE.PRO : SPOT_LAYOUT_MODE.SIMPLE);
+    }, [router.query]);
+
     const onChangeLayout = (_layout) => {
-        const nextUrl = `/${currentLocale}${route.replace('[id]', id)}`;
-        window.location = `${nextUrl}?layout=${_layout}`;
+        router.push(`/trade/${id}?layout=${_layout}`);
     };
     const inActiveLabel = currentTheme === 'dark' ? colors.gray[7] : colors.gray[1];
 
@@ -76,7 +79,7 @@ const SpotSetting = (props) => {
 
     return (
         <Popover className="relative">
-            {({ open }) => (
+            {({ open, close }) => (
                 <>
                     <Popover.Button className={`h-full flex items-center ${open ? '' : 'text-opacity-90'} text-white group px-2`}>
                         <SettingIcon size={20} color={currentTheme === 'dark' ? colors.darkBlue5 : colors.gray[1]} />
@@ -126,7 +129,15 @@ const SpotSetting = (props) => {
                                                             'border border-teal': isActive
                                                         })}
                                                     >
-                                                        <img onClick={() => onChangeLayout(rs.value)} src={rs.icon} width={82} height={55} />
+                                                        <img
+                                                            onClick={() => {
+                                                                onChangeLayout(rs.value);
+                                                                close();
+                                                            }}
+                                                            src={getS3Url(rs.icon)}
+                                                            width={82}
+                                                            height={55}
+                                                        />
                                                     </div>
                                                     <span
                                                         className={classnames('text-xs text-center', {

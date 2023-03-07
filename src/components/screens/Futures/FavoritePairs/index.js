@@ -46,7 +46,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
     if (!favoritePairs) return null;
 
     const dataFilter = useMemo(() => {
-        const suggestedSymbols = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'LTC', 'DOT'];
+        const suggestedSymbols = ['BNB', 'BCH', 'BTC', 'LTC', 'ETH', 'EOS', 'ETC'];
         const marketWatch = refreshMarketWatch?.map((o) => {
             const quoteAsset = allPairConfigs.find((i) => i.pair === o.s)?.quoteAsset;
             return FuturesMarketWatch.create(o, quoteAsset);

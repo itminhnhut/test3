@@ -279,7 +279,7 @@ const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
         <PopoverV2
             ref={popover}
             label={
-                <div className="h-11 px-4 py-3 bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[150px]">
+                <div className="h-11 px-4 py-3 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between space-x-2 w-[150px]">
                     <p className="text-sm truncate">{t(selectedFilter.label)}</p>
                     <ChevronDown size={16} />
                 </div>
@@ -297,8 +297,8 @@ const FilterTable = ({ selectedFilter, setSelectedFilter }) => {
                                     handleChangeFilter(item);
                                     close();
                                 }}
-                                className={classNames('cursor-pointer px-4 py-2 text-txtSecondary-dark hover:bg-hover-dark', {
-                                    '!text-white': selectedFilter.index === index
+                                className={classNames('cursor-pointer px-4 py-2 text-txtSecondary dark:text-txtSecondary-dark hover:bg-hover dark:hover:bg-hover-dark', {
+                                    '!text-txtPrimary dark:!text-white': selectedFilter.index === index
                                 })}
                             >
                                 {t(label)}

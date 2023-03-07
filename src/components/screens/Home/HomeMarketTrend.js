@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { HotIcon } from 'components/screens/MarketV2/MarketTable';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -53,11 +54,14 @@ const TrendTab = ({ width, type, setType, setState, types, t }) => {
             />
             {width >= 992 && (
                 <span className="flex flex-row items-center text-base font-semibold">
-                    <Link href="/market">
-                        <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                    <Link href="/market" passHref>
+                        <ButtonV2 variants="text" className="capitalize">
+                            <span className="mr-3">{t('home:markettrend.explore_market')}</span>
+                            <div className="!ml-0">
+                                <ArrowRightIcon size={16} />
+                            </div>
+                        </ButtonV2>
                     </Link>
-
-                    <ArrowRightIcon size={16} />
                 </span>
             )}
         </div>
@@ -125,37 +129,14 @@ const HomeMarketTrend = ({ trendData }) => {
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
 
     // * Render Handler
-    const renderTrendTab = useCallback(() => {
-        return (
-            <div className="w-full flex justify-between">
-                <TokenTypes
-                    type={type?.id}
-                    setType={(i) => {
-                        setType(i);
-                    }}
-                    types={types}
-                    lang={'vi'}
-                />
-                {width >= 992 && (
-                    <span className="flex flex-row items-center text-base font-semibold">
-                        <Link href="/market">
-                            <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
-                        </Link>
-
-                        <ArrowRightIcon size={16} />
-                    </span>
-                )}
-            </div>
-        );
-    }, [width, state, type]);
 
     const renderMarketHeader = useCallback(() => {
         return (
             <div className="homepage-markettrend__market_table__row">
-                <div className="homepage-markettrend__market_table__row__col1">{t('table:pair')}</div>
-                <div className="homepage-markettrend__market_table__row__col2">{t('table:last_price')}</div>
-                <div className="homepage-markettrend__market_table__row__col3">{t('table:change_24h')}</div>
-                {width >= 576 && <div className="homepage-markettrend__market_table__row__col4">{t('table:mini_chart')}</div>}
+                <div className="homepage-markettrend__market_table__row__col1 !font-normal">{t('table:pair')}</div>
+                <div className="homepage-markettrend__market_table__row__col2 !font-normal">{t('table:last_price')}</div>
+                <div className="homepage-markettrend__market_table__row__col3 !font-normal">{t('table:change_24h')}</div>
+                {width >= 576 && <div className="homepage-markettrend__market_table__row__col4 !font-normal">{t('table:mini_chart')}</div>}
             </div>
         );
     }, [width]);
@@ -177,7 +158,7 @@ const HomeMarketTrend = ({ trendData }) => {
 
             if (width >= 992) {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
@@ -193,7 +174,7 @@ const HomeMarketTrend = ({ trendData }) => {
                             <div className="homepage-markettrend__market_table__row__col2">
                                 <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
                             </div>
-                            <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                            <div className="homepage-markettrend__market_table__row__col3">
                                 <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                                     {render24hChange(pair, false, '!text-base')}
                                 </div>
@@ -208,7 +189,7 @@ const HomeMarketTrend = ({ trendData }) => {
                 );
             } else {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
@@ -223,7 +204,7 @@ const HomeMarketTrend = ({ trendData }) => {
                             </div>
                             <div className="homepage-markettrend__market_table__row__col2 ">
                                 <div className="homepage-markettrend__market_table__chart">
-                                    <img src={sparkLine} alt="Nami Exchange" />
+                                    <Image width={100} height={37} src={sparkLine} alt="Nami Exchange" />
                                 </div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
@@ -256,11 +237,14 @@ const HomeMarketTrend = ({ trendData }) => {
                     </div>
                     {width < 992 && (
                         <span className="flex flex-row items-center justify-center text-sm font-semibold pt-6">
-                            <Link href="/market">
-                                <a className="!text-teal mr-3">{t('home:markettrend.explore_market')}</a>
+                            <Link href="/market" passHref>
+                                <ButtonV2 variants="text" className="capitalize">
+                                    <span className="mr-3">{t('home:markettrend.explore_market')}</span>
+                                    <div className="!ml-0">
+                                        <ArrowRightIcon size={16} />
+                                    </div>
+                                </ButtonV2>
                             </Link>
-
-                            <ArrowRightIcon size={14} />
                         </span>
                     )}
                 </div>

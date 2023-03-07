@@ -143,7 +143,7 @@ const Support = () => {
         <MaldivesLayout>
             <div className='bg-white dark:bg-shadow'>
                 <SearchSection t={t} width={width} />
-                <div className='pt-6 max-w-screen-v3 2xl:max-w-screen-xxl m-auto'>
+                <div className='max-w-screen-v3 2xl:max-w-screen-xxl mx-auto'>
                     <div className='pb-[120px] px-4 sm:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>
                         <div className='mt-12 sm:mt-20'>
                             <SupportSection

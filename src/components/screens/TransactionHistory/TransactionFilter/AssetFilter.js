@@ -11,6 +11,7 @@ const AssetFilter = ({ search, setSearch }) => {
     return (
         <FilterWrapper label="Loại tài sản">
             <PopoverSelect
+            containerClassName="!z-40"
                 className="min-w-[400px] rounded-xl !left-0 !translate-x-0"
                 labelValue={'Loại tài sản'}
                 ref={popoverRef}

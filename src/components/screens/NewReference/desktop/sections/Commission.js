@@ -136,7 +136,7 @@ const Commission = ({ t, language, id }) => {
                             <div className="text-teal">+{formatNumber(data.value, 2)} VNDC</div>
                         </div>
                         <div className="flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm">
-                            <div>{formatTime(data.createdAt, 'yyyy-MM-dd HH:mm:ss')}</div>
+                            <div>{formatTime(data.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
                             <div>
                                 {t('reference:referral.type')}: <span className="capitalize">{data.kind?.toLowerCase()}</span>
                             </div>

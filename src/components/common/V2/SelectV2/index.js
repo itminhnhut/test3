@@ -14,7 +14,7 @@ const SelectV2 = ({ options = [], value, onChange, keyExpr = 'value', displayExp
                     <Popover.Button className={`w-full h-11 sm:h-12 bg-gray-10 dark:bg-dark-2 rounded-md px-3 ${className}`}>
                         <div className="flex items-center justify-between">
                             <div className="w-full text-left whitespace-nowrap">{title}</div>
-                            <ChevronDown className={`${open ? 'rotate-0' : ''} transition-all`} />
+                            <ChevronDown className={`${open ? '!rotate-0' : ''} transition-all`} />
                         </div>
                     </Popover.Button>
                     <Transition

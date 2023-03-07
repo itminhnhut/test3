@@ -62,7 +62,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
             <div id="download_section" className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto px-4 relative">
                 <div className="flex flex-col items-center justify-center mb-[70px] z-1000">
                     <div className="text-xs tooltip-arrow-bottom mb-[30px] justify-center items-center w-[85px] h-[38px] inline-flex animate-bounce	 rounded-full">
-                        Thử ngay{' '}
+                        {t('home:intro_app.try_now')}
                     </div>
                     <div className="flex justify-center ">
                         <SwitchTheme onChangeTheme={onChange} themeMode={themeMode} />
@@ -106,6 +106,7 @@ const HomeLightDark = ({ onShowQr, t }) => {
                             <SwiperSlide key={index} className="">
                                 <div className="relative overflow-hidden w-full h-[650px] md:h-[435px]">
                                     <Image
+                                        priority
                                         src={getS3Url(`/images/screen/homepage/iphone_${index + 1}_${themeMode}.webp`)}
                                         layout="fill"
                                         className="p-1"
@@ -119,35 +120,42 @@ const HomeLightDark = ({ onShowQr, t }) => {
                 </div>
 
                 <div className="flex justify-between  -m-3 flex-col-reverse lg:flex-row lg:items-center pt-[90px]">
-                    <div className="flex flex-wrap items-center gap-4 p-3">
+                    <div className="flex flex-wrap items-center gap-3 md:gap-4 p-3">
                         <Link href="https://apps.apple.com/app/id1480302334" passHref>
-                            <GradientButton className="text-left py-2 px-6 w-auto">
+                            <GradientButton className="text-left !py-1 md:!py-2 !px-4 md:!px-6 w-auto h-[44px] md:h-[56px] ">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
                                     <AppleIcon color="currentColor" />
 
-                                    <div className="ml-3">
-                                        <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
+                                    <div className="ml-2 md:ml-3">
+                                        <div className="text-xs mb-1 font-normal">{t('home:intro_app.get_it')}</div>
                                         <div className="text-sm font-semibold ">App Store</div>
                                     </div>
                                 </a>
                             </GradientButton>
                         </Link>
                         <Link href="https://play.google.com/store/apps/details?id=com.namicorp.exchange" passHref>
-                            <GradientButton className="text-left py-2 px-6 w-auto">
+                            <GradientButton className="text-left !py-1 md:!py-2 !px-4 md:!px-6 w-auto h-[44px] md:h-[56px] ">
                                 <a style={{ color: 'inherit' }} className="text-inherit flex items-center justify-center">
                                     <GooglePlayIcon />
 
-                                    <div className="ml-3">
-                                        <div className="text-xs mb-1">{t('navbar:trade_on')}</div>
-                                        <div className="text-sm font-semibold ">Google Play</div>
+                                    <div className="ml-2 md:ml-3">
+                                        <div className="text-xs mb-1 font-normal">{t('home:intro_app.get_it')}</div>
+                                        <div className="text-sm font-semibold leading-[1.43] " style={{ letterSpacing: 'normal' }}>
+                                            Google Play
+                                        </div>
                                     </div>
                                 </a>
                             </GradientButton>
                         </Link>
 
-                        <div onClick={onShowQr} className="cursor-pointer w-[54px]">
-                            <Image alt="qr_code_icon" src={'/images/icon/ic_qr_1.png'} width="54px" height="54px" alt="Nami Exchange" />
-                        </div>
+                        <Image
+                            onClick={onShowQr}
+                            className="cursor-pointer"
+                            alt="qr_code_icon"
+                            src={getS3Url('/images/icon/ic_qr_1.png')}
+                            width={54}
+                            height={54}
+                        />
                     </div>
                     <div className="text-left lg:text-right flex-1  p-3">
                         <div className="text-txtPrimary dark:text-txtPrimary-dark leading-[1.19] text-[32px] font-semibold mb-4">
@@ -161,4 +169,4 @@ const HomeLightDark = ({ onShowQr, t }) => {
     );
 };
 
-export default HomeLightDark;
+export default React.memo(HomeLightDark);

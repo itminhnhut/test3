@@ -383,7 +383,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 render: (row, item) =>
                     marketWatch[row?.symbol] && (
                         <div className="text-txtPrimary dark:text-gray-4 text-sm font-normal">
-                            {formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true)}
+                            {formatNumber(marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true)}
                         </div>
                     ),
                 sortable: false
@@ -404,7 +404,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 width: 138,
                 render: (row) =>
                     marketWatch[row?.symbol] &&
-                    formatNumber(marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true),
+                    formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
                 sortable: true
             },
             {
@@ -582,11 +582,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     if (!isAuth)
         return (
             <div className="cursor-pointer flex items-center justify-center h-full">
-                <Link href={getLoginUrl('sso', 'login')} locale={false}>
-                    <a className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80">
-                        {t('futures:order_table:login_to_continue')}
-                    </a>
-                </Link>
+                <a
+                    href={getLoginUrl('sso', 'login')}
+                    className="w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80"
+                >
+                    {t('futures:order_table:login_to_continue')}
+                </a>
             </div>
         );
 
@@ -614,7 +615,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             />
             <FuturesCloseAllOrder
                 isVisible={showCloseAll}
-                onClose={() => setShowCloseAll(false)}
+                onClose={() => { setShowCloseAll(false); setPage(0) }}
                 marketWatch={marketWatch}
                 pairConfig={pairConfig}
                 closeType={closeType}

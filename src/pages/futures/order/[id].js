@@ -246,7 +246,7 @@ const OrderDetail = ({ id }) => {
             return '-';
         }
     };
-
+    const isModify = orderDetail?.sl > 0 || orderDetail?.tp > 0;
     if (!orderDetail) return null;
     return (
         <DynamicNoSsr>
@@ -319,7 +319,7 @@ const OrderDetail = ({ id }) => {
                                     <div className="border-b border-divider dark:border-divider-dark py-5 max-h-[90px]">
                                         <FuturesPairDetail pairPrice={pairTicker} pairConfig={pairConfig} isVndcFutures={isVndcFutures} isAuth={!!auth} />
                                     </div>
-                                    <div className={classNames('h-calc(100%-90px)')}>
+                                    <div className={classNames('h-[calc(100%-90px)]')}>
                                         <FuturesChart
                                             key="futures_detail_containter_chart"
                                             chartKey="futures_detail_containter_chart"
@@ -384,7 +384,7 @@ const OrderDetail = ({ id }) => {
                                                         >
                                                             <ChevronDown
                                                                 color={general.percent < 0 ? colors.red2 : colors.teal}
-                                                                className={`${general.percent >= 0 ? 'rotate-0' : ''}`}
+                                                                className={`${general.percent >= 0 ? '!rotate-0' : ''}`}
                                                             />
                                                             {formatNumber(Math.abs(general.percent), 2, 0, true)}%
                                                         </span>
@@ -400,7 +400,7 @@ const OrderDetail = ({ id }) => {
                                                 ) : (
                                                     <Item className="text-red flex flex-col text-base">
                                                         <span>{getValue(orderDetail?.sl)}</span>
-                                                        <span>({getRatioProfit(orderDetail?.sl, orderDetail)}%)</span>
+                                                        {!!orderDetail?.sl && <span>{`(${getRatioProfit(orderDetail?.sl, orderDetail)}%)`}</span>}
                                                     </Item>
                                                 )}
                                             </Row>
@@ -411,7 +411,7 @@ const OrderDetail = ({ id }) => {
                                                 ) : (
                                                     <Item className="text-teal flex flex-col text-base">
                                                         <span>{getValue(orderDetail?.tp)}</span>
-                                                        <span>({getRatioProfit(orderDetail?.tp, orderDetail)}%)</span>
+                                                        {!!orderDetail?.tp && <span>{`(${getRatioProfit(orderDetail?.tp, orderDetail)}%)`}</span>}
                                                     </Item>
                                                 )}
                                             </Row>
@@ -452,13 +452,13 @@ const OrderDetail = ({ id }) => {
                                                     {t('futures:mobile:modify_order')}
                                                 </ButtonV2>
                                             )}
-                                            {!general.dca_close && general.pending && (
+                                            {!(general.dca_close && general.pending) && (
                                                 <ButtonV2
                                                     className={general.pending ? 'col-span-2' : ''}
                                                     onClick={() => setShowEditSLTP(true)}
                                                     variants="secondary"
                                                 >
-                                                    {t('futures:tp_sl:modify_tpsl')}
+                                                    {t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
                                                 </ButtonV2>
                                             )}
                                             <ButtonV2
@@ -490,6 +490,9 @@ const OrderDetail = ({ id }) => {
                                             isDark={isDark}
                                             general={general}
                                             pairConfig={pairConfig}
+                                            renderLiqPrice={renderLiqPrice}
+                                            getValue={getValue}
+                                            isVndcFutures={isVndcFutures}
                                         />
                                     </>
                                 )}

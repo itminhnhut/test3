@@ -1,5 +1,8 @@
 {
-  "email_placeholder": "Nhập email của bạn",
-  "password_placeholder": "Mật khẩu",
-  "password_length_required":"Độ dài từ 8-50 kí tự"
+    "email_placeholder": "Nhập email của bạn",
+    "password_label": "Mật khẩu",
+    "password_length_required": "Độ dài từ 8-50 kí tự",
+
+    "referral_label": "Mã giới thiệu (tùy chọn)",
+    "referral_placeholder": "Nhập mã giới thiệu"
 }

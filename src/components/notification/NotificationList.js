@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import _ from 'lodash';
 import Image from 'next/image';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
@@ -11,9 +11,9 @@ import { IconBell } from '../common/Icons';
 import colors from 'styles/colors';
 import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
-import ButtonV2 from 'src/components/common/V2/ButtonV2/Button';
+import classNames from 'classnames';
 
-const NOTI_READ = 2;
+const NOTI_READ = NotificationStatus.DELETED;
 
 const IconNoti = {
     0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
@@ -24,7 +24,7 @@ const IconNoti = {
     17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} /> // NOTE: COMMISSION
 };
 
-const NotificationList = ({ btnClass, navTheme, auth }) => {
+const NotificationList = ({ btnClass }) => {
     const { t, i18n } = useTranslation(['navbar']);
     const dispatch = useDispatch();
 
@@ -36,24 +36,24 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
         closeDropdownPopover();
     });
 
-    const truncateNotificationsDebounce = debounce(() => {
-        dispatch(truncateNotifications());
-    }, 60000);
+    // const truncateNotificationsDebounce = debounce(() => {
+    //     dispatch(truncateNotifications());
+    // }, 60000);
 
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
     const unreadCount = useSelector((state) => state.notification.unreadCount);
     const user = useSelector((state) => state.auth.user) || null;
 
+    useEffect(() => {
+        dispatch(getNotifications({ lang: i18n.language }));
+    }, [i18n, dispatch]);
+
     const [notificationLoading, setNotificationLoading] = useState(false);
 
     const markAsRead = async (ids) => {
         dispatch(await markAllAsRead(ids));
     };
-
-    const fetchNotificationsOnOpen = _.throttle(() => {
-        dispatch(getNotifications({ lang: i18n.language }));
-    }, 1000);
 
     const loadMoreNotification = () => {
         let prevId;
@@ -66,12 +66,11 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
 
     const openDropdownPopover = () => {
         setPopover(true);
-        fetchNotificationsOnOpen();
     };
 
     const closeDropdownPopover = () => {
         if (isPopover) {
-            truncateNotificationsDebounce();
+            // truncateNotificationsDebounce();
             setPopover(false);
         }
     };
@@ -96,14 +95,17 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                 <>
                     {mix.map((notification) => (
                         <div
-                            className={`py-3 px-4 mx-6 mb-4 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
-                                notification?.status === NotificationStatus.READ ? '' : ''
-                            }`}
+                            className={classNames(
+                                'py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1',
+                                {
+                                    'cursor-pointer ': notification?.status === NotificationStatus.READ
+                                }
+                            )}
                             key={notification?._id || notification?.created_at}
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
                             <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full w-[58px] h-[58px]">
-                                {IconNoti?.[notification?.category] || <IconBell color={colors.teal} />}
+                                {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
                                 <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
@@ -118,7 +120,11 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                     {getTimeAgo(notification.createdAt)}
                                 </div>
                             </div>
-                            {notification?.status !== NOTI_READ && <div className="ml-3 bg-dominant w-2 h-2 rounded-full" />}
+                            <div
+                                className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
+                                    'pointer-events-none invisible': notification?.status === NOTI_READ
+                                })}
+                            />
                         </div>
                     ))}
                 </>
@@ -144,7 +150,7 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                             isPopover ? 'text-dominant ' : 'text-txtSecondary dark:text-txtPrimary-dark lg:dark:text-txtSecondary-dark'
                         } hover:!text-dominant relative`}
                     >
-                        <BxsBellIcon size={20} />
+                        <BxsBellIcon size={24} />
                         {unreadCount > 0 && <div className="bg-red w-2 h-2 rounded-full absolute top-1 right-0" />}
                     </div>
 
@@ -165,36 +171,41 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                         <div className="flex items-center px-6 justify-between mb-8">
                             <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
-                            <ButtonV2 variants="text" className="w-[fit-content] text-sm font-semibold" onClick={handleMarkAllRead}>
+                            <div
+                                onClick={handleMarkAllRead}
+                                className={classNames('text-sm font-semibold', {
+                                    'cursor-pointer  hover:opacity-70 transition-opacity text-teal': unreadCount > 0,
+                                    'pointer-events-none text-txtDisabled dark:text-txtDisabled-dark': !unreadCount
+                                })}
+                            >
                                 {t('navbar:mark_read')}
-                            </ButtonV2>
+                            </div>
+
                             {/* {unreadCount > 0 && (
                                 <div className="text-sm font-medium text-teal dark:text-teal">
                                     {unreadCount} {t('navbar:unread_noti')}
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[488px]  min-h-[400px] overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[488px]  min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
-                        <div className="font-semibold px-6">
-                            <div className="flex items-center py-3 justify-center">
+                        <div className="font-semibold px-6 mb-2">
+                            <div className="flex items-center justify-center">
                                 {hasNextNotification ? (
                                     <>
                                         {notificationLoading ? (
-                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
-                                                {t('loading')}
-                                            </span>
+                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark">{t('loading')}</span>
                                         ) : (
                                             <span
                                                 onClick={loadMoreNotification}
-                                                className="text-dominant dark:text-txtPrimary-dark hover:text-teal cursor-pointer"
+                                                className="text-dominant hover:opacity-70 transition-opacity  hover:text-teal cursor-pointer"
                                             >
                                                 {t('load_more')}
                                             </span>
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark hover:text-teal cursor-pointer">
+                                    <span className="opacity-0 pointer-events-none cursor-default text-txtPrimary dark:text-txtPrimary-dark">
                                         {t('navbar:read_all_noti')}
                                     </span>
                                 )}

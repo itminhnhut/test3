@@ -6,7 +6,7 @@ import {
     SET_USER_AVATAR,
     USER_AVATAR_PRESET
 } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, DefaultAvatar } from 'redux/actions/const';
 import { getMe } from 'redux/actions/user';
 
 import Dropzone from 'react-dropzone';
@@ -290,7 +290,7 @@ const AccountAvatar = ({
                             className='flex items-center justify-center bg-white dark:bg-darkBlue-3 w-full h-full rounded-full'>
                             <Spinner color={colors.darkBlue5} />
                         </div> :
-                        <img src={currentAvatar}
+                        <img src={currentAvatar || DefaultAvatar}
                              className='bg-white dark:bg-darkBlue-3 object-cover w-full h-full'
                              alt='Nami.Exchange' />
                 }

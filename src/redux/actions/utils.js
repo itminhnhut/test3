@@ -144,7 +144,7 @@ export const getDecimalSpotPrice = memoize(
 export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
     let params = {};
     if (typeof window !== 'undefined') {
-        const currentUrl = window.location.href
+        const currentUrl = window.location.href;
 
         const _options = defaults(options, {
             redirect: currentUrl,
@@ -160,9 +160,8 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const theme = localStorage?.getItem('theme') ?? 'light';
 
-        let language = 'vi'
-        if(!currentUrl.includes('/vi')) language = 'en'
-
+        let language = 'vi';
+        if (!currentUrl.includes('/vi')) language = 'en';
 
         params = {
             ..._options,
@@ -337,7 +336,7 @@ export function render24hChange(ticker, showPrice = false, className = '') {
         <div className={`${className} text-xs space-x-2 flex font-semibold`}>
             {showPrice && <span>{formatNumber(Math.abs(priceChange), ticker?.q === 'VNDC' ? 0 : 2, 0, true)}</span>}
             <span className={'flex items-center ' + (percent ? '' : 'text-teal')}>
-                {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : 'rotate-0'} /> : null} {percent ?? '-'}
+                {percent ? <ChevronDown color={negative ? colors.red2 : colors.teal} className={negative ? '' : '!rotate-0'} /> : null} {percent ?? '-'}
             </span>
         </div>
     );
@@ -1041,7 +1040,7 @@ export const TypeTable = ({ type, data }) => {
         case 'side':
             return <span className={color}>{str === 'SELL' ? t('common:sell') : t('common:buy')}</span>;
         case 'type':
-            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : str;
+            return str === 'MARKET' ? t('common:market') : str === 'LIMIT' ? t('common:limit') : getType(str);
         default:
             return null;
     }
@@ -1071,7 +1070,7 @@ export const getType = (type) => {
         case FuturesOrderTypes.StopMarket:
             return VndcFutureOrderType.Type.STOP;
         default:
-            return VndcFutureOrderType.Limit;
+            return null;
     }
 };
 
@@ -1118,7 +1117,7 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
             }
         >
             <span>{title}</span>
-            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} />}
+            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} color={colors.teal} />}
         </div>
     );
 });

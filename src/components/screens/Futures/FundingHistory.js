@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
-import Tab from 'components/common/Tab';
 import FundingTab from 'components/screens/Futures/FundingHistoryTabs/FundingTab';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
@@ -10,6 +9,8 @@ import colors from 'styles/colors';
 import FundingHistoryTable from 'components/screens/Futures/FundingHistoryTabs/FundingHistoryTable';
 import useApp from 'hooks/useApp';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import { ChevronLeft } from 'react-feather';
+import router from 'next/router';
 
 export const CURRENCIES = [
     {
@@ -53,7 +54,12 @@ export default function FundingHistory(props) {
 
     return (
         <MaldivesLayout>
-            <Background isDark={currentTheme === THEME_MODE.DARK}>
+            {isApp && (
+                <div className="p-4 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
+                    <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
+                </div>
+            )}
+            <Background className={isApp ? 'mt-12' : ''} isDark={currentTheme === THEME_MODE.DARK}>
                 <div className={'max-w-screen-v3 2xl:max-w-screen-xxl m-auto'}>
                     <div className="text-xl sm:text-[2rem] sm:leading-[2.375rem] font-semibold">{t('futures:information')}</div>
                     <div className="sm:space-x-3 mt-4 sm:mt-6 mb-6 sm:mb-[3.75rem] flex flex-wrap text-sm sm:text-base">
@@ -73,7 +79,7 @@ export default function FundingHistory(props) {
                     <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
                         <Tabs tab={selectedTab} className="gap-8 border-b border-divider dark:border-divider-dark sm:w-max">
                             {SCREEN_TAB_SERIES?.map((rs) => (
-                                <TabItem V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
+                                <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
                                     {t(rs.localized)}
                                 </TabItem>
                             ))}
@@ -81,6 +87,7 @@ export default function FundingHistory(props) {
                         <div className="flex items-center space-x-4 text-sm sm:text-base mb-4 sm:mb-0">
                             {CURRENCIES.map((rs) => (
                                 <div
+                                    key={rs.value}
                                     className={classNames(
                                         'text-txtSecondary dark:text-txtSecondary-dark px-4 py-2 sm:py-3 border border-divider dark:border-divider-dark rounded-full cursor-pointer',
                                         {

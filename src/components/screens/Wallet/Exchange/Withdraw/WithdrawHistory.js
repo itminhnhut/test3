@@ -6,7 +6,6 @@ import TableV2 from 'components/common/V2/TableV2';
 import Empty from 'components/common/Empty';
 import useWindowSize from 'hooks/useWindowSize';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
 import { keyBy, range } from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
 import format from 'date-fns/format';
@@ -20,24 +19,23 @@ export default function () {
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
     const mapAssetConfig = useMemo(() => keyBy(assetConfigs, 'id'), [assetConfigs]);
 
-    const { width } = useWindowSize();
-
-    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [histories, setHistories] = useState([]);
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
-    const getWithdrawHistory = (page) => {
-        setLoading(true);
+    const getWithdrawHistory = () => {
         Axios.get(API_GET_DEPWDL_HISTORY, {
             params: {
-                type: 2,
-                page,
-                pageSize: HISTORY_SIZE
+                type: 2
+                // page,
+                // pageSize: HISTORY_SIZE,
+                // status: status
             }
         })
             .then(({ data: res }) => {
@@ -45,7 +43,7 @@ export default function () {
                     setHistories(res.data);
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(`Can't get withdraw history `, err);
             })
             .finally(() => {
@@ -59,67 +57,82 @@ export default function () {
             dataIndex: 'txId',
             title: 'TxHash',
             align: 'left',
-            render: txHash => {
+            render: (txHash) => {
                 return txHash ? shortHashAddress(txHash, 6, 6) : '--';
             }
         },
         {
             key: 'asset',
             dataIndex: 'assetId',
-            title: 'Asset',
+            title: t('common:asset'),
             align: 'left',
             render: (assetId) => {
                 const assetConfig = mapAssetConfig[assetId];
-                return <div className='flex items-center'>
-                    <AssetLogo size={30} assetId={assetId} />
-                    <span className='ml-2'>{assetConfig?.assetCode}</span>
-                </div>;
+                return (
+                    <div className="flex items-center">
+                        <AssetLogo size={30} assetId={assetId} />
+                        <span className="ml-2">{assetConfig?.assetCode}</span>
+                    </div>
+                );
             }
         },
         {
             key: 'network',
             dataIndex: 'network',
-            title: 'Network',
+            title: t('wallet:network'),
             align: 'left'
         },
         {
             key: 'time',
             dataIndex: 'executeAt',
-            title: 'Time',
+            title: t('common:time'),
             align: 'left',
             render: (time) => time && format(new Date(time), 'dd/MM/yyyy')
         },
         {
             key: 'amount',
             dataIndex: 'amount',
-            title: 'Amount',
+            title: t('common:amount'),
             align: 'right',
             render: (amount) => formatWallet(amount)
         },
         {
             key: 'withdraw_to',
             dataIndex: ['to', 'address'],
-            title: 'Withdraw To',
+            title: t('common:to'),
             align: 'right',
-            render: address => {
+            render: (address) => {
                 return address ? shortHashAddress(address, 6, 6) : '--';
             }
         },
         {
             key: 'status',
             dataIndex: 'status',
-            title: 'Status',
+            title: t('common:status'),
             align: 'right',
-            render: (status) => ({
-                [DepWdlStatus.Success]: <TagV2 className='ml-auto' type='success'>{t('common:success')}</TagV2>,
-                [DepWdlStatus.Pending]: <TagV2 className='ml-auto' type='warning'>{t('common:pending')}</TagV2>,
-                [DepWdlStatus.Declined]: <TagV2 className='ml-auto' type='failed'>{t('common:declined')}</TagV2>
-            }[status])
+            render: (status) =>
+                ({
+                    [DepWdlStatus.Success]: (
+                        <TagV2 icon={false} className="ml-auto" type="success">
+                            {t('common:success')}
+                        </TagV2>
+                    ),
+                    [DepWdlStatus.Pending]: (
+                        <TagV2 icon={false} className="ml-auto" type="warning">
+                            {t('common:pending')}
+                        </TagV2>
+                    ),
+                    [DepWdlStatus.Declined]: (
+                        <TagV2 icon={false} className="ml-auto" type="failed">
+                            {t('common:declined')}
+                        </TagV2>
+                    )
+                }[status])
         }
     ];
 
     if (loading) {
-        columns = columns.map(c => ({
+        columns = columns.map((c) => ({
             ...c,
             render: () => <Skeletor width={65} />
         }));
@@ -131,24 +144,65 @@ export default function () {
     }
 
     useEffect(() => {
-        getWithdrawHistory(currentPage);
-    }, [currentPage]);
+        getWithdrawHistory();
+    }, []);
 
-    return <div className='bg-white dark:bg-dark dark:border dark:border-divider-dark pb-2 rounded-xl pt-4'>
-        <TableV2
-            useRowHover
-            data={loading ? range(0, 6) : histories}
-            columns={columns}
-            rowKey={(item) => item?.key}
-            scroll={{ x: true }}
-            tableStatus={tableStatus}
-            pagingClassName='border-none'
-            pagingPrevNext={{
-                page: currentPage,
-                hasNext: histories.length === HISTORY_SIZE,
-                onChangeNextPrev: (delta) => setCurrentPage(currentPage + delta),
-                language
-            }}
-        />
-    </div>;
+    const listStatus = [
+        {
+            label: t('common:all'),
+            value: null
+        },
+        {
+            label: t('common:success'),
+            value: DepWdlStatus.Success
+        },
+        {
+            label: t('common:pending'),
+            value: DepWdlStatus.Pending
+        },
+        {
+            label: t('common:declined'),
+            value: DepWdlStatus.Declined
+        }
+    ];
+
+    const dataFilter = useMemo(() => {
+        return status ? histories.filter((rs) => rs.status === status) : histories;
+    }, [status, histories]);
+
+    return (
+        <>
+            <div className="space-x-3 flex items-center my-6">
+                {listStatus.map((rs, i) => (
+                    <div
+                        key={i}
+                        onClick={() => {
+                            setStatus(rs.value);
+                            setCurrentPage(1);
+                        }}
+                        className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
+                            status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
+                        }`}
+                    >
+                        {rs.label}
+                    </div>
+                ))}
+            </div>
+            <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark pb-2 rounded-xl pt-4">
+                <TableV2
+                    useRowHover
+                    data={dataFilter}
+                    loading={loading}
+                    columns={columns}
+                    rowKey={(item) => item?.key}
+                    scroll={{ x: true }}
+                    tableStatus={tableStatus}
+                    pagingClassName="border-none"
+                    limit={10}
+                    page={currentPage}
+                    onChangePage={setCurrentPage}
+                />
+            </div>
+        </>
+    );
 }
