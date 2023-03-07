@@ -13,7 +13,7 @@ import { useClickAway } from 'react-use';
 import { BxsBellIcon } from '../svg/SvgIcon';
 import classNames from 'classnames';
 
-const NOTI_READ = 2;
+const NOTI_READ = NotificationStatus.DELETED;
 
 const IconNoti = {
     0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
@@ -24,7 +24,7 @@ const IconNoti = {
     17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} /> // NOTE: COMMISSION
 };
 
-const NotificationList = ({ btnClass, navTheme, auth }) => {
+const NotificationList = ({ btnClass }) => {
     const { t, i18n } = useTranslation(['navbar']);
     const dispatch = useDispatch();
 

@@ -572,7 +572,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 </div>
                             </>
                         )}
-                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} auth={auth} />}
+                        {auth && <NotificationList btnClass="!mr-0" />}
                         {width >= 1366 && (
                             <>
                                 <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">
