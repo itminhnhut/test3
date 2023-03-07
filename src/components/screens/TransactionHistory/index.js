@@ -26,6 +26,11 @@ const INITAL_FILTER = {
     },
 }
 
+const namiSystem = {
+    en: 'Nami system',
+    vi: 'Hệ thống Nami'
+}
+
 const TransactionHistory = ({ id }) => {
     const { t, i18n: { language } } = useTranslation()
     const router = useRouter();
@@ -183,7 +188,7 @@ const TransactionHistory = ({ id }) => {
                 title: id === TRANSACTION_TYPES.COMMISSION ? 'From' : 'From wallet',
                 align: id === TRANSACTION_TYPES.COMMISSION ? 'left' : 'right',
                 width: 148,
-                render: (_row, item) => item?.fromUserId ?? renderWalletType(item?.from_wallet)
+                render: (_row, item) => item?.kind?.toLowerCase() === 'staking' ? namiSystem[language] : item?.fromUserId ?? renderWalletType(item?.from_wallet)
             },
             toWallet: {
                 key: 'toWallet',
@@ -197,7 +202,7 @@ const TransactionHistory = ({ id }) => {
                 key: 'walletType',
                 dataIndex: 'wallet_type',
                 title: 'Wallet',
-                align: 'right',
+                align: 'left',
                 width: 148,
                 render: (row) => renderWalletType(row)
             },

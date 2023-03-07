@@ -19,7 +19,7 @@ export const getServerSideProps = async (context) => {
     const { id } = context.query;
     return {
         props: {
-            id: id ?? '',
+            id: id ?? 'all',
             ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'reference']))
         }
     };
