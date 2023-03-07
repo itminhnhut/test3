@@ -82,6 +82,7 @@ const TokenTypes = ({ type, setType, types, lang, width, setState, t }) => {
                 const Content = e?.content;
                 return (
                     <div
+                        id={e.id}
                         key={e.id}
                         className={
                             isMobile
@@ -101,6 +102,7 @@ const TokenTypes = ({ type, setType, types, lang, width, setState, t }) => {
                         onClick={() => {
                             setType(e);
                             setState({ marketTabIndex: index });
+                            // document.getElementById(e.id).scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'end' });
                         }}
                     >
                         <Content t={t} />
