@@ -1,22 +1,24 @@
-import RefCard from 'components/screens/NewReference/RefCard'
 import React, { useEffect, useMemo } from 'react'
 import { useState } from 'react';
 import { TableFilter } from '.';
 import { API_GET_COMMISSON_HISTORY } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
-import ReTable from 'components/common/ReTable';
 import Skeletor from 'components/common/Skeletor';
-import { getS3Url, formatNumber, formatTime } from 'redux/actions/utils';
-import RePagination from 'components/common/ReTable/RePagination';
+import { formatNumber, formatTime } from 'redux/actions/utils';
 import { WalletCurrency } from 'components/screens/OnusWithdrawGate/helper';
 import _ from 'lodash';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { useSelector } from 'react-redux';
-import NoData from 'components/common/V2/TableV2/NoData';
 import TableV2 from 'components/common/V2/TableV2';
 
+// Start: Do api filter date range sai nen moi can cai qq nay :D
+const timeZone = parseInt(new Date().getTimezoneOffset() / -60)
+const addFromDate = 86400 * 1000 - 1000 * 60 * 60 * (24 - timeZone)
+const addEndDate = 86400 * 1000 - 1000 * 60 * 60 * timeZone - 1
+// End: Do api filter date range sai nen moi can cai qq nay :D
+
+
 const CommissionHistory = ({ t, commisionConfig, id }) => {
-    const assetConfig = useSelector(state => state.utils.assetConfig)
+    // const assetConfig = useSelector(state => state.utils.assetConfig)
     const levelTabs = [
         { title: t('common:all'), value: null },
         { title: '1', value: 1 },
@@ -87,14 +89,16 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         hasNext: false,
         total: 0
     });
+
     const getCommisionHistory = _.throttle(async () => {
         const params = {
-            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() : null,
-            to: new Date(filter?.date?.value?.endDate).getTime() ?? new Date().getTime(),
+            from: filter?.date?.value?.startDate ? new Date(filter?.date?.value?.startDate).getTime() + addFromDate : null,
+            to: filter?.date?.value?.endDate ? new Date(filter?.date?.value?.endDate).getTime() + addEndDate : new Date().getTime(),
             kind: filter?.commission_type?.value,
             level: filter?.level?.value,
             currency: filter?.asset_type?.value,
         };
+
         try {
             setLoading(true);
             const { data } = await fetchApi({
@@ -105,6 +109,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                     skip: limit * (page - 1)
                 }
             });
+
             if (data) {
                 setDataSource(data);
             }
@@ -117,15 +122,14 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
 
     useEffect(() => {
         getCommisionHistory();
-    }, [filter, page]);
+    }, [page]);
 
-    const skeletons = useMemo(() => {
-        const skeletons = [];
-        for (let i = 0; i < limit; i++) {
-            skeletons.push({ ...ROW_SKELETON, isSkeleton: true, key: `asset__skeleton__${i}` });
+    useEffect(() => {
+        setPage(1)
+        if (page === 1) {
+            getCommisionHistory();
         }
-        return skeletons;
-    }, []);
+    }, [filter]);
 
     const columns = useMemo(() => [{
         key: 'createdAt',
@@ -134,7 +138,7 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
         align: 'left',
         width: 200,
         fixed: 'left',
-        render: data => formatTime(data, 'dd/MM/yyyy hh:mm:ss')
+        render: data => formatTime(data, 'dd/MM/yyyy HH:mm:ss')
     }, {
         key: 'level',
         dataIndex: 'level',

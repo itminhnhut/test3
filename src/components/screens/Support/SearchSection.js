@@ -3,6 +3,7 @@ import SupportSearchBar from 'components/screens/Support/SupportSearchBar';
 import Link from 'next/link'
 import { BREAK_POINTS } from "constants/constants";
 import classNames from "classnames";
+import { getS3Url } from "redux/actions/utils";
 
 const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v2/background/bg_main.png')` }) => {
     const isMobile = width < 640
@@ -15,7 +16,7 @@ const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v
             <div
                 className={classNames('relative max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full px-4 lg:px-[112px] flex flex-col justify-center h-full')}
                 style={{
-                    backgroundImage: image,
+                    backgroundImage: getS3Url(image) ,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'

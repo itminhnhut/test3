@@ -5,7 +5,7 @@
 // Reference: https://table-react-component.vercel.app/
 // **********************************
 
-// >>> Columns Defs should look like
+// Columns Defs should look like
 // [
 //     { key: 'coin', dataIndex: 'coin', title: 'Coin', width: 100, fixed: 'left', preventSort: <boolean> },
 //     { key: 'last_price', dataIndex: 'last_price', title: 'Last Price', width: 100, preventSort: <boolean> },
@@ -15,7 +15,7 @@
 //     { key: '24h_low', dataIndex: '24h_low', title: '24h Low', width: 100, preventSort: <boolean> }
 // ]
 
-// >>> Data Source should look like
+// Data Source should look like
 // [
 //     { coin: 'BTC/USDT', last_price: 600000, change_24h: 50%, volume_24h: 1000000, ... },
 //     ...

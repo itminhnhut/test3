@@ -11,7 +11,7 @@ const AuthButton = ({ t, showSignInBreakPoint = 0, showSignUpBreakPoint = 0 }) =
         <>
             {width >= showSignInBreakPoint && (
                 <ButtonV2
-                    className="px-0 w-auto hover:opacity-80"
+                    className="px-0 w-auto hover:opacity-80 !text-sm"
                     variants="text"
                     onClick={() => {
                         window.open(getLoginUrl('sso', 'login'), '_self');

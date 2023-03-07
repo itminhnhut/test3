@@ -242,7 +242,7 @@ const TradingRules = () => {
         <MaldivesLayout>
             {isApp && (
                 <div className="px-4 py-3 border-b border-divider dark:border-divider-dark fixed top-0 w-full bg-white dark:bg-dark z-10">
-                    <ChevronLeft onClick={() => router.back()} />
+                    <ChevronLeft onClick={() => router.back()} className="text-txtPrimary dark:text-white" />
                 </div>
             )}
             {isMobile && <GlossaryModal isVisible={showModal} onClose={() => setShowModal(false)} />}
@@ -287,8 +287,10 @@ const TradingRules = () => {
                                                 <div className="text-sm leading-6 space-y-4 flex flex-col ">
                                                     {initColumns.map((c) => (
                                                         <div className="flex items-center justify-between">
-                                                            <div className="text-darkBlue-5">{renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}</div>
-                                                            <div className="text-gray-4">{renderContent(c.title, item)} </div>
+                                                            <div className="text-txtSecondary dark:text-txtSecondary-dark">
+                                                                {renderHead(`futures:${c.title}`, `futures:${c.tooltip}`)}
+                                                            </div>
+                                                            <div className="text-txtPrimary dark:text-gray-4">{renderContent(c.title, item)} </div>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -347,12 +349,12 @@ const GlossaryModal = ({ isVisible, onClose }) => {
     const { t } = useTranslation();
     return (
         <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose} isMobile>
-            <div className="text-xl mb-8">{t('futures:the_glossary')}</div>
-            <div className="divide-y divide-divider-dark">
+            <div className="text-2xl font-semibold mb-8">{t('futures:the_glossary')}</div>
+            <div className="divide-y divide-divider dark:divide-divider-dark">
                 {initColumns.map((rs) => (
                     <div className="flex items-center justify-between text-sm space-x-7 w-full py-3">
                         <lable className="font-semibold min-w-[120px] max-w-[120px]">{t(`futures:${rs.title}`)}</lable>
-                        <span className="text-txtSecondary-dark w-full">{t(`futures:${rs.tooltip}`)}</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark w-full">{t(`futures:${rs.tooltip}`)}</span>
                     </div>
                 ))}
             </div>

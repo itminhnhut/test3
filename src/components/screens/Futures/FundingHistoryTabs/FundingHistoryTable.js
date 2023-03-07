@@ -120,7 +120,6 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         pageSize: days[0].value,
         symbol: null
     });
-
     const [flag, setFlag] = useState(false);
 
     const pairConfig = useMemo(() => {
@@ -154,6 +153,7 @@ export default function FundingHistoryTable({ currency, active, isDark }) {
         const urlParams = new URLSearchParams(queryString);
         let symbol = urlParams.get('symbol');
         if (!symbol?.includes(currency) && !router.query.symbol) {
+            symbol = currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT';
             urlParams.set('symbol', currency === 'VNDC' ? 'BTCVNDC' : 'BTCUSDT');
         }
         const url = `/${router.locale}/futures/funding-history?${urlParams.toString()}`;

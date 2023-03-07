@@ -154,7 +154,7 @@
     "term_transfer": "By using Nami Transfer, you’re agree to the</br><0>Terms and Conditions</0>",
     "my_wallet": "My Wallet",
     "overview": "Overview",
-    "partners": "Partner",
+    "partners": "Commission",
     "transfer": "Transfer",
     "portfolio": "Portfolio",
     "crypto": "Crypto",
@@ -377,5 +377,9 @@
     "others": "Others",
     "convert": "Convert",
     "futures_short": "Futures",
-    "spot_short": "Exchange"
+    "spot_short": "Exchange",
+    "favourite": "Favorites",
+    "gainers": "Gainers",
+    "losers": "Losers",
+    "trending": "Trending"
 }

@@ -108,9 +108,7 @@ const FuturesOrderDetailModal = ({ isVisible, onClose, order, decimals, lastPric
                     </Row>
                     <Row>
                         <Item>{t('futures:stop_loss')}</Item>
-                        <Item className="text-red" F>
-                            {order?.sl ? formatNumber(order?.sl, decimals.price) : '-'}
-                        </Item>
+                        <Item className="text-red">{order?.sl ? formatNumber(order?.sl, decimals.price) : '-'}</Item>
                     </Row>
                     <Row>
                         <Item>{t('futures:mobile:open_fee')}</Item>

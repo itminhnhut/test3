@@ -12,6 +12,7 @@ import classnames from 'classnames';
 import Switch from 'components/common/V2/SwitchV2';
 import { SettingIcon } from 'components/svg/SvgIcon';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
+import { getS3Url } from 'src/redux/actions/utils';
 
 const SpotSetting = (props) => {
     const { spotState, onChangeSpotState, resetDefault } = props;
@@ -133,7 +134,7 @@ const SpotSetting = (props) => {
                                                                 onChangeLayout(rs.value);
                                                                 close();
                                                             }}
-                                                            src={rs.icon}
+                                                            src={getS3Url(rs.icon)}
                                                             width={82}
                                                             height={55}
                                                         />

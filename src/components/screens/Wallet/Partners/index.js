@@ -21,7 +21,6 @@ import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 
 const INITIAL_STATE = {
-    hideAsset: false,
     hideSmallAsset: false,
     tableData: null,
     search: '',
@@ -33,7 +32,7 @@ const INITIAL_STATE = {
 const AVAILBLE_KEY = 'partners_available';
 const PARTNERS_ASSET = ['VNDC', 'NAMI', 'NAC', 'USDT'];
 
-const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen }) => {
+const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, isHideAsset, setIsHideAsset }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -96,7 +95,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -108,7 +107,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                 width: 213,
                 render: (v, item) => (
                     <span className="whitespace-nowrap">
-                        {state.hideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
+                        {isHideAsset ? SECRET_STRING : v ? formatWallet(v, item?.assetCode === 'USDT' ? 2 : item?.assetDigit) : '0.0000'}
                     </span>
                 )
             },
@@ -126,7 +125,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
 
                     return (
                         <span className="whitespace-nowrap">
-                            {state.hideAsset
+                            {isHideAsset
                                 ? SECRET_STRING
                                 : v
                                 ? // <Link href={PATHS.FUTURES.TRADE.DEFAULT}>
@@ -156,10 +155,10 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                             {assetUsdRate ? (
                                 <>
                                     <div className="whitespace-nowrap">
-                                        {state.hideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}
+                                        {isHideAsset ? SECRET_STRING : totalBtc ? formatWallet(totalBtc, estBtc?.assetDigit || 8) : '0.0000'}
                                     </div>
                                     <div className="text-txtSecondary dark:text-txtSecondary-dark font-medium whitespace-nowrap">
-                                        ({state.hideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
+                                        ({isHideAsset ? '$' + SECRET_STRING : totalUsd > 0 ? ' ≈ $' + formatWallet(totalUsd, 2) : '$0.0000'})
                                     </div>
                                 </>
                             ) : (
@@ -203,7 +202,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
             />
             // </div>
         );
-    }, [state.tableData, width, usdRate, state.hideAsset]);
+    }, [state.tableData, width, usdRate, isHideAsset]);
 
     const renderEstWallet = useCallback(() => {
         return (
@@ -212,14 +211,14 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                     <PartnersIcon size={32} />
                 </div>
                 <div>
-                    <div className="t-common-v2">{state.hideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
+                    <div className="t-common-v2">{isHideAsset ? SECRET_STRING : formatWallet(estBtc?.totalValue, estBtc?.assetDigit)} BTC</div>
                     <div className="font-normal text-sm md:text-base mt-1">
-                        {state.hideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
+                        {isHideAsset ? `${SECRET_STRING}` : `$${formatWallet(estUsd?.totalValue, estUsd?.assetDigit)}`}
                     </div>
                 </div>
             </div>
         );
-    }, [state.hideAsset, currentTheme, estUsd, estBtc]);
+    }, [isHideAsset, currentTheme, estUsd, estBtc]);
 
     // Kha dung - dang dat lenh2
     const renderAvailableBalance = useCallback(() => {
@@ -228,18 +227,18 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                 <div className="flex flex-col md:flex-row pr-4 md:pr-8 md:items-center">
                     <span className="txtSecond-1">{t('common:available_balance')}: &nbsp;</span>
                     <span className="mt-2 md:mt-0">
-                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
+                        {isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.value, estBtc?.assetDigit, estBtc?.value ? 0 : 8)} BTC
                     </span>
                 </div>
                 <div className="pl-4 border-l border-divider dark:border-divider-dark md:flex md:border-none md:items-center">
                     <div className="txtSecond-1">{t('common:in_order')}: &nbsp;</div>
                     <div className="mt-2 md:mt-0">
-                        {state.hideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
+                        {isHideAsset ? `${SECRET_STRING}` : formatWallet(estBtc?.locked, estBtc?.assetDigit, estBtc?.locked ? 0 : 8, true)} BTC
                     </div>
                 </div>
             </div>
         );
-    }, [estBtc, state.hideAsset, currentTheme]);
+    }, [estBtc, isHideAsset, currentTheme]);
 
     useEffect(() => {
         walletMapper(wallets, assetConfig);
@@ -273,7 +272,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
             >
                 <div className="text-base border-b border-divider dark:border-divider-dark pb-5 md:pb-8 flex justify-between items-end">
                     <div>
-                        <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
+                        <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                         {renderEstWallet()}
                     </div>
 
@@ -368,7 +367,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                                     </div>
                                     <div className="flex items-center">
                                         <span className="txtPri-1 whitespace-nowrap">
-                                            {state.hideAsset
+                                            {isHideAsset
                                                 ? SECRET_STRING
                                                 : wallet.value
                                                 ? formatWallet(wallet.value, assetCode === 'USDT' ? 2 : assetDigit)
@@ -376,14 +375,14 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                                         </span>
                                         &nbsp;
                                         <span className="txtSecond-1  whitespace-nowrap">
-                                            ~ ${state.hideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
+                                            ~ ${isHideAsset ? SECRET_STRING : totalUsd > 0 ? formatWallet(totalUsd, 2) : '0.0000'}
                                         </span>
                                     </div>
                                     <div>
                                         <div className="flex items-center justify-between">
                                             <span className="txtSecond-2">{t('common:available_balance')}</span>
                                             <span className="txtPri-1">
-                                                {state.hideAsset
+                                                {isHideAsset
                                                     ? SECRET_STRING
                                                     : available
                                                     ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit)
@@ -393,7 +392,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen })
                                         <div className="flex items-center justify-between mt-3">
                                             <span className="txtSecond-2">{t('common:in_order')}</span>
                                             <span className="txtPri-1">
-                                                {state.hideAsset
+                                                {isHideAsset
                                                     ? SECRET_STRING
                                                     : wallet.locked_value
                                                     ? formatWallet(wallet.locked_value, assetCode === 'USDT' ? 2 : assetDigit)

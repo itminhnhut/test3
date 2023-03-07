@@ -47,7 +47,7 @@ export const RECORD_TAB_VNDC = [
     {
         key: 1,
         code: FUTURES_RECORD_CODE.openOrders,
-        title: 'spot:open_orders',
+        title: 'futures:open_orders',
         localized: null,
     },
     {

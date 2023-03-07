@@ -21,8 +21,6 @@ import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
 
 const INITIAL_STATE = {
-    hideAsset: false
-
     // ...
 };
 
@@ -39,7 +37,9 @@ const OverviewWallet = (props) => {
         stakingRefPrice,
         farmingEstBtc,
         farmingRefPrice,
-        isSmallScreen
+        isSmallScreen,
+        isHideAsset,
+        setIsHideAsset
     } = props;
 
     // Init State
@@ -89,49 +89,49 @@ const OverviewWallet = (props) => {
         return (
             <>
                 <div className="font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px] dark:text-txtPrimary-dark text-txtPrimary">
-                    {state.hideAsset
+                    {isHideAsset
                         ? SECRET_STRING
                         : formatWallet(exchangeEstBtc?.totalValue + futuresEstBtc?.totalValue + partnersEstBtc?.totalValue, exchangeEstBtc?.assetDigit)}{' '}
                     BTC
                 </div>
                 <div className="font-normal text-sm md:text-base mt-1">
-                    {state.hideAsset
+                    {isHideAsset
                         ? SECRET_STRING
                         : `$ ${formatWallet(exchangeRefPrice?.totalValue + futuresRefPrice?.totalValue + partnersRefPrice?.totalValue, 2)}`}
                 </div>
             </>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, state.hideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, futuresEstBtc, futuresRefPrice, isHideAsset]);
 
     const renderExchangeEstBalance = useCallback(() => {
         return (
             <span>
-                {state.hideAsset
+                {isHideAsset
                     ? SECRET_STRING
                     : formatWallet(exchangeEstBtc?.totalValue, exchangeEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(exchangeRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [exchangeEstBtc, exchangeRefPrice, state.hideAsset]);
+    }, [exchangeEstBtc, exchangeRefPrice, isHideAsset]);
 
     const renderFuturesEstBalance = useCallback(() => {
         return (
             <span>
-                {state.hideAsset
+                {isHideAsset
                     ? SECRET_STRING
                     : formatWallet(futuresEstBtc?.totalValue, futuresEstBtc?.assetDigit) + ' BTC ' + '~ $' + formatWallet(futuresRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [futuresEstBtc, futuresRefPrice, state.hideAsset]);
+    }, [futuresEstBtc, futuresRefPrice, isHideAsset]);
 
     const renderPartnersEstBalance = useCallback(() => {
         return (
             <span>
-                {state.hideAsset
+                {isHideAsset
                     ? SECRET_STRING
                     : formatWallet(partnersEstBtc?.totalValue, partnersEstBtc?.assetDigit) + ' BTC ~ $' + formatWallet(partnersRefPrice?.totalValue, 2)}
             </span>
         );
-    }, [partnersEstBtc, partnersRefPrice, state.hideAsset]);
+    }, [partnersEstBtc, partnersRefPrice, isHideAsset]);
 
     // const renderFarmingEstBalance = useCallback(() => {
     //     return (
@@ -165,7 +165,6 @@ const OverviewWallet = (props) => {
 
     // Check Kyc before redirect to page Deposit / Withdraw
     const router = useRouter();
-
 
     const [isShowAction, setIsShowAction] = useState({});
     const { EXCHANGE, FUTURES, PARTNERS } = ActionType;
@@ -260,15 +259,15 @@ const OverviewWallet = (props) => {
     return (
         <div className="pb-32">
             <MCard
+                style={{
+                    backgroundImage: `url(${getS3Url(`/images/screen/wallet/overview_background${currentTheme === THEME_MODE.DARK ? '_dark' : ''}.png`)})`
+                }}
                 addClass={`mt-8 p-4 md:p-8 bg-cover 
-            ${currentTheme === THEME_MODE.DARK
-                        ? ' bg-namiv2-linear-dark border border-divider-dark'
-                        : ' bg-namiv2-linear shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'
-                    }`}
+            ${currentTheme === THEME_MODE.DARK ? ' border border-divider-dark' : '  shadow-card_light backdrop-blur-[60px] bg-[#ffffff66] border-none'}`}
             >
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between tracking-normal">
                     <div>
-                        <EstBalance onClick={() => setState({ hideAsset: !state.hideAsset })} isHide={state.hideAsset} isSmallScreen={isSmallScreen} />
+                        <EstBalance onClick={() => setIsHideAsset(!isHideAsset)} isHide={isHideAsset} isSmallScreen={isSmallScreen} />
                         <div className="mt-[52px] md:mt-12 flex items-center justify-between">
                             <div className="hidden md:flex rounded-full dark:bg-listItemSelected-dark w-[64px] h-[64px] items-center justify-center mr-6">
                                 <SvgWalletOverview />
@@ -446,10 +445,11 @@ const AssetBalance = ({ title, icon, renderEstBalance, isSmallScreen, onHandleCl
 
 const CardWallet = styled.div.attrs(({ onClick, isSmallScreen }) => ({
     className: `dark:bg-dark-4 bg-white cursor-pointer group hover:bg-gray-13 dark:hover:bg-hover-dark text-txtPrimary dark:text-txtPrimary-dark font-semibold
-     ${isSmallScreen
-            ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
-            : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
-        }
+     ${
+         isSmallScreen
+             ? 'p-4 rounded-xl first:mt-0 mt-4 bg-gray-13 text-base'
+             : 'p-8 flex flex-col lg:flex-row first:rounded-t-xl last:rounded-b-xl border-r border-l first:border-t last:border-b border-divider dark:border-transparent text-2xl leading-[30px]'
+     }
      `,
     onClick: onClick
 }))``;
@@ -503,10 +503,10 @@ const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW
-                                    ? t('common:withdraw')
-                                    : item === TRANSFER
-                                        ? t('common:transfer')
-                                        : null}
+                                ? t('common:withdraw')
+                                : item === TRANSFER
+                                ? t('common:transfer')
+                                : null}
                         </ButtonV2>
                     </div>
                 ))}

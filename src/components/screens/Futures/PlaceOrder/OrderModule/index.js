@@ -322,10 +322,12 @@ const FuturesOrderModule = ({ type, leverage, pairConfig, availableAsset, isVndc
                 <div className="flex items-center justify-between">
                     <div className="text-darkBlue-5 flex items-center space-x-1">
                         <span>{t('futures:mobile:available')}</span>
-                        <AddCircleColorIcon
-                            onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
-                            className="cursor-pointer"
-                        />
+                        {isAuth && (
+                            <AddCircleColorIcon
+                                onClick={() => dispatch(setTransferModal({ isVisible: true, fromWallet: WalletType.SPOT, toWallet: WalletType.FUTURES }))}
+                                className="cursor-pointer"
+                            />
+                        )}
                     </div>
                     <span className="font-medium">
                         {formatNumber(availableAsset, decimals.symbol)} {pairConfig?.quoteAsset}

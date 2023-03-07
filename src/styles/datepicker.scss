@@ -1,5 +1,4 @@
 @import 'react-date-range/dist/styles.css'; // main css file
-//@import 'react-date-range/dist/theme/default.css';
 
 .date-range-picker {
     @apply border dark:border-none pt-6 bg-white dark:bg-darkBlue-3 rounded-xl shadow overflow-hidden;
@@ -23,9 +22,6 @@
     align-items: center;
     height: 60px;
     padding-top: 10px;
-}
-
-.rdrMonthAndYearPickers{
 }
 
 .rdrMonthAndYearPickers select{
@@ -186,7 +182,6 @@
 }
 
 .rdrInRange ~ .rdrDayNumber > span {
-    //background-color: rgba(71, 204, 133, 0.1);
     color: currentColor !important;
 }
 
@@ -194,8 +189,6 @@
     left: 2px;
     right: 2px;
 }
-
-.rdrInRange{}
 
 .rdrStartEdge{
     @apply rounded-l;
