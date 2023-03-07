@@ -191,17 +191,15 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 </div>
 
                 <div className="relative flex tracking-normal mx-4">
-                    <Tabs isMobile tab={curTab ?? TABS.FUTURES} className="border-b border-divider dark:border-divider-dark">
+                    <Tabs key="tabs_pair_list_info" tab={curTab} className="border-b border-divider dark:border-divider-dark">
                         {Object.values(TABS).map((t) => {
                             return (
                                 <TabItem
-                                    isActive={curTab === t}
+                                    V2
                                     key={'tab_detail_pairlist_' + t}
                                     className={`!px-2 !text-sm`}
                                     value={t}
-                                    onClick={() => {
-                                        if (curTab !== t) setCurTab(t);
-                                    }}
+                                    onClick={(isClick) => isClick && setCurTab(t)}
                                 >
                                     {tabTitles[t]}
                                 </TabItem>
