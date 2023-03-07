@@ -82,7 +82,7 @@ const index = ({
                 onRowClick={onRowClick}
                 {...props}
             />
-            {(pagingPrevNext || (totalPage > 1 && limit > 0)) && showPaging && (
+            {((pagingPrevNext?.page !== 0 || pagingPrevNext?.hasNext) || (totalPage > 1 && limit > 0)) && showPaging && (
                 <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination
                         total={total ?? data?.length}
