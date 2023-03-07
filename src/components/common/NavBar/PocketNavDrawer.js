@@ -15,7 +15,7 @@ import { PulseLoader } from 'react-spinners';
 import { PATHS } from 'constants/paths';
 import FuturesSetting from '../../screens/Futures/FuturesSetting';
 import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
-import { KYC_STATUS } from 'redux/actions/const';
+import { KYC_STATUS,DefaultAvatar } from 'redux/actions/const';
 import NavbarIcons from './Icons';
 import AuthButton from './AuthButton';
 import Image from 'next/image';
@@ -23,6 +23,7 @@ import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import { buildLogoutUrl } from 'src/utils';
 import { useRouter } from 'next/router';
+
 
 
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
@@ -190,7 +191,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
                             <a className="flex items-center px-4 mb-6">
-                                <Image width={58} height={58} objectFit="cover" src={auth?.avatar} alt="avatar_user" className="rounded-full" />
+                                <Image width={58} height={58} objectFit="cover" src={auth?.avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
                                         {auth?.username || auth?.name || auth?.email}
