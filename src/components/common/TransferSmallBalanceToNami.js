@@ -7,9 +7,9 @@ import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, Copy
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
 import { TabItemNao } from 'components/screens/Nao/NaoStyle';
-import { isEmpty, isNumber } from 'lodash';
+import { isEmpty, isNumber, keys, pickBy } from 'lodash';
 import NamiCircle from 'components/svg/NamiCircle';
 import TagV2 from 'components/common/V2/TagV2';
 
@@ -23,7 +23,8 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
     const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
     const [isShowModalResult, setIsShowModalResult] = useState(false);
     const isDark = currentTheme === THEME_MODE.DARK;
-    const namiUsdRate = usdRate?.['1'] || 0.4;
+    // const namiUsdRate = usdRate?.['1'] || 0.4;
+    const namiUsdRate = 0;
 
     useEffect(() => {
         if (allAssets) {
@@ -89,9 +90,29 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
 
     const handleBtnConvert = () => {
         setIsShowModalConfirm(true);
+        onRefreshData();
     };
-    const listChecked = _.keys(_.pickBy(listCheck));
-    const totalGet = listAsset.reduce((sum, item) => (listChecked.includes(item?.id + '') ? sum + parseFloat(item?.namiValue) : sum), 0);
+
+    const listChecked = keys(pickBy(listCheck));
+
+    const [dataModal, setDataModal] = useState({ amount: 0, namiAmount: 0 });
+
+    const getTotalGet = () => {
+        const totalGet = formatWallet(
+            listAsset.reduce((sum, item) => (listChecked.includes(item?.id + '') ? sum + parseFloat(item?.namiValue) : sum), 0),
+            1
+        );
+        return totalGet;
+    };
+
+    const getAmount = () => Object.values(listCheck).reduce((a, item) => a + (item === true ? 1 : 0), 0);
+
+    const onRefreshData = () => {
+        setDataModal({
+            amount: getAmount(),
+            namiAmount: parseFloat(getTotalGet())
+        });
+    };
 
     return (
         <>
@@ -108,10 +129,10 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
             </button>
             <ModalV2
                 // isVisible={isShowPoppup}
-                isVisible={true}
+                isVisible={false}
                 onBackdropCb={() => setIsShowPoppup(false)}
                 className="!max-w-[488px]"
-                wrapClassName="!py-[30px] px-0"
+                wrapClassName="!py-[30px] px-0 border border-divider dark:border-divider-dark"
                 btnCloseclassName="px-8 !pt-0"
             >
                 <div className=" text-gray-15 dark:text-gray-4 tracking-normal text-base">
@@ -139,9 +160,9 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                                     );
                                 })
                             ) : (
-                                <div className="mt-6 py-[80px] px-[53px] flex items-center flex-col justify-center">
+                                <div className="mt-6 py-[72px] px-[53px] flex items-center flex-col justify-center">
                                     {isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
-                                    <span className={'text-txtSecondary dark:text-darkBlue-5 text-base'}>{t('common:no_assets_available')}</span>
+                                    <span className="text-txtSecondary dark:text-darkBlue-5 text-base mt-3">{t('common:no_assets_available')}</span>
                                 </div>
                             )}
                         </div>
@@ -162,13 +183,11 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                                 active={isCheckAll}
                                 isDisable={!namiUsdRate || listAsset.length === 0}
                             />
-                            <span className="flex-auto text-right">
-                                {Object.values(listCheck).reduce((a, item) => a + (item === true ? 1 : 0), 0) + ' ' + t('wallet:selected')}
-                            </span>
+                            <span className="flex-auto text-right">{getAmount() + ' ' + t('wallet:selected')}</span>
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="text-base text-gray-1 dark:text-gray-7">{t('convert:you_will_get')}</span>
-                            <span className="text-gray-15 dark:text-gray-4 tracking-normal text-[18px] leading-[26px] font-semibold">{totalGet}</span>
+                            <span className="text-gray-15 dark:text-gray-4 tracking-normal text-[18px] leading-[26px] font-semibold">{getTotalGet()}</span>
                         </div>
                         <ButtonV2
                             disabled={!namiUsdRate || listAsset.length === 0 || Object.values(listCheck).every((item) => !item)}
@@ -180,21 +199,35 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                     </div>
                 </div>
             </ModalV2>
+
             {/* Modal Confirm */}
-            <ModalConfirm isVisible={isShowModalConfirm} onBackdropCb={() => setIsShowModalConfirm(false)} t={t} key="modal_confirm" />
+            <ModalConfirm
+                isVisible={false}
+                onBackdropCb={() => setIsShowModalConfirm(false)}
+                t={t}
+                key="modal_confirm"
+                onRefreshData={onRefreshData}
+                data={dataModal}
+            />
+
             {/* Modal Result */}
-            <ModalResult isVisible={isShowModalResult} onBackdropCb={() => setIsShowModalResult(false)} t={t} key="modal_result" />
+            <ModalResult isVisible={true} onBackdropCb={() => setIsShowModalResult(false)} t={t} key="modal_result" />
         </>
     );
 };
+const INIT_SWAP_TIMER = 6;
 
-const ModalConfirm = ({ isVisible, onBackdropCb, t }) => {
-    const [swapTimer, setSwapTimer] = useState(null);
-
+const ModalConfirm = ({ isVisible, onBackdropCb, t, onRefreshData, data }) => {
+    const [swapTimer, setSwapTimer] = useState(INIT_SWAP_TIMER);
     const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
 
     const onConfirmOrder = () => {
         console.log('confirm order');
+    };
+
+    const onRefresh = () => {
+        setSwapTimer(INIT_SWAP_TIMER);
+        onRefreshData();
     };
 
     useEffect(() => {
@@ -224,14 +257,14 @@ const ModalConfirm = ({ isVisible, onBackdropCb, t }) => {
                 <div className="w-full rounded-md dark:bg-dark-4 bg-gray-13 p-4 space-y-3">
                     <div className="flex justify-between items-center">
                         <span>{t('common:amount_of_asset')}</span>
-                        <span className="font-semibold text-gray-15 dark:text-gray-4">6</span>
+                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.amount}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span>{t('common:amount_of_estimate_nami')}</span>
-                        <span className="font-semibold text-gray-15 dark:text-gray-4">6</span>
+                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.namiAmount}</span>
                     </div>
                 </div>
-                <ButtonV2 className="mt-10" onClick={() => (swapTimer ? onConfirmOrder(state.preOrder?.preOrderId) : setSwapTimer(6))}>
+                <ButtonV2 className="mt-10" onClick={() => (swapTimer ? onConfirmOrder() : onRefresh())}>
                     {positiveLabel}
                 </ButtonV2>
             </div>
@@ -263,15 +296,7 @@ const ModalResult = ({ isVisible, onBackdropCb, t }) => {
                         <span className="font-semibold text-gray-15 dark:text-gray-4">6</span>
                     </div>
                 </div>
-                <ButtonV2
-                    className="mt-10"
-                    onClick={() => console.log('view_detail')}
-                    // onClick={() =>
-                    //     swapTimer
-                    //         ? onConfirmOrder(state.preOrder?.preOrderId)
-                    //         : !state.loadingPreOrder && fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount)
-                    // }
-                >
+                <ButtonV2 className="mt-10" onClick={() => console.log('view_detail')}>
                     {t('common:view_detail')}
                 </ButtonV2>
             </div>
@@ -280,3 +305,34 @@ const ModalResult = ({ isVisible, onBackdropCb, t }) => {
 };
 
 export default TransferSmallBalanceToNami;
+
+const NoDataLightIcon = () => (
+    <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M100.582 93.544 14.945 98.42l-2.051-50.127-.342-8.131v-.194c0-.044-.021-.108-.021-.173l-.257-6.04c-.064-1.293.94-2.393 2.223-2.437l36.002-1.51a2.34 2.34 0 0 1 2.414 2.244l.172 4.098 24.87-1.035v8.692h20.79l.192 6.104 1.645 43.634z"
+            fill="#E9EEF4"
+        />
+        <path
+            d="m113.663 51.697-12.82 44.433c-.235.798-1.026 1.359-1.945 1.402h-.021L62.618 98.89l-1.602.064-30.02 1.122-13.632.517c-1.282.044-2.35-.84-2.415-1.984v-.172l13.867-43.29.406-1.272v-.022c.256-.755 1.026-1.294 1.902-1.337l.598-.022 67.198-2.61 12.585-.496c1.431-.064 2.5 1.1 2.158 2.308z"
+            fill="url(#lsi0nluwsa)"
+        />
+        <path d="M98.747 43.77h-20.79v-8.693l18.098-.755c1.281-.064 2.35.95 2.414 2.222l.064 1.574.064 1.575.15 3.86v.217z" fill="url(#ysalzfvymb)" />
+        <path d="M113.725 22.543v21.224H98.747v-.216l-.15-3.86-.064-1.575-.064-1.575a2.296 2.296 0 0 0-2.414-2.221l-18.098.755V22.543h35.768z" fill="#E9EEF4" />
+        <path d="M99.945 25.288H82.19v.518h17.755v-.518zM94.603 27.529H82.19v.518h12.413v-.518zM94.603 29.796H82.19v.518h12.413v-.518z" fill="#fff" />
+        <defs>
+            <linearGradient id="lsi0nluwsa" x1="61.921" y1="78.919" x2="107.828" y2="22.297" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".22" stop-color="#D1D8E4" />
+                <stop offset=".315" stop-color="#D8DEE8" />
+                <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
+                <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
+            </linearGradient>
+            <linearGradient id="ysalzfvymb" x1="77.201" y1="41.532" x2="109.379" y2="35.57" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".017" stop-color="#C7CFDE" />
+                <stop offset=".65" stop-color="#EFF2F6" />
+                <stop offset=".977" stop-color="#fff" />
+            </linearGradient>
+        </defs>
+    </svg>
+);
