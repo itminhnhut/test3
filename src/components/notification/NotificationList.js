@@ -95,8 +95,8 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                 <>
                     {mix.map((notification) => (
                         <div
-                            className={`py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1 cursor-pointer ${
-                                notification?.status === NotificationStatus.READ ? '' : ''
+                            className={`py-3 px-4 mx-6 flex justify-between items-center rounded-xl group dark:hover:bg-hover-dark hover:bg-hover-1  ${
+                                notification?.status === NotificationStatus.READ ? 'cursor-pointer ' : ' '
                             }`}
                             key={notification?._id || notification?.created_at}
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
@@ -117,7 +117,11 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                     {getTimeAgo(notification.createdAt)}
                                 </div>
                             </div>
-                            {notification?.status !== NOTI_READ && <div className="ml-3 bg-dominant w-2 h-2 rounded-full" />}
+                            <div
+                                className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
+                                    'pointer-events-none invisible': notification?.status === NOTI_READ
+                                })}
+                            />
                         </div>
                     ))}
                 </>
@@ -187,17 +191,18 @@ const NotificationList = ({ btnClass, navTheme, auth }) => {
                                 {hasNextNotification ? (
                                     <>
                                         {notificationLoading ? (
-                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark">
-                                                {t('loading')}
-                                            </span>
+                                            <span className="pointer-events-none text-txtPrimary dark:text-txtPrimary-dark">{t('loading')}</span>
                                         ) : (
-                                            <span onClick={loadMoreNotification} className="text-dominant hover:opacity-70 transition-opacity  hover:text-teal cursor-pointer">
+                                            <span
+                                                onClick={loadMoreNotification}
+                                                className="text-dominant hover:opacity-70 transition-opacity  hover:text-teal cursor-pointer"
+                                            >
                                                 {t('load_more')}
                                             </span>
                                         )}
                                     </>
                                 ) : (
-                                    <span className="text-txtPrimary dark:text-txtPrimary-dark">
+                                    <span className="opacity-0 pointer-events-none cursor-default text-txtPrimary dark:text-txtPrimary-dark">
                                         {t('navbar:read_all_noti')}
                                     </span>
                                 )}
