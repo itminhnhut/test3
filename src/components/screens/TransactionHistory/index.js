@@ -219,10 +219,10 @@ const TransactionHistory = ({ id }) => {
                 key: 'amount',
                 title: 'Amount' + (id === TRANSACTION_TYPES.COMMISSION ? ' (VNDC)' : ''),
                 align: 'right',
-                width: 148,
+                width: 168,
                 render: (_row, item) => {
-                    const decimal = assetConfig?.find(e => e?.id === item?.currency)?.assetDigit ?? 0
-                    return <div>{formatPrice(item?.amount || item?.money_use || item?.value, decimal)}</div>
+                    const config = assetConfig?.find(e => e?.id === item?.currency)
+                    return <div>{formatPrice(item?.amount || item?.money_use || item?.value, config?.assetDigit ?? 0)} {config?.assetCode ?? 'VNDC'}</div>
                 }
             },
             original_amount: {
@@ -255,12 +255,14 @@ const TransactionHistory = ({ id }) => {
     }, [t, categoryConfig]);
 
     const columnsConfig = {
-        all: ['_id', 'category'],
-        [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
-        [TRANSACTION_TYPES.CONVERT]: ['category', '_id', 'convert_pair', 'created_at', 'fromAsset', 'toAsset', 'convert_rate', 'status'],
-        [TRANSACTION_TYPES.TRANSFER]: ['category', 'asset', 'created_at', 'amount', 'fromWallet', 'toWallet', 'status'],
-        [TRANSACTION_TYPES.STAKING]: ['_id', 'asset', 'created_at', 'amount', 'wallet_type', 'original_amount', 'status'],
-        [TRANSACTION_TYPES.COMMISSION]: ['_id', 'created_at', 'amount', 'fromWallet', 'commission_kind', 'commission_type', 'status'],
+        [id]: ['_id', 'category', 'created_at', 'amount', 'status'],
+        // all: ['_id', 'category', 'created_at', 'amount', 'status'],
+        // [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
+        // [TRANSACTION_TYPES.FUTURES]: ['category', '_id'],
+        // [TRANSACTION_TYPES.CONVERT]: ['category', '_id', 'convert_pair', 'created_at', 'fromAsset', 'toAsset', 'convert_rate', 'status'],
+        // [TRANSACTION_TYPES.TRANSFER]: ['category', 'asset', 'created_at', 'amount', 'fromWallet', 'toWallet', 'status'],
+        // [TRANSACTION_TYPES.STAKING]: ['_id', 'asset', 'created_at', 'amount', 'wallet_type', 'original_amount', 'status'],
+        // [TRANSACTION_TYPES.COMMISSION]: ['_id', 'created_at', 'amount', 'fromWallet', 'commission_kind', 'commission_type', 'status'],
     }
 
     const filterdColumns = useMemo(() => {
@@ -273,11 +275,11 @@ const TransactionHistory = ({ id }) => {
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length
             ? {
-                  [id]: id,
-                  all: null,
-                  [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-                  [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
-              }[id]
+                [id]: id,
+                all: null,
+                [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+            }[id]
             : null;
         const from = filter?.range?.startDate;
         const to = filter?.range?.endDate;
@@ -290,8 +292,8 @@ const TransactionHistory = ({ id }) => {
 
         const url = {
             [id]: API_GET_WALLET_TRANSACTION_HISTORY,
-            [TRANSACTION_TYPES.TRANSFER]: API_GET_WALLET_TRANSFER_HISTORY,
-            [TRANSACTION_TYPES.COMMISSION]: API_GET_COMMISSON_HISTORY,
+            // [TRANSACTION_TYPES.TRANSFER]: API_GET_WALLET_TRANSFER_HISTORY,
+            // [TRANSACTION_TYPES.COMMISSION]: API_GET_COMMISSON_HISTORY,
         }[id]
 
         const params = {
