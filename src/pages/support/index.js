@@ -40,17 +40,17 @@ const Support = () => {
         };
     }, []);
 
-    React.useEffect(() => {
-        const themeInLocalStorage = localStorage.getItem("theme");
-        const root = document.querySelector(":root");
-        if (themeInLocalStorage === "dark") {
-            root.classList.add("dark");
-            setTheme(THEME_MODE.DARK);
-        } else {
-            root.classList.add("light");
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [currentTheme]);
+    // React.useEffect(() => {
+    //     const themeInLocalStorage = localStorage.getItem("theme");
+    //     const root = document.querySelector(":root");
+    //     if (themeInLocalStorage === "dark") {
+    //         root.classList.add("dark");
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         root.classList.add("light");
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [currentTheme]);
 
     // ? Use hooks
     const { width } = useWindowSize()
