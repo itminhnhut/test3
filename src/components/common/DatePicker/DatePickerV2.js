@@ -112,7 +112,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         onChange({
             selection: {
                 startDate: null,
-                endDate: new Date(),
+                endDate: null,
                 key: date['key']
             }
         });

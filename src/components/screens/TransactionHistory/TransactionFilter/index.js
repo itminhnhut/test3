@@ -4,7 +4,8 @@ import dynamic from 'next/dynamic';
 
 import classNames from 'classnames';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { INITAL_FILTER } from '../constant'
+import { INITAL_FILTER } from '../constant';
+import { isNull } from 'lodash';
 
 const DateFilter = dynamic(() => import('./DateFilter', { ssr: false }));
 const AssetFilter = dynamic(() => import('./AssetFilter', { ssr: false }));
@@ -22,12 +23,14 @@ export const FilterWrapper = ({ children, label, className }) => (
 );
 
 const TransactionFilter = ({ filter, setFilter, categoryConfig, language }) => {
+    console.log('filter:', filter.range);
+
     const [search, setSearch] = useState('');
 
     return (
         <div className="flex flex-wrap -m-3 items-end w-full">
             <div className="w-1/2 p-3 lg:w-1/4">
-                <AssetFilter search={search} setSearch={setSearch} />
+                <AssetFilter search={search} setSearch={setSearch} asset={filter.asset} setAsset={(asset) => setFilter({ asset })} />
             </div>
             <div className="w-1/2 p-3 lg:w-1/4">
                 <DateFilter filter={filter} setFilter={setFilter} />
@@ -43,7 +46,12 @@ const TransactionFilter = ({ filter, setFilter, categoryConfig, language }) => {
                 />
             </div>
             <div className="w-1/2 p-3 lg:w-1/4">
-                <ButtonV2 onClick={() => setFilter(INITAL_FILTER)} variants="secondary" className="!leading-5 !h-auto !w-[85px] ">
+                <ButtonV2
+                    disabled={!filter.category && !filter.asset && isNull(filter.range.endDate)}
+                    onClick={() => setFilter(INITAL_FILTER)}
+                    variants="secondary"
+                    className={'!leading-5 !h-auto !w-[85px] disabled:cursor-default '}
+                >
                     Reset
                 </ButtonV2>
             </div>

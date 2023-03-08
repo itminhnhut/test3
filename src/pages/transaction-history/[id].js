@@ -1,5 +1,4 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { PATHS } from 'src/constants/paths';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import Skeleton from 'components/screens/TransactionHistory/Skeleton';
@@ -19,11 +18,21 @@ export default index;
 
 export const getServerSideProps = async (context) => {
     const { id } = context.query;
-    const existed = TransactionTabs.find((tab) => tab.href === '/transaction-history/' + id);
+    const existedRoute = TransactionTabs.find((tab) => tab.key === id);
+
+    const redirectObj = !existedRoute
+        ? {
+              redirect: {
+                  destination: `/transaction-history/all`,
+                  permanent: false
+              }
+          }
+        : {};
 
     return {
+        ...redirectObj,
         props: {
-            id: existed ? id : 'all',
+            id,
             ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'reference']))
         }
     };

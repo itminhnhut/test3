@@ -8,23 +8,26 @@ import { TransactionTabs } from '../constant';
 const CategoryFilter = ({ search, category, setCategory, setSearch, categoryConfig, language }) => {
     const popoverRef = useRef(null);
     const router = useRouter();
+    const { id } = router.query;
 
     return (
         <FilterWrapper label="Loại giao dịch">
             <PopoverSelect
                 className="w-full rounded-xl !left-0 !translate-x-0"
-                labelValue={() => <span clsassName="text-txtPrimary">{!category ? 'Tất cả' : category?.content[language]}</span>}
+                labelValue={() => <span className={classNames({ 'text-txtPrimary': category })}>{!category ? 'Tất cả' : category?.content[language]}</span>}
                 ref={popoverRef}
                 value={search}
                 onChange={(value) => setSearch(value)}
             >
-                <div className='max-h-[300px] overflow-y-scroll space-y-3'>
+                <div className="max-h-[300px] overflow-y-scroll space-y-3">
                     {categoryConfig
                         .filter((cate) => cate.content[language].toLowerCase().includes(search.toLowerCase()))
                         .map((cate) => (
                             <div
                                 onClick={() => {
                                     setCategory(cate);
+                                    popoverRef?.current?.close();
+                                    if (id === TransactionTabs[0].key) return;
                                     router.push(TransactionTabs[0].href);
                                 }}
                                 key={cate.category_id}

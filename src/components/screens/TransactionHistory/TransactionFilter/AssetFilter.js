@@ -4,8 +4,9 @@ import AssetLogo from '../../../wallet/AssetLogo';
 import { FilterWrapper } from '.';
 import { useSelector } from 'react-redux';
 import { List } from 'react-virtualized';
+import classNames from 'classnames';
 
-const AssetFilter = ({ search, setSearch }) => {
+const AssetFilter = ({ search, setSearch, asset, setAsset }) => {
     const popoverRef = useRef(null);
 
     const assetConfigs = useSelector((state) => state.utils.assetConfig) || [];
@@ -18,17 +19,30 @@ const AssetFilter = ({ search, setSearch }) => {
 
     const rowRenderer = useCallback(
         ({ index, key, style }) => {
-            const asset = fitlerAssets[index];
+            const currentAsset = fitlerAssets[index];
+            const isAssetChosen = asset && asset?.id === currentAsset?.id;
             return (
-                <div style={style} key={key} className="flex items-center px-4 py-3 space-x-2 cursor-pointer hover:bg-hover dark:hover:bg-hover-dark">
-                    <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
-                    <div className="text-txtPrimary dark:text-txtPrimary-dark">{asset?.assetCode}</div>
+                <div
+                    onClick={() => {
+                        if (isAssetChosen) return;
+                        popoverRef?.current?.close();
+                        setAsset(currentAsset);
+                    }}
+                    style={style}
+                    key={key}
+                    className={classNames('flex items-center px-4 py-3 space-x-2 ', {
+                        'bg-hover dark:bg-hover-dark pointer-events-none': isAssetChosen,
+                        'cursor-pointer hover:bg-hover dark:hover:bg-hover-dark': !isAssetChosen
+                    })}
+                >
+                    <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
+                    <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
 
-                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{asset?.assetName}</div>
+                    <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
                 </div>
             );
         },
-        [fitlerAssets, search]
+        [fitlerAssets, search, asset]
     );
 
     return (
@@ -36,7 +50,7 @@ const AssetFilter = ({ search, setSearch }) => {
             <PopoverSelect
                 containerClassName="!z-40"
                 className="min-w-[400px] rounded-xl !left-0 !translate-x-0"
-                labelValue={'Loại tài sản'}
+                labelValue={() => <span className={classNames({ 'text-txtPrimary': asset })}>{!asset ? 'Tất cả' : asset?.assetCode || asset?.assetName}</span>}
                 ref={popoverRef}
                 value={search}
                 onChange={(value) => setSearch(value)}

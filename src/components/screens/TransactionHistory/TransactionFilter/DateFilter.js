@@ -5,9 +5,9 @@ import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
 import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
+import { isDate } from 'lodash';
 
 const DateFilter = ({ filter, setFilter }) => {
-
     return (
         <FilterWrapper label="Thời gian" className="!max-w-[300px]">
             <DatePickerV2
@@ -15,8 +15,8 @@ const DateFilter = ({ filter, setFilter }) => {
                 onChange={(e) =>
                     setFilter({
                         range: {
-                            startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                            endDate: new Date(e?.selection?.endDate ?? null).getTime(),
+                            startDate: e?.selection?.startDate ? new Date(e?.selection?.startDate).getTime() : null,
+                            endDate: e?.selection?.endDate ?  new Date(e?.selection?.endDate).getTime() : null,
                             key: 'selection'
                         }
                     })

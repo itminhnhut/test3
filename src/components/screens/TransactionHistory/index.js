@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TabV2 from 'components/common/V2/TabV2/index';
-import Link from 'next/link';
 import { TransactionTabs, TRANSACTION_TYPES, INITAL_FILTER } from './constant';
 import { useRouter } from 'next/router';
 import TransactionFilter from './TransactionFilter';
@@ -18,8 +17,6 @@ import { ApiStatus } from 'redux/actions/const';
 const LIMIT = 10
 const MILLISEC_ONE_DAY = 86400000
 
-
-
 const namiSystem = {
     en: 'Nami system',
     vi: 'Hệ thống Nami'
@@ -36,18 +33,17 @@ const TransactionHistory = ({ id }) => {
     const [data, setData] = useState([])
     const hasNext = useRef(false)
     const [filter, setFilter] = useState(INITAL_FILTER);
+    const [categoryConfig, setCategoryConfig] = useState([]);
+
 
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
 
-
-    const [categoryConfig, setCategoryConfig] = useState([]);
+   
     useEffect(() => {
         FetchApi({
             url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY
         }).then(({ data, statusCode }) => {
             if (statusCode === 200) {
-                console.log('data1:', data)
-
                 setCategoryConfig(data);
             }
         });
@@ -249,7 +245,7 @@ const TransactionHistory = ({ id }) => {
                 }
             }
         };
-    }, [t, categoryConfig]);
+    }, [t, categoryConfig,assetConfig,id]);
 
     const columnsConfig = {
         [id]: ['_id', 'category', 'created_at', 'amount', 'status'],
@@ -268,6 +264,7 @@ const TransactionHistory = ({ id }) => {
 
     useEffect(() => {
         setLoading(true)
+
         // custom type phai dat ben duoi [id] de overwrite lai
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length
@@ -284,6 +281,7 @@ const TransactionHistory = ({ id }) => {
             
         // Plus 1 more day on endDate if endDate !== null
         const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
+
         // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
         const isNegative = {
             deposit: false,
@@ -303,7 +301,8 @@ const TransactionHistory = ({ id }) => {
             isNegative,
             limit: LIMIT,
             skip: filter?.page * LIMIT,
-            category:filter?.category?.category_id ?? undefined
+            category:filter?.category?.category_id ?? undefined,
+            currency : filter?.asset?.id ?? undefined
         };
 
         FetchApi({
@@ -311,7 +310,6 @@ const TransactionHistory = ({ id }) => {
             params
         }).then(({ data, statusCode, status }) => {
             if (statusCode === 200 || status === ApiStatus.SUCCESS) {
-                console.log('data', data)
                 if (id === TRANSACTION_TYPES.TRANSFER) {
                     data?.result = data?.result.map(e => {
                         return {
@@ -342,7 +340,8 @@ const TransactionHistory = ({ id }) => {
                         activeTabKey={id}
                         onChangeTab={(key) => {
                             const clickedTab = TransactionTabs.find((tab) => tab.key === key);
-                            if (clickedTab) {
+                            if(clickedTab.key !== 'all' && filter.category) changeFilter({category:null});
+                            if (clickedTab) {                
                                 router.push(clickedTab.href);
                             }
                         }}

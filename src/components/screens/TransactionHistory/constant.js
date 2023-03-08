@@ -4,10 +4,11 @@ export const INITAL_FILTER = {
     page: 0,
     range: {
         startDate: null,
-        endDate: null, // Date.now(),
+        endDate: null,
         key: 'selection'
     },
-    category: null
+    category: null,
+    asset: null
 };
 
 export const TRANSACTION_TYPES = {
