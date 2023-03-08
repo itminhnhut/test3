@@ -12,8 +12,12 @@ import { TabItemNao } from 'components/screens/Nao/NaoStyle';
 import { isEmpty, isNumber, keys, pickBy } from 'lodash';
 import NamiCircle from 'components/svg/NamiCircle';
 import TagV2 from 'components/common/V2/TagV2';
+import { ApiStatus } from 'redux/actions/const';
+import fetchAPI from 'utils/fetch-api';
+import { PATHS } from 'constants/paths';
+import { API_GET_NAMI_RATE } from '../../redux/actions/apis';
 
-const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) => {
+const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
     const [isShowPoppup, setIsShowPoppup] = useState(false);
     const [isCheckAll, setIsCheckAll] = useState(false);
@@ -22,22 +26,39 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
     const [listAsset, setListAsset] = useState([]);
     const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
     const [isShowModalResult, setIsShowModalResult] = useState(false);
+    const [dataModal, setDataModal] = useState({ amount: 0, namiAmount: 0 });
+    const [namiRate, setNamiRate] = useState(null);
+
     const isDark = currentTheme === THEME_MODE.DARK;
-    // const namiUsdRate = usdRate?.['1'] || 0.4;
-    const namiUsdRate = 0;
+
+    const initNamiRate = async () => {
+        const res = await fetchAPI({
+            url: API_GET_NAMI_RATE,
+            options: {
+                method: 'GET'
+            }
+        });
+
+        if (res?.status === ApiStatus.SUCCESS) {
+            setNamiRate(res.data);
+        }
+    };
 
     useEffect(() => {
+        initNamiRate();
+    }, []);
+
+    useEffect(() => {
+        console.log('__here useEffect: ', namiRate, allAssets);
         if (allAssets) {
-            if (!namiUsdRate) setListAsset([]);
+            if (!namiRate) setListAsset([]);
             else {
                 let _listAsset = [];
                 allAssets.forEach((item) => {
                     const { assetCode, assetDigit, assetName, id, status, wallet, walletTypes, available } = item;
 
-                    const assetUsdRate = usdRate?.[item?.id] || 0;
-                    const totalUsd = available * assetUsdRate;
-                    const totalNami = totalUsd / namiUsdRate;
-                    const namiValue = formatWallet(totalNami, 1);
+                    const namiValue = formatWallet(available * namiRate[id], 1);
+                    console.log('___here 2: ', namiValue, namiRate[id]);
 
                     if (id !== 1 && namiValue > 0 && namiValue < 1000) {
                         _listAsset.push({
@@ -52,7 +73,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                 setListAsset(_listAsset);
             }
         }
-    }, [usdRate, allAssets]);
+    }, [namiRate, allAssets]);
 
     useEffect(() => {
         if (allAssets && isEmpty(listCheck)) {
@@ -90,12 +111,11 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
 
     const handleBtnConvert = () => {
         setIsShowModalConfirm(true);
-        onRefreshData();
+        if (!state.loadingPreOrder) fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount);
+        // onRefreshData();
     };
 
     const listChecked = keys(pickBy(listCheck));
-
-    const [dataModal, setDataModal] = useState({ amount: 0, namiAmount: 0 });
 
     const getTotalGet = () => {
         const totalGet = formatWallet(
@@ -114,6 +134,16 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
         });
     };
 
+    const [state, setState] = useState({
+        loadingPreOrder: false,
+        preOrder: null,
+        shouldRefreshRate: false
+    });
+
+    const fetchPreSwapOrder = async (fromAsset, toAsset, fromQty) => {
+        return;
+    };
+
     return (
         <>
             <button
@@ -129,13 +159,13 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
             </button>
             <ModalV2
                 // isVisible={isShowPoppup}
-                isVisible={false}
+                isVisible={true}
                 onBackdropCb={() => setIsShowPoppup(false)}
-                className="!max-w-[488px]"
-                wrapClassName="!py-[30px] px-0 border border-divider dark:border-divider-dark"
+                className="!max-w-[488px] !border-divider"
+                wrapClassName="!py-[30px] px-0"
                 btnCloseclassName="px-8 !pt-0"
             >
-                <div className=" text-gray-15 dark:text-gray-4 tracking-normal text-base">
+                <div className=" text-gray-15 dark:text-gray-4 tracking-normal text-base ">
                     <div className="txtPri-3 px-8">{t('wallet:convert_small_balance')}</div>
                     {listAsset ? (
                         <div className="mt-6 max-h-[332px] overflow-y-scroll px-8">
@@ -181,7 +211,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                                 label={t('common:all')}
                                 onChange={() => handleCheckAll()}
                                 active={isCheckAll}
-                                isDisable={!namiUsdRate || listAsset.length === 0}
+                                isDisable={!namiRate || listAsset.length === 0}
                             />
                             <span className="flex-auto text-right">{getAmount() + ' ' + t('wallet:selected')}</span>
                         </div>
@@ -190,7 +220,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
                             <span className="text-gray-15 dark:text-gray-4 tracking-normal text-[18px] leading-[26px] font-semibold">{getTotalGet()}</span>
                         </div>
                         <ButtonV2
-                            disabled={!namiUsdRate || listAsset.length === 0 || Object.values(listCheck).every((item) => !item)}
+                            disabled={!namiRate || listAsset.length === 0 || Object.values(listCheck).every((item) => !item)}
                             className="px-6 !text-sm w-full mt-10"
                             onClick={handleBtnConvert}
                         >
@@ -202,7 +232,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
 
             {/* Modal Confirm */}
             <ModalConfirm
-                isVisible={false}
+                isVisible={isShowModalConfirm}
                 onBackdropCb={() => setIsShowModalConfirm(false)}
                 t={t}
                 key="modal_confirm"
@@ -211,7 +241,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets, usdRate }) =>
             />
 
             {/* Modal Result */}
-            <ModalResult isVisible={true} onBackdropCb={() => setIsShowModalResult(false)} t={t} key="modal_result" />
+            <ModalResult isVisible={isShowModalResult} onBackdropCb={() => setIsShowModalResult(false)} t={t} key="modal_result" />
         </>
     );
 };

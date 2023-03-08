@@ -531,7 +531,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2 hidden md:block">Exchange</div>
                 <div className="flex items-end justify-between md:pt-8">
-                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} usdRate={usdRate} />
+                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
 
                     {isSmallScreen ? (
                         <div className="w-full flex items-center justify-between">
