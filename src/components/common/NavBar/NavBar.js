@@ -6,7 +6,6 @@ import SvgMoon from 'src/components/svg/Moon';
 import SvgSun from 'src/components/svg/Sun';
 import SpotSetting from 'src/components/trade/SpotSetting';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -22,7 +21,6 @@ import { useWindowSize } from 'utils/customHooks';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import classNames from 'classnames';
-import GridLayoutSettings from './GridLayoutSettings';
 import FuturesSetting from 'src/components/screens/Futures/FuturesSetting';
 import LanguageSetting from './LanguageSetting';
 import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
@@ -376,17 +374,17 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <img src={avatar || DefaultAvatar} alt="avatar_user" className="w-12 h-12 rounded-full object-cover" />
+                                <Image objectFit="cover" width={48} height={48} src={avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
-                                <div className="text-txtSecondary items-center flex">
+                                <div className="text-txtSecondary items-center font-normal flex">
                                     <TextCopyable text={code} />
                                 </div>
                             </div>
                         </div>
                         {!isNotVerified && (
-                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 ml-[22px]">
+                            <TagV2 type={isVerified ? 'success' : 'warning'} className="py-2 px-3 text-center">
                                 <div className={`text-sm ${isVerified ? 'text-dominant' : 'text-yellow-100'}`}>
                                     {isVerified ? t('navbar:verified') : t('navbar:pending_approval')}
                                 </div>
@@ -394,7 +392,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                         )}
                     </div>
                     {isNotVerified && (
-                        <Button onClick={() => window.open(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
+                        <Button onClick={() => router.push(PATHS.ACCOUNT.IDENTIFICATION)} className="mb-6 ">
                             {t('navbar:verify_account')}
                         </Button>
                     )}
@@ -450,14 +448,14 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <Link href={PATHS.WALLET.EXCHANGE.DEFAULT}>
                         <a style={{ minWidth: 180 }} className="mal-navbar__dropdown___item">
                             <FutureExchangeIcon size={24} />
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Exchange</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.spot_wallet')}</span>
                         </a>
                     </Link>
                     <Link href={PATHS.WALLET.FUTURES}>
                         <a className="mal-navbar__dropdown___item">
                             <FutureIcon size={24} />
 
-                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:menu.wallet')} Futures</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:submenu.futures_wallet')}</span>
                         </a>
                     </Link>
                 </div>
@@ -527,7 +525,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <Link href="/">
                         <a className="block mal-navbar__logo mr-10">
                             <Image
-                                src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                                src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                                 width="94"
                                 height="30"
                                 className="navbar__logo"
@@ -574,7 +572,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                                 </div>
                             </>
                         )}
-                        {auth && <NotificationList btnClass="!mr-0" navTheme={navTheme} auth={auth} />}
+                        {auth && <NotificationList btnClass="!mr-0" />}
                         {width >= 1366 && (
                             <>
                                 <div className="flex flex-row items-center mal-navbar__hamburger__spacing h-full">

@@ -19,7 +19,8 @@ const HomeFirstAward = ({ t, theme }) => {
         checkedTermAndPolicy: false,
         isPwShow: false,
         email: '',
-        password: ''
+        password: '',
+        referral: ''
     });
 
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
@@ -94,44 +95,52 @@ const HomeFirstAward = ({ t, theme }) => {
                 </div>
                 <div className="homepage-first_award___form relative">
                     <div
-                        className={` ${
-                            theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
-                        } absolute  z-[-10] w-[228px] `}
+                        className={
+                            // ${
+                            //     theme === THEME_MODE.DARK ? 'left-[-24px] top-[-24px]' : 'right-[-48px] top-[-12px] rotate-90'
+                            // }
+                            `left-[-24px] top-[-24px] absolute  z-[-10] w-[228px] `
+                        }
                     >
                         <Image alt="first_award_corner" width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
                     <div
-                        className={`
-                    ${
-                        theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
-                    }    absolute z-[-10] w-[228px] `}
+                        className={
+                            // ${
+                            //     theme === THEME_MODE.DARK ? 'rotate-180 right-[-24px] bottom-[-24px] ' : 'left-[-48px] bottom-[-12px] -rotate-90'
+                            // }
+
+                            `rotate-180 right-[-24px] bottom-[-24px]    absolute z-[-10] w-[228px] `
+                        }
                     >
                         <Image alt="first_award_corner_replicate" width={228} height={185} src={getS3Url('/images/screen/homepage/first_award_corner.webp')} />
                     </div>
 
                     <div className="homepage-first_award___form___input_group">
-                        <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
-                            Email
-                        </label>
-                        <div
-                            className={`homepage-first_award___form___input__wrapper
-                                             ${state.focus === 'email' ? 'homepage-first_award___form___focus' : ''} mb-4`}
-                        >
-                            <input
-                                value={state.email}
-                                onChange={(e) => setState({ email: e.target.value })}
-                                id="homepage-form-email"
-                                className="homepage-first_award___form___input"
-                                onFocus={() => setState({ focus: 'email' })}
-                                onBlur={() => setState({ focus: null })}
-                                placeholder={t('input:email_placeholder')}
-                            />
-                            {Boolean(state.email) && <X className="cursor-pointer" onClick={() => onDeleteInput('email')} size={16} />}
+                        <div className="mb-4">
+                            <label htmlFor="homepage-form-email" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                                Email
+                            </label>
+                            <div
+                                className={`homepage-first_award___form___input__wrapper
+                                             ${state.focus === 'email' ? 'homepage-first_award___form___focus' : ''}`}
+                            >
+                                <input
+                                    value={state.email}
+                                    onChange={(e) => setState({ email: e.target.value })}
+                                    id="homepage-form-email"
+                                    className="homepage-first_award___form___input"
+                                    onFocus={() => setState({ focus: 'email' })}
+                                    onBlur={() => setState({ focus: null })}
+                                    placeholder={t('input:email_placeholder')}
+                                />
+                                {Boolean(state.email) && <X className="cursor-pointer" onClick={() => onDeleteInput('email')} size={16} />}
+                            </div>
                         </div>
 
-                        <div className="">
+                        <div className="mb-4">
                             <label htmlFor="homepage-form-password" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
-                                {t('input:password_placeholder')}
+                                {t('input:password_label')}
                             </label>
                             <div
                                 className={`homepage-first_award___form___input__wrapper
@@ -159,6 +168,33 @@ const HomeFirstAward = ({ t, theme }) => {
                                     <div className="cursor-pointer" onClick={() => setState({ isPwShow: !state.isPwShow })}>
                                         {state.isPwShow ? <Eye size={16} /> : <EyeOff size={16} />}
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="">
+                            <label htmlFor="homepage-form-referral" className="text-gray-9 dark:text-gray-7 mb-2 text-sm">
+                                {t('input:referral_label')}
+                            </label>
+                            <div
+                                className={`homepage-first_award___form___input__wrapper
+                                             ${state.focus === 'referral' ? 'homepage-first_award___form___focus' : ''}`}
+                            >
+                                <input
+                                    value={state.referral}
+                                    onChange={(e) => setState({ referral: e.target.value })}
+                                    id="homepage-form-referral"
+                                    className="homepage-first_award___form___input"
+                                    onFocus={() => setState({ focus: 'referral' })}
+                                    onBlur={() => setState({ focus: null })}
+                                    placeholder={t('input:referral_placeholder')}
+                                />
+                                <div className="flex">
+                                    {Boolean(state.referral) && (
+                                        <div onClick={() => onDeleteInput('referral')} className="cursor-pointer">
+                                            <X size={16} />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>

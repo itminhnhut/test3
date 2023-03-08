@@ -133,10 +133,10 @@ const HomeMarketTrend = ({ trendData }) => {
     const renderMarketHeader = useCallback(() => {
         return (
             <div className="homepage-markettrend__market_table__row">
-                <div className="homepage-markettrend__market_table__row__col1">{t('table:pair')}</div>
-                <div className="homepage-markettrend__market_table__row__col2">{t('table:last_price')}</div>
-                <div className="homepage-markettrend__market_table__row__col3">{t('table:change_24h')}</div>
-                {width >= 576 && <div className="homepage-markettrend__market_table__row__col4">{t('table:mini_chart')}</div>}
+                <div className="homepage-markettrend__market_table__row__col1 !font-normal">{t('table:pair')}</div>
+                <div className="homepage-markettrend__market_table__row__col2 !font-normal">{t('table:last_price')}</div>
+                <div className="homepage-markettrend__market_table__row__col3 !font-normal">{t('table:change_24h')}</div>
+                {width >= 576 && <div className="homepage-markettrend__market_table__row__col4 !font-normal">{t('table:mini_chart')}</div>}
             </div>
         );
     }, [width]);
@@ -158,7 +158,7 @@ const HomeMarketTrend = ({ trendData }) => {
 
             if (width >= 992) {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
@@ -174,7 +174,7 @@ const HomeMarketTrend = ({ trendData }) => {
                             <div className="homepage-markettrend__market_table__row__col2">
                                 <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
                             </div>
-                            <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
+                            <div className="homepage-markettrend__market_table__row__col3">
                                 <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
                                     {render24hChange(pair, false, '!text-base')}
                                 </div>
@@ -189,7 +189,7 @@ const HomeMarketTrend = ({ trendData }) => {
                 );
             } else {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/trade/${_?.baseAsset}-${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">

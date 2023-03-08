@@ -415,7 +415,7 @@ module.exports = {
                 'gradient-button-dark':
                     'linear-gradient(95deg, rgba(62, 166, 111, 0.49) -2%, rgba(55, 220, 131, 0.54) 26%, rgba(50, 222, 133, 0.66) 37%, rgba(40, 226, 137, 0.7) 50%, rgba(48, 220, 137, 0.7) 61%, rgba(57, 212, 138, 0.63) 71%, rgba(60, 210, 134, 0.37) 86%, rgba(63, 207, 130, 0.15) 101%)',
                 'gradient-button':
-                    'linear-gradient(280deg, rgba(98, 255, 104, 0.24) 98%, rgba(50, 244, 110, 0.59) 63%, rgba(45, 225, 96, 0.53) 35%, #3be29c 7%)',
+                    'linear-gradient(285.88deg, rgba(98, 255, 104, 0.24) 6.52%, rgba(50, 244, 110, 0.59) 38.97%, rgba(45, 225, 96, 0.53) 65.02%, #3BE29C 91.4%)',
                 'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
                 'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')"

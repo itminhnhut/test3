@@ -13,7 +13,7 @@ const LanguageSetting = () => {
             </div>
 
             <div className="absolute hidden group-hover:block top-full pt-[27px] right-0 ">
-                <div className=" mt-[1px] bg-white  dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] rounded-b-xl  ">
+                <div className=" mt-[1px] shadow-card_light dark:shadow-none bg-white  dark:bg-bgTabInactive-dark py-2 border border-t-0 dark:border-divider-dark !min-w-[216px] rounded-b-xl  ">
                     {Object.values(LANGUAGE_TAG).map((lang) => (
                         <button
                             key={lang}

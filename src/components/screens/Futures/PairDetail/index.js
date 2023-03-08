@@ -158,7 +158,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                     </div>
                 </div>
                 <div className="text-base font-semibold mt-2">
-                    1<span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
+                    <span>{formatFundingRate(pairPrice?.fundingRate * 100)}</span> /
                     <Countdown
                         now={() => (timesync ? timesync.now() : Date.now())}
                         date={pairPrice?.fundingTime}
@@ -439,7 +439,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
                             </div>
                             <div className="z-10 text-tiny font-normal text-txtSecondary dark:text-txtSecondary-dark mt-2">{t('futures:tp_sl:perpetual')}</div>
                         </div>
-                        <div className="flex flex-col items-end justify-end flex-1">
+                        <div className="flex flex-col items-end justify-start flex-1">
                             {renderLastPrice(true)}
                             <PriceChangePercent priceChangePercent={priceFromMarketWatch?.priceChangePercent} className="mt-2 text-sm" />
                         </div>

@@ -3,9 +3,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import useLanguage from 'hooks/useLanguage';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
-import { WIDTH_MD } from 'components/screens/Wallet'
+import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
-
 
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
     const { t } = useTranslation(['common', 'wallet']);
@@ -25,7 +24,7 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
 
             <div className="mb-4 mt-6 txtPri-3 text-center capitalize">{t('wallet:required_kyc')}</div>
             <div className="text-center txtSecond-2">{t('wallet:errors.invalid_kyc_status')}</div>
-            <HrefButton className="mt-10 mb-3" href="https://nami.exchange/account/identification" target="_blank">
+            <HrefButton className="mt-10 mb-3" href="https://nami.exchange/account/identification">
                 {t('common:kyc_now')}
             </HrefButton>
             <HrefButton

@@ -36,7 +36,7 @@ const Footer = memo(() => {
                     <div className="">
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={113}
                             height={36}
                             alt="Nami Exchange"
@@ -60,7 +60,7 @@ const Footer = memo(() => {
                         {/*  */}
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={251}
                             height={80}
                             alt="Nami Exchange"

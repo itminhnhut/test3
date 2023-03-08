@@ -6,10 +6,13 @@ import { useKeenSlider } from 'keen-slider/react';
 import { useWindowSize } from 'utils/customHooks';
 import { useTranslation } from 'next-i18next';
 import 'keen-slider/keen-slider.min.css';
-import Link from 'next/link';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import colors from 'styles/colors';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
 import { useRefWindowSize } from 'hooks/useWindowSize';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import { PATHS } from 'constants/paths';
 
 const LastedNews = ({ data, lang }) => {
     const [state, set] = useState({
@@ -19,6 +22,7 @@ const LastedNews = ({ data, lang }) => {
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
     const { width } = useRefWindowSize();
+    const router = useRouter();
     const {
         i18n: { language }
     } = useTranslation();
@@ -95,11 +99,18 @@ const LastedNews = ({ data, lang }) => {
                         </div>
                     </div>
                 </div>
-                <div className="homepage-news___lastest___news____right " onClick={() => window.open(`/${language}/support/announcement`)}>
-                    <a target="_blank" className="!text-teal mr-3">
-                        {language === LANGUAGE_TAG.VI ? 'Xem Thêm' : 'More'}
-                    </a>
-                    <ArrowRightIcon size={16} />
+
+                <div className="homepage-news___lastest___news____right ">
+                    <Link href={PATHS.SUPPORT.ANNOUNCEMENT} passHref>
+                        <a >
+                            <ButtonV2 variants="text" className="capitalize">
+                                <span className="mr-3"> {language === LANGUAGE_TAG.VI ? 'Xem Thêm' : 'More'}</span>
+                                <div className="!ml-0">
+                                    <ArrowRightIcon size={16} />
+                                </div>
+                            </ButtonV2>
+                        </a>
+                    </Link>
                 </div>
             </div>
         </div>
