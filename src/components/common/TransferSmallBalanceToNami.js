@@ -17,8 +17,7 @@ import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
 import { PATHS } from 'constants/paths';
 import { API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE, API_GET_NAMI_RATE, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from '../../redux/actions/apis';
-
-const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
 const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
@@ -28,8 +27,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const [listCheck, setListCheck] = useState([]);
     const [listAsset, setListAsset] = useState([]);
     const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
-    const [isShowModalResult, setIsShowModalResult] = useState(false);
-    const [dataModal, setDataModal] = useState({ amount: 0, namiAmount: 0 });
+    const [isShowModalSuccess, setIsShowModalSuccess] = useState(false);
     const [namiRate, setNamiRate] = useState(null);
 
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -57,7 +55,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             else {
                 let _listAsset = [];
                 allAssets.forEach((item) => {
-                    const { assetCode, assetDigit, assetName, id, status, wallet, walletTypes, available } = item;
+                    const { assetCode, assetDigit, id, available } = item;
 
                     const namiValue = formatWallet(available * namiRate[id], 8);
 
@@ -113,7 +111,6 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const handleBtnConvert = () => {
         setIsShowModalConfirm(true);
         if (!state.loadingPreOrder) fetchPreSwapOrder(state.fromAsset, state.toAsset, +state.fromAmount);
-        // onRefreshData();
     };
 
     const listChecked = keys(pickBy(listCheck));
@@ -131,7 +128,8 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const [state, set] = useState({
         loadingPreOrder: false,
         preOrder: null,
-        shouldRefreshRate: false
+        shouldRefreshRate: false,
+        resultErr: ''
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
@@ -186,9 +184,9 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     }, [swapTimer]);
 
     const onConfirmOrder = async (preOrderId) => {
-        setState({ processingOrder: true });
+        setState({ processingOrder: true, resultErr: '' });
 
-        const result = await fetchAPI({
+        const { status, data, code } = await fetchAPI({
             url: API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE,
             options: {
                 method: 'POST'
@@ -198,13 +196,14 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
 
         setState({ processingOrder: false });
 
-        if (result?.status === ApiStatus.SUCCESS && result?.data) {
-            const { displayingId } = result?.data;
+        if (status === ApiStatus.SUCCESS && data) {
+            const { displayingId } = data;
             setState({ preOrder: null, invoiceId: displayingId });
-            setIsShowModalResult(true);
+            setIsShowModalSuccess(true);
         } else {
-            const error = find(Error, { code: result?.code });
-            console.error('Error when confirm order: ', error);
+            const e = find(Error, { code });
+            const msg = e ? t(`error:${e?.message}`) : t('error:COMMON_ERROR');
+            setState({ resultErr: `(${code}) ${msg}` });
             setSwapTimer(null);
         }
     };
@@ -223,8 +222,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 </div>
             </button>
             <ModalV2
-                // isVisible={isShowPoppup}
-                isVisible={true}
+                isVisible={isShowPoppup}
                 onBackdropCb={() => setIsShowPoppup(false)}
                 className="!max-w-[488px] !border-divider"
                 wrapClassName="!py-[30px] px-0"
@@ -297,6 +295,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
 
             {/* Modal Confirm */}
             <ModalConfirm
+                key="modal_confirm"
                 isVisible={isShowModalConfirm}
                 onBackdropCb={() => {
                     setIsShowModalConfirm(false);
@@ -304,23 +303,28 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                     setSwapTimer(null);
                 }}
                 t={t}
-                key="modal_confirm"
-                onConfirm={() => {
-                    swapTimer ? onConfirmOrder(state.preOrder?.preOrderId) : !state.loadingPreOrder && fetchPreSwapOrder();
-                }}
+                onConfirm={() => (swapTimer ? onConfirmOrder(state.preOrder?.preOrderId) : !state.loadingPreOrder && fetchPreSwapOrder())}
                 data={state.preOrder}
                 swapTimer={swapTimer}
             />
 
             {/* Modal Result */}
-            <ModalResult isVisible={isShowModalResult} onBackdropCb={() => setIsShowModalResult(false)} t={t} key="modal_result" />
+            <ModalSuccess key="modal_success" isVisible={isShowModalSuccess} onBackdropCb={() => setIsShowModalSuccess(false)} t={t} />
+            <AlertModalV2
+                key="modal_error"
+                isVisible={!!state.resultErr}
+                onClose={() => setState({ resultErr: '' })}
+                type="error"
+                title={t('common:convert_fail')}
+                message={state.resultErr}
+            />
         </>
     );
 };
 
 const ModalConfirm = ({ isVisible, onBackdropCb, t, onConfirm, data, swapTimer }) => {
     if (!isVisible) return null;
-    const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
+    const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:convert')} (${swapTimer})`;
 
     return (
         <ModalV2 isVisible={isVisible} onBackdropCb={onBackdropCb} className="!max-w-[488px]" wrapClassName="!py-[30px] px-0" btnCloseclassName="px-8 !pt-0">
@@ -349,7 +353,7 @@ const ModalConfirm = ({ isVisible, onBackdropCb, t, onConfirm, data, swapTimer }
     );
 };
 
-const ModalResult = ({ isVisible, onBackdropCb, t }) => {
+const ModalSuccess = ({ isVisible, onBackdropCb, t }) => {
     return (
         <ModalV2 isVisible={isVisible} onBackdropCb={onBackdropCb} className="!max-w-[488px]" wrapClassName="!py-[30px] px-0" btnCloseclassName="px-8 !pt-0">
             <div className="text-gray-1 dark:text-gray-7 tracking-normal text-base font-normal flex items-center justify-between w-full flex-col px-8">
@@ -381,6 +385,9 @@ const ModalResult = ({ isVisible, onBackdropCb, t }) => {
     );
 };
 
+const ModalError = ({ t, errMsg, onClose, isVisible }) => {
+    return <AlertModalV2 isVisible={!!isVisible} onClose={onClose} type="error" title={t('common:convert_fail')} message={errMsg} />;
+};
 export default TransferSmallBalanceToNami;
 
 const NoDataLightIcon = () => (

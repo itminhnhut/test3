@@ -16,7 +16,7 @@
     "failed": "Failed",
     "declined": "Declined",
     "expired": "Expired",
-    "waiting_confirmation": "Waiting Confirmation",
+    "waiting_confirmation": "Waiting for confirmation",
     "asset": "Asset",
     "total_balance": "Total",
     "available_balance": "Available",
@@ -383,9 +383,10 @@
     "losers": "Losers",
     "trending": "Trending",
     "no_assets_available": "No assets available for conversion",
-    "confirm_convert": "Confirm transfer",
+    "confirm_convert": "Conversion confirmation",
     "convert_success": "Convert success",
-    "amount_of_asset": "Amount of asset",
-    "amount_of_estimate_nami": "Amount of NAMI estimated",
-    "view_detail": "View details"
+    "amount_of_asset": "Number of assets",
+    "amount_of_estimate_nami": "Estimated quantity",
+    "view_detail": "View details",
+    "convert_fail": "Conversion failed"
 }
