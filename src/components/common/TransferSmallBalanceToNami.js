@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { LogoIcon, BxChevronDown } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useState, useEffect } from 'react';
+import * as Error from 'redux/actions/apiError';
 import CheckBox from 'components/common/CheckBox';
 import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, CopyText } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -9,13 +10,15 @@ import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
 import { TabItemNao } from 'components/screens/Nao/NaoStyle';
-import { isEmpty, isNumber, keys, pickBy } from 'lodash';
+import { find, isEmpty, isNumber, keys, pickBy } from 'lodash';
 import NamiCircle from 'components/svg/NamiCircle';
 import TagV2 from 'components/common/V2/TagV2';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
 import { PATHS } from 'constants/paths';
-import { API_GET_NAMI_RATE } from '../../redux/actions/apis';
+import { API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE, API_GET_NAMI_RATE, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from '../../redux/actions/apis';
+
+const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
 
 const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
@@ -49,7 +52,6 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     }, []);
 
     useEffect(() => {
-        console.log('__here useEffect: ', namiRate, allAssets);
         if (allAssets) {
             if (!namiRate) setListAsset([]);
             else {
@@ -57,8 +59,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 allAssets.forEach((item) => {
                     const { assetCode, assetDigit, assetName, id, status, wallet, walletTypes, available } = item;
 
-                    const namiValue = formatWallet(available * namiRate[id], 1);
-                    console.log('___here 2: ', namiValue, namiRate[id]);
+                    const namiValue = formatWallet(available * namiRate[id], 8);
 
                     if (id !== 1 && namiValue > 0 && namiValue < 1000) {
                         _listAsset.push({
@@ -127,21 +128,85 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
 
     const getAmount = () => Object.values(listCheck).reduce((a, item) => a + (item === true ? 1 : 0), 0);
 
-    const onRefreshData = () => {
-        setDataModal({
-            amount: getAmount(),
-            namiAmount: parseFloat(getTotalGet())
-        });
-    };
-
-    const [state, setState] = useState({
+    const [state, set] = useState({
         loadingPreOrder: false,
         preOrder: null,
         shouldRefreshRate: false
     });
+    const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
 
-    const fetchPreSwapOrder = async (fromAsset, toAsset, fromQty) => {
-        return;
+    const [swapTimer, setSwapTimer] = useState(null);
+
+    const fetchPreSwapOrder = async () => {
+        setState({ loadingPreOrder: true, preOrder: null });
+
+        const assets = [];
+        listAsset.forEach((item) => {
+            if (listChecked.includes(item?.id + '')) {
+                assets.push({
+                    assetId: item?.id,
+                    value: item?.available
+                });
+            }
+        });
+
+        const { status, data, code } = await fetchAPI({
+            url: API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE,
+            options: {
+                method: 'POST'
+            },
+            params: {
+                assets
+            }
+        });
+
+        if (status === ApiStatus.SUCCESS && data) {
+            setState({ preOrder: data, shouldRefreshRate: false });
+            setSwapTimer(data?.swapTimeout);
+        } else {
+            const e = find(Error, { code });
+            console.error('Error when prefetch convert', e);
+        }
+        setState({ loadingPreOrder: false });
+    };
+
+    useEffect(() => {
+        let interval;
+        if (swapTimer) {
+            interval = setInterval(() => {
+                setSwapTimer((lastTimerCount) => {
+                    if (lastTimerCount <= 1) {
+                        clearInterval(interval);
+                    }
+                    return lastTimerCount - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [swapTimer]);
+
+    const onConfirmOrder = async (preOrderId) => {
+        setState({ processingOrder: true });
+
+        const result = await fetchAPI({
+            url: API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE,
+            options: {
+                method: 'POST'
+            },
+            params: { preOrderId }
+        });
+
+        setState({ processingOrder: false });
+
+        if (result?.status === ApiStatus.SUCCESS && result?.data) {
+            const { displayingId } = result?.data;
+            setState({ preOrder: null, invoiceId: displayingId });
+            setIsShowModalResult(true);
+        } else {
+            const error = find(Error, { code: result?.code });
+            console.error('Error when confirm order: ', error);
+            setSwapTimer(null);
+        }
     };
 
     return (
@@ -233,11 +298,18 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             {/* Modal Confirm */}
             <ModalConfirm
                 isVisible={isShowModalConfirm}
-                onBackdropCb={() => setIsShowModalConfirm(false)}
+                onBackdropCb={() => {
+                    setIsShowModalConfirm(false);
+                    setState({ preOrder: null });
+                    setSwapTimer(null);
+                }}
                 t={t}
                 key="modal_confirm"
-                onRefreshData={onRefreshData}
-                data={dataModal}
+                onConfirm={() => {
+                    swapTimer ? onConfirmOrder(state.preOrder?.preOrderId) : !state.loadingPreOrder && fetchPreSwapOrder();
+                }}
+                data={state.preOrder}
+                swapTimer={swapTimer}
             />
 
             {/* Modal Result */}
@@ -245,35 +317,10 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
         </>
     );
 };
-const INIT_SWAP_TIMER = 6;
 
-const ModalConfirm = ({ isVisible, onBackdropCb, t, onRefreshData, data }) => {
-    const [swapTimer, setSwapTimer] = useState(INIT_SWAP_TIMER);
+const ModalConfirm = ({ isVisible, onBackdropCb, t, onConfirm, data, swapTimer }) => {
+    if (!isVisible) return null;
     const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
-
-    const onConfirmOrder = () => {
-        console.log('confirm order');
-    };
-
-    const onRefresh = () => {
-        setSwapTimer(INIT_SWAP_TIMER);
-        onRefreshData();
-    };
-
-    useEffect(() => {
-        let interval;
-        if (swapTimer) {
-            interval = setInterval(() => {
-                setSwapTimer((lastTimerCount) => {
-                    if (lastTimerCount <= 1) {
-                        clearInterval(interval);
-                    }
-                    return lastTimerCount - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(interval);
-    }, [swapTimer]);
 
     return (
         <ModalV2 isVisible={isVisible} onBackdropCb={onBackdropCb} className="!max-w-[488px]" wrapClassName="!py-[30px] px-0" btnCloseclassName="px-8 !pt-0">
@@ -287,14 +334,14 @@ const ModalConfirm = ({ isVisible, onBackdropCb, t, onRefreshData, data }) => {
                 <div className="w-full rounded-md dark:bg-dark-4 bg-gray-13 p-4 space-y-3">
                     <div className="flex justify-between items-center">
                         <span>{t('common:amount_of_asset')}</span>
-                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.amount}</span>
+                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.assets?.length}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span>{t('common:amount_of_estimate_nami')}</span>
-                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.namiAmount}</span>
+                        <span className="font-semibold text-gray-15 dark:text-gray-4">{data?.toQty}</span>
                     </div>
                 </div>
-                <ButtonV2 className="mt-10" onClick={() => (swapTimer ? onConfirmOrder() : onRefresh())}>
+                <ButtonV2 className="mt-10" onClick={onConfirm}>
                     {positiveLabel}
                 </ButtonV2>
             </div>
@@ -326,7 +373,7 @@ const ModalResult = ({ isVisible, onBackdropCb, t }) => {
                         <span className="font-semibold text-gray-15 dark:text-gray-4">6</span>
                     </div>
                 </div>
-                <ButtonV2 className="mt-10" onClick={() => console.log('view_detail')}>
+                <ButtonV2 className="mt-10" onClick={() => console.info('view_detail')}>
                     {t('common:view_detail')}
                 </ButtonV2>
             </div>
