@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const useOnClickOutside = (ref, cb, loading) => {
+const useOnClickOutside = (ref, cb, loading, container) => {
     useEffect(() => {
         const listener = (event) => {
             if (!ref.current || ref.current.contains(event.target) || loading) {
@@ -8,11 +8,16 @@ const useOnClickOutside = (ref, cb, loading) => {
             }
             cb(event);
         };
-        document.addEventListener('mousedown', listener);
-        document.addEventListener('touchstart', listener);
+        if (container?.current) {
+            container.current.addEventListener('mousedown', listener);
+            container.current.addEventListener('touchstart', listener);
+        }
+
         return () => {
-            document.removeEventListener('mousedown', listener);
-            document.removeEventListener('touchstart', listener);
+            if (container?.current) {
+                container.current.removeEventListener('mousedown', listener);
+                container.current.removeEventListener('touchstart', listener);
+            }
         };
     }, [ref, cb, loading]);
 };

@@ -34,7 +34,7 @@ const ModalV2 = ({
     };
 
     if (canBlur) {
-        useOnClickOutside(wrapperRef, handleOutside, loading);
+        useOnClickOutside(wrapperRef, handleOutside, loading, container);
     }
 
     useEffect(() => {
