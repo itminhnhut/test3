@@ -1,12 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { FilterWrapper } from '.';
 import PopoverSelect from '../PopoverSelect';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { TransactionTabs } from '../constant';
 
-const CategoryFilter = ({ search, category, setCategory, setSearch, categoryConfig, language }) => {
+const CategoryFilter = ({ category, setCategory, categoryConfig, language }) => {
     const popoverRef = useRef(null);
+    const [search, setSearch] = useState('');
     const router = useRouter();
     const { id } = router.query;
 
@@ -14,7 +15,7 @@ const CategoryFilter = ({ search, category, setCategory, setSearch, categoryConf
         <FilterWrapper label="Loại giao dịch">
             <PopoverSelect
                 className="w-full rounded-xl !left-0 !translate-x-0"
-                labelValue={() => <span className={classNames({ 'text-txtPrimary': category })}>{!category ? 'Tất cả' : category?.content[language]}</span>}
+                labelValue={() => <span className={classNames({ 'text-txtPrimary dark:text-txtPrimary-dark': category })}>{!category ? 'Tất cả' : category?.content[language]}</span>}
                 ref={popoverRef}
                 value={search}
                 onChange={(value) => setSearch(value)}
@@ -27,6 +28,7 @@ const CategoryFilter = ({ search, category, setCategory, setSearch, categoryConf
                                 onClick={() => {
                                     setCategory(cate);
                                     popoverRef?.current?.close();
+                                    setSearch('');
                                     if (id === TransactionTabs[0].key) return;
                                     router.push(TransactionTabs[0].href);
                                 }}

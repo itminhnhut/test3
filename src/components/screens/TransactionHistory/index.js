@@ -13,6 +13,7 @@ import { SwapIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
+import ModalHistory from './ModalHistory';
 
 const LIMIT = 10
 const MILLISEC_ONE_DAY = 86400000
@@ -32,6 +33,7 @@ const TransactionHistory = ({ id }) => {
     const [loading, setLoading] = useState(true)
     const [data, setData] = useState([])
     const hasNext = useRef(false)
+    const [detailId,setDetailId] = useState(null)
     const [filter, setFilter] = useState(INITAL_FILTER);
     const [categoryConfig, setCategoryConfig] = useState([]);
 
@@ -265,6 +267,7 @@ const TransactionHistory = ({ id }) => {
     useEffect(() => {
         setLoading(true)
 
+        const {range,asset,category}=filter
         // custom type phai dat ben duoi [id] de overwrite lai
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length
@@ -276,7 +279,9 @@ const TransactionHistory = ({ id }) => {
             }[id]
             : null;
 
-        const {startDate,endDate} = filter.range;
+
+
+        const {startDate,endDate} = range;
         const from = startDate;
             
         // Plus 1 more day on endDate if endDate !== null
@@ -294,6 +299,7 @@ const TransactionHistory = ({ id }) => {
             // [TRANSACTION_TYPES.COMMISSION]: API_GET_COMMISSON_HISTORY,
         }[id]
 
+
         const params = {
             type,
             from,
@@ -301,7 +307,7 @@ const TransactionHistory = ({ id }) => {
             isNegative,
             limit: LIMIT,
             skip: filter?.page * LIMIT,
-            category:filter?.category?.category_id ?? undefined,
+            category: id ==='all' && category?.category_id,
             currency : filter?.asset?.id ?? undefined
         };
 
@@ -332,6 +338,7 @@ const TransactionHistory = ({ id }) => {
     }, [])
 
     return (
+        <>
         <div className="min-h-[500px] max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl">
             <div className="mt-20 mb-[120px]">
                 <div className="text-[32px] lead-[1.19] font-semibold mb-12">Lịch sử giao dịch</div>
@@ -363,6 +370,9 @@ const TransactionHistory = ({ id }) => {
                         rowKey={(item) => item?.key}
                         scroll={{ x: true }}
                         loading={loading}
+                        onRowClick={(transaction) => {
+                            setDetailId(transaction._id)
+                        }}
                         height={404}
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
@@ -376,6 +386,15 @@ const TransactionHistory = ({ id }) => {
                 </div>
             </div>
         </div>
+        <ModalHistory
+            onClose={() => setDetailId(null)} 
+            isVisible={!!detailId}
+            id={detailId}
+            t={t}
+            assetConfig={assetConfig}
+        />
+        </>
+        
     );
 };
 
