@@ -5,7 +5,7 @@ import { BREAK_POINTS } from "constants/constants";
 import classNames from "classnames";
 import { getS3Url } from "redux/actions/utils";
 
-const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v2/background/bg_main.png')` }) => {
+const SearchSection = ({ t, width = 1024, image = `/images/screen/support/v2/background/bg_main.png` }) => {
     const isMobile = width < 640
     const renderInput = useCallback(() => {
         return <SupportSearchBar simpleMode={isMobile} />
