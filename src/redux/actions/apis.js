@@ -26,7 +26,7 @@ export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 
 export const API_GET_FAVORITE = API_PREFIX + 'symbols/favorite';
 
-export const API_GET_OVERVIEW_STATISTIC = API_PREFIX + 'overview/statistic'
+export const API_GET_OVERVIEW_STATISTIC = API_PREFIX + 'overview/statistic';
 
 export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
@@ -279,3 +279,8 @@ export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 //referal
 export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
+
+// convert small balance to Nami
+export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
+export const API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_pre_order';
+export const API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_confirm_order';

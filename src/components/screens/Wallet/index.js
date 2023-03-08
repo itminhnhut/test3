@@ -71,7 +71,7 @@ const Wallet = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const [isHideAsset, setIsHideAsset] = useState(false)
+    const [isHideAsset, setIsHideAsset] = useState(false);
 
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
