@@ -16,7 +16,7 @@ const SearchSection = ({ t, width = 1024, image = `/images/screen/support/v2/bac
             <div
                 className={classNames('relative max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full px-4 flex flex-col justify-center h-full')}
                 style={{
-                    backgroundImage: getS3Url(image) ,
+                    backgroundImage: `url('${getS3Url(image)}')`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
