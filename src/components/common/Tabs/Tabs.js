@@ -10,14 +10,15 @@ let currentKeyTab = 0;
 let isClick = true;
 const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScroll = false }, ref) => {
     const TabRef = useRef(null);
-    const [mount, setMount] = useState(false);
     const { width } = useWindowSize();
+    const [offset, setOffset] = useState(false);
 
     const mouseDown = useRef(false);
     const startX = useRef(null);
     const scrollLeft = useRef(null);
     const startY = useRef(null);
     const scrollTop = useRef(null);
+    const timer = useRef();
 
     useImperativeHandle(ref, () => ({
         ref: TabRef.current
@@ -71,11 +72,8 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     }, [TabRef.current]);
 
     useEffect(() => {
-        setMount(true);
-    }, []);
-
-    useEffect(() => {
         if (TabRef.current) {
+            getOffset();
             TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
                     el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove'](
@@ -87,29 +85,28 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
                 }
             });
         }
-    }, [tab, TabRef, children, mount]);
+    }, [tab, TabRef]);
 
-    const active = useMemo(() => {
-        const _currentTab = Array.isArray(children) ? children.findIndex((rs) => rs?.props?.value === tab) : 0;
-        currentKeyTab = tab;
-        return _currentTab;
-    }, [tab, children]);
-
-    const offset = useMemo(() => {
-        if (!mount) return null;
+    const getOffset = () => {
         const el = document.querySelector('#tab-item-' + tab);
-        if (!el) return null;
         scrollHorizontal(el, TabRef.current);
         const total = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
-        return {
+        setOffset({
             l_after: `${el?.offsetLeft}px`,
             w_after: `${el?.offsetWidth}px` ?? '100%',
             w_before: TabRef.current.offsetWidth > total ? '100%' : `${total}px`
-        };
-    }, [tab, mount, width, active]);
+        });
+    };
+
+    useEffect(() => {
+        clearTimeout(timer.current);
+        timer.current = setTimeout(() => {
+            getOffset();
+        }, 800);
+    }, [width]);
 
     return (
-        <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} active={active} className={className}>
+        <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} className={className}>
             {children}
         </Tab>
     );

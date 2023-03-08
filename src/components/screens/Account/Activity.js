@@ -91,7 +91,8 @@ function Activity({ t }) {
     };
 
     const closeRevokeModal = () => {
-        if (flag.current || !revokeDevice.id) return;
+        // console.log('_here');
+        if (flag.current) return;
         setRevokeDevice(null);
         setOpenRevokeModal(false);
     };

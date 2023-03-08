@@ -57,14 +57,14 @@ export const NAV_DATA = [
                 child_lv2: []
             },
 
-            {
-                key: 2,
-                title: 'Launchpad',
-                localized: 'launchpad',
-                isNew: false,
-                url: 'https://launchpad.nami.exchange/',
-                child_lv1: []
-            },
+            // {
+            //     key: 2,
+            //     title: 'Launchpad',
+            //     localized: 'launchpad',
+            //     isNew: false,
+            //     url: 'https://launchpad.nami.exchange/',
+            //     child_lv1: []
+            // },
             // {
             //     key: 3,
             //     title: 'Copy Trade',
@@ -484,5 +484,5 @@ export const USER_CP = [
     //     url: getV1Url('/settings/api-management'),
     //     child_lv1: []
     // }
-    
+
 ];

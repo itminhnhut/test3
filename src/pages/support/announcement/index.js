@@ -131,7 +131,7 @@ const SupportAnnouncement = () => {
 
     return (
         <MaldivesLayout>
-            <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_announcement.png')`} />
+            <SearchSection t={t} width={width} image={`/images/screen/support/v2/background/bg_announcement.png`} />
             <div className="">
                 <div style={
                     theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
