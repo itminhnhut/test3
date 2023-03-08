@@ -307,7 +307,7 @@ const TransactionHistory = ({ id }) => {
             isNegative,
             limit: LIMIT,
             skip: filter?.page * LIMIT,
-            category: id ==='all' && category?.category_id,
+            category: id ==='all' && category?.category_id ,
             currency : filter?.asset?.id ?? undefined
         };
 
