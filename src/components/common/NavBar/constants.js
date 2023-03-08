@@ -217,14 +217,14 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-            {
-                key: 2,
-                title: 'Launchpad',
-                localized: 'launchpad',
-                isNew: true,
-                url: 'https://launchpad.nami.exchange/',
-                child_lv1: []
-            },
+            // {
+            //     key: 2,
+            //     title: 'Launchpad',
+            //     localized: 'launchpad',
+            //     isNew: true,
+            //     url: 'https://launchpad.nami.exchange/',
+            //     child_lv1: []
+            // },
             // {
             //     key: 3,
             //     title: 'Copy Trade',
