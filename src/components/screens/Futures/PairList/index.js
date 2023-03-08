@@ -77,8 +77,9 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
             switch (curTab) {
                 case TABS.FAVOURITE:
-                    if (favoritePairs?.length > 0) {
-                        data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+                    const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+                    if (_data?.length > 0) {
+                        data = _data;
                     } else {
                         data = data?.filter((i) => SUGGESTED_SYMBOLS?.find((rs) => rs.includes(i?.baseAsset)));
                     }
