@@ -187,7 +187,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[488px]  min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[488px]   md:min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">
