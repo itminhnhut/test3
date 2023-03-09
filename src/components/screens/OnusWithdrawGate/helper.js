@@ -26,7 +26,7 @@ export function getCurrencyDescription(currency) {
         case WalletCurrency.KAI:
             return 'KardiaChain Token'
         case WalletCurrency.NAMI:
-            return 'Nami Corporation'
+            return 'Nami Foundation'
         case WalletCurrency.NAC:
             return 'NAMI Coin'
         case WalletCurrency.ATS:

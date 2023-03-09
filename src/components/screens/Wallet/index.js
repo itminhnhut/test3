@@ -71,6 +71,7 @@ const Wallet = () => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
+    const [isHideAsset, setIsHideAsset] = useState(false)
 
     // Rdx
     const auth = useSelector((state) => state.auth?.user) || null;
@@ -464,6 +465,8 @@ const Wallet = () => {
                                 farmingEstBtc={state.farmingEstBtc}
                                 farmingRefPrice={state.farmingRefPrice}
                                 isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.EXCHANGE && (
@@ -474,6 +477,8 @@ const Wallet = () => {
                                 usdRate={state.usdRate}
                                 marketWatch={state.exchangeMarketWatch}
                                 isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.FUTURES && (
@@ -483,6 +488,8 @@ const Wallet = () => {
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
                                 isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.PARTNERS && (
@@ -492,6 +499,8 @@ const Wallet = () => {
                                 usdRate={state.usdRate}
                                 marketWatch={state.futuresMarketWatch}
                                 isSmallScreen={isSmallScreen}
+                                isHideAsset={isHideAsset}
+                                setIsHideAsset={setIsHideAsset}
                             />
                         )}
                         {state.screen === WALLET_SCREENS.STAKING && <StakingWallet summary={state.stakingSummary} loadingSummary={state.loadingSummary} />}

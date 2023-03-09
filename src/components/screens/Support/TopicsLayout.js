@@ -169,6 +169,7 @@ const TopicsLayout = ({
                             <a
                                 className={classNames(
                                     'block pl-[72px] text-sm font-semibold sm:text-base sm:font-normal cursor-pointer text-txtSecondary dark:text-darkBlue-5',
+                                    'hover:font-semibold hover:text-txtPrimary dark:hover:text-gray-4 hover:leading-6',
                                     {
                                         '!font-semibold !text-txtPrimary dark:!text-gray-4 leading-6':
                                             subCats?.displaySlug ===
@@ -188,7 +189,7 @@ const TopicsLayout = ({
     return (
         <MaldivesLayout>
             <div className="bg-bgPrimary dark:bg-dark pt-0">
-                <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png')`} />
+                <SearchSection t={t} width={width} image={`/images/screen/support/v2/background/${isFaq ? 'bg_faq' : 'bg_announcement'}.png`} />
                 <div className="bg-bgPrimary dark:bg-dark rounded-t-[20px] lg:mt-0">
                     <div className="block sm:flex min-h-[500px] relative 2xl:max-w-screen-xxl m-auto">
                         <div

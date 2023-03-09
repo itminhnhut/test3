@@ -197,20 +197,20 @@ const FaqTopics = (props) => {
         ))
     }, [articles, currentGroup])
 
-    useEffect(() => {
-        if (router?.query?.group) {
-            setCurrentGroup(router?.query?.group)
-        } else {
-            setCurrentGroup(null)
-        }
+    // useEffect(() => {
+    //     if (router?.query?.group) {
+    //         setCurrentGroup(router?.query?.group)
+    //     } else {
+    //         setCurrentGroup(null)
+    //     }
 
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [router?.query])
+    //     const themeLocal = localStorage.getItem("theme");
+    //     if (themeLocal === "dark") {
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [router?.query])
 
     return (
         <>

@@ -47,12 +47,13 @@
     "reason_3": "Possessing potential Tokens at a favorable price",
     "reason_3_description": "Offering prestigious projects first launched at Nami Launchpad and potential tokens with lower-than-market asking prices at NextGem.",
     "reason_4": "Improve Your Knowledge Of Cryptocurrencies",
-    "reason_4_description": "Nami Explained - The place to answer questions about the Crypto market"
+    "reason_4_description": "Bringing interesting knowledge and information about the cryptocurrency market"
   },
   "intro_app": {
     "try_now":"Try now",
     "title":"Trade Anytime Anywhere",
-    "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps"
+    "description": "Deposit, withdraw and trade 24/7 on iOS and Android apps",
+    "get_it":"Get it on"
   },
   "trade3step": {
     "title": "Trading Now With Just 3 Steps",

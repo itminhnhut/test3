@@ -39,5 +39,6 @@
         "not_verified_2": "Complete verification to access services on Nami.",
         "verified": "Your account has been verified."
     },
-    "title_tab": "Identification"
+    "title_tab": "Identification",
+    "kyc_title": "KYC"
 }

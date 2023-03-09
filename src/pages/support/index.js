@@ -40,17 +40,17 @@ const Support = () => {
         };
     }, []);
 
-    React.useEffect(() => {
-        const themeInLocalStorage = localStorage.getItem("theme");
-        const root = document.querySelector(":root");
-        if (themeInLocalStorage === "dark") {
-            root.classList.add("dark");
-            setTheme(THEME_MODE.DARK);
-        } else {
-            root.classList.add("light");
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [currentTheme]);
+    // React.useEffect(() => {
+    //     const themeInLocalStorage = localStorage.getItem("theme");
+    //     const root = document.querySelector(":root");
+    //     if (themeInLocalStorage === "dark") {
+    //         root.classList.add("dark");
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         root.classList.add("light");
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [currentTheme]);
 
     // ? Use hooks
     const { width } = useWindowSize()
@@ -143,8 +143,8 @@ const Support = () => {
         <MaldivesLayout>
             <div className='bg-white dark:bg-shadow'>
                 <SearchSection t={t} width={width} />
-                <div className='container pt-6 max-w-screen-v3 2xl:max-w-screen-xxl m-auto'>
-                    <div className='pb-[120px] px-4 sm:px-[112px] h-full  drop-shadow-onlyLight bg-transparent'>
+                <div className='max-w-screen-v3 2xl:max-w-screen-xxl mx-auto'>
+                    <div className='pb-[120px] px-4 sm:px-0 h-full  drop-shadow-onlyLight bg-transparent'>
                         <div className='mt-12 sm:mt-20'>
                             <SupportSection
                                 title={t('support-center:announcement')}

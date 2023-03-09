@@ -37,7 +37,7 @@ import { THEME_MODE } from 'hooks/useDarkMode';
 import { find } from 'lodash';
 
 export const setTheme = () => {
-    let theme = THEME_MODE.LIGHT;
+    let theme = THEME_MODE.DARK;
     const localTheme = localStorage.getItem(LOCAL_STORAGE_KEY.THEME);
 
     if (localTheme) {

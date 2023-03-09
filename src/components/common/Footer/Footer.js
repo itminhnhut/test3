@@ -36,7 +36,7 @@ const Footer = memo(() => {
                     <div className="">
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={113}
                             height={36}
                             alt="Nami Exchange"
@@ -45,7 +45,7 @@ const Footer = memo(() => {
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
                 <div style={{ fontSize: 12 }} className="font-medium text-gray-1 dark:text-gray-2">
-                    Copyright © 2020 Nami Corporation. All rights reserved.
+                    Copyright © 2020 Nami Foundation. All rights reserved.
                 </div>
             </div>
         ),
@@ -60,7 +60,7 @@ const Footer = memo(() => {
                         {/*  */}
                         <Image
                             // src={getS3Url('/images/logo/nami-logo-v2.png')}
-                            src={`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`}
+                            src={getS3Url(`/images/logo/nami-logo-v2${currentTheme === THEME_MODE.DARK ? '' : '-light'}.png`)}
                             width={251}
                             height={80}
                             alt="Nami Exchange"
@@ -70,7 +70,7 @@ const Footer = memo(() => {
                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                 </div>
                 <hr className="border-divider dark:border-divider-dark mb-6" />
-                <div className="font-medium text-gray-2 mt-6 text-center text-sm">Copyright © 2020 Nami Corporation. All rights reserved.</div>
+                <div className="font-medium text-gray-2 mt-6 text-center text-sm">Copyright © 2020 Nami Foundation. All rights reserved.</div>
             </>
         ),
         [t, language, currentTheme]
@@ -94,7 +94,7 @@ const Footer = memo(() => {
                             <>
                                 <div className="flex justify-between items-center mt-10 mb-6">
                                     <div className="font-medium text-gray-1 dark:text-txtSecondary-dark text-sm text-center">
-                                        Copyright © 2020 Nami Corporation. All rights reserved.
+                                        Copyright © 2020 Nami Foundation. All rights reserved.
                                     </div>
                                     <LanguageSelect t={t} language={language} currentTheme={currentTheme} />
                                 </div>{' '}
@@ -108,7 +108,7 @@ const Footer = memo(() => {
                 )}
                 {/* {width < 1200 && (
                     <div style={{ fontSize: 12 }} className="font-medium text-gray-2 mt-6">
-                        Copyright © 2020 Nami Corporation. All rights reserved.
+                        Copyright © 2020 Nami Foundation. All rights reserved.
                     </div>
                 )} */}
             </div>

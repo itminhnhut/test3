@@ -172,6 +172,32 @@ export const seasons = [
         total_rewards: '1,000,000,000 VNDC',
         quoteAsset: 'VNDC',
         time_to_create: { start: '2023-02-02T17:00:00.000Z', end: '2023-02-16T17:00:00.000Z' },
+        active: false,
+        top_ranks_per: 20,
+        top_ranks_team: 10,
+        lastUpdated: true,
+        hasTabCurrency: true
+    },
+    {
+        season: 9,
+        start: '2023-03-05T17:00:00.000Z',
+        end: '2023-03-31T17:00:00.000Z',
+        contest_id: 12,
+        title_detail: { vi: 'NAO Futures VNDC & USDT – Nami Championship mùa 6', en: 'NAO Futures VNDC & USDT – Nami Championship Season 6' },
+        title: { vi: 'NAO Futures VNDC & USDT', en: 'NAO Futures VNDC & USDT' },
+        title_champion: { vi: 'Nami Championship mùa 6', en: 'Nami Championship Season 6' },
+        minVolumeInd: {
+            vi: 'Người dùng cần đạt đủ Điều kiện cơ bản để được xếp hạng',
+            en: 'Traders need to meet the Basic Conditions to be ranked. For details',
+            isHtml: false
+        },
+        rules: {
+            vi: 'https://goonus.io/onus-x-nami-giai-dau-nao-futures-vndc-usdt-nami-championship-mua-6',
+            en: 'https://goonus.io/en/onus-x-nami-nao-futures-vndc-usdt-tournament-nami-championship-season-6'
+        },
+        total_rewards: '1,000,000,000 VNDC',
+        quoteAsset: 'VNDC',
+        time_to_create: { start: '2023-03-02T17:00:00.000Z', end: '2023-03-16T17:00:00.000Z' },
         active: true,
         top_ranks_per: 20,
         top_ranks_team: 10,
@@ -303,7 +329,7 @@ const Contest = (props) => {
     //     if (props?.lastUpdated) renderLastUpdated(props?.contest_id);
     // }, [props?.contest_id, props?.lastUpdated]);
 
-    const showPnl = ![9, 10, 11].includes(props?.contest_id);
+    const showPnl = ![9, 10, 11, 12].includes(props?.contest_id);
 
     const params = useMemo(() => {
         const queryString = window.location.search;
@@ -401,7 +427,7 @@ const Contest = (props) => {
             )}
             <div className="nao_section">
                 <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
-                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies}/>
+                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
                 {props?.season === SEASON_SPECIAL ? (
                     <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
                         {renderTab()}

@@ -10,11 +10,10 @@ import CheckBox from 'components/common/CheckBox';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { FuturesSettings } from 'redux/reducers/futures';
 import { useDispatch, useSelector } from 'react-redux';
-import Link from 'next/link';
 
 export const getPrice = (type, side, price, ask, bid, stopPrice) => {
     if (type === VndcFutureOrderType.Type.MARKET) return VndcFutureOrderType.Side.BUY === side ? ask : bid;
-    // if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
+    if (type === VndcFutureOrderType.Type.STOP) return Number(stopPrice);
     return Number(price);
 };
 
@@ -38,11 +37,10 @@ const FuturesOrderButtonsGroupVndc = ({
     const dispatch = useDispatch();
     const settings = useSelector((state) => state.futures.settings);
     const [loading, setLoading] = useState(false);
-    const _price = getPrice(getType(type), side, price, ask, bid);
+    const _price = getPrice(getType(type), side, price, ask, bid, price);
     const [showModal, setShowModal] = useState('');
     const [hidden, setHidden] = useState(false);
     const messages = useRef(null);
-    const canBlur = useRef(true);
 
     const isShowConfirm = useMemo(() => {
         return settings?.user_setting ? settings?.user_setting?.show_place_order_confirm_modal : true;
@@ -67,7 +65,6 @@ const FuturesOrderButtonsGroupVndc = ({
 
     const onSave = () => {
         setLoading(true);
-        canBlur.current = false;
         placeFuturesOrder(
             handleParams(side),
             {
@@ -77,7 +74,6 @@ const FuturesOrderButtonsGroupVndc = ({
             },
             t,
             (data) => {
-                canBlur.current = true;
                 messages.current = data;
                 setLoading(false);
                 setShowModal('alert');
@@ -133,12 +129,7 @@ const FuturesOrderButtonsGroupVndc = ({
                 notes={messages.current?.notes}
                 className="max-w-[448px]"
             />
-            <ModalV2
-                closeButton={!loading}
-                className="!max-w-[448px] text-base"
-                isVisible={showModal === 'confirm'}
-                onBackdropCb={() => canBlur.current && setShowModal('')}
-            >
+            <ModalV2 loading={loading} className="!max-w-[448px] text-base" isVisible={showModal === 'confirm'} onBackdropCb={() => setShowModal('')}>
                 <div className="text-2xl mb-6 font-semibold">{t('futures:preferences:order_confirm')}</div>
                 <div className="p-4 mb-6 rounded-md border border-divider dark:border-divider-dark divide-y divide-divider dark:divide-divider-dark space-y-3">
                     <div className="flex items-center justify-between">
@@ -213,7 +204,7 @@ const FuturesOrderButtonsGroupVndc = ({
                         variants={isBuy ? 'primary' : 'red'}
                     >
                         <span>{(isBuy ? t('common:buy') : t('common:sell')) + ' ' + title}</span>
-                        <span className="text-xs">{formatNumber(lastPrice, decimals.price)}</span>
+                        <span className="text-xs">{formatNumber(_price, decimals.price)}</span>
                     </ButtonV2>
                 )}
             </div>

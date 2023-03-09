@@ -6,12 +6,17 @@ import { useTranslation } from 'next-i18next';
 import { QRCode } from 'react-qrcode-logo';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { NAVBAR_USE_TYPE } from 'src/components/common/NavBar/NavBar';
-import { getMarketWatch } from 'redux/actions/market';
-import { compact, uniqBy, find } from 'lodash';
+import { getMarketWatch, getFuturesMarketWatch } from 'redux/actions/market';
+import { compact, uniqBy, find, filter, sortBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import LoadingPage from 'components/screens/Mobile/LoadingPage';
 import { SkeletonHomeIntroduce } from 'components/screens/Home/Skeleton';
+import { getS3Url } from 'redux/actions/utils';
+import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
+import useDarkMode from 'hooks/useDarkMode';
+import { useRefWindowSize } from 'hooks/useWindowSize';
+import Skeletor from '../components/common/Skeletor';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -48,13 +53,6 @@ const HomeLightDark = dynamic(() => import('components/screens/Home/HomeLightDar
 });
 
 // const HomeNews = dynamic(() => import('components/screens/Home/HomeNews'), { ssr: false });
-
-import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
-import { X } from 'react-feather';
-import useDarkMode from 'hooks/useDarkMode';
-import { useRefWindowSize } from 'hooks/useWindowSize';
-import Skeletor from '../components/common/Skeletor';
-import { getS3Url } from 'redux/actions/utils';
 const Index = () => {
     // * Initial State
     const [state, set] = useState({
@@ -63,7 +61,7 @@ const Index = () => {
         trendData: null
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
+    const futuresConfigs = useSelector((state) => state.futures.pairConfigs);
 
     // * Use Hooks
     const {
@@ -81,7 +79,7 @@ const Index = () => {
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="!max-w-[488px] bg-darkBlue-3 !border-divider dark:!border-divider-dark"
+                className="!max-w-[488px]  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
@@ -99,40 +97,44 @@ const Index = () => {
     }, [state.showQR]);
 
     useEffect(async () => {
-        if (!(exchangeConfig && exchangeConfig.length)) return;
-        const originPairs = await getMarketWatch();
+        if (!(futuresConfigs && futuresConfigs.length)) return;
+        const originPairs = await getFuturesMarketWatch();
         let pairs = originPairs;
         pairs = compact(
             pairs.map((p) => {
                 p.change_24 = getExchange24hPercentageChange(p);
-                const config = find(exchangeConfig, { symbol: p.s });
+                const config = find(futuresConfigs, { symbol: p.s });
                 if (config?.tags?.length && config.tags.includes('NEW_LISTING')) {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
+                    console.log(p.s);
                 }
 
                 if (p?.vq > 1000) return p;
                 return null;
             })
         );
+        pairs = filter(pairs, { q: 'VNDC' });
+
         pairs = uniqBy(pairs, 'b');
 
-        const topView = _.sortBy(pairs, [
+        const topView = sortBy(pairs, [
             function (o) {
-                return -o.vc;
+                return -o.vq;
             }
         ]);
-        const topGainers = _.sortBy(pairs, [
+
+        const topGainers = sortBy(pairs, [
             function (o) {
                 return -o.change_24;
             }
         ]);
-        const topLosers = _.sortBy(pairs, [
+        const topLosers = sortBy(pairs, [
             function (o) {
                 return o.change_24;
             }
         ]);
-        const newListings = _.sortBy(pairs, [
+        const newListings = sortBy(pairs, [
             function (o) {
                 return (o?.is_new_listing ? -1 : 1) * (o?.listing_time || 0);
             }
@@ -149,7 +151,7 @@ const Index = () => {
                 total: originPairs.length
             }
         });
-    }, [exchangeConfig]);
+    }, [futuresConfigs]);
 
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>

@@ -6,8 +6,11 @@ import {
     ADD_NOTIFICATION_UNREAD_COUNT,
     NOTIFICATION_MARK_ALL_AS_READ,
     SET_NOTIFICATION,
-    SET_NOTIFICATION_UNREAD_COUNT
+    SET_NOTIFICATION_UNREAD_COUNT,
+    SET_NOTIFICATION_UNREAD_COUNT_BASE_ON_STATE
 } from '../actions/types';
+
+import { filter } from 'lodash';
 
 import { NotificationStatus } from '../actions/const';
 
@@ -28,6 +31,9 @@ export default (state = INITIAL_STATE, action) => {
 
         case SET_NOTIFICATION_UNREAD_COUNT:
             return { ...state, unreadCount: action.payload };
+        case SET_NOTIFICATION_UNREAD_COUNT_BASE_ON_STATE:
+            return { ...state, unreadCount: filter(state.notificationsMix || [], { status: 1 }).length };
+
         case ADD_NOTIFICATION_UNREAD_COUNT:
             return { ...state, unreadCount: (state.unreadCount || 0) + 1 };
 
@@ -36,13 +42,16 @@ export default (state = INITIAL_STATE, action) => {
             let mix = state.notificationsMix;
 
             if (!ids) {
+                // case mark read all
                 if (mix && Array.isArray(mix)) {
                     mix.forEach((e) => {
                         e.status = NotificationStatus.DELETED;
                     });
                     mix = [...mix];
                 }
+                return { ...state, notificationsMix: mix, unreadCount: 0 };
             } else {
+                // case mark read on 1 noti
                 if (mix && Array.isArray(mix)) {
                     mix.forEach((e) => {
                         if (ids === e._id) {
@@ -51,8 +60,8 @@ export default (state = INITIAL_STATE, action) => {
                     });
                     mix = [...mix];
                 }
+                return { ...state, notificationsMix: mix, unreadCount: state.unreadCount === 0 ? state.unreadCount : state.unreadCount - 1 };
             }
-            return { ...state, notificationsMix: mix, unreadCount: 0 };
         }
         default:
             return state;

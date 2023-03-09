@@ -57,14 +57,14 @@ export const NAV_DATA = [
                 child_lv2: []
             },
 
-            {
-                key: 2,
-                title: 'Launchpad',
-                localized: 'launchpad',
-                isNew: false,
-                url: 'https://launchpad.nami.exchange/',
-                child_lv1: []
-            },
+            // {
+            //     key: 2,
+            //     title: 'Launchpad',
+            //     localized: 'launchpad',
+            //     isNew: false,
+            //     url: 'https://launchpad.nami.exchange/',
+            //     child_lv1: []
+            // },
             // {
             //     key: 3,
             //     title: 'Copy Trade',
@@ -159,6 +159,7 @@ export const NAV_DATA = [
 ];
 
 export const MOBILE_NAV_DATA = [
+    
     // {
     //     key: 10,
     //     title: 'Profile',
@@ -216,14 +217,14 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-            {
-                key: 2,
-                title: 'Launchpad',
-                localized: 'launchpad',
-                isNew: true,
-                url: 'https://launchpad.nami.exchange/',
-                child_lv1: []
-            },
+            // {
+            //     key: 2,
+            //     title: 'Launchpad',
+            //     localized: 'launchpad',
+            //     isNew: true,
+            //     url: 'https://launchpad.nami.exchange/',
+            //     child_lv1: []
+            // },
             // {
             //     key: 3,
             //     title: 'Copy Trade',
@@ -340,6 +341,14 @@ export const MOBILE_NAV_DATA = [
         isNew: false,
         url: '/',
         child_lv1: [
+            {
+                key: 2,
+                title: 'Overview',
+                localized: 'overview_wallet',
+                isNew: false,
+                url: PATHS.WALLET.OVERVIEW,
+                child_lv2: []
+            },
             {
                 key: 0,
                 title: 'Spot Wallet',
@@ -475,5 +484,5 @@ export const USER_CP = [
     //     url: getV1Url('/settings/api-management'),
     //     child_lv1: []
     // }
-    
+
 ];
