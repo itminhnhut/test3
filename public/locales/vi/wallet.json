@@ -137,7 +137,9 @@
         "google_otp_wrong": "Sai mã xác thực Google Authenticator",
         "verifying": "Đang xác thực",
         "input_otp_suggest": "Vui lòng nhập OTP",
-        "both_input_otp_suggest": "Vui lòng nhập đủ 2 OTP"
+        "both_input_otp_suggest": "Vui lòng nhập đủ 2 OTP",
+        "title_success": "Lệnh rút đang thực hiện",
+        "desc_success": "Yêu cầu rút của bạn đã được ghi nhận, vui lòng chờ"
     },
     "withdraw_success_msg": "Lệnh rút đã được ghi nhận,<br/>vui lòng chờ trong giây lát",
     "expected_arrival": "Lượng xác nhận đến",
@@ -195,5 +197,7 @@
         "transfer_from_to": "Chuyển từ đến",
         "unsupported_asset": "Tài sản hiện chưa hỗ trợ chuyển giữa 2 ví",
         "btn_confirm_transfer": "Xác nhận chuyển"
-    }
+    },
+    "do_not_receive_email": "Không nhận được mã xác thực email?",
+    "resend": "Gửi lại mã"
 }
