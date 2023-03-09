@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import debounce from 'lodash/debounce';
-import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
+import { getNotifications, markAllAsRead, getNotificationsUnreadCount } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
@@ -43,7 +43,6 @@ const NotificationList = ({ btnClass }) => {
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
     const unreadCount = useSelector((state) => state.notification.unreadCount);
-    const user = useSelector((state) => state.auth.user) || null;
 
     useEffect(() => {
         dispatch(getNotifications({ lang: i18n.language }));
@@ -108,10 +107,8 @@ const NotificationList = ({ btnClass }) => {
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5">
-                                    {notification.title}
-                                </div>
-                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 ">{notification.content}</div>
+                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">{notification.title}</div>
+                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
                                     className={`text-xs ${
                                         notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'

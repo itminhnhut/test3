@@ -8,7 +8,7 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import Div100vh from 'react-div-100vh';
 import { X } from 'react-feather';
 import { useSelector } from 'react-redux';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, getLoginUrl } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { useWindowSize } from 'utils/customHooks';
 import { PulseLoader } from 'react-spinners';
