@@ -94,7 +94,7 @@ const DepositWithdrawFee = () => {
                 key: 'network',
                 dataIndex: 'network',
                 title: t('wallet:network'),
-                width: 80,
+                width: 160,
                 align: 'left',
                 preventSort: true
             },
@@ -102,7 +102,7 @@ const DepositWithdrawFee = () => {
                 key: 'deposit_fee',
                 dataIndex: 'deposit_fee',
                 title: t('wallet:deposit_fee'),
-                width: 80,
+                width: 60,
                 align: 'left',
                 preventSort: true
             },
@@ -110,7 +110,7 @@ const DepositWithdrawFee = () => {
                 key: 'min_withdraw',
                 dataIndex: 'min_withdraw',
                 title: t('wallet:min_withdraw'),
-                width: 80,
+                width: 100,
                 align: 'right',
                 preventSort: true
             },
@@ -118,7 +118,7 @@ const DepositWithdrawFee = () => {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
                 title: t('wallet:withdraw_fee'),
-                width: 80,
+                width: 100,
                 align: 'right',
                 preventSort: true
             }
