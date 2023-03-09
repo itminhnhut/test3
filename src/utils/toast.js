@@ -65,7 +65,7 @@ const NamiToast = ({ render, text, type }) => {
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 3000 }) => {
+const toast = ({ text = '', render = undefined, type = 'default', duration = 1000 }) => {
     return rcToast(<NamiToast render={render} text={text} type={type} />, { autoClose: duration });
 };
 
