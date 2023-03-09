@@ -37,6 +37,7 @@ import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
 import { useRouter } from 'next/router';
+import { log } from 'utils';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;

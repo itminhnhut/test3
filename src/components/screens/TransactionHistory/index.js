@@ -307,7 +307,7 @@ const TransactionHistory = ({ id }) => {
             isNegative,
             limit: LIMIT,
             skip: filter?.page * LIMIT,
-            category: id ==='all' && category?.category_id ,
+            category: (id ==='all' && category?.category_id) || undefined,
             currency : filter?.asset?.id ?? undefined
         };
 
@@ -317,6 +317,7 @@ const TransactionHistory = ({ id }) => {
         }).then(({ data, statusCode, status }) => {
             if (statusCode === 200 || status === ApiStatus.SUCCESS) {
                 if (id === TRANSACTION_TYPES.TRANSFER) {
+                 
                     data?.result = data?.result.map(e => {
                         return {
                             ...e,
@@ -386,13 +387,16 @@ const TransactionHistory = ({ id }) => {
                 </div>
             </div>
         </div>
-        <ModalHistory
+        
+            <ModalHistory
             onClose={() => setDetailId(null)} 
             isVisible={!!detailId}
             id={detailId}
             t={t}
             assetConfig={assetConfig}
         />
+        
+        
         </>
         
     );
