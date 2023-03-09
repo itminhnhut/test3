@@ -62,6 +62,7 @@ export const API_SET_ASSET_AS_FEE = API_PREFIX + 'user/set_fee_currency';
 export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
 export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw';
 export const API_GET_DEPWDL_HISTORY = API_V3_PREFIX + 'payment/deposit_withdraw_history';
+export const API_WITHDRAW_V4 = API_V3_PREFIX + 'payment/withdraw_v4';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
