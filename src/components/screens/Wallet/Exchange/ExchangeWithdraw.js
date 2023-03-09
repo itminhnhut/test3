@@ -87,35 +87,47 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
 
     const postData = async (otp) => {
         const result = await withdrawHelper(selectedAsset?.assetId, amount, selectedNetwork?.network, address, memo, otp);
-        setLoading(false);
         return result;
     };
 
-    const onConfirmInfo = () => {
+    const onConfirmInfo = async () => {
         if (remaining_time.current.timer > Date.now()) {
             setPhase(PHASE_CONFIRM.OTP);
         } else {
-            postData().then((rs) => {
-                remaining_time.current = {
-                    timer: Date.now() + rs?.data?.remaining_time,
-                    value: rs?.data?.remaining_time ?? 0
-                };
-                setPhase(PHASE_CONFIRM.OTP);
+            await postData().then((rs) => {
+                if (rs?.data?.remaining_time) {
+                    remaining_time.current = {
+                        timer: Date.now() + rs?.data?.remaining_time,
+                        value: rs?.data?.remaining_time ?? 0
+                    };
+                    setPhase(PHASE_CONFIRM.OTP);
+                } else {
+                    toast({
+                        text: errorMessageMapper(t),
+                        type: 'error'
+                    });
+                }
             });
         }
         setExpired(false);
     };
 
     const onConfirmOTP = async () => {
-        const { data, status } = await postData(otp);
-        if (status === 'ok') {
-            setShowAlert(true);
-            if (onClose) onClose();
-        } else {
-            toast({
-                text: errorMessageMapper(t, data),
-                type: 'error'
-            });
+        try {
+            setLoading(true);
+            const { data, status } = await postData(otp);
+            if (status === 'ok') {
+                setShowAlert(true);
+                if (onClose) onClose();
+            } else {
+                toast({
+                    text: errorMessageMapper(t, data),
+                    type: 'error'
+                });
+            }
+        } catch (error) {
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -253,7 +265,7 @@ const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, add
                                             date={remaining_time.current.timer}
                                             renderer={({ minutes, seconds }) => {
                                                 return (
-                                                    <span>
+                                                    <span className="font-semibold text-teal">
                                                         {minutes}:{seconds}
                                                     </span>
                                                 );
