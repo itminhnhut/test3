@@ -60,7 +60,7 @@ export default (state = INITIAL_STATE, action) => {
                     });
                     mix = [...mix];
                 }
-                return { ...state, notificationsMix: mix, unreadCount: state.unreadCount === 0 ? state.unreadCount : state.unreadCount - 1 };
+                return { ...state, notificationsMix: mix, unreadCount: state.unreadCount > 0 ? state.unreadCount - 1 : 0 };
             }
         }
         default:

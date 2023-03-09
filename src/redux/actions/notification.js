@@ -1,6 +1,6 @@
 import compact from 'lodash/compact';
 import fetchAPI from 'utils/fetch-api';
-import { API_GET_NOTIFICATIONS, API_MARK_NOTIFICATIONS_READ } from './apis';
+import { API_GET_NOTIFICATIONS, API_GET_NOTIFICATIONS_UNREAD_COUNT, API_MARK_NOTIFICATIONS_READ } from './apis';
 import { filter } from 'lodash';
 import {
     ADD_NOTIFICATION,
@@ -15,6 +15,26 @@ import Axios from 'axios';
 
 function getSpinNotificationText() {
     return null;
+}
+
+export function getNotificationsUnreadCount() {
+    return async (dispatch) => {
+        try {
+            const { status, data } = await fetchAPI({
+                url: API_GET_NOTIFICATIONS_UNREAD_COUNT,
+                options: {
+                    method: 'GET'
+                }
+            });
+            if (status === ApiStatus.SUCCESS) {
+                console.log('data?.num_of_unread:', data?.num_of_unread);
+
+                dispatch({ type: SET_NOTIFICATION_UNREAD_COUNT, payload: data?.num_of_unread || 0 });
+            }
+        } catch (error) {
+            console.log('error:', error);
+        }
+    };
 }
 
 export function getNotifications({ lang, limit = 10, prevId }, cb) {
@@ -32,6 +52,7 @@ export function getNotifications({ lang, limit = 10, prevId }, cb) {
                 },
                 params
             });
+
             if (status === ApiStatus.SUCCESS) {
                 if (!prevId) {
                     dispatch({
@@ -39,6 +60,7 @@ export function getNotifications({ lang, limit = 10, prevId }, cb) {
                         mix: data?.results,
                         hasNext: data?.hasNext
                     });
+                    dispatch({ type: SET_NOTIFICATION_UNREAD_COUNT, payload: data?.numOfUnread || 0 });
                 } else {
                     dispatch({
                         type: ADD_NOTIFICATION,
@@ -46,10 +68,6 @@ export function getNotifications({ lang, limit = 10, prevId }, cb) {
                         hasNext: data?.hasNext
                     });
                 }
-
-                dispatch({
-                    type: SET_NOTIFICATION_UNREAD_COUNT_BASE_ON_STATE
-                });
             } else {
                 dispatch({
                     type: SET_NOTIFICATION,

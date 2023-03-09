@@ -562,10 +562,10 @@ const BxsLogoutCircle = ({ size, color }) => (
     </svg>
 );
 
-const CopyIcon = (props) => (
+const CopyIcon = ({ color = '#8694B3', ...props }) => (
     <svg {...props} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clipPath="url(#piv8lb9sya)">
-            <path d="M10.665.666H1.332v10.667h1.333V1.999h8V.666zM14 3.333h-10v12h10v-12zm-1.334 10.666H5.332V4.666h7.333v9.333z" fill="#8694B3" />
+            <path d="M10.665.666H1.332v10.667h1.333V1.999h8V.666zM14 3.333h-10v12h10v-12zm-1.334 10.666H5.332V4.666h7.333v9.333z" fill={color} />
         </g>
         <defs>
             <clipPath id="piv8lb9sya">
