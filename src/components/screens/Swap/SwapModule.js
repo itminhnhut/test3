@@ -211,6 +211,7 @@ const SwapModule = ({ width, pair }) => {
             });
         } else {
             const error = find(Error, { code: result?.code });
+
             if (REJECT_PREORDER.includes(error.message)) {
                 setTimeout(() => setState({ openModal: false }), 200);
             }

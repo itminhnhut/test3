@@ -1174,3 +1174,13 @@ export const FeeMetaFutures = ({ order, mode = 'open_fee' }) => {
     const decimal = fee_metadata[0]?.asset === 72 ? allAssets[fee_metadata[0]?.asset]?.assetDigit : allAssets[fee_metadata[0]?.asset]?.assetDigit + 2;
     return fee_metadata.length > 0 ? formatNumber(fee_metadata[0]?.value, decimal) + ' ' + allAssets[fee_metadata[0]?.asset]?.assetCode : '-';
 };
+
+export const getOffsetEl = (el) => {
+    var clone = el.cloneNode(true);
+    clone.style.cssText = 'position: fixed; top: 0; left: 0; overflow: auto; visibility: hidden; pointer-events: none; height: unset; max-height: unset';
+    document.body.append(clone);
+    const width = clone.offsetWidth;
+    const height = clone.offsetHeight;
+    clone.remove();
+    return { w: width, h: height };
+};

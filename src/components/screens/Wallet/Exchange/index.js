@@ -25,6 +25,7 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
+import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -43,8 +44,6 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-
-    const tableRef = useRef(null);
 
     // Use Hooks
     const r = useRouter();
@@ -480,7 +479,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
             <ListButton className="mt-6 flex items-end justify-end h-full w-full gap-2 md:hidden" />
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi remove code nay */}
-            <div className="mt-12 md:mt-16 flex items-center justify-between">
+            {/* <div className="mt-12 md:mt-16 flex items-center justify-between">
                 <div className="t-common-v2 hidden md:block">Exchange</div>
                 {isSmallScreen ? (
                     <div className="w-full flex items-center justify-between">
@@ -526,13 +525,13 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                         />
                     </div>
                 )}
-            </div>
+            </div> */}
 
             {/* Khi nao co Function Chuyen so du nho thanh Nami thi enable code nay */}
-            {/* <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
+            <div className="mt-12 md:mt-16 lg:items-center lg:justify-between">
                 <div className="t-common-v2 hidden md:block">Exchange</div>
                 <div className="flex items-end justify-between md:pt-8">
-                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} />
+                    <TransferSmallBalanceToNami className="hidden md:flex" width={width} allAssets={allAssets} />
 
                     {isSmallScreen ? (
                         <div className="w-full flex items-center justify-between">
@@ -579,10 +578,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                         </div>
                     )}
                 </div>
-            </div> */}
+            </div>
             <div className="hidden md:block">{renderAssetTable()}</div>
             <div className="md:hidden flex flex-col gap-4 mt-4 mb-20 text-sm dark:text-gray-4 text-gray-15">
-                {state?.tableData && state?.tableData?.length > 0 ? (
+                {state?.tableData && state?.tableData?.length > 0 && isSmallScreen ? (
                     <>
                         {state.tableData.map((item, index) => {
                             const { assetCode, assetDigit, assetName, available, id, wallet } = item;
@@ -591,7 +590,10 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                             const hidden = index + 1 > state.currentPage * ASSET_ROW_LIMIT;
 
                             return (
-                                <div className={`w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl ${hidden && 'hidden'}`}>
+                                <div
+                                    key={'mobile_row_' + item.id}
+                                    className={`w-full flex flex-col p-4 gap-4 bg-gray-13 dark:bg-dark-4 rounded-xl ${hidden && 'hidden'}`}
+                                >
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center">
                                             <AssetLogo assetCode={assetCode} size={32} />
