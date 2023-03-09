@@ -1,17 +1,21 @@
 import classnames from 'classnames';
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState, cloneElement } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, memo, useRef, useState, cloneElement } from 'react';
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import useWindowSize from 'hooks/useWindowSize';
-import { scrollHorizontal } from 'redux/actions/utils';
+import { scrollHorizontal, getOffsetEl } from 'redux/actions/utils';
 import { sumBy } from 'lodash';
 
 let currentKeyTab = 0;
 let isClick = true;
-const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScroll = false }, ref) => {
+const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScroll = false, mode }, ref) => {
     const TabRef = useRef(null);
     const { width } = useWindowSize();
-    const [offset, setOffset] = useState(false);
+    const [offset, setOffset] = useState({
+        l_after: 0,
+        w_after: 0,
+        w_before: 0
+    });
 
     const mouseDown = useRef(false);
     const startX = useRef(null);
@@ -54,6 +58,19 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
         if (TabRef.current.scrollWidth > TabRef.current.clientWidth) isClick = false;
     };
 
+    const getOffset = () => {
+        const el = TabRef.current?.querySelector('#tab-item-' + tab);
+        if (!el) return;
+        scrollHorizontal(el, TabRef.current);
+        const total = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
+        const { w, h } = getOffsetEl(el);
+        setOffset({
+            l_after: `${el?.offsetLeft}px`,
+            w_after: `${el?.offsetWidth || w}px`,
+            w_before: TabRef.current.offsetWidth > total ? '100%' : `${total}px`
+        });
+    };
+
     useEffect(() => {
         if (TabRef.current) {
             TabRef.current.addEventListener('mousemove', onDrag);
@@ -85,18 +102,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
                 }
             });
         }
-    }, [tab, TabRef]);
-
-    const getOffset = () => {
-        const el = document.querySelector('#tab-item-' + tab);
-        scrollHorizontal(el, TabRef.current);
-        const total = sumBy(TabRef.current.querySelectorAll('.tab-item'), 'clientWidth');
-        setOffset({
-            l_after: `${el?.offsetLeft}px`,
-            w_after: `${el?.offsetWidth}px` ?? '100%',
-            w_before: TabRef.current.offsetWidth > total ? '100%' : `${total}px`
-        });
-    };
+    }, [tab]);
 
     useEffect(() => {
         clearTimeout(timer.current);
@@ -106,7 +112,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     }, [width]);
 
     return (
-        <Tab borderWidth={borderWidth} offset={offset} ref={TabRef} className={className}>
+        <Tab borderWidth={borderWidth} offsetEl={offset} ref={TabRef} className={className}>
             {children}
         </Tab>
     );
@@ -120,7 +126,7 @@ const Tab = styled.div.attrs(({ className }) => ({
         position: absolute;
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
-        width: ${({ offset }) => `${offset?.w_before}`};
+        width: ${({ offsetEl }) => `${offsetEl?.w_before}`};
     }
     :after {
         content: '';
@@ -128,8 +134,8 @@ const Tab = styled.div.attrs(({ className }) => ({
         bottom: 0;
         height: ${({ borderWidth }) => `${borderWidth}px`};
         background-color: ${() => colors.teal};
-        width: ${({ offset }) => offset?.w_after};
-        left: ${({ offset }) => offset?.l_after};
+        width: ${({ offsetEl }) => offsetEl?.w_after};
+        left: ${({ offsetEl }) => offsetEl?.l_after};
         transition: all 0.2s;
     }
 `;
