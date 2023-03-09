@@ -27,6 +27,7 @@ import Crown from 'components/svg/Crown';
 import classnames from 'classnames';
 import useDarkMode from 'hooks/useDarkMode';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
+import TableV2 from 'components/common/V2/TableV2';
 
 const INITIAL_STATE = {
     tabIndex: 0,
@@ -193,7 +194,7 @@ const TradingFee = () => {
                 key: 'max_leverage',
                 dataIndex: 'max_leverage',
                 title: t('common:max_leverage'),
-                width: 100,
+                width: 200,
                 align: 'right'
             },
             {
@@ -208,7 +209,7 @@ const TradingFee = () => {
                         </span>
                     </span>
                 ),
-                width: 100,
+                width: 200,
                 align: 'right'
             },
             {
@@ -223,7 +224,7 @@ const TradingFee = () => {
                         </span>
                     </span>
                 ),
-                width: 100,
+                width: 200,
                 align: 'right'
             }
         ];
@@ -291,7 +292,7 @@ const TradingFee = () => {
                 key: 'level',
                 dataIndex: 'level',
                 title: t('common:fee_level'),
-                width: 180,
+                width: 100,
                 fixed: 'left',
                 align: 'left'
             },
@@ -301,14 +302,14 @@ const TradingFee = () => {
                 key: 'nami_holding',
                 dataIndex: 'nami_holding',
                 title: 'NAMI',
-                width: 100,
+                width: 150,
                 align: 'right'
             },
             {
                 key: 'maker_taker',
                 dataIndex: 'maker_taker',
                 title: 'Maker/Taker',
-                width: 100,
+                width: 150,
                 align: 'right'
             },
             {
@@ -327,7 +328,7 @@ const TradingFee = () => {
                         </span>
                     </span>
                 ),
-                width: 100,
+                width: 160,
                 align: 'right'
             }
         ];
@@ -522,11 +523,11 @@ const TradingFee = () => {
                 <div className="relative mt-12 p-6 nami-light-shadow bg-white dark:bg-darkBlue-3 rounded-xl">
                     <div
                         className={classnames(
-                            'relative z-10 w-full grid md:grid-cols-3 md:grid-rows-1 grid-rows-3 gap-10',
+                            'relative z-10 w-full flex md:flex-row flex-col gap-10',
                             'divide-y md:divide-y-0 md:divide-x divide-divider dark:divide-divider-dark'
                         )}
                     >
-                        <div className="space-y-4">
+                        <div className="space-y-4 flex-1">
                             <div className="font-semibold">
                                 <div>{t('fee-structure:exchange_trading_fee')}</div>
                             </div>
@@ -570,7 +571,7 @@ const TradingFee = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10 flex-1">
                             <div className="font-semibold">
                                 <div>{language === LANGUAGE_TAG.VI && 'Phí '}USDT Futures</div>
                             </div>
@@ -604,7 +605,7 @@ const TradingFee = () => {
                             </div>
                         </div>
 
-                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10">
+                        <div className="space-y-4 pt-10 md:pt-0 md:pl-10 flex-1">
                             <div className="font-semibold">
                                 <div>{language === LANGUAGE_TAG.VI && 'Phí '}VNDC Futures</div>
                             </div>
