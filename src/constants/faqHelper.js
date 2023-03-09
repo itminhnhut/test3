@@ -56,9 +56,9 @@ export const SupportCategories = {
                     },
                     {
                         id: 'referral_freshman',
-                        title: 'Chương trình Giới thiệu người dùng mới',
-                        slug: 'faq-vi-chuong-trinh-gioi-thieu-nguoi-dung-moi',
-                        displaySlug: 'chuong-trinh-gioi-thieu-nguoi-dung-moi',
+                        title: 'Giới thiệu người dùng mới',
+                        slug: 'faq-vi-gioi-thieu-nguoi-dung-moi',
+                        displaySlug: 'gioi-thieu-nguoi-dung-moi',
                     },
                     {
                         id: 'rw_center',
@@ -251,8 +251,8 @@ export const SupportCategories = {
                     {
                         id: 'referral_freshman',
                         title: 'Referral Program',
-                        slug: 'faq-en-introducing-new-users',
-                        displaySlug: 'introducing-new-users',
+                        slug: 'faq-en-referral-program',
+                        displaySlug: 'referral-program',
                     },
                     {
                         id: 'rw_center',
