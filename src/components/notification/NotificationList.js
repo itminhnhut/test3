@@ -108,10 +108,10 @@ const NotificationList = ({ btnClass }) => {
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
+                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5">
                                     {notification.title}
                                 </div>
-                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 line-clamp-2">{notification.content}</div>
+                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 ">{notification.content}</div>
                                 <div
                                     className={`text-xs ${
                                         notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
