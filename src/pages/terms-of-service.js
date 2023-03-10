@@ -55,15 +55,15 @@ const Terms = () => {
 
     const Content = () => {
         return (
-            <div
-                className={`max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-txtPrimary bg-white dark:bg-dark dark:text-txtPrimary-dark font-SF-Pro txtPri-2 text-left ${
-                    width < WIDTH_MD ? 'pb-20' : 'px-24 pb-[120px]'
-                }`}
-            >
-                <div className={`px-4 w-full txtPri-4 pb-8 sm:pb-12 bg-white dark:bg-dark ${width < WIDTH_MD ? 'sticky top-0 pt-6' : 'pt-20'}`}>
-                    {t('common:terms_and_privacy')}
-                </div>
-                <div className="px-4 ">
+            <div className="px-4 bg-white dark:bg-dark">
+                <div
+                    className={`max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-txtPrimary dark:text-txtPrimary-dark font-SF-Pro txtPri-2 text-left ${
+                        width < WIDTH_MD ? 'pb-20' : 'pb-[120px]'
+                    }`}
+                >
+                    <div className={`w-full txtPri-4 pb-8 sm:pb-12 bg-white dark:bg-dark ${width < WIDTH_MD ? 'sticky top-0 pt-6' : 'pt-20'}`}>
+                        {t('common:terms_and_privacy')}
+                    </div>
                     {language === 'en' && (
                         <div className="text-left">
                             <p className="text-right pb-8">

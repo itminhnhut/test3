@@ -174,7 +174,7 @@ const PartnersWallet = ({ estBtc, estUsd, usdRate, marketWatch, isSmallScreen, i
                 title: '',
                 align: 'left',
                 width: 137,
-                fixed: width >= 992 ? 'right' : 'none',
+                fixed: 'right',
                 render: (v, item) => {
                     return renderOperationLink(item?.assetCode, t, dispatch);
                 }
