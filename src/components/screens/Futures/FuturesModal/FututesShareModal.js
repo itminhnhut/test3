@@ -41,7 +41,6 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
             const option = {
                 height: content.current.offsetHeight * scale,
                 width: content.current.offsetWidth * scale,
-                cacheBust: true,
                 style: {
                     transform: 'scale(' + scale + ')',
                     transformOrigin: 'top left',
@@ -67,15 +66,15 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
                     <span>#{id}</span>
                     <span>{formatTime(order?.opened_at, 'HH:mm:ss dd/MM/yyyy')}</span>
                 </div>
-                <div className="space-x-2 text-sm font-semibold mt-8 mb-2">
+                <div className="space-x-2 text-sm font-semibold mt-8 mb-1">
                     <TypeTable type="side" data={order} />
                     <span className="text-txtSecondary-dark">•</span>
                     <span className="text-white">{leverage}x</span>
                     <span className="text-txtSecondary-dark">•</span>
                     <span className="text-white">{order?.symbol}</span>
                 </div>
-                <div className={`${negative ? 'text-red' : 'text-teal'} text-[2.25rem] font-semibold flex items-center space-x-1`}>
-                    <ChevronDown size={30} color={negative ? colors.red2 : colors.teal} className={!negative ? '!rotate-0' : ''} />
+                <div className={`${negative ? 'text-red' : 'text-teal'} text-[2.25rem] leading-[3rem] font-semibold flex items-center space-x-1 -mr-2`}>
+                    <ChevronDown size={30} color={negative ? colors.red2 : colors.teal} className={`${!negative ? '!rotate-0' : ''} scale-[2]`} />
                     <span>{String(percent).substr(1, String(percent).length)}</span>
                 </div>
                 <div className="w-1/2 space-y-1 mt-6">
@@ -89,7 +88,8 @@ const FututesShareModal = ({ isVisible, onClose, order, decimals }) => {
                     </Row>
                 </div>
                 <div id="section_bottom" className="absolute bottom-0 left-0 py-3 w-full flex items-center justify-between px-4">
-                    <img className="max-h-6" src={getS3Url('/images/logo/nami-logo-v2.png')} />
+                    {/* <img className="max-h-6" src={'https://nami.exchange/images/nami-logo-v3.png'} /> */}
+                    <div className="bg-cover w-[75px] h-6 bg-no-repeat" style={{ backgroundImage: 'url(https://nami.exchange/images/nami-logo-v3.png)' }} />
                     <div className="flex items-center space-x-6">
                         <div className="flex flex-col text-white">
                             <span className="text-xs">{t('futures:share:ref_id')}</span>
@@ -119,13 +119,13 @@ const Item = styled.div.attrs({
 const Background = styled.div.attrs({
     className: 'min-h-[380px] bg-dark mb-10 rounded-xl relative p-6 overflow-hidden'
 })`
-    background-image: ${({ negative }) => `url(${getS3Url(`/images/screen/futures/bg_share_${negative ? 'down' : 'up'}.png`)})`};
+    background-image: ${({ negative }) => `url(${`https://nami.exchange/images/bg_share_${negative ? 'down' : 'up'}.png`})`};
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 
     #section_bottom {
-        background-image: ${({}) => `url(${getS3Url(`/images/screen/futures/bg_share_bottom.png`)})`};
+        background-image: ${({}) => `url(${`https://nami.exchange/images/bg_share_bottom.png`})`};
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
