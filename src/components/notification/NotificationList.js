@@ -16,15 +16,13 @@ import classNames from 'classnames';
 const NOTI_READ = NotificationStatus.DELETED;
 
 const IconNoti = {
-    0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')}  width={32} height={32} />, // NOTE: ALL
+    0: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: ALL
     1: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: INDIVIDUAL
     9: <Image src={getS3Url('/images/screen/noti/ic_noti_exchange.png')} width={32} height={32} />, // NOTE: TRANSACTIONS
     14: <Image src={getS3Url('/images/screen/noti/ic_noti_events.png')} width={32} height={32} />, // NOTE: EVENTS
     16: <Image src={getS3Url('/images/screen/noti/ic_noti_system.png')} width={32} height={32} />, // NOTE: SYSTEM
     17: <Image src={getS3Url('/images/screen/noti/ic_noti_referral.png')} width={32} height={32} /> // NOTE: COMMISSION
 };
-
-const CONTENT_SLICE_LENGTH = 50;
 
 const NotificationList = ({ btnClass }) => {
     const { t, i18n } = useTranslation(['navbar']);
@@ -43,7 +41,6 @@ const NotificationList = ({ btnClass }) => {
     // }, 60000);
 
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
-    console.log('notificationsMix:', notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
     const unreadCount = useSelector((state) => state.notification.unreadCount);
 
@@ -110,10 +107,8 @@ const NotificationList = ({ btnClass }) => {
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">{notification.title}</div>
-
-                                <div className={classNames('mb-2 text-sm text-txtPrimary dark:text-txtPrimary-dark  break-words')}>{notification.content}</div>
-
+                                <div className="text-sm sm:text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">{notification.title}</div>
+                                <div className="text-xs sm:text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
                                     className={`text-xs ${
                                         notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
@@ -124,7 +119,7 @@ const NotificationList = ({ btnClass }) => {
                             </div>
                             <div
                                 className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
-                                    hidden: notification?.status === NOTI_READ
+                                    'pointer-events-none invisible': notification?.status === NOTI_READ
                                 })}
                             />
                         </div>
@@ -133,7 +128,7 @@ const NotificationList = ({ btnClass }) => {
             );
         }
         if (!content) {
-            content = <div className="w-full  h-full text-center py-4">{t('navbar:no_noti')}</div>;
+            content = <div className="w-full h-full text-center py-4">{t('navbar:no_noti')}</div>;
         }
     }
     return (
@@ -166,12 +161,12 @@ const NotificationList = ({ btnClass }) => {
                 <div
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
-                        'absolute z-10 transform w-screen max-w-[358px] sm:max-w-[448px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
+                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
                     }
                 >
                     <div className="py-6">
                         <div className="flex items-center px-6 justify-between mb-8">
-                            <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
+                            <div className="text-base sm:text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
                             <div
                                 onClick={handleMarkAllRead}
@@ -189,7 +184,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[400px] sm:max-h-[488px] min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[488px]   md:min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">
