@@ -21,7 +21,7 @@ export const FilterWrapper = ({ children, label, className }) => (
     </div>
 );
 
-const TransactionFilter = ({ filter, setFilter, categoryConfig, language }) => {
+const TransactionFilter = ({ filter, setFilter, resetFilter, categoryConfig, language }) => {
     return (
         <div className="flex flex-wrap -m-3 items-end w-full">
             <div className="w-1/2 p-3 lg:w-1/4">
@@ -41,7 +41,7 @@ const TransactionFilter = ({ filter, setFilter, categoryConfig, language }) => {
             <div className="w-1/2 p-3 lg:w-1/4">
                 <ButtonV2
                     disabled={!filter.category && !filter.asset && isNull(filter.range.endDate)}
-                    onClick={() => setFilter(INITAL_FILTER)}
+                    onClick={resetFilter}
                     variants="secondary"
                     className={'!leading-5 !h-auto !w-[85px] disabled:cursor-default '}
                 >

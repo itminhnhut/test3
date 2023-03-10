@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
 import ModalHistory from './ModalHistory';
+import axios from 'axios';
 
 const LIMIT = 10
 const MILLISEC_ONE_DAY = 86400000
@@ -35,12 +36,16 @@ const TransactionHistory = ({ id }) => {
     const hasNext = useRef(false)
     const [detailId,setDetailId] = useState(null)
     const [filter, setFilter] = useState(INITAL_FILTER);
+    const [currentPage,setCurrentPage] =  useState(0);
     const [categoryConfig, setCategoryConfig] = useState([]);
 
 
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
+    const resetFilter = () => {
+        setFilter(INITAL_FILTER)
+        setCurrentPage(0);
+    }
 
-   
     useEffect(() => {
         FetchApi({
             url: API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY
@@ -251,13 +256,6 @@ const TransactionHistory = ({ id }) => {
 
     const columnsConfig = {
         [id]: ['_id', 'category', 'created_at', 'amount', 'status'],
-        // all: ['_id', 'category', 'created_at', 'amount', 'status'],
-        // [TRANSACTION_TYPES.DEPOSIT]: ['_id', 'asset', 'category'],
-        // [TRANSACTION_TYPES.FUTURES]: ['category', '_id'],
-        // [TRANSACTION_TYPES.CONVERT]: ['category', '_id', 'convert_pair', 'created_at', 'fromAsset', 'toAsset', 'convert_rate', 'status'],
-        // [TRANSACTION_TYPES.TRANSFER]: ['category', 'asset', 'created_at', 'amount', 'fromWallet', 'toWallet', 'status'],
-        // [TRANSACTION_TYPES.STAKING]: ['_id', 'asset', 'created_at', 'amount', 'wallet_type', 'original_amount', 'status'],
-        // [TRANSACTION_TYPES.COMMISSION]: ['_id', 'created_at', 'amount', 'fromWallet', 'commission_kind', 'commission_type', 'status'],
     }
 
     const filterdColumns = useMemo(() => {
@@ -265,9 +263,8 @@ const TransactionHistory = ({ id }) => {
     }, [columns, id, columnsConfig]);
 
     useEffect(() => {
-        setLoading(true)
-
-        const {range,asset,category}=filter
+        const source = axios.CancelToken.source();  
+        const { range, asset, category } = filter
         // custom type phai dat ben duoi [id] de overwrite lai
         // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
         const type = id?.length
@@ -281,7 +278,7 @@ const TransactionHistory = ({ id }) => {
 
 
 
-        const {startDate,endDate} = range;
+        const { startDate, endDate } = range;
         const from = startDate;
             
         // Plus 1 more day on endDate if endDate !== null
@@ -306,14 +303,16 @@ const TransactionHistory = ({ id }) => {
             to,
             isNegative,
             limit: LIMIT,
-            skip: filter?.page * LIMIT,
+            skip: currentPage * LIMIT,
             category: (id ==='all' && category?.category_id) || undefined,
-            currency : filter?.asset?.id ?? undefined
+            currency : asset?.id ?? undefined
         };
-
-        FetchApi({
+        setLoading(true)
+    
+            FetchApi({
             url,
-            params
+            params,
+            cancelToken:source.token
         }).then(({ data, statusCode, status }) => {
             if (statusCode === 200 || status === ApiStatus.SUCCESS) {
                 if (id === TRANSACTION_TYPES.TRANSFER) {
@@ -328,9 +327,17 @@ const TransactionHistory = ({ id }) => {
                 hasNext.current = data?.hasNext
                 setData(data?.result || data?.results)
             }
-        }).finally(() => setLoading(false));
+            setLoading(false)
+        }).catch((err) => {
+                console.log('err:', err)
+                setLoading(false)
+            })
 
-    }, [filter, id])
+return () => {
+    source.cancel()
+}
+      
+    }, [filter, id, currentPage])
 
     const renderWalletType = useCallback((wallet_id) => {
         const wallet = WalletTypes?.find(e => e?.id === wallet_id)
@@ -348,9 +355,10 @@ const TransactionHistory = ({ id }) => {
                         activeTabKey={id}
                         onChangeTab={(key) => {
                             const clickedTab = TransactionTabs.find((tab) => tab.key === key);
-                            if(clickedTab.key !== 'all' && filter.category) changeFilter({category:null});
-                            if (clickedTab) {                
+                            if(clickedTab.key !== 'all' && filter.category) changeFilter( {category:null} );
+                            if (clickedTab) {       
                                 router.push(clickedTab.href);
+                                setCurrentPage(0);         
                             }
                         }}
                         tabs={TransactionTabs.map((tab) => ({
@@ -360,7 +368,7 @@ const TransactionHistory = ({ id }) => {
                     />
                 </div>
                 <div className="mb-12">
-                    <TransactionFilter language={language} categoryConfig={categoryConfig} filter={filter} setFilter={changeFilter} />
+                    <TransactionFilter language={language} categoryConfig={categoryConfig} filter={filter} resetFilter={resetFilter} setFilter={changeFilter} />
                 </div>
                 <div>
                     <TableV2
@@ -378,9 +386,9 @@ const TransactionHistory = ({ id }) => {
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
                         pagingPrevNext={{
-                            page: filter?.page,
+                            page: currentPage,
                             hasNext: hasNext.current,
-                            onChangeNextPrev: (e) => changeFilter({ page: filter.page + e }),
+                            onChangeNextPrev: (e) => setCurrentPage(prevPage => prevPage  + e),
                             language
                         }}
                     />

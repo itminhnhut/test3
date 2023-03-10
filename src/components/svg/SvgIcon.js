@@ -680,6 +680,22 @@ const SettingIcon = ({ size = 24, color = '#8694B3', ...props }) => (
     </svg>
 );
 
+const ArrowCompareIcon = ({ color, size = 24, ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 32 32" fill="none">
+        <g clip-path="url(#kvn1hu363a)">
+            <path
+                d="M12.013 18.667H2.667v2.667h9.346v4L17.333 20l-5.32-5.333v4zm7.974-1.333v-4h9.346v-2.667h-9.346v-4L14.667 12l5.32 5.334z"
+                fill={color || '#47CC85'}
+            />
+        </g>
+        <defs>
+            <clipPath id="kvn1hu363a">
+                <path fill="#fff" d="M0 0h32v32H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -725,5 +741,6 @@ export {
     BxsInfoCircle,
     ShareIcon,
     FireIcon,
-    SettingIcon
+    SettingIcon,
+    ArrowCompareIcon
 };

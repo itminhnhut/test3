@@ -1,7 +1,6 @@
 import { PATHS } from 'constants/paths';
 
 export const INITAL_FILTER = {
-    page: 0,
     range: {
         startDate: null,
         endDate: null,
@@ -87,7 +86,8 @@ export const COLUMNS_TYPE = {
     FUTURES_ORDER: 'futures_order',
     NUMBER_OF_ASSETS: 'number_of_assets',
     WALLET_TYPE: 'wallet_type',
-    NAMI_SYSTEM: 'nami_system'
+    NAMI_SYSTEM: 'nami_system',
+    STAKING_SNAPSHOT: 'staking_snapshot'
 };
 
 export const modalDetailColumn = {
@@ -105,7 +105,8 @@ export const modalDetailColumn = {
     ],
     [TRANSACTION_TYPES.DEPOSITWITHDRAW]: [
         { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['createdAt', 'updatedAt'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['from.address'], localized: 'Từ', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true  },
         { keys: ['to.address'], localized: 'Đến', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['network'], localized: 'Mạng' },
         { keys: ['metadata.txhash'], localized: 'Tx Hash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
@@ -118,20 +119,34 @@ export const modalDetailColumn = {
         { keys: ['side', 'type'], localized: 'Loại', primaryTeal: true },
         { keys: ['request_id.place'], localized: 'ID Vị thế', primaryTeal: true }
     ],
+    [TRANSACTION_TYPES.EXCHANGE]: [
+        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['createdAt'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['symbol'], localized: 'Cặp giao dịch', type: COLUMNS_TYPE.SYMBOL },
+
+        { keys: ['price'], localized: 'Giá mở', type: COLUMNS_TYPE.FUTURES_ORDER },
+        { keys: ['side', 'type'], localized: 'Loại', primaryTeal: true }
+    ],
     [TRANSACTION_TYPES.TRANSFER]: [
         { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
         { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
         { keys: ['from_wallet'], localized: 'Từ', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['to_wallet'], localized: 'Sang', type: COLUMNS_TYPE.WALLET_TYPE }
     ],
-    [TRANSACTION_TYPES.FUTURESCOMMISSION]: [
+    [TRANSACTION_TYPES.REWARD]: [
         { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME }
+        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['nami_system'], localized: 'Từ', type: COLUMNS_TYPE.NAMI_SYSTEM },
+        { keys: ['reward'], localized: 'Số lượng tài sản', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.STAKING]: [
         { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
         { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['nami_sysmtem'], localized: 'Từ', type: COLUMNS_TYPE.NAMI_SYSTEM },
-        { keys: ['snapshotValue', 'snapshotAssetId'], localized: 'Giá trị tài sản ghi nhận tại thời điểm quét' }
+        { keys: ['nami_system'], localized: 'Từ', type: COLUMNS_TYPE.NAMI_SYSTEM },
+        { keys: ['snapshotValue', 'snapshotAssetId'], localized: 'Giá trị tài sản ghi nhận tại thời điểm quét', type: COLUMNS_TYPE.STAKING_SNAPSHOT }
+    ],
+    common: [
+        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME }
     ]
 };
