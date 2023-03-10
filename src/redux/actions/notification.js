@@ -27,8 +27,6 @@ export function getNotificationsUnreadCount() {
                 }
             });
             if (status === ApiStatus.SUCCESS) {
-                console.log('data?.num_of_unread:', data?.num_of_unread);
-
                 dispatch({ type: SET_NOTIFICATION_UNREAD_COUNT, payload: data?.num_of_unread || 0 });
             }
         } catch (error) {

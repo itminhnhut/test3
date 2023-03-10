@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { getNotifications, markAllAsRead, getNotificationsUnreadCount } from 'src/redux/actions/notification';
+import { getNotifications, markAllAsRead } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
@@ -120,7 +120,7 @@ const NotificationList = ({ btnClass }) => {
                             </div>
                             <div
                                 className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
-                                    'pointer-events-none invisible': notification?.status === NOTI_READ
+                                    'hidden': notification?.status === NOTI_READ
                                 })}
                             />
                         </div>
@@ -162,7 +162,7 @@ const NotificationList = ({ btnClass }) => {
                 <div
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
-                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
+                        'absolute z-10 transform w-screen max-w-[358px] sm:max-w-[442px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
                     }
                 >
                     <div className="py-6">
