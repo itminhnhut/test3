@@ -106,7 +106,7 @@ const NotificationList = ({ btnClass }) => {
                             key={notification?._id || notification?.created_at}
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
-                            <div className="min-w-[48px] min-h-[48px] mr-3 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
+                            <div className="min-w-[48px] min-h-[48px] mr-4 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
