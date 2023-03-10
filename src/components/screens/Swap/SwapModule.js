@@ -302,14 +302,11 @@ const SwapModule = ({ width, pair }) => {
     // Render Handler
     const handleDepositIconBtn = useCallback(() => {
         if (!auth) {
-            router.push(getLoginUrl('sso', 'login'));
+            // router.push(getLoginUrl('sso', 'login'));
         } else {
-            // if (!state.fromAsset) return null;
-            // router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
-            // router.push(`/wallet/exchange/deposit?type=crypto&asset=${state.fromAsset}`);
             router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
         }
-    }, [state.fromAsset]);
+    }, [state.fromAsset, auth]);
 
     const renderFromInput = useCallback(() => {
         return (
