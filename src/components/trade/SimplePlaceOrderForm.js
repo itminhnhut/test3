@@ -22,7 +22,7 @@ import { roundToDown } from 'round-to';
 
 let initPrice = '';
 
-const rate = 1.001;
+const fee = 1.001;
 
 const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const { base, quote } = symbol;
@@ -179,8 +179,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         try {
             const _quantity = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyQuantity : +sellQuantity;
             const _quoteOrderQty = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyQuoteQty : +sellQuoteQty;
-            const _price = _orderSide === ExchangeOrderEnum.Side.BUY ? +buyPrice : +sellPrice;
-
+            const _price = getPrice(_orderSide, _orderSide === ExchangeOrderEnum.Side.BUY ? +buyPrice : +sellPrice);
+            const _percentage = _orderSide === ExchangeOrderEnum.Side.BUY ? buyPercentage : sellPercentage;
             const params = {
                 symbol: `${base}${quote}`,
                 side: _orderSide,
@@ -188,7 +188,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 quantity: _quantity,
                 quoteOrderQty: _quoteOrderQty,
                 price: _price,
-                useQuoteQty: isUseQuoteQuantity
+                useQuoteQty: orderType === ExchangeOrderEnum.Type.MARKET && +_percentage === 100
             };
             const res = await fetchAPI({
                 url: '/api/v3/spot/order',
@@ -248,6 +248,11 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             }
         } catch (e) {
             console.log('createOrder web: ', e);
+            alert.current = {
+                type: 'error',
+                title: t('common:failure'),
+                message: e?.message
+            };
         } finally {
             setShowAlert(true);
             setPlacing(false);
@@ -289,21 +294,21 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     }, [quoteAssetId, balanceSpot, baseAssetId, decimals]);
 
     useEffect(() => {
-        const price = symbolTicker?.p;
-        const quoteQty = floor(+sellQuantity * price * rate, decimals.symbol);
+        const price = getPrice(ExchangeOrderEnum.Side.SELL, symbolTicker?.p);
+        const quoteQty = floor(+sellQuantity * price * fee, decimals.symbol);
         const per = getPercent(sellQuantity, balance.token);
         setSellPrice(price);
         setSellPercentage(per);
-        setSellQuoteQty(quoteQty);
+        setSellQuoteQty(formatValue(quoteQty));
     }, [orderType]);
 
     useEffect(() => {
-        const price = symbolTicker?.p;
-        const qty = roundToDown(buyQuoteQty / (price * rate), decimals.qty);
-        const per = getPercent(qty, balance.stable);
+        const price = getPrice(ExchangeOrderEnum.Side.BUY, symbolTicker?.p);
+        const qty = roundToDown(buyQuoteQty / (price * fee), decimals.qty);
+        const per = getPercent(buyQuoteQty, balance.stable);
         setBuyPrice(price);
         setBuyPercentage(per);
-        setBuyQuantity(qty);
+        setBuyQuantity(formatValue(qty));
     }, [orderType]);
 
     const _renderOrderType = useMemo(() => {
@@ -359,8 +364,8 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             };
         }
         const validate_limit = {
-            min: Math.max(+quantityFilter?.minQty ?? 0, +(+(minNotionalFilter?.minNotional ?? 0) / price).toFixed(decimals.qty)),
-            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price : 1)).toFixed(decimals.qty))
+            min: Math.max(+quantityFilter?.minQty ?? 0, +(+(minNotionalFilter?.minNotional ?? 0 * (isBuy ? fee : 1)) / price).toFixed(decimals.qty)),
+            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price * fee : 1)).toFixed(decimals.qty))
         };
 
         const validate_market = {
@@ -451,7 +456,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     };
 
     const formatValue = (value) => {
-        return value || '';
+        return !value || !isFinite(value) ? '' : value;
     };
 
     const onHandleChange = (key, value, options) => {
@@ -466,12 +471,12 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
         switch (key) {
             case 'price':
                 if (isBuy) {
-                    qty = roundToDown(buyQuoteQty / (price * rate), decimals.qty);
-                    setBuyPrice(value);
+                    qty = roundToDown(buyQuoteQty / (price * fee), decimals.qty);
+                    setBuyPrice(formatValue(value));
                     setBuyQuantity(formatValue(qty));
                 } else {
-                    quoteQty = floor(sellQuantity * (price * rate), decimals.symbol);
-                    setSellPrice(value);
+                    quoteQty = floor(sellQuantity * (price * fee), decimals.symbol);
+                    setSellPrice(formatValue(value));
                     setSellQuoteQty(formatValue(quoteQty));
                 }
                 break;
@@ -479,13 +484,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 isChangeSlider.current = true;
                 if (isBuy) {
                     quoteQty = floor((_balance * value) / 100, decimals.symbol);
-                    qty = roundToDown(quoteQty / (price * rate), decimals.qty);
+                    qty = roundToDown(quoteQty / (price * fee), decimals.qty);
                     setBuyQuoteQty(formatValue(quoteQty));
                     setBuyQuantity(formatValue(qty));
                     setBuyPercentage(value);
                 } else {
                     qty = roundToDown((_balance * value) / 100, decimals.qty);
-                    quoteQty = floor(qty * (price * rate), decimals.symbol);
+                    quoteQty = floor(qty * (price * fee), decimals.symbol);
                     setSellPercentage(value);
                     setSellQuantity(formatValue(qty));
                     setSellQuoteQty(formatValue(quoteQty));
@@ -496,7 +501,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     isChangeSlider.current = false;
                     return;
                 }
-                quoteQty = floor(value * (price * rate), decimals.symbol);
+                quoteQty = floor(value * (price * fee), decimals.symbol);
                 per = getPercent(isBuy ? quoteQty : value, _balance);
                 if (isBuy) {
                     setBuyQuantity(formatValue(value));
@@ -513,7 +518,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                     isChangeSlider.current = false;
                     return;
                 }
-                qty = floor(value / (price * rate), decimals.qty);
+                qty = floor(value / (price * fee), decimals.qty);
                 per = getPercent(isBuy ? value : qty, _balance);
                 if (isBuy) {
                     setBuyQuantity(formatValue(qty));
