@@ -135,7 +135,9 @@
         "google_otp_wrong": "Wrong Google Authentication code",
         "verifying": "Verifying",
         "input_otp_suggest": "Please input OTP",
-        "both_input_otp_suggest": "Please input 2 OTP"
+        "both_input_otp_suggest": "Please input 2 OTP",
+        "title_success": "Progressing",
+        "desc_success": "Your request to withdraw has been received, please wait"
     },
     "withdraw_success_msg": "Your order has been recorded,<br/>please wait for a moment",
     "expected_arrival": "Expected arrival",
@@ -193,5 +195,7 @@
         "transfer_from_to": "From - to",
         "unsupported_asset": "The asset currently does not support transferring",
         "btn_confirm_transfer": "Confirm Transfer"
-    }
+    },
+    "do_not_receive_email": "Didn't receive email code?",
+    "resend": "Resend code"
 }
