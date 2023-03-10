@@ -3,7 +3,6 @@ import _ from 'lodash';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import debounce from 'lodash/debounce';
 import { getNotifications, markAllAsRead, getNotificationsUnreadCount } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
@@ -107,7 +106,9 @@ const NotificationList = ({ btnClass }) => {
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-sm sm:text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">{notification.title}</div>
+                                <div className="text-sm sm:text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">
+                                    {notification.title}
+                                </div>
                                 <div className="text-xs sm:text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
                                     className={`text-xs ${
@@ -184,7 +185,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[488px]   md:min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[400px] sm:max-h-[488px]   min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">
