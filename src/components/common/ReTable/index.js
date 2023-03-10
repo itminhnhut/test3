@@ -476,6 +476,13 @@ const ReTableWrapperV2 = styled.div`
         box-shadow: none !important;
     }
 
+    // Fix border red action in Safari
+    .rc-table-cell-fix-right-first,
+    .rc-table-cell-fix-right-last {
+        // box-shadow: -1px 0 0 transparent !important;
+        box-shadow: none !important;
+    }
+
     table {
         width: 100% !important;
         ${({ tableStyle }) => (tableStyle ? { ...tableStyle } : '')};
@@ -499,7 +506,7 @@ const ReTableWrapperV2 = styled.div`
                 }
             }
             .rc-table-cell-fix-right:last-child:not(.rc-table-cell-fix-sticky) {
-                z-index: 30;
+                z-index: 10;
                 background: ${({ isDark }) => (isDark ? colors.dark.dark : colors.white)};
             }
         }
@@ -548,7 +555,7 @@ const ReTableWrapperV2 = styled.div`
             transition: all .2s ease;
 
             :hover {
-                box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
+                // box-shadow: 0 7px 23px rgba(0, 0, 0, 0.05);
             }
         }
     }

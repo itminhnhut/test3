@@ -30,7 +30,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
 
     const startDragging = (e) => {
         if (!isScroll) return;
-        TabRef.current.classList.add('cursor-grabbing');
+        TabRef?.current?.classList.add('cursor-grabbing');
         mouseDown.current = true;
         startX.current = e.pageX - TabRef.current.offsetLeft;
         scrollLeft.current = TabRef.current.scrollLeft;
@@ -41,7 +41,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     };
 
     const stopDragging = (event) => {
-        TabRef.current.classList.remove('cursor-grabbing');
+        TabRef?.current?.classList.remove('cursor-grabbing');
         mouseDown.current = false;
     };
 
@@ -91,7 +91,7 @@ const Tabs = forwardRef(({ children, tab, borderWidth = 2, className = '', isScr
     useEffect(() => {
         if (TabRef.current) {
             getOffset();
-            TabRef.current.querySelectorAll('.tab-item').forEach((el) => {
+            TabRef?.current?.querySelectorAll('.tab-item').forEach((el) => {
                 if (el) {
                     el.classList[el.getAttributeNode('value').value === tab ? 'add' : 'remove'](
                         'tab-active',
