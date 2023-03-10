@@ -483,7 +483,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
         };
         const validate_market = {
             min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / symbolTicker?.p).toFixed(decimals.qty), quantityMarketFilter?.minQty),
-            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1)), quantityMarketFilter?.maxQty), decimals.qty)
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1)), quantityMarketFilter?.maxQty ?? 0), decimals.qty)
         };
         return isMarket ? validate_market : validate_limit;
     };

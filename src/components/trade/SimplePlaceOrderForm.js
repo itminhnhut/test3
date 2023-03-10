@@ -359,13 +359,17 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             };
         }
         const validate_limit = {
-            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty)),
-            max: Math.min(+quantityFilter?.maxQty, +(_balance / (isBuy ? price : 1)).toFixed(decimals.qty))
+            min: Math.max(+quantityFilter?.minQty ?? 0, +(+(minNotionalFilter?.minNotional ?? 0) / price).toFixed(decimals.qty)),
+            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price : 1)).toFixed(decimals.qty))
         };
 
         const validate_market = {
-            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty), quantityMarketFilter?.minQty),
-            max: Math.min(+quantityFilter?.maxQty, +(_balance / (isBuy ? price : 1), quantityMarketFilter?.maxQty).toFixed(decimals.qty))
+            min: Math.max(
+                +quantityFilter?.minQty ?? 0,
+                +(+(minNotionalFilter?.minNotional ?? 0) / price).toFixed(decimals.qty),
+                quantityMarketFilter?.minQty ?? 0
+            ),
+            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price : 1), quantityMarketFilter?.maxQty ?? 0).toFixed(decimals.qty))
         };
         return isMarket ? validate_market : validate_limit;
     };
