@@ -107,7 +107,6 @@ const Index = () => {
                 if (config?.tags?.length && config.tags.includes('NEW_LISTING')) {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
-                    console.log(p.s);
                 }
 
                 if (p?.vq > 1000) return p;
