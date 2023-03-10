@@ -372,6 +372,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
     };
 
     useEffect(() => {
+        setPrice(symbolTicker?.p);
         setQuantity('');
         setQuoteQty('');
         setPercentage(0);
@@ -713,7 +714,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
                         <ButtonV2
                             onClick={confirmModal}
                             disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                            className={isBuy ? 'bg-teal' : 'bg-red'}
+                            className={isBuy ? 'bg-teal' : '!bg-red'}
                         >
                             {t(orderSide)} {base}
                         </ButtonV2>

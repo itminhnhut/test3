@@ -289,17 +289,19 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     }, [quoteAssetId, balanceSpot, baseAssetId, decimals]);
 
     useEffect(() => {
-        const price = getPrice(ExchangeOrderEnum.Side.SELL, sellPrice);
+        const price = symbolTicker?.p;
         const quoteQty = floor(+sellQuantity * price * rate, decimals.symbol);
         const per = getPercent(sellQuantity, balance.token);
+        setSellPrice(price);
         setSellPercentage(per);
         setSellQuoteQty(quoteQty);
     }, [orderType]);
 
     useEffect(() => {
-        const price = getPrice(ExchangeOrderEnum.Side.BUY, buyPrice);
+        const price = symbolTicker?.p;
         const qty = roundToDown(buyQuoteQty / (price * rate), decimals.qty);
         const per = getPercent(qty, balance.stable);
+        setBuyPrice(price);
         setBuyPercentage(per);
         setBuyQuantity(qty);
     }, [orderType]);
@@ -639,7 +641,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
                 onClick={() => !disabled && confirmModal(_orderSide)}
                 disabled={disabled}
                 loading={placing && side.current === _orderSide}
-                className={_orderSide === ExchangeOrderEnum.Side.BUY ? 'bg-teal' : 'bg-red'}
+                className={_orderSide === ExchangeOrderEnum.Side.BUY ? 'bg-teal' : '!bg-red'}
             >
                 {t(_orderSide)} {base}
             </ButtonV2>
