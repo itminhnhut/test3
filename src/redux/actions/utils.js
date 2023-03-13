@@ -158,7 +158,7 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
-        const theme = localStorage?.getItem('theme') ?? 'light';
+        const theme = localStorage?.getItem('theme') ?? 'dark';
 
         let language = 'vi';
         if (!currentUrl.includes('/vi')) language = 'en';

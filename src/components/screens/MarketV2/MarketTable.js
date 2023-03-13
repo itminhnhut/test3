@@ -222,7 +222,7 @@ const MarketTable = ({
                                     />
                                 </div>
                             </div>
-                            <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row font-normal text-xs sm:gap-2">
+                            <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row font-normal text-xs sm:gap-2 h-max">
                                 <div className="w-full">
                                     <div className="w-fit font-medium text-base">
                                         {render24hChange(symbol, false, '!font-semibold !text-base')}
@@ -244,7 +244,7 @@ const MarketTable = ({
                 })}
             </div>
         </div>;
-    }, [restProps?.suggestedSymbols, restProps?.favType, restProps?.futuresConfigs]);
+    }, [restProps?.suggestedSymbols, restProps?.favType, restProps?.futuresConfigs, data]);
 
     const renderTable = useCallback(() => {
         let modifyColumns = [];
