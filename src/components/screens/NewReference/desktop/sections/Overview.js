@@ -193,7 +193,10 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center mb-10">
                                     <div className="flex relative items-center">
-                                        <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" />
+                                        <img
+                                            src={user?.avatar || '/images/default_avatar.png'}
+                                            className="max-w-[80px] max-h-[80px] min-w-[80px] min-h-[80px] rounded-full object-fit"
+                                        />
                                         <div className="absolute bottom-[-1px] right-[-1px]">{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                                     </div>
                                     <div className="h-full flex flex-col">
