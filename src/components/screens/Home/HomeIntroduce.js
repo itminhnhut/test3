@@ -1,4 +1,4 @@
-import { memo, useEffect, useState,useCallback } from 'react';
+import { memo, useEffect, useState, useCallback } from 'react';
 import { formatNumber, getS3Url } from 'redux/actions/utils';
 import { PulseLoader } from 'react-spinners';
 import { useAsync, useWindowSize } from 'react-use';
@@ -130,9 +130,7 @@ const HomeIntroduce = ({ trendData, t }) => {
                     {/* <div className="homepage-introduce___description">
                 <Trans>{t('home:introduce.description')}</Trans>
             </div> */}
-                    <div className="flex">
-                        {statisticFn()}
-                    </div>
+                    <div className="flex">{statisticFn()}</div>
 
                     <div className="homepage-introduce___download">
                         <GradientButton
