@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -7,23 +7,23 @@ import { find, isNumber } from 'lodash';
 import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
 import { PATHS } from 'constants/paths';
-
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import OtpInput from 'react-otp-input';
 import ModalV2 from 'components/common/V2/ModalV2';
-
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import useWindowFocus from 'hooks/useWindowFocus';
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { AddressInput, AmountInput, ErrorMessage, Information, MemoInput, NetworkInput } from 'components/screens/Wallet/Exchange/Withdraw';
 import WithdrawHistory from 'components/screens/Wallet/Exchange/Withdraw/WithdrawHistory';
 import classNames from 'classnames';
-import WarningTriangle from 'components/svg/WarningTriangle';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { roundToDown } from 'round-to';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import toast from 'utils/toast';
+import { CopyIcon } from 'components/svg/SvgIcon';
+import Countdown from 'react-countdown-now';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -59,183 +59,244 @@ const PHASE_CONFIRM = {
     RESULT: 3
 };
 
-const ModalConfirm = ({
-    otpModes = [],
-    selectedAsset,
-    selectedNetwork,
-    open,
-    address,
-    memo,
-    amount,
-    assetDigit,
-    assetCode,
-    onConfirmWithDraw,
-    currentTheme,
-    closeModal
-}) => {
+const ModalConfirm = ({ otpModes = [], selectedAsset, selectedNetwork, open, address, memo, amount, assetDigit, assetCode, currentTheme, closeModal }) => {
     const [phase, setPhase] = useState(PHASE_CONFIRM.INFO);
     const [loading, setLoading] = useState(false);
-    const [otp, setOtp] = useState({
-        email: '',
-        tfa: ''
+    const [showAlert, setShowAlert] = useState(false);
+    const remaining_time = useRef({
+        timer: Date.now(),
+        value: 0
     });
-    const [withdrawResult, setWithdrawResult] = useState(null);
+    const [expired, setExpired] = useState(false);
+    const [otp, setOtp] = useState({
+        email: null,
+        tfa: null
+    });
 
     const onClose = () => {
         closeModal();
         setOtp({
-            email: '',
-            otp: ''
+            email: null,
+            tfa: null
         });
-        setWithdrawResult(null);
+        setExpired(false);
         setPhase(PHASE_CONFIRM.INFO);
     };
 
     const { t } = useTranslation();
 
-    const postData = async () => {
-        setLoading(true);
+    const postData = async (otp) => {
         const result = await withdrawHelper(selectedAsset?.assetId, amount, selectedNetwork?.network, address, memo, otp);
-        setLoading(false);
         return result;
     };
 
-    const onConfirmInfo = () =>
-        postData().then(() => {
+    const onConfirmInfo = async () => {
+        if (remaining_time.current.timer > Date.now()) {
             setPhase(PHASE_CONFIRM.OTP);
-        });
+        } else {
+            await postData().then((rs) => {
+                if (rs?.data?.remaining_time) {
+                    remaining_time.current = {
+                        timer: Date.now() + rs?.data?.remaining_time,
+                        value: rs?.data?.remaining_time ?? 0
+                    };
+                    setPhase(PHASE_CONFIRM.OTP);
+                } else {
+                    toast({
+                        text: errorMessageMapper(t),
+                        type: 'error'
+                    });
+                }
+            });
+        }
+        setExpired(false);
+    };
 
     const onConfirmOTP = async () => {
-        const result = await postData();
-        if (result.status === 'ok') {
-            setWithdrawResult(result.data);
-            if (!errorShowOnlyMessage.includes(result.data)) {
-                setPhase(PHASE_CONFIRM.RESULT);
+        try {
+            setLoading(true);
+            const { data, status } = await postData(otp);
+            if (status === 'ok') {
+                setShowAlert(true);
+                if (onClose) onClose();
+            } else {
+                toast({
+                    text: errorMessageMapper(t, data),
+                    type: 'error'
+                });
             }
+        } catch (error) {
+        } finally {
+            setLoading(false);
         }
     };
 
+    const onPaste = async () => {
+        const pasteCode = await navigator.clipboard.readText();
+        setOtp({
+            ...otp,
+            email: pasteCode
+        });
+    };
+
     return (
-        <ModalV2 isVisible={open} className="!max-w-[488px]" onBackdropCb={onClose}>
-            {
-                // CONFIRM PHASE
-                phase === PHASE_CONFIRM.INFO && (
-                    <>
-                        <div className="text-center mb-4">
-                            <p className="text-xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
-                        </div>
-                        <div className="space-y-2">
-                            {[
-                                {
-                                    title: t('common:withdraw'),
-                                    value: assetCode
-                                },
-                                {
-                                    title: t('wallet:receive_address'),
-                                    value: shortHashAddress(address, 8, 8)
-                                },
-                                {
-                                    title: 'MEMO',
-                                    value: shortHashAddress(memo, 8, 8)
-                                },
-                                {
-                                    title: t('common:amount'),
-                                    value: `${formatNumber(amount, assetDigit)} ${assetCode}`
-                                },
-                                {
-                                    title: t('common:fee'),
-                                    value: `${formatNumber(selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
-                                },
-                                {
-                                    title: t('wallet:will_receive'),
-                                    value: `${formatNumber(amount - selectedNetwork?.withdraFee, assetDigit)} ${assetCode}`
-                                },
-                                {
-                                    title: t('wallet:network'),
-                                    value: selectedNetwork?.name
-                                }
-                            ].map((item, index) => {
-                                return (
-                                    <div key={index}>
-                                        <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
-                                        <span className="float-right font-semibold">{item.value || '--'}</span>
-                                    </div>
-                                );
-                            })}
-
-                            {!memo && <div className="!mt-6 text-xs text-red">{t('wallet:notes.memo_wdl_tips')}</div>}
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 mt-6">
-                            <ButtonV2 variants="none" onClick={onClose}>
-                                {t('common:cancel')}
-                            </ButtonV2>
-                            <ButtonV2 loading={loading} onClick={onConfirmInfo}>
-                                {t('common:continue')}
-                            </ButtonV2>
-                        </div>
-                    </>
-                )
-            }
-
-            {
-                // OTP PHASE
-                phase === PHASE_CONFIRM.OTP && (
-                    <div className="space-y-6">
-                        <p className="text-xl font-semibold">Xác minh 2FA</p>
-                        <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
-                            <div className="font-medium">{t('common:email_authentication')}</div>
-                            <span className="text-txtSecondary dark:text-txtSecondary"> {t('wallet:withdraw_prompt.email_description')}</span>
-                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                <OtpInput
-                                    value={otp?.email}
-                                    onChange={(value) =>
-                                        setOtp({
-                                            ...otp,
-                                            email: value
-                                        })
+        <>
+            <AlertModalV2
+                isVisible={showAlert}
+                onClose={() => setShowAlert(false)}
+                type="success"
+                title={t('wallet:withdraw_prompt:title_success')}
+                message={t('wallet:withdraw_prompt:desc_success')}
+            />
+            <ModalV2 isVisible={open} className="!max-w-[488px]" onBackdropCb={onClose}>
+                {
+                    // CONFIRM PHASE
+                    phase === PHASE_CONFIRM.INFO && (
+                        <>
+                            <div className="text-center mb-4">
+                                <p className="text-xl font-semibold">{t('wallet:withdraw_confirmation')}</p>
+                            </div>
+                            <div className="space-y-2">
+                                {[
+                                    {
+                                        title: t('common:withdraw'),
+                                        value: assetCode
+                                    },
+                                    {
+                                        title: t('wallet:receive_address'),
+                                        value: shortHashAddress(address, 8, 8)
+                                    },
+                                    {
+                                        title: 'MEMO',
+                                        value: shortHashAddress(memo, 8, 8)
+                                    },
+                                    {
+                                        title: t('common:amount'),
+                                        value: `${formatNumber(amount, assetDigit)} ${assetCode}`
+                                    },
+                                    {
+                                        title: t('common:fee'),
+                                        value: `${formatNumber(selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                    },
+                                    {
+                                        title: t('wallet:will_receive'),
+                                        value: `${formatNumber(amount - selectedNetwork?.withdrawFee, assetDigit)} ${assetCode}`
+                                    },
+                                    {
+                                        title: t('wallet:network'),
+                                        value: selectedNetwork?.name
                                     }
-                                    numInputs={6}
-                                    placeholder="------"
-                                    isInputNum
-                                />
-                            </OtpWrapper>
+                                ].map((item, index) => {
+                                    return (
+                                        <div key={index}>
+                                            <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark">{item.title}</span>
+                                            <span className="float-right font-semibold">{item.value || '--'}</span>
+                                        </div>
+                                    );
+                                })}
+
+                                {!memo && <div className="!mt-6 text-xs text-red">{t('wallet:notes.memo_wdl_tips')}</div>}
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 mt-6">
+                                <ButtonV2 variants="secondary" onClick={onClose}>
+                                    {t('common:cancel')}
+                                </ButtonV2>
+                                <ButtonV2 loading={loading} onClick={onConfirmInfo}>
+                                    {t('common:continue')}
+                                </ButtonV2>
+                            </div>
+                        </>
+                    )
+                }
+
+                {
+                    // OTP PHASE
+                    phase === PHASE_CONFIRM.OTP && (
+                        <div className="space-y-6">
+                            {/* <p className="text-xl font-semibold">
+                                {t('common:verify')} {otpModes.includes('tfa') ? '2FA' : ''}
+                            </p> */}
+                            <div className={classNames('hidden', { '!block': otpModes.includes('email') })}>
+                                <div className="text-xl font-semibold mb-4">{t('common:email_authentication')}</div>
+                                <span className="text-txtSecondary dark:text-txtSecondary"> {t('wallet:withdraw_prompt.email_description')}</span>
+                                <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                    <OtpInput
+                                        value={otp?.email}
+                                        onChange={(value) =>
+                                            setOtp({
+                                                ...otp,
+                                                email: value
+                                            })
+                                        }
+                                        numInputs={6}
+                                        placeholder="------"
+                                        isInputNum
+                                    />
+                                </OtpWrapper>
+                            </div>
+                            <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
+                                <div className="text-xl font-semibold mb-4">{t('common:tfa_authentication')}</div>
+                                <div className="text-txtSecondary dark:text-txtSecondary">{t('wallet:withdraw_prompt.google_description')}</div>
+                                <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
+                                    <OtpInput
+                                        value={otp?.tfa}
+                                        onChange={(value) =>
+                                            setOtp({
+                                                ...otp,
+                                                tfa: value
+                                            })
+                                        }
+                                        numInputs={6}
+                                        placeholder="------"
+                                        isInputNum
+                                    />
+                                </OtpWrapper>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div className="space-x-2">
+                                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:do_not_receive_email')}</span>
+                                    {expired ? (
+                                        <span onClick={onConfirmInfo} className="text-teal font-semibold cursor-pointer">
+                                            {t('wallet:resend', { value: `${remaining_time.current.value / 1000}s` })}
+                                        </span>
+                                    ) : (
+                                        <Countdown
+                                            now={() => Date.now()}
+                                            date={remaining_time.current.timer}
+                                            renderer={({ minutes, seconds }) => {
+                                                return (
+                                                    <span className="font-semibold text-teal">
+                                                        {minutes}:{seconds}
+                                                    </span>
+                                                );
+                                            }}
+                                            onComplete={() => setExpired(true)}
+                                        />
+                                    )}
+                                </div>
+                                <div onClick={onPaste} className="flex items-center space-x-2 text-teal font-semibold cursor-pointer">
+                                    <CopyIcon size={16} color={colors.teal} />
+                                    <span>{t('common:paste')}</span>
+                                </div>
+                            </div>
+                            <ButtonV2 disabled={String(otp.email || otp.tfa).length < 6} className="!mt-10" onClick={onConfirmOTP} loading={loading}>
+                                {t('common:confirm')}
+                            </ButtonV2>
                         </div>
-                        <div className={classNames('hidden', { '!block': otpModes.includes('tfa') })}>
-                            <div className="font-medium">{t('common:tfa_authentication')}</div>
-                            <div className="text-txtSecondary dark:text-txtSecondary">{t('wallet:withdraw_prompt.google_description')}</div>
-                            <OtpWrapper isDark={currentTheme === THEME_MODE.DARK}>
-                                <OtpInput
-                                    value={otp?.tfa}
-                                    onChange={(value) =>
-                                        setOtp({
-                                            ...otp,
-                                            tfa: value
-                                        })
-                                    }
-                                    numInputs={6}
-                                    placeholder="------"
-                                    isInputNum
-                                />
-                            </OtpWrapper>
+                    )
+                }
+                {/* {
+                    // RESULT PHASE
+                    phase === PHASE_CONFIRM.RESULT && (
+                        <div className="flex flex-col items-center text-center">
+                            <WarningTriangle size={64} />
+                            <p className="text-2xl mt-8 mb-4 font-semibold">{t('wallet:withdraw_failed_title')}</p>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{errorMessageMapper(t, withdrawResult?.data)}</span>
                         </div>
-                        <ErrorMessage message={errorMessageMapper(t, withdrawResult?.data)} show={errorShowOnlyMessage.includes(withdrawResult?.data)} />
-                        <ButtonV2 className="!mt-10" onClick={onConfirmOTP} loading={loading}>
-                            {t('common:confirm')}
-                        </ButtonV2>
-                    </div>
-                )
-            }
-            {
-                // RESULT PHASE
-                phase === PHASE_CONFIRM.RESULT && (
-                    <div className="flex flex-col items-center text-center">
-                        <WarningTriangle size={64} />
-                        <p className="text-2xl mt-8 mb-4 font-semibold">{t('wallet:withdraw_failed_title')}</p>
-                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{errorMessageMapper(t, withdrawResult?.data)}</span>
-                    </div>
-                )
-            }
-        </ModalV2>
+                    )
+                } */}
+            </ModalV2>
+        </>
     );
 };
 
@@ -480,7 +541,7 @@ const ExchangeWithdraw = () => {
     );
 };
 
-const OtpWrapper = styled.div.attrs({ className: 'mt-4' })`
+const OtpWrapper = styled.div.attrs({ className: 'mt-6' })`
     > div {
         width: 100%;
         justify-content: space-between;
@@ -496,7 +557,10 @@ const OtpWrapper = styled.div.attrs({ className: 'mt-4' })`
             input {
                 font-weight: 600;
                 font-size: 14px;
-                color: ${colors.darkBlue};
+                color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+                ::placeholder {
+                    color: ${({ isDark }) => (isDark ? colors.gray[4] : colors.darkBlue)};
+                }
             }
 
             @media (min-width: 768px) {

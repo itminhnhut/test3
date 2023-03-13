@@ -149,18 +149,18 @@ const SupportAnnouncement = () => {
         setCategories(categories.faqCategories)
         setLastedArticles(lastedArticles)
 
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
+        // const themeLocal = localStorage.getItem("theme");
+        // if (themeLocal === "dark") {
+        //     setTheme(THEME_MODE.DARK);
+        // } else {
+        //     setTheme(THEME_MODE.LIGHT);
+        // }
         setLoading(false)
     }, [language])
 
     return (
         <MaldivesLayout>
-            <SearchSection t={t} width={width} image={`url('/images/screen/support/v2/background/bg_faq.png')`} />
+            <SearchSection t={t} width={width} image={`/images/screen/support/v2/background/bg_faq.png`} />
             <div style={
                 theme === THEME_MODE.LIGHT ? { boxShadow: '0px -4px 30px rgba(0, 0, 0, 0.08)' } : undefined}
                  className="px-4 py-5 sm:px-6 lg:px-[48px] lg:py-[50px] rounded-t-[20px]">

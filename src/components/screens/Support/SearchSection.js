@@ -5,7 +5,7 @@ import { BREAK_POINTS } from "constants/constants";
 import classNames from "classnames";
 import { getS3Url } from "redux/actions/utils";
 
-const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v2/background/bg_main.png')` }) => {
+const SearchSection = ({ t, width = 1024, image = `/images/screen/support/v2/background/bg_main.png` }) => {
     const isMobile = width < 640
     const renderInput = useCallback(() => {
         return <SupportSearchBar simpleMode={isMobile} />
@@ -14,9 +14,9 @@ const SearchSection = ({ t, width = 1024, image = `url('/images/screen/support/v
     return (
         <div className={classNames('flex justify-center w-full h-[158px] sm:h-[456px] bg-[#000]')}>
             <div
-                className={classNames('relative max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full px-4 lg:px-[112px] flex flex-col justify-center h-full')}
+                className={classNames('relative max-w-screen-v3 2xl:max-w-screen-xxl m-auto w-full px-4 flex flex-col justify-center h-full')}
                 style={{
-                    backgroundImage: getS3Url(image) ,
+                    backgroundImage: `url('${getS3Url(image)}')`,
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'

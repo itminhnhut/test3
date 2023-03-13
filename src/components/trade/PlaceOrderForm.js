@@ -5,7 +5,6 @@ import defaults from 'lodash/defaults';
 import find from 'lodash/find';
 import floor from 'lodash/floor';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMarketWatch } from 'redux/actions/market';
@@ -13,40 +12,24 @@ import InputSlider from 'src/components/trade/InputSlider';
 import * as Error from 'src/redux/actions/apiError';
 import { ApiStatus, ExchangeOrderEnum, PublicSocketEvent, SpotMarketPriceBias } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
-import { formatBalance, formatPrice, formatWallet, getDecimalScale, getFilter, getLoginUrl, getSymbolString, setTransferModal } from 'src/redux/actions/utils';
+import { formatPrice, formatWallet, getDecimalScale, getFilter, getLoginUrl, getSymbolString, setTransferModal, getUnit } from 'src/redux/actions/utils';
 import fetchAPI from 'utils/fetch-api';
 import ButtonClip from 'components/common/V2/ButtonV2/ButtonClip';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TradingInput from './TradingInput';
 import AddCircle from 'components/svg/AddCircle';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import Link from 'next/link';
 import { roundToDown } from 'round-to';
 import { formatNumber } from 'redux/actions/utils';
 import ErrorTriggersIcon from 'components/svg/ErrorTriggers';
 import { WalletType } from 'redux/actions/const';
+import { max, min } from 'lodash/math';
 
 let initPrice = '';
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ');
-}
-
-const useFocus = () => {
-    const htmlElRef = useRef(null);
-    const setFocus = () => {
-        return htmlElRef.current && htmlElRef.current.focus();
-    };
-    return [htmlElRef, setFocus];
-};
-
-const allSubTabs = [ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.Type.LIMIT];
-
-const PlaceOrderForm = ({ symbol }) => {
+const fee = 1.001;
+const PlaceOrderForm = ({ symbol, orderBook }) => {
     const dispatch = useDispatch();
-    const [priceRef, setPriceFocus] = useFocus();
-    const [quantityRef, setQuantityFocus] = useFocus();
-    const [quoteQtyRef, setQuoteQtyFocus] = useFocus();
     const { base, quote } = symbol;
     const { t } = useTranslation();
     const QuantityMode = [
@@ -62,22 +45,20 @@ const PlaceOrderForm = ({ symbol }) => {
     const user = useSelector((state) => state.auth.user) || null;
     const balanceSpot = useSelector((state) => state.wallet.SPOT);
     const selectedOrder = useSelector((state) => state.spot?.selectedOrder);
+    const unitConfig = useSelector((state) => getUnit(state, quote));
     const [open, setOpen] = useState(false);
     const [quantityMode, setQuantityMode] = useState(QuantityMode[0]);
     const [percentage, setPercentage] = useState(0);
     const [placing, setPlacing] = useState(false);
     const [orderSide, setOrderSide] = useState(ExchangeOrderEnum.Side.BUY);
-    const [orderType, setOrderType] = useState(ExchangeOrderEnum.Type.MARKET);
+    const [orderType, setOrderType] = useState(ExchangeOrderEnum.Type.LIMIT);
     const [quantity, setQuantity] = useState('');
     const [quoteQty, setQuoteQty] = useState('');
-    const [focus, setFocus] = useState();
     const [price, setPrice] = useState();
     const [symbolTicker, setSymbolTicker] = useState(null);
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
-    const quoteAsset = useSelector((state) => state.user.quoteAsset) || 'USDT';
-    const router = useRouter();
-    const [isUseQuoteQuantity, setIsUseQuoteQuantity] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
+    const isChangeSlider = useRef(false);
     const alert = useRef({
         type: '',
         title: '',
@@ -85,6 +66,19 @@ const PlaceOrderForm = ({ symbol }) => {
         notes: ''
     });
     const mount = useRef(false);
+
+    const [ticker, setTicker] = useState({ bid: 0, ask: 0 });
+
+    useEffect(() => {
+        if (orderBook) {
+            const asks = orderBook?.asks.map((e) => e[0]);
+            const bids = orderBook?.bids.map((e) => e[0]);
+            setTicker({
+                bid: max(bids),
+                ask: min(asks)
+            });
+        }
+    }, [orderBook]);
 
     useEffect(async () => {
         if (symbol) {
@@ -164,9 +158,6 @@ const PlaceOrderForm = ({ symbol }) => {
     const closeModal = () => {
         setOpen(false);
     };
-    const openModal = () => {
-        setOpen(true);
-    };
 
     const filterOrderInputApi = (input = {}) => {
         const success = null;
@@ -225,27 +216,12 @@ const PlaceOrderForm = ({ symbol }) => {
                 type: orderType,
                 quantity: +quantity,
                 quoteOrderQty: +quoteQty,
-                price: +price,
-                useQuoteQty: isUseQuoteQuantity
+                price: getPrice(orderSide, price),
+                useQuoteQty: orderType === ExchangeOrderEnum.Type.MARKET && +percentage === 100
             };
-            // console.log(orderType, quantityMode.id, ExchangeOrderEnum.Type.MARKET, ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY);
-
-            // if (orderType === ExchangeOrderEnum.Type.MARKET && quantityMode.id === ExchangeOrderEnum.QuantityMode.QUOTE_QUANTITY) {
-            //     params.useQuoteQty = true;
-            // }
             const filterResult = filterOrderInputApi(params);
             if (filterResult) {
                 const { code, message } = filterResult;
-                // showNotification(
-                //     {
-                //         message: `(${code}) ${t(`error:${message}`)}`,
-                //         title: 'Error',
-                //         type: 'failure'
-                //     },
-                //     2500,
-                //     'bottom',
-                //     'bottom-right'
-                // );
                 alert.current = {
                     type: 'error',
                     title: t('common:failed'),
@@ -318,19 +294,14 @@ const PlaceOrderForm = ({ symbol }) => {
                     message: content,
                     notes: `(${shortRequestId})`
                 };
-                // showNotification(
-                //     {
-                //         message: content,
-                //         title: t('common:failure'),
-                //         type: 'warning'
-                //     },
-                //     2500,
-                //     'bottom',
-                //     'bottom-right'
-                // );
             }
         } catch (e) {
             // console.log('createOrder web: ', e);
+            alert.current = {
+                type: 'error',
+                title: t('common:failed'),
+                message: e?.message
+            };
         } finally {
             setPlacing(false);
             setShowAlert(true);
@@ -348,10 +319,6 @@ const PlaceOrderForm = ({ symbol }) => {
         await createOrder();
     };
 
-    const getAvailableText = (assetId) => {
-        return formatBalance(balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value, 6);
-    };
-
     const getAvailable = (assetId) => {
         return balanceSpot?.[assetId]?.value - balanceSpot?.[assetId]?.locked_value;
     };
@@ -366,50 +333,86 @@ const PlaceOrderForm = ({ symbol }) => {
     const decimals = useMemo(() => {
         return {
             price: getDecimalScale(+priceFilter?.tickSize),
-            qty: getDecimalScale(+quantityFilter?.stepSize)
+            qty: getDecimalScale(+quantityFilter?.stepSize),
+            symbol: unitConfig?.assetDigit ?? 2
         };
-    }, [priceFilter, quantityFilter]);
+    }, [priceFilter, quantityFilter, unitConfig]);
 
     const balance = useMemo(() => {
         return getBalance(orderSide);
     }, [quoteAssetId, balanceSpot, baseAssetId, orderSide]);
 
-    useEffect(() => {
-        if (isFocus.current !== 'qty') return;
-        let _price = price;
-        if (isMarket) {
-            _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
-        }
-        const per = quantity ? ceil(((+quantity * (isBuy ? _price : 1)) / balance) * 100, 0) : 0;
-        const quoteQty = floor(+quantity * _price, 2);
-        setPercentage(quoteQty ? Math.min(per, 100) : 0);
-        setQuoteQty(quoteQty);
-    }, [quantity, decimals, notEnough]);
+    const getPrice = (side, price) => {
+        return orderType === ExchangeOrderEnum.Type.MARKET ? (side === ExchangeOrderEnum.Side.BUY ? ticker.ask : ticker.bid) : price;
+    };
 
-    const onHandleChange = (key, value, side) => {
-        const _isBuy = side === ExchangeOrderEnum.Side.BUY;
-        let _price = price;
-        if (isMarket) {
-            _price = +symbolTicker?.p * (1 + SpotMarketPriceBias.NORMAL);
-        }
-        let qty = 0;
+    const getPercent = (value, balance) => {
+        const per = value ? ((value / balance) * 100).toFixed(0) : 0;
+        return Math.min(per, 100);
+    };
+
+    useEffect(() => {
+        setPrice(getPrice(orderSide, symbolTicker?.p));
+        setQuantity('');
+        setQuoteQty('');
+        setPercentage(0);
+    }, [orderType, orderSide]);
+
+    const formatValue = (value) => {
+        return !value || !isFinite(value) ? '' : value;
+    };
+
+    const onHandleChange = (key, value) => {
+        const _isBuy = orderSide === ExchangeOrderEnum.Side.BUY;
+        const _price = getPrice(orderSide, key === 'price' ? value : price);
+        let qty = 0,
+            _quoteQty = 0,
+            per = 0;
         switch (key) {
             case 'price':
-                isFocus.current = key;
-                const quoteQty = floor(+quantity * value, decimals.price);
-                setQuoteQty(quoteQty);
+                if (_isBuy) {
+                    qty = roundToDown(quoteQty / (_price * fee), decimals.qty);
+                    setQuantity(formatValue(qty));
+                } else {
+                    _quoteQty = floor(quantity * (_price * fee), decimals.symbol);
+                    setQuoteQty(formatValue(quoteQty));
+                }
                 setPrice(value);
                 break;
             case 'percentage':
-                qty = roundToDown(((value / 100) * balance) / (_isBuy ? _price : 1), decimals.qty);
-                setQuantity(qty);
+                isChangeSlider.current = true;
+                if (isBuy) {
+                    _quoteQty = floor((balance * value) / 100, decimals.symbol);
+                    qty = roundToDown(_quoteQty / (_price * fee), decimals.qty);
+                } else {
+                    qty = roundToDown((balance * value) / 100, decimals.qty);
+                    _quoteQty = floor(qty * (_price * fee), decimals.symbol);
+                }
+                setQuoteQty(formatValue(_quoteQty));
+                setQuantity(formatValue(qty));
                 setPercentage(value);
                 break;
+            case 'qty':
+                if (isChangeSlider.current || isFocus.current !== key) {
+                    isChangeSlider.current = false;
+                    return;
+                }
+                quoteQty = floor(value * (_price * fee), decimals.symbol);
+                per = getPercent(isBuy ? quoteQty : value, balance);
+                setQuantity(formatValue(value));
+                setQuoteQty(formatValue(quoteQty));
+                setPercentage(per);
+                break;
             case 'quote':
-                if (isFocus.current !== key) return;
-                qty = floor((value / _price) * 1, decimals.qty);
-                setQuantity(qty);
-                setQuoteQty(value);
+                if (isChangeSlider.current || isFocus.current !== key) {
+                    isChangeSlider.current = false;
+                    return;
+                }
+                qty = floor(value / (_price * fee), decimals.qty);
+                per = getPercent(isBuy ? value : qty, balance);
+                setQuantity(formatValue(qty));
+                setQuoteQty(formatValue(value));
+                setPercentage(per);
                 break;
             default:
                 break;
@@ -445,10 +448,9 @@ const PlaceOrderForm = ({ symbol }) => {
     }, [priceFilter, percentPriceFilter, symbolTicker]);
 
     const validateTotal = (price) => {
-        const formatPrice = isMarket ? symbolTicker?.p : price;
         return {
             min: +minNotionalFilter?.minNotional,
-            max: balance * (isBuy ? 1 : formatPrice)
+            max: balance * (isBuy ? 1 : price)
         };
     };
 
@@ -460,22 +462,23 @@ const PlaceOrderForm = ({ symbol }) => {
             };
         }
         const validate_limit = {
-            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty)),
-            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? price : 1))), decimals.qty)
+            min: Math.max(+quantityFilter?.minQty, +((+minNotionalFilter?.minNotional * (isBuy ? fee : 1)) / price).toFixed(decimals.qty)),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? price * fee : 1))), decimals.qty)
         };
         const validate_market = {
             min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / symbolTicker?.p).toFixed(decimals.qty), quantityMarketFilter?.minQty),
-            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1))), decimals.qty)
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1)), quantityMarketFilter?.maxQty ?? 0), decimals.qty)
         };
         return isMarket ? validate_market : validate_limit;
     };
 
     const notEnough = useMemo(() => {
-        const { min, max } = validateAmount(+price);
+        const { min, max } = validateAmount(getPrice(orderSide, price));
         return max < min;
     }, [price, orderSide, balance]);
 
     const validator = (key, value, isText = false) => {
+        const _price = getPrice(orderSide, price);
         let rs = { isValid: true, msg: '' };
         let validate = {};
         if (notEnough && (key === 'amount' || key === 'quote')) {
@@ -494,7 +497,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 }
                 break;
             case 'amount':
-                validate = validateAmount(+price);
+                validate = validateAmount(+_price);
                 if (isText) {
                     return { min: validate.min, max: validate.max };
                 }
@@ -506,7 +509,7 @@ const PlaceOrderForm = ({ symbol }) => {
                 }
                 break;
             case 'quote':
-                validate = validateTotal(+price);
+                validate = validateTotal(+_price);
                 if (isText) {
                     return { min: validate.min, max: validate.max };
                 }
@@ -655,7 +658,7 @@ const PlaceOrderForm = ({ symbol }) => {
                     labelClassName="!text-sm !font-normal"
                     value={quantity}
                     onFocus={() => (isFocus.current = 'qty')}
-                    onValueChange={({ value }) => setQuantity(value)}
+                    onValueChange={({ value }) => onHandleChange('qty', value)}
                     name="quantity"
                     allowNegative={false}
                     decimalScale={decimals.qty}
@@ -695,7 +698,7 @@ const PlaceOrderForm = ({ symbol }) => {
                         <ButtonV2
                             onClick={confirmModal}
                             disabled={placing || currentExchangeConfig?.status === 'MAINTAIN' || isError}
-                            className={isBuy ? 'bg-teal' : 'bg-red'}
+                            className={isBuy ? 'bg-teal' : '!bg-red'}
                         >
                             {t(orderSide)} {base}
                         </ButtonV2>

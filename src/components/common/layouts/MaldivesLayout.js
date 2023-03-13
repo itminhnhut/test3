@@ -16,7 +16,7 @@ import Skeletor from '../Skeletor';
 
 const NavBar = dynamic(() => import('src/components/common/NavBar/NavBar'), {
     ssr: false,
-    loading: () => <Skeletor width="100%" height={isMobile ? MOBILE_NAV_HEIGHT : DESKTOP_NAV_HEIGHT} />
+    loading: () => <Skeletor className="!fixed" width="100%" height={isMobile ? MOBILE_NAV_HEIGHT : DESKTOP_NAV_HEIGHT} />
 });
 const Footer = dynamic(() => import('components/common/Footer/Footer'), { ssr: false });
 const TransferModal = dynamic(() => import('components/wallet/TransferModal'), { ssr: false });

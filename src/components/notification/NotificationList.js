@@ -3,8 +3,7 @@ import _ from 'lodash';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import debounce from 'lodash/debounce';
-import { getNotifications, markAllAsRead, truncateNotifications } from 'src/redux/actions/notification';
+import { getNotifications, markAllAsRead } from 'src/redux/actions/notification';
 import { NotificationStatus } from 'src/redux/actions/const';
 import { getTimeAgo, getS3Url } from 'src/redux/actions/utils';
 import { IconBell } from '../common/Icons';
@@ -43,7 +42,6 @@ const NotificationList = ({ btnClass }) => {
     const notificationsMix = useSelector((state) => state.notification.notificationsMix);
     const hasNextNotification = useSelector((state) => state.notification.hasNextNotification);
     const unreadCount = useSelector((state) => state.notification.unreadCount);
-    const user = useSelector((state) => state.auth.user) || null;
 
     useEffect(() => {
         dispatch(getNotifications({ lang: i18n.language }));
@@ -104,14 +102,14 @@ const NotificationList = ({ btnClass }) => {
                             key={notification?._id || notification?.created_at}
                             onClick={() => handleMarkRead(notification?._id, notification.status)}
                         >
-                            <div className="mr-3 p-4 bg-hover-1 dark:bg-dark-2 rounded-full w-[58px] h-[58px]">
+                            <div className="min-w-[48px] min-h-[48px] mr-4 p-2 sm:p-3 bg-hover-1 dark:bg-dark-2 rounded-full flex justify-center items-center ">
                                 {IconNoti?.[notification?.category] || <IconBell size={24} color={colors.teal} />}
                             </div>
                             <div className="mr-3 flex-1">
-                                <div className="text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 line-clamp-2">
+                                <div className="text-sm sm:text-base font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-1.5 break-words">
                                     {notification.title}
                                 </div>
-                                <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 line-clamp-2">{notification.content}</div>
+                                <div className="text-xs sm:text-sm text-txtPrimary dark:text-txtPrimary-dark mb-2 break-words">{notification.content}</div>
                                 <div
                                     className={`text-xs ${
                                         notification?.status !== NOTI_READ ? 'text-dominant' : 'text-txtSecondary dark:text-txtSecondary-dark'
@@ -122,7 +120,7 @@ const NotificationList = ({ btnClass }) => {
                             </div>
                             <div
                                 className={classNames('ml-3 bg-dominant w-2 h-2 rounded-full', {
-                                    'pointer-events-none invisible': notification?.status === NOTI_READ
+                                    'hidden': notification?.status === NOTI_READ
                                 })}
                             />
                         </div>
@@ -164,12 +162,12 @@ const NotificationList = ({ btnClass }) => {
                 <div
                     className={
                         (isPopover ? 'block ' : 'hidden ') +
-                        'absolute z-10 transform w-screen max-w-[415px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
+                        'absolute z-10 transform w-screen max-w-[358px] sm:max-w-[442px] rounded-b-xl border border-t-0  dark:border-divider-dark top-[calc(100%+1px)] right-0 bg-bgPrimary dark:bg-darkBlue-3 shadow-lg text-sm'
                     }
                 >
                     <div className="py-6">
                         <div className="flex items-center px-6 justify-between mb-8">
-                            <div className="text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
+                            <div className="text-base sm:text-[22px] font-semibold text-txtPrimary dark:text-txtPrimary-dark">{t('navbar:noti')}</div>
 
                             <div
                                 onClick={handleMarkAllRead}
@@ -187,7 +185,7 @@ const NotificationList = ({ btnClass }) => {
                                 </div>
                             )} */}
                         </div>
-                        <div className="max-h-[488px]  min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
+                        <div className="max-h-[400px] sm:max-h-[488px]   min-h-[400px] space-y-4 overflow-y-auto mb-8">{content}</div>
 
                         <div className="font-semibold px-6 mb-2">
                             <div className="flex items-center justify-center">

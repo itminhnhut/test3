@@ -1,7 +1,7 @@
 import React from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
-import TextButton from '../ButtonV2/TextButton';
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import { useTranslation } from 'next-i18next';
 
 const AlertModalV2 = ({
@@ -36,7 +36,7 @@ const AlertModalV2 = ({
     };
 
     return (
-        <ModalV2 className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
+        <ModalV2 loading={loading} className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
             <div className="flex flex-col items-center">
                 {getIcon()}
                 <div className="mt-6 mb-4 font-semibold text-2xl">{title}</div>

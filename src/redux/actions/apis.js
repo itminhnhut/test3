@@ -26,7 +26,7 @@ export const API_REFRESH_TOKEN = API_PREFIX + 'web/refresh_token';
 
 export const API_GET_FAVORITE = API_PREFIX + 'symbols/favorite';
 
-export const API_GET_OVERVIEW_STATISTIC = API_PREFIX + 'overview/statistic'
+export const API_GET_OVERVIEW_STATISTIC = API_PREFIX + 'overview/statistic';
 
 export const API_GET_ASSET_CONFIG = API_V3_PREFIX + 'asset/config';
 export const API_GET_USER_WALLET = API_PREFIX + 'user/wallet';
@@ -65,6 +65,7 @@ export const API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY = API_V3_PREFIX + 'wall
 export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
 export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw';
 export const API_GET_DEPWDL_HISTORY = API_V3_PREFIX + 'payment/deposit_withdraw_history';
+export const API_WITHDRAW_V4 = API_V3_PREFIX + 'payment/withdraw_v4';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
@@ -114,6 +115,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 //NOTE Notification
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
+export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread'
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
@@ -282,3 +284,8 @@ export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 //referal
 export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
+
+// convert small balance to Nami
+export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
+export const API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_pre_order';
+export const API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_confirm_order';

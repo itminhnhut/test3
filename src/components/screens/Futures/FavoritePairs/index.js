@@ -15,6 +15,8 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
 import { FireIcon } from 'components/svg/SvgIcon';
 
+export const SUGGESTED_SYMBOLS = ['BNB', 'BCH', 'BTC', 'LTC', 'ETH', 'EOS', 'ETC'];
+
 const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
     const quoteAsset = pairConfig?.quoteAsset;
     const [loading, setLoading] = useState(false);
@@ -46,7 +48,6 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
     if (!favoritePairs) return null;
 
     const dataFilter = useMemo(() => {
-        const suggestedSymbols = ['BNB', 'BCH', 'BTC', 'LTC', 'ETH', 'EOS', 'ETC'];
         const marketWatch = refreshMarketWatch?.map((o) => {
             const quoteAsset = allPairConfigs.find((i) => i.pair === o.s)?.quoteAsset;
             return FuturesMarketWatch.create(o, quoteAsset);
@@ -58,7 +59,7 @@ const FuturesFavoritePairs = memo(({ favoritePairLayout, pairConfig }) => {
             list:
                 (Array.isArray(favorites) && favorites.length > 0
                     ? favorites
-                    : marketWatch?.filter((o) => suggestedSymbols.find((s) => s + quoteAsset === o?.symbol))) || []
+                    : marketWatch?.filter((o) => SUGGESTED_SYMBOLS.find((s) => s + quoteAsset === o?.symbol))) || []
         };
     }, [favoritePairs, refreshMarketWatch]);
 

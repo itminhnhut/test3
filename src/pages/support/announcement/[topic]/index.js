@@ -40,14 +40,14 @@ const AnnouncementTopics = (props) => {
     const { width } = useWindowSize()
     const isMobile = width < 640
 
-    useEffect(() => {
-        const themeLocal = localStorage.getItem('theme');
-        if (themeLocal === 'dark') {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [router?.query]);
+    // useEffect(() => {
+    //     const themeLocal = localStorage.getItem('theme');
+    //     if (themeLocal === 'dark') {
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [router?.query]);
 
     useEffect(() => {
         getLastedArticles(
