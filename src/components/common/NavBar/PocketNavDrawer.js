@@ -183,14 +183,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     className=" max-w-[132px] !text-sm"
                                     variants="text"
                                     onClick={() => {
-                                        router.push(getLoginUrl('sso', 'login'));
+                                        window.open(getLoginUrl('sso', 'login'),"self");
                                     }}
                                 >
                                     {t('common:sign_in')}
                                 </ButtonV2>
 
                                 <ButtonV2
-                                    onClick={() => router.push(getLoginUrl('sso', 'register'))}
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'),"self")}
                                     className="ml-4 py-2 max-w-[132px] !h-[36px] rounded-md !text-sm"
                                 >
                                     {t('common:sign_up')}
