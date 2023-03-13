@@ -8,13 +8,13 @@ import classNames from 'classnames';
 const JOURNEY_DESCRIPTIONS = [
     {
         key: 1,
-        image: 'maxium_performance_1',
+        image: 'maxium_performance',
         localized: 'journey.reason_1',
         href: '/futures'
     },
     {
         key: 2,
-        image: 'crypto_knowledge_1',
+        image: 'crypto_knowledge',
         localized: 'journey.reason_4',
         href: '#'
     },
