@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
 import ModalHistory from './ModalHistory';
+import usePrevious from 'hooks/usePrevious'
 import axios from 'axios';
 
 const LIMIT = 10
@@ -40,9 +41,12 @@ const TransactionHistory = ({ id }) => {
     const [detailId,setDetailId] = useState(null)
     const [filter, setFilter] = useState(INITAL_FILTER);
     const [currentPage,setCurrentPage] =  useState(0);
+    const previousId = usePrevious(id)
+    const previousPage = usePrevious(currentPage)
     const [categoryConfig, setCategoryConfig] = useState([]);
 
-
+    console.log('id:', id)
+    console.log('previousId:', previousId)
     const changeFilter = (_filter) => setFilter((prevState) => ({ ...prevState, ..._filter }));
     const resetFilter = () => {
         setFilter(INITAL_FILTER)
@@ -62,7 +66,7 @@ const TransactionHistory = ({ id }) => {
      useEffect(() => {
         const source = axios.CancelToken.source();  
 
-        (async () => {
+        (async () => {     
             const { range, asset, category } = filter
             const { startDate, endDate } = range;
             const from = startDate;
@@ -85,7 +89,16 @@ const TransactionHistory = ({ id }) => {
                 withdraw: true
             }[id];
 
+           
+
+            // only 'all' tab is able to filter with category_id
             if(category?.category_id && id !== 'all') return
+
+            //Reset page when switch tab
+            if(previousId !== id) {
+                setCurrentPage(0)
+                return
+            } 
 
             const params = {
                 type,
@@ -97,6 +110,7 @@ const TransactionHistory = ({ id }) => {
                 category: category?.category_id ?? undefined ,
                 currency: asset?.id ?? undefined
             };
+
       
             try {
                 setLoading(true)
@@ -105,15 +119,16 @@ const TransactionHistory = ({ id }) => {
                     params,
                     cancelToken:source.token
                 })
-                if (id === TRANSACTION_TYPES.TRANSFER) {
-                     
-                    data?.result = data?.result.map(e => {
-                        return {
-                            ...e,
-                            category: 48
-                        }
-                    })
-                }
+                if (statusCode === 200 || status === ApiStatus.SUCCESS) {
+                    if (id === TRANSACTION_TYPES.TRANSFER) {                   
+                        data?.result = data?.result.map(e => {
+                            return {
+                                ...e,
+                                category: 48
+                            }
+                        })
+                    }
+                }            
                 hasNext.current = data?.hasNext
                 setData(data?.result || data?.results)
             } catch (error) {
@@ -128,7 +143,7 @@ const TransactionHistory = ({ id }) => {
             source.cancel()
         }
       
-    }, [filter, id, currentPage])
+    }, [filter, id, currentPage, previousId])
 
     const columns = useMemo(() => {
         return {
@@ -346,9 +361,9 @@ const TransactionHistory = ({ id }) => {
                         onChangeTab={(key) => {
                             const clickedTab = TransactionTabs.find((tab) => tab.key === key);
                             if(clickedTab.key !== 'all' && filter.category) changeFilter( {category:null} );
+                            
                             if (clickedTab) {       
                                 router.push(clickedTab.href);
-                                setCurrentPage(0);         
                             }
                         }}
                         tabs={TransactionTabs.map((tab) => ({
@@ -371,6 +386,7 @@ const TransactionHistory = ({ id }) => {
                         loading={loading}
                         onRowClick={(transaction) => {
                             setDetailId(transaction._id)
+                           
                         }}
                         height={404}
                         className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
