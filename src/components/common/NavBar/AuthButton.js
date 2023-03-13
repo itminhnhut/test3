@@ -7,7 +7,6 @@ import { useRouter } from 'next/router';
 
 const AuthButton = ({ t, showSignInBreakPoint = 0, showSignUpBreakPoint = 0 }) => {
     const { width } = useWindowSize();
-    const router = useRouter();
 
     return (
         <>
@@ -16,14 +15,14 @@ const AuthButton = ({ t, showSignInBreakPoint = 0, showSignUpBreakPoint = 0 }) =
                     className="px-0 w-auto hover:opacity-80 !text-sm"
                     variants="text"
                     onClick={() => {
-                        router.push(getLoginUrl('sso', 'login'));
+                        window.open(getLoginUrl('sso', 'login'), 'self');
                     }}
                 >
                     {t('common:sign_in')}
                 </ButtonV2>
             )}
             {width >= showSignUpBreakPoint && (
-                <ButtonV2 onClick={() => router.push(getLoginUrl('sso', 'register'))} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
+                <ButtonV2 onClick={() => window.open(getLoginUrl('sso', 'register'), 'self')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
                     {t('common:sign_up')}
                 </ButtonV2>
             )}
