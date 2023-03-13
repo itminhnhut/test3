@@ -24,6 +24,9 @@ const namiSystem = {
     vi: 'Hệ thống Nami'
 }
 
+const columnsConfig = ['_id', 'category', 'created_at', 'amount', 'status']
+
+
 const TransactionHistory = ({ id }) => {
     const {
         t,
@@ -55,6 +58,77 @@ const TransactionHistory = ({ id }) => {
             }
         });
     }, []);
+
+     useEffect(() => {
+        const source = axios.CancelToken.source();  
+
+        (async () => {
+            const { range, asset, category } = filter
+            const { startDate, endDate } = range;
+            const from = startDate;
+
+            // Plus 1 more day on endDate if endDate !== null
+            const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
+
+            // custom type phai dat ben duoi [id] de overwrite lai
+            // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
+            const type = {
+                    [id]: id,
+                    all:null,
+                    [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                    [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+                }[id]
+    
+            // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
+            const isNegative = {
+                deposit: false,
+                withdraw: true
+            }[id];
+
+            if(category?.category_id && id !== 'all') return
+
+            const params = {
+                type,
+                from,
+                to,
+                isNegative,
+                limit:LIMIT,
+                skip: currentPage * LIMIT,
+                category: category?.category_id ?? undefined ,
+                currency: asset?.id ?? undefined
+            };
+      
+            try {
+                setLoading(true)
+                const { data, statusCode, status } =   await  FetchApi({
+                    url : API_GET_WALLET_TRANSACTION_HISTORY,
+                    params,
+                    cancelToken:source.token
+                })
+                if (id === TRANSACTION_TYPES.TRANSFER) {
+                     
+                    data?.result = data?.result.map(e => {
+                        return {
+                            ...e,
+                            category: 48
+                        }
+                    })
+                }
+                hasNext.current = data?.hasNext
+                setData(data?.result || data?.results)
+            } catch (error) {
+                console.log('fetching API_GET_WALLET_TRANSACTION_HISTORY error:', error)
+            } finally {
+                setLoading(false);
+            }
+        })()
+       
+
+        return () => {
+            source.cancel()
+        }
+      
+    }, [filter, id, currentPage])
 
     const columns = useMemo(() => {
         return {
@@ -254,85 +328,7 @@ const TransactionHistory = ({ id }) => {
         };
     }, [t, categoryConfig,assetConfig,id]);
 
-    const columnsConfig = {
-        [id]: ['_id', 'category', 'created_at', 'amount', 'status'],
-    }
-
-    const filterdColumns = useMemo(() => {
-        return columnsConfig?.[id || 'all']?.map((key) => columns?.[key]) ?? [];
-    }, [columns, id, columnsConfig]);
-
-    useEffect(() => {
-        const source = axios.CancelToken.source();  
-
-        (async () => {
-            const { range, asset, category } = filter
-            const { startDate, endDate } = range;
-            const from = startDate;
-
-            // Plus 1 more day on endDate if endDate !== null
-            const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
-
-            // custom type phai dat ben duoi [id] de overwrite lai
-            // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
-            const type = {
-                    [id]: id,
-                    all:null,
-                    [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-                    [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
-                }[id]
-    
-            // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
-            const isNegative = {
-                deposit: false,
-                withdraw: true
-            }[id];
-
-            if(category?.category_id && id !== 'all') return
-
-            const params = {
-                type,
-                from,
-                to,
-                isNegative,
-                limit:LIMIT,
-                skip: currentPage * LIMIT,
-                category: category?.category_id ?? undefined ,
-                currency: asset?.id ?? undefined
-            };
-      
-            try {
-                setLoading(true)
-                const { data, statusCode, status } =   await  FetchApi({
-                    url : API_GET_WALLET_TRANSACTION_HISTORY,
-                    params,
-                    cancelToken:source.token
-                })
-                if (id === TRANSACTION_TYPES.TRANSFER) {
-                     
-                    data?.result = data?.result.map(e => {
-                        return {
-                            ...e,
-                            category: 48
-                        }
-                    })
-                }
-                hasNext.current = data?.hasNext
-                setData(data?.result || data?.results)
-            } catch (error) {
-                console.log('fetching API_GET_WALLET_TRANSACTION_HISTORY error:', error)
-            } finally {
-                setLoading(false);
-            }
-        })()
-       
-
-        return () => {
-            source.cancel()
-        }
-      
-    }, [filter, id, currentPage])
-
+   
     const renderWalletType = useCallback((wallet_id) => {
         const wallet = WalletTypes?.find(e => e?.id === wallet_id)
         const content = wallet?.localized ? t('wallet:' + wallet?.localized) : wallet?.title
@@ -369,7 +365,7 @@ const TransactionHistory = ({ id }) => {
                         sort={['created_at']}
                         useRowHover
                         data={data}
-                        columns={filterdColumns}
+                        columns={columnsConfig.map((key) => columns?.[key]) ?? []}
                         rowKey={(item) => item?.key}
                         scroll={{ x: true }}
                         loading={loading}
