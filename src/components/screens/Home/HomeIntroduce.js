@@ -46,32 +46,6 @@ const HomeIntroduce = ({ trendData, t }) => {
         }
     }, []);
 
-    // Using video.play to lazy loading video on different screen breakpoint;
-    useEffect(() => {
-        let videoDesktop4k, videoDesktop, videoMobile;
-        if (window) {
-            videoDesktop4k = window.document.getElementById('video_wrapper-right');
-            videoMobile = window.document.getElementById('video-banner_mobile');
-            videoDesktop = window.document.getElementById('video-banner_desktop');
-        }
-        function handleResize() {
-            const { innerWidth } = window;
-            if (innerWidth >= 2160) {
-                videoDesktop4k?.play();
-                return;
-            }
-            if (innerWidth >= 768) {
-                videoDesktop?.play();
-                return;
-            }
-            videoMobile?.play();
-        }
-
-        window.addEventListener('resize', handleResize);
-        handleResize();
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
     return (
         <section className="homepage-introduce relative">
             <TrendingSlide trending={trendData} />
@@ -165,18 +139,13 @@ const HomeIntroduce = ({ trendData, t }) => {
                     <video
                         loop
                         muted
-                        id="video_wrapper-right"
+                        autoPlay
                         class="pointer-events-none max-h-[500px]"
-                        // poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
-                        poster="/images/screen/homepage/banner_graphics_fit.webp"
-
+                        poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                         preload="none"
                         playsInline
                     >
-                        <source
-                        src="/images/screen/homepage/banner_graphics_fit.mp4"
-                        //  src={getS3Url('/images/screen/homepage/banner_graphics.mp4')} 
-                         type="video/mp4" />
+                        <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
                     </video>
                 </div>
             </div>
@@ -184,27 +153,24 @@ const HomeIntroduce = ({ trendData, t }) => {
                 <video
                     loop
                     muted
+                    autoPlay
                     className="lg:hidden pointer-events-none max-h-[390px] "
-                    poster="/images/screen/homepage/banner_graphics_fit.webp"
+                    poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                     preload="none"
                     playsInline
                 >
-                    <source src="/images/screen/homepage/banner_graphics_fit.mp4" type="video/mp4" />
+                    <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
                 </video>
                 <video
                     loop
                     muted
                     className="hidden  lg:block pointer-events-none "
-                    poster={getS3Url('/images/screen/homepage/banner_graphics_1.webp')}
+                    poster={getS3Url('/images/screen/homepage/banner_graphics_fit.webp')}
                     preload="none"
                     playsInline
-                    id="video-banner_desktop"
+                    autoPlay
                 >
-                    <source
-                        //  src={getS3Url('/images/screen/homepage/banner_graphics.mp4')}
-                        src="/images/screen/homepage/banner_graphics_fit.mp4"
-                        type="video/mp4"
-                    />
+                    <source src={getS3Url('/images/screen/homepage/banner_graphics_fit.mp4')} type="video/mp4" />
                 </video>
             </div>
         </section>
