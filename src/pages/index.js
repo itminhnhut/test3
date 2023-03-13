@@ -79,7 +79,7 @@ const Index = () => {
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="!max-w-[488px]  !bg-hover-1 "
+                className="sm:max-w-[488px]  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
@@ -107,7 +107,6 @@ const Index = () => {
                 if (config?.tags?.length && config.tags.includes('NEW_LISTING')) {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
-                    console.log(p.s);
                 }
 
                 if (p?.vq > 1000) return p;

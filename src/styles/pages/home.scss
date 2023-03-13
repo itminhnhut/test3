@@ -930,7 +930,7 @@
   //   z-index:1000;
   // }
   .homepage-journey__wrapper {
-    @apply text-txtPrimary px-4 py-[120px];
+    @apply text-txtPrimary px-4 pt-[88px] pb-[80px] md:py-[120px];
 
     .homepage-journey__title {
       @apply dark:text-txtPrimary-dark mb-5;
@@ -1249,14 +1249,13 @@
   .homepage-trade3step___wrapper {
    
     .homepage-trade3step__inner {
-      @apply py-12 dark:text-txtPrimary-dark  text-txtPrimary border dark:border-divider-dark border-divider md:border-teal rounded-[24px] ;
+      @apply py-8 md:py-12 dark:text-txtPrimary-dark  text-txtPrimary border dark:border-divider-dark border-divider md:border-green-3 rounded-[24px] ;
       -webkit-backdrop-filter: blur(20px);
       backdrop-filter: blur(20px);
       background:rgba(255,255,255,0.4);
       
       .homepage-trade3step___title {
-        @apply text-center;
-        font-size:28px;
+        @apply text-center text-3xl;
         font-weight: 600;
         @media (min-width: 768px) {
   
@@ -1272,7 +1271,7 @@
           @apply flex flex-col items-center justify-center;
   
           .homepage-trade3step___step___item___inner {
-            @apply flex flex-col items-center justify-center hover:text-dominant transition cursor-pointer;
+            @apply flex flex-col items-center justify-center hover:text-green-3 transition cursor-pointer;
   
             .homepage-trade3step___step___item__label {
               font-weight: 600;

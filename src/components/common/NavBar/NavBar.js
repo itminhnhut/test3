@@ -549,7 +549,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__hamburger">
                         {!auth && (
                             <div className="flex flex-row items-center mal-navbar__hamburger__spacing">
-                                <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1090} />
+                                <AuthButton t={t} showSignInBreakPoint={1366} showSignUpBreakPoint={1366} />
                             </div>
                         )}
                         {auth && (

@@ -26,7 +26,7 @@ const typeStyles = {
         colorContent: 'text-red'
     },
     [types.WARNING]: {
-        backgroundColor: 'text-yellow-2/[0.1]',
+        backgroundColor: 'bg-yellow-2/[0.1]',
         icon: WarningTriangle,
         colorContent: 'text-yellow-2'
     }

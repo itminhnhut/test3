@@ -30,12 +30,12 @@ const SupportAnnouncement = () => {
         setCategories(categories.announcementCategories)
         setLastedArticles(lastedArticles)
 
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
+        // const themeLocal = localStorage.getItem("theme");
+        // if (themeLocal === "dark") {
+        //     setTheme(THEME_MODE.DARK);
+        // } else {
+        //     setTheme(THEME_MODE.LIGHT);
+        // }
         setLoading(false)
     }
 

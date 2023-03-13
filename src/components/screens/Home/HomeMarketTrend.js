@@ -3,8 +3,7 @@ import colors from 'styles/colors';
 
 import { useCallback, useState } from 'react';
 import { useWindowSize } from 'utils/customHooks';
-import { useSelector } from 'react-redux';
-import { formatPrice, getExchange24hPercentageChange, render24hChange } from 'redux/actions/utils';
+import { formatPrice, render24hChange } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { initMarketWatchItem, sparkLineBuilder } from 'src/utils';
 import { ArrowRightIcon } from 'components/svg/SvgIcon';
@@ -128,8 +127,6 @@ const HomeMarketTrend = ({ trendData }) => {
     const { width } = useWindowSize();
     const { t } = useTranslation(['home', 'table']);
 
-    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
-
     // * Render Handler
 
     const renderMarketHeader = useCallback(() => {
@@ -149,35 +146,34 @@ const HomeMarketTrend = ({ trendData }) => {
         if (!pairs) return null;
         return pairs.map((pair, index) => {
             let sparkLineColor = colors.teal;
-            const _ = initMarketWatchItem(pair);
-            const _24hChange = getExchange24hPercentageChange(pair);
+            const _24hChange = pair.change_24;
 
             if (_24hChange) {
                 if (_24hChange > 0) sparkLineColor = colors.teal;
                 if (_24hChange <= 0) sparkLineColor = colors.red2;
             }
-            const sparkLine = sparkLineBuilder(_?.symbol, sparkLineColor);
+            const sparkLine = sparkLineBuilder(pair?.s, sparkLineColor);
 
             if (width >= 992) {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${pair?.s}__${state.marketTabIndex}`} href={`/futures/${pair?.s}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
                                     <div className="homepage-markettrend__market_table__coin__icon">
-                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={pair?.b} />
                                     </div>
                                     <div className="homepage-markettrend__market_table__coin__pair">
-                                        <span>{_?.baseAsset}</span>
-                                        <span>/{_?.quoteAsset}</span>
+                                        <span>{pair?.b}</span>
+                                        <span>/{pair?.q}</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col2">
-                                <div className="homepage-markettrend__market_table__price">{formatPrice(_?.lastPrice)}</div>
+                                <div className="homepage-markettrend__market_table__price">{formatPrice(pair?.p)}</div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col3">
-                                <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                <div className={`homepage-markettrend__market_table__percent ${pair?.u ? 'value-up' : 'value-down'}`}>
                                     {render24hChange(pair, false, '!text-base')}
                                 </div>
                             </div>
@@ -191,16 +187,16 @@ const HomeMarketTrend = ({ trendData }) => {
                 );
             } else {
                 return (
-                    <Link key={`markettrend_${_?.symbol}__${state.marketTabIndex}`} href={`/futures/${_?.baseAsset}${_?.quoteAsset}`} passHref>
+                    <Link key={`markettrend_${pair?.s}__${state.marketTabIndex}`} href={`/futures/${pair?.s}`} passHref>
                         <a className="homepage-markettrend__market_table__row">
                             <div className="homepage-markettrend__market_table__row__col1">
                                 <div className="homepage-markettrend__market_table__coin">
                                     <div className="homepage-markettrend__market_table__coin__icon">
-                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={_?.baseAsset} />
+                                        <AssetLogo useNextImg={true} size={width >= 350 ? 32 : 30} assetCode={pair?.b} />
                                     </div>
                                     <div className="homepage-markettrend__market_table__coin__pair">
-                                        <span>{_?.baseAsset}</span>
-                                        <span>/{_?.quoteAsset}</span>
+                                        <span>{pair?.b}</span>
+                                        <span>/{pair?.q}</span>
                                     </div>
                                 </div>
                             </div>
@@ -210,8 +206,8 @@ const HomeMarketTrend = ({ trendData }) => {
                                 </div>
                             </div>
                             <div className="homepage-markettrend__market_table__row__col3 flex flex-col items-end">
-                                <div className={`homepage-markettrend__market_table__price text-sm`}>{formatPrice(_?.lastPrice)}</div>
-                                <div className={`homepage-markettrend__market_table__percent ${_?.up ? 'value-up' : 'value-down'}`}>
+                                <div className={`homepage-markettrend__market_table__price text-sm`}>{formatPrice(pair?.p)}</div>
+                                <div className={`homepage-markettrend__market_table__percent ${pair?.u ? 'value-up' : 'value-down'}`}>
                                     {render24hChange(pair, false, '!text-sm')}
                                 </div>
                             </div>
@@ -220,7 +216,7 @@ const HomeMarketTrend = ({ trendData }) => {
                 );
             }
         });
-    }, [width, trendData, state.marketTabIndex, exchangeConfig]);
+    }, [width, trendData, state.marketTabIndex]);
 
     return (
         <section className="homepage-markettrend">

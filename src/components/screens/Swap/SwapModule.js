@@ -211,6 +211,7 @@ const SwapModule = ({ width, pair }) => {
             });
         } else {
             const error = find(Error, { code: result?.code });
+
             if (REJECT_PREORDER.includes(error.message)) {
                 setTimeout(() => setState({ openModal: false }), 200);
             }
@@ -301,14 +302,11 @@ const SwapModule = ({ width, pair }) => {
     // Render Handler
     const handleDepositIconBtn = useCallback(() => {
         if (!auth) {
-            router.push(getLoginUrl('sso', 'login'));
+            // router.push(getLoginUrl('sso', 'login'));
         } else {
-            // if (!state.fromAsset) return null;
-            // router.push(getV1Url(`/wallet?action=deposit&symbol=${state.fromAsset}`));
-            // router.push(`/wallet/exchange/deposit?type=crypto&asset=${state.fromAsset}`);
             router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
         }
-    }, [state.fromAsset]);
+    }, [state.fromAsset, auth]);
 
     const renderFromInput = useCallback(() => {
         return (

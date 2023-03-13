@@ -105,7 +105,7 @@ function Activity({ t }) {
                 type="warning"
                 title={t('profile:revoke_title')}
                 message={revokeDevice ? t('profile:revoke_question', { device: revokeDevice?.device_title }) : t('profile:revoke_question_all')}
-                textButton={t('common:confirm')}
+                loading={revoking}
                 customButton={
                     <ButtonV2
                         loading={revoking}

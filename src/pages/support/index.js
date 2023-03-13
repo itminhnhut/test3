@@ -40,17 +40,17 @@ const Support = () => {
         };
     }, []);
 
-    React.useEffect(() => {
-        const themeInLocalStorage = localStorage.getItem("theme");
-        const root = document.querySelector(":root");
-        if (themeInLocalStorage === "dark") {
-            root.classList.add("dark");
-            setTheme(THEME_MODE.DARK);
-        } else {
-            root.classList.add("light");
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [currentTheme]);
+    // React.useEffect(() => {
+    //     const themeInLocalStorage = localStorage.getItem("theme");
+    //     const root = document.querySelector(":root");
+    //     if (themeInLocalStorage === "dark") {
+    //         root.classList.add("dark");
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         root.classList.add("light");
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [currentTheme]);
 
     // ? Use hooks
     const { width } = useWindowSize()
@@ -103,9 +103,9 @@ const Support = () => {
                         (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT +
                         `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
                     }
-                    className={classNames({ 'w-[calc(50%-8px)]': isMobile })}
+                    className={classNames({ 'w-[calc(50%-8px)]': isMobile, 'flex-1 min-w-[236px] w-full': !isMobile })}
                 >
-                    <div key={announcement.id} className={classNames('w-full h-[140px] sm:w-[236px] sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none')}>
+                    <div key={announcement.id} className={classNames('w-full h-[140px]  sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none')}>
                         <Image
                             src={getSupportCategoryIcons(announcement.id)}
                             width={isMobile ? 48 : 52}
