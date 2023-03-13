@@ -35,7 +35,6 @@ const mappingTokensRewardType = (detail) => {
 
 const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
     const [detailTx, setDetailTx] = useState(null);
-    console.log('detailTx:', detailTx);
     const [assetData, setAssetData] = useState(null);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -48,9 +47,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                     signal: controller.signal
                 });
                 if (detail.data && (detail.data.statusCode === 200 || detail.data.statusCode === ApiStatus.SUCCESS)) {
-                    const categoryId = detail.data.data.result;
-                    const category = categoryConfig.find((cate) => cate.category_id === categoryId);
-                    const asset = assetConfig?.find((e) => e?.id === detail.data.data?.result?.currency);
+                    const result = detail.data.data.result;
+                    const category = categoryConfig.find((cate) => cate.category_id === result?.category);
+                    const asset = assetConfig?.find((e) => e?.id === result?.currency);
 
                     setDetailTx({ ...detail.data.data, categoryContent: category?.content });
                     setAssetData(asset);
@@ -208,7 +207,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         asset = assetConfig.find((asset) => asset.id === get(detailTx, col.keys[1]));
                                         formatKeyData = (
                                             <div className="flex">
-                                                <a data-for="detail-history-tooltip" data-tooltip-content="Hello world!">
+                                                <a>
                                                     {formatPrice(get(detailTx, col.keys[0]), asset?.assetDigit || 0)} {asset?.assetCode}
                                                 </a>
                                             </div>

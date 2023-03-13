@@ -264,53 +264,52 @@ const TransactionHistory = ({ id }) => {
 
     useEffect(() => {
         const source = axios.CancelToken.source();  
-        const { range, asset, category } = filter
-        // custom type phai dat ben duoi [id] de overwrite lai
-        // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
-        const type = id?.length
-            ? {
-                [id]: id,
-                all: null,
-                [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
-                [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
-            }[id]
-            : null;
 
+        (async () => {
+            const { range, asset, category } = filter
+            const { startDate, endDate } = range;
+            const from = startDate;
 
+            // Plus 1 more day on endDate if endDate !== null
+            const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
 
-        const { startDate, endDate } = range;
-        
-        const from = startDate;
-            
-        // Plus 1 more day on endDate if endDate !== null
-        const to = !endDate ? new Date().getTime() : endDate +  MILLISEC_ONE_DAY - 1;
-
-        // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
-        const isNegative = {
-            deposit: false,
-            withdraw: true
-        }[id];
-
-        const params = {
-            type,
-            from,
-            to,
-            isNegative,
-            limit: LIMIT,
-            skip: currentPage * LIMIT,
-            category: (id ==='all' && category?.category_id) || undefined,
-            currency : asset?.id ?? undefined
-        };
-        setLoading(true)
+            // custom type phai dat ben duoi [id] de overwrite lai
+            // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
+            const type = {
+                    [id]: id,
+                    all:null,
+                    [TRANSACTION_TYPES.DEPOSIT]: TRANSACTION_TYPES.DEPOSITWITHDRAW,
+                    [TRANSACTION_TYPES.WITHDRAW]: TRANSACTION_TYPES.DEPOSITWITHDRAW
+                }[id]
     
-        FetchApi({
-            url : API_GET_WALLET_TRANSACTION_HISTORY,
-            params,
-            cancelToken:source.token
-        }).then(({ data, statusCode, status }) => {
-            if (statusCode === 200 || status === ApiStatus.SUCCESS) {
+            // neu la withdraw hoac deposit thi se co gia tri isNegative, cac truong hop khac se undefined
+            const isNegative = {
+                deposit: false,
+                withdraw: true
+            }[id];
+
+            if(category?.category_id && id !== 'all') return
+
+            const params = {
+                type,
+                from,
+                to,
+                isNegative,
+                limit:LIMIT,
+                skip: currentPage * LIMIT,
+                category: category?.category_id ?? undefined ,
+                currency: asset?.id ?? undefined
+            };
+      
+            try {
+                setLoading(true)
+                const { data, statusCode, status } =   await  FetchApi({
+                    url : API_GET_WALLET_TRANSACTION_HISTORY,
+                    params,
+                    cancelToken:source.token
+                })
                 if (id === TRANSACTION_TYPES.TRANSFER) {
-                 
+                     
                     data?.result = data?.result.map(e => {
                         return {
                             ...e,
@@ -320,12 +319,13 @@ const TransactionHistory = ({ id }) => {
                 }
                 hasNext.current = data?.hasNext
                 setData(data?.result || data?.results)
+            } catch (error) {
+                console.log('fetching API_GET_WALLET_TRANSACTION_HISTORY error:', error)
+            } finally {
+                setLoading(false);
             }
-            setLoading(false)
-        }).catch((err) => {
-                console.log('err:', err)
-                setLoading(false)
-        })
+        })()
+       
 
         return () => {
             source.cancel()
