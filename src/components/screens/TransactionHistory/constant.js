@@ -46,6 +46,11 @@ export const TransactionTabs = [
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.WITHDRAW)
     },
     {
+        key: TRANSACTION_TYPES.FIAT,
+        localized: 'fiat',
+        href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.FIAT)
+    },
+    {
         key: TRANSACTION_TYPES.EXCHANGE,
         localized: 'exchange',
         href: PATHS.TRANSACTION_HISTORY.TYPE(TRANSACTION_TYPES.EXCHANGE)
@@ -87,66 +92,77 @@ export const COLUMNS_TYPE = {
     NUMBER_OF_ASSETS: 'number_of_assets',
     WALLET_TYPE: 'wallet_type',
     NAMI_SYSTEM: 'nami_system',
-    STAKING_SNAPSHOT: 'staking_snapshot'
+    STAKING_SNAPSHOT: 'staking_snapshot',
+    FIAT_USER: 'fiat_user'
 };
 
 export const modalDetailColumn = {
     [TRANSACTION_TYPES.CONVERT]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['createdAt'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['fromQty', 'fromAsset'], localized: 'Từ' },
-        { keys: ['toQty', 'toAsset'], localized: 'Sang' },
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.fromQty', 'additionalData.fromAsset'], localized: 'Từ' },
+        { keys: ['additionalData.toQty', 'additionalData.toAsset'], localized: 'Sang' },
         { keys: ['rate'], localized: 'Giá quy đổi', type: COLUMNS_TYPE.RATE }
     ],
     [TRANSACTION_TYPES.CONVERTSMALLBALANCE]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, primaryTeal: true },
-        { keys: ['createdAt'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, primaryTeal: true },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
         { keys: ['assets'], localized: 'Số lượng tài sản', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.DEPOSITWITHDRAW]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['from.address'], localized: 'Từ', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true  },
-        { keys: ['to.address'], localized: 'Đến', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
-        { keys: ['network'], localized: 'Mạng' },
-        { keys: ['metadata.txhash'], localized: 'Tx Hash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.from.address', ''], localized: 'Từ', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['additionalData.to.address'], localized: 'Đến', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['additionalData.network'], localized: 'Mạng' },
+        { keys: ['additionalData.metadata.txhash'], localized: 'Tx Hash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
     ],
     [TRANSACTION_TYPES.FUTURES]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, primaryTeal: true },
-        { keys: ['closed_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['symbol'], localized: 'Cặp giao dịch', type: COLUMNS_TYPE.SYMBOL },
-        { keys: ['open_price'], localized: 'Giá mở', type: COLUMNS_TYPE.FUTURES_ORDER },
-        { keys: ['side', 'type'], localized: 'Loại', primaryTeal: true },
-        { keys: ['request_id.place'], localized: 'ID Vị thế', primaryTeal: true }
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, primaryTeal: true },
+        { keys: ['additionalData.closed_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.symbol'], localized: 'Cặp giao dịch', type: COLUMNS_TYPE.SYMBOL },
+        { keys: ['additionalData.open_price'], localized: 'Giá mở', type: COLUMNS_TYPE.FUTURES_ORDER },
+        { keys: ['additionalData.side', 'additionalData.type'], localized: 'Loại', primaryTeal: true },
+        { keys: ['additionalData.request_id.place'], localized: 'ID Vị thế', primaryTeal: true }
     ],
     [TRANSACTION_TYPES.EXCHANGE]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['createdAt'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['symbol'], localized: 'Cặp giao dịch', type: COLUMNS_TYPE.SYMBOL },
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.symbol'], localized: 'Cặp giao dịch', type: COLUMNS_TYPE.SYMBOL },
 
-        { keys: ['price'], localized: 'Giá mở', type: COLUMNS_TYPE.FUTURES_ORDER },
-        { keys: ['side', 'type'], localized: 'Loại', primaryTeal: true }
+        { keys: ['additionalData.price'], localized: 'Giá mở', type: COLUMNS_TYPE.FUTURES_ORDER },
+        { keys: ['additionalData.side', 'additionalData.type'], localized: 'Loại', primaryTeal: true }
     ],
     [TRANSACTION_TYPES.TRANSFER]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
-        { keys: ['from_wallet'], localized: 'Từ', type: COLUMNS_TYPE.WALLET_TYPE },
-        { keys: ['to_wallet'], localized: 'Sang', type: COLUMNS_TYPE.WALLET_TYPE }
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.from_wallet'], localized: 'Từ', type: COLUMNS_TYPE.WALLET_TYPE },
+        { keys: ['additionalData.to_wallet'], localized: 'Sang', type: COLUMNS_TYPE.WALLET_TYPE }
     ],
     [TRANSACTION_TYPES.REWARD]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
         { keys: ['nami_system'], localized: 'Từ', type: COLUMNS_TYPE.NAMI_SYSTEM },
-        { keys: ['reward'], localized: 'Số lượng tài sản', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
+        { keys: ['additionalData.reward'], localized: 'Số lượng tài sản', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.STAKING]: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
         { keys: ['nami_system'], localized: 'Từ', type: COLUMNS_TYPE.NAMI_SYSTEM },
-        { keys: ['snapshotValue', 'snapshotAssetId'], localized: 'Giá trị tài sản ghi nhận tại thời điểm quét', type: COLUMNS_TYPE.STAKING_SNAPSHOT }
+        {
+            keys: ['additionalData.snapshotValue', 'additionalData.snapshotAssetId'],
+            localized: 'Giá trị tài sản ghi nhận tại thời điểm quét',
+            type: COLUMNS_TYPE.STAKING_SNAPSHOT
+        }
+    ],
+    [TRANSACTION_TYPES.FIAT]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME },
+        { keys: ['additionalData.partnerMetadata.name', 'additionalData.fromNamiId.code'], localized: 'Từ', type: COLUMNS_TYPE.FIAT_USER },
+        { keys: ['additionalData.transferMetadata.accountName', 'additionalData.toNamiId.code'], localized: 'Đến', type: COLUMNS_TYPE.FIAT_USER },
     ],
     common: [
-        { keys: ['_id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
-        { keys: ['created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME }
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE },
+        { keys: ['result.created_at'], localized: 'Thời gian', type: COLUMNS_TYPE.TIME }
     ]
 };

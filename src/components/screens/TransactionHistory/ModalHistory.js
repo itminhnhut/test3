@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatPrice, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatPrice, formatNumber, formatWallet, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -32,8 +32,10 @@ const mappingTokensRewardType = (detail) => {
 
     return assets;
 };
-const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => {
+
+const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
     const [detailTx, setDetailTx] = useState(null);
+    console.log('detailTx:', detailTx);
     const [assetData, setAssetData] = useState(null);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -46,8 +48,11 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                     signal: controller.signal
                 });
                 if (detail.data && (detail.data.statusCode === 200 || detail.data.statusCode === ApiStatus.SUCCESS)) {
-                    setDetailTx(detail.data.data);
+                    const categoryId = detail.data.data.result;
+                    const category = categoryConfig.find((cate) => cate.category_id === categoryId);
                     const asset = assetConfig?.find((e) => e?.id === detail.data.data?.result?.currency);
+
+                    setDetailTx({ ...detail.data.data, categoryContent: category?.content });
                     setAssetData(asset);
                 }
             } catch (error) {
@@ -99,7 +104,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                 detailTx && (
                     <>
                         <div className="flex pt-20 bg-center bg-cover bg-no-repeat px-8 pb-6 bg-tx-history-detail dark:bg-tx-history-detail-dark flex-col font-semibold text-2xl text-txtPrimary dark:text-txtPrimary-dark items-center">
-                            <div className="mb-6 flex w-full items-start capitalize">{detailTx.type}</div>
+                            <div className="mb-6 flex w-full items-start capitalize">{detailTx?.categoryContent?.[language] ?? detailTx.type}</div>
                             <div className="mb-6">
                                 {detailTx.type === 'convert' ? (
                                     <div className="flex items-center space-x-2">
@@ -127,29 +132,38 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                         </div>
                         <div className="mx-8 p-4 space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                             {modalDetailColumn[detailTx.type].map((col) => {
-                                const additionalData = detailTx?.additionalData || detailTx?.result;
+                                let additionalData;
 
                                 const keyData = col.keys
                                     .filter((key) => {
                                         // filter out falsy value, array and obj.
-                                        return isNumber(get(additionalData, key)) || isString(get(additionalData, key));
+                                        return isNumber(get(detailTx, key)) || isString(get(detailTx, key));
                                     })
-                                    .map((key, index) => (index >= 1 ? ' ' : '') + get(additionalData, key))
+                                    .map((key, index) => (index >= 1 ? ' ' : '') + get(detailTx, key))
                                     .join('');
 
                                 let formatKeyData = keyData;
                                 let symbol, asset;
                                 switch (col.type) {
                                     case COLUMNS_TYPE.COPIEDABLE:
-                                        formatKeyData = (
-                                            <TextCopyable showingText={col.isAddress ? `${shortHashAddress(keyData, 6, 6)}` : undefined} text={keyData} />
-                                        );
+                                        let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
+                                        formatKeyData =
+                                            priorityKey.includes('0x') || col.localized === 'ID' ? (
+                                                <TextCopyable
+                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 6, 6)}` : undefined}
+                                                    text={priorityKey}
+                                                />
+                                            ) : (
+                                                <span>{priorityKey}</span>
+                                            );
+
                                         break;
                                     case COLUMNS_TYPE.TIME:
                                         formatKeyData = formatTime(keyData, 'HH:mm:ss dd/MM/yyyy');
                                         break;
 
                                     case COLUMNS_TYPE.RATE:
+                                        additionalData = detailTx?.additionalData;
                                         asset = assetConfig.find((asset) => asset.assetCode === additionalData?.toAsset);
 
                                         formatKeyData = `1 ${additionalData?.fromAsset} =  ${formatPrice(
@@ -159,13 +173,26 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                                         break;
                                     case COLUMNS_TYPE.SYMBOL:
                                         symbol = getSymbolObject(keyData);
+                                        if (!symbol) {
+                                            symbol = {
+                                                baseAsset: get(detailTx, 'additionalData.baseAsset'),
+                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset')
+                                            };
+                                        }
                                         formatKeyData = `${symbol?.baseAsset}/${symbol?.quoteAsset}`;
                                         break;
                                     case COLUMNS_TYPE.FUTURES_ORDER:
-                                        symbol = getSymbolObject(additionalData.symbol);
+                                        symbol = getSymbolObject(detailTx?.additionalData?.symbol);
+                                        if (!symbol) {
+                                            symbol = {
+                                                baseAsset: get(detailTx, 'additionalData.baseAsset'),
+                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset')
+                                            };
+                                        }
                                         formatKeyData = `${formatPrice(keyData)} ${symbol?.quoteAsset}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
+                                        additionalData = detailTx.additionalData;
                                         const assetLength = additionalData.assets
                                             ? additionalData.assets.length
                                             : Object.keys(additionalData?.reward.tokens).length;
@@ -178,32 +205,21 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                                         formatKeyData = 'NAMI System';
                                         break;
                                     case COLUMNS_TYPE.STAKING_SNAPSHOT:
-                                        asset = assetConfig.find((asset) => asset.id === additionalData[col.keys[1]]);
+                                        asset = assetConfig.find((asset) => asset.id === get(detailTx, col.keys[1]));
                                         formatKeyData = (
                                             <div className="flex">
                                                 <a data-for="detail-history-tooltip" data-tooltip-content="Hello world!">
-                                                    {formatPrice(additionalData[col.keys[0]], asset?.assetDigit || 0)} {asset?.assetCode}
+                                                    {formatPrice(get(detailTx, col.keys[0]), asset?.assetDigit || 0)} {asset?.assetCode}
                                                 </a>
-                                                <Tooltip
-                                                    id="detail-history-tooltip"
-                                                    // place="top"
-                                                    // effect="solid"
-                                                    // backgroundColor="bg-darkBlue-4"
-                                                    // className={`w-20 h-20`}
-                                                />
-                                                {/* <div data-for={'detail-history-tooltip'}>
-
-                                                    <Tooltip
-                                                        id="detail-history-tooltip"
-                                                        place="top"
-                                                        effect="solid"
-                                                        backgroundColor="bg-darkBlue-4"
-                                                        className={`w-20 h-20`}
-                                                    >
-                                                       
-                                                    </Tooltip>
-                                                </div> */}
                                             </div>
+                                        );
+                                        break;
+                                    case COLUMNS_TYPE.FIAT_USER:
+                                        const formatKeyData = (
+                                            <>
+                                                <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{get(detailTx, col.keys[0])}</div>
+                                                <div className="text-sm text-txtSecondary dark:text-txtSecodnary-dark">{get(detailTx, col.keys[1])}</div>
+                                            </>
                                         );
                                         break;
                                     default:
@@ -236,7 +252,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t }) => 
                                             <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
                                                 <div className="">{_?.assetCode}</div>
                                                 <div className={classNames('font-semibold')}>
-                                                    {formatPrice(asset.value, _?.assetDigit || 0)} {_?.assetCode}
+                                                    {isNaN(formatWallet(asset.value, _?.assetDigit || 0))
+                                                        ? asset.value.toFixed(_?.assetDigit || 0)
+                                                        : formatWallet(asset.value, _?.assetDigit || 0)}
                                                 </div>
                                             </div>
                                         );

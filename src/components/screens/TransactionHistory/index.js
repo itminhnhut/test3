@@ -279,6 +279,7 @@ const TransactionHistory = ({ id }) => {
 
 
         const { startDate, endDate } = range;
+        
         const from = startDate;
             
         // Plus 1 more day on endDate if endDate !== null
@@ -289,13 +290,6 @@ const TransactionHistory = ({ id }) => {
             deposit: false,
             withdraw: true
         }[id];
-
-        const url = {
-            [id]: API_GET_WALLET_TRANSACTION_HISTORY,
-            // [TRANSACTION_TYPES.TRANSFER]: API_GET_WALLET_TRANSFER_HISTORY,
-            // [TRANSACTION_TYPES.COMMISSION]: API_GET_COMMISSON_HISTORY,
-        }[id]
-
 
         const params = {
             type,
@@ -309,8 +303,8 @@ const TransactionHistory = ({ id }) => {
         };
         setLoading(true)
     
-            FetchApi({
-            url,
+        FetchApi({
+            url : API_GET_WALLET_TRANSACTION_HISTORY,
             params,
             cancelToken:source.token
         }).then(({ data, statusCode, status }) => {
@@ -331,11 +325,11 @@ const TransactionHistory = ({ id }) => {
         }).catch((err) => {
                 console.log('err:', err)
                 setLoading(false)
-            })
+        })
 
-return () => {
-    source.cancel()
-}
+        return () => {
+            source.cancel()
+        }
       
     }, [filter, id, currentPage])
 
@@ -402,6 +396,8 @@ return () => {
             id={detailId}
             t={t}
             assetConfig={assetConfig}
+            language={language}
+            categoryConfig={categoryConfig}
         />
         
         
