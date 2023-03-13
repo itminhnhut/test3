@@ -15,14 +15,14 @@ const AuthButton = ({ t, showSignInBreakPoint = 0, showSignUpBreakPoint = 0 }) =
                     className="px-0 w-auto hover:opacity-80 !text-sm"
                     variants="text"
                     onClick={() => {
-                        window.open(getLoginUrl('sso', 'login'), 'self');
+                        window.open(getLoginUrl('sso', 'login'), '_self');
                     }}
                 >
                     {t('common:sign_in')}
                 </ButtonV2>
             )}
             {width >= showSignUpBreakPoint && (
-                <ButtonV2 onClick={() => window.open(getLoginUrl('sso', 'register'), 'self')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
+                <ButtonV2 onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')} className="ml-4 py-2 w-[105px] !h-[36px] rounded-md !text-sm">
                     {t('common:sign_up')}
                 </ButtonV2>
             )}
