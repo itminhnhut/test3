@@ -231,7 +231,14 @@ const Portfolio = () => {
             y: {
                 beginAtZero: true,
                 ticks: {
-                    color: colors.darkBlue5
+                    color: colors.darkBlue5,
+                    callback: function (value, index, ticks) {
+                        console.log('___here: ', ticks);
+                        return value + 'K';
+                    },
+                    // prefix: 'K',
+                    align: 'center',
+                    padding: 8
                 },
                 grid: {
                     borderDash: [1, 4],
@@ -273,7 +280,6 @@ const Portfolio = () => {
                             yScale.ticks,
                             yScale.ticks.find((item) => item?.value === 0)
                         );
-                console.log('___ here 3: ', center, (yScale.top + yScale.bottom) / 2);
 
                 ctx.beginPath();
 
