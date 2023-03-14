@@ -315,6 +315,7 @@ const TopPositionTable = () => {
                 height={350}
                 // pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
                 tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="pb-1 rounded-b-xl"
             />
         </div>
     );
