@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
 import React from 'react';
 import {
@@ -38,12 +38,14 @@ const LIST_TABS = [
     { id: 2, localized: 'common:position:min_profit' }
 ];
 
-const ASSET_ROW_LIMIT = 5;
+const LIMIT_ROW = 5;
 
 const TopPositionTable = () => {
+    const [loading, setLoading] = useState(false);
     const [curFilter, setCurFilter] = useState(listTimeFilter[0].value);
     const [curTab, setCurTab] = useState(LIST_TABS[0].id);
     const [tableData, setTableData] = useState([]);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const mockData = [];
@@ -167,25 +169,23 @@ const TopPositionTable = () => {
                 initial_margin: 5400000,
                 decimalSymbol: 0,
                 decimalScalePrice: 0,
-                quoteAsset: 'VNDC'
+                quoteAsset: 'VNDC',
+                hashIdx: '0x00' + i
             });
         }
 
         setTableData(mockData);
-    }, []);
+    }, [curTab, curFilter]);
 
-    const { t } = useTranslation();
-
-    const renderPositionTable = useCallback(() => {
-        const columns = [
+    const columns = useMemo(
+        () => [
             {
                 key: 'opened_at',
                 dataIndex: 'opened_at',
                 title: t('futures:order_table:open_at'),
                 align: 'left',
                 width: 192,
-                render: (v) => <span className="whitespace-nowrap">{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>,
-                sortable: true
+                render: (v) => <span className="whitespace-nowrap">{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
             {
                 key: 'pair',
@@ -199,8 +199,7 @@ const TopPositionTable = () => {
                         <span className="txtSecond-2 !font-semibold">{`/${item.quoteAsset} `}</span>
                         <span className="txtPri-1">{item?.leverage}x</span>
                     </div>
-                ),
-                sortable: true
+                )
             },
             {
                 key: 'side',
@@ -210,39 +209,13 @@ const TopPositionTable = () => {
                 width: 88,
                 render: (v) => (
                     <span className={v.toUpperCase() === 'BUY' ? 'text-green-3 dark:text-green-2' : 'text-red-2'}>{t(`common:${v.toLowerCase()}`)}</span>
-                ),
-                sortable: true
+                )
             },
-            // {
-            //     key: 'sltp',
-            //     title: `${t('futures:stop_loss')} / ${t('futures:take_profit')}`,
-            //     align: 'left',
-            //     width: 224,
-            //     render: (_row, item) => (
-            //         <div className="flex items-center">
-            //             <div className="flex flex-col gap-1 font-normal text-sm text-txtSecondary dark:text-darkBlue-5">
-            //                 <div>
-            //                     SL:{' '}
-            //                     <span className="text-red-2 dark:text-red">
-            //                         {item?.sl ? `${formatNumber(item?.sl, item?.decimalScalePrice, 0, true)}` : '_'}
-            //                     </span>
-            //                 </div>
-            //                 <div>
-            //                     TP:{' '}
-            //                     <span className="text-green-3 dark:text-teal">
-            //                         {item?.tp ? `${formatNumber(item?.tp, item?.decimalScalePrice, 0, true)}` : '_'}
-            //                     </span>
-            //                 </div>
-            //             </div>
-            //         </div>
-            //     ),
-            //     sortable: false
-            // },
             {
                 key: 'pnl',
                 title: 'PNL (ROE%)',
                 align: 'right',
-                width: 148,
+                width: 169,
                 render: (_row, item) => {
                     const isVndc = item?.symbol?.indexOf('VNDC') !== -1;
                     if (item.reason_close_code === 5) return '_';
@@ -257,80 +230,56 @@ const TopPositionTable = () => {
                             isTabHistory
                         />
                     );
-                },
-                sortable: false
+                }
             },
             {
                 key: 'margin',
                 dataIndex: 'order_value',
                 title: t('futures:margin'),
                 align: 'right',
-                width: 148,
-                render: (v, item) => formatNumber(v, item?.decimalScalePrice, 0, true),
-                sortable: false
+                width: 138,
+                render: (v, item) => formatNumber(v, item?.decimalScalePrice, 0, true)
             },
             {
                 key: 'volume',
                 dataIndex: 'order_value',
                 title: t('futures:order_table:volume'),
                 align: 'right',
-                width: 148,
-                render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true),
-                sortable: false
+                width: 138,
+                render: (_row, item) => formatNumber(item?.order_value, item?.decimalScalePrice, 0, true)
             },
             {
                 key: 'open_price',
                 dataIndex: 'open_price',
                 title: t('futures:order_table:open_price'),
                 align: 'right',
-                width: 148,
-                render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true),
-                sortable: false
-            },
-            {
-                key: 'close_price',
-                dataIndex: 'close_price',
-                title: t('futures:order_table:close_price'),
-                align: 'right',
-                width: 148,
-                render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true),
-                sortable: false
-            },
-            {
-                key: 'id',
-                dataIndex: 'id',
-                title: t('futures:mobile:transaction_histories:id'),
-                align: 'right',
-                width: 148,
-                sortable: false
+                width: 138,
+                render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)
             }
-        ];
-
-        return (
-            <TableV2
-                sort
-                // defaultSort={{ key: 'wallet.value', direction: 'desc' }}
-                useRowHover
-                data={tableData || []}
-                columns={columns}
-                rowKey={(item) => item?.key}
-                scroll={{ x: true }}
-                limit={ASSET_ROW_LIMIT}
-                skip={0}
-                noBorder={true}
-                height={404}
-                // pagingClassName="border-none"
-                // className="border border-divider dark:border-divider-dark rounded-xl pt-4 mt-8"
-                className="nowrap"
-                tableStyle={{ fontSize: '16px', padding: '16px' }}
-            />
-        );
-    }, [tableData]);
+            // {
+            //     key: 'close_price',
+            //     dataIndex: 'close_price',
+            //     title: t('futures:order_table:close_price'),
+            //     align: 'right',
+            //     width: 138,
+            //     render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)
+            // }
+            // {
+            //     key: 'hashIdx',
+            //     dataIndex: 'hashIdx',
+            //     title: t('futures:mobile:transaction_histories:id'),
+            //     align: 'right',
+            //     width: 128,
+            //     render: (v) => v
+            // }
+        ],
+        [tableData]
+    );
 
     return (
         <div className="mt-12 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
             <div className="flex items-center justify-between w-full p-8">
-                <div className="text-2xl font-semibold">Top {ASSET_ROW_LIMIT} vị thế</div>
+                <div className="text-2xl font-semibold">Top {LIMIT_ROW} vị thế</div>
                 <GroupFilterTime curFilter={curFilter} setCurFilter={setCurFilter} GroupKey="Profit_changing" t={t} />
             </div>
             <div className="relative flex tracking-normal">
@@ -349,7 +298,23 @@ const TopPositionTable = () => {
                     })}
                 </Tabs>
             </div>
-            {renderPositionTable()}
+            <TableV2
+                sort
+                defaultSort={{ key: 'opened_at', direction: 'desc' }}
+                loading={loading}
+                useRowHover
+                data={tableData || []}
+                columns={columns}
+                rowKey={(item) => `${item?.key}`}
+                scroll={{ x: true }}
+                limit={LIMIT_ROW}
+                skip={0}
+                // isSearch={!!state.search}
+                pagingClassName="border-none"
+                height={350}
+                // pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
+                tableStyle={{ fontSize: '16px', padding: '16px' }}
+            />
         </div>
     );
 };

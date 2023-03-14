@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import classNames from 'classnames';
 
 const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick }) => {
     return (
@@ -12,7 +12,7 @@ const SvgChevronDown = ({ color, size = 16, fill, style, className, onClick }) =
             fill={fill || 'none'}
             style={style}
         >
-            <g clip-path="url(#clip0_2093_28978)">
+            <g clipPath="url(#clip0_2093_28978)">
                 <path d="M11.026 8.83333H6.77351L8.89974 6.70711L11.026 8.83333Z" fill={color || '#8694B3'} stroke={color || '#8694B3'} />
             </g>
             <defs>

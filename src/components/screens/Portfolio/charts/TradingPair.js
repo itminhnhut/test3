@@ -136,7 +136,11 @@ const TradingPair = () => {
             {/* Chu thich */}
             <div className="flex items-center gap-x-4 mt-9 py-1 justify-center">
                 {labels.map((label, idx) => (
-                    <Note style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }} title={label} />
+                    <Note
+                        key={'note_' + label}
+                        style={{ backgroundColor: isDark ? listDoughnutColorsDark[idx] : listDoughnutColorsLight[idx] }}
+                        title={label}
+                    />
                 ))}
             </div>
         </div>
