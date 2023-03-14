@@ -12,10 +12,7 @@ import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
-const Charts = ({
-    t,
-    id
-}) => {
+const Charts = ({ t, id }) => {
     const timeTabs = [
         {
             title: '1 ' + t('futures:day'),
@@ -38,22 +35,22 @@ const Charts = ({
         // { title: t('reference:referral.custom'), value: 'custom' },
     ];
     return (
-        <div className='flex flex-col gap-8 w-full' id={id}>
-            <RenderContent url={API_NEW_REFERRAL_STATISTIC + '-friend'} t={t} timeTabs={timeTabs} title={t('reference:referral.number_of_friends')} type='count' />
-            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type='volume' />
+        <div className="flex flex-col gap-8 w-full" id={id}>
+            <RenderContent
+                url={API_NEW_REFERRAL_STATISTIC + '-friend'}
+                t={t}
+                timeTabs={timeTabs}
+                title={t('reference:referral.number_of_friends')}
+                type="count"
+            />
+            <RenderContent url={API_NEW_REFERRAL_STATISTIC} t={t} timeTabs={timeTabs} title={t('reference:referral.total_commissions')} type="volume" />
         </div>
     );
 };
 
 export default Charts;
 
-const RenderContent = ({
-    t,
-    timeTabs,
-    title,
-    url,
-    type
-}) => {
+const RenderContent = ({ t, timeTabs, title, url, type }) => {
     const [currentTheme] = useDarkMode();
     const [timeTab, setTimeTab] = useState(timeTabs[0].value);
     const [dataSource, setDataSource] = useState({
@@ -78,26 +75,22 @@ const RenderContent = ({
                 method: 'GET'
             },
             params: {
-                interval: timeTabs.find(e => e.value === timeTab)?.interval ?? '1d',
+                interval: timeTabs.find((e) => e.value === timeTab)?.interval ?? '1d',
                 from: filter?.range?.startDate,
                 // from: 0,
                 to: filter?.range?.endDate,
-                format: timeTabs.find(e => e.value === timeTab)?.format ?? 'dd/MM'
+                format: timeTabs.find((e) => e.value === timeTab)?.format ?? 'dd/MM'
             }
-        })
-            .then(({
-                data,
-                status
-            }) => {
-                if (status === 'ok') {
-                    setDataSource(data);
-                } else {
-                    setDataSource({
-                        data: [],
-                        labels: []
-                    });
-                }
-            });
+        }).then(({ data, status }) => {
+            if (status === 'ok') {
+                setDataSource(data);
+            } else {
+                setDataSource({
+                    data: [],
+                    labels: []
+                });
+            }
+        });
     }, 300);
 
     useEffect(() => {
@@ -142,50 +135,55 @@ const RenderContent = ({
 
     const renderChart = () => {
         // const getData = (level) => dataSource.data.map(e => e[level - 1]?.[tab === tags[0].value ? 'count' : 'volume'] ?? [])
-        const getData = (level) => dataSource?.data?.map(e => e[level - 1]?.[type]) ?? [];
+        const getData = (level) => dataSource?.data?.map((e) => e[level - 1]?.[type]) ?? [];
         const data = {
             labels: dataSource?.labels || [],
-            datasets: [{
-                type: 'bar',
-                label: 'level1',
-                data: getData(1),
-                backgroundColor: colors[0],
-                borderColor: colors[0],
-                maxBarThickness: 8,
-                borderRadius: 2,
-                barPercentage: 0.7,
-                order: 1
-            }, {
-                type: 'bar',
-                label: 'level2',
-                data: getData(2),
-                backgroundColor: colors[1],
-                borderColor: colors[1],
-                maxBarThickness: 8,
-                borderRadius: 2,
-                barPercentage: 0.7,
-                order: 2
-            }, {
-                type: 'bar',
-                label: 'level3',
-                data: getData(3),
-                backgroundColor: colors[2],
-                borderColor: colors[2],
-                maxBarThickness: 8,
-                borderRadius: 2,
-                barPercentage: 0.7,
-                order: 3
-            }, {
-                type: 'bar',
-                label: 'level4',
-                data: getData(4),
-                backgroundColor: colors[3],
-                borderColor: colors[3],
-                maxBarThickness: 8,
-                borderRadius: 2,
-                barPercentage: 0.7,
-                order: 4
-            }]
+            datasets: [
+                {
+                    type: 'bar',
+                    label: 'level1',
+                    data: getData(1),
+                    backgroundColor: colors[0],
+                    borderColor: colors[0],
+                    maxBarThickness: 8,
+                    borderRadius: 2,
+                    barPercentage: 0.7,
+                    order: 1
+                },
+                {
+                    type: 'bar',
+                    label: 'level2',
+                    data: getData(2),
+                    backgroundColor: colors[1],
+                    borderColor: colors[1],
+                    maxBarThickness: 8,
+                    borderRadius: 2,
+                    barPercentage: 0.7,
+                    order: 2
+                },
+                {
+                    type: 'bar',
+                    label: 'level3',
+                    data: getData(3),
+                    backgroundColor: colors[2],
+                    borderColor: colors[2],
+                    maxBarThickness: 8,
+                    borderRadius: 2,
+                    barPercentage: 0.7,
+                    order: 3
+                },
+                {
+                    type: 'bar',
+                    label: 'level4',
+                    data: getData(4),
+                    backgroundColor: colors[3],
+                    borderColor: colors[3],
+                    maxBarThickness: 8,
+                    borderRadius: 2,
+                    barPercentage: 0.7,
+                    order: 4
+                }
+            ]
         };
         const options = {
             responsive: true,
@@ -217,19 +215,23 @@ const RenderContent = ({
                     stacked: true,
                     ticks: {
                         color: baseColors.darkBlue5,
-                        showLabelBackdrop: false
+                        showLabelBackdrop: false,
+                        padding: 8
                     },
                     grid: {
+                        drawTicks: false,
                         display: false,
                         drawBorder: true,
                         borderColor: currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT
-                    },
+                    }
                 },
                 y: {
                     ticks: {
                         color: baseColors.darkBlue5,
+                        padding: 8
                     },
                     grid: {
+                        drawTicks: false,
                         borderDash: [1, 4],
                         // color: baseColors.divider.DEFAULT,
                         color: function (context) {
@@ -238,8 +240,8 @@ const RenderContent = ({
                             }
                             return currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT;
                         },
-                        drawBorder: false,
-                    },
+                        drawBorder: false
+                    }
 
                     // ticks: {
                     //     callback: function(value) {
@@ -257,59 +259,62 @@ const RenderContent = ({
         };
         return (
             <>
-                <ChartJS type='bar' data={data} options={options} height='400px' />
+                <ChartJS type="bar" data={data} options={options} height="400px" />
             </>
         );
     };
     return (
-        <RefCard wrapperClassName='!p-8 w-full h-auto bg-white dark:bg-dark-4' style={{ height: 'fit-content' }}>
-            <div className='mb-6 flex justify-between w-full'>
-                <div className='font-semibold text-[20px] leading-6'>
-                    {title}
-                </div>
-                <div className='flex gap-3'>
-                    {timeTabs.map(t => {
-                        return <div
-                            key={t.value}
-                            onClick={() => setTimeTab(t.value)}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
-                                'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== t.value,
-                                'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === t.value,
-                            })}
-                        >{t.title}</div>;
+        <RefCard wrapperClassName="!p-8 w-full h-auto bg-white dark:bg-dark-4" style={{ height: 'fit-content' }}>
+            <div className="mb-6 flex justify-between w-full">
+                <div className="font-semibold text-[20px] leading-6">{title}</div>
+                <div className="flex gap-3">
+                    {timeTabs.map((t) => {
+                        return (
+                            <div
+                                key={t.value}
+                                onClick={() => setTimeTab(t.value)}
+                                className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
+                                    'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== t.value,
+                                    'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === t.value
+                                })}
+                            >
+                                {t.title}
+                            </div>
+                        );
                     })}
                     <DatePickerV2
                         initDate={filter.range}
-                        onChange={e => {
+                        onChange={(e) => {
                             setFilter({
                                 range: {
                                     startDate: new Date(e?.selection?.startDate ?? null).getTime(),
                                     endDate: new Date(e?.selection?.endDate ?? null).getTime(),
                                     key: 'selection'
                                 }
-                            })
+                            });
                         }}
                         month={2}
                         hasShadow
-                        position='right'
-                        text={<div
-                            onClick={() => setTimeTab('custom')}
-                            className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
-                                'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom',
-                            })}
-                        >{t('reference:referral.custom')}</div>}
+                        position="right"
+                        text={
+                            <div
+                                onClick={() => setTimeTab('custom')}
+                                className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
+                                    'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
+                                    'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
+                                })}
+                            >
+                                {t('reference:referral.custom')}
+                            </div>
+                        }
                     />
                 </div>
             </div>
             <div>
-                <div className='h-[350px]'>
-                    {renderChart()}
-                </div>
-                <div className='px-2 mt-4 flex flex-wrap items-center gap-4'>
+                <div className="h-[350px]">{renderChart()}</div>
+                <div className="px-2 mt-4 flex flex-wrap items-center gap-4">
                     {colors.map((color, index) => (
-                        <div className='flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]'
-                            key={index}>
+                        <div className="flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]" key={index}>
                             <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
                         </div>
                     ))}

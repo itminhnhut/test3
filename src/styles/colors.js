@@ -52,7 +52,8 @@ const colors = {
         1: '#ffb700',
         2: '#ffc632',
         3: '#ffd670',
-        4: '#ffebb7'
+        4: '#ffebb7',
+        5: '#e8bf56'
     },
     green: {
         1: '#7ee5ae',
@@ -60,7 +61,8 @@ const colors = {
         3: '#30bf73',
         4: '#19a65b',
         5: '#e6faef',
-        6: '#4ae17b'
+        6: '#4ae17b',
+        7: '#a3f5c7'
     },
     red: {
         1: '#cc1f1f',
@@ -74,6 +76,9 @@ const colors = {
         3: '#87b9fa',
         4: '#d9e9ff',
         5: '#1e77eb'
+    },
+    purple: {
+        1: '#7c99f7'
     },
 
     onus: {

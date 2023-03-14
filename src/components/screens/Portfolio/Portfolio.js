@@ -22,11 +22,14 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 import 'react-loading-skeleton/dist/skeleton.css';
 import Skeletor from 'components/common/Skeletor';
+import Note from 'components/common/Note';
+import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
 import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import PriceChangePercent from 'components/common/PriceChangePercent';
 import ChartLayout from './charts/ChartLayout';
 import ChartJS from './charts/ChartJS';
 import { indexOf } from 'lodash';
+import PnlChanging from './charts/PnlChanging';
 const { subDays } = require('date-fns');
 
 const Portfolio = () => {
@@ -118,6 +121,7 @@ const Portfolio = () => {
 
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
     const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
+    const [curTradingPairFilter, setCurTradingPairFilter] = useState(listTimeFilter[0].value);
 
     // Hanlde for Chart Bien dong loi nhuan:
     const [pnlLabels, setPnlLabels] = useState([]);
@@ -144,13 +148,18 @@ const Portfolio = () => {
         setPnlLabels(newLabels);
     }, [curPnlFilter]);
 
+    const minDuong = 500;
+    const maxDuong = 30000;
+    const minAm = -30000;
+    const maxAm = -500;
+
     const pnlChartData = {
         labels: pnlLabels,
         datasets: [
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [2, Math.floor(Math.random() * (100 - 2 + 1)) + 2]),
+                data: Array.from({ length: pnlLabels.length }, () => [minDuong, Math.floor(Math.random() * (maxDuong - minDuong + 1)) + minDuong]),
                 backgroundColor: colors.green[6],
                 stack: 'pnl'
                 // lineTension: 0.2,
@@ -162,7 +171,7 @@ const Portfolio = () => {
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [-2, Math.floor(Math.random() * (-2 - -100 + 1)) + -100]),
+                data: Array.from({ length: pnlLabels.length }, () => [Math.floor(Math.random() * (maxAm - minAm + 1)) + minAm, maxAm]),
                 backgroundColor: colors.red[2],
                 stack: 'pnl'
                 // borderSkipped: false,
@@ -183,7 +192,7 @@ const Portfolio = () => {
         indexAxis: 'x',
         // categorySpacing: 5,
         barPercentage: 0.15,
-        borderRadius: 4,
+        borderRadius: 3,
         borderSkipped: false,
         plugins: {
             tooltip: {
@@ -220,7 +229,8 @@ const Portfolio = () => {
                 stacked: true,
                 ticks: {
                     color: colors.darkBlue5,
-                    showLabelBackdrop: false
+                    showLabelBackdrop: false,
+                    padding: 8
                 },
                 grid: {
                     display: false,
@@ -233,14 +243,13 @@ const Portfolio = () => {
                 ticks: {
                     color: colors.darkBlue5,
                     callback: function (value, index, ticks) {
-                        console.log('___here: ', ticks);
-                        return value + 'K';
+                        return formatPrice(value) + 'K';
                     },
-                    // prefix: 'K',
-                    align: 'center',
+                    crossAlign: 'far',
                     padding: 8
                 },
                 grid: {
+                    drawTicks: false,
                     borderDash: [1, 4],
                     borderDashOffset: 1,
                     // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
@@ -282,10 +291,11 @@ const Portfolio = () => {
                         );
 
                 ctx.beginPath();
+                ctx.lineWidth = 0.5;
 
                 // The line is drawn from the bottom left ..
                 // ctx.moveTo(xScale.left + 0.5, yScale.bottom);
-                ctx.moveTo(xScale.left + 0.5, center);
+                ctx.moveTo(xScale.left + 2, center);
 
                 // .. to the top left ('+ 0.5' is more or less a fix but it is not essential)
                 // ctx.lineTo(xScale.left + 0.5, yScale.top);
@@ -446,13 +456,30 @@ const Portfolio = () => {
                     </div>
 
                     {/* Bien dong loi nhuan */}
-                    <div className="mt-12 p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
-                        <div className="flex items-center justify-between w-full">
-                            <div className="text-2xl font-semibold">Biến động lợi nhuận</div>
-                            <GroupFilterTime curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
+                    <PnlChanging />
+
+                    {/* Cap giao dich || Vi the mua - Vi the ban */}
+                    <div className="mt-12 grid grid-cols-2 gap-x-8">
+                        <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
+                            <div className="flex items-center justify-between w-full">
+                                <div className="text-2xl font-semibold">Cặp giao dịch</div>
+                                <GroupFilterTime curFilter={curTradingPairFilter} setCurFilter={setCurTradingPairFilter} GroupKey="Trading_pair" t={t} />
+                            </div>
+                            {/* <div className=" w-full max-h-[450px] mt-8">
+                                <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                            </div> */}
+                            {/* Chu thich */}
+                            <div className="flex items-center gap-x-4 mt-9 py-1 justify-center">
+                                <Note iconClassName="bg-green-6" title={'BTC/VNDC'} />
+                                <Note iconClassName="bg-green-7" title={'ETH/VNDC'} />
+                                <Note iconClassName="bg-purple-1" title={'BNB/VNDC'} />
+                                <Note iconClassName="bg-yellow-5" title={'SOL/VNDC'} />
+                                <Note iconClassName="bg-gray-12 dark:bg-white" title={'Khác'} />
+                            </div>
                         </div>
-                        <div className="flex w-full max-h-[600px] items-center justify-center mt-8">
-                            <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                        <div className="grid grid-rows-2 gap-y-8">
+                            <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">Vi the mua</div>
+                            <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">Vi the ban</div>
                         </div>
                     </div>
                 </div>
@@ -466,27 +493,27 @@ const Portfolio = () => {
 
 export default Portfolio;
 
-const listTimeFilter = [
-    { localized: 'common:global_label:time:week', value: 1 },
-    { localized: 'common:global_label:time:1month', value: 2 },
-    { localized: 'common:global_label:time:all', value: 3 }
-];
+// const listTimeFilter = [
+//     { localized: 'common:global_label:time:week', value: 1 },
+//     { localized: 'common:global_label:time:1month', value: 2 },
+//     { localized: 'common:global_label:time:all', value: 3 }
+// ];
 
-const GroupFilterTime = ({ curFilter = listTimeFilter[0]?.value, setCurFilter, GroupKey, t }) => {
-    return (
-        <div className="flex items-center gap-4 text-base font-normal text-gray-1 dark:text-gray-7">
-            {listTimeFilter.map((item) => (
-                <button
-                    key={GroupKey + 'filter_' + item?.value}
-                    onClick={() => setCurFilter(item?.value)}
-                    className={curFilter === item?.value && 'text-green-3 dark:text-green-2 font-semibold'}
-                >
-                    {t(`${item.localized ? item.localized : item.title}`)}
-                </button>
-            ))}
-        </div>
-    );
-};
+// const GroupFilterTime = ({ curFilter = listTimeFilter[0]?.value, setCurFilter, GroupKey, t }) => {
+//     return (
+//         <div className="flex items-center gap-4 text-base font-normal text-gray-1 dark:text-gray-7">
+//             {listTimeFilter.map((item) => (
+//                 <button
+//                     key={GroupKey + 'filter_' + item?.value}
+//                     onClick={() => setCurFilter(item?.value)}
+//                     className={curFilter === item?.value && 'text-green-3 dark:text-green-2 font-semibold'}
+//                 >
+//                     {t(`${item.localized ? item.localized : item.title}`)}
+//                 </button>
+//             ))}
+//         </div>
+//     );
+// };
 
 export const renderTabs = (tabs, tabType, setTabType, haveUnderline = true) => {
     return (
