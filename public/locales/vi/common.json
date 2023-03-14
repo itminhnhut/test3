@@ -377,5 +377,13 @@
     "trending": "Xu hướng",
     "favourite": "Yêu thích",
     "gainers": "Tăng giá",
-    "losers": "Giảm giá"
+    "losers": "Giảm giá",
+    "position": {
+        "buy": "Vị thế Mua",
+        "sell": "Vị thế Bán",
+        "sum_buy": "Tổng vị thế Mua",
+        "sum_sell": "Tổng vị thế Bán",
+        "max_profit": "Lợi nhuận cao nhất",
+        "min_profit": "Lợi nhuận thấp nhất"
+    }
 }

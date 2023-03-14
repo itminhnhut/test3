@@ -25,6 +25,6 @@ export default index;
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'portfolio', 'navbar', 'home', 'modal', 'input', 'table']))
+        ...(await serverSideTranslations(locale, ['common', 'portfolio', 'navbar', 'home', 'modal', 'input', 'table', 'futures']))
     }
 });

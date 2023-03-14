@@ -30,6 +30,10 @@ import ChartLayout from './charts/ChartLayout';
 import ChartJS from './charts/ChartJS';
 import { indexOf } from 'lodash';
 import PnlChanging from './charts/PnlChanging';
+import TradingPair from './charts/TradingPair';
+import PositionInfo from './PositionInfo';
+import TopPositionTable from './TopPositionTable';
+
 const { subDays } = require('date-fns');
 
 const Portfolio = () => {
@@ -80,7 +84,6 @@ const Portfolio = () => {
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        console.log('_________here');
         FetchApi({
             url: API_PORTFOLIO_OVERVIEW,
             options: {
@@ -108,9 +111,6 @@ const Portfolio = () => {
     const level = +userData?.nami?.level || 0;
     const nextLevel = level >= 9 ? 9 : level + 1;
 
-    // console.log('___here: ', user);
-    // console.log('___here 2: ', FEE_TABLE[nextLevel]?.nami_holding);
-
     const handleDepositIconBtn = useCallback(() => {
         if (!auth) {
             router.push(getLoginUrl('sso', 'login'));
@@ -120,191 +120,6 @@ const Portfolio = () => {
     }, [currency]);
 
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
-    const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
-    const [curTradingPairFilter, setCurTradingPairFilter] = useState(listTimeFilter[0].value);
-
-    // Hanlde for Chart Bien dong loi nhuan:
-    const [pnlLabels, setPnlLabels] = useState([]);
-    useEffect(() => {
-        const curDate = new Date();
-        const newLabels = [formatTime(curDate, 'dd/MM')];
-        switch (curPnlFilter) {
-            case 1: // 1 Tuan
-                for (let i = 1; i < 7; i++) {
-                    // Lấy ngày hôm trước i ngày
-                    const pastDay = subDays(new Date(), 1);
-
-                    // Định dạng ngày theo format 'dd/MM'
-                    newLabels.push(formatTime(pastDay, 'dd/MM'));
-                }
-                break;
-            case 2: // 1 Thang
-                break;
-            case 3: // all
-                break;
-            default:
-                break;
-        }
-        setPnlLabels(newLabels);
-    }, [curPnlFilter]);
-
-    const minDuong = 500;
-    const maxDuong = 30000;
-    const minAm = -30000;
-    const maxAm = -500;
-
-    const pnlChartData = {
-        labels: pnlLabels,
-        datasets: [
-            {
-                fill: false,
-                label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [minDuong, Math.floor(Math.random() * (maxDuong - minDuong + 1)) + minDuong]),
-                backgroundColor: colors.green[6],
-                stack: 'pnl'
-                // lineTension: 0.2,
-                // borderColor: isDark ? colors.teal : colors.green[6],
-                // borderWidth: 1.5,
-                // pointRadius: 0,
-                // pointBackgroundColor: colors.teal
-            },
-            {
-                fill: false,
-                label: false,
-                data: Array.from({ length: pnlLabels.length }, () => [Math.floor(Math.random() * (maxAm - minAm + 1)) + minAm, maxAm]),
-                backgroundColor: colors.red[2],
-                stack: 'pnl'
-                // borderSkipped: false,
-                // categoryPercentage: 0.2,
-                // barPercentage: 0.2
-                // lineTension: 0.2
-                // borderColor: '#80FFEA',
-                // borderWidth: 1.5,
-                // pointRadius: 0,
-                // pointBackgroundColor: '#80FFEA'
-            }
-        ]
-    };
-
-    const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        indexAxis: 'x',
-        // categorySpacing: 5,
-        barPercentage: 0.15,
-        borderRadius: 3,
-        borderSkipped: false,
-        plugins: {
-            tooltip: {
-                // callbacks: {
-                //     label: function (context) {
-                //         const descriptions = {
-                //             1: 'Mức PNL: ',
-                //             2: ['Tài sản :', 'Vốn: '],
-                //             3: ['Lượng tiền nạp: ', 'Lượng tiền rút: '],
-                //             4: ['Tài sản: ', 'Vốn: ']
-                //         };
-                //         const index = context.dataIndex;
-                //         const text1 =
-                //             descriptions[chart5Config.tab] + (chartData[0][index] >= 0 ? '+' : '') + formatPrice(chartData[0][index], 0) + ' ' + props.currency;
-                //         if (chart5Config.tab === 1) return text1;
-                //         const text2 = descriptions[chart5Config.tab][0] + formatPrice(chartData[0][index], 0) + ' ' + props.currency ?? null;
-                //         const text3 = descriptions[chart5Config.tab][1] + formatPrice(chartData[1][index], 0) + ' ' + props.currency ?? null;
-                //         return [text2, text3];
-                //     },
-                //     // filter: function (context) {
-                //     //     return context.datasetIndex === 0
-                //     // },
-                //     labelTextColor: function (context) {
-                //         return colors.darkBlue;
-                //     }
-                // },
-                // backgroundColor: colors.white,
-                // displayColors: false,
-                // titleColor: colors.gray[2]
-            }
-        },
-        scales: {
-            x: {
-                stacked: true,
-                ticks: {
-                    color: colors.darkBlue5,
-                    showLabelBackdrop: false,
-                    padding: 8
-                },
-                grid: {
-                    display: false,
-                    drawBorder: false
-                    // borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
-                }
-            },
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    color: colors.darkBlue5,
-                    callback: function (value, index, ticks) {
-                        return formatPrice(value) + 'K';
-                    },
-                    crossAlign: 'far',
-                    padding: 8
-                },
-                grid: {
-                    drawTicks: false,
-                    borderDash: [1, 4],
-                    borderDashOffset: 1,
-                    // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
-                    // borderDash: [1, 4],
-                    // // color: colors.divider.DEFAULT,
-                    color: function (context) {
-                        if (context.tick.value === 0) {
-                            return 'rgba(0, 0, 0, 0)';
-                        }
-                        return currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT;
-                    },
-                    drawBorder: false
-                }
-            }
-        }
-    };
-
-    const plugins = [
-        {
-            id: 'middleText',
-            afterDatasetsDraw(chart, args, options) {
-                const { ctx } = chart;
-                ctx.save();
-
-                var xAxe = chart.config.options.scales.x;
-                var xScale = chart.scales[xAxe.axis];
-                var yAxe = chart.config.options.scales.y;
-                var yScale = chart.scales[yAxe.axis];
-
-                // You can define the color here
-                ctx.strokeStyle = isDark ? colors.divider.dark : colors.divider.DEFAULT;
-
-                var center =
-                    yScale.bottom +
-                    ((yScale.top - yScale.bottom) / (yScale.ticks.length - 1)) *
-                        indexOf(
-                            yScale.ticks,
-                            yScale.ticks.find((item) => item?.value === 0)
-                        );
-
-                ctx.beginPath();
-                ctx.lineWidth = 0.5;
-
-                // The line is drawn from the bottom left ..
-                // ctx.moveTo(xScale.left + 0.5, yScale.bottom);
-                ctx.moveTo(xScale.left + 2, center);
-
-                // .. to the top left ('+ 0.5' is more or less a fix but it is not essential)
-                // ctx.lineTo(xScale.left + 0.5, yScale.top);
-                ctx.lineTo(xScale.right + 0.5, center);
-
-                ctx.stroke();
-            }
-        }
-    ];
 
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal">
@@ -367,7 +182,7 @@ const Portfolio = () => {
                             <div className="w-full h-2 my-3 flex justify-between items-center bg-white rounded-xl">
                                 <Progressbar
                                     background={colors.green[3]}
-                                    percent={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
+                                    percentProfit={((userData?.nami?.metadata?.namiBalance || 0) / FEE_TABLE[nextLevel]?.nami_holding) * 100}
                                     height={8}
                                     className={'rounded-xl'}
                                 />
@@ -460,28 +275,15 @@ const Portfolio = () => {
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
                     <div className="mt-12 grid grid-cols-2 gap-x-8">
-                        <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
-                            <div className="flex items-center justify-between w-full">
-                                <div className="text-2xl font-semibold">Cặp giao dịch</div>
-                                <GroupFilterTime curFilter={curTradingPairFilter} setCurFilter={setCurTradingPairFilter} GroupKey="Trading_pair" t={t} />
-                            </div>
-                            {/* <div className=" w-full max-h-[450px] mt-8">
-                                <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-                            </div> */}
-                            {/* Chu thich */}
-                            <div className="flex items-center gap-x-4 mt-9 py-1 justify-center">
-                                <Note iconClassName="bg-green-6" title={'BTC/VNDC'} />
-                                <Note iconClassName="bg-green-7" title={'ETH/VNDC'} />
-                                <Note iconClassName="bg-purple-1" title={'BNB/VNDC'} />
-                                <Note iconClassName="bg-yellow-5" title={'SOL/VNDC'} />
-                                <Note iconClassName="bg-gray-12 dark:bg-white" title={'Khác'} />
-                            </div>
-                        </div>
+                        <TradingPair />
                         <div className="grid grid-rows-2 gap-y-8">
-                            <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">Vi the mua</div>
-                            <div className="p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">Vi the ban</div>
+                            <PositionInfo type="buy" t={t} />
+                            <PositionInfo type="sell" t={t} />
                         </div>
                     </div>
+
+                    {/* Table top 5 positions */}
+                    <TopPositionTable />
                 </div>
             </div>
 
@@ -492,28 +294,6 @@ const Portfolio = () => {
 };
 
 export default Portfolio;
-
-// const listTimeFilter = [
-//     { localized: 'common:global_label:time:week', value: 1 },
-//     { localized: 'common:global_label:time:1month', value: 2 },
-//     { localized: 'common:global_label:time:all', value: 3 }
-// ];
-
-// const GroupFilterTime = ({ curFilter = listTimeFilter[0]?.value, setCurFilter, GroupKey, t }) => {
-//     return (
-//         <div className="flex items-center gap-4 text-base font-normal text-gray-1 dark:text-gray-7">
-//             {listTimeFilter.map((item) => (
-//                 <button
-//                     key={GroupKey + 'filter_' + item?.value}
-//                     onClick={() => setCurFilter(item?.value)}
-//                     className={curFilter === item?.value && 'text-green-3 dark:text-green-2 font-semibold'}
-//                 >
-//                     {t(`${item.localized ? item.localized : item.title}`)}
-//                 </button>
-//             ))}
-//         </div>
-//     );
-// };
 
 export const renderTabs = (tabs, tabType, setTabType, haveUnderline = true) => {
     return (
