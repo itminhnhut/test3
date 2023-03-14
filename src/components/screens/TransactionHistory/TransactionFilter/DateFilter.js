@@ -8,9 +8,9 @@ import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
 import { X } from 'react-feather';
 
-const DateFilter = ({ filter, setFilter }) => {
+const DateFilter = ({ filter, setFilter, t }) => {
     return (
-        <FilterWrapper label="Thời gian" className="!max-w-[300px]">
+        <FilterWrapper label={t('transaction-history:filter.time')} className="!max-w-[300px]">
             <DatePickerV2
                 initDate={filter.range}
                 onChange={(e) =>
@@ -35,7 +35,7 @@ const DateFilter = ({ filter, setFilter }) => {
                         <span>
                             {filter.range.startDate && filter.range.endDate
                                 ? `${formatTime(filter.range.startDate, 'dd/MM/yyyy')} - ${formatTime(filter.range.endDate, 'dd/MM/yyyy')}`
-                                : 'Chọn thời gian'}
+                                : t('transaction-history:filter.select_time')}
                         </span>
                         {filter.range.startDate && filter.range.endDate ? (
                             <X

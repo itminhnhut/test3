@@ -33,7 +33,7 @@ export const getServerSideProps = async (context) => {
         ...redirectObj,
         props: {
             id,
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'reference']))
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'reference', 'transaction-history']))
         }
     };
 };

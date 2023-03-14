@@ -149,7 +149,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData =
                                             priorityKey.includes('0x') || col.localized === 'ID' ? (
                                                 <TextCopyable
-                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 6, 6)}` : undefined}
+                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
                                                     text={priorityKey}
                                                 />
                                             ) : (
@@ -191,14 +191,19 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData = `${formatPrice(keyData)} ${symbol?.quoteAsset}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
-                                        additionalData = detailTx.additionalData;
-                                        const assetLength = additionalData.assets
-                                            ? additionalData.assets.length
-                                            : Object.keys(additionalData?.reward.tokens).length;
+                                        additionalData = detailTx?.additionalData;
+                                        if (!additionalData) return;
+                                        const assetLength = additionalData?.assets
+                                            ? additionalData?.assets?.length
+                                            : Object.keys(additionalData?.reward?.tokens)?.length;
                                         formatKeyData = `${assetLength < 10 ? `0${assetLength}` : assetLength}`;
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
-                                        formatKeyData = <div className="capitalize">Ví {WalletTypeById?.[keyData]?.toLowerCase()}</div>;
+                                        formatKeyData = (
+                                            <div className="capitalize">
+                                                {t('transaction-history:wallet', { wallet: WalletTypeById?.[keyData]?.toLowerCase() })}
+                                            </div>
+                                        );
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
                                         formatKeyData = 'NAMI System';
@@ -226,7 +231,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
-                                        <div className="text-txtSecondary dark:text-txtSecondary-dark max-w-[170px]">{col.localized}</div>
+                                        <div className="text-txtSecondary dark:text-txtSecondary-dark max-w-[170px]">
+                                            {t(`transaction-history:${col.localized}`)}
+                                        </div>
                                         <div
                                             className={classNames('ml-2 text-right font-semibold text-txtPrimary  dark:text-txtPrimary-dark', {
                                                 '!text-dominant': col.primaryTeal
@@ -240,10 +247,14 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                         </div>
                         {(detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE || detailTx.type === TRANSACTION_TYPES.REWARD) && (
                             <div className="mx-8 mt-6">
-                                <div className="font-semibold mb-3">Danh sách token chuyển đổi</div>
+                                <div className="font-semibold mb-3">
+                                    {detailTx.type === TRANSACTION_TYPES.REWARD
+                                        ? t('transaction-history:modal_detail.list_assets')
+                                        : t('transaction-history:modal_detail.list_assets_convert')}
+                                </div>
                                 <div className="p-4  space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                                     {(
-                                        (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx.additionalData.assets) ||
+                                        (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx?.additionalData?.assets) ||
                                         (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
                                     ).map((asset) => {
                                         const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
