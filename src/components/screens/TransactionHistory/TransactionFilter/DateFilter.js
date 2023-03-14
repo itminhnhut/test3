@@ -8,16 +8,16 @@ import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
 import { X } from 'react-feather';
 
-const DateFilter = ({ filter, setFilter }) => {
+const DateFilter = ({ filter, setFilter, t }) => {
     return (
-        <FilterWrapper label="Thời gian" className="!max-w-[300px]">
+        <FilterWrapper label={t('transaction-history:filter.time')} className="!max-w-[300px]">
             <DatePickerV2
                 initDate={filter.range}
                 onChange={(e) =>
                     setFilter({
                         range: {
-                            startDate:  new Date(e?.selection?.startDate || null).getTime(),
-                            endDate:  new Date(e?.selection?.endDate || null).getTime(),
+                            startDate: new Date(e?.selection?.startDate || null).getTime(),
+                            endDate: new Date(e?.selection?.endDate || null).getTime(),
                             key: 'selection'
                         }
                     })
@@ -28,13 +28,14 @@ const DateFilter = ({ filter, setFilter }) => {
                 text={
                     <div
                         className={classNames(
-                            'relative py-3 px-3 leading-5 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer'
+                            'relative py-3 px-3 leading-5 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer',
+                            { 'text-txtPrimary dark:text-txtPrimary-dark': filter.range.startDate && filter.range.endDate }
                         )}
                     >
                         <span>
                             {filter.range.startDate && filter.range.endDate
                                 ? `${formatTime(filter.range.startDate, 'dd/MM/yyyy')} - ${formatTime(filter.range.endDate, 'dd/MM/yyyy')}`
-                                : 'Chọn thời gian'}
+                                : t('transaction-history:filter.select_time')}
                         </span>
                         {filter.range.startDate && filter.range.endDate ? (
                             <X
@@ -56,28 +57,6 @@ const DateFilter = ({ filter, setFilter }) => {
                     </div>
                 }
             />
-
-            {/* <DatePicker
-                date={filter.range}
-                wrapperClassname=""
-                className="!right-unset !w-[max-content] !left-0 "
-                dateRangeClassName="!text-base"
-                month={2}
-                hasShadow
-                showConfirmButton
-                text={
-                    filter.range.startDate && filter.range.endDate ? null : (
-                        <div
-                            className={classNames(
-                                'relative py-3 px-3 leading-5 flex items-center justify-between bg-gray-10 dark:bg-dark-2 rounded-md w-auto cursor-pointer'
-                            )}
-                        >
-                            Chọn thời gian
-                            <Calendar size={16} />
-                        </div>
-                    )
-                }
-            /> */}
         </FilterWrapper>
     );
 };
