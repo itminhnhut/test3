@@ -283,7 +283,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     const getPercent = (value, balance) => {
         const per = value ? ((value / balance) * 100).toFixed(0) : 0;
-        return Math.min(per, 100);
+        return Math.min(per, 100) || 0;
     };
 
     const balance = useMemo(() => {
@@ -346,7 +346,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
 
     const validateTotal = (price, side) => {
         const isBuy = side === ExchangeOrderEnum.Side.BUY;
-        const _balance = balance[isBuy ? 'stable' : 'token'];
+        const _balance = balance[isBuy ? 'stable' : 'token'] || 0;
         return {
             min: +minNotionalFilter?.minNotional,
             max: _balance * (isBuy ? 1 : price)
@@ -356,7 +356,7 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
     const validateAmount = (price, side) => {
         const isMarket = orderType === ExchangeOrderEnum.Type.MARKET;
         const isBuy = side === ExchangeOrderEnum.Side.BUY;
-        const _balance = balance[isBuy ? 'stable' : 'token'];
+        const _balance = balance[isBuy ? 'stable' : 'token'] || 0;
         if (!price) {
             return {
                 min: quantityFilter?.minQty,
@@ -364,17 +364,13 @@ const SimplePlaceOrderForm = ({ symbol, orderBook }) => {
             };
         }
         const validate_limit = {
-            min: Math.max(+quantityFilter?.minQty ?? 0, +(+(minNotionalFilter?.minNotional ?? 0 * (isBuy ? fee : 1)) / price).toFixed(decimals.qty)),
-            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price * fee : 1)).toFixed(decimals.qty))
+            min: Math.max(+quantityFilter?.minQty, +(+(minNotionalFilter?.minNotional * (isBuy ? fee : 1)) / price).toFixed(decimals.qty)),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, _balance / (isBuy ? price * fee : 1)), decimals.qty)
         };
 
         const validate_market = {
-            min: Math.max(
-                +quantityFilter?.minQty ?? 0,
-                +(+(minNotionalFilter?.minNotional ?? 0) / price).toFixed(decimals.qty),
-                quantityMarketFilter?.minQty ?? 0
-            ),
-            max: Math.min(+quantityFilter?.maxQty ?? 0, (_balance / (isBuy ? price : 1), quantityMarketFilter?.maxQty ?? 0).toFixed(decimals.qty))
+            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty), quantityMarketFilter?.minQty),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, _balance / (isBuy ? price : 1), quantityMarketFilter?.maxQty), decimals.qty)
         };
         return isMarket ? validate_market : validate_limit;
     };

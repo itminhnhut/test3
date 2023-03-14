@@ -327,7 +327,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
         const token = getAvailable(baseAssetId);
         const stable = getAvailable(quoteAssetId);
         const _isBuy = side === ExchangeOrderEnum.Side.BUY;
-        return roundToDown(_isBuy ? stable : token, _isBuy ? 2 : decimals.qty);
+        return roundToDown(_isBuy ? stable : token, _isBuy ? 2 : decimals.qty) || 0;
     };
 
     const decimals = useMemo(() => {
@@ -348,7 +348,7 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
 
     const getPercent = (value, balance) => {
         const per = value ? ((value / balance) * 100).toFixed(0) : 0;
-        return Math.min(per, 100);
+        return Math.min(per, 100) || 0;
     };
 
     useEffect(() => {
@@ -466,8 +466,8 @@ const PlaceOrderForm = ({ symbol, orderBook }) => {
             max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? price * fee : 1))), decimals.qty)
         };
         const validate_market = {
-            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / symbolTicker?.p).toFixed(decimals.qty), quantityMarketFilter?.minQty),
-            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? symbolTicker?.p : 1)), quantityMarketFilter?.maxQty ?? 0), decimals.qty)
+            min: Math.max(+quantityFilter?.minQty, +(+minNotionalFilter?.minNotional / price).toFixed(decimals.qty), quantityMarketFilter?.minQty),
+            max: roundToDown(Math.min(+quantityFilter?.maxQty, +(balance / (isBuy ? price : 1)), quantityMarketFilter?.maxQty), decimals.qty)
         };
         return isMarket ? validate_market : validate_limit;
     };
