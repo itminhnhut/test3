@@ -4,6 +4,7 @@ import PopoverSelect from '../PopoverSelect';
 import classNames from 'classnames';
 import { useRouter } from 'next/router';
 import { TransactionTabs } from '../constant';
+import { X } from 'react-feather';
 
 const CategoryFilter = ({ category, setCategory, categoryConfig, language }) => {
     const popoverRef = useRef(null);
@@ -15,7 +16,25 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language }) => 
         <FilterWrapper label="Loại giao dịch">
             <PopoverSelect
                 className="w-full rounded-xl !left-0 !translate-x-0"
-                labelValue={() => <span className={classNames({ 'text-txtPrimary dark:text-txtPrimary-dark': category })}>{!category ? 'Tất cả' : category?.content[language]}</span>}
+                hideChevron={Boolean(category)}
+                labelValue={() => (
+                    <div className={classNames({ 'text-txtPrimary dark:text-txtPrimary-dark flex justify-between items-center w-full': category })}>
+                        {!category ? (
+                            'Tất cả'
+                        ) : (
+                            <>
+                                <span>{category?.content[language]}</span>
+                                <X
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCategory(null);
+                                    }}
+                                    size={16}
+                                />
+                            </>
+                        )}
+                    </div>
+                )}
                 ref={popoverRef}
                 value={search}
                 onChange={(value) => setSearch(value)}

@@ -62,7 +62,7 @@ const AssetFilter = ({ asset, setAsset }) => {
             <PopoverSelect
                 containerClassName="!z-40"
                 className="min-w-[400px] rounded-xl !left-0 !translate-x-0"
-                hideChevron={!!asset}
+                hideChevron={Boolean(asset)}
                 labelValue={() => (
                     <div className={classNames({ 'text-txtPrimary dark:text-txtPrimary-dark flex justify-between items-center w-full': asset })}>
                         {!asset ? (
