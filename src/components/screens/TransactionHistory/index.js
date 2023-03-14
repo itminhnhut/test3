@@ -25,6 +25,8 @@ import axios from 'axios';
 const LIMIT = 10;
 const MILLISEC_ONE_DAY = 86400000;
 
+const CANCEL_REQUEST_SIGNAL = 'Cancel_Request';
+
 const namiSystem = {
     en: 'Nami system',
     vi: 'Hệ thống Nami'
@@ -39,7 +41,7 @@ const TransactionHistory = ({ id }) => {
     } = useTranslation();
     const router = useRouter();
     const assetConfig = useSelector((state) => state.utils.assetConfig);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const hasNext = useRef(false);
     const [detailId, setDetailId] = useState(null);
@@ -111,18 +113,11 @@ const TransactionHistory = ({ id }) => {
             };
             try {
                 setLoading(true);
-                const {
-                    data: { data, statusCode, status }
-                } = await axios.get(API_GET_WALLET_TRANSACTION_HISTORY, {
+                const { data, statusCode, status } = await FetchApi({
+                    url: API_GET_WALLET_TRANSACTION_HISTORY,
                     params,
                     cancelToken: source.token
                 });
-
-                // const { data, statusCode, status } = await FetchApi({
-                //     url: API_GET_WALLET_TRANSACTION_HISTORY,
-                //     params,
-                //     cancelToken: source.token
-                // });
                 let result = data?.result || data?.results;
                 if (statusCode === 200 || status === ApiStatus.SUCCESS) {
                     if (id === TRANSACTION_TYPES.TRANSFER) {
@@ -136,19 +131,21 @@ const TransactionHistory = ({ id }) => {
                 }
                 hasNext.current = data?.hasNext;
                 setData(result);
+                setLoading(false);
             } catch (error) {
                 console.log('fetching API_GET_WALLET_TRANSACTION_HISTORY error:', error);
-            } finally {
-                setLoading(false);
+                if (error?.message === CANCEL_REQUEST_SIGNAL) {
+                    setLoading(true);
+                } else setLoading(false);
             }
         };
 
         fetchTransactionHistory();
 
         return () => {
-            source.cancel();
+            source.cancel(CANCEL_REQUEST_SIGNAL);
         };
-    }, [filter.range, filter.asset, filter.category, id, currentPage, previousId]);
+    }, [filter, id, currentPage, previousId]);
 
     const columns = useMemo(() => {
         return {

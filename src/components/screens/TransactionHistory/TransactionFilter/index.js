@@ -25,7 +25,7 @@ const TransactionFilter = ({ filter, setFilter, resetFilter, categoryConfig, lan
     return (
         <div className="flex flex-wrap -m-3 items-end w-full">
             <div className="w-1/2 p-3 lg:w-1/4">
-                <AssetFilter asset={filter.asset} setAsset={(asset) => setFilter({ asset })} />
+                <AssetFilter asset={filter.asset} setAsset={(newAsset) => setFilter({ asset: newAsset })} />
             </div>
             <div className="w-1/2 p-3 lg:w-1/4">
                 <DateFilter filter={filter} setFilter={setFilter} />
