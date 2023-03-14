@@ -184,6 +184,7 @@ const TopPositionTable = () => {
                 dataIndex: 'opened_at',
                 title: t('futures:order_table:open_at'),
                 align: 'left',
+                fixed: 'left',
                 width: 192,
                 render: (v) => <span className="whitespace-nowrap">{formatTime(v, 'HH:mm:ss dd/MM/yyyy')}</span>
             },
@@ -255,23 +256,23 @@ const TopPositionTable = () => {
                 align: 'right',
                 width: 138,
                 render: (_row, item) => formatNumber(item?.open_price, item?.decimalScalePrice, 0, true)
+            },
+            {
+                key: 'close_price',
+                dataIndex: 'close_price',
+                title: t('futures:order_table:close_price'),
+                align: 'right',
+                width: 138,
+                render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)
+            },
+            {
+                key: 'hashIdx',
+                dataIndex: 'hashIdx',
+                title: t('futures:mobile:transaction_histories:id'),
+                align: 'right',
+                width: 128,
+                render: (v) => v
             }
-            // {
-            //     key: 'close_price',
-            //     dataIndex: 'close_price',
-            //     title: t('futures:order_table:close_price'),
-            //     align: 'right',
-            //     width: 138,
-            //     render: (_row, item) => formatNumber(item?.close_price, item?.decimalScalePrice, 0, true)
-            // }
-            // {
-            //     key: 'hashIdx',
-            //     dataIndex: 'hashIdx',
-            //     title: t('futures:mobile:transaction_histories:id'),
-            //     align: 'right',
-            //     width: 128,
-            //     render: (v) => v
-            // }
         ],
         [tableData]
     );

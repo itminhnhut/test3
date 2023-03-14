@@ -16,7 +16,7 @@
     "failed": "Failed",
     "declined": "Declined",
     "expired": "Expired",
-    "waiting_confirmation": "Waiting Confirmation",
+    "waiting_confirmation": "Waiting for confirmation",
     "asset": "Asset",
     "total_balance": "Total",
     "available_balance": "Available",
@@ -389,5 +389,12 @@
         "sum_sell": "Tổng vị thế Bán",
         "max_profit": "Lợi nhuận cao nhất",
         "min_profit": "Lợi nhuận thấp nhất"
-    }
+    },
+    "no_assets_available": "No assets available for conversion",
+    "confirm_convert": "Conversion confirmation",
+    "convert_success": "Convert success",
+    "amount_of_asset": "Number of assets",
+    "amount_of_estimate_nami": "Estimated quantity",
+    "view_detail": "View details",
+    "convert_fail": "Conversion failed"
 }

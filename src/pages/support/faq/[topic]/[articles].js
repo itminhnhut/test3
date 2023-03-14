@@ -40,14 +40,14 @@ const FaqArticle = (props) => {
     }, []);
 
 
-    useEffect(() => {
-        const themeLocal = localStorage.getItem("theme");
-        if (themeLocal === "dark") {
-            setTheme(THEME_MODE.DARK);
-        } else {
-            setTheme(THEME_MODE.LIGHT);
-        }
-    }, [router?.query]);
+    // useEffect(() => {
+    //     const themeLocal = localStorage.getItem("theme");
+    //     if (themeLocal === "dark") {
+    //         setTheme(THEME_MODE.DARK);
+    //     } else {
+    //         setTheme(THEME_MODE.LIGHT);
+    //     }
+    // }, [router?.query]);
 
     const renderAppHeader = () => {
         if (!isApp) return null

@@ -8,30 +8,27 @@ import { memo, useCallback, useEffect, useState } from 'react';
 import Div100vh from 'react-div-100vh';
 import { X } from 'react-feather';
 import { useSelector } from 'react-redux';
-import { getS3Url } from 'redux/actions/utils';
+import { getS3Url, getLoginUrl } from 'redux/actions/utils';
 import colors from 'styles/colors';
 import { useWindowSize } from 'utils/customHooks';
 import { PulseLoader } from 'react-spinners';
 import { PATHS } from 'constants/paths';
 import FuturesSetting from '../../screens/Futures/FuturesSetting';
 import { AppleIcon, GooglePlayIcon, SuccessfulTransactionIcon } from '../../svg/SvgIcon';
-import { KYC_STATUS,DefaultAvatar } from 'redux/actions/const';
+import { KYC_STATUS, DefaultAvatar } from 'redux/actions/const';
 import NavbarIcons from './Icons';
-import AuthButton from './AuthButton';
 import Image from 'next/image';
 import ButtonV2 from '../V2/ButtonV2/Button';
 import TagV2 from '../V2/TagV2';
 import { buildLogoutUrl } from 'src/utils';
 import { useRouter } from 'next/router';
 
-
-
 const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, page, spotState, resetDefault, onChangeSpotState }) => {
     const [state, set] = useState({
         navActiveLv1: {}
     });
     const setState = (state) => set((prevState) => ({ ...prevState, ...state }));
-    const router = useRouter()
+    const router = useRouter();
 
     const { user: auth } = useSelector((state) => state.auth) || null;
     const isNotVerified = auth?.kyc_status === KYC_STATUS.NO_KYC;
@@ -182,8 +179,22 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                         src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
                                     />
                                 </div>
+                                <ButtonV2
+                                    className=" max-w-[132px] !text-sm"
+                                    variants="text"
+                                    onClick={() => {
+                                        window.open(getLoginUrl('sso', 'login'),"_self");
+                                    }}
+                                >
+                                    {t('common:sign_in')}
+                                </ButtonV2>
 
-                                <AuthButton t={t} />
+                                <ButtonV2
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'),"_self")}
+                                    className="ml-4 py-2 max-w-[132px] !h-[36px] rounded-md !text-sm"
+                                >
+                                    {t('common:sign_up')}
+                                </ButtonV2>
                             </div>
 
                             <div className="my-4" />
@@ -191,7 +202,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
                             <a className="flex items-center px-4 mb-6">
-                                <Image width={58} height={58} objectFit="cover" src={auth?.avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
+                                <Image
+                                    width={58}
+                                    height={58}
+                                    objectFit="cover"
+                                    src={auth?.avatar || DefaultAvatar}
+                                    alt="avatar_user"
+                                    className="rounded-full"
+                                />
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
                                         {auth?.username || auth?.name || auth?.email}
@@ -279,7 +297,7 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                             </Link>
                         </div>
                         {auth && (
-                            <div className="mal-pocket-navbar__drawer__navlink__group___item mt-8">
+                            <div className="px-4 w-full flex justify-center mt-8">
                                 <ButtonV2 onClick={() => router.push(buildLogoutUrl())} variants="secondary" className=" font-semibold text-txtPrimary">
                                     {t('navbar:menu.user.logout')}
                                 </ButtonV2>

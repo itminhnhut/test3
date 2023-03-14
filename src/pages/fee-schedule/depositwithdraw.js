@@ -75,13 +75,19 @@ const DepositWithdrawFee = () => {
 
         const columns = [
             {
-                key: 'asset',
-                dataIndex: 'asset',
+                key: 'assetCode',
+                dataIndex: 'assetCode',
                 title: 'Coin / Token',
                 width: 80,
                 fixed: 'left',
                 align: 'left',
-                preventSort: true
+                // preventSort: true
+                render: (row, item) =>
+                    <div className="flex items-center">
+                        <AssetLogo assetCode={item?.assetCode} size={width >= BREAK_POINTS['2xl'] ? 32 : 24} />
+                        <span className="ml-2.5 text-base font-semibold">{item?.assetCode}</span>
+                    </div>
+                ,
             },
             // {
             //     key: 'fullName',
@@ -94,33 +100,61 @@ const DepositWithdrawFee = () => {
                 key: 'network',
                 dataIndex: 'network',
                 title: t('wallet:network'),
-                width: 80,
+                width: 160,
                 align: 'left',
-                preventSort: true
+                preventSort: true,
+                render: (row, item) => <div>
+                    {item?.networkList?.map((network, index) => (
+                        <div key={`network__${index}`} className="mb-1 text-base last:mb-0">
+                            {network?.name}
+                        </div>
+                    ))}
+                </div>
             },
             {
                 key: 'deposit_fee',
                 dataIndex: 'deposit_fee',
                 title: t('wallet:deposit_fee'),
-                width: 80,
+                width: 60,
                 align: 'left',
-                preventSort: true
+                preventSort: true,
+                render: (row, item) => {
+                    const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
+                    return <div>
+                        {item?.networkList?.map((network, index) => (
+                            <div key={`withdrawFee__${index}`} className={index === item?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
+                                {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
+                            </div>
+                        ))}
+                    </div>
+                }
             },
             {
                 key: 'min_withdraw',
                 dataIndex: 'min_withdraw',
                 title: t('wallet:min_withdraw'),
-                width: 80,
+                width: 100,
                 align: 'right',
-                preventSort: true
+                preventSort: true,
+                render: (row, item) => {
+                    const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
+                    return <div>
+                        {item?.networkList?.map((network, index) => (
+                            <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
+                                {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
+                            </div>
+                        ))}
+                    </div>
+                }
             },
             {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
                 title: t('wallet:withdraw_fee'),
-                width: 80,
+                width: 100,
                 align: 'right',
-                preventSort: true
+                preventSort: true,
+                render: () => <span className="text-base text-dominant">{t('common:free')}</span>,
             }
         ];
 
@@ -131,55 +165,55 @@ const DepositWithdrawFee = () => {
             }
             data = skeleton;
         } else {
-            const _data = [];
-            rawData?.forEach((raw) => {
-                const assetDigit = state.configs?.find((o) => o.assetCode === raw?.assetCode)?.assetDigit;
-                _data.push({
-                    raw,
-                    key: `asset_depwdl__item__${raw?.assetCode}`,
-                    asset: (
-                        <div className="flex items-center">
-                            <AssetLogo assetCode={raw?.assetCode} size={width >= BREAK_POINTS['2xl'] ? 32 : 24} />
-                            <span className="ml-2.5 text-base font-semibold">{raw?.assetCode}</span>
-                        </div>
-                    ),
-                    // fullName: <span className="text-base">{raw?.assetFullName || raw?.assetCode}</span>,
-                    network: (
-                        <div>
-                            {raw?.networkList?.map((network, index) => (
-                                <div key={`network__${index}`} className="mb-1 text-base last:mb-0">
-                                    {network?.name}
-                                </div>
-                            ))}
-                        </div>
-                    ),
-                    min_withdraw: (
-                        <div>
-                            {raw?.networkList?.map((network, index) => (
-                                <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
-                                    {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
-                                </div>
-                            ))}
-                        </div>
-                    ),
-                    deposit_fee: <span className="text-base text-dominant">{t('common:free')}</span>,
-                    withdraw_fee: (
-                        <div>
-                            {raw?.networkList?.map((network, index) => (
-                                <div key={`withdrawFee__${index}`} className={index === raw?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
-                                    {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
-                                </div>
-                            ))}
-                        </div>
-                    ),
-                    [RETABLE_SORTBY]: {
-                        asset: raw?.assetCode,
-                        fullName: raw?.assetFullName || raw?.assetCode
-                    }
-                });
-            });
+            // const _data = [];
+            // rawData?.forEach((raw) => {
+            //     const assetDigit = state.configs?.find((o) => o.assetCode === raw?.assetCode)?.assetDigit;
+            //     _data.push({
+            //         raw,
+            //         key: `asset_depwdl__item__${raw?.assetCode}`,
+            //         asset: (
+            //             <div className="flex items-center">
+            //                 <AssetLogo assetCode={raw?.assetCode} size={width >= BREAK_POINTS['2xl'] ? 32 : 24} />
+            //                 <span className="ml-2.5 text-base font-semibold">{raw?.assetCode}</span>
+            //             </div>
+            //         ),
+            //         // fullName: <span className="text-base">{raw?.assetFullName || raw?.assetCode}</span>,
+            //         network: (
+            //             <div>
+            //                 {raw?.networkList?.map((network, index) => (
+            //                     <div key={`network__${index}`} className="mb-1 text-base last:mb-0">
+            //                         {network?.name}
+            //                     </div>
+            //                 ))}
+            //             </div>
+            //         ),
+            //         min_withdraw: (
+            //             <div>
+            //                 {raw?.networkList?.map((network, index) => (
+            //                     <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
+            //                         {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
+            //                     </div>
+            //                 ))}
+            //             </div>
+            //         ),
+            //         deposit_fee: <span className="text-base text-dominant">{t('common:free')}</span>,
+            //         withdraw_fee: (
+            //             <div>
+            //                 {raw?.networkList?.map((network, index) => (
+            //                     <div key={`withdrawFee__${index}`} className={index === raw?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
+            //                         {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
+            //                     </div>
+            //                 ))}
+            //             </div>
+            //         ),
+            //         [RETABLE_SORTBY]: {
+            //             asset: raw?.assetCode,
+            //             fullName: raw?.assetFullName || raw?.assetCode
+            //         }
+            //     });
+            // });
 
-            data = _data;
+            // data = _data;
         }
 
         if (!data?.length) {
@@ -190,9 +224,8 @@ const DepositWithdrawFee = () => {
             <>
                 <ReTable
                     sort
-                    defaultSort={{ key: 'asset', direction: 'asc' }}
                     useRowHover
-                    data={data}
+                    data={rawData}
                     emptyText={tableStatus}
                     columns={columns}
                     rowKey={(item) => item?.key}
@@ -240,7 +273,7 @@ const DepositWithdrawFee = () => {
                 onChange={(value) => {
                     setState({ search: value });
                 }}
-                // width
+            // width
             />
         );
     }, [state.search]);

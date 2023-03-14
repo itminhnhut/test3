@@ -62,11 +62,9 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
     const [currentTheme] = useDarkMode();
     const router = useRouter();
 
-    // console.log('here 1: ', data);
-    // console.log('here 2: ', user);
-
     // handle check KYC
     const auth = useSelector((state) => state.auth?.user);
+
     const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
 
     const handleBtnRegisterPartner = () => {
@@ -200,7 +198,9 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <div className="absolute bottom-[-1px] right-[-1px]">{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                                     </div>
                                     <div className="h-full flex flex-col">
-                                        <p className="font-semibold text-2xl leading-[30px] mb-2">{data?.name ?? user?.name ?? t('common:unknown')}</p>
+                                        <p className="font-semibold text-2xl leading-[30px] mb-2">
+                                            {auth?.name ?? auth?.username ?? auth?.email ?? auth?.namiID ?? t('common:unknown')}
+                                        </p>
                                         <span className="text-txtSecondary dark:text-txtSecondary-dark leading-6">
                                             <span className="uppercase">{t('reference:referral.ranking')}: </span>
                                             <span className="text-teal font-semibold">{rank[data?.rank?.toString() ?? user?.rank_id?.toString() ?? '1']}</span>
