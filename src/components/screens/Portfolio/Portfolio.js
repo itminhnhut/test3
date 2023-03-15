@@ -33,11 +33,11 @@ const Portfolio = () => {
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
 
     return (
-        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal">
+        <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base">
             {/* {renderTabs(mainTabs, type, setType)} */}
 
             {/* Banner infor */}
-            <BannerInfo currency={currency} setCurrency={setCurrency} user={user} t={t} isMobile={isMobile} />
+            <BannerInfo currency={currency} setCurrency={setCurrency} user={user} t={t} isMobile={isMobile} isDark={isDark} />
 
             {/* Content */}
             <div className="w-full px-4 md:px-28">
