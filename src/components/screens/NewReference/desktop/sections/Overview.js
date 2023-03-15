@@ -38,7 +38,8 @@ import toast from 'utils/toast';
 import { useSelector } from 'react-redux';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { data } from 'autoprefixer';
-
+import { useDispatch } from 'react-redux';
+import { getMe } from 'redux/actions/user';
 import Spinner from 'components/svg/Spinner';
 
 const formatter = Intl.NumberFormat('en', {
@@ -101,7 +102,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             } else {
             }
         });
-    }, [user]);
+    }, [user?.code]);
 
     const rank = {
         1: t('reference:referral.normal'),
@@ -371,6 +372,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
     const [code, setCode] = useState('');
     const [currentNote, setCurrentNote] = useState('');
     const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (!isShow) return;
@@ -404,6 +406,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
                 type: 'success'
             });
             // setDoRefresh(!doRefresh)
+            dispatch(getMe(true));
             setRefs(
                 refs.map((e) => {
                     if (e.code === code) {
@@ -414,7 +417,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
                     return e;
                 })
             );
-            if (refreshData) refreshData();
+            // if (refreshData) refreshData();
         } else {
         }
     }, 1000);
