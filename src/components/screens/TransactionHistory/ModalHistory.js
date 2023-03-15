@@ -137,7 +137,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
                                 const keyData = col.keys
                                     .filter((key) => {
-                                        // filter out falsy value, array and obj.
+                                        // filter number & string value.
                                         return isNumber(get(detailTx, key)) || isString(get(detailTx, key));
                                     })
                                     .map((key, index) => (index >= 1 ? ' ' : '') + get(detailTx, key))
@@ -165,12 +165,17 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
                                     case COLUMNS_TYPE.RATE:
                                         additionalData = detailTx?.additionalData;
+
+                                        if (!additionalData) {
+                                            formatKeyData = '--';
+                                            break;
+                                        }
                                         asset = assetConfig.find((asset) => asset.assetCode === additionalData?.toAsset);
 
-                                        formatKeyData = `1 ${additionalData?.fromAsset} =  ${formatPrice(
+                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} =  ${formatPrice(
                                             additionalData?.toQty / additionalData?.fromQty,
                                             asset?.assetDigit ?? 0
-                                        )}  ${additionalData?.toAsset}`;
+                                        )}  ${additionalData?.toAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.SYMBOL:
                                         symbol = getSymbolObject(keyData);
@@ -222,7 +227,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         );
                                         break;
                                     case COLUMNS_TYPE.FIAT_USER:
-                                        const formatKeyData = (
+                                        formatKeyData = (
                                             <>
                                                 <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{get(detailTx, col.keys[0])}</div>
                                                 <div className="text-sm text-txtSecondary dark:text-txtSecodnary-dark">{get(detailTx, col.keys[1])}</div>
@@ -259,7 +264,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     {(
                                         (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx?.additionalData?.assets) ||
                                         (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
-                                    ).map((asset) => {
+                                    )?.map((asset) => {
                                         const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
                                         return (
                                             <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
