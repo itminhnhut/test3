@@ -17,9 +17,9 @@ import axios from 'axios';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { isNull } from 'lodash';
 import usePrevious from 'hooks/usePrevious';
+import { formatLocalTimezoneToUTC } from 'utils/helpers';
 
 const LIMIT = 10;
-const MILLISEC_ONE_DAY = 86400000;
 
 const namiSystem = {
     en: 'Nami system',
@@ -80,10 +80,11 @@ const TransactionHistory = ({ id }) => {
         const fetchTransactionHistory = async () => {
             const { range, asset, category } = filter;
             const { startDate, endDate } = range;
-            const from = startDate;
+
+            const from = startDate && formatLocalTimezoneToUTC(startDate.getTime());
 
             // Plus 1 more day on endDate if endDate !== null
-            const to = !endDate ? new Date().getTime() : endDate + MILLISEC_ONE_DAY - 1000;
+            const to = formatLocalTimezoneToUTC(!endDate ? new Date().getTime() : endDate.getTime());
 
             // custom type phai dat ben duoi [id] de overwrite lai
             // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative

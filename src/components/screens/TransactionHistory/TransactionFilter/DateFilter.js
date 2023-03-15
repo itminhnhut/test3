@@ -2,7 +2,6 @@ import React from 'react';
 import DatePicker from 'components/common/DatePicker/DatePicker';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import { formatTime } from 'redux/actions/utils';
-
 import classNames from 'classnames';
 import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
@@ -13,15 +12,15 @@ const DateFilter = ({ filter, setFilter, t }) => {
         <FilterWrapper label={t('transaction-history:filter.time')} className="!max-w-[300px]">
             <DatePickerV2
                 initDate={filter.range}
-                onChange={(e) =>
+                onChange={(e) => {
                     setFilter({
                         range: {
-                            startDate: new Date(e?.selection?.startDate || null).getTime(),
-                            endDate: new Date(e?.selection?.endDate || null).getTime(),
+                            startDate: new Date(e?.selection?.startDate || null),
+                            endDate: new Date(e?.selection?.endDate || null),
                             key: 'selection'
                         }
-                    })
-                }
+                    });
+                }}
                 month={2}
                 hasShadow
                 position="left"
