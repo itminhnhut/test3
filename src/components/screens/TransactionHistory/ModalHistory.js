@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatPrice, formatNumber, formatWallet, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatPrice, formatWallet, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -9,19 +9,22 @@ import { ApiStatus } from 'redux/actions/const';
 import AssetLogo from '../../wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { get, isArray, isNumber, isString } from 'lodash';
+import { get, isNumber, isString } from 'lodash';
 import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
-import { WalletType } from 'redux/actions/const';
+import { WalletType, EarnWalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
-import Tooltip from 'components/common/Tooltip';
 
 const WalletTypeById = {
     0: WalletType.SPOT,
     1: WalletType.MARGIN,
     2: WalletType.FUTURES,
     3: WalletType.P2P,
-    4: WalletType.POOL
+    4: WalletType.POOL,
+    5: WalletType.EARN,
+    6: EarnWalletType.STAKE,
+    7: EarnWalletType.FARM,
+    8: WalletType.BROKER
 };
 
 const mappingTokensRewardType = (detail) => {
@@ -76,14 +79,8 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
             isVisible={isVisible}
             wrapClassName="!px-0"
             onBackdropCb={onClose}
-            className={`w-[90%] !max-w-[488px] select-none border-divider ${className}`}
-            customHeader={() => (
-                <div className="absolute right-8 top-8">
-                    <div className="flex items-center justify-center w-6 h-6 rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
-                        <X size={24} />
-                    </div>
-                </div>
-            )}
+            className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
+            customHeader={() => <div className="bg-transparent"></div>}
         >
             {loading ? (
                 <div className="flex flex-col pt-20 px-8 font-semibold text-xl text-txtPrimary dark:text-txtPrimary-dark items-center">
@@ -102,7 +99,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
             ) : (
                 detailTx && (
                     <>
-                        <div className="flex pt-20 bg-center bg-cover bg-no-repeat px-8 pb-6 bg-tx-history-detail dark:bg-tx-history-detail-dark flex-col font-semibold text-2xl text-txtPrimary dark:text-txtPrimary-dark items-center">
+                        <div className="flex pt-8  bg-center bg-cover bg-no-repeat px-8 pb-6 bg-tx-history-detail dark:bg-tx-history-detail-dark flex-col font-semibold text-2xl text-txtPrimary dark:text-txtPrimary-dark items-center">
+                            <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
+                                <X size={24} />
+                            </div>
                             <div className="mb-6 flex w-full items-start capitalize">{detailTx?.categoryContent?.[language] ?? detailTx.type}</div>
                             <div className="mb-6">
                                 {detailTx.type === 'convert' ? (
@@ -200,8 +200,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
-                                            <div className="capitalize">
-                                                {t('transaction-history:wallet', { wallet: WalletTypeById?.[keyData]?.toLowerCase() })}
+                                            <div className="uppercase">
+                                                {WalletTypeById?.[keyData]?.toLowerCase()}
+                                                {/* {t('transaction-history:wallet', { wallet: WalletTypeById?.[keyData]?.toLowerCase() })} */}
                                             </div>
                                         );
                                         break;

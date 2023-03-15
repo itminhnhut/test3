@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { sortBy } from 'lodash';
 import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 const AssetFilter = ({ asset, setAsset, t }) => {
     const popoverRef = useRef(null);
@@ -42,15 +43,17 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                             setAsset(currentAsset);
                         }}
                         key={key}
-                        className={classNames('flex items-center px-4 py-3 space-x-2', {
-                            'bg-hover dark:bg-hover-dark pointer-events-none': isAssetChosen,
-                            'cursor-pointer hover:bg-hover dark:hover:bg-hover-dark': !isAssetChosen
+                        className={classNames('flex items-center justify-between px-4 py-3 hover:bg-hover dark:hover:bg-hover-dark ', {
+                            'text-txtPrimary dark:text-txtPrimary-dark': isAssetChosen,
+                            'cursor-pointer ': !isAssetChosen
                         })}
                     >
-                        <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
-                        <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
-
-                        <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
+                        <div className="flex items-center space-x-2">
+                            <AssetLogo useNextImg={true} size={24} assetCode={currentAsset?.assetCode} />
+                            <div className="text-txtPrimary dark:text-txtPrimary-dark">{currentAsset?.assetCode}</div>
+                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark">{currentAsset?.assetName}</div>
+                        </div>
+                        {isAssetChosen && <CheckCircleIcon color="currentColor" size={16} />}
                     </div>
                 </div>
             );

@@ -25,6 +25,7 @@
     "category": "Loại giao dịch",
     "status": "Trạng thái",
     "wallet": "Ví {{wallet}}",
+    "click_on_transaction": "Click vào từng giao dịch để xem thông tin chi tiết.",
     "modal_detail": {
         "snapshot_value": "Giá trị tài sản",
         "list_assets": "Danh sách tài sản nhận được",
@@ -42,6 +43,6 @@
         "close_price": "Giá đóng",
         "type": "Loại",
         "position_id": "ID vị thế",
-        "wallet_type":"Loại ví"
+        "wallet_type": "Loại ví"
     }
 }
