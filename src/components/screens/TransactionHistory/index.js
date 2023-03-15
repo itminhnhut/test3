@@ -16,6 +16,7 @@ import ModalHistory from './ModalHistory';
 import axios from 'axios';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { isNull } from 'lodash';
+import usePrevious from 'hooks/usePrevious';
 
 const LIMIT = 10;
 const MILLISEC_ONE_DAY = 86400000;
@@ -43,6 +44,8 @@ const TransactionHistory = ({ id }) => {
     const [filter, setFilter] = useState(INITAL_FILTER);
     const [currentPage, setCurrentPage] = useState(0);
     const [categoryConfig, setCategoryConfig] = useState([]);
+
+    const previousId = usePrevious(id);
 
     const changeFilter = (_filter) => {
         setFilter((prevState) => ({ ...prevState, ..._filter }));
@@ -102,6 +105,11 @@ const TransactionHistory = ({ id }) => {
                 router.push('all');
                 return;
             }
+            // set currentPage to 0 when change tab
+            if (previousId !== id) {
+                setCurrentPage(0);
+                return;
+            }
 
             const params = {
                 type,
@@ -151,7 +159,7 @@ const TransactionHistory = ({ id }) => {
             mounted = true;
             source.cancel();
         };
-    }, [filter, id, currentPage]);
+    }, [filter, id, currentPage, previousId]);
 
     const columns = useMemo(() => {
         return {

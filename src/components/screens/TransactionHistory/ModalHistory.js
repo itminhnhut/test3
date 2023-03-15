@@ -27,6 +27,8 @@ const WalletTypeById = {
     8: WalletType.BROKER
 };
 
+const NULL_ASSET = '--';
+
 const mappingTokensRewardType = (detail) => {
     const tokens = get(detail, 'additionalData.reward.tokens');
     if (!tokens) return [];
@@ -178,7 +180,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 quoteAsset: get(detailTx, 'additionalData.quoteAsset')
                                             };
                                         }
-                                        formatKeyData = `${symbol?.baseAsset}/${symbol?.quoteAsset}`;
+                                        formatKeyData = `${symbol?.baseAsset || NULL_ASSET}/${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.FUTURES_ORDER:
                                         symbol = getSymbolObject(detailTx?.additionalData?.symbol);
@@ -188,7 +190,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 quoteAsset: get(detailTx, 'additionalData.quoteAsset')
                                             };
                                         }
-                                        formatKeyData = `${formatPrice(keyData)} ${symbol?.quoteAsset}`;
+                                        formatKeyData = `${formatPrice(keyData)} ${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
                                         additionalData = detailTx?.additionalData;
@@ -214,7 +216,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         formatKeyData = (
                                             <div className="flex">
                                                 <a>
-                                                    {formatPrice(get(detailTx, col.keys[0]), asset?.assetDigit || 0)} {asset?.assetCode}
+                                                    {formatPrice(get(detailTx, col.keys[0]), asset?.assetDigit || 0)} {asset?.assetCode || NULL_ASSET}
                                                 </a>
                                             </div>
                                         );
@@ -240,7 +242,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 '!text-dominant': col.primaryTeal
                                             })}
                                         >
-                                            {formatKeyData}
+                                            {formatKeyData || '--'}
                                         </div>
                                     </div>
                                 );
@@ -261,7 +263,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
                                         return (
                                             <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
-                                                <div className="">{_?.assetCode}</div>
+                                                <div className="">{_?.assetCode || NULL_ASSET}</div>
                                                 <div className={classNames('font-semibold')}>
                                                     {isNaN(formatWallet(asset.value, _?.assetDigit || 0))
                                                         ? asset.value.toFixed(_?.assetDigit || 0)
