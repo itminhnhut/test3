@@ -703,7 +703,7 @@ const Funding = ({ symbol }) => {
     }, [symbol])
 
     useEffect(() => {
-        const localKey = `notShowNetworkError:${symbol}`
+        const localKey = `notShowNetworkError`
         const notShowNetworkError = localStorage.getItem(localKey)
         if (notShowNetworkError?.length  ) {
             if(Number(notShowNetworkError) >= Date.now()){
