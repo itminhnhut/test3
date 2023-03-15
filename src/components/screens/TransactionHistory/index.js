@@ -215,7 +215,9 @@ const TransactionHistory = ({ id }) => {
                 width: 150,
                 render: () => (
                     <div className="w-full flex">
-                        <div className="px-4 py-1 rounded-[80px] bg-teal/10 text-green-2 dark:text-teal w-fit text-sm font-normal">{t('common:success')}</div>
+                        <div className="px-4 py-1 rounded-[80px] bg-teal/10 text-green-2 dark:text-teal w-fit text-sm font-normal">
+                            {t('transaction-history:completed')}
+                        </div>
                     </div>
                 )
             }
@@ -272,6 +274,7 @@ const TransactionHistory = ({ id }) => {
                             onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
                             language
                         }}
+                        emptyTextContent={t('transaction-history:no_transaction_history')}
                     />
                 </div>
             </div>

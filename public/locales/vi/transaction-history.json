@@ -19,13 +19,16 @@
         "category_type": "Loại giao dịch",
         "select_time": "Chọn thời gian"
     },
+    "completed": "Thành công",
     "asset": "Tài sản",
     "time": "Thời gian",
     "amount": "Số lượng",
     "category": "Loại giao dịch",
+    "reset": "Đặt lại",
     "status": "Trạng thái",
     "wallet": "Ví {{wallet}}",
     "click_on_transaction": "Click vào từng giao dịch để xem thông tin chi tiết.",
+    "no_transaction_history": "Không có lịch sử",
     "modal_detail": {
         "snapshot_value": "Giá trị tài sản",
         "list_assets": "Danh sách tài sản nhận được",

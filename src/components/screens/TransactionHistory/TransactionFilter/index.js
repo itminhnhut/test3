@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
-
-import dynamic from 'next/dynamic';
-
+import React from 'react';
 import classNames from 'classnames';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { INITAL_FILTER } from '../constant';
 import DateFilter from './DateFilter';
 import AssetFilter from './AssetFilter';
 import CategoryFilter from './CategoryFilter';
@@ -46,7 +42,7 @@ const TransactionFilter = ({ filter, setFilter, resetFilter, categoryConfig, lan
                     variants="secondary"
                     className={'!leading-5 !h-auto !w-[85px] disabled:cursor-default '}
                 >
-                    Reset
+                    {t('transaction-history:reset')}
                 </ButtonV2>
             </div>
         </div>

@@ -42,9 +42,9 @@ const index = ({
         const cols = !isAdd ? filterdData : filterdData.concat([{ fixed: 'right', width: 0 }]);
         return loading
             ? columns.map((column) => ({
-                ...column,
-                render: () => <Skeletor width={100} height={20} />
-            }))
+                  ...column,
+                  render: () => <Skeletor width={100} height={20} />
+              }))
             : cols;
     }, [columns, ref.current, loading]);
 
@@ -78,11 +78,11 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="" />}
+                emptyText={<NoData loading={loading} isSearch={!!isSearch} text={props?.emptyTextContent} className="" />}
                 onRowClick={onRowClick}
                 {...props}
             />
-            {((pagingPrevNext?.page !== 0 || pagingPrevNext?.hasNext) || (totalPage > 1 && limit > 0)) && showPaging && (
+            {(pagingPrevNext?.page !== 0 || pagingPrevNext?.hasNext || (totalPage > 1 && limit > 0)) && showPaging && (
                 <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination
                         total={total ?? data?.length}

@@ -127,7 +127,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     : (detailTx?.result?.money_use > 0 ? '+' : '') +
                                       `${formatPrice(detailTx?.result?.money_use, assetData?.assetDigit ?? 0)} ${assetData?.assetCode}`}
                             </div>
-                            <TagV2 type="success">{t('common:success')}</TagV2>
+                            <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
                         </div>
                         <div className="mx-8 p-4 space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                             {modalDetailColumn[detailTx.type].map((col) => {
