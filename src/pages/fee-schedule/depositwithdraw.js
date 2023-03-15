@@ -107,9 +107,9 @@ const DepositWithdrawFee = () => {
                 )
             },
             {
-                key: 'withdraw_fee',
-                dataIndex: 'withdraw_fee',
-                title: t('wallet:withdraw_fee'),
+                key: 'deposit_fee',
+                dataIndex: 'deposit_fee',
+                title: t('wallet:deposit_fee'),
                 width: '20%',
                 align: 'left',
                 preventSort: true,
@@ -137,9 +137,10 @@ const DepositWithdrawFee = () => {
                 }
             },
             {
-                key: 'deposit_fee',
-                dataIndex: 'deposit_fee',
-                title: t('wallet:deposit_fee'),
+                key: 'withdraw_fee',
+                dataIndex: 'withdraw_fee',
+                title: t('wallet:withdraw_fee'),
+
                 width: '20%',
                 align: 'right',
                 preventSort: true,
