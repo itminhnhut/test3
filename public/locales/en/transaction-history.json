@@ -25,6 +25,7 @@
     "category": "Category",
     "status": "Status",
     "wallet": "{{wallet}} Wallet",
+    "click_on_transaction": "Click on each transaction to view detailed information.",
     "modal_detail": {
         "snapshot_value": "Snapshot value",
         "list_assets": "List of received assets",
@@ -42,6 +43,6 @@
         "close_price": "Close price",
         "type": "Type",
         "position_id": "Position ID",
-        "wallet_type":"Wallet Type"
+        "wallet_type": "Wallet Type"
     }
 }

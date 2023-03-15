@@ -2,7 +2,7 @@ import { Search } from 'react-feather';
 import { useTranslation } from 'next-i18next';
 import { CloseIcon } from 'components/svg/SvgIcon';
 
-const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChange, onFocus, width, placeholder }) => {
+const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', isValueTrim = true, value, onChange, onFocus, width, placeholder }) => {
     const { t } = useTranslation();
 
     return (
@@ -19,7 +19,8 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
                 }
                 value={value}
                 onChange={(e) => {
-                    onChange(e?.target?.value?.trim());
+                    const value = e.target.value;
+                    onChange(isValueTrim ? value.trim() : value);
                 }}
                 placeholder={placeholder || t('common:search')}
                 onFocus={onFocus}

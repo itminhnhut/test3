@@ -3,16 +3,13 @@ import { FilterWrapper } from '.';
 import PopoverSelect from '../PopoverSelect';
 import classNames from 'classnames';
 import { useSelector } from 'react-redux';
-import { useRouter } from 'next/router';
-import { TransactionTabs } from '../constant';
 import { X } from 'react-feather';
 import NoResult from 'components/screens/Support/NoResult';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 
 const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) => {
     const popoverRef = useRef(null);
     const [search, setSearch] = useState('');
-    const router = useRouter();
-    const { id } = router.query;
     const { user: auth } = useSelector((state) => state.auth) || null;
     const filterCategory = useMemo(
         () => categoryConfig.filter((cate) => cate.content[language].toLowerCase().includes(search.toLowerCase())) || [],
@@ -57,27 +54,30 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
                     {!filterCategory?.length ? (
                         <NoResult text={t('common:no_results_found')} />
                     ) : (
-                        filterCategory?.map((cate) => (
-                            <div
-                                onClick={() => {
-                                    setCategory(cate);
-                                    popoverRef?.current?.close();
-                                    setSearch('');
-                                }}
-                                key={cate.category_id}
-                                className={classNames(
-                                    ' text-txtPrimary dark:text-txtPrimary-dark flex items-center px-4 py-3',
-                                    {
-                                        'cursor-default pointer-events-none bg-hover dark:bg-hover-dark': category?.category_id === cate.category_id
-                                    },
-                                    {
-                                        'cursor-pointer hover:bg-hover dark:hover:bg-hover-dark': !category || category?.category_id !== cate.category_id
-                                    }
-                                )}
-                            >
-                                {cate.content[language]}
-                            </div>
-                        ))
+                        filterCategory?.map((cate) => {
+                            const isCategoryChosen = category && category?.category_id === cate.category_id;
+                            return (
+                                <div
+                                    onClick={() => {
+                                        if (isCategoryChosen) return;
+                                        setCategory(cate);
+                                        popoverRef?.current?.close();
+                                        setSearch('');
+                                    }}
+                                    key={cate.category_id}
+                                    className={classNames(
+                                        ' text-txtPrimary dark:text-txtPrimary-dark hover:bg-hover dark:hover:bg-hover-dark flex items-center justify-between px-4 py-3',
+                                        {
+                                            'cursor-pointer ': !isCategoryChosen
+                                        }
+                                    )}
+                                >
+                                    {cate.content[language]}
+
+                                    {isCategoryChosen && <CheckCircleIcon color="currentColor" size={16} />}
+                                </div>
+                            );
+                        })
                     )}
                 </div>
             </PopoverSelect>

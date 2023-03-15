@@ -15,7 +15,10 @@ const PopoverSelect = (props, ref) => {
             ref={ref}
             label={(open) => (
                 <div className=" z-0 p-3 bg-gray-10 dark:bg-dark-2 rounded-md h-11 flex items-center justify-between w-full">
-                    <div className="leading-5 truncate flex w-full"> {props.labelValue && isFunction(props.labelValue) ? props.labelValue() : props.labelValue}</div>
+                    <div className="leading-5 truncate flex w-full">
+                        {' '}
+                        {props.labelValue && isFunction(props.labelValue) ? props.labelValue() : props.labelValue}
+                    </div>
                     {!props.hideChevron && (
                         <div className="text-txtSecondary dark:text-gray-7">
                             <SvgIcon
@@ -31,7 +34,7 @@ const PopoverSelect = (props, ref) => {
         >
             <div className="py-4 z-50">
                 <div className="px-4 mb-6">
-                    <SearchBox inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
+                    <SearchBox isValueTrim={false} inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
                 </div>
                 {props.children}
                 {/* <div className="max-h-[300px] space-y-3 overflow-y-scroll"></div> */}

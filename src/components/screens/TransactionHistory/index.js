@@ -1,25 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import TabV2 from 'components/common/V2/TabV2/index';
 import { TransactionTabs, TRANSACTION_TYPES, INITAL_FILTER } from './constant';
 import { useRouter } from 'next/router';
 import TransactionFilter from './TransactionFilter';
 import TableV2 from 'components/common/V2/TableV2';
 import FetchApi from 'utils/fetch-api';
-import {
-    API_GET_COMMISSON_HISTORY,
-    API_GET_WALLET_TRANSACTION_HISTORY,
-    API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY,
-    API_GET_WALLET_TRANSFER_HISTORY
-} from 'redux/actions/apis';
+import { API_GET_WALLET_TRANSACTION_HISTORY, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatNumber, formatPrice, formatTime, getAssetName, getAssetCode, shortHashAddress } from 'redux/actions/utils';
-import { SwapIcon } from 'components/svg/SvgIcon';
+import { formatPrice, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
 import ModalHistory from './ModalHistory';
-import usePrevious from 'hooks/usePrevious';
 import axios from 'axios';
 import { BxsInfoCircle } from 'components/svg/SvgIcon';
 import { isNull } from 'lodash';
@@ -53,6 +46,7 @@ const TransactionHistory = ({ id }) => {
 
     const changeFilter = (_filter) => {
         setFilter((prevState) => ({ ...prevState, ..._filter }));
+        setCurrentPage(0);
     };
     const resetFilter = () => {
         setFilter(INITAL_FILTER);
@@ -121,6 +115,7 @@ const TransactionHistory = ({ id }) => {
             };
             try {
                 setLoading(true);
+                hasNext.current = false;
                 const { data, statusCode, status } = await FetchApi({
                     url: API_GET_WALLET_TRANSACTION_HISTORY,
                     params,
@@ -145,6 +140,7 @@ const TransactionHistory = ({ id }) => {
             } finally {
                 if (mounted) {
                     setLoading(true);
+                    hasNext.current = false;
                 } else setLoading(false);
             }
         };
@@ -254,7 +250,7 @@ const TransactionHistory = ({ id }) => {
 
                     <div className="mb-4 inline-flex items-center bg-hover-1 dark:bg-darkBlue-3 rounded-xl p-4">
                         <BxsInfoCircle size={16} />
-                        <div className="ml-2 text-txtSecondary dark:text-txtSecondary-dark">Click vào từng giao dịch để xem thông tin chi tiết.</div>
+                        <div className="ml-2 text-txtSecondary dark:text-txtSecondary-dark">{t('transaction-history:click_on_transaction')}</div>
                     </div>
                     <TableV2
                         sort={['created_at']}
