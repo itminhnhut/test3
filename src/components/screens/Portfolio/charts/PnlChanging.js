@@ -10,13 +10,9 @@ import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
 const { subDays } = require('date-fns');
 
-const PnlChanging = () => {
-    const [currentTheme] = useDarkMode();
-    const isDark = currentTheme === THEME_MODE.DARK;
-
+const PnlChanging = ({ isDark, t }) => {
     const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
     const [pnlLabels, setPnlLabels] = useState([]);
-    const { t } = useTranslation();
 
     useEffect(() => {
         const curDate = new Date();
@@ -152,7 +148,7 @@ const PnlChanging = () => {
                         if (context.tick.value === 0) {
                             return 'rgba(0, 0, 0, 0)';
                         }
-                        return currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT;
+                        return isDark ? colors.divider.dark : colors.divider.DEFAULT;
                     },
                     drawBorder: false
                 }

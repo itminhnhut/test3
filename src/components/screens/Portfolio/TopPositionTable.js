@@ -310,10 +310,8 @@ const TopPositionTable = () => {
                 scroll={{ x: true }}
                 limit={LIMIT_ROW}
                 skip={0}
-                // isSearch={!!state.search}
                 pagingClassName="border-none"
                 height={350}
-                // pagingPrevNext={{ page: state.page, hasNext: state.histories?.length, onChangeNextPrev: onChangePagination, language }}
                 tableStyle={{ fontSize: '16px', padding: '16px' }}
                 className="pb-1 rounded-b-xl"
             />

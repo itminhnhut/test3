@@ -14,12 +14,8 @@ const { subDays } = require('date-fns');
 const listDoughnutColorsLight = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], colors.gray[12]];
 const listDoughnutColorsDark = [colors.green[6], colors.purple[1], colors.green[7], colors.yellow[5], '#fff'];
 
-const TradingPair = () => {
-    const [currentTheme] = useDarkMode();
-    const isDark = currentTheme === THEME_MODE.DARK;
-
+const TradingPair = ({ isDark, t }) => {
     const [labels, setLabels] = useState([]);
-    const { t } = useTranslation();
     const [curFilter, setCurFilter] = useState(listTimeFilter[0].value);
 
     useEffect(() => {
