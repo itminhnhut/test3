@@ -81,7 +81,7 @@ const Overview = ({
                 } else {
                 }
             });
-    }, [user]);
+    }, [user?.code]);
 
     const handleCompactLink = (address, first, last) => {
         return address ? `${address.substring(0, first)}...${address.substring(address.length - last)}` : '';
