@@ -18,7 +18,7 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
     return (
         <FilterWrapper label={t('transaction-history:filter.category_type')}>
             <PopoverSelect
-                className="w-full rounded-xl !left-0 !translate-x-0"
+                className="w-[280px] md:w-full rounded-xl !left-0 !translate-x-0"
                 hideChevron={Boolean(category)}
                 labelValue={() => (
                     <div

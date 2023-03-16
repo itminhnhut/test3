@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 
-
 export function useWindowSize() {
     const [windowSize, setWindowSize] = useState({ width: undefined, height: undefined });
 
@@ -29,11 +28,10 @@ export const useRefWindowSize = () => {
         }
 
         window.addEventListener('resize', handleResize);
-        handleResize()
+        handleResize();
         return () => window.removeEventListener('resize', handleResize);
     }, []);
     return windowSizeRef?.current;
 };
-
 
 export default useWindowSize;

@@ -275,7 +275,7 @@ const TransactionHistory = ({ id }) => {
                             setDetailId(transaction._id);
                         }}
                         height={404}
-                        className="border rounded-lg border-divider dark:border-divider-dark pt-4 mt-8"
+                        className="border rounded-lg border-divider dark:border-divider-dark pt-4"
                         tableStyle={{ fontSize: '16px', padding: '16px' }}
                         pagingPrevNext={{
                             page: currentPage,

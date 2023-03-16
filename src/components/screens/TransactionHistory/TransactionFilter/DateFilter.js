@@ -6,8 +6,13 @@ import classNames from 'classnames';
 import { FilterWrapper } from '.';
 import Calendar from 'components/svg/CalendarIcon';
 import { X } from 'react-feather';
+import { useWindowSize } from 'react-use';
+import { getWidthByBreakpoint } from 'src/utils/helpers';
 
 const DateFilter = ({ filter, setFilter, t }) => {
+    const { width } = useWindowSize();
+    console.log('getWidthByBreakpoint(', getWidthByBreakpoint('md'))
+
     return (
         <FilterWrapper label={t('transaction-history:filter.time')} className="!max-w-[300px]">
             <DatePickerV2
@@ -21,9 +26,10 @@ const DateFilter = ({ filter, setFilter, t }) => {
                         }
                     });
                 }}
-                month={2}
+                month={width > getWidthByBreakpoint('md') ? 2 : 1}
                 hasShadow
-                position="left"
+                position={width > getWidthByBreakpoint('lg') ? 'left' : 'right'}
+                wrapperClassname="z-40"
                 text={
                     <div
                         className={classNames(
