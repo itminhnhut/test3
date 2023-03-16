@@ -1,5 +1,4 @@
 import React from 'react';
-import DatePicker from 'components/common/DatePicker/DatePicker';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
