@@ -4,9 +4,9 @@ export const listTimeFilter = [
     { localized: 'common:global_label:time:all', value: 3 }
 ];
 
-const GroupFilterTime = ({ curFilter = listTimeFilter[0]?.value, setCurFilter, GroupKey, t }) => {
+const GroupFilterTime = ({ className = '', curFilter = listTimeFilter[0]?.value, setCurFilter, GroupKey, t }) => {
     return (
-        <div className="flex items-center gap-4 text-base font-normal text-gray-1 dark:text-gray-7">
+        <div className={`flex items-center gap-3 md:gap-4 text-sm md:text-base font-normal text-gray-1 dark:text-gray-7 ${className}`}>
             {listTimeFilter.map((item) => (
                 <button
                     key={GroupKey + 'filter_' + item?.value}

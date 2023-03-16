@@ -17,6 +17,7 @@ import PositionInfo from './PositionInfo';
 import TopPositionTable from './TopPositionTable';
 import BannerInfo from './BannerInfo';
 import { WIDTH_MD } from '../Wallet';
+import FeaturedStats from './FeaturedStats';
 
 const Portfolio = () => {
     const [type, setType] = useState(1);
@@ -30,8 +31,6 @@ const Portfolio = () => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
-    const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
-
     return (
         <div className="w-full h-full bg-white dark:bg-dark text-gray-15 dark:text-gray-4 font-normal tracking-normal text-xs leading-[16px] md:text-base">
             {/* {renderTabs(mainTabs, type, setType)} */}
@@ -43,53 +42,7 @@ const Portfolio = () => {
             <div className="w-full px-4 md:px-28">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]">
                     {/* Chi so noi bat */}
-                    <div>
-                        <div className="flex items-center justify-between">
-                            <div className="text-2xl font-semibold">Chỉ số nổi bật</div>
-                            <GroupFilterTime curFilter={curOverviewFilter} setCurFilter={setCurOverviewFilter} GroupKey="Overview" t={t} />
-                        </div>
-                        <div className="mt-8 border border-divider dark:border-transparent rounded-xl flex px-6 py-3 bg-transparent dark:bg-dark-4">
-                            <div className="flex-auto px-6 py-4">
-                                <span className="txtSecond-2">Tổng KLGD</span>
-                                <div className="txtPri-3 mt-4">4,567,890,234</div>
-                                <div className="txtSecond-2 mt-2">12,008 USDT</div>
-                            </div>
-                            {/* Divider */}
-                            <div className="w-[1px] h-auto bg-divider dark:bg-divider-dark mx-6"></div>
-
-                            {/* Card 2 */}
-                            <div className="flex-auto px-6 py-4">
-                                <span className="txtSecond-2">Tổng lợi nhuận</span>
-                                <div className="text-green-3 dark:text-green-2 font-semibold text-2xl mt-4">+200,000,000</div>
-                                <PriceChangePercent priceChangePercent={1.93} className="!justify-start !text-base mt-2" />
-                            </div>
-
-                            {/* Divider */}
-                            <div className="w-[1px] h-auto bg-divider dark:bg-divider-dark mx-6"></div>
-
-                            {/* Card 3 */}
-                            <div className="flex-auto px-6 py-4">
-                                <div className="flex items-center justify-between">
-                                    <span className="txtSecond-2">Tổng ký quỹ</span>
-                                    <div>
-                                        <span className="font-semibold">4,567,890</span>
-                                        <span className="txtSecond-2">{` (12,008 USDT)`}</span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between mt-3">
-                                    <span className="txtSecond-2">Tổng số vị thế</span>
-                                    <div>
-                                        <span className="font-semibold">180</span>
-                                        <span className="txtSecond-2">{` (90 mua - 90 bán)`}</span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between mt-3">
-                                    <span className="txtSecond-2">Đòn bẩy trung bình</span>
-                                    <span className="font-semibold">10x</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <FeaturedStats user={user} t={t} isMobile={isMobile} isDark={isDark} />
 
                     {/* Bien dong loi nhuan */}
                     <PnlChanging isDark={isDark} t={t} />

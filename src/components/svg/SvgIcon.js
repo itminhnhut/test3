@@ -111,12 +111,12 @@ const CloseIcon = ({ className, onClick, color, size }) => {
     );
 };
 
-const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true }) => {
+const ArrowDropDownIcon = ({ className = '', color, size = 32, isFilled = true, ...props }) => {
     const [currentTheme] = useDarkMode();
     const defaultColor = currentTheme === THEME_MODE.DARK ? '#E2E8F0' : '#1E1E1E';
 
     return (
-        <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg {...props} className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             {isFilled ? (
                 <g clipPath="url(#ixety35iha)">
                     <path d="M4.666 6.667 7.999 10l3.334-3.333H4.666z" fill={color || defaultColor} />
