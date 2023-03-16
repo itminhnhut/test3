@@ -249,3 +249,6 @@ export const NAO_STAKE_SUCCESS = 'NAO_STAKE_SUCCESS';
 // Time sync
 export const SET_TIME_SYNC = "SET_TIME_SYNC";
 export const SET_TIME_SYNC_OFFSET = "SET_TIME_SYNC_OFFSET";
+
+// Withdraw-deposit
+export const SET_WITHDRAW_DEPOSIT_AMOUNT = "SET_WITHDRAW_DEPOSIT_AMOUNT";

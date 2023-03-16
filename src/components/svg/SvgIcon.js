@@ -449,9 +449,9 @@ const BxChevronDown = ({ size = 24, color, ...props }) => {
     );
 };
 
-const SyncAltIcon = ({ size, color, bgColor }) => {
+const SyncAltIcon = ({ size, color, bgColor, ...props }) => {
     return (
-        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <g clipPath="url(#0dcfa1hmna)">
                 <path fill={bgColor || 'undefined'} d="M0 24V0h24v24z" />
                 <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color || '#47CC85'} />
