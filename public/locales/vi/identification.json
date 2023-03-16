@@ -41,5 +41,6 @@
         "verified": "Tài khoản của bạn đã được xác minh."
     },
     "title_tab": "Nhận dạng",
-    "kyc_title": "Xác thực tài khoản"
+    "kyc_title": "Xác thực tài khoản",
+    "payment_method": "Phương thức thanh toán"
 }

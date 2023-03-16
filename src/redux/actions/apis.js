@@ -63,6 +63,9 @@ export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
 export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw';
 export const API_GET_DEPWDL_HISTORY = API_V3_PREFIX + 'payment/deposit_withdraw_history';
 export const API_WITHDRAW_V4 = API_V3_PREFIX + 'payment/withdraw_v4';
+export const API_DEFAULT_BANK_USER = API_V3_PREFIX + 'payment/default_user_bank_accounts';
+export const API_GET_USER_BANK_LIST = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_GET_BANK_ACCOUNT_NAME = API_V3_PREFIX + 'payment/bank_account_name';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
@@ -112,7 +115,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 //NOTE Notification
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
-export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread'
+export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
