@@ -6,11 +6,14 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import Note from 'components/common/Note';
 import GroupFilterTime, { listTimeFilter } from 'components/common/GroupFilterTime';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import CollapseV2 from 'components/common/V2/CollapseV2';
+
 import ChartJS from './ChartJS';
 import { indexOf } from 'lodash';
 const { subDays } = require('date-fns');
 
-const PnlChanging = ({ isDark, t }) => {
+const PnlChanging = ({ t, isMobile, isDark }) => {
     const [curPnlFilter, setCurPnlFilter] = useState(listTimeFilter[0].value);
     const [pnlLabels, setPnlLabels] = useState([]);
 
@@ -51,11 +54,6 @@ const PnlChanging = ({ isDark, t }) => {
                 data: Array.from({ length: pnlLabels.length }, () => [minDuong, Math.floor(Math.random() * (maxDuong - minDuong + 1)) + minDuong]),
                 backgroundColor: colors.green[6],
                 stack: 'pnl'
-                // lineTension: 0.2,
-                // borderColor: isDark ? colors.teal : colors.green[6],
-                // borderWidth: 1.5,
-                // pointRadius: 0,
-                // pointBackgroundColor: colors.teal
             },
             {
                 fill: false,
@@ -63,14 +61,6 @@ const PnlChanging = ({ isDark, t }) => {
                 data: Array.from({ length: pnlLabels.length }, () => [Math.floor(Math.random() * (maxAm - minAm + 1)) + minAm, maxAm]),
                 backgroundColor: colors.red[2],
                 stack: 'pnl'
-                // borderSkipped: false,
-                // categoryPercentage: 0.2,
-                // barPercentage: 0.2
-                // lineTension: 0.2
-                // borderColor: '#80FFEA',
-                // borderWidth: 1.5,
-                // pointRadius: 0,
-                // pointBackgroundColor: '#80FFEA'
             }
         ]
     };
@@ -79,7 +69,6 @@ const PnlChanging = ({ isDark, t }) => {
         responsive: true,
         maintainAspectRatio: false,
         indexAxis: 'x',
-        // categorySpacing: 5,
         barPercentage: 0.15,
         borderRadius: 3,
         borderSkipped: false,
@@ -119,7 +108,9 @@ const PnlChanging = ({ isDark, t }) => {
                 ticks: {
                     color: colors.darkBlue5,
                     showLabelBackdrop: false,
-                    padding: 8
+                    padding: 8,
+                    fontSize: isMobile ? 9 : 12,
+                    lineHeight: isMobile ? 20 : 16
                 },
                 grid: {
                     display: false,
@@ -135,7 +126,9 @@ const PnlChanging = ({ isDark, t }) => {
                         return formatPrice(value) + 'K';
                     },
                     crossAlign: 'far',
-                    padding: 8
+                    padding: 8,
+                    fontSize: isMobile ? 9 : 12,
+                    lineHeight: isMobile ? 20 : 16
                 },
                 grid: {
                     drawTicks: false,
@@ -150,7 +143,7 @@ const PnlChanging = ({ isDark, t }) => {
                         }
                         return isDark ? colors.divider.dark : colors.divider.DEFAULT;
                     },
-                    drawBorder: false
+                    drawBorder: !!isMobile
                 }
             }
         }
@@ -196,19 +189,39 @@ const PnlChanging = ({ isDark, t }) => {
     ];
 
     return (
-        <div className="mt-12 p-8 border border-divider dark:border-transparent rounded-xl bg-transparent dark:bg-dark-4">
-            <div className="flex items-center justify-between w-full">
-                <div className="text-2xl font-semibold">Biến động lợi nhuận</div>
-                <GroupFilterTime curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
-            </div>
-            <div className=" w-full max-h-[450px] mt-8">
-                <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
-            </div>
-            {/* Chu thich */}
-            <div className="flex items-center gap-x-4 mt-9">
-                <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
-                <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
-            </div>
+        <div className={`mt-12 md:p-8 bg-transparent  ${isMobile ? '' : 'border border-divider dark:border-transparent rounded-xl dark:bg-dark-4'}`}>
+            {isMobile ? (
+                <CollapseV2
+                    className="w-full"
+                    divLabelClassname="w-full justify-between"
+                    chrevronStyled={{ size: 24, color: isDark ? '#E2E8F0' : '#1E1E1E' }}
+                    label="Biến động lợi nhuận"
+                    labelClassname="text-base font-semibold"
+                >
+                    <div>
+                        <GroupFilterTime className={`mt-4`} curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
+                    </div>
+                    <div className="mt-6">
+                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                    </div>
+                </CollapseV2>
+            ) : (
+                <>
+                    <div className="flex items-center justify-between w-full">
+                        <div className="text-2xl font-semibold">Biến động lợi nhuận</div>
+                        <GroupFilterTime curFilter={curPnlFilter} setCurFilter={setCurPnlFilter} GroupKey="Profit_changing" t={t} />
+                    </div>
+
+                    <div className=" w-full max-h-[450px] mt-8">
+                        <ChartJS type="bar" data={pnlChartData} options={options} plugins={plugins} height="450px" />
+                    </div>
+                    {/* Chu thich */}
+                    <div className="flex items-center gap-x-4 mt-9">
+                        <Note iconClassName="bg-green-6" title={'Lợi nhuận tăng'} />
+                        <Note iconClassName="bg-red-2" title={'Lợi nhuận giảm'} />
+                    </div>
+                </>
+            )}
         </div>
     );
 };

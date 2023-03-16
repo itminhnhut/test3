@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import classNames from 'classnames';
 import ChevronDown from 'components/svg/ChevronDown';
 
-const index = ({ children, className, label, isCustom, active, reload }) => {
+const index = ({ children, className, label, isCustom, active, reload, divLabelClassname = '', labelClassname = '', chrevronStyled }) => {
     const [open, setOpen] = useState(false);
     const wraper = useRef();
     const list = useRef();
@@ -47,10 +47,10 @@ const index = ({ children, className, label, isCustom, active, reload }) => {
         <div className={classNames('', className, { 'overflow-hidden': !flag })}>
             <div
                 onClick={handleOpen}
-                className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', { 'mb-4': open && !isCustom })}
+                className={classNames('flex items-center space-x-2 cursor-pointer leading-5 font-semibold', { 'mb-4': open && !isCustom }, divLabelClassname)}
             >
-                <label className="cursor-pointer select-none">{label}</label>
-                {!isCustom && <ChevronDown size={16} className={`${open ? '!rotate-0' : ''} transition-all`} />}
+                <label className={`cursor-pointer select-none ${labelClassname}`}>{label}</label>
+                {!isCustom && <ChevronDown size={16} {...chrevronStyled} className={`${open ? '!rotate-0' : ''} transition-all`} />}
             </div>
             <Wraper className={classNames({ 'overflow-hidden': !flag })} ref={wraper}>
                 <div ref={list}>{children}</div>

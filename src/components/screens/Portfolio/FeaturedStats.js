@@ -23,12 +23,6 @@ import { WIDTH_MD } from '../Wallet';
 const FeaturedStats = ({ user, t, isMobile, isDark }) => {
     const [curOverviewFilter, setCurOverviewFilter] = useState(listTimeFilter[0].value);
     const [isCollapse, setIsCollapse] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [height, setHeight] = useState(0);
-
-    useEffect(() => {
-        setHeight(isOpen ? 'auto' : 0);
-    }, [isOpen]);
 
     const renderSumVolumns = () => (
         <div className={isMobile ? 'w-1/2 flex flex-col justify-center items-center flex-1 py-4' : 'flex-auto px-6 py-4'}>

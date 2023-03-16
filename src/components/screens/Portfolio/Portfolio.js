@@ -42,10 +42,10 @@ const Portfolio = () => {
             <div className="w-full px-4 md:px-28">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto pt-20 pb-[120px]">
                     {/* Chi so noi bat */}
-                    <FeaturedStats user={user} t={t} isMobile={isMobile} isDark={isDark} />
+                    <FeaturedStats t={t} isMobile={isMobile} />
 
                     {/* Bien dong loi nhuan */}
-                    <PnlChanging isDark={isDark} t={t} />
+                    <PnlChanging t={t} isMobile={isMobile} isDark={isDark} />
 
                     {/* Cap giao dich || Vi the mua - Vi the ban */}
                     <div className="mt-12 grid grid-cols-2 gap-x-8">
