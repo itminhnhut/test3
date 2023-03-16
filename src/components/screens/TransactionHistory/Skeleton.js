@@ -35,7 +35,7 @@ const Skeleton = () => {
                 </div>
 
                 <div className="mb-4">
-                    <Skeletor width="300px" height="100px" />
+                    <Skeletor width="300px" height="50px" />
                 </div>
 
                 <div>
