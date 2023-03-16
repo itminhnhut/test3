@@ -200,9 +200,10 @@ const TransactionHistory = ({ id }) => {
                 width: 241,
                 render: (_row, item) => {
                     const config = assetConfig?.find((e) => e?.id === item?.currency);
+                    const amount = item?.amount || item?.money_use || item?.value;
                     return (
                         <div>
-                            {formatPrice(item?.amount || item?.money_use || item?.value, config?.assetDigit ?? 0)}
+                            {amount > 0 && '+'}{formatPrice(amount, config?.assetDigit ?? 0)}
                             {/* {config?.assetCode ?? 'VNDC'} */}
                         </div>
                     );
@@ -214,7 +215,9 @@ const TransactionHistory = ({ id }) => {
                 title: t('transaction-history:category'),
                 align: 'left',
                 width: 208,
-                render: (row) => <div>{categoryConfig?.find((e) => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>
+                render: (row) => (
+                    <div>{categoryConfig?.find((e) => e.category_id === row)?.content?.[language] ?? t('transaction-history:default_category')}</div>
+                )
             },
 
             status: {

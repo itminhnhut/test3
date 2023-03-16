@@ -29,6 +29,7 @@
     "wallet": "Ví {{wallet}}",
     "click_on_transaction": "Click vào từng giao dịch để xem thông tin chi tiết.",
     "no_transaction_history": "Không có lịch sử",
+    "default_category": "Giao dịch",
     "modal_detail": {
         "snapshot_value": "Giá trị tài sản",
         "list_assets": "Danh sách tài sản nhận được",

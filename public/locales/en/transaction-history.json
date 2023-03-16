@@ -29,6 +29,7 @@
     "wallet": "{{wallet}} Wallet",
     "click_on_transaction": "Click on each transaction to view detailed information.",
     "no_transaction_history": "No history",
+    "default_category": "Transaction",
     "modal_detail": {
         "snapshot_value": "Snapshot value",
         "list_assets": "List of received assets",
