@@ -141,6 +141,7 @@ export const modalDetailColumn = {
     [TRANSACTION_TYPES.TRANSFER]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE},
         { keys: ['additionalData.from_wallet'], localized: 'modal_detail.from', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['additionalData.to_wallet'], localized: 'modal_detail.to', type: COLUMNS_TYPE.WALLET_TYPE }
     ],
