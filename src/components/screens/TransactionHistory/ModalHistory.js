@@ -105,7 +105,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             <div className="flex w-full mb-6 justify-end rounded-md hover:opacity-50 transition-opacity cursor-pointer" onClick={onClose}>
                                 <X size={24} />
                             </div>
-                            <div className="mb-6 flex w-full items-start capitalize">{detailTx?.categoryContent?.[language] ?? detailTx.type}</div>
+                            <div className="mb-6 flex w-full items-start capitalize">
+                                {detailTx?.categoryContent?.[language] ?? t('transaction-history:default_category')}
+                            </div>
                             <div className="mb-6">
                                 {detailTx.type === 'convert' ? (
                                     <div className="flex items-center space-x-2">
