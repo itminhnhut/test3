@@ -1,6 +1,8 @@
 import DOMPurify from 'dompurify';
 import { DOWNLOAD_APP_LINK } from 'redux/actions/const';
 import moment from 'moment-timezone';
+import tailwindConfig from '../../tailwind.config';
+import tailwindDefault from 'tailwindcss/defaultTheme';
 
 const SEC_PER_MINUTE = 60;
 const MILLISEC_PER_SEC = 1000;
@@ -46,4 +48,9 @@ export const formatLocalTimezoneToUTC = (millisecond) => {
     const tz = moment.tz.guess();
     const offsetTime = moment.tz(millisecond, tz).utcOffset();
     return millisecond + offsetTime * SEC_PER_MINUTE * MILLISEC_PER_SEC;
+};
+
+export const getWidthByBreakpoint = (breakpoint) => {
+    const breakPointWidth = { ...tailwindDefault.screens, ...tailwindConfig.theme.extend.screens }?.[breakpoint ?? 'xs'].replace('px', '');
+    return +breakPointWidth;
 };

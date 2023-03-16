@@ -122,7 +122,7 @@ export const modalDetailColumn = {
     ],
     [TRANSACTION_TYPES.FUTURES]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
-        { keys: ['additionalData.closed_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE},
         { keys: ['additionalData.symbol'], localized: 'modal_detail.pair', type: COLUMNS_TYPE.SYMBOL },
         { keys: ['additionalData.close_price'], localized: 'modal_detail.close_price', type: COLUMNS_TYPE.FUTURES_ORDER },
