@@ -150,15 +150,12 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 switch (col.type) {
                                     case COLUMNS_TYPE.COPIEDABLE:
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
-                                        formatKeyData =
-                                            priorityKey.includes('0x') || col.localized === 'ID' ? (
-                                                <TextCopyable
-                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
-                                                    text={priorityKey}
-                                                />
-                                            ) : (
-                                                <span>{priorityKey}</span>
-                                            );
+                                        formatKeyData = (
+                                            <TextCopyable
+                                                showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
+                                                text={priorityKey}
+                                            />
+                                        );
 
                                         break;
                                     case COLUMNS_TYPE.TIME:
