@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import TradingInput from 'components/trade/TradingInput';
-import Card from './components/Card';
+import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { setInput } from 'src/redux/actions/withdrawDeposit';
-import { SyncAltIcon } from '../../svg/SvgIcon';
+import { setInput } from 'redux/actions/withdrawDeposit';
+import { SyncAltIcon } from 'components/svg/SvgIcon';
+import { switchAsset } from 'redux/actions/withdrawDeposit';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 const CardInput = () => {
-    const { input } = useSelector((state) => state.withdrawDeposit);
+    const { input, assetId } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
 
     const validator = useMemo(() => {
@@ -43,10 +45,10 @@ const CardInput = () => {
                     />
                 </div>
                 <div className="w-24">
-                    <button className="rounded-md bg-gray-12 dark:!bg-dark-2 text-dominant font-semibold p-3 flex items-center space-x-2">
-                        VNDC
+                    <ButtonV2 className="!text-dominant" variants="secondary" onClick={() => dispatch(switchAsset(assetId))}>
+                        <span>{assetId === 72 ? 'VNDC' : 'USDT'}</span>
                         <SyncAltIcon className="rotate-90" size={16} />
-                    </button>
+                    </ButtonV2>
                 </div>
             </div>
         </Card>

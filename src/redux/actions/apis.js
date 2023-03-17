@@ -115,7 +115,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 //NOTE Notification
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
-export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread'
+export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
@@ -289,3 +289,7 @@ export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commiss
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
 export const API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_pre_order';
 export const API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_confirm_order';
+
+// withdraw-deposit Partner
+export const API_GET_PARTNERS = API_V3_PREFIX + 'spot/partner';
+export const API_GET_DEFAULT_PARTNER = API_V3_PREFIX + 'spot/default_partner';

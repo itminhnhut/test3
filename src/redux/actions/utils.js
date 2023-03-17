@@ -261,6 +261,12 @@ export function formatSpotPrice(price = 0, symbol = '') {
     return numeral(+price).format(`0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`);
 }
 
+export const formatPhoneNumber = (phoneNumber) => {
+    let phone = phoneNumber?.toString();
+    if (phone.length !== 10) return phoneNumber;
+    return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+};
+
 export function randomString(length = 15) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

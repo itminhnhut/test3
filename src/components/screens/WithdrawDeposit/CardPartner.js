@@ -1,29 +1,31 @@
-import React from 'react';
-import Card from './components/Card';
-import { Clock } from 'react-feather';
-import SelectCard from './components/SelectCard';
+import React, { useState } from 'react';
+import Card from './components/common/Card';
+import PartnerInfo from './components/PartnerInfo';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { useDebounce } from 'react-use';
+import BankInfo from './components/BankInfo';
 
 const CardPartner = () => {
+    const dispatch = useDispatch();
+
+    const { selectedPartner, partners, assetId, input } = useSelector((state) => state.withdrawDeposit);
+    const [debounceQuantity, setDebouncedQuantity] = useState('');
+
+    useDebounce(
+        () => {
+            setDebouncedQuantity(input);
+        },
+        500,
+        [input]
+    );
+
     return (
         <Card className="min-h-[300px] ">
             <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
             <div className="space-y-4">
-                <SelectCard
-                    title="Đối tác kinh doanh"
-                    info={{
-                        name: 'Nguyễn Hoàng Thị Thuỳ Linh',
-                        subInfo: (
-                            <div className="flex items-center space-x-3">
-                                <span>0901201031</span>
-                                <div className="flex space-x-1 items-center">
-                                    <Clock size={12} />
-                                    <span>1 Phút</span>
-                                </div>
-                            </div>
-                        )
-                    }}
-                />
-                {/* <SelectCard title="Phương thức thanh toán" /> */}
+                <PartnerInfo selectedPartner={selectedPartner} partners={partners} assetId={assetId} debounceQuantity={debounceQuantity} />
+                {selectedPartner && <BankInfo selectedPartner={selectedPartner} />}
             </div>
         </Card>
     );
