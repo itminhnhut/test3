@@ -110,7 +110,7 @@ export default function AccountLayout({ children }) {
                                     link: PATHS.ACCOUNT.IDENTIFICATION
                                 },
                                 {
-                                    label: t('identification:payment_method'),
+                                    label: t('payment-method:payment_method'),
                                     link: PATHS.ACCOUNT.PAYMENT_METHOD
                                 }
                                 // {

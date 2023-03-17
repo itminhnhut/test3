@@ -6,10 +6,7 @@ import { formatNumber, formatTime } from 'redux/actions/utils';
 import React, { useEffect, useState, useMemo } from 'react';
 import RefCard from '../../RefCard';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-import { pick } from 'lodash';
-import { UserIcon } from 'components/screens/NewReference/mobile/sections/LastedActivities';
-import User from 'components/svg/User';
-import UserCircle from 'components/svg/UserCircle';
+import { BxsInfoCircle, BxsUserCircle } from 'components/svg/SvgIcon';
 
 const tier = {
     1: {
@@ -92,7 +89,7 @@ const Commission = ({ t, language, id }) => {
             lastedFriends.map((data) => (
                 <div key={data.userId} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
                     <div className="flex gap-2 mb-6">
-                        <UserCircle />
+                        <BxsUserCircle />
                         <p className="font-semibold">
                             {t('reference:referral.new_friend')}: {data.code}
                         </p>

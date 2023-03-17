@@ -31,7 +31,16 @@ function PaymentMethod() {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'profile', 'fee-structure', 'reward-center', 'identification', 'reference']))
+        ...(await serverSideTranslations(locale, [
+            'common',
+            'navbar',
+            'profile',
+            'fee-structure',
+            'reward-center',
+            'identification',
+            'reference',
+            'payment-method'
+        ]))
     }
 });
 

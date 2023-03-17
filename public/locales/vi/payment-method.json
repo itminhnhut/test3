@@ -3,5 +3,11 @@
     "payment_method_add": "Thêm phương thức thanh toán",
     "account_number": "Số tài khoản",
     "bank_name": "Tài khoản ngân hàng",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "payment_method": "Phương thức thanh toán",
+    "privacy": "Chuyển khoản ngân hàng chỉ áp dụng cho người dùng Việt Nam, vui lòng sử dụng tài khoản ngân hàng đã đăng ký chính xác dưới tên đầy đủ với tài khoản Nami của bạn",
+    "input_bank_account": "Nhập số tài khoản của bạn",
+    "select_bank": "Chọn ngân hàng",
+    "owner_account": "Chủ tài khoản",
+    "add": "Thêm mới"
 }
