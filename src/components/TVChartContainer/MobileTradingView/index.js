@@ -720,7 +720,9 @@ const Funding = ({ symbol }) => {
                 t("futures:funding_history_tab:funding_warning"),
                 t("futures:funding_history_tab:network_warning_content"),
                 null,
-                () => { localStorage.setItem(localKey, (Date.now() + 900000).toString()) },
+                () => {
+                    localStorage.setItem(localKey, (Date.now() + 12 * 60 * 60 * 1000).toString());
+                },
                 null,
                 {
                     hideCloseButton: true,
