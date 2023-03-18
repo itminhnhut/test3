@@ -12,7 +12,6 @@ import CheckBox from 'components/common/CheckBox';
 import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, CopyText } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
-import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
 import { TabItemNao } from 'components/screens/Nao/NaoStyle';
 import { find, forEach, isEmpty, isFunction, isNumber, keys, pickBy } from 'lodash';
@@ -36,14 +35,14 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
 import SelectV2 from 'components/common/V2/SelectV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import SwapWarning from 'components/svg/SwapWarning';
 
-const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvailable, user }) => {
-    const [currentTheme] = useDarkMode();
-    const isDark = currentTheme === THEME_MODE.DARK;
+const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, listBankAvailable, user }) => {
     const [bankNumber, setBankNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState({});
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
+    const [helperTextBankNumber, setHelperTextBankNumber] = useState('');
 
     const handleBtnAdd = () => {
         setLoading(true);
@@ -75,19 +74,32 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
             });
     };
 
+    const onCloseAlert = () => {
+        setHelperTextBankNumber('');
+        setResult(null);
+    };
+
     const renderAlertNotification = useCallback(() => {
         if (!result) return null;
 
         return (
             <AlertModalV2
                 isVisible={result}
-                onClose={() => setResult(null)}
+                onClose={onCloseAlert}
                 type={result.isSuccess ? 'success' : 'error'}
                 title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
                 message={result.isSuccess ? '' : result.msg}
             />
         );
     }, [result]);
+
+    const onBlurInputBankNumber = () => {
+        if (!bankNumber) {
+            setHelperTextBankNumber(t('payment-method:please_input_account_num'));
+        } else {
+            setHelperTextBankNumber('');
+        }
+    };
 
     return (
         <ModalV2
@@ -107,9 +119,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
                 {/* Banner Info */}
                 <div
                     style={{
-                        backgroundImage: `url(${getS3Url(
-                            `/images/screen/account/bg_transfer_onchain_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
-                        )})`
+                        backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${isDark ? 'dark' : 'light'}.png`)})`
                     }}
                     className="rounded-xl bg-cover bg-center dark:shadow-popover "
                 >
@@ -129,14 +139,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
                 {/* Bank name */}
                 <div className="flex flex-col gap-y-2">
                     <span className="text-sm">{t('payment-method:bank_name')}</span>
-                    <BankNameInput
-                        t={t}
-                        listData={listBankAvailable}
-                        selected={selectedBank}
-                        onChange={(bank) => setSelectedBank(bank)}
-                        currentTheme={currentTheme}
-                        isDark={isDark}
-                    />
+                    <BankNameInput t={t} listData={listBankAvailable} selected={selectedBank} onChange={(bank) => setSelectedBank(bank)} isDark={isDark} />
                 </div>
                 {/* Bank number */}
                 <div className="flex flex-col gap-y-2">
@@ -147,7 +150,15 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
                         onChange={(value) => setBankNumber(value.toString())}
                         placeholder={t('payment-method:input_bank_account')}
                         allowClear
+                        onBlur={onBlurInputBankNumber}
                     />
+                    {/* Helper Text */}
+                    {helperTextBankNumber && (
+                        <div className="flex items-center text-red pt-3 text-xs text-left leading-4 gap-1">
+                            <SwapWarning size={12} fill={colors.red2} />
+                            {helperTextBankNumber}
+                        </div>
+                    )}
                 </div>
             </div>
             {/* Button action */}

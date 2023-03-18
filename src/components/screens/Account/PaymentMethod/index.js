@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST, API_GET_BANK_ACCOUNT_NAME, API_GET_BANK_AVAILABLE } from 'redux/actions/apis';
@@ -12,6 +12,10 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import TagV2 from 'components/common/V2/TagV2';
 import RePagination from 'components/common/ReTable/RePagination';
 import ModalAddPaymentMethod from './ModalAddPaymentMethod';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import Spinner from 'components/svg/Spinner';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const LIMIT_ROW = 5;
 
@@ -21,6 +25,8 @@ const index = () => {
     const isOpenModalKyc = useMemo(() => {
         return user ? user?.kyc_status !== 2 : false;
     }, [user]);
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     const { t } = useTranslation();
 
@@ -30,6 +36,9 @@ const index = () => {
     const [listBankAvailable, setListBankAvailable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpenModalAddNew, setIsOpenModalAddNew] = useState(false);
+
+    const [loadingSetDefault, setLoadingSetDefault] = useState(false);
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         setLoading(true);
@@ -96,8 +105,46 @@ const index = () => {
     }, [search]);
 
     const handleSetDefault = (bankAccountId) => {
-        console.log('hello from ', bankAccountId);
+        setLoadingSetDefault(bankAccountId);
+
+        fetchAPI({
+            url: API_DEFAULT_BANK_USER,
+            options: {
+                method: 'POST'
+            },
+            params: {
+                bankAccountId
+            }
+        })
+            .then(({ status, data }) => {
+                setResult({
+                    isSuccess: status === ApiStatus.SUCCESS
+                });
+            })
+            .catch((e) => {
+                setResult({
+                    isSuccess: false,
+                    msg: t('error:COMMON_ERROR')
+                });
+            })
+            .finally(() => {
+                setLoadingSetDefault(null);
+            });
     };
+
+    const renderAlertNotification = useCallback(() => {
+        if (!result) return null;
+
+        return (
+            <AlertModalV2
+                isVisible={result}
+                onClose={() => setResult(null)}
+                type={result.isSuccess ? 'success' : 'error'}
+                title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
+                message={result.isSuccess ? '' : result.msg}
+            />
+        );
+    }, [result]);
 
     const _onChangePage = (page) => {
         setCurrentPage(page);
@@ -146,11 +193,16 @@ const index = () => {
                                 </div>
                             </div>
                             <div>
-                                {!bankAccount?.isDefault && (
-                                    <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => handleSetDefault(bankAccount?._id)}>
-                                        {t('reference:referral.set_default')}
-                                    </ButtonV2>
-                                )}
+                                {!bankAccount?.isDefault &&
+                                    (loadingSetDefault === bankAccount?._id ? (
+                                        <div className="h-full px-10 flex items-center justify-between">
+                                            <Spinner color={isDark ? colors.green[2] : colors.green[3]} />
+                                        </div>
+                                    ) : (
+                                        <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => handleSetDefault(bankAccount?._id)}>
+                                            {t('reference:referral.set_default')}
+                                        </ButtonV2>
+                                    ))}
                             </div>
                         </div>
                     );
@@ -174,8 +226,10 @@ const index = () => {
                 t={t}
                 listBankAvailable={listBankAvailable}
                 user={user}
+                isDark={isDark}
             />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
+            {renderAlertNotification()}
         </div>
     );
 };
