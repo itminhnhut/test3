@@ -1,48 +1,47 @@
-import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
-import useLanguage from 'hooks/useLanguage';
-import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
-import { WIDTH_MD } from 'components/screens/Wallet';
-import useWindowSize from 'hooks/useWindowSize';
-import { LogoIcon, BxChevronDown, CheckCircleIcon } from 'components/svg/SvgIcon';
+import { CheckCircleIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import * as Error from 'redux/actions/apiError';
-import CheckBox from 'components/common/CheckBox';
-import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, CopyText } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import Spiner from 'components/common/V2/LoaderV2/Spiner';
-import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
-import { TabItemNao } from 'components/screens/Nao/NaoStyle';
-import { find, forEach, isEmpty, isFunction, isNumber, keys, pickBy } from 'lodash';
-import NamiCircle from 'components/svg/NamiCircle';
-import TagV2 from 'components/common/V2/TagV2';
+import { isFunction } from 'lodash';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
-import { PATHS } from 'constants/paths';
-import { API_GET_BANK_ACCOUNT_NAME, API_ADD_USER_BANK_ACCOUNT, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from 'redux/actions/apis';
+import { API_ADD_USER_BANK_ACCOUNT, API_GET_BANK_AVAILABLE } from 'redux/actions/apis';
 import { BxsInfoCircle, BxsUserCircle, ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import InputV2 from 'components/common/V2/InputV2';
 import useOutsideClick from 'hooks/useOutsideClick';
-import ChevronDown from 'components/svg/ChevronDown';
 import CreditCard from 'components/svg/CreditCard';
-import classNames from 'classnames';
 
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
-import SelectV2 from 'components/common/V2/SelectV2';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import SwapWarning from 'components/svg/SwapWarning';
 
-const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, listBankAvailable, user }) => {
+const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user }) => {
     const [bankNumber, setBankNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState({});
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
     const [helperTextBankNumber, setHelperTextBankNumber] = useState('');
+    const [listBankAvailable, setListBankAvailable] = useState([]);
+
+    useEffect(() => {
+        fetchAPI({
+            url: API_GET_BANK_AVAILABLE,
+            options: {
+                method: 'GET'
+            }
+        })
+            .then(({ status, data }) => {
+                if (status === ApiStatus.SUCCESS) {
+                    data ? setListBankAvailable(data) : setListBankAvailable([]);
+                }
+            })
+            .finally(() => {});
+    }, []);
 
     const handleBtnAdd = () => {
         setLoading(true);

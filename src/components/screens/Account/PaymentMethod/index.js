@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
-import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST, API_GET_BANK_ACCOUNT_NAME, API_GET_BANK_AVAILABLE } from 'redux/actions/apis';
+import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
@@ -16,6 +16,7 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Spinner from 'components/svg/Spinner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
+import Skeletor from 'components/common/Skeletor';
 
 const LIMIT_ROW = 5;
 
@@ -30,10 +31,9 @@ const index = () => {
 
     const { t } = useTranslation();
 
-    const [loading, setLoading] = useState(false);
+    const [loadingListUserBank, setLoadingListUserBank] = useState(false);
     const [listUserBank, setListUserBank] = useState([]);
     const [dataTable, setDataTable] = useState([]);
-    const [listBankAvailable, setListBankAvailable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [isOpenModalAddNew, setIsOpenModalAddNew] = useState(false);
 
@@ -41,7 +41,7 @@ const index = () => {
     const [result, setResult] = useState(null);
 
     useEffect(() => {
-        setLoading(true);
+        setLoadingListUserBank(true);
 
         // Fetch list bank accounts
         fetchAPI({
@@ -53,46 +53,7 @@ const index = () => {
             .then(({ status, data }) => {
                 if (status === ApiStatus.SUCCESS) data ? setListUserBank(data) : setListUserBank([]);
             })
-            .finally(() => setLoading(false));
-
-        fetchAPI({
-            url: API_GET_BANK_AVAILABLE,
-            options: {
-                method: 'GET'
-            }
-        })
-            .then(({ status, data }) => {
-                if (status === ApiStatus.SUCCESS) {
-                    // setKyc(data);
-                    data ? setListBankAvailable(data) : setListBankAvailable([]);
-                }
-
-                // mock data:
-                setListUserBank(
-                    data.map((bankAvai, idx) => ({
-                        _id: idx,
-                        bankName: bankAvai.bank_name,
-                        bankLogo: bankAvai.logo,
-                        bankKey: bankAvai.bank_key,
-                        bankCode: bankAvai.bank_code,
-                        accountNumber: idx + 1 + '',
-                        isDefault: idx === 0
-                    }))
-                );
-
-                setDataTable(
-                    data.map((bankAvai, idx) => ({
-                        _id: idx,
-                        bankName: bankAvai.bank_name,
-                        bankLogo: bankAvai.logo,
-                        bankKey: bankAvai.bank_key,
-                        bankCode: bankAvai.bank_code,
-                        accountNumber: idx + 1 + '',
-                        isDefault: idx === 0
-                    }))
-                );
-            })
-            .finally(() => {});
+            .finally(() => setLoadingListUserBank(false));
     }, []);
 
     useEffect(() => {
@@ -169,44 +130,48 @@ const index = () => {
             </div>
 
             <div className="mt-12 flex flex-col gap-y-6">
-                {dataTable.map((bankAccount, index) => {
-                    // 5 * 2 =10
-                    const hidden = index >= currentPage * LIMIT_ROW || index < (currentPage - 1) * LIMIT_ROW;
-                    if (hidden) return null;
-                    return (
-                        <div
-                            key={bankAccount?._id}
-                            className="dark:bg-dark-4 hover:bg-gray-13 dark:hover:bg-hover-dark rounded-xl border border-divider dark:border-none py-6 px-8 flex items-center justify-between"
-                        >
-                            <div className="flex items-center gap-x-4">
-                                <Image src={bankAccount.bankLogo} width={68} height={68} alt={bankAccount?.bankKey} className="rounded-full" />
-                                <div>
-                                    <div>{bankAccount?.bankName}</div>
-                                    <div className="mt-2 flex items-center gap-x-3">
-                                        <span className="txtSecond-3">{bankAccount?.accountNumber}</span>
-                                        {bankAccount?.isDefault && (
-                                            <TagV2 className="whitespace-nowrap" type="success">
-                                                {t('reference:referral.default')}
-                                            </TagV2>
-                                        )}
+                {loadingListUserBank ? (
+                    <TableSkeletor />
+                ) : (
+                    dataTable.map((bankAccount, index) => {
+                        // 5 * 2 =10
+                        const hidden = index >= currentPage * LIMIT_ROW || index < (currentPage - 1) * LIMIT_ROW;
+                        if (hidden) return null;
+                        return (
+                            <div
+                                key={bankAccount?._id}
+                                className="dark:bg-dark-4 hover:bg-gray-13 dark:hover:bg-hover-dark rounded-xl border border-divider dark:border-none py-6 px-8 flex items-center justify-between"
+                            >
+                                <div className="flex items-center gap-x-4">
+                                    <Image src={bankAccount.bankLogo} width={68} height={68} alt={bankAccount?.bankKey} className="rounded-full" />
+                                    <div>
+                                        <div>{bankAccount?.bankName}</div>
+                                        <div className="mt-2 flex items-center gap-x-3">
+                                            <span className="txtSecond-3">{bankAccount?.accountNumber}</span>
+                                            {bankAccount?.isDefault && (
+                                                <TagV2 className="whitespace-nowrap" type="success">
+                                                    {t('reference:referral.default')}
+                                                </TagV2>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
+                                <div>
+                                    {!bankAccount?.isDefault &&
+                                        (loadingSetDefault === bankAccount?._id ? (
+                                            <div className="h-full px-10 flex items-center justify-between">
+                                                <Spinner color={isDark ? colors.green[2] : colors.green[3]} />
+                                            </div>
+                                        ) : (
+                                            <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => handleSetDefault(bankAccount?._id)}>
+                                                {t('reference:referral.set_default')}
+                                            </ButtonV2>
+                                        ))}
+                                </div>
                             </div>
-                            <div>
-                                {!bankAccount?.isDefault &&
-                                    (loadingSetDefault === bankAccount?._id ? (
-                                        <div className="h-full px-10 flex items-center justify-between">
-                                            <Spinner color={isDark ? colors.green[2] : colors.green[3]} />
-                                        </div>
-                                    ) : (
-                                        <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => handleSetDefault(bankAccount?._id)}>
-                                            {t('reference:referral.set_default')}
-                                        </ButtonV2>
-                                    ))}
-                            </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })
+                )}
                 <div className="flex items-center justify-center font-normal">
                     <RePagination
                         total={dataTable?.length}
@@ -220,18 +185,31 @@ const index = () => {
             </div>
 
             {/* Popup if user have not KYC yet */}
-            <ModalAddPaymentMethod
-                isOpenModalAdd={isOpenModalAddNew}
-                onBackdropCb={() => setIsOpenModalAddNew(false)}
-                t={t}
-                listBankAvailable={listBankAvailable}
-                user={user}
-                isDark={isDark}
-            />
+            <ModalAddPaymentMethod isOpenModalAdd={isOpenModalAddNew} onBackdropCb={() => setIsOpenModalAddNew(false)} t={t} user={user} isDark={isDark} />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
             {renderAlertNotification()}
         </div>
     );
 };
+
+const TableSkeletor = () =>
+    Array(LIMIT_ROW)
+        .fill()
+        .map((_, i) => (
+            <div
+                key={'sekeleton' + i}
+                className="dark:bg-dark-4 hover:bg-gray-13 dark:hover:bg-hover-dark rounded-xl border border-divider dark:border-none py-6 px-8 flex items-center justify-between"
+            >
+                <div className="flex items-center gap-x-4">
+                    <Skeletor width={68} height={68} style={{ borderRadius: '100%' }} />
+                    <div>
+                        <Skeletor width={300} />
+                        <div className="mt-2 flex items-center gap-x-3">
+                            <Skeletor width={150} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ));
 
 export default index;
