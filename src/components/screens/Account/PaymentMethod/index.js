@@ -173,6 +173,7 @@ const index = () => {
                 onBackdropCb={() => setIsOpenModalAddNew(false)}
                 t={t}
                 listBankAvailable={listBankAvailable}
+                user={user}
             />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
         </div>

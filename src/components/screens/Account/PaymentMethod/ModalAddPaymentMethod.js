@@ -6,7 +6,7 @@ import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
 import { LogoIcon, BxChevronDown, CheckCircleIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import * as Error from 'redux/actions/apiError';
 import CheckBox from 'components/common/CheckBox';
 import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, CopyText } from 'redux/actions/utils';
@@ -21,7 +21,7 @@ import TagV2 from 'components/common/V2/TagV2';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
 import { PATHS } from 'constants/paths';
-import { API_GET_BANK_ACCOUNT_NAME, API_GET_NAMI_RATE, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from 'redux/actions/apis';
+import { API_GET_BANK_ACCOUNT_NAME, API_ADD_USER_BANK_ACCOUNT, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from 'redux/actions/apis';
 import { BxsInfoCircle, BxsUserCircle, ArrowDropDownIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import InputV2 from 'components/common/V2/InputV2';
@@ -34,23 +34,24 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import Image from 'next/image';
+import SelectV2 from 'components/common/V2/SelectV2';
+import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 
-const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvailable }) => {
+const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvailable, user }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-    const [owner, setOwner] = useState({});
     const [bankNumber, setBankNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState({});
     const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState(null);
 
     const handleBtnAdd = () => {
         setLoading(true);
-        console.log('here', selectedBank?.bank_code, bankNumber);
 
         fetchAPI({
-            url: API_GET_BANK_ACCOUNT_NAME,
+            url: API_ADD_USER_BANK_ACCOUNT,
             options: {
-                method: 'GET'
+                method: 'POST'
             },
             params: {
                 bankCode: selectedBank?.bank_code,
@@ -58,19 +59,39 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
             }
         })
             .then(({ status, data }) => {
-                if (status === ApiStatus.SUCCESS) {
-                    // setKyc(data);
-                }
-                console.log(status, data);
+                setResult({
+                    isSuccess: status === ApiStatus.SUCCESS,
+                    msg: status === ApiStatus.SUCCESS ? '' : t('payment-method:bank_account_not_found')
+                });
+            })
+            .catch((e) => {
+                setResult({
+                    isSuccess: false,
+                    msg: t('error:COMMON_ERROR')
+                });
             })
             .finally(() => {
                 setLoading(false);
             });
     };
 
+    const renderAlertNotification = useCallback(() => {
+        if (!result) return null;
+
+        return (
+            <AlertModalV2
+                isVisible={result}
+                onClose={() => setResult(null)}
+                type={result.isSuccess ? 'success' : 'error'}
+                title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
+                message={result.isSuccess ? '' : result.msg}
+            />
+        );
+    }, [result]);
+
     return (
         <ModalV2
-            // isMobile={isMobile || width < WIDTH_MD}
+            loading={loading}
             isVisible={isOpenModalAdd}
             onBackdropCb={onBackdropCb}
             className="!max-w-[488px]"
@@ -93,13 +114,18 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
                     className="rounded-xl bg-cover bg-center dark:shadow-popover "
                 >
                     <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
-                        <BxsUserCircle size={48} />
+                        {user?.avatar ? (
+                            <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
+                        ) : (
+                            <BxsUserCircle size={48} />
+                        )}
                         <div>
-                            <div className="txtPri-1 pl-[1px]">{owner?.name ?? '_'}</div>
+                            <div className="txtPri-1 pl-[1px]">{user?.name ?? '_'}</div>
                             <div className="mt-1">{t('payment-method:owner_account')}</div>
                         </div>
                     </div>
                 </div>
+
                 {/* Bank name */}
                 <div className="flex flex-col gap-y-2">
                     <span className="text-sm">{t('payment-method:bank_name')}</span>
@@ -119,16 +145,17 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, listBankAvaila
                         className="!pb-0"
                         value={bankNumber}
                         onChange={(value) => setBankNumber(value.toString())}
-                        // onHitEnterButton={(value) => onSearch(value.toString())}
                         placeholder={t('payment-method:input_bank_account')}
                         allowClear
                     />
                 </div>
             </div>
             {/* Button action */}
-            <ButtonV2 className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
+            <ButtonV2 disabled={!bankNumber || !selectedBank?.bank_code} loading={loading} className="mx-8 mt-10 w-auto" onClick={handleBtnAdd}>
                 {t('payment-method:add')}
             </ButtonV2>
+
+            {renderAlertNotification()}
         </ModalV2>
     );
 };

@@ -1,13 +1,18 @@
 {
     "bank_list": "Banks list",
     "payment_method_add": "Add payment method",
-    "account_number": "Account number",
+    "account_number": "Account Number",
     "bank_name": "Bank name",
     "confirm": "Confirm",
     "payment_method": "Payment method",
-    "privacy": "Chuyển khoản ngân hàng chỉ áp dụng cho người dùng Việt Nam, vui lòng sử dụng tài khoản ngân hàng đã đăng ký chính xác dưới tên đầy đủ với tài khoản Nami của bạn",
-    "input_bank_account": "Enter your bank account",
+    "privacy": "Internet banking is only applicable to Vietnamese. Please, use registed bank account matching to your Nami information account",
+    "input_bank_account": "Enter your account number",
     "select_bank": "Select your bank",
-    "owner_account": "Owner Account",
-    "add": "Add"
+    "owner_account": "Account holder",
+    "add": "Add",
+    "error_add": "Adding payment method error",
+    "bank_account_not_found": "No accounts found. Please check account number again",
+    "set_default_bank_success": "Default bank changed",
+    "please_input_account_num": "Please, enter your account number",
+    "validate_input_account": "Invalid account"
 }
