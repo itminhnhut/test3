@@ -233,7 +233,7 @@
         "stake": "Stake",
         "farm": "Farm",
         "max_opt": "Tối đa",
-        "view_history": "Xem lịch sử",
+        "view_history": "View History",
         "reset": "Đặt lại",
         "view_portfolio": "Xem Portfolio"
     },
@@ -384,9 +384,10 @@
     "trending": "Trending",
     "no_assets_available": "No assets available for conversion",
     "confirm_convert": "Conversion confirmation",
-    "convert_success": "Convert success",
+    "convert_success": "Successful conversion",
     "amount_of_asset": "Number of assets",
     "amount_of_estimate_nami": "Estimated quantity",
+    "amount_nami": "Approx. NAMI",
     "view_detail": "View details",
     "convert_fail": "Conversion failed"
 }
