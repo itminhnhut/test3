@@ -18,6 +18,8 @@ import { API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE, API_GET_NAMI_RATE, API_PREFETC
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { useSelector } from 'react-redux';
+import router from 'next/router';
+import { WALLET_SCREENS } from 'pages/wallet';
 
 const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
@@ -400,7 +402,7 @@ const ModalSuccess = ({ isVisible, onBackdropCb, t }) => {
                         <span className="font-semibold text-gray-15 dark:text-gray-4">6</span>
                     </div>
                 </div>
-                <ButtonV2 className="mt-10" onClick={() => console.info('view_detail')}>
+                <ButtonV2 className="mt-10" onClick={() => router.push(`/${WALLET_SCREENS.TRANSACTION_HISTORY}`)}>
                     {t('common:global_btn.view_history')}
                 </ButtonV2>
             </div>
