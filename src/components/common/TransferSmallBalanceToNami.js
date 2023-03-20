@@ -4,21 +4,20 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { useState, useEffect } from 'react';
 import * as Error from 'redux/actions/apiError';
 import CheckBox from 'components/common/CheckBox';
-import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder, CopyText } from 'redux/actions/utils';
+import { formatNumber as formatWallet, CopyText } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 // import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
-import { TabItemNao } from 'components/screens/Nao/NaoStyle';
-import { find, isEmpty, isNumber, keys, pickBy } from 'lodash';
+import { find, isEmpty, keys, pickBy } from 'lodash';
 import NamiCircle from 'components/svg/NamiCircle';
 import TagV2 from 'components/common/V2/TagV2';
 import { ApiStatus } from 'redux/actions/const';
 import fetchAPI from 'utils/fetch-api';
-import { PATHS } from 'constants/paths';
 import { API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE, API_GET_NAMI_RATE, API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE } from '../../redux/actions/apis';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import NoData from 'components/common/V2/TableV2/NoData';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import { useSelector } from 'react-redux';
 
 const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const { t } = useTranslation();
@@ -30,6 +29,8 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
     const [isShowModalSuccess, setIsShowModalSuccess] = useState(false);
     const [namiRate, setNamiRate] = useState(null);
+    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
+    const auth = useSelector((state) => state.auth.user) || null;
 
     const isDark = currentTheme === THEME_MODE.DARK;
 
@@ -118,10 +119,13 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     const listChecked = keys(pickBy(listCheck));
 
     const getTotalGet = () => {
-        const totalGet = formatWallet(
+        let totalGet = formatWallet(
             listAsset.reduce((sum, item) => (listChecked.includes(item?.id + '') ? sum + parseFloat(item?.namiValue) : sum), 0),
             8
         );
+        console.log('totalGet: ', totalGet);
+
+        totalGet = parseFloat(parseFloat(totalGet).toFixed(8));
         return totalGet;
     };
 
@@ -213,7 +217,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
     return (
         <>
             <button
-                onClick={() => setIsShowPoppup((prev) => !prev)}
+                onClick={() => (auth?.kyc_status !== 2 ? setIsOpenModalKyc(true) : setIsShowPoppup((prev) => !prev))}
                 className={`bg-gray-10 dark:bg-dark-2 flex items-center justify-between text-txtTabHover dark:text-white 
            text-sm gap-3 rounded-md px-4 py-3 cursor-pointer ${className}`}
             >
@@ -224,10 +228,10 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 </div>
             </button>
             <ModalV2
-                isVisible={true}
+                isVisible={isShowPoppup}
                 onBackdropCb={() => setIsShowPoppup(false)}
-                // className="!border-divider"
-                wrapClassName="!py-[14px] px-0 m-auto w-[488px] h-[680px] rounded-xl border border-divider dark:border-divider-dark"
+                className="!w-auto"
+                wrapClassName="!py-[14px] px-0 m-auto w-[488px] h-[680px] rounded-xl !border border-divider dark:border-divider-dark"
                 btnCloseclassName="px-8 !pt-0"
             >
                 <div className=" text-gray-15 dark:text-gray-4 tracking-normal text-base">
@@ -240,7 +244,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                                 <div className="w-[154px] text-right overflow-hidden">{t('common:amount_nami')}</div>
                             </div>
 
-                            <div className="max-h-[332px] overflow-y-scroll px-8">
+                            <div className="max-h-[332px] h-[332px] overflow-y-scroll px-8">
                                 {listAsset.length > 0 ? (
                                     listAsset.map((item) => {
                                         const { id, available, assetCode, assetDigit, namiValue } = item;
@@ -257,7 +261,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                                                 <span className="flex-auto text-right">
                                                     {available ? formatWallet(available, assetCode === 'USDT' ? 2 : assetDigit) : '0.0000'}
                                                 </span>
-                                                <div className="w-[154px] text-right overflow-hidden">&approx;{namiValue}</div>
+                                                <div className="w-[154px] text-right overflow-hidden">≈{namiValue}</div>
                                             </div>
                                         );
                                     })
@@ -305,6 +309,9 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 </div>
             </ModalV2>
 
+            {/* If user have not KYC yet */}
+            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} onBackdropCb={() => setIsOpenModalKyc(false)} />
+
             {/* Modal Confirm */}
             <ModalConfirm
                 key="modal_confirm"
@@ -321,7 +328,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             />
 
             {/* Modal Result */}
-            <ModalSuccess key="modal_success" isVisible={true} onBackdropCb={() => setIsShowModalSuccess(false)} t={t} />
+            <ModalSuccess key="modal_success" isVisible={isShowModalSuccess} onBackdropCb={() => setIsShowModalSuccess(false)} t={t} />
             <AlertModalV2
                 key="modal_error"
                 isVisible={!!state.resultErr}
@@ -341,7 +348,9 @@ const ModalConfirm = ({ isVisible, onBackdropCb, t, onConfirm, data, swapTimer }
     return (
         <ModalV2 isVisible={isVisible} onBackdropCb={onBackdropCb} className="!max-w-[488px]" wrapClassName="!py-[30px] px-0" btnCloseclassName="px-8 !pt-0">
             <div className="text-gray-1 dark:text-gray-7 tracking-normal text-base font-normal flex items-center justify-between w-full flex-col px-8">
-                <NamiCircle size={68} />
+                <div className="relative h-20">
+                    <NamiCircle className="absolute -translate-x-1/2" size={81.6} />
+                </div>
                 <span className="mt-6 mb-4">{t('wallet:convert_small_balance')}</span>
                 <span className="txtPri-3">{t('common:confirm_convert')}</span>
                 <TagV2 className="whitespace-nowrap mt-4 mb-8" type="warning">
@@ -369,7 +378,9 @@ const ModalSuccess = ({ isVisible, onBackdropCb, t }) => {
     return (
         <ModalV2 isVisible={isVisible} onBackdropCb={onBackdropCb} className="!max-w-[488px]" wrapClassName="!py-[30px] px-0" btnCloseclassName="px-8 !pt-0">
             <div className="text-gray-1 dark:text-gray-7 tracking-normal text-base font-normal flex items-center justify-between w-full flex-col px-8">
-                <NamiCircle size={81} />
+                <div className="relative h-20">
+                    <NamiCircle className="absolute -translate-x-1/2" size={81.6} />
+                </div>
                 <span className="mt-6 mb-4">{t('wallet:convert_small_balance')}</span>
                 <span className="txtPri-3">{t('common:convert_success')}</span>
                 <TagV2 className="whitespace-nowrap mt-4 mb-8" type="success">
