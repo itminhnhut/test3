@@ -7,10 +7,10 @@ import { BxsUserIcon } from 'components/svg/SvgIcon';
 
 const CardContent = ({ image, mainContent, subContent }) => {
     return (
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 ">
             {image}
             <div className="">
-                <div className="txtPri-1 mb-2">{mainContent}</div>
+                <div className="txtPri-1 mb-2 max-w-[95%] line-clamp-2">{mainContent}</div>
                 <div className="txtSecond-3">{subContent}</div>
             </div>
         </div>
@@ -20,7 +20,7 @@ const CardContent = ({ image, mainContent, subContent }) => {
 const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) => {
     return (
         <div
-            className={classNames('flex justify-between', {
+            className={classNames('flex justify-between w-full', {
                 'items-center': endIconPosition === 'center',
                 'items-end': endIconPosition === 'end'
             })}

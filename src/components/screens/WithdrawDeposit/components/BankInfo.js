@@ -1,73 +1,93 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ChevronDown from 'components/svg/ChevronDown';
-import PopoverSelect from './common/PopoverSelect';
 import InfoCard from './common/InfoCard';
-import classNames from 'classnames';
+import { ApiStatus } from 'redux/actions/const';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_PARTNER_BANKS } from 'redux/actions/apis';
+import { setBank } from 'redux/actions/withdrawDeposit';
+import axios from 'axios';
+import CheckCircle from 'components/svg/CheckCircle';
+import { useDispatch, useSelector } from 'react-redux';
+import DropdownCard from './DropdownCard';
+
+const useFetchApi = ({ url = '', params }, dependencies = []) => {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+        (async () => {
+            try {
+                setLoading(true);
+                const data = await FetchApi({ url, cancelToken: source.token, params });
+                if (data && data?.status === ApiStatus.SUCCESS) {
+                    setData(data.data);
+                } else {
+                    setData(null);
+                }
+            } catch (error) {
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        })();
+        return () => source.cancel();
+    }, dependencies);
+
+    return { data, loading, error };
+};
 
 const BankInfo = ({ selectedPartner }) => {
-    const cardRef = useRef(null);
-    const [isVisible, setVisible] = useState(false);
     const [search, setSearch] = useState('');
+    const dispatch = useDispatch();
+    const { selectedBank } = useSelector((state) => state.withdrawDeposit);
+
+    const {
+        data: banks,
+        loading: loadingBanks,
+        error
+    } = useFetchApi({
+        url: API_GET_PARTNER_BANKS,
+        params: {
+            partnerId: selectedPartner?.partnerId
+        }
+    });
 
     return (
-        <PopoverSelect
-            ref={cardRef}
-            open={isVisible}
-            label={
-                <div
-                    onClick={() => {
-                        setVisible((prev) => !prev);
-                    }}
-                    className={classNames('bg-gray-12 text-left dark:bg-dark-2 px-4 py-6 rounded-xl w-full', {
-                        'cursor-pointer': selectedPartner
-                    })}
-                >
-                    <div className="txtSecond-2 mb-4">Phương thức thanh toán</div>
-                    <InfoCard
-                        // loading={fetchingPartner}
-                        content={
-                            selectedPartner && {
-                                mainContent: selectedPartner?.defaultBank?.bankName,
-                                subContent: <span>{selectedPartner?.defaultBank?.accountNumber}</span>,
-                                imgSrc: selectedPartner?.defaultBank?.bankLogo
-                            }
-                        }
-                        imgSize={40}
-                        endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
-                    />
-                </div>
-            }
-            value={search}
-            onChange={(value) => setSearch(value)}
-        >
-            <div className="space-y-3 w-full">
-                {/* {!partners.length ? (
-                    <NoData />
-                ) : (
-                    partners.map((partner) => (
-                        <div key={partner._id} className={classNames('p-3 hover:bg-hover-1 dark:hover:bg-hover-dark transition')}>
-                            <InfoCard
-                                content={{
-                                    mainContent: partner?.name,
-                                    subContent: (
-                                        <div className="flex items-center space-x-3">
-                                            <span>{formatPhoneNumber(partner?.phone)}</span>
-                                            <div className="flex space-x-1 items-center">
-                                                <Clock size={12} />
-                                                <span>1 Phút</span>
-                                            </div>
-                                        </div>
-                                    ),
-                                    imgSrc: partner?.avatar
-                                }}
-                                endIcon={<CheckCircle size={16} color="currentColor " />}
-                                endIconPosition="center"
-                            />
-                        </div>
-                    ))
-                )} */}
-            </div>
-        </PopoverSelect>
+        <DropdownCard
+            loading={loadingBanks}         
+            label="Phương thức thanh toán"
+            imgSize={40}
+            data={banks}
+            search={search}
+            setSearch={setSearch}
+            onSelect={(bank) => {
+                dispatch(setBank(bank));
+            }}
+            selected={{
+                id: selectedBank?._id,
+                content: selectedBank && {
+                    mainContent: selectedBank?.bankName,
+                    subContent: <span>{selectedBank?.accountNumber}</span>,
+                    imgSrc: selectedBank?.bankLogo
+                },
+                item: (item) => {
+                    return (
+                        <InfoCard
+                            content={{
+                                mainContent: item?.bankName,
+                                subContent: <span>{item?.accountNumber}</span>,
+                                imgSrc: item?.bankLogo
+                            }}
+                            endIcon={item._id === selectedBank?._id && <CheckCircle size={16} color="currentColor " />}
+                            endIconPosition="center"
+                            imgSize={40}
+                        />
+                    );
+                }
+            }}
+        />
     );
 };
 

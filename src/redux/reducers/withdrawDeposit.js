@@ -13,7 +13,8 @@ export const initialState = {
     assetId: 72,
     assetInfo: null,
     partners: [],
-    selectedPartner: null
+    selectedPartner: null,
+    selectedBank: null
 };
 
 export default (state = initialState, action) => {
@@ -32,6 +33,11 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 selectedPartner: action.payload
+            };
+        case types.SET_DEFAULT_BANK:
+            return {
+                ...state,
+                selectedBank: action.payload
             };
         default:
             return state;

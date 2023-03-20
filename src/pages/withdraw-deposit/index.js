@@ -1,8 +1,12 @@
 import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import WithdrawDeposit from 'components/screens/WithdrawDeposit';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
+import dynamic from 'next/dynamic';
+
+const WithdrawDeposit = dynamic(() => import('components/screens/WithdrawDeposit'), {
+    ssr: false
+});
 const index = () => {
     return (
         <MaldivesLayout>

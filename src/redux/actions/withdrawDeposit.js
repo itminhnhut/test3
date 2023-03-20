@@ -17,32 +17,55 @@ export const switchAsset = (currentAssetId) => {
     };
 };
 
-export const getPartners = ({ params, cancelToken, getAll = true, callbackFn = () => {} }) => {
-    return async (dispatch) => {
-        const partnerType = {
-            url: getAll ? API_GET_PARTNERS : API_GET_DEFAULT_PARTNER,
-            actionType: getAll ? types.SET_PARTNERS : types.SET_DEFAULT_PARTNER
-        };
+export const setBank = (bank) => {
+    return (dispatch) => {
+        dispatch({ type: types.SET_DEFAULT_BANK, payload: bank });
+    };
+};
 
+export const setPartner = (partner) => {
+    return (dispatch) => {
+        dispatch({ type: types.SET_DEFAULT_PARTNER, payload: partner });
+    };
+};
+
+const getDataFromPromiseSettled = (response) => {
+    if (response.status === 'fulfilled') {
+        const { data } = response.value;
+        if (data && data.status === ApiStatus.SUCCESS) {
+            return data.data;
+        }
+    }
+    return null;
+};
+
+export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
+    return async (dispatch) => {
         try {
-            const data = await FetchApi({
-                url: partnerType.url,
-                params,
-                ...(cancelToken ? { cancelToken } : {})
+            const [partners, partner] = await Promise.allSettled([
+                axios.get(API_GET_PARTNERS, {
+                    params,
+                    ...(cancelToken ? { cancelToken } : {})
+                }),
+                axios.get(API_GET_DEFAULT_PARTNER, {
+                    params,
+                    ...(cancelToken ? { cancelToken } : {})
+                })
+            ]);
+
+            const defaultPartner = getDataFromPromiseSettled(partner);
+            
+            dispatch({
+                type: types.SET_PARTNERS,
+                payload: getDataFromPromiseSettled(partners) || []
             });
-            if (data && data.status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: partnerType.actionType,
-                    payload: data.data
-                });
-            } else {
-                dispatch({
-                    type: partnerType.actionType,
-                    payload: null
-                });
-            }
+            dispatch({
+                type: types.SET_DEFAULT_PARTNER,
+                payload: defaultPartner
+            });
+            dispatch({ type: types.SET_DEFAULT_BANK, payload: defaultPartner?.defaultBank });
         } catch (error) {
-            console.log(`GET ${partnerType.url} error:`, error);
+            console.log(`GET ${API_GET_PARTNERS} error:`, error);
         } finally {
             callbackFn();
         }

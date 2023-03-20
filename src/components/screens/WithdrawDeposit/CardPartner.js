@@ -7,8 +7,6 @@ import { useDebounce } from 'react-use';
 import BankInfo from './components/BankInfo';
 
 const CardPartner = () => {
-    const dispatch = useDispatch();
-
     const { selectedPartner, partners, assetId, input } = useSelector((state) => state.withdrawDeposit);
     const [debounceQuantity, setDebouncedQuantity] = useState('');
 

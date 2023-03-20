@@ -6,7 +6,6 @@ import HistoryTable from './HistoryTable';
 import { useSelector } from 'react-redux';
 
 const WithdrawDeposit = () => {
-    const { selectedPartner } = useSelector((state) => state.withdrawDeposit);
 
     return (
         <div className="max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl my-20">
