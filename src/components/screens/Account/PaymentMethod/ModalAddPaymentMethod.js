@@ -20,7 +20,7 @@ import Image from 'next/image';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import SwapWarning from 'components/svg/SwapWarning';
 
-const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user }) => {
+const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
     const [bankNumber, setBankNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState({});
     const [loading, setLoading] = useState(false);
@@ -57,10 +57,12 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user }
             }
         })
             .then(({ status, data }) => {
+                let isSuccess = status === ApiStatus.SUCCESS;
                 setResult({
-                    isSuccess: status === ApiStatus.SUCCESS,
-                    msg: status === ApiStatus.SUCCESS ? '' : t('payment-method:bank_account_not_found')
+                    isSuccess,
+                    msg: isSuccess ? '' : t('payment-method:bank_account_not_found')
                 });
+                if (isSuccess) fetchListUserBank();
             })
             .catch((e) => {
                 setResult({

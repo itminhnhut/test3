@@ -193,7 +193,14 @@ const index = () => {
             </div>
 
             {/* Popup if user have not KYC yet */}
-            <ModalAddPaymentMethod isOpenModalAdd={isOpenModalAddNew} onBackdropCb={() => setIsOpenModalAddNew(false)} t={t} user={user} isDark={isDark} />
+            <ModalAddPaymentMethod
+                isOpenModalAdd={isOpenModalAddNew}
+                onBackdropCb={() => setIsOpenModalAddNew(false)}
+                t={t}
+                user={user}
+                isDark={isDark}
+                fetchListUserBank={fetchListUserBank}
+            />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
             {renderAlertNotification()}
         </div>
