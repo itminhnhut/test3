@@ -40,7 +40,7 @@ const index = () => {
     const [loadingSetDefault, setLoadingSetDefault] = useState(false);
     const [result, setResult] = useState(null);
 
-    useEffect(() => {
+    const fetchListUserBank = () => {
         setLoadingListUserBank(true);
 
         // Fetch list bank accounts
@@ -54,16 +54,20 @@ const index = () => {
                 if (status === ApiStatus.SUCCESS) data ? setListUserBank(data) : setListUserBank([]);
             })
             .finally(() => setLoadingListUserBank(false));
+    };
+    useEffect(() => {
+        fetchListUserBank();
     }, []);
 
     useEffect(() => {
-        setDataTable(
-            listUserBank.filter(
-                (item) => item.bankKey.toLowerCase().includes(search.toLowerCase()) || item.bankName.toLowerCase().includes(search.toLowerCase())
-            )
-        );
+        if (listUserBank?.length > 0)
+            setDataTable(
+                listUserBank.filter(
+                    (item) => item.bankKey.toLowerCase().includes(search.toLowerCase()) || item.bankName.toLowerCase().includes(search.toLowerCase())
+                )
+            );
         setCurrentPage(1);
-    }, [search]);
+    }, [search, listUserBank]);
 
     const handleSetDefault = (bankAccountId) => {
         setLoadingSetDefault(bankAccountId);
@@ -78,9 +82,13 @@ const index = () => {
             }
         })
             .then(({ status, data }) => {
+                const isSuccess = status === ApiStatus.SUCCESS;
                 setResult({
-                    isSuccess: status === ApiStatus.SUCCESS
+                    isSuccess
                 });
+                if (isSuccess) {
+                    fetchListUserBank();
+                }
             })
             .catch((e) => {
                 setResult({

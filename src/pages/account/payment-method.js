@@ -39,7 +39,8 @@ export const getStaticProps = async ({ locale }) => ({
             'reward-center',
             'identification',
             'reference',
-            'payment-method'
+            'payment-method',
+            'wallet'
         ]))
     }
 });
