@@ -13,14 +13,23 @@ import { useRouter } from 'next/router';
 import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const CardInput = () => {
     const { input, assetId, selectedPartner } = useSelector((state) => state.withdrawDeposit);
+    const wallets = useSelector((state) => state.wallet.SPOT);
+
     const dispatch = useDispatch();
     const router = useRouter();
     const side = router?.query?.side;
 
     const orderConfig = selectedPartner?.orderConfig?.[side.toLowerCase()];
+
+    const availableAsset = useMemo(
+        () => wallets?.[assetId]?.value - wallets?.[assetId]?.locked_value,
+
+        [wallets, assetId]
+    );
 
     const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side), [side, assetId]);
 
@@ -56,6 +65,8 @@ const CardInput = () => {
         [assetId, selectedPartner]
     );
 
+    console.log('availableAsset:', availableAsset);
+
     return (
         <Card className="min-h-[444px]">
             <div className="flex mb-4 space-x-2 pt-6 relative">
@@ -76,10 +87,28 @@ const CardInput = () => {
                         allowedDecimalSeparators={[',', '.']}
                         clearAble
                         placeHolder="Nhập số lượng tài sản"
+                        renderTail={
+                            side === SIDE.SELL && (
+                                <ButtonV2
+                                    variants="text"
+                                    disabled={+input === availableAsset}
+                                    onClick={() => dispatch(setInput(availableAsset))}
+                                    className="uppercase font-semibold text-teal !h-10"
+                                >
+                                    Max
+                                </ButtonV2>
+                            )
+                        }
                     />
                 </div>
                 <div className="w-24">
-                    <ButtonV2 className="!text-dominant" variants="secondary" onClick={() => dispatch(switchAsset(assetId))}>
+                    <ButtonV2
+                    className="!text-dominant"
+                        variants="secondary"
+                        onClick={() => {
+                            dispatch(switchAsset(assetId));
+                        }}
+                    >
                         <span>{assetId === 72 ? 'VNDC' : 'USDT'}</span>
                         <SyncAltIcon className="rotate-90" size={16} />
                     </ButtonV2>
@@ -91,8 +120,9 @@ const CardInput = () => {
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Giá quy đổi</div>
                     <div className="txtPri-1 flex items-center space-x-1">
-                        <span>1 {assetId === 72 ? 'VNDC' : 'USDT'} </span> =
-                        <span className="flex ml-1 items-center">{loadingRate ? <Skeletor width="50px" height="20px" /> : formatPrice(rate)}</span> VND
+                        <span>1 {assetId === 72 ? 'VNDC' : 'USDT'} =</span>
+                        <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatPrice(rate)}</span>
+                        <span>VND</span>
                     </div>
                 </div>
                 <div className="flex items-center justify-between ">

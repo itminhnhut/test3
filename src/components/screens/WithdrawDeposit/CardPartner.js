@@ -45,7 +45,7 @@ const CardPartner = () => {
         );
 
         return () => source.cancel();
-    }, [debounceQuantity, assetId]);
+    }, [debounceQuantity, assetId, side]);
 
     const {
         data: banks,
@@ -57,7 +57,7 @@ const CardPartner = () => {
         selectedPartner
     ]);
 
-    const { data: accountBanks, loading: loadingAccBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL);
+    const { data: accountBanks, loading: loadingAccBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side]);
 
     useEffect(() => {
         if (accountBanks && accountBanks.length) {
@@ -73,7 +73,13 @@ const CardPartner = () => {
 
                 <PartnerInfo loadingPartners={loadingPartners} selectedPartner={selectedPartner} partners={partners} />
                 {side === SIDE.BUY && selectedPartner && (
-                    <BankInfo selectedBank={selectedBank} onSelect={(bank) => dispatch(setBank(bank))} banks={banks} loading={loadingBanks} />
+                    <BankInfo
+                        selectedBank={selectedBank}
+                        onSelect={(bank) => dispatch(setBank(bank))}
+                        banks={banks}
+                        loading={loadingBanks || loadingPartners}
+                        containerClassname="z-40"
+                    />
                 )}
             </div>
         </Card>
