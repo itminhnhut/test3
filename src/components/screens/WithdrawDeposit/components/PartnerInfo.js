@@ -10,33 +10,17 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { Clock } from 'react-feather';
 import DropdownCard from './DropdownCard';
 
-const PartnerInfo = ({ debounceQuantity, assetId, selectedPartner, partners }) => {
-    const [loading, setLoading] = useState(false);
+const PartnerInfo = ({ loadingPartners, selectedPartner, partners }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
 
-    useEffect(() => {
-        const source = axios.CancelToken.source();
-        setLoading(true);
-        dispatch(
-            getPartners({
-                params: { quantity: !debounceQuantity ? 0 : debounceQuantity, assetId, side: SIDE.SELL },
-                cancelToken: source.token,
-                callbackFn: () => {
-                    setLoading(false);
-                }
-            })
-        );
-
-        return () => source.cancel();
-    }, [debounceQuantity, assetId]);
-
     return (
         <DropdownCard
-            loading={loading}
+            loading={loadingPartners}
+            disabled={Boolean(!selectedPartner)}
             containerClassname="z-[41]"
             label="Đối tác kinh doanh"
-            data={partners}
+            data={partners && partners.filter((partner) => partner.name.toLowerCase().includes(search.toLowerCase()))}
             search={search}
             setSearch={setSearch}
             onSelect={(partner) => {
@@ -81,4 +65,4 @@ const PartnerInfo = ({ debounceQuantity, assetId, selectedPartner, partners }) =
     );
 };
 
-export default PartnerInfo;
+export default React.memo(PartnerInfo);

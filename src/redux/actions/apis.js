@@ -295,3 +295,4 @@ export const API_GET_PARTNERS = API_V3_PREFIX + 'spot/partner';
 export const API_GET_DEFAULT_PARTNER = API_V3_PREFIX + 'spot/default_partner';
 export const API_GET_PARTNER_BANKS = API_V3_PREFIX + 'payment/partner_bank_accounts';
 export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'spot/partner_order';
+export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'spot/partner_order_price';

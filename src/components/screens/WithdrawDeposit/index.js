@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './components/common/Header';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
-import { useSelector } from 'react-redux';
+
+import useLocationSide from './useLocationSide';
 
 const WithdrawDeposit = () => {
+    useLocationSide();
 
     return (
         <div className="max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl my-20">

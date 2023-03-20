@@ -120,6 +120,7 @@ const HistoryTable = () => {
     const user = useSelector((state) => state.auth.user) || null;
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
+
     const fetchData = () => {
         setLoadingDataTable(true);
 

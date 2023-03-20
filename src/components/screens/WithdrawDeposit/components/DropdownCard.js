@@ -18,14 +18,14 @@ const DropdownCard = ({ loading, containerClassname, disabled, label, selected, 
         <PopoverSelect
             ref={cardRef}
             open={isVisible}
-            containerClassname={classNames(containerClassname)}
+            containerClassname={containerClassname}
             label={
                 <button
                     disabled={disabled || loading}
                     onClick={() => {
                         setVisible((prev) => !prev);
                     }}
-                    className={classNames('bg-gray-12 disabled:cursor-default cursor-pointer text-left dark:bg-dark-2 px-4 py-6 rounded-xl w-full', {})}
+                    className="bg-gray-12 disabled:cursor-default cursor-pointer text-left dark:bg-dark-2 px-4 py-6 rounded-xl w-full"
                 >
                     <div className="txtSecond-2 mb-4"> {label}</div>
                     <InfoCard
