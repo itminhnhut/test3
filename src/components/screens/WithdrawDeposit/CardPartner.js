@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { API_GET_PARTNER_BANKS } from 'redux/actions/apis';
-import { getPartners } from 'redux/actions/withdrawDeposit';
+import { API_GET_PARTNER_BANKS, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
+import { getPartners, setBank } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
@@ -12,7 +12,7 @@ import PartnerInfo from './components/PartnerInfo';
 import { useRouter } from 'next/router';
 
 const CardPartner = () => {
-    const { selectedPartner, partners, assetId, input } = useSelector((state) => state.withdrawDeposit);
+    const { selectedPartner, partners, assetId, input, selectedBank } = useSelector((state) => state.withdrawDeposit);
     const [debounceQuantity, setDebouncedQuantity] = useState('');
     const [loadingPartners, setLoadingPartners] = useState(false);
     const dispatch = useDispatch();
@@ -51,22 +51,29 @@ const CardPartner = () => {
         data: banks,
         loading: loadingBanks,
         error
-    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: selectedPartner?.partnerId } }, [debounceQuantity, assetId, selectedPartner]);
+    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: selectedPartner?.partnerId } }, Boolean(selectedPartner), [
+        debounceQuantity,
+        assetId,
+        selectedPartner
+    ]);
+
+    const { data: accountBanks, loading: loadingAccBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL);
+
+    useEffect(() => {
+        if (accountBanks && accountBanks.length) {
+            dispatch(setBank(accountBanks.find((bank) => bank.isDefault)));
+        }
+    }, [accountBanks]);
 
     return (
         <Card className="min-h-[444px] ">
             <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
             <div className="space-y-4">
+                {side === SIDE.SELL && <BankInfo selectedBank={selectedBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccBanks} />}
+
                 <PartnerInfo loadingPartners={loadingPartners} selectedPartner={selectedPartner} partners={partners} />
-                {selectedPartner && (
-                    <BankInfo
-                        banks={banks}
-                        loadingBanks={loadingBanks}
-                        debounceQuantity={debounceQuantity}
-                        assetId={assetId}
-                        loading={loadingPartners}
-                        selectedPartner={selectedPartner}
-                    />
+                {side === SIDE.BUY && selectedPartner && (
+                    <BankInfo selectedBank={selectedBank} onSelect={(bank) => dispatch(setBank(bank))} banks={banks} loading={loadingBanks} />
                 )}
             </div>
         </Card>

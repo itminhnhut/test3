@@ -2,28 +2,30 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
-const useFetchApi = ({ url = '', params }, dependencies = []) => {
+const useFetchApi = ({ url = '', params },condition, dependencies = []) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const source = axios.CancelToken.source();
-        (async () => {
-            try {
-                setLoading(true);
-                const data = await FetchApi({ url, cancelToken: source.token, params });
-                if (data && data?.status === ApiStatus.SUCCESS) {
-                    setData(data.data);
-                } else {
-                    setData(null);
+        if (condition) {
+            (async () => {
+                try {
+                    setLoading(true);
+                    const data = await FetchApi({ url, cancelToken: source.token, params });
+                    if (data && data?.status === ApiStatus.SUCCESS) {
+                        setData(data.data);
+                    } else {
+                        setData(null);
+                    }
+                } catch (error) {
+                    setError(error);
+                } finally {
+                    setLoading(false);
                 }
-            } catch (error) {
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        })();
+            })();
+        }
         return () => source.cancel();
     }, dependencies);
 

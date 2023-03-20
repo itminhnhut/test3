@@ -22,7 +22,7 @@ const CardInput = () => {
 
     const orderConfig = selectedPartner?.orderConfig?.[side.toLowerCase()];
 
-    const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, [side, assetId]);
+    const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side), [side, assetId]);
 
     const validator = useMemo(() => {
         let isValid = true,

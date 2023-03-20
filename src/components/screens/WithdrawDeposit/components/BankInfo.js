@@ -5,14 +5,13 @@ import { setBank } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import { useDispatch, useSelector } from 'react-redux';
 import DropdownCard from './DropdownCard';
+import TagV2 from 'components/common/V2/TagV2';
 
-const BankInfo = ({ loadingBanks, loading, banks }) => {
+const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBank, onSelect }) => {
     const [search, setSearch] = useState('');
-    const dispatch = useDispatch();
-    const { selectedBank } = useSelector((state) => state.withdrawDeposit);
-
     return (
         <DropdownCard
+            containerClassname={containerClassname}
             loading={loadingBanks || loading}
             label="Phương thức thanh toán"
             imgSize={40}
@@ -22,14 +21,16 @@ const BankInfo = ({ loadingBanks, loading, banks }) => {
             }
             search={search}
             setSearch={setSearch}
-            onSelect={(bank) => {
-                dispatch(setBank(bank));
-            }}
+            onSelect={(bank) => onSelect && onSelect?.(bank)}
             selected={{
                 id: selectedBank?._id,
                 content: selectedBank && {
                     mainContent: selectedBank?.bankName,
-                    subContent: <span>{selectedBank?.accountNumber}</span>,
+                    subContent: (
+                        <div className="flex space-x-2 items-center">
+                            <span>{selectedBank?.accountNumber}</span>
+                        </div>
+                    ),
                     imgSrc: selectedBank?.bankLogo
                 },
                 item: (item) => {
@@ -37,7 +38,16 @@ const BankInfo = ({ loadingBanks, loading, banks }) => {
                         <InfoCard
                             content={{
                                 mainContent: item?.bankName,
-                                subContent: <span>{item?.accountNumber}</span>,
+                                subContent: (
+                                    <div className="flex space-x-2 items-center">
+                                        <span>{item?.accountNumber}</span>
+                                        {item.isDefault && (
+                                            <TagV2 icon={false} type="success">
+                                                Mặc định
+                                            </TagV2>
+                                        )}
+                                    </div>
+                                ),
                                 imgSrc: item?.bankLogo
                             }}
                             endIcon={item._id === selectedBank?._id && <CheckCircle size={16} color="currentColor " />}

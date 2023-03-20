@@ -54,7 +54,7 @@ export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
             ]);
 
             const defaultPartner = getDataFromPromiseSettled(partner);
-            
+
             dispatch({
                 type: types.SET_PARTNERS,
                 payload: getDataFromPromiseSettled(partners) || []
@@ -63,7 +63,9 @@ export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
                 type: types.SET_DEFAULT_PARTNER,
                 payload: defaultPartner
             });
-            dispatch({ type: types.SET_DEFAULT_BANK, payload: defaultPartner?.defaultBank });
+            if (params.side === SIDE.BUY) {
+                dispatch({ type: types.SET_DEFAULT_BANK, payload: defaultPartner?.defaultBank });
+            }
         } catch (error) {
             console.log(`GET ${API_GET_PARTNERS} error:`, error);
         } finally {
