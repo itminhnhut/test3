@@ -17,6 +17,7 @@ import { getExchange24hPercentageChange } from 'src/redux/actions/utils';
 import useDarkMode from 'hooks/useDarkMode';
 import { useRefWindowSize } from 'hooks/useWindowSize';
 import Skeletor from '../components/common/Skeletor';
+import { useAsync } from 'react-use';
 
 const APP_URL = process.env.APP_URL || 'https://nami.exchange';
 
@@ -89,14 +90,19 @@ const Index = () => {
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
                     <div className="absolute w-full h-full z-0">
-                        <Image layout="fill" objectFit="cover" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
+                        <Image
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-xl"
+                            src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
+                        />
                     </div>
                 </div>
             </ModalV2>
         );
     }, [state.showQR]);
 
-    useEffect(async () => {
+    useAsync(async () => {
         if (!(futuresConfigs && futuresConfigs.length)) return;
         const originPairs = await getFuturesMarketWatch();
         let pairs = originPairs;
@@ -108,7 +114,7 @@ const Index = () => {
                     p.is_new_listing = true;
                     p.listing_time = config?.createdAt ? new Date(config?.createdAt).getTime() : 0;
                 }
-
+                p.leverage = config?.leverageConfig;
                 if (p?.vq > 1000) return p;
                 return null;
             })
@@ -138,6 +144,7 @@ const Index = () => {
                 return (o?.is_new_listing ? -1 : 1) * (o?.listing_time || 0);
             }
         ]);
+        console.log('newListings:', newListings);
 
         setState({
             trendData: {
