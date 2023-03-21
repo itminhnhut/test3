@@ -1,12 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { getPartners } from 'redux/actions/withdrawDeposit';
-import { formatPhoneNumber } from 'redux/actions/utils';
+import { formatPhoneNumber, filterSearch } from 'redux/actions/utils';
 import { setPartner } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import InfoCard from './common/InfoCard';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { Clock } from 'react-feather';
 import DropdownCard from './DropdownCard';
 
@@ -20,7 +17,7 @@ const PartnerInfo = ({ loadingPartners, selectedPartner, partners }) => {
             disabled={Boolean(!selectedPartner)}
             containerClassname="z-[41]"
             label="Đối tác kinh doanh"
-            data={partners && partners.filter((partner) => partner.name.toLowerCase().includes(search.toLowerCase()))}
+            data={partners && filterSearch(partners, ['name'], search)}
             search={search}
             setSearch={setSearch}
             onSelect={(partner) => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { API_GET_PARTNER_BANKS, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
-import { getPartners, setBank } from 'redux/actions/withdrawDeposit';
+import { getPartners, setAccountBank, setPartnerBank } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useDispatch, useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
@@ -12,7 +12,7 @@ import PartnerInfo from './components/PartnerInfo';
 import { useRouter } from 'next/router';
 
 const CardPartner = () => {
-    const { selectedPartner, partners, assetId, input, selectedBank } = useSelector((state) => state.withdrawDeposit);
+    const { partner, partnerBank, accountBank, assetId, input } = useSelector((state) => state.withdrawDeposit);
     const [debounceQuantity, setDebouncedQuantity] = useState('');
     const [loadingPartners, setLoadingPartners] = useState(false);
     const dispatch = useDispatch();
@@ -51,17 +51,13 @@ const CardPartner = () => {
         data: banks,
         loading: loadingBanks,
         error
-    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: selectedPartner?.partnerId } }, Boolean(selectedPartner), [
-        debounceQuantity,
-        assetId,
-        selectedPartner
-    ]);
+    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, Boolean(partner), [debounceQuantity, assetId, partner]);
 
-    const { data: accountBanks, loading: loadingAccBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side]);
+    const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side]);
 
     useEffect(() => {
         if (accountBanks && accountBanks.length) {
-            dispatch(setBank(accountBanks.find((bank) => bank.isDefault)));
+            dispatch(setAccountBank(accountBanks.find((bank) => bank.isDefault)));
         }
     }, [accountBanks]);
 
@@ -69,13 +65,13 @@ const CardPartner = () => {
         <Card className="min-h-[444px] ">
             <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
             <div className="space-y-4">
-                {side === SIDE.SELL && <BankInfo selectedBank={selectedBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccBanks} />}
+                {side === SIDE.SELL && <BankInfo selectedBank={accountBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccountBanks} />}
 
-                <PartnerInfo loadingPartners={loadingPartners} selectedPartner={selectedPartner} partners={partners} />
-                {side === SIDE.BUY && selectedPartner && (
+                <PartnerInfo loadingPartners={loadingPartners} selectedPartner={partner} partners={[]} />
+                {side === SIDE.BUY && partner && (
                     <BankInfo
-                        selectedBank={selectedBank}
-                        onSelect={(bank) => dispatch(setBank(bank))}
+                        selectedBank={partnerBank}
+                        onSelect={(bank) => dispatch(setPartnerBank(bank))}
                         banks={banks}
                         loading={loadingBanks || loadingPartners}
                         containerClassname="z-40"

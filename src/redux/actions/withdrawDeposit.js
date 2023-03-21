@@ -17,27 +17,19 @@ export const switchAsset = (currentAssetId) => {
     };
 };
 
-export const setBank = (bank) => {
+export const setPartnerBank = (bank) => {
     return (dispatch) => {
-        dispatch({ type: types.SET_DEFAULT_BANK, payload: bank });
+        dispatch({ type: types.SET_PARTNER_BANK, payload: bank });
     };
 };
 
 export const setPartner = (partner) => {
     return (dispatch) => {
-        dispatch({ type: types.SET_DEFAULT_PARTNER, payload: partner });
+        dispatch({ type: types.SET_PARTNER, payload: partner });
     };
 };
 
-const getDataFromPromiseSettled = (response) => {
-    if (response.status === 'fulfilled') {
-        const { data } = response.value;
-        if (data && data.status === ApiStatus.SUCCESS) {
-            return data.data;
-        }
-    }
-    return null;
-};
+export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
 
 export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
@@ -53,23 +45,24 @@ export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
                 })
             ]);
 
-            const defaultPartner = getDataFromPromiseSettled(partner);
-
             dispatch({
-                type: types.SET_PARTNERS,
-                payload: getDataFromPromiseSettled(partners) || []
+                type: types.SET_PARTNER,
+                payload: parseDataFromPromiseSettled(partner)
             });
-            dispatch({
-                type: types.SET_DEFAULT_PARTNER,
-                payload: defaultPartner
-            });
-            if (params.side === SIDE.BUY) {
-                dispatch({ type: types.SET_DEFAULT_BANK, payload: defaultPartner?.defaultBank });
-            }
         } catch (error) {
             console.log(`GET ${API_GET_PARTNERS} error:`, error);
         } finally {
             callbackFn();
         }
     };
+};
+
+const parseDataFromPromiseSettled = (response) => {
+    if (response.status === 'fulfilled') {
+        const { data } = response.value;
+        if (data && data.status === ApiStatus.SUCCESS) {
+            return data.data;
+        }
+    }
+    return null;
 };

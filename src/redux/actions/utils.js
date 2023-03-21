@@ -38,6 +38,7 @@ import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
 import { useRouter } from 'next/router';
 import { log } from 'utils';
+import { cloneDeep } from 'lodash';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1192,4 +1193,8 @@ export const getOffsetEl = (el) => {
     return { w: width, h: height };
 };
 
-
+export const filterSearch = (originDataset, keys, searchValue) => {
+    const lowercaseSearch = searchValue.toLowerCase();
+    const copyDataSet = cloneDeep(originDataset);
+    return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
+};

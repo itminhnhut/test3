@@ -16,21 +16,20 @@ import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const CardInput = () => {
-    const { input, assetId, selectedPartner } = useSelector((state) => state.withdrawDeposit);
+    const { input, assetId, partner } = useSelector((state) => state.withdrawDeposit);
+    console.log('partner:', partner);
     const wallets = useSelector((state) => state.wallet.SPOT);
 
     const dispatch = useDispatch();
     const router = useRouter();
     const side = router?.query?.side;
 
-    const orderConfig = selectedPartner?.orderConfig?.[side.toLowerCase()];
-
+    const orderConfig = useMemo(() => partner?.orderConfig?.[side.toLowerCase()], [partner]);
     const availableAsset = useMemo(
         () => wallets?.[assetId]?.value - wallets?.[assetId]?.locked_value,
 
         [wallets, assetId]
     );
-
     const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side), [side, assetId]);
 
     const validator = useMemo(() => {
@@ -50,11 +49,11 @@ const CardInput = () => {
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [input, selectedPartner, orderConfig]);
+    }, [input, partner, orderConfig]);
 
     const renderingMinMaxPartner = useCallback(
         (price) => {
-            return !selectedPartner ? (
+            return !partner ? (
                 <Skeletor width={100} />
             ) : (
                 <div>
@@ -62,7 +61,7 @@ const CardInput = () => {
                 </div>
             );
         },
-        [assetId, selectedPartner]
+        [assetId, partner]
     );
 
     console.log('availableAsset:', availableAsset);
@@ -103,7 +102,7 @@ const CardInput = () => {
                 </div>
                 <div className="w-24">
                     <ButtonV2
-                    className="!text-dominant"
+                        className="!text-dominant"
                         variants="secondary"
                         onClick={() => {
                             dispatch(switchAsset(assetId));
@@ -127,18 +126,18 @@ const CardInput = () => {
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số lượng nạp tối thiểu</div>
-                    <div className="txtPri-1">{renderingMinMaxPartner(selectedPartner?.orderConfig[side.toLowerCase()]?.min)}</div>
+                    <div className="txtPri-1">{renderingMinMaxPartner(orderConfig?.min)}</div>
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số lượng nạp tối đa</div>
-                    <div className="txtPri-1">{renderingMinMaxPartner(selectedPartner?.orderConfig[side.toLowerCase()]?.max)}</div>
+                    <div className="txtPri-1">{renderingMinMaxPartner(orderConfig?.max)}</div>
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số tiền cần chuyển</div>
                     <div className="txtPri-1">{formatPrice(input * rate)} VNDC</div>
                 </div>
             </div>
-            <ButtonV2 disabled={!selectedPartner} className="disabled:cursor-default">
+            <ButtonV2 disabled={!partner} className="disabled:cursor-default">
                 Xác nhận
             </ButtonV2>
         </Card>

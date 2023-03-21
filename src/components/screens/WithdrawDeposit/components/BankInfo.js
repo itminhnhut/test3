@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import InfoCard from './common/InfoCard';
-
-import { setBank } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
-import { useDispatch, useSelector } from 'react-redux';
+import { filterSearch } from 'redux/actions/utils';
 import DropdownCard from './DropdownCard';
 import TagV2 from 'components/common/V2/TagV2';
 
@@ -15,10 +13,7 @@ const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBa
             loading={loadingBanks || loading}
             label="Phương thức thanh toán"
             imgSize={40}
-            data={
-                banks &&
-                banks.filter((bank) => bank.bankName.toLowerCase().includes(search.toLowerCase()) || bank.bankKey.toLowerCase().includes(search.toLowerCase()))
-            }
+            data={banks && filterSearch(banks, ['bankName', 'bankKey'], search)}
             search={search}
             setSearch={setSearch}
             onSelect={(bank) => onSelect && onSelect?.(bank)}
