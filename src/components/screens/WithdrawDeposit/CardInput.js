@@ -19,7 +19,6 @@ import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { PATHS } from 'src/constants/paths';
 import { ORDER_TYPES } from './components/OrderModal';
-
 const CardInput = () => {
     const { input, assetId, partner, partnerBank } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
@@ -84,8 +83,7 @@ const CardInput = () => {
 
             if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
                 toast({ text: `Bạn đã đặt thành công lệnh mua ${assetId === 72 ? 'VNDC' : 'USDT'} #${orderResponse.data.displayingId} `, type: 'success' });
-
-                // router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + orderResponse.data.displayingId);
+                router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + orderResponse.data.displayingId);
             }
         } catch (error) {
             console.log('error:', error);
