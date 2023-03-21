@@ -1,74 +1,89 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { shortHashAddress, getAssetCode, formatTime, formatPrice } from 'redux/actions/utils';
+import { shortHashAddress, getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
+import Axios from 'axios';
 import { TABS, data } from './constants';
+import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
+import { ApiStatus } from 'redux/actions/const';
+import { useSelector } from 'react-redux';
+import TextCopyable from 'components/screens/Account/TextCopyable';
 
-const columns = [
-    { key: '_id', dataIndex: '_id', title: 'Mã giao dịch', align: 'center', width: 124, render: (row) => <div>{shortHashAddress(row, 0, 4)}</div> },
+const LIMIT_ROW = 10;
+
+const getColumns = (t, user) => [
     {
-        key: 'asset',
-        dataIndex: 'currency',
-        title: 'Tài sản',
+        key: '_id',
+        dataIndex: '_id',
+        title: t('common:transaction_id'),
+        align: 'center',
+        width: 150,
+        fixed: 'left',
+        render: (v) => (
+            // <div className="flex items-center gap-x-2">
+            //     <span>{shortHashAddress(v, 8, 6)}</span>
+            //     <CopyIcon data={v} size={16} className="cursor-pointer" />
+            // </div>
+            <TextCopyable className="gap-x-1" showingText={v ? `${shortHashAddress(v, 3, 4)}` : undefined} text={v} />
+        )
+    },
+    {
+        key: 'baseAssetId',
+        dataIndex: 'baseAssetId',
+        title: t('common:asset'),
         align: 'left',
         width: 148,
-        render: (row) => (
+        render: (v) => (
             <div className="flex items-center font-semibold">
-                {row && <AssetLogo useNextImg={true} assetId={row} size={32} />}
-                <div className="ml-2"> {getAssetCode(row)}</div>
+                {v && <AssetLogo assetId={v} size={32} />}
+                <div className="ml-2"> {getAssetCode(v)}</div>
             </div>
         )
     },
     {
-        key: 'created_at',
-        dataIndex: 'created_at',
-        title: 'Thời gian',
+        key: 'createdAt',
+        dataIndex: 'createdAt',
+        title: t('common:time'),
         align: 'left',
-        width: 196,
-        render: (row) => <div>{formatTime(row, 'HH:mm:ss dd/MM/yyyy')}</div>
+        width: 200,
+        render: (v) => formatTime(v, 'HH:mm:ss dd/MM/yyyy')
     },
     {
-        key: 'amount',
-        dataIndex: 'amount',
-        title: 'Số lượng',
+        key: 'quoteQty',
+        dataIndex: 'quoteQty',
+        title: t('common:amount'),
         align: 'right',
         width: 189,
-        render: (row) => {
-            // const config = assetConfig?.find((e) => e?.id === item?.currency);
-            return <div>{formatPrice(row, 5)}</div>;
-        }
+        render: (v) => formatNumber(v)
     },
     {
-        key: 'from',
-        dataIndex: 'from',
-        title: 'Từ',
+        key: 'partnerMetadata',
+        dataIndex: 'partnerMetadata',
+        title: t('common:from'),
+        align: 'left',
+        width: 189,
+        render: (v) => (
+            <div className="">
+                <div className="txtPri-2 mb-1">{v?.name}</div>
+                <div className="txtSecond-3">{v?.userId}</div>
+            </div>
+        )
+    },
+    {
+        key: '_',
+        dataIndex: '_',
+        title: t('common:to'),
         align: 'left',
         width: 189,
         render: (row) => {
             // const config = assetConfig?.find((e) => e?.id === item?.currency);
             return (
                 <div className="">
-                    <div className="txtPri-2 mb-1">{row.name}</div>
-                    <div className="txtSecond-3">{row.code}</div>
-                </div>
-            );
-        }
-    },
-    {
-        key: 'to',
-        dataIndex: 'to',
-        title: 'Đến',
-        align: 'left',
-        width: 189,
-        render: (row) => {
-            // const config = assetConfig?.find((e) => e?.id === item?.currency);
-            return (
-                <div className="">
-                    <div className="txtPri-2 mb-1">{row.name}</div>
-                    <div className="txtSecond-3">{row.code}</div>
+                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
+                    <div className="txtSecond-3">{user?.code}</div>
                 </div>
             );
         }
@@ -76,16 +91,16 @@ const columns = [
     {
         key: 'status',
         dataIndex: 'status',
-        title: 'Trạng thái',
+        title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 182,
-        render: (row) => {
-            const statusContent = TABS.find((tab) => tab?.status && tab.status === row);
+        render: (v) => {
+            const statusContent = TABS.find((tab) => tab?.status === v);
             return (
                 <div className="flex justify-end items-center">
-                    <TagV2 icon={false} type={statusContent.type}>
-                        {statusContent.localized}
-                    </TagV2>{' '}
+                    <TagV2 icon={false} type={statusContent?.type}>
+                        {statusContent?.localized}
+                    </TagV2>
                 </div>
             );
         }
@@ -98,8 +113,52 @@ const HistoryTable = () => {
         i18n: { language }
     } = useTranslation();
 
-    const [currentPage, setCurrentPage] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
+    const [dataTable, setDataTable] = useState([]);
+    const [hasNext, setHasNext] = useState(false);
+    const user = useSelector((state) => state.auth.user) || null;
+
+    const [loadingDataTable, setLoadingDataTable] = useState(false);
+
+    const fetchData = () => {
+        setLoadingDataTable(true);
+
+        Axios.get(API_GET_HISTORY_DW_PARTNERS, {
+            params: {
+                page: currentPage,
+                pageSize: LIMIT_ROW,
+                lastId: dataTable[dataTable.length - 1]?._id ?? null,
+                mode: 'partner',
+                side: 'BUY',
+                status: activeTab === 0 ? null : TABS[activeTab]?.status
+            }
+        })
+            .then(({ data: res }) => {
+                setHasNext(res.data?.hasNext);
+
+                if (res.status === ApiStatus.SUCCESS && res.data?.orders) {
+                    setDataTable(res.data.orders);
+                } else {
+                    setDataTable([]);
+                }
+            })
+            .catch((err) => {
+                setDataTable([]);
+            })
+            .finally(() => {
+                setLoadingDataTable(false);
+            });
+    };
+
+    useEffect(() => {
+        setCurrentPage(0);
+        fetchData();
+    }, [activeTab]);
+
+    useEffect(() => {
+        fetchData();
+    }, [currentPage]);
 
     return (
         <div className="space-y-6">
@@ -114,23 +173,27 @@ const HistoryTable = () => {
             />
             <TableV2
                 // sort={['created_at']}
-                limit={10}
+                limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
-                data={data}
-                columns={columns}
+                data={dataTable}
+                columns={getColumns(t, user)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
-                loading={false}
+                loading={loadingDataTable}
                 onRowClick={(transaction) => {
                     console.log('transaction:', transaction);
                 }}
                 height={404}
-                className="border rounded-lg border-divider dark:border-divider-dark pt-4"
-                tableStyle={{ fontSize: '16px', padding: '16px' }}
+                className="border border-divider dark:border-divider-dark rounded-lg pt-4"
+                tableStyle={{
+                    fontSize: '16px',
+                    padding: '16px',
+                    headerFontStyle: { 'font-size': `14px !important` }
+                }}
                 pagingPrevNext={{
                     page: currentPage,
-                    hasNext: false,
+                    hasNext: hasNext,
                     onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
                     language
                 }}

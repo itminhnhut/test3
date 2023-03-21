@@ -730,6 +730,21 @@ const CancelIcon = ({ color = '#F93636', size }) => (
     </svg>
 );
 
+const FutureSupportIcon = ({ size = 16, className = '', isDark }) => (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M13.55 7.01a2.149 2.149 0 0 0-1.361-.49v.027a3.534 3.534 0 0 0-3.392-3.058H7.2a3.541 3.541 0 0 0-3.396 3.058v-.028a2.14 2.14 0 0 0-1.36.49c.1-2.721 2.199-4.876 4.76-4.876h1.597c2.567 0 4.662 2.164 4.748 4.876z"
+            fill={isDark ? '#47CC85' : '#30BF73'}
+        />
+        <path d="M3.814 6.52v.027a4.085 4.085 0 0 0-.054.672v4.92a2.125 2.125 0 0 1-1.317-.485V7.009c.386-.318.871-.491 1.371-.49z" fill="#9FF2C6" />
+        <path d="M2.449 7.012v4.643a2.31 2.31 0 0 1-.85-1.815V8.8a2.301 2.301 0 0 1 .85-1.788z" fill="#0D994E" />
+        <path d="M12.711 10.05v3.578H8.26v-.454h3.993V10.05h.458z" fill="#5BD891" />
+        <path d="M12.188 6.52v.027c.04.221.06.446.058.672v4.92c.481-.009.945-.18 1.317-.485V7.009a2.152 2.152 0 0 0-1.376-.49z" fill="#9FF2C6" />
+        <path d="M13.55 7.012v4.643a2.312 2.312 0 0 0 .85-1.815V8.8a2.3 2.3 0 0 0-.85-1.788zM8.263 13.168H7.105v.454h1.158v-.454z" fill="#0D994E" />
+        <path d="M8.263 12.8H7.105v.373h1.158v-.372zM8.263 13.61H7.105v.34h1.158v-.34z" fill="#9FF2C6" />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -779,5 +794,6 @@ export {
     ArrowCompareIcon,
     TimeLapseIcon,
     BxsErrorIcon,
-    CancelIcon
+    CancelIcon,
+    FutureSupportIcon
 };
