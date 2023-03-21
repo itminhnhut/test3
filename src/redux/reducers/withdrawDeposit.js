@@ -13,7 +13,14 @@ export const initialState = {
     assetId: 72,
     accountBank: null,
     partnerBank: null,
-    partner: null
+    partner: null,
+    modal: {
+        isVisible: false,
+        type: null,
+        additionalData: null,
+        confirmFunction: undefined,
+        loading: false
+    }
 };
 
 export default (state = initialState, action) => {
@@ -22,6 +29,15 @@ export default (state = initialState, action) => {
             return { ...state, input: action.payload };
         case types.SET_ASSET_ID:
             return { ...state, assetId: action.payload };
+        case types.TOGGLE_MODAL:
+            const newModalState = action.payload;
+            return {
+                ...state,
+                modal: {
+                    ...state.modal,
+                    ...newModalState
+                }
+            };
         case types.SET_ACCOUNT_BANK:
             return {
                 ...state,

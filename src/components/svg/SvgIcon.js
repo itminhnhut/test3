@@ -639,9 +639,9 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
     );
 };
 
-const BxsInfoCircle = ({ size = 24 }) => (
+const BxsInfoCircle = ({ size = 24, color = '#768394' }) => (
     <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill="#768394" />
+        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill={color} />
     </svg>
 );
 
@@ -696,6 +696,40 @@ const ArrowCompareIcon = ({ color, size = 24, ...props }) => (
     </svg>
 );
 
+const TimeLapseIcon = ({ size, color = '#FFC632' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <g clip-path="url(#jnxbzu5ofa)">
+            <path
+                d="M54.133 25.866c-3.9-3.9-9-5.866-14.134-5.866v20L25.866 54.133c7.8 7.8 20.467 7.8 28.3 0 7.8-7.8 7.8-20.467-.033-28.267zm-14.134-19.2C21.6 6.666 6.666 21.6 6.666 40c0 18.4 14.933 33.333 33.333 33.333S73.333 58.4 73.333 40 58.399 6.666 39.999 6.666zm0 60c-14.733 0-26.666-11.933-26.666-26.666s11.933-26.667 26.666-26.667c14.734 0 26.667 11.934 26.667 26.667 0 14.733-11.933 26.666-26.667 26.666z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="jnxbzu5ofa">
+                <path fill="transparent" d="M0 0h80v80H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsErrorIcon = ({ size, color = '#FFC632' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <path
+            d="M42.947 8.44c-1.154-2.18-4.74-2.18-5.894 0l-30 56.666A3.333 3.333 0 0 0 10 70h60c1.17 0 2.254-.613 2.853-1.613a3.32 3.32 0 0 0 .09-3.276L42.948 8.44zM43.333 60h-6.666v-6.667h6.666V60zm-6.666-13.334V30h6.666l.004 16.666h-6.67z"
+            fill={color}
+        />
+    </svg>
+);
+
+const CancelIcon = ({ color = '#F93636', size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <path
+            d="M40 6.667C21.565 6.667 6.665 21.567 6.665 40s14.9 33.333 33.333 33.333c18.434 0 33.334-14.9 33.334-33.333S58.433 6.667 39.999 6.667zm16.666 45.3-4.7 4.7L39.999 44.7 28.033 56.667l-4.7-4.7L35.299 40 23.333 28.033l4.7-4.7L39.999 35.3l11.967-11.967 4.7 4.7L44.699 40l11.967 11.967z"
+            fill={color}
+        />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -742,5 +776,8 @@ export {
     ShareIcon,
     FireIcon,
     SettingIcon,
-    ArrowCompareIcon
+    ArrowCompareIcon,
+    TimeLapseIcon,
+    BxsErrorIcon,
+    CancelIcon
 };

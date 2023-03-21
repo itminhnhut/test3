@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { setInput } from 'redux/actions/withdrawDeposit';
+import { closeModal, openModal, setInput } from 'redux/actions/withdrawDeposit';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
 import { switchAsset } from 'redux/actions/withdrawDeposit';
 import { formatPrice } from 'redux/actions/utils';
@@ -17,6 +17,8 @@ import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
+import { PATHS } from 'src/constants/paths';
+import { ORDER_TYPES } from './components/OrderModal';
 
 const CardInput = () => {
     const { input, assetId, partner, partnerBank } = useSelector((state) => state.withdrawDeposit);
@@ -68,29 +70,29 @@ const CardInput = () => {
         [assetId, partner]
     );
 
-    // const onMakeOrderHandler = async () => {
-    //     try {
-    //         setLoadingConfirm(true);
-    //         const orderResponse = await createNewOrder({
-    //             assetId,
-    //             bankAccountId: partnerBank?._id,
-    //             partnerId: partner?.partnerId,
-    //             quantity: input,
-    //             side
-    //         });
-    //         console.log('orderResponse:', orderResponse);
+    const onMakeOrderHandler = async () => {
+        try {
+            setLoadingConfirm(true);
+            const orderResponse = await createNewOrder({
+                assetId,
+                bankAccountId: partnerBank?._id,
+                partnerId: partner?.partnerId,
+                quantity: input,
+                side
+            });
 
-    //         if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
-    //             toast({ text: `Bạn đã đặt thành công lệnh mua ${assetId === 72 ? 'VNDC' : 'USDT'} #${orderResponse.data.displayingId} `, type: 'success' });
-    //             // router.push('/withdraw-deposit/details/' + orderResponse.data.displayingId);
-    //             router.push('/');
-    //         }
-    //     } catch (error) {
-    //         console.log('error:', error);
-    //     } finally {
-    //         setLoadingConfirm(false);
-    //     }
-    // };
+            if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
+                toast({ text: `Bạn đã đặt thành công lệnh mua ${assetId === 72 ? 'VNDC' : 'USDT'} #${orderResponse.data.displayingId} `, type: 'success' });
+
+                // router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + orderResponse.data.displayingId);
+            }
+        } catch (error) {
+            console.log('error:', error);
+        } finally {
+            setLoadingConfirm(false);
+            dispatch(closeModal());
+        }
+    };
 
     return (
         <Card className="min-h-[444px]">
@@ -165,7 +167,9 @@ const CardInput = () => {
             </div>
             <ButtonV2
                 loading={loadingConfirm}
-                //onClick={onMakeOrderHandler}
+                onClick={() => {
+                    dispatch(openModal({ type: ORDER_TYPES.CONFIRM, confirmFunction: onMakeOrderHandler, loading: loadingConfirm }));
+                }}
                 disabled={!partner}
                 className="disabled:cursor-default"
             >

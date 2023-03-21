@@ -1,5 +1,5 @@
 import * as types from './types';
-import { SIDE } from '../reducers/withdrawDeposit';
+import { SIDE, initialState } from '../reducers/withdrawDeposit';
 import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
@@ -30,6 +30,15 @@ export const setPartner = (partner) => {
 };
 
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
+
+export const toggleModal = (payload) => {
+    return (dispatch) => dispatch({ type: types.TOGGLE_MODAL, payload });
+};
+
+// return state to the initial state
+export const closeModal = () => (dispatch) => dispatch(toggleModal(initialState.modal));
+
+export const openModal = (payload) => (dispatch) => dispatch(toggleModal({ ...payload, isVisible: true }));
 
 export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {

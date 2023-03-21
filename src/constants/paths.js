@@ -82,7 +82,12 @@ const FUTURES_V2 = {
 
 const TRANSACTION_HISTORY = {
     DEFAULT: '/transaction-history',
-    TYPE :(type) => `/transaction-history/${type}`
+    TYPE: (type) => `/transaction-history/${type}`
+};
+
+const WITHDRAW_DEPOSIT = {
+    DEFAULT: '/withdraw-deposit',
+    DETAIL: '/withdraw-deposit/details'
 };
 
 export const PATHS = {
@@ -95,8 +100,8 @@ export const PATHS = {
     TERM_OF_SERVICES,
     REFERENCE,
     SUPPORT,
-    TRANSACTION_HISTORY
-
+    TRANSACTION_HISTORY,
+    WITHDRAW_DEPOSIT
     // Add news path here
 };
 
