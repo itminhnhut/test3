@@ -20,7 +20,7 @@ import toast from 'utils/toast';
 import { PATHS } from 'src/constants/paths';
 import { ORDER_TYPES } from './components/OrderModal';
 const CardInput = () => {
-    const { input, assetId, partner, partnerBank } = useSelector((state) => state.withdrawDeposit);
+    const { input, assetId, partner, partnerBank, accountBank } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
     const [loadingConfirm, setLoadingConfirm] = useState(false);
 
@@ -75,7 +75,7 @@ const CardInput = () => {
             dispatch(openModal({ loading: true }));
             const orderResponse = await createNewOrder({
                 assetId,
-                bankAccountId: partnerBank?._id,
+                bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
                 partnerId: partner?.partnerId,
                 quantity: input,
                 side

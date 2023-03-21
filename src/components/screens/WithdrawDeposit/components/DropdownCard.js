@@ -48,7 +48,7 @@ const DropdownCard = ({
                         loading={loading}
                         content={selected.content}
                         imgSize={imgSize}
-                        endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
+                        endIcon={data && data.length && <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
                     />
                 </button>
             }
