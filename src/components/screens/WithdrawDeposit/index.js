@@ -6,6 +6,7 @@ import HistoryTable from './HistoryTable';
 
 import useLocationSide from './useLocationSide';
 import OrderModal, { ORDER_TYPES } from './components/OrderModal';
+import ModalQr from './components/ModalQr';
 
 const WithdrawDeposit = () => {
     useLocationSide();
