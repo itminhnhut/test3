@@ -384,7 +384,5 @@
     "amount_of_asset": "Số lượng tài sản",
     "amount_of_estimate_nami": "Số lượng NAMI ước tính",
     "view_detail": "Xem chi tiết",
-    "convert_fail": "Conversion failed",
-    "transaction_details": "Chi tiết giao dịch",
-    "depsit_from_partners": "Nạp {{asset}} qua ĐTKD"
+    "convert_fail": "Conversion failed"
 }

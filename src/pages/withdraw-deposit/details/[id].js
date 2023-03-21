@@ -49,6 +49,7 @@ const getStatusOrder = (status, t) =>
             </TagV2>
         )
     }[status]);
+
 const OrderDetail = ({ id }) => {
     const { t } = useTranslation();
     const user = useSelector((state) => state.auth.user) || null;
@@ -87,12 +88,12 @@ const OrderDetail = ({ id }) => {
                     <div className="flex gap-x-6 w-full">
                         {/* Chi tiết giao dịch */}
                         <div className="flex-1">
-                            <h1 className="text-2xl font-semibold">{t('common:transaction_details')}</h1>
+                            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
                             <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-start">
                                         <h2 className="font-semibold">
-                                            {t('common:depsit_from_partners', {
+                                            {t('payment-method:depsit_from_partners', {
                                                 asset: getAssetCode(orderDetail?.baseAssetId)
                                             })}
                                         </h2>
@@ -124,7 +125,7 @@ const OrderDetail = ({ id }) => {
                         </div>
                         {/* Thông tin chuyển khoản */}
                         <div className="flex-1">
-                            <h1 className="text-2xl font-semibold">{t('common:transaction_details')}</h1>
+                            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
                             <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                                 <div className="flex justify-between items-start">
                                     <InfoCard
@@ -212,7 +213,7 @@ const OrderDetail = ({ id }) => {
 export const getServerSideProps = async ({ locale, params }) => {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar', 'trade', 'futures', 'wallet', 'error', 'spot'])),
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'payment-method'])),
             id: params?.id
         }
     };

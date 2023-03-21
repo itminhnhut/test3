@@ -388,7 +388,5 @@
     "amount_of_asset": "Number of assets",
     "amount_of_estimate_nami": "Estimated quantity",
     "view_detail": "View details",
-    "convert_fail": "Conversion failed",
-    "transaction_details": "Transaction details",
-    "depsit_from_partners": "Deposit {{asset}} through partner"
+    "convert_fail": "Conversion failed"
 }
