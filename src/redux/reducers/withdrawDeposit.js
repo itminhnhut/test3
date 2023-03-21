@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
             return { ...state, input: action.payload };
         case types.SET_ASSET_ID:
             return { ...state, assetId: action.payload };
-        case types.TOGGLE_MODAL:
+        case types.SET_MODAL_STATE:
             const newModalState = action.payload;
             return {
                 ...state,

@@ -73,6 +73,7 @@ const CardInput = () => {
     const onMakeOrderHandler = async () => {
         try {
             setLoadingConfirm(true);
+            dispatch(openModal({ loading: true }));
             const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: partnerBank?._id,
@@ -168,7 +169,7 @@ const CardInput = () => {
             <ButtonV2
                 loading={loadingConfirm}
                 onClick={() => {
-                    dispatch(openModal({ type: ORDER_TYPES.CONFIRM, confirmFunction: onMakeOrderHandler, loading: loadingConfirm }));
+                    dispatch(openModal({ type: ORDER_TYPES.CONFIRM, confirmFunction: onMakeOrderHandler }));
                 }}
                 disabled={!partner}
                 className="disabled:cursor-default"

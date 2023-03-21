@@ -43,27 +43,25 @@ export const ORDER_TYPES = {
 };
 
 const OrderModal = () => {
-    const {
-        modal: { type, isVisible, additionalData, confirmFunction, loading }
-    } = useSelector((state) => state.withdrawDeposit);
+    const { modal } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
 
     return (
         <ModalV2
-            isVisible={isVisible}
+            isVisible={modal?.isVisible}
             wrapClassName=""
-            onBackdropCb={!loading ? () => dispatch(closeModal()) : undefined}
+            onBackdropCb={!modal?.loading ? () => dispatch(closeModal()) : undefined}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            {type && (
+            {modal?.type && (
                 <div className="text-center ">
-                    <div className="text-dominant flex justify-center mb-6">{type.icon}</div>
-                    <div className="txtPri-3 mb-4">{type.title}</div>
+                    <div className="text-dominant flex justify-center mb-6">{modal.type.icon}</div>
+                    <div className="txtPri-3 mb-4">{modal.type.title}</div>
                     <div className="txtSecond-2 mb-10">
-                        {isFunction(type.description) ? additionalData && type.description(additionalData) : type.description}
+                        {isFunction(modal.type.description) ? additionalData && modal.type.description(additionalData) : modal.type.description}
                     </div>
-                    {type.showConfirm && (
-                        <ButtonV2 loading={loading} disabled={loading} onClick={() => confirmFunction?.()} className="transition-all">
+                    {modal.type.showConfirm && (
+                        <ButtonV2 loading={modal.loading} disabled={modal.loading} onClick={() => modal?.confirmFunction?.()} className="transition-all">
                             Xác nhận
                         </ButtonV2>
                     )}

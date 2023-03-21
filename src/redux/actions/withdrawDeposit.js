@@ -32,11 +32,17 @@ export const setPartner = (partner) => {
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
 
 export const toggleModal = (payload) => {
-    return (dispatch) => dispatch({ type: types.TOGGLE_MODAL, payload });
+    return (dispatch) => dispatch({ type: types.SET_MODAL_STATE, payload });
 };
 
 // return state to the initial state
-export const closeModal = () => (dispatch) => dispatch(toggleModal(initialState.modal));
+export const closeModal = () => (dispatch) =>
+    dispatch(
+        toggleModal(
+            { isVisible: false, type: null, additionalData: null, confirmFunction: undefined, loading: false }
+            // initialState.modal
+        )
+    );
 
 export const openModal = (payload) => (dispatch) => dispatch(toggleModal({ ...payload, isVisible: true }));
 

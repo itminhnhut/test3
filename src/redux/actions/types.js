@@ -231,4 +231,4 @@ export const SET_ASSET_ID = 'SET_ASSET_ID';
 export const SET_PARTNER = 'SET_PARTNER';
 export const SET_PARTNER_BANK = 'SET_PARTNER_BANK';
 export const SET_ACCOUNT_BANK = 'SET_ACCOUNT_BANK';
-export const TOGGLE_MODAL = 'TOGGLE_MODAL';
+export const SET_MODAL_STATE = 'SET_MODAL_STATE';
