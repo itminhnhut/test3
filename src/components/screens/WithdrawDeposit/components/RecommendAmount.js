@@ -26,4 +26,4 @@ const RecommendAmount = () => {
     );
 };
 
-export default RecommendAmount;
+export default React.memo(RecommendAmount);

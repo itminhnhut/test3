@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,18 +13,22 @@ import { useRouter } from 'next/router';
 import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { ApiStatus } from 'redux/actions/const';
+import toast from 'utils/toast';
 
 const CardInput = () => {
-    const { input, assetId, partner } = useSelector((state) => state.withdrawDeposit);
-    console.log('partner:', partner);
+    const { input, assetId, partner, partnerBank } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
+    const [loadingConfirm, setLoadingConfirm] = useState(false);
 
     const dispatch = useDispatch();
     const router = useRouter();
     const side = router?.query?.side;
 
-    const orderConfig = useMemo(() => partner?.orderConfig?.[side.toLowerCase()], [partner]);
+    const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
+
     const availableAsset = useMemo(
         () => wallets?.[assetId]?.value - wallets?.[assetId]?.locked_value,
 
@@ -32,7 +36,7 @@ const CardInput = () => {
     );
     const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side), [side, assetId]);
 
-    const validator = useMemo(() => {
+    const validator = () => {
         let isValid = true,
             msg = null;
         if (!orderConfig?.max || !orderConfig?.min) {
@@ -49,7 +53,7 @@ const CardInput = () => {
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [input, partner, orderConfig]);
+    };
 
     const renderingMinMaxPartner = useCallback(
         (price) => {
@@ -64,7 +68,29 @@ const CardInput = () => {
         [assetId, partner]
     );
 
-    console.log('availableAsset:', availableAsset);
+    // const onMakeOrderHandler = async () => {
+    //     try {
+    //         setLoadingConfirm(true);
+    //         const orderResponse = await createNewOrder({
+    //             assetId,
+    //             bankAccountId: partnerBank?._id,
+    //             partnerId: partner?.partnerId,
+    //             quantity: input,
+    //             side
+    //         });
+    //         console.log('orderResponse:', orderResponse);
+
+    //         if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
+    //             toast({ text: `Bạn đã đặt thành công lệnh mua ${assetId === 72 ? 'VNDC' : 'USDT'} #${orderResponse.data.displayingId} `, type: 'success' });
+    //             // router.push('/withdraw-deposit/details/' + orderResponse.data.displayingId);
+    //             router.push('/');
+    //         }
+    //     } catch (error) {
+    //         console.log('error:', error);
+    //     } finally {
+    //         setLoadingConfirm(false);
+    //     }
+    // };
 
     return (
         <Card className="min-h-[444px]">
@@ -81,7 +107,7 @@ const CardInput = () => {
                         containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
                         inputClassName="!text-left !ml-0"
                         onValueChange={({ value }) => dispatch(setInput(value))}
-                        validator={validator}
+                        validator={validator()}
                         errorTooltip={false}
                         allowedDecimalSeparators={[',', '.']}
                         clearAble
@@ -137,7 +163,12 @@ const CardInput = () => {
                     <div className="txtPri-1">{formatPrice(input * rate)} VNDC</div>
                 </div>
             </div>
-            <ButtonV2 disabled={!partner} className="disabled:cursor-default">
+            <ButtonV2
+                loading={loadingConfirm}
+                //onClick={onMakeOrderHandler}
+                disabled={!partner}
+                className="disabled:cursor-default"
+            >
                 Xác nhận
             </ButtonV2>
         </Card>

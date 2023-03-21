@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import FetchApi from 'utils/fetch-api';
 import { ApiStatus } from 'redux/actions/const';
-const useFetchApi = ({ url = '', params },condition, dependencies = []) => {
+const useFetchApi = ({ url = '', params, successCallBack = () => {} }, condition, dependencies = []) => {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -19,6 +19,7 @@ const useFetchApi = ({ url = '', params },condition, dependencies = []) => {
                     } else {
                         setData(null);
                     }
+                    successCallBack();
                 } catch (error) {
                     setError(error);
                 } finally {

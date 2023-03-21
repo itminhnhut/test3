@@ -5,7 +5,7 @@ import { filterSearch } from 'redux/actions/utils';
 import DropdownCard from './DropdownCard';
 import TagV2 from 'components/common/V2/TagV2';
 
-const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBank, onSelect }) => {
+const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBank, onSelect, showTag = false }) => {
     const [search, setSearch] = useState('');
     return (
         <DropdownCard
@@ -16,7 +16,7 @@ const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBa
             data={banks && filterSearch(banks, ['bankName', 'bankKey'], search)}
             search={search}
             setSearch={setSearch}
-            onSelect={(bank) => onSelect && onSelect?.(bank)}
+            onSelect={onSelect ? (bank) => onSelect(bank) : undefined}
             selected={{
                 id: selectedBank?._id,
                 content: selectedBank && {
@@ -36,7 +36,8 @@ const BankInfo = ({ loadingBanks, loading, banks, containerClassname, selectedBa
                                 subContent: (
                                     <div className="flex space-x-2 items-center">
                                         <span>{item?.accountNumber}</span>
-                                        {item.isDefault && (
+
+                                        {showTag && item.isDefault && (
                                             <TagV2 icon={false} type="success">
                                                 Mặc định
                                             </TagV2>

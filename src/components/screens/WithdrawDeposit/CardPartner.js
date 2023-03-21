@@ -14,14 +14,14 @@ import { useRouter } from 'next/router';
 const CardPartner = () => {
     const { partner, partnerBank, accountBank, assetId, input } = useSelector((state) => state.withdrawDeposit);
     const [debounceQuantity, setDebouncedQuantity] = useState('');
-    const [loadingPartners, setLoadingPartners] = useState(false);
+    const [loadingPartner, setLoadingPartner] = useState(false);
     const dispatch = useDispatch();
     const router = useRouter();
 
     const side = router.query?.side;
 
     useEffect(() => {
-        setLoadingPartners(true);
+        setLoadingPartner(true);
     }, [input]);
 
     useDebounce(
@@ -39,7 +39,7 @@ const CardPartner = () => {
                 params: { quantity: !debounceQuantity ? 0 : debounceQuantity, assetId, side },
                 cancelToken: source.token,
                 callbackFn: () => {
-                    setLoadingPartners(false);
+                    setLoadingPartner(false);
                 }
             })
         );
@@ -65,15 +65,17 @@ const CardPartner = () => {
         <Card className="min-h-[444px] ">
             <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
             <div className="space-y-4">
-                {side === SIDE.SELL && <BankInfo selectedBank={accountBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccountBanks} />}
+                {side === SIDE.SELL && (
+                    <BankInfo showTag selectedBank={accountBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccountBanks} />
+                )}
 
-                <PartnerInfo loadingPartners={loadingPartners} selectedPartner={partner} partners={[]} />
+                <PartnerInfo debounceQuantity={debounceQuantity} assetId={assetId} side={side} loadingPartner={loadingPartner} selectedPartner={partner} />
                 {side === SIDE.BUY && partner && (
                     <BankInfo
                         selectedBank={partnerBank}
                         onSelect={(bank) => dispatch(setPartnerBank(bank))}
                         banks={banks}
-                        loading={loadingBanks || loadingPartners}
+                        loading={loadingBanks || loadingPartner}
                         containerClassname="z-40"
                     />
                 )}

@@ -1,9 +1,9 @@
 import * as types from './types';
 import { SIDE } from '../reducers/withdrawDeposit';
-import axios from 'axios';
-import { API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
+import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
+import Axios from 'axios';
 
 export const setInput = (value) => {
     return (dispatch) => {
@@ -34,27 +34,40 @@ export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ t
 export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
-            const [partners, partner] = await Promise.allSettled([
-                axios.get(API_GET_PARTNERS, {
-                    params,
-                    ...(cancelToken ? { cancelToken } : {})
-                }),
-                axios.get(API_GET_DEFAULT_PARTNER, {
-                    params,
-                    ...(cancelToken ? { cancelToken } : {})
-                })
-            ]);
-
-            dispatch({
-                type: types.SET_PARTNER,
-                payload: parseDataFromPromiseSettled(partner)
+            const partner = await FetchApi({
+                url: API_GET_DEFAULT_PARTNER,
+                params,
+                ...(cancelToken ? { cancelToken } : {})
             });
+            if (partner && partner.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: partner.data
+                });
+            } else {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: null
+                });
+            }
         } catch (error) {
-            console.log(`GET ${API_GET_PARTNERS} error:`, error);
+            console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
         } finally {
             callbackFn();
         }
     };
+};
+
+export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side }) => {
+    const res = await Axios.post(API_CREATE_ORDER, {
+        assetId,
+        bankAccountId,
+        partnerId,
+        quantity,
+        side
+    });
+
+    return res.data;
 };
 
 const parseDataFromPromiseSettled = (response) => {
