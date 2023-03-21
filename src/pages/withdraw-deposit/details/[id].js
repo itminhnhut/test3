@@ -65,10 +65,9 @@ const OrderDetail = ({ id }) => {
                     url: API_GET_ORDER_DETAILS,
                     options: { method: 'GET' },
                     params: {
-                        displayingId: '365PBS'
+                        displayingId: id + ''
                     }
                 });
-                console.log('res: ', data);
 
                 if (data) {
                     setOrderDetail(data);
