@@ -11,10 +11,9 @@ export const SIDE = {
 export const initialState = {
     input: '',
     assetId: 72,
-    assetInfo: null,
-    partners: [],
-    selectedPartner: null,
-    selectedBank: null
+    accountBank: null,
+    partnerBank: null,
+    partner: null
 };
 
 export default (state = initialState, action) => {
@@ -23,22 +22,23 @@ export default (state = initialState, action) => {
             return { ...state, input: action.payload };
         case types.SET_ASSET_ID:
             return { ...state, assetId: action.payload };
+        case types.SET_ACCOUNT_BANK:
+            return {
+                ...state,
+                accountBank: action.payload
+            };
+        case types.SET_PARTNER:
+            return {
+                ...state,
+                partner: action.payload,
+                partnerBank: action.payload?.defaultBank
+            };
+        case types.SET_PARTNER_BANK:
+            return {
+                ...state,
+                partnerBank: action.payload
+            };
 
-        case types.SET_PARTNERS:
-            return {
-                ...state,
-                partners: action.payload || []
-            };
-        case types.SET_DEFAULT_PARTNER:
-            return {
-                ...state,
-                selectedPartner: action.payload
-            };
-        case types.SET_DEFAULT_BANK:
-            return {
-                ...state,
-                selectedBank: action.payload
-            };
         default:
             return state;
     }

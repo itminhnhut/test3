@@ -1,9 +1,9 @@
 import * as types from './types';
 import { SIDE } from '../reducers/withdrawDeposit';
-import axios from 'axios';
-import { API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
+import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
+import Axios from 'axios';
 
 export const setInput = (value) => {
     return (dispatch) => {
@@ -17,19 +17,60 @@ export const switchAsset = (currentAssetId) => {
     };
 };
 
-export const setBank = (bank) => {
+export const setPartnerBank = (bank) => {
     return (dispatch) => {
-        dispatch({ type: types.SET_DEFAULT_BANK, payload: bank });
+        dispatch({ type: types.SET_PARTNER_BANK, payload: bank });
     };
 };
 
 export const setPartner = (partner) => {
     return (dispatch) => {
-        dispatch({ type: types.SET_DEFAULT_PARTNER, payload: partner });
+        dispatch({ type: types.SET_PARTNER, payload: partner });
     };
 };
 
-const getDataFromPromiseSettled = (response) => {
+export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
+
+export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
+    return async (dispatch) => {
+        try {
+            const partner = await FetchApi({
+                url: API_GET_DEFAULT_PARTNER,
+                params,
+                ...(cancelToken ? { cancelToken } : {})
+            });
+            if (partner && partner.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: partner.data
+                });
+            } else {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: null
+                });
+            }
+        } catch (error) {
+            console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
+        } finally {
+            callbackFn();
+        }
+    };
+};
+
+export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side }) => {
+    const res = await Axios.post(API_CREATE_ORDER, {
+        assetId,
+        bankAccountId,
+        partnerId,
+        quantity,
+        side
+    });
+
+    return res.data;
+};
+
+const parseDataFromPromiseSettled = (response) => {
     if (response.status === 'fulfilled') {
         const { data } = response.value;
         if (data && data.status === ApiStatus.SUCCESS) {
@@ -37,37 +78,4 @@ const getDataFromPromiseSettled = (response) => {
         }
     }
     return null;
-};
-
-export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
-    return async (dispatch) => {
-        try {
-            const [partners, partner] = await Promise.allSettled([
-                axios.get(API_GET_PARTNERS, {
-                    params,
-                    ...(cancelToken ? { cancelToken } : {})
-                }),
-                axios.get(API_GET_DEFAULT_PARTNER, {
-                    params,
-                    ...(cancelToken ? { cancelToken } : {})
-                })
-            ]);
-
-            const defaultPartner = getDataFromPromiseSettled(partner);
-            
-            dispatch({
-                type: types.SET_PARTNERS,
-                payload: getDataFromPromiseSettled(partners) || []
-            });
-            dispatch({
-                type: types.SET_DEFAULT_PARTNER,
-                payload: defaultPartner
-            });
-            dispatch({ type: types.SET_DEFAULT_BANK, payload: defaultPartner?.defaultBank });
-        } catch (error) {
-            console.log(`GET ${API_GET_PARTNERS} error:`, error);
-        } finally {
-            callbackFn();
-        }
-    };
 };

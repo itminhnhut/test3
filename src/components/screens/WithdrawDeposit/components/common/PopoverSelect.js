@@ -6,7 +6,7 @@ import { Transition } from '@headlessui/react';
 import classNames from 'classnames';
 const PopoverSelect = (props, ref) => {
     return (
-        <div ref={ref} className={classNames('relative z-40', props.containerClassname)}>
+        <div ref={ref} className={classNames('relative', props.containerClassname)}>
             {props.label}
             <Transition
                 show={props.open}
