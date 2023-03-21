@@ -3,7 +3,7 @@ import React, { useState, useMemo, useRef } from 'react';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
-import { API_ORDER_DETAIL } from 'redux/actions/apis';
+import { API_ORDER_DETAIL, API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { useEffect } from 'react';
 import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
@@ -25,38 +25,59 @@ import { Clock } from 'react-feather';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import Axios from 'axios';
 
 import { shortHashAddress, getAssetCode, formatTime, formatNumber, formatPhoneNumber } from 'redux/actions/utils';
 
 const OrderDetailComponent = dynamic(() => import('components/screens/Mobile/Futures/OrderDetail'), { loading: () => <OrderDetailLoading /> });
 
-const OrderDetail = () => {
-    const router = useRouter();
-
-    const { id } = router.query;
+const getStatusOrder = (status, t) =>
+    ({
+        [DepWdlStatus.Success]: (
+            <TagV2 icon={true} className="ml-auto" type="success">
+                {t('common:success')}
+            </TagV2>
+        ),
+        [DepWdlStatus.Pending]: (
+            <TagV2 icon={true} className="ml-auto" type="warning">
+                {t('common:pending')}
+            </TagV2>
+        ),
+        [DepWdlStatus.Declined]: (
+            <TagV2 icon={true} className="ml-auto" type="failed">
+                {t('common:declined')}
+            </TagV2>
+        )
+    }[status]);
+const OrderDetail = ({ id }) => {
     const { t } = useTranslation();
     const user = useSelector((state) => state.auth.user) || null;
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
+    const [orderDetail, setOrderDetail] = useState(null);
+    const side = orderDetail?.side;
 
-    const getStatusOrder = (status) =>
-        ({
-            [DepWdlStatus.Success]: (
-                <TagV2 icon={true} className="ml-auto" type="success">
-                    {t('common:success')}
-                </TagV2>
-            ),
-            [DepWdlStatus.Pending]: (
-                <TagV2 icon={true} className="ml-auto" type="warning">
-                    {t('common:pending')}
-                </TagV2>
-            ),
-            [DepWdlStatus.Declined]: (
-                <TagV2 icon={true} className="ml-auto" type="failed">
-                    {t('common:declined')}
-                </TagV2>
-            )
-        }[status]);
+    console.log("orderDetail: '", orderDetail);
+    useEffect(() => {
+        const fetchData = async () => {
+            if (id) {
+                const { status, data } = await fetchApi({
+                    url: API_GET_ORDER_DETAILS,
+                    options: { method: 'GET' },
+                    params: {
+                        displayingId: '365PBS'
+                    }
+                });
+                console.log('res: ', data);
+
+                if (data) {
+                    setOrderDetail(data);
+                }
+            }
+        };
+        fetchData();
+    }, [id]);
+
     const onOpenChat = () => {
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
@@ -68,108 +89,116 @@ const OrderDetail = () => {
                         {/* Chi tiết giao dịch */}
                         <div className="flex-1">
                             <h1 className="text-2xl font-semibold">{t('common:transaction_details')}</h1>
-                            <CardStyled className="mt-6 flex flex-col justify-between">
+                            <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-start">
-                                        <h2 className="font-semibold">Nạp VNDC qua ĐTKD</h2>
+                                        <h2 className="font-semibold">
+                                            {t('common:depsit_from_partners', {
+                                                asset: getAssetCode(orderDetail?.baseAssetId)
+                                            })}
+                                        </h2>
                                         <CountdownTimer />
                                     </div>
                                     <div>
                                         <span className="txtSecond-2">So luong</span>
-                                        <div className="mt-3 text-2xl font-semibold">+5,000,000 VNDC</div>
+                                        <div className="mt-3 text-2xl font-semibold">
+                                            {side === 'BUY' ? '+' : '-'}
+                                            {formatNumber(orderDetail?.baseQty)} VNDC
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex items-end mt-14 gap-x-6">
                                     <div className="flex flex-col gap-y-3">
                                         <span className="txtSecond-2">{t('common:transaction_id')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={'797EBC'} />
+                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
                                     </div>
                                     <div className="flex flex-col gap-y-3">
                                         <span className="txtSecond-2">{t('common:time')}</span>
-                                        <span>{formatTime(new Date(), 'HH:mm:ss dd/MM/yyyy')}</span>
+                                        <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
                                     </div>
                                     <div className="flex flex-col gap-y-3">
                                         <span className="txtSecond-2">{t('common:status')}</span>
-                                        {getStatusOrder(1)}
+                                        {getStatusOrder(orderDetail?.status, t)}
                                     </div>
                                 </div>
-                            </CardStyled>
+                            </div>
                         </div>
                         {/* Thông tin chuyển khoản */}
                         <div className="flex-1">
                             <h1 className="text-2xl font-semibold">{t('common:transaction_details')}</h1>
-                            <CardStyled className="mt-6">
+                            <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                                 <div className="flex justify-between items-start">
                                     <InfoCard
                                         content={{
-                                            mainContent: 'partner?.name',
+                                            mainContent: orderDetail?.partnerMetadata?.name,
                                             subContent: (
                                                 <div className="flex items-center space-x-3">
-                                                    <span>{formatPhoneNumber('0357099285')}</span>
+                                                    <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
                                                     <div className="flex space-x-1 items-center">
                                                         <Clock size={12} />
                                                         <span>1 Phút</span>
                                                     </div>
                                                 </div>
-                                            )
-                                            // imgSrc: partner?.avatar
+                                            ),
+                                            imgSrc: orderDetail?.partnerMetadata?.avatar
                                         }}
-                                        // endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor " />}
-                                        endIconPosition="center"
                                     />
                                     <div>QR Code</div>
                                 </div>
                                 <div className="flex flex-col mt-6 gap-y-4">
                                     <div className="flex items-center justify-between">
                                         <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
-                                        <span>{'CK 243CBS TRAN NGUYEN PHUONG LINH'}</span>
+                                        <span>{orderDetail?.transferMetadata?.note}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="txtSecond-2">{t('wallet:bank_name')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={'ACB - Ngân hàng TMCP Á C...'} />
+                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.bankName} />
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="txtSecond-2">{t('wallet:account_number')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={'1900100102928431'} />
+                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="txtSecond-2">Người thụ hưởng</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={'Nguyen Hoang Thuy Linh'} />
+                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="txtSecond-2">{t('common:amount')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(100000)} />
+                                        <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(orderDetail?.baseQty)} />
                                     </div>
                                 </div>
-                            </CardStyled>
+                            </div>
                         </div>
                     </div>
                     {/* Lưu ý */}
 
-                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
-                        <div className="flex items-center gap-x-2">
-                            <BxsInfoCircle size={16} fill={isDark ? colors.darkBlue5 : colors.gray[1]} fillInside={'currentColor'} />
-                            <span>{t('wallet:note')}</span>
+                    {side === 'BUY' && (
+                        <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
+                            <div className="flex items-center gap-x-2">
+                                <BxsInfoCircle size={16} fill={isDark ? colors.darkBlue5 : colors.gray[1]} fillInside={'currentColor'} />
+                                <span>{t('wallet:note')}</span>
+                            </div>
+                            <div className="txtSecond-2 mt-2">
+                                Sử dụng mã QR hoặc sao chép thông tin để chuyển khoản:
+                                <ul className="list-disc ml-6 marker:text-xs">
+                                    <li>Đúng số tiền</li>
+                                    <li>Đúng nội dung</li>
+                                    <li>Thực hiện hành động chuyển khoản trong vòng 15 phút sau khi nhấn nút “Tôi đã chuyển khoản” để lệnh không bị huỷ.</li>
+                                </ul>
+                            </div>
                         </div>
-                        <p className="txtSecond-2 mt-2">
-                            Sử dụng mã QR hoặc sao chép thông tin để chuyển khoản:
-                            <ul className="list-disc ml-6 marker:text-xs">
-                                <li>Đúng số tiền</li>
-                                <li>Đúng nội dung</li>
-                                <li>Thực hiện hành động chuyển khoản trong vòng 15 phút sau khi nhấn nút “Tôi đã chuyển khoản” để lệnh không bị huỷ.</li>
-                            </ul>
-                        </p>
-                    </div>
+                    )}
+
                     {/* Actions */}
                     <div className="flex items-center justify-between mt-8">
-                        <div className="flex gap-x-4">
+                        <div className={`flex gap-x-4 ${side !== 'BUY' && 'hidden'}`}>
                             <ButtonV2 className="!whitespace-nowrap px-[62.5px]">{t('wallet:transfer_already')} </ButtonV2>
                             <ButtonV2 onClick={() => console.log('Toi da chuyen khoan')} className="px-6" variants="secondary">
                                 Huỷ giao dịch
                             </ButtonV2>
                         </div>
-                        <div>
-                            <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm">
+                        <div className="flex justify-end w-full">
+                            <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
                                 <FutureSupportIcon className="mr-2" isDark={isDark} />
                                 {t('common:chat_with_support')}
                             </ButtonV2>
@@ -181,14 +210,11 @@ const OrderDetail = () => {
     );
 };
 
-const CardStyled = styled.div.attrs(({ className }) => ({
-    className: `rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 ${className}`
-}))``;
-
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async ({ locale, params }) => {
     return {
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet']))
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'trade', 'futures', 'wallet', 'error', 'spot'])),
+            id: params?.id
         }
     };
 };
