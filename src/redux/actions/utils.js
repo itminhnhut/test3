@@ -1198,3 +1198,14 @@ export const filterSearch = (originDataset, keys, searchValue) => {
     const copyDataSet = cloneDeep(originDataset);
     return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
 };
+
+export const saveFile = (file, name) => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};

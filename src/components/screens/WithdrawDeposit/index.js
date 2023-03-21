@@ -6,6 +6,7 @@ import HistoryTable from './HistoryTable';
 
 import useLocationSide from './useLocationSide';
 import OrderModal, { ORDER_TYPES } from './components/OrderModal';
+import ModalQr from './components/ModalQr';
 
 const WithdrawDeposit = () => {
     useLocationSide();
@@ -25,6 +26,17 @@ const WithdrawDeposit = () => {
                 </div>
                 <HistoryTable />
             </div>
+            <ModalQr
+                isVisible={true}
+                onClose={() => {}}
+                bank={{
+                    bankName: 'VPBank - Ngân hàng TMCP Việt Nam Thịnh Vượng',
+                    bankCode: '970432',
+                    accountNumber: '146283551_',
+                    accountName: 'NGUYEN DUC TRUNG1',
+                    note: 'CK 365PBS NGUYEN DUC TRUNG'
+                }}
+            />
             <OrderModal />
         </>
     );
