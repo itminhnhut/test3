@@ -85,9 +85,9 @@ const OrderDetail = ({ id }) => {
         <MaldivesLayout>
             <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
-                    <div className="flex gap-x-6 w-full">
+                    <div className="flex gap-x-6 w-full items-stretch">
                         {/* Chi tiết giao dịch */}
-                        <div className="flex-1">
+                        <div className="flex-auto min-h-full">
                             <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
                             <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                                 <div>
@@ -97,7 +97,7 @@ const OrderDetail = ({ id }) => {
                                                 asset: getAssetCode(orderDetail?.baseAssetId)
                                             })}
                                         </h2>
-                                        <CountdownTimer />
+                                        <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
                                     </div>
                                     <div>
                                         <span className="txtSecond-2">So luong</span>
@@ -124,7 +124,7 @@ const OrderDetail = ({ id }) => {
                             </div>
                         </div>
                         {/* Thông tin chuyển khoản */}
-                        <div className="flex-1">
+                        <div className="flex-auto min-h-full">
                             <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
                             <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                                 <div className="flex justify-between items-start">
