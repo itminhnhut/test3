@@ -31,7 +31,7 @@ const FuturesOrderSLTP = ({
     const _price = type === FuturesOrderTypes.Market ? (VndcFutureOrderType.Side.BUY === side ? ask : bid) : price;
 
     const canShowChangeTpSL = useMemo(() => {
-        const ArrStop = [FuturesOrderTypes.StopMarket, FuturesOrderTypes.StopLimit];
+        const ArrStop = [];
         return !(!quoteQty || !inputValidator('price', ArrStop.includes(type)).isValid || !inputValidator('quoteQty').isValid || !isAuth);
     }, [isAuth, type, pairConfig, price, side, leverage, quoteQty]);
 

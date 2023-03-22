@@ -10,7 +10,7 @@ import styles from './tradingview.module.scss';
 import { ChartMode } from 'redux/actions/const';
 import { VndcFutureOrderType } from '../screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { isMobile } from 'react-device-detect';
-import { debounce } from 'lodash';
+import { debounce, set } from 'lodash';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const CONTAINER_ID = 'nami-tv';
@@ -223,7 +223,7 @@ export class TVChartContainer extends React.PureComponent {
 
     // eslint-disable-next-line class-methods-use-this
     get getChartKey() {
-        return `nami-tv__${CHART_VERSION}`;
+        return `nami-tv-${this.props.mode}__${CHART_VERSION}`;
     }
 
     loadSavedChart = () => {
@@ -231,12 +231,11 @@ export class TVChartContainer extends React.PureComponent {
         let savedChart = localStorage.getItem(this.getChartKey);
         if (savedChart) {
             try {
-                const symbol = this.props.symbol;
                 const data = JSON.parse(savedChart);
-                if (typeof data === 'object' && data[`chart_${symbol.toLowerCase()}`]) {
-                    this.widget.load(data[`chart_${symbol.toLowerCase()}`]);
-                }
+                set(data, 'charts[0].panes[0].sources[0].state.symbol', this.props.symbol);
+                this.widget.load(data);
             } catch (err) {
+                localStorage.removeItem(this.getChartKey);
                 console.error('Load chart error', err);
             }
         }
@@ -247,29 +246,8 @@ export class TVChartContainer extends React.PureComponent {
         try {
             if (this.widget) {
                 this.widget.save((data) => {
-                    let currentData = localStorage.getItem(this.getChartKey);
-                    if (currentData) {
-                        try {
-                            currentData = JSON.parse(currentData);
-                            if (typeof currentData !== 'object') {
-                                currentData = null;
-                            }
-                        } catch (ignored) {
-                            currentData = null;
-                        }
-                    }
-                    if (!currentData) {
-                        currentData = {
-                            created_at: new Date()
-                        };
-                    }
-
-                    const obj = {
-                        updated_at: new Date(),
-                        [`chart_${this.props.symbol.toLowerCase()}`]: data,
-                        chart_all: data
-                    };
-                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, obj)));
+                    let currentData = JSON.parse(localStorage.getItem(this.getChartKey) || '{}');
+                    localStorage.setItem(this.getChartKey, JSON.stringify(Object.assign(currentData, data)));
                 });
             }
         } catch (err) {
@@ -312,7 +290,7 @@ export class TVChartContainer extends React.PureComponent {
                 .setBodyBackgroundColor(isMarket ? color : colors.white)
                 .setBodyBorderColor(isMarket ? 'rgba(0,0,0,0)' : color)
                 .setLineLength(100)
-                .setLineStyle(1)
+                .setLineStyle(1);
             line.setBodyFont(this.toNormalText(line));
             this.drawnOrder[displayingId] = line;
             if (order.sl > 0) {
@@ -506,7 +484,7 @@ export class TVChartContainer extends React.PureComponent {
             setTimeout(() => {
                 this.drawHighLowArrows();
                 this.widget
-                    .chart()
+                    ?.chart()
                     .onVisibleRangeChanged()
                     .subscribe({}, () => {
                         this.drawHighLowArrows();
