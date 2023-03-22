@@ -274,7 +274,7 @@ const Futures = () => {
                                     <FuturesChart
                                         chartKey="futures_containter_chart"
                                         pair={pairConfig?.pair}
-                                        initTimeFrame="1D"
+                                        initTimeFrame=""
                                         isVndcFutures={state.isVndcFutures}
                                         ordersList={ordersList}
                                     />
