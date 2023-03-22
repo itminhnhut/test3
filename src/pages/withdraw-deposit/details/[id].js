@@ -22,12 +22,14 @@ import StatusWithdraw from 'src/components/wallet/StatusWithdraw';
 import TagV2 from 'components/common/V2/TagV2';
 import InfoCard from 'components/screens/WithdrawDeposit/components/common/InfoCard';
 import { Clock } from 'react-feather';
-import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
+import { BxsInfoCircle, FutureSupportIcon, QrCodeScannIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Axios from 'axios';
+import Image from 'next/image';
+import ModalQr from 'components/screens/WithdrawDeposit/components/ModalQr';
 
-import { shortHashAddress, getAssetCode, formatTime, formatNumber, formatPhoneNumber } from 'redux/actions/utils';
+import { shortHashAddress, getAssetCode, formatTime, formatNumber, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
 
 const OrderDetailComponent = dynamic(() => import('components/screens/Mobile/Futures/OrderDetail'), { loading: () => <OrderDetailLoading /> });
 
@@ -56,9 +58,9 @@ const OrderDetail = ({ id }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const [orderDetail, setOrderDetail] = useState(null);
+    const [onShowQr, setOnShowQr] = useState(false);
     const side = orderDetail?.side;
 
-    console.log("orderDetail: '", orderDetail);
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
@@ -87,9 +89,9 @@ const OrderDetail = ({ id }) => {
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
                     <div className="flex gap-x-6 w-full items-stretch">
                         {/* Chi tiết giao dịch */}
-                        <div className="flex-auto min-h-full">
+                        <div className="flex flex-col flex-auto min-h-full">
                             <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
-                            <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
+                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                                 <div>
                                     <div className="flex justify-between items-start">
                                         <h2 className="font-semibold">
@@ -97,7 +99,7 @@ const OrderDetail = ({ id }) => {
                                                 asset: getAssetCode(orderDetail?.baseAssetId)
                                             })}
                                         </h2>
-                                        <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
+                                        {getStatusOrder(orderDetail?.status, t)}
                                     </div>
                                     <div>
                                         <span className="txtSecond-2">So luong</span>
@@ -116,17 +118,19 @@ const OrderDetail = ({ id }) => {
                                         <span className="txtSecond-2">{t('common:time')}</span>
                                         <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
                                     </div>
-                                    <div className="flex flex-col gap-y-3">
+                                    <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
+
+                                    {/* <div className="flex flex-col gap-y-3">
                                         <span className="txtSecond-2">{t('common:status')}</span>
                                         {getStatusOrder(orderDetail?.status, t)}
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
                         {/* Thông tin chuyển khoản */}
-                        <div className="flex-auto min-h-full">
+                        <div className="flex flex-col flex-auto min-h-full">
                             <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
-                            <div className="rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
+                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                                 <div className="flex justify-between items-start">
                                     <InfoCard
                                         content={{
@@ -143,7 +147,10 @@ const OrderDetail = ({ id }) => {
                                             imgSrc: orderDetail?.partnerMetadata?.avatar
                                         }}
                                     />
-                                    <div>QR Code</div>
+                                    <ButtonV2 onClick={() => setOnShowQr((prev) => !prev)} className="flex items-center gap-x-2 w-auto" variants="text">
+                                        <QrCodeScannIcon />
+                                        QR Code
+                                    </ButtonV2>
                                 </div>
                                 <div className="flex flex-col mt-6 gap-y-4">
                                     <div className="flex items-center justify-between">
@@ -170,8 +177,8 @@ const OrderDetail = ({ id }) => {
                             </div>
                         </div>
                     </div>
-                    {/* Lưu ý */}
 
+                    {/* Lưu ý */}
                     {side === 'BUY' && (
                         <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
                             <div className="flex items-center gap-x-2">
@@ -206,6 +213,13 @@ const OrderDetail = ({ id }) => {
                     </div>
                 </div>
             </div>
+            <ModalQr
+                isVisible={onShowQr}
+                onClose={() => setOnShowQr(false)}
+                qrCodeUrl={'awegawge'}
+                bank={orderDetail?.transferMetadata}
+                amount={orderDetail?.baseQty}
+            />
         </MaldivesLayout>
     );
 };

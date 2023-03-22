@@ -745,6 +745,22 @@ const FutureSupportIcon = ({ size = 16, className = '', isDark }) => (
     </svg>
 );
 
+const QrCodeScannIcon = ({ size = 16, color = '#47CC85' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#1dj1n52n6a)">
+            <path
+                d="M6.332 4.332v2h-2v-2h2zm1-1h-4v4h4v-4zm-1 6.333v2h-2v-2h2zm1-1h-4v4h4v-4zm4.333-4.333v2h-2v-2h2zm1-1h-4v4h4v-4zm-4 5.333h1v1h-1v-1zm1 1h1v1h-1v-1zm1-1h1v1h-1v-1zm-2 2h1v1h-1v-1zm1 1h1v1h-1v-1zm1-1h1v1h-1v-1zm1-1h1v1h-1v-1zm0 2h1v1h-1v-1zm3-7h-1.333v-2h-2V1.332h3.333v3.333zm0 10v-3.333h-1.333v2h-2v1.333h3.333zm-13.333 0h3.333v-1.333h-2v-2H1.332v3.333zm0-13.333v3.333h1.333v-2h2V1.332H1.332z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="1dj1n52n6a">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -795,5 +811,6 @@ export {
     TimeLapseIcon,
     BxsErrorIcon,
     CancelIcon,
-    FutureSupportIcon
+    FutureSupportIcon,
+    QrCodeScannIcon
 };

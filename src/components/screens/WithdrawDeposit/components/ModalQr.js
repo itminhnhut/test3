@@ -8,7 +8,10 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
 import DomToImage from 'dom-to-image';
 
-const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className }) => {
+const getImageQrUrl = ({ bankCode: BANK_ID, accountNumber: ACCOUNT_NO, TEMPLATE = 'qr_only', amount: AMOUNT, note: DESCRIPTION, accountName: ACCOUNT_NAME }) =>
+    `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-${TEMPLATE}.png?amount=${AMOUNT}&addInfo=${DESCRIPTION}&accountName=${ACCOUNT_NAME}`;
+
+const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount }) => {
     const [currentTheme] = useDarkMode();
 
     const [downloading, setDownloading] = useState(false);
@@ -17,6 +20,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className }) => {
     const onDownLoad = async () => {
         try {
             setDownloading(true);
+
             const scale = 2;
             const option = {
                 height: content.current.offsetHeight * scale,
@@ -50,20 +54,26 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className }) => {
                 <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-2">Chủ tài khoản</div>
                 <div className="txtPri-3">{bank?.bankName}</div>
             </div>
-            <div className="relative py-[30px] flex justify-center items-center mb-10">
-                <div ref={content} className="z-10 rounded-qr-canvas">
-                    {qrCodeUrl && <QRCode value={qrCodeUrl} eyeRadius={6} size={120} />}
-                </div>
-                <div className="absolute w-full h-full z-0">
+
+            <div
+                style={{
+                    backgroundImage: `url(${`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`})`,
+                    // backgroundImage: `url(${getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)})`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundSize: 'cover'
+                }}
+                className="h-[180px] w-full flex justify-center items-center mb-10 rounded-xl"
+            >
+                <div ref={content} className="h-[120px] w-[120px] bg-white rounded-md flex items-center justify-center overflow-hidden">
                     <Image
-                        layout="fill"
-                        objectFit="cover"
-                        className="rounded-xl"
-                        src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)}
+                        // src="https://img.vietqr.io/image/970432-146283551_-qr_only.png?amount=1000000&addInfo=CK"
+                        src={getImageQrUrl({ ...bank, amount })}
+                        width={108}
+                        height={108}
                     />
                 </div>
             </div>
-            <ButtonV2 onClick={() => onDownLoad()} disabled={downloading} loading={downloading}>
+            <ButtonV2 onClick={onDownLoad} disabled={downloading} loading={downloading}>
                 Tải mã QR
             </ButtonV2>
         </ModalV2>
