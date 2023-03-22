@@ -243,17 +243,20 @@ export function formatWallet(value, additionDigits = 2, acceptNegative = false) 
 }
 
 export function formatPrice(price = 0, configs = [], assetCode = '') {
+    price = exponentialToDecimal(price);
     if (isArray(configs)) {
         const asset = configs.find((e) => e.assetCode?.toUpperCase() === assetCode?.toUpperCase());
         if (asset) {
+            if (price <= 1e-6) return formatNumber2(price, asset.assetDigit);
             return numeral(+price).format(`0,0.[${'0'.repeat(asset.assetDigit)}]`);
         }
     }
     if (isNumber(configs)) {
+        if (price <= 1e-6) return formatNumber2(price, configs);
         return numeral(+price).format(`0,0.[${'0'.repeat(configs)}]`);
     }
 
-    return numeral(+price).format('0,0.[000000]');
+    return price
 }
 
 export function formatSpotPrice(price = 0, symbol = '') {
@@ -285,12 +288,75 @@ export function formatNumberToText(value = 0) {
 }
 
 export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
+    value = exponentialToDecimal(value);
     const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
+    if (value <= 1e-6) return formatNumber2(value, digits);
     if (isNil(value)) return defaultValue;
-    if (Math.abs(+value) < 1e-9) return defaultValue;
+    if (Math.abs(+value) <= 1e-6) return defaultValue;
     if (!acceptNegative && +value < 0) return defaultValue;
     return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
+
+export function formatNumber2(number, decimalScale = 8, thousandSeparator = true) {
+    if (!number) {
+        return '';
+    }
+    if (thousandSeparator) {
+        // Can't use toLocaleString because it's not available on Android
+        const parts = number.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        if (parts[1]) {
+            parts[1] = parts[1].substring(0, decimalScale);
+        }
+        if (decimalScale === 0) return parts[0];
+        return parts.join('.');
+    } else {
+        return numberToString(number, decimalScale);
+    }
+}
+
+export function numberToString(number, decimalScale = 8, cutPaddingDecimalsZero = true) {
+    if (!number) {
+        return '';
+    }
+    let result = Number(number).toFixed(decimalScale);
+    if (decimalScale > 0 && cutPaddingDecimalsZero) {
+        return result.replace(/\.?0+$/, '');
+    } else {
+        return result;
+    }
+}
+
+export const exponentialToDecimal = (exponential) => {
+    let decimal = exponential?.toString().toLowerCase() || '';
+    if (decimal.includes('e+')) {
+        const exponentialSplitted = decimal.split('e+');
+        let postfix = '';
+        for (let i = 0; i < +exponentialSplitted[1] - (exponentialSplitted[0].includes('.') ? exponentialSplitted[0].split('.')[1].length : 0); i++) {
+            postfix += '0';
+        }
+        const addCommas = (text) => {
+            let j = 3;
+            let textLength = text.length;
+            while (j < textLength) {
+                text = `${text.slice(0, textLength - j)},${text.slice(textLength - j, textLength)}`;
+                textLength++;
+                j += 3 + 1;
+            }
+            return text;
+        };
+        decimal = addCommas(exponentialSplitted[0].replace('.', '') + postfix);
+    }
+    if (decimal.toLowerCase().includes('e-')) {
+        const exponentialSplitted = decimal.split('e-');
+        let prefix = '0.';
+        for (let i = 0; i < +exponentialSplitted[1] - 1; i++) {
+            prefix += '0';
+        }
+        decimal = prefix + exponentialSplitted[0].replace('.', '');
+    }
+    return decimal;
+};
 
 export function scrollFocusInput() {
     if (typeof window !== 'undefined') {
