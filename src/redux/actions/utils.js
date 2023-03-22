@@ -256,7 +256,7 @@ export function formatPrice(price = 0, configs = [], assetCode = '') {
         return numeral(+price).format(`0,0.[${'0'.repeat(configs)}]`);
     }
 
-    return price
+    return numeral(+price).format('0,0.[000000]');
 }
 
 export function formatSpotPrice(price = 0, symbol = '') {
