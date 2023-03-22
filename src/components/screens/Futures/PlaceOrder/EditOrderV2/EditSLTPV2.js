@@ -436,7 +436,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         </div>
                         {show.sl && (
                             <>
-                                <div className="flex items-center space-x-2">
+                                <div className="flex space-x-2">
                                     <TradingInput
                                         containerClassName="w-full dark:bg-dark-2"
                                         value={data.sl}
@@ -495,7 +495,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                         </div>
                         {show.tp && (
                             <>
-                                <div className="flex items-center space-x-2">
+                                <div className="flex space-x-2">
                                     <TradingInput
                                         containerClassName="w-full dark:bg-dark-2"
                                         value={data.tp}
