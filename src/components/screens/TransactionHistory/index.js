@@ -8,7 +8,7 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_WALLET_TRANSACTION_HISTORY, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatPrice, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { formatBalance, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
@@ -25,6 +25,8 @@ const namiSystem = {
     en: 'Nami system',
     vi: 'Hệ thống Nami'
 };
+
+export const customFormatBalance = (number, digit, acceptNegative = true) => formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
 
 export const isFilterEmpty = (filter) => !filter.category && !filter.asset && isNull(filter.range.endDate);
 
@@ -203,7 +205,8 @@ const TransactionHistory = ({ id }) => {
                     const amount = item?.amount || item?.money_use || item?.value;
                     return (
                         <div>
-                            {amount > 0 && '+'}{formatPrice(amount, config?.assetDigit ?? 0)}
+                            {amount > 0 && '+'}
+                            {customFormatBalance(amount, config?.assetDigit ?? 0, true)}
                             {/* {config?.assetCode ?? 'VNDC'} */}
                         </div>
                     );

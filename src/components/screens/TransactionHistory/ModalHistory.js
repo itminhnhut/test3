@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
-import { formatPrice, formatWallet, formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
+import { formatTime, getSymbolObject, shortHashAddress } from 'redux/actions/utils';
 import { X } from 'react-feather';
 import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
 import axios from 'axios';
@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
 import { WalletType, EarnWalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
+import { customFormatBalance } from '.';
 
 const WalletTypeById = {
     0: WalletType.SPOT,
@@ -112,12 +113,24 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 {detailTx.type === 'convert' ? (
                                     <div className="flex items-center space-x-2">
                                         <div>
-                                            <AssetLogo useNextImg={true} size={80} assetCode={detailTx?.additionalData?.fromAsset} />
+                                            <AssetLogo
+                                                useNextImg={true}
+                                                size={80}
+                                                assetCode={get(detailTx, 'additionalData.fromAsset') || get(detailTx, 'result.metadata.fromAsset')}
+                                            />
                                         </div>
-                                        <ArrowCompareIcon size={32} />
-                                        <div>
-                                            <AssetLogo useNextImg={true} size={80} assetCode={detailTx?.additionalData?.toAsset} />
-                                        </div>
+                                        {(get(detailTx, 'additionalData.toAsset') || get(detailTx, 'result.metadata.toAsset')) !== 'USDT' && (
+                                            <>
+                                                <ArrowCompareIcon size={32} />
+                                                <div>
+                                                    <AssetLogo
+                                                        useNextImg={true}
+                                                        size={80}
+                                                        assetCode={get(detailTx, 'additionalData.toAsset') || get(detailTx, 'result.metadata.toAsset')}
+                                                    />
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 ) : detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE ? (
                                     <AssetLogo useNextImg={true} size={80} assetCode={'NAMI'} />
@@ -126,10 +139,13 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 )}
                             </div>
                             <div className="mb-3">
-                                {detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE
-                                    ? '+' + formatPrice(detailTx?.additionalData?.toQty)
-                                    : (detailTx?.result?.money_use > 0 ? '+' : '') +
-                                      `${formatPrice(detailTx?.result?.money_use, assetData?.assetDigit ?? 0)} ${assetData?.assetCode}`}
+                                {`${detailTx?.result?.money_use > 0 ? '+' : ''} ${
+                                    assetData?.assetCode === 'VNDC'
+                                        ? customFormatBalance(detailTx?.result?.money_use, 0, true)
+                                        : assetData?.assetCode === 'USDT'
+                                        ? customFormatBalance(detailTx?.result?.money_use, 4, true)
+                                        : customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit || 0, true)
+                                } ${assetData?.assetCode}`}
                             </div>
                             <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
                         </div>
@@ -150,6 +166,11 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 switch (col.type) {
                                     case COLUMNS_TYPE.COPIEDABLE:
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
+
+                                        // if(detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                            
+                                        //     priorityKey = get(detailTx, 'result.categoy')
+                                        // }
                                         formatKeyData = (
                                             <TextCopyable
                                                 showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
@@ -171,9 +192,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         }
                                         asset = assetConfig.find((asset) => asset.assetCode === additionalData?.toAsset);
 
-                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} =  ${formatPrice(
+                                        formatKeyData = `1 ${additionalData?.fromAsset || NULL_ASSET} =  ${customFormatBalance(
                                             additionalData?.toQty / additionalData?.fromQty,
-                                            asset?.assetDigit ?? 0
+                                            asset?.assetDigit ?? 0,
+                                            true
                                         )}  ${additionalData?.toAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.SYMBOL:
@@ -194,7 +216,12 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 quoteAsset: get(detailTx, 'additionalData.quoteAsset')
                                             };
                                         }
-                                        formatKeyData = `${formatPrice(keyData)} ${symbol?.quoteAsset || NULL_ASSET}`;
+
+                                        const { assetCode } = assetData;
+                                        formatKeyData = `${customFormatBalance(
+                                            keyData,
+                                            assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : assetData?.assetDigit || 0
+                                        )} ${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
                                         additionalData = detailTx?.additionalData;
@@ -207,20 +234,21 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
                                             <div className="uppercase">
-                                                {WalletTypeById?.[keyData]?.toLowerCase()}
+                                                {keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]?.toLowerCase()}
                                                 {/* {t('transaction-history:wallet', { wallet: WalletTypeById?.[keyData]?.toLowerCase() })} */}
                                             </div>
                                         );
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
-                                        formatKeyData = 'NAMI System';
+                                        formatKeyData = t('transaction-history:nami_system');
                                         break;
                                     case COLUMNS_TYPE.STAKING_SNAPSHOT:
                                         asset = assetConfig.find((asset) => asset.id === get(detailTx, col.keys[1]));
                                         formatKeyData = (
                                             <div className="flex">
                                                 <a>
-                                                    {formatPrice(get(detailTx, col.keys[0]), asset?.assetDigit || 0)} {asset?.assetCode || NULL_ASSET}
+                                                    {customFormatBalance(get(detailTx, col.keys[0]), asset?.assetDigit || 0, true)}{' '}
+                                                    {asset?.assetCode || NULL_ASSET}
                                                 </a>
                                             </div>
                                         );
@@ -231,6 +259,15 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 <div className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{get(detailTx, col.keys[0])}</div>
                                                 <div className="text-sm text-txtSecondary dark:text-txtSecodnary-dark">{get(detailTx, col.keys[1])}</div>
                                             </>
+                                        );
+                                        break;
+                                    case COLUMNS_TYPE.SIDETYPE:
+                                        const side = get(detailTx, col.keys[0])?.toLowerCase() || NULL_ASSET;
+                                        const type = get(detailTx, col.keys[1])?.toLowerCase() || NULL_ASSET;
+                                        formatKeyData = (
+                                            <div className={classNames({ 'text-red-1': side === 'sell' }, { 'text-dominant': side === 'buy' })}>{`${t(
+                                                'transaction-history:' + side
+                                            )} ${t('transaction-history:' + type)}`}</div>
                                         );
                                         break;
                                     default:
@@ -261,17 +298,22 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 </div>
                                 <div className="p-4  space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                                     {(
-                                        (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx?.additionalData?.assets) ||
-                                        (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
+                                        (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx?.additionalData?.assets) 
+                                        // ||
+                                        // (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
                                     )?.map((asset) => {
                                         const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
+                                        const isUSDT = _.assetCode === 'USDT';
+                                        const isVNDC = _.assetCode === 'VNDC';
                                         return (
                                             <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
                                                 <div className="">{_?.assetCode || NULL_ASSET}</div>
                                                 <div className={classNames('font-semibold')}>
-                                                    {isNaN(formatWallet(asset.value, _?.assetDigit || 0))
-                                                        ? asset.value.toFixed(_?.assetDigit || 0)
-                                                        : formatWallet(asset.value, _?.assetDigit || 0)}
+                                                    {isVNDC
+                                                        ? customFormatBalance(asset.value, 0, true)
+                                                        : isUSDT
+                                                        ? customFormatBalance(asset.value, 4, true)
+                                                        : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
                                                 </div>
                                             </div>
                                         );
