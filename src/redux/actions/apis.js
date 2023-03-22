@@ -298,4 +298,5 @@ export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'spot/partner_order';
 export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'spot/partner_order_price';
 export const API_CREATE_ORDER = API_V3_PREFIX + 'spot/partner_order';
 export const API_GET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
 export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'spot/partner_order_detail';

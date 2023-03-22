@@ -5,7 +5,7 @@ import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
 
 import useLocationSide from './useLocationSide';
-import OrderModal, { ORDER_TYPES } from './components/OrderModal';
+import OrderModal from './components/OrderModal';
 import ModalQr from './components/ModalQr';
 
 const WithdrawDeposit = () => {
@@ -24,7 +24,7 @@ const WithdrawDeposit = () => {
                         </div>
                     </div>
                 </div>
-                <HistoryTable />
+                {/* <HistoryTable /> */}
             </div>
             <OrderModal />
         </>

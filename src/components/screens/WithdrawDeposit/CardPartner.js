@@ -1,59 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 import { API_GET_PARTNER_BANKS, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
-import { getPartners, setAccountBank, setPartnerBank } from 'redux/actions/withdrawDeposit';
+import { getPartner, setAccountBank, setPartnerBank } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDebounce } from 'react-use';
-import BankInfo from './components/BankInfo';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useFetchApi from 'hooks/useFetchApi';
 import axios from 'axios';
 import Card from './components/common/Card';
-import PartnerInfo from './components/PartnerInfo';
-import { useRouter } from 'next/router';
+
+const ModalBankDefault = dynamic(() => import('./components/ModalBankDefault'), { ssr: false });
+const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: false });
+const BankInfo = dynamic(() => import('./components/BankInfo'), { ssr: false });
 
 const CardPartner = () => {
-    const { partner, partnerBank, accountBank, assetId, input } = useSelector((state) => state.withdrawDeposit);
-    const [debounceQuantity, setDebouncedQuantity] = useState('');
-    const [loadingPartner, setLoadingPartner] = useState(false);
+    const { partner, partnerBank, accountBank, assetId, input, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
     const router = useRouter();
+    const side = useMemo(() => router.query?.side, [router]);
+    const [visibleModalBank, setVisibleModalBank] = useState(false);
+    const [refetchAccBanks, setRefetchAccBanks] = useState(false);
 
-    const side = router.query?.side;
-
-    useEffect(() => {
-        setLoadingPartner(true);
-    }, [input]);
-
-    useDebounce(
-        () => {
-            setDebouncedQuantity(input);
-        },
-        500,
-        [input]
-    );
-
-    useEffect(() => {
-        const source = axios.CancelToken.source();
-        dispatch(
-            getPartners({
-                params: { quantity: !debounceQuantity ? 0 : debounceQuantity, assetId, side },
-                cancelToken: source.token,
-                callbackFn: () => {
-                    setLoadingPartner(false);
-                }
-            })
-        );
-
-        return () => source.cancel();
-    }, [debounceQuantity, assetId, side]);
+    const toggleRefetchAccBanks = () => setRefetchAccBanks((prev) => !prev);
 
     const {
         data: banks,
         loading: loadingBanks,
         error
-    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, Boolean(partner), [debounceQuantity, assetId, partner]);
+    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, Boolean(partner) && side === SIDE.BUY, [
+        input,
+        assetId,
+        partner
+    ]);
 
-    const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side]);
+    const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side, refetchAccBanks]);
+
+    useEffect(() => {
+        const source = axios.CancelToken.source();
+        dispatch(
+            getPartner({
+                params: { quantity: !input ? 0 : input, assetId, side },
+                cancelToken: source.token,
+            })
+        );
+
+        return () => source.cancel();
+    }, [input, assetId, side]);
 
     useEffect(() => {
         if (accountBanks && accountBanks.length) {
@@ -61,26 +54,53 @@ const CardPartner = () => {
         }
     }, [accountBanks]);
 
-    return (
-        <Card className="min-h-[444px] ">
-            <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
-            <div className="space-y-4">
-                {side === SIDE.SELL && (
-                    <BankInfo showTag selectedBank={accountBank} containerClassname="z-[42]" banks={accountBanks} loading={loadingAccountBanks} />
-                )}
-
-                <PartnerInfo debounceQuantity={debounceQuantity} assetId={assetId} side={side} loadingPartner={loadingPartner} selectedPartner={partner} />
-                {side === SIDE.BUY && partner && (
-                    <BankInfo
-                        selectedBank={partnerBank}
-                        onSelect={(bank) => dispatch(setPartnerBank(bank))}
-                        banks={banks}
-                        loading={loadingBanks || loadingPartner}
-                        containerClassname="z-40"
-                    />
-                )}
+    const accountBankAction = useMemo(
+        () => (
+            <div className="mt-6 px-4 space-y-3">
+                <ButtonV2 className="text-base font-semibold">Thêm tài khoản ngân hàng</ButtonV2>
+                <ButtonV2 onClick={() => setVisibleModalBank(true)} variants="text" className="text-base font-semibold">
+                    Chỉnh sửa mặc định
+                </ButtonV2>
             </div>
-        </Card>
+        ),
+        []
+    );
+
+    return (
+        <>
+            <Card className="min-h-[444px] ">
+                <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
+                <div className="space-y-4">
+                    {side === SIDE.SELL && (
+                        <BankInfo
+                            additionalActions={accountBankAction}
+                            showTag
+                            selectedBank={accountBank}
+                            containerClassname="z-[42]"
+                            banks={accountBanks}
+                            loading={loadingAccountBanks}
+                        />
+                    )}
+
+                    <PartnerInfo quantity={input} assetId={assetId} side={side} loadingPartner={loadingPartner} selectedPartner={partner} />
+                    {side === SIDE.BUY && partner && (
+                        <BankInfo
+                            selectedBank={partnerBank}
+                            onSelect={(bank) => dispatch(setPartnerBank(bank))}
+                            banks={banks}
+                            loading={loadingBanks || loadingPartner}
+                            containerClassname="z-40"
+                        />
+                    )}
+                </div>
+            </Card>
+            <ModalBankDefault
+                banks={accountBanks}
+                toggleRefetch={toggleRefetchAccBanks}
+                onClose={() => setVisibleModalBank(false)}
+                isVisible={visibleModalBank}
+            />
+        </>
     );
 };
 

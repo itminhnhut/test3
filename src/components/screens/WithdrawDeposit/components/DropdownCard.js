@@ -5,6 +5,7 @@ import ChevronDown from 'components/svg/ChevronDown';
 import classNames from 'classnames';
 import PopoverSelect from './common/PopoverSelect';
 import InfoCard from './common/InfoCard';
+import Spinner from 'components/svg/Spinner';
 
 const DropdownCard = ({
     loading,
@@ -19,7 +20,8 @@ const DropdownCard = ({
     imgSize,
     setSearch,
     data,
-    onSelect
+    onSelect,
+    additionalActions
 }) => {
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
@@ -33,7 +35,7 @@ const DropdownCard = ({
         <PopoverSelect
             ref={cardRef}
             open={isVisible && show}
-            containerClassname={containerClassname}
+            containerClassname={{ [containerClassname]: isVisible }}
             label={
                 <button
                     disabled={disabled || loading}
@@ -48,44 +50,44 @@ const DropdownCard = ({
                         loading={loading}
                         content={selected.content}
                         imgSize={imgSize}
-                        endIcon={data && data.length && <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
+                        endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
                     />
                 </button>
             }
             value={search}
             onChange={(value) => setSearch(value)}
         >
-            <div className="space-y-3 w-full overflow-y-auto max-h-[300px]">
-                {loadingList ? (
-                    <>
-                        <InfoCard loading />
-                        <InfoCard loading />
-                        <InfoCard loading />
-                        <InfoCard loading />
-                    </>
-                ) : !data || !data.length ? (
-                    <NoData />
-                ) : (
-                    data?.map((item) => (
-                        <button
-                            key={item._id}
-                            onClick={() => {
-                                if (onSelect) {
-                                    onSelect(item);
-                                    setVisible(false);
-                                }
-                            }}
-                            disabled={selected?.id === item?._id}
-                            className={classNames('p-3 w-full text-left disabled:cursor-default hover:bg-hover-1 dark:hover:bg-hover-dark transition', {
-                                'cursor-pointer': Boolean(onSelect),
-                                '!cursor-default': !Boolean(onSelect)
-                            })}
-                        >
-                            {selected.item(item)}
-                        </button>
-                    ))
-                )}
-            </div>
+            {loadingList ? (
+                <div className="flex justify-center items-center ">
+                    <Spinner size={60} color="currentColor" />
+                </div>
+            ) : !data || !data.length ? (
+                <NoData />
+            ) : (
+                <>
+                    <div className="space-y-3 w-full overflow-y-auto max-h-[300px]">
+                        {data?.map((item) => (
+                            <button
+                                key={item._id}
+                                onClick={() => {
+                                    if (onSelect) {
+                                        onSelect(item);
+                                        setVisible(false);
+                                    }
+                                }}
+                                disabled={selected?.id === item?._id}
+                                className={classNames('p-3 w-full text-left disabled:cursor-default  transition', {
+                                    'cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark': Boolean(onSelect),
+                                    '!cursor-default': !Boolean(onSelect)
+                                })}
+                            >
+                                {selected.item(item)}
+                            </button>
+                        ))}
+                    </div>
+                    {additionalActions}
+                </>
+            )}
         </PopoverSelect>
     );
 };

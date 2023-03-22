@@ -1,6 +1,6 @@
 import * as types from './types';
 import { SIDE, initialState } from '../reducers/withdrawDeposit';
-import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS } from './apis';
+import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS, API_SET_USER_BANK_ACCOUNT } from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
 import Axios from 'axios';
@@ -46,9 +46,11 @@ export const closeModal = () => (dispatch) =>
 
 export const openModal = (payload) => (dispatch) => dispatch(toggleModal({ ...payload, isVisible: true }));
 
-export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
+export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
+export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
+            dispatch(setLoadingPartner(true));
             const partner = await FetchApi({
                 url: API_GET_DEFAULT_PARTNER,
                 params,
@@ -69,6 +71,7 @@ export const getPartners = ({ params, cancelToken, callbackFn = () => {} }) => {
             console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
         } finally {
             callbackFn();
+            dispatch(setLoadingPartner(false));
         }
     };
 };
@@ -85,12 +88,10 @@ export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quanti
     return res.data;
 };
 
-const parseDataFromPromiseSettled = (response) => {
-    if (response.status === 'fulfilled') {
-        const { data } = response.value;
-        if (data && data.status === ApiStatus.SUCCESS) {
-            return data.data;
-        }
-    }
-    return null;
-};
+export const setAccountDefaultBank =  async ({bankAccountId}) => {
+    const res = await Axios.post(API_SET_USER_BANK_ACCOUNT, {
+        bankAccountId
+    });
+
+    return res.data;
+}
