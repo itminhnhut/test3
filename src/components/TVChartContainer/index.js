@@ -239,6 +239,13 @@ export class TVChartContainer extends React.PureComponent {
                 console.error('Load chart error', err);
             }
         }
+
+        setTimeout(() => {
+            const interval = this.widget.activeChart().resolution();
+            if (interval && this.timeFrame) {
+                this.timeFrame.current.setActiveTime(interval);
+            }
+        }, 0);
     };
 
     // eslint-disable-next-line class-methods-use-this
@@ -466,7 +473,7 @@ export class TVChartContainer extends React.PureComponent {
         this.widget.onChartReady(() => {
             // Load saved chart
             this.loadSavedChart();
-            this.handleActiveTime(60);
+            // this.handleActiveTime(60);
             this.widget.applyOverrides(this.overrides(isDark));
             this.setState({ chartStatus: ChartStatus.LOADED });
             if (this.timer) clearTimeout(this.timer);
