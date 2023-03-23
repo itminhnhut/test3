@@ -20,6 +20,8 @@ import Image from 'next/image';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import SwapWarning from 'components/svg/SwapWarning';
 
+const regex = /^[0-9]*$/; // chỉ cho phép nhập các ký tự từ 0 đến 9 hoặc giá trị rỗng
+
 const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, fetchListUserBank }) => {
     const [bankNumber, setBankNumber] = useState('');
     const [selectedBank, setSelectedBank] = useState({});
@@ -94,8 +96,20 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
         );
     }, [result]);
 
-    const onBlurInputBankNumber = () => {
+    const onBlurInputBankNumber = (e) => {
         if (!bankNumber) {
+            setHelperTextBankNumber(t('payment-method:please_input_account_num'));
+        } else {
+            setHelperTextBankNumber('');
+        }
+    };
+
+    const onChangeBankNumber = (value) => {
+        if (regex.test(value)) {
+            setBankNumber(value);
+        }
+
+        if (value === '') {
             setHelperTextBankNumber(t('payment-method:please_input_account_num'));
         } else {
             setHelperTextBankNumber('');
@@ -111,11 +125,15 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
             wrapClassName="px-0 flex flex-col tracking-normal overflow-auto"
             btnCloseclassName="px-8"
         >
+            {/* Title */}
             <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
+
+            {/* Notice */}
             <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-8 mb-10 gap-x-4">
-                <BxsInfoCircle size={24} fill={isDark ? colors.gray[7] : colors.gray[1]} fillInside={'currentColor'} />
+                <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
                 <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
             </div>
+
             <div className="px-8 flex flex-col gap-y-4 txtSecond-3">
                 {/* Banner Info */}
                 <div
@@ -146,20 +164,16 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                 <div className="flex flex-col gap-y-2">
                     <span className="text-sm">{t('payment-method:account_number')}</span>
                     <InputV2
+                        // type="number"
                         className="!pb-0"
                         value={bankNumber}
-                        onChange={(value) => setBankNumber(value.toString())}
+                        onChange={(value) => onChangeBankNumber(value)}
                         placeholder={t('payment-method:input_bank_account')}
                         allowClear
                         onBlur={onBlurInputBankNumber}
+                        error={helperTextBankNumber}
+                        onFocus={() => setHelperTextBankNumber('')}
                     />
-                    {/* Helper Text */}
-                    {helperTextBankNumber && (
-                        <div className="flex items-center text-red pt-3 text-xs text-left leading-4 gap-1">
-                            <SwapWarning size={12} fill={colors.red2} />
-                            {helperTextBankNumber}
-                        </div>
-                    )}
                 </div>
             </div>
             {/* Button action */}
@@ -253,7 +267,7 @@ const BankNameInput = ({ t, selected = {}, onChange, listData = [], isDark }) =>
                                 </li>
                             ))
                         ) : (
-                            <div className="flex items-center justify-center">
+                            <div className="flex items-center justify-center h-[200px]">
                                 <NoData isSearch={!!search} />
                             </div>
                         )}
