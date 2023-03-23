@@ -2,17 +2,42 @@ import { useState, useEffect } from 'react';
 import colors from 'styles/colors';
 import { formatTime } from 'redux/actions/utils';
 
-const CountdownTimer = ({ size = 80, timeExpire = '2023-03-21T08:32:25.171Z' }) => {
-    const [timeLeft, setTimeLeft] = useState(null); // set initial time in seconds
-    const totalTime = 60; // set total time in seconds
+const testTime = () => {
+    let now = new Date();
+
+    // Add 15 minutes to the current time
+    let fifteenMinutesFromNow = new Date(now.getTime() + 15 * 60000);
+
+    // Get the timestamp for 15 minutes from now
+    let timestamp = fifteenMinutesFromNow.getTime();
+
+    return timestamp;
+};
+
+const getColor = (percent, isDark) => {
+    if (isDark) {
+        if (percent > 1 / 2) return colors.green[2];
+        else if (percent > 1 / 4) return colors.yellow[2];
+        else return colors.red[2];
+    } else {
+        if (percent > 1 / 2) return colors.green[3];
+        else if (percent > 1 / 4) return colors.yellow[2];
+        else return colors.red[2];
+    }
+};
+
+const CountdownTimer = ({ size = 80, timeExpire = '2023-03-21T08:32:25.171Z', isDark = true }) => {
+    const [timeLeft, setTimeLeft] = useState(1 * 60); // set initial time in seconds
+    const totalTime = 1 * 60; // set total time in seconds
     const radius = 40; // set radius in pixels
     const strokeWidth = 3; // set stroke width in pixels
 
-    if (Date.now() > +new Date(timeExpire)) return null;
+    // if (Date.now() > +new Date(timeExpire)) return null;
 
-    useEffect(() => {
-        setTimeLeft(+new Date(timeExpire) - Date.now());
-    }, [timeExpire]);
+    // useEffect(() => {
+    //     // setTimeLeft(+new Date(timeExpire) - Date.now());
+    //     setTimeLeft(testTime());
+    // }, [timeExpire]);
 
     // start the timer and update the time left every second
     useEffect(() => {
@@ -25,7 +50,6 @@ const CountdownTimer = ({ size = 80, timeExpire = '2023-03-21T08:32:25.171Z' }) 
             clearInterval(intervalId);
         };
     }, []);
-    console.log('timeLeft: ' + timeLeft);
 
     // calculate the circumference of the circle based on the radius
     const circumference = 2 * Math.PI * radius;
@@ -36,9 +60,23 @@ const CountdownTimer = ({ size = 80, timeExpire = '2023-03-21T08:32:25.171Z' }) 
     return (
         <div style={{ width: radius * 2, height: radius * 2 }} className="relative">
             <div className="rounded-full border-[3px] border-divider dark:border-divider-dark h-full w-full flex items-center justify-center">
-                <span className="text-lg leading-[28px] text-green-3 dark:text-green-2 font-semibold">{formatTime(timeLeft, 'mm:ss')}</span>
+                <span
+                    style={{
+                        color: getColor(timeLeft / totalTime, isDark)
+                    }}
+                    className="text-lg leading-[28px] font-semibold"
+                >
+                    {formatTime(timeLeft * 1000, 'mm:ss')}
+                </span>
             </div>
-            <svg className="absolute z-20 top-0 left-0 transform -rotate-90 text-green-3" width={radius * 2} height={radius * 2}>
+            <svg
+                style={{
+                    color: getColor(timeLeft / totalTime, isDark)
+                }}
+                className="absolute z-20 top-0 left-0 transform -rotate-90"
+                width={radius * 2}
+                height={radius * 2}
+            >
                 <circle
                     className="stroke-current"
                     cx={radius}

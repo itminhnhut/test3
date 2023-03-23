@@ -88,6 +88,7 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
             'blog.nami.today',
             'data-test.bitbattle.io',
             'nami-dev.sgp1.digitaloceanspaces.com',
+            'img.vietqr.io'
         ]
     },
     distDir: process.env.BUILD_DIR || 'build'
