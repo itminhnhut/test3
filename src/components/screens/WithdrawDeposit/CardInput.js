@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, openModal, setInput, setLoadingPartner } from 'redux/actions/withdrawDeposit';
+import { setInput, setLoadingPartner } from 'redux/actions/withdrawDeposit';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
 import { switchAsset } from 'redux/actions/withdrawDeposit';
 import { formatPrice } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
-
 import { useRouter } from 'next/router';
 import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
@@ -18,8 +17,8 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { PATHS } from 'src/constants/paths';
-import { ORDER_TYPES } from './components/OrderModal';
 import { useDebounce } from 'react-use';
+
 const CardInput = () => {
     const { input, assetId, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
@@ -74,7 +73,6 @@ const CardInput = () => {
     const onMakeOrderHandler = async () => {
         try {
             setLoadingConfirm(true);
-            // dispatch(openModal({ loading: true }));
             const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,

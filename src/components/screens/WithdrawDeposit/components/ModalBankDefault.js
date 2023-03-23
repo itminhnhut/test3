@@ -91,7 +91,12 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch 
                     ))}
             </div>
             <div className="px-8 mt-10">
-                <ButtonV2 onClick={onSetBankHandler} loading={loading}>
+                <ButtonV2
+                    className="disabled:!cursor-default"
+                    onClick={onSetBankHandler}
+                    disabled={banks && bankAccountId === banks.find((bank) => bank.isDefault)._id}
+                    loading={loading}
+                >
                     Đặt làm mặc định
                 </ButtonV2>
             </div>

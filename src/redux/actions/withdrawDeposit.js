@@ -31,21 +31,6 @@ export const setPartner = (partner) => {
 
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
 
-export const toggleModal = (payload) => {
-    return (dispatch) => dispatch({ type: types.SET_MODAL_STATE, payload });
-};
-
-// return state to the initial state
-export const closeModal = () => (dispatch) =>
-    dispatch(
-        toggleModal(
-            { isVisible: false, type: null, additionalData: null, confirmFunction: undefined, loading: false }
-            // initialState.modal
-        )
-    );
-
-export const openModal = (payload) => (dispatch) => dispatch(toggleModal({ ...payload, isVisible: true }));
-
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
 export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
@@ -88,10 +73,10 @@ export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quanti
     return res.data;
 };
 
-export const setAccountDefaultBank =  async ({bankAccountId}) => {
+export const setAccountDefaultBank = async ({ bankAccountId }) => {
     const res = await Axios.post(API_SET_USER_BANK_ACCOUNT, {
         bankAccountId
     });
 
     return res.data;
-}
+};

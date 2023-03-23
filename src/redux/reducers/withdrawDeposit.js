@@ -14,14 +14,7 @@ export const initialState = {
     accountBank: null,
     partnerBank: null,
     partner: null,
-    loadingPartner: false,
-    modal: {
-        isVisible: false,
-        type: null,
-        additionalData: null,
-        confirmFunction: undefined,
-        loading: false
-    }
+    loadingPartner: false
 };
 
 export default (state = initialState, action) => {
@@ -34,15 +27,6 @@ export default (state = initialState, action) => {
         case types.SET_LOADING_PARTNER:
             return { ...state, loadingPartner: action.payload };
 
-        case types.SET_MODAL_STATE:
-            const newModalState = action.payload;
-            return {
-                ...state,
-                modal: {
-                    ...state.modal,
-                    ...newModalState
-                }
-            };
         case types.SET_ACCOUNT_BANK:
             return {
                 ...state,

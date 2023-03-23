@@ -4,8 +4,6 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { isFunction } from 'redux/actions/utils';
 import { BxsInfoCircle, TimeLapseIcon, BxsErrorIcon, CancelIcon } from 'components/svg/SvgIcon';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from 'redux/actions/withdrawDeposit';
 
 export const ORDER_TYPES = {
     CONFIRM: {
@@ -42,26 +40,23 @@ export const ORDER_TYPES = {
     }
 };
 
-const OrderModal = () => {
-    const { modal } = useSelector((state) => state.withdrawDeposit);
-    const dispatch = useDispatch();
-
+const OrderModal = ({ isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
     return (
         <ModalV2
-            isVisible={modal?.isVisible}
+            isVisible={isVisible}
             wrapClassName=""
-            onBackdropCb={!modal?.loading ? () => dispatch(closeModal()) : undefined}
+            onBackdropCb={loading ? () => onClose() : undefined}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            {modal?.type && (
+            {type && (
                 <div className="text-center ">
-                    <div className="text-dominant flex justify-center mb-6">{modal.type.icon}</div>
-                    <div className="txtPri-3 mb-4">{modal.type.title}</div>
+                    <div className="text-dominant flex justify-center mb-6">{type.icon}</div>
+                    <div className="txtPri-3 mb-4">{type.title}</div>
                     <div className="txtSecond-2 mb-10">
-                        {isFunction(modal.type.description) ? additionalData && modal.type.description(additionalData) : modal.type.description}
+                        {isFunction(type.description) ? additionalData && type.description(additionalData) : type.description}
                     </div>
-                    {modal.type.showConfirm && (
-                        <ButtonV2 loading={modal.loading} disabled={modal.loading} onClick={() => modal?.confirmFunction?.()} className="transition-all">
+                    {type.showConfirm && (
+                        <ButtonV2 loading={loading} disabled={loading} onClick={() => onConfirm?.()} className="transition-all">
                             Xác nhận
                         </ButtonV2>
                     )}
