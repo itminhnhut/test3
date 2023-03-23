@@ -7,7 +7,17 @@ import TagV2 from 'components/common/V2/TagV2';
 import Tooltip from 'components/common/Tooltip';
 import classNames from 'classnames';
 
-const BankInfo = ({ showTooltip = true, loadingBanks, loading, banks, containerClassname, selectedBank, onSelect, showTag = false, additionalActions }) => {
+export const BankInfo = ({
+    showTooltip = true,
+    loadingBanks,
+    loading,
+    banks,
+    containerClassname,
+    selectedBank,
+    onSelect,
+    showTag = false,
+    additionalActions
+}) => {
     const [search, setSearch] = useState('');
     return (
         <DropdownCard

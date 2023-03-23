@@ -1,4 +1,4 @@
-import React, {  useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { API_GET_PARTNER_BANKS, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
@@ -41,7 +41,7 @@ const CardPartner = () => {
         dispatch(
             getPartner({
                 params: { quantity: !input ? 0 : input, assetId, side },
-                cancelToken: source.token,
+                cancelToken: source.token
             })
         );
 

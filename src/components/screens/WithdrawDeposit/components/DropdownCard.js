@@ -64,7 +64,7 @@ const DropdownCard = ({
                     <Spinner size={60} color="currentColor" />
                 </div>
             ) : !data || !data.length ? (
-                <NoData />
+                <NoData isSearch />
             ) : (
                 <>
                     <div className="space-y-3 w-full overflow-y-auto max-h-[300px]">

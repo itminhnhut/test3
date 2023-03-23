@@ -5,5 +5,7 @@
     "bank_name": "Bank name",
     "confirm": "Confirm",
     "transaction_details": "Transaction details",
-    "depsit_from_partners": "Deposit {{asset}} through partner"
+    "depsit_from_partners": "Deposit {{asset}} through partner",
+    "sell": "sell",
+    "buy": "buy"
 }
