@@ -1,5 +1,6 @@
 import { TYPES } from 'components/common/V2/TagV2';
-import { WITHDRAW_DEPOSIT_ORDER_STATUS } from 'redux/actions/const';
+import { PartnerOrderStatus } from 'redux/actions/const';
+
 export const TABS = [
     {
         key: 0,
@@ -8,25 +9,25 @@ export const TABS = [
     {
         key: 1,
         localized: 'Thành công',
-        status: WITHDRAW_DEPOSIT_ORDER_STATUS.SUCCESS,
+        status: PartnerOrderStatus.SUCCESS,
         type: TYPES.SUCCESS
     },
     {
         key: 2,
         localized: 'Đang xử lý',
-        status: WITHDRAW_DEPOSIT_ORDER_STATUS.PENDING,
+        status: PartnerOrderStatus.PENDING,
         type: TYPES.WARNING
     },
     {
         key: 3,
         localized: 'Đã từ chối',
-        status: WITHDRAW_DEPOSIT_ORDER_STATUS.REJECTED,
+        status: PartnerOrderStatus.REJECTED,
         type: TYPES.FAILED
     },
     {
         key: 4,
         localized: 'Đang tranh chấp',
-        status: WITHDRAW_DEPOSIT_ORDER_STATUS.DISPUTED,
+        status: PartnerOrderStatus.DISPUTED,
         type: TYPES.FAILED
     }
 ];

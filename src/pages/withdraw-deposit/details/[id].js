@@ -2,55 +2,23 @@ import React, { useState, useMemo, useRef } from 'react';
 // import OrderDetailComponent from 'components/screens/Mobile/Futures/OrderDetail';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
-import { API_ORDER_DETAIL, API_GET_ORDER_DETAILS } from 'redux/actions/apis';
+import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import fetchApi from 'utils/fetch-api';
 import { useEffect } from 'react';
-import { VndcFutureOrderType } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import LayoutMobile from 'components/common/layouts/LayoutMobile';
 import { UserSocketEvent, ApiStatus, DepWdlStatus } from 'redux/actions/const';
-import { getOrdersList } from 'redux/actions/futures';
-import OrderDetailLoading from 'components/screens/Mobile/Futures/OrderDetailLoading';
-import dynamic from 'next/dynamic';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import { useTranslation } from 'next-i18next';
-import styled from 'styled-components';
 import CountdownTimer from 'components/common/CountdownTimer';
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import StatusWithdraw from 'src/components/wallet/StatusWithdraw';
-import TagV2 from 'components/common/V2/TagV2';
 import InfoCard from 'components/screens/WithdrawDeposit/components/common/InfoCard';
 import { Clock } from 'react-feather';
 import { BxsInfoCircle, FutureSupportIcon, QrCodeScannIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import Axios from 'axios';
-import Image from 'next/image';
 import ModalQr from 'components/screens/WithdrawDeposit/components/ModalQr';
-
+import OrderStatusTag from 'components/common/OrderStatusTag';
 import { shortHashAddress, getAssetCode, formatTime, formatNumber, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
-
-const OrderDetailComponent = dynamic(() => import('components/screens/Mobile/Futures/OrderDetail'), { loading: () => <OrderDetailLoading /> });
-
-const getStatusOrder = (status, t) =>
-    ({
-        [DepWdlStatus.Success]: (
-            <TagV2 icon={true} className="ml-auto" type="success">
-                {t('common:success')}
-            </TagV2>
-        ),
-        [DepWdlStatus.Pending]: (
-            <TagV2 icon={true} className="ml-auto" type="warning">
-                {t('common:pending')}
-            </TagV2>
-        ),
-        [DepWdlStatus.Declined]: (
-            <TagV2 icon={true} className="ml-auto" type="failed">
-                {t('common:declined')}
-            </TagV2>
-        )
-    }[status]);
 
 const OrderDetail = ({ id }) => {
     const { t } = useTranslation();
@@ -151,7 +119,7 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => (
                                 asset: getAssetCode(orderDetail?.baseAssetId)
                             })}
                         </h2>
-                        {getStatusOrder(orderDetail?.status, t)}
+                        <OrderStatusTag status={orderDetail?.status} />
                     </div>
                     <div>
                         <span className="txtSecond-2">So luong</span>

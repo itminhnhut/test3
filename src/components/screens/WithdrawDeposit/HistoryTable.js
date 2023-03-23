@@ -2,7 +2,6 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
-import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { shortHashAddress, getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
 import Axios from 'axios';
@@ -11,6 +10,7 @@ import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
+import OrderStatusTag from 'components/common/OrderStatusTag';
 
 const LIMIT_ROW = 10;
 
@@ -68,7 +68,7 @@ const getColumns = (t, user) => [
         render: (v) => (
             <div className="">
                 <div className="txtPri-2 mb-1">{v?.name}</div>
-                <div className="txtSecond-3">{v?.userId}</div>
+                <div className="txtSecond-3">{v?.code}</div>
             </div>
         )
     },
@@ -94,16 +94,7 @@ const getColumns = (t, user) => [
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 182,
-        render: (v) => {
-            const statusContent = TABS.find((tab) => tab?.status === v);
-            return (
-                <div className="flex justify-end items-center">
-                    <TagV2 icon={false} type={statusContent?.type}>
-                        {statusContent?.localized}
-                    </TagV2>
-                </div>
-            );
-        }
+        render: (v) => <OrderStatusTag status={v} />
     }
 ];
 

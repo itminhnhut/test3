@@ -761,6 +761,24 @@ const QrCodeScannIcon = ({ size = 16, color = '#47CC85' }) => (
     </svg>
 );
 
+const CancelCircleFillIcon = ({ size = 16, color = '#F93636' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M8 1.332a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.667 8a6.674 6.674 0 0 0-6.666-6.667zm2.805 8.529-.942.942L8 8.941l-1.862 1.862-.943-.942 1.862-1.862-1.862-1.862.943-.943L8 7.056l1.862-1.862.942.943-1.862 1.862 1.862 1.862z"
+            fill={color}
+        />
+    </svg>
+);
+
+const BxsErrorAltIcon = ({ size = 16, color = '#F93636' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M11.139 1.527a.664.664 0 0 0-.472-.195H5.334a.664.664 0 0 0-.471.195L1.529 4.861a.664.664 0 0 0-.195.471v5.333c0 .178.07.347.195.472l3.334 3.333a.664.664 0 0 0 .471.195h5.333c.178 0 .347-.07.472-.195l3.333-3.333a.664.664 0 0 0 .195-.472V5.332a.664.664 0 0 0-.195-.471l-3.333-3.334zm-2.472 9.805H7.334V9.999h1.333v1.333zm0-2.667H7.334v-4h1.333v4z"
+            fill={color}
+        />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -812,5 +830,7 @@ export {
     BxsErrorIcon,
     CancelIcon,
     FutureSupportIcon,
-    QrCodeScannIcon
+    QrCodeScannIcon,
+    CancelCircleFillIcon,
+    BxsErrorAltIcon
 };
