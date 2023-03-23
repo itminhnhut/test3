@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setInput, setLoadingPartner } from 'redux/actions/withdrawDeposit';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
 import { switchAsset } from 'redux/actions/withdrawDeposit';
-import { formatPrice } from 'redux/actions/utils';
+import { formatPrice, formatBalance } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
@@ -18,6 +18,7 @@ import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { PATHS } from 'src/constants/paths';
 import { useDebounce } from 'react-use';
+
 
 const CardInput = () => {
     const { input, assetId, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
@@ -166,7 +167,7 @@ const CardInput = () => {
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số tiền cần chuyển</div>
-                    <div className="txtPri-1">{formatPrice(input * rate)} VNDC</div>
+                    <div className="txtPri-1">{formatBalance(input * rate, 0)} VNDC</div>
                 </div>
             </div>
             <ButtonV2

@@ -37,28 +37,30 @@ const DropdownCard = ({
             open={isVisible && show}
             containerClassname={{ [containerClassname]: isVisible }}
             label={
-                <button
-                    disabled={disabled || loading}
-                    onClick={() => {
-                        setVisible((prev) => !prev);
-                        setShow((prev) => !prev);
-                    }}
-                    className="bg-gray-12 disabled:cursor-default cursor-pointer text-left dark:bg-dark-2 px-4 py-6 rounded-xl w-full"
-                >
+                <div className="bg-gray-12  dark:bg-dark-2 px-4 py-6 rounded-xl w-full">
                     <div className="txtSecond-2 mb-4"> {label}</div>
-                    <InfoCard
-                        loading={loading}
-                        content={selected.content}
-                        imgSize={imgSize}
-                        endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
-                    />
-                </button>
+                    <button
+                        disabled={disabled || loading}
+                        className="w-full disabled:cursor-default cursor-pointer text-left"
+                        onClick={() => {
+                            setVisible((prev) => !prev);
+                            setShow((prev) => !prev);
+                        }}
+                    >
+                        <InfoCard
+                            loading={loading}
+                            content={selected.content}
+                            imgSize={imgSize}
+                            endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
+                        />
+                    </button>
+                </div>
             }
             value={search}
             onChange={(value) => setSearch(value)}
         >
             {loadingList ? (
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center min-h-[200px]">
                     <Spinner size={60} color="currentColor" />
                 </div>
             ) : !data || !data.length ? (

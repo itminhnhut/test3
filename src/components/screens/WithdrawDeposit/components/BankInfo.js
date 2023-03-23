@@ -25,7 +25,7 @@ const BankInfo = ({ showTooltip = true, loadingBanks, loading, banks, containerC
                         </Tooltip>
                     )}
 
-                    <div data-tip="" className="inline-flex" data-for="payment-method-description" id="payment-method-description">
+                    <div data-tip="" className="inline-flex !cursor-default" data-for="payment-method-description" id="payment-method-description">
                         <div className={classNames({ 'nami-underline-dotted': showTooltip })}>Phương thức thanh toán</div>
                     </div>
                 </>
