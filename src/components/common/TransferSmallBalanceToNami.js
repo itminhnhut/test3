@@ -230,8 +230,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 </div>
             </button>
             <ModalV2
-                // isVisible={isShowPoppup}
-                isVisible={true}
+                isVisible={isShowPoppup}
                 onBackdropCb={() => setIsShowPoppup(false)}
                 className="!w-auto"
                 wrapClassName="!py-[14px] px-0 m-auto w-[488px] h-[680px] rounded-xl !border border-divider dark:border-divider-dark"
