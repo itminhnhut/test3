@@ -1,7 +1,7 @@
 import { IconLoading } from 'src/components/common/Icons';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState,useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import { getRecentTrade } from 'src/redux/actions/market';
@@ -9,7 +9,7 @@ import { formatNumber, formatTime, getSymbolString, getDecimalPrice, getDecimalQ
 
 let temp = [];
 const Trades = (props) => {
-    const { publicSocket, symbol, layoutConfig, isPro } = props;
+    const { publicSocket, symbol, layoutConfig, isPro, decimals } = props;
     const router = useRouter();
     const [recentTrade, setRecentTrade] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -68,11 +68,6 @@ const Trades = (props) => {
             }
         };
     }, [publicSocket, MAX_LENGTH, symbol]);
-
-    const decimals = useMemo(() => {
-        const config = exchangeConfig.find((rs) => rs.symbol === `${symbol.base}${symbol.quote}`);
-        return { price: getDecimalPrice(config), qty: getDecimalQty(config) };
-    }, [exchangeConfig, symbol]);
 
     return (
         <div className={`p-4 ${isPro ? '' : 'pr-6'} bg-bgSpotContainer dark:bg-bgSpotContainer-dark row-span-1 h-[95%] overflow-hidden`} ref={ref}>

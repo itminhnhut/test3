@@ -290,10 +290,8 @@ export function formatNumberToText(value = 0) {
 export function formatNumber(value, digits = 2, forceDigits = 0, acceptNegative = false) {
     value = exponentialToDecimal(value);
     const defaultValue = `0${forceDigits > 0 ? `.${'0'.repeat(forceDigits)}` : ''}`;
-    if (value <= 1e-6) return formatNumber2(value, digits);
-    if (isNil(value)) return defaultValue;
-    if (Math.abs(+value) <= 1e-6) return defaultValue;
-    if (!acceptNegative && +value < 0) return defaultValue;
+    if (isNil(value) || (!acceptNegative && +value < 0)) return defaultValue;
+    if (Math.abs(+value) <= 1e-6) return formatNumber2(value, forceDigits || digits);
     return numeral(+value).format(`0,0.${'0'.repeat(forceDigits)}${digits > 0 ? `[${'0'.repeat(digits)}]` : ''}`, Math.floor);
 }
 

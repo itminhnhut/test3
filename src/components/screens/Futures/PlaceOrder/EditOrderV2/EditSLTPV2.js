@@ -73,7 +73,7 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
         if (order_value && margin) leverage = order_value / margin;
         const openPrice = status === VndcFutureOrderType.Status.PENDING ? price : open_price;
         const tpsl = key === 'sl' ? getSuggestSl(side, openPrice, leverage, index / 100) : getSuggestTp(side, openPrice, leverage, index / 100);
-        return +tpsl.toFixed(decimals.symbol);
+        return +tpsl.toFixed(decimals.price);
     };
 
     const onHandleChange = (key, e) => {
@@ -330,10 +330,10 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     // Modify bound base on type
                     if (sl < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.symbol, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
                     } else if (sl > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.symbol, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
                     }
                 } else if (type === 'take_profit') {
                     bound = order?.side === FuturesOrderEnum.Side.BUY ? upperBound : lowerBound;
@@ -341,10 +341,10 @@ const EditSLTPV2 = ({ isVisible, onClose, order, status, lastPrice, decimals, on
                     max = bound.max;
                     if (tp < bound.min) {
                         isValid = false;
-                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.symbol, 0, true)}`;
+                        msg = `${t('futures:minimum_price')} ${formatNumber(bound.min, decimals.price, 0, true)}`;
                     } else if (tp > bound.max) {
                         isValid = false;
-                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.symbol, 0, true)}`;
+                        msg = `${t('futures:maximum_price')} ${formatNumber(bound.max, decimals.price, 0, true)}`;
                     }
                 }
                 if (isText) {

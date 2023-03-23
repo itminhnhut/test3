@@ -24,7 +24,7 @@ import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, parentState, isPro } = props;
+    const { symbol, layoutConfig, parentState, isPro, decimals } = props;
     const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
     const { base, quote } = props.symbol;
     const dispatch = useDispatch();
@@ -163,11 +163,6 @@ const OrderBook = (props) => {
     const maxBid = maxBy(bids, (o) => {
         return o[1];
     });
-
-    const decimals = useMemo(() => {
-        const config = exchangeConfig.find((rs) => rs.symbol === `${symbol.base}${symbol.quote}`);
-        return { price: getDecimalPrice(config), qty: getDecimalQty(config) };
-    }, [exchangeConfig, symbol]);
 
     const renderOrderRow = (order, index, side) => {
         const [p, q] = order;
