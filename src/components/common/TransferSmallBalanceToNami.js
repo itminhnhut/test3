@@ -73,15 +73,16 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                         });
                     }
                 });
+                console.log('__here: ', _listAsset.length);
                 setListAsset(_listAsset);
             }
         }
     }, [namiRate, allAssets]);
 
     useEffect(() => {
-        if (allAssets && isEmpty(listCheck)) {
+        if (listAsset && isEmpty(listCheck)) {
             const parseArray = _.reduce(
-                allAssets,
+                listAsset,
                 (acc, { id, wallet }) => {
                     if (id === 1) return acc;
                     return {
@@ -94,7 +95,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
 
             setListCheck(parseArray);
         }
-    }, [allAssets]);
+    }, [listAsset]);
 
     const handleCheckAll = () => {
         if (!namiRate || listAsset.length === 0) return;
@@ -125,7 +126,6 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
             listAsset.reduce((sum, item) => (listChecked.includes(item?.id + '') ? sum + parseFloat(item?.namiValue) : sum), 0),
             8
         );
-        console.log('totalGet: ', totalGet);
 
         totalGet = parseFloat(parseFloat(totalGet).toFixed(8));
         return totalGet;
@@ -211,7 +211,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
         } else {
             const e = find(Error, { code });
             const msg = e ? t(`error:${e?.message}`) : t('error:COMMON_ERROR');
-            setState({ resultErr: `(${code}) ${msg}` });
+            setState({ resultErr: code ? `(${code}) ${msg}` : `${msg}` });
             setSwapTimer(null);
         }
     };
@@ -230,7 +230,8 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                 </div>
             </button>
             <ModalV2
-                isVisible={isShowPoppup}
+                // isVisible={isShowPoppup}
+                isVisible={true}
                 onBackdropCb={() => setIsShowPoppup(false)}
                 className="!w-auto"
                 wrapClassName="!py-[14px] px-0 m-auto w-[488px] h-[680px] rounded-xl !border border-divider dark:border-divider-dark"
@@ -410,9 +411,6 @@ const ModalSuccess = ({ isVisible, onBackdropCb, t }) => {
     );
 };
 
-const ModalError = ({ t, errMsg, onClose, isVisible }) => {
-    return <AlertModalV2 isVisible={!!isVisible} onClose={onClose} type="error" title={t('common:convert_fail')} message={errMsg} />;
-};
 export default TransferSmallBalanceToNami;
 
 const NoDataLightIcon = () => (
