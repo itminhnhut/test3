@@ -9,7 +9,7 @@ import { Clock } from 'react-feather';
 import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
 
-const PartnerInfo = ({ debounceQuantity, assetId, side, loadingPartner, selectedPartner }) => {
+const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
     const [isVisible, setVisible] = useState(false);
@@ -17,16 +17,16 @@ const PartnerInfo = ({ debounceQuantity, assetId, side, loadingPartner, selected
 
     useEffect(() => {
         setRefetch(true);
-    }, [debounceQuantity]);
+    }, [quantity]);
 
     const {
         data: partners,
         loading: loadingPartners,
         error
     } = useFetchApi(
-        { url: API_GET_PARTNERS, params: { quantity: !debounceQuantity ? 0 : debounceQuantity, assetId, side }, successCallBack: () => setRefetch(false) },
+        { url: API_GET_PARTNERS, params: { quantity: !quantity ? 0 : quantity, assetId, side }, successCallBack: () => setRefetch(false) },
         isVisible && refetch,
-        [debounceQuantity, assetId, side, isVisible, refetch]
+        [quantity, assetId, side, isVisible, refetch]
     );
 
     return (

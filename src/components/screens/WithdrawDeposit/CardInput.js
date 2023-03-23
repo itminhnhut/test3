@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import TradingInput from 'components/trade/TradingInput';
 import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, openModal, setInput } from 'redux/actions/withdrawDeposit';
+import { closeModal, openModal, setInput, setLoadingPartner } from 'redux/actions/withdrawDeposit';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
 import { switchAsset } from 'redux/actions/withdrawDeposit';
 import { formatPrice } from 'redux/actions/utils';
@@ -19,10 +19,25 @@ import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { PATHS } from 'src/constants/paths';
 import { ORDER_TYPES } from './components/OrderModal';
+import { useDebounce } from 'react-use';
 const CardInput = () => {
-    const { input, assetId, partner, partnerBank, accountBank } = useSelector((state) => state.withdrawDeposit);
+    const { input, assetId, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
     const [loadingConfirm, setLoadingConfirm] = useState(false);
+
+    const [amount, setAmount] = useState('');
+
+    useEffect(() => {
+        dispatch(setLoadingPartner(true));
+    }, [amount]);
+
+    useDebounce(
+        () => {
+            dispatch(setInput(amount));
+        },
+        500,
+        [amount]
+    );
 
     const dispatch = useDispatch();
     const router = useRouter();
@@ -45,34 +60,21 @@ const CardInput = () => {
             const { min, max } = orderConfig;
             if (input > max) {
                 isValid = false;
-                msg = `Amount must not be greater than ${max}`;
+                msg = `Amount must not be greater than ${formatPrice(max, 0)}`;
             }
             if (input < min) {
                 isValid = false;
-                msg = `Amount must not be smaller than ${min}`;
+                msg = `Amount must not be smaller than ${formatPrice(min, 0)}`;
             }
         }
 
         return { isValid, msg, isError: !isValid };
     };
 
-    const renderingMinMaxPartner = useCallback(
-        (price) => {
-            return !partner ? (
-                <Skeletor width={100} />
-            ) : (
-                <div>
-                    {formatPrice(price, 0)} <span>{assetId === 72 ? 'VNDC' : 'USDT'}</span>
-                </div>
-            );
-        },
-        [assetId, partner]
-    );
-
     const onMakeOrderHandler = async () => {
         try {
             setLoadingConfirm(true);
-            dispatch(openModal({ loading: true }));
+            // dispatch(openModal({ loading: true }));
             const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
@@ -89,7 +91,6 @@ const CardInput = () => {
             console.log('error:', error);
         } finally {
             setLoadingConfirm(false);
-            dispatch(closeModal());
         }
     };
 
@@ -102,12 +103,12 @@ const CardInput = () => {
                     </label>
                     <TradingInput
                         id="HAHA"
-                        value={input}
+                        value={amount}
                         allowNegative={false}
                         thousandSeparator={true}
                         containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
                         inputClassName="!text-left !ml-0"
-                        onValueChange={({ value }) => dispatch(setInput(value))}
+                        onValueChange={({ value }) => setAmount(value)}
                         validator={validator()}
                         errorTooltip={false}
                         allowedDecimalSeparators={[',', '.']}
@@ -118,7 +119,7 @@ const CardInput = () => {
                                 <ButtonV2
                                     variants="text"
                                     disabled={+input === availableAsset}
-                                    onClick={() => dispatch(setInput(availableAsset))}
+                                    onClick={() => setAmount(availableAsset)}
                                     className="uppercase font-semibold text-teal !h-10"
                                 >
                                     Max
@@ -141,7 +142,7 @@ const CardInput = () => {
                 </div>
             </div>
 
-            <RecommendAmount />
+            <RecommendAmount setAmount={setAmount} amount={amount} />
             <div className="space-y-2 mb-10">
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Giá quy đổi</div>
@@ -153,11 +154,17 @@ const CardInput = () => {
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số lượng nạp tối thiểu</div>
-                    <div className="txtPri-1">{renderingMinMaxPartner(orderConfig?.min)}</div>
+                    <div className="txtPri-1 flex items-center">
+                        {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.min, 0)}{' '}
+                        <span className="ml-1">{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                    </div>
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số lượng nạp tối đa</div>
-                    <div className="txtPri-1">{renderingMinMaxPartner(orderConfig?.max)}</div>
+                    <div className="txtPri-1 flex items-center">
+                        {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.max, 0)}{' '}
+                        <span className="ml-1">{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                    </div>
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Số tiền cần chuyển</div>
@@ -165,11 +172,9 @@ const CardInput = () => {
                 </div>
             </div>
             <ButtonV2
-                loading={loadingConfirm}
-                onClick={() => {
-                    dispatch(openModal({ type: ORDER_TYPES.CONFIRM, confirmFunction: onMakeOrderHandler }));
-                }}
-                disabled={!partner}
+                loading={loadingConfirm || loadingPartner}
+                onClick={onMakeOrderHandler}
+                disabled={!partner || loadingPartner}
                 className="disabled:cursor-default"
             >
                 Xác nhận

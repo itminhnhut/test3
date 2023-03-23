@@ -14,6 +14,7 @@ export const initialState = {
     accountBank: null,
     partnerBank: null,
     partner: null,
+    loadingPartner: false,
     modal: {
         isVisible: false,
         type: null,
@@ -29,6 +30,10 @@ export default (state = initialState, action) => {
             return { ...state, input: action.payload };
         case types.SET_ASSET_ID:
             return { ...state, assetId: action.payload };
+
+        case types.SET_LOADING_PARTNER:
+            return { ...state, loadingPartner: action.payload };
+
         case types.SET_MODAL_STATE:
             const newModalState = action.payload;
             return {
