@@ -1,6 +1,13 @@
 import * as types from './types';
 import { SIDE, initialState } from '../reducers/withdrawDeposit';
-import { API_CREATE_ORDER, API_GET_DEFAULT_PARTNER, API_GET_PARTNERS, API_SET_USER_BANK_ACCOUNT } from './apis';
+import {
+    API_CREATE_ORDER,
+    API_GET_DEFAULT_PARTNER,
+    API_GET_PARTNERS,
+    API_MARK_PARTNER_ORDER,
+    API_REJECT_PARTNER_ORDER,
+    API_SET_USER_BANK_ACCOUNT
+} from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
 import Axios from 'axios';
@@ -76,6 +83,25 @@ export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quanti
 export const setAccountDefaultBank = async ({ bankAccountId }) => {
     const res = await Axios.post(API_SET_USER_BANK_ACCOUNT, {
         bankAccountId
+    });
+
+    return res.data;
+};
+
+export const markOrder = async ({ displayingId, mode = 'user', userStatus }) => {
+    const res = await Axios.post(API_MARK_PARTNER_ORDER, {
+        displayingId,
+        userStatus,
+        mode
+    });
+
+    return res.data;
+};
+
+export const rejectOrder = async ({ displayingId, mode = 'user' }) => {
+    const res = await Axios.post(API_REJECT_PARTNER_ORDER, {
+        displayingId,
+        mode
     });
 
     return res.data;

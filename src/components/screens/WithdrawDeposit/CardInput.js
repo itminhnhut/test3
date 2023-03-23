@@ -121,7 +121,7 @@ const CardInput = () => {
                                     variants="text"
                                     disabled={+input === availableAsset}
                                     onClick={() => setAmount(availableAsset)}
-                                    className="uppercase font-semibold text-teal !h-10"
+                                    className="uppercase font-semibold text-teal !h-10 "
                                 >
                                     Max
                                 </ButtonV2>
@@ -131,8 +131,8 @@ const CardInput = () => {
                 </div>
                 <div className="w-24 p-1">
                     <ButtonV2
-                        className="!text-dominant"
-                        variants="secondary"
+                        className="!text-dominant bg-gray-12 dark:bg-dark-2 hover:opacity-80"
+                        variants="text"
                         onClick={() => {
                             dispatch(switchAsset(assetId));
                         }}
