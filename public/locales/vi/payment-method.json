@@ -5,5 +5,7 @@
     "bank_name": "Tài khoản ngân hàng",
     "confirm": "Xác nhận",
     "transaction_details": "Chi tiết giao dịch",
-    "depsit_from_partners": "Nạp {{asset}} qua ĐTKD"
+    "depsit_from_partners": "Nạp {{asset}} qua ĐTKD",
+    "sell": "bán",
+    "buy": "nạp"
 }

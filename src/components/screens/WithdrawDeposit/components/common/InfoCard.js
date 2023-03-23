@@ -5,10 +5,13 @@ import { DefaultAvatar } from 'src/redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { BxsUserIcon } from 'components/svg/SvgIcon';
 
-const CardContent = ({ image, mainContent, subContent }) => {
+const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
         <div className="flex items-center space-x-3 ">
-            {image}
+            <div style={{ minWidth: imgSize, minHeight: imgSize }}>
+                {image ?? <Image src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
+            </div>
+
             <div className="">
                 <div className="txtPri-1 mb-2 text-left line-clamp-2">{mainContent}</div>
                 <div className="txtSecond-3">{subContent}</div>
@@ -43,11 +46,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) 
                 />
             ) : (
                 <>
-                    <CardContent
-                        image={<Image src={DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
-                        mainContent={content.mainContent}
-                        subContent={content.subContent}
-                    />
+                    <CardContent imgSize={imgSize} mainContent={content.mainContent} subContent={content.subContent} />
                     {endIcon}
                 </>
             )}

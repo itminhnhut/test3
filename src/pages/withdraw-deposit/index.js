@@ -20,7 +20,7 @@ export default index;
 export const getServerSideProps = async (context) => {
     return {
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet']))
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet','payment-method']))
         }
     };
 };

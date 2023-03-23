@@ -291,12 +291,14 @@ export const API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert
 export const API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE = API_V3_PREFIX + 'convert/nami_confirm_order';
 
 // withdraw-deposit Partner
-export const API_GET_PARTNERS = API_V3_PREFIX + 'spot/partner';
-export const API_GET_DEFAULT_PARTNER = API_V3_PREFIX + 'spot/default_partner';
+export const API_GET_PARTNERS = API_V3_PREFIX + 'dw_partner/partner';
+export const API_GET_DEFAULT_PARTNER = API_V3_PREFIX + 'dw_partner/default_partner';
 export const API_GET_PARTNER_BANKS = API_V3_PREFIX + 'payment/partner_bank_accounts';
-export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'spot/partner_order';
-export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'spot/partner_order_price';
-export const API_CREATE_ORDER = API_V3_PREFIX + 'spot/partner_order';
+export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'dw_partner/partner_order';
+export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'dw_partner/partner_order_price';
+export const API_CREATE_ORDER = API_V3_PREFIX + 'dw_partner/partner_order';
 export const API_GET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
 export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
-export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'spot/partner_order_detail';
+export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'dw_partner/partner_order_detail';
+export const API_MARK_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/mark_partner_order';
+export const API_REJECT_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/reject_partner_order';

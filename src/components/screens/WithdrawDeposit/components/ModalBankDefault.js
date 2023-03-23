@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
 import TagV2 from 'components/common/V2/TagV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -11,11 +11,21 @@ import { X } from 'react-feather';
 import { setAccountDefaultBank } from 'redux/actions/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
+import { filterSearch } from 'redux/actions/utils';
+import NoData from 'components/common/V2/TableV2/NoData';
 
 const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch }) => {
     const [search, setSearch] = useState('');
-    const [bankAccountId, setBankAccountId] = useState('');
+    const [bankAccountId, setBankAccountId] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [filter, setFilter] = useState([]);
+
+    useEffect(() => {
+        if (banks && banks.length) {
+            setFilter(filterSearch(banks, ['bankName', 'bankKey'], search));
+        }
+    }, [search, banks]);
 
     const onSetBankHandler = async () => {
         try {
@@ -52,9 +62,10 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch 
             </div>
 
             <div className="max-h-[300px] px-4 space-y-3 overflow-y-auto">
-                {banks &&
-                    banks.length &&
-                    banks.map((bank) => (
+                {!filter.length ? (
+                    <NoData isSearch />
+                ) : (
+                    filter.map((bank) => (
                         <button
                             onClick={() => setBankAccountId(bank._id)}
                             key={bank._id}
@@ -88,13 +99,14 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch 
                                 imgSize={40}
                             />
                         </button>
-                    ))}
+                    ))
+                )}
             </div>
             <div className="px-8 mt-10">
                 <ButtonV2
                     className="disabled:!cursor-default"
                     onClick={onSetBankHandler}
-                    disabled={banks && bankAccountId === banks.find((bank) => bank.isDefault)._id}
+                    disabled={!filter.length || !bankAccountId || (filter.length && bankAccountId === filter.find((bank) => bank.isDefault)?._id)}
                     loading={loading}
                 >
                     Đặt làm mặc định
