@@ -876,13 +876,24 @@ export const rateCurrency = {
 
 export const DefaultAvatar = 'https://nami-dev.sgp1.digitaloceanspaces.com/nami.exchange/images/preset_avatar/2/Len_cung_trang_11.png';
 
-export const WITHDRAW_DEPOSIT_ORDER_STATUS = {
+export const GET_PARTNER_STATUS = {
+    INVALID_AMOUNT: 'INVALID_AMOUNT'
+};
+
+export const PartnerOrderStatus = {
     PENDING: 0,
     SUCCESS: 1,
     REJECTED: 2,
     DISPUTED: 3
 };
 
-export const GET_PARTNER_STATUS = {
-    INVALID_AMOUNT:'INVALID_AMOUNT',
+export const PartnerPersonStatus = {
+    PENDING: 0,
+    TRANSFERRED: 1,
+    DISPUTED: 2
+};
+
+export const PartnerReasonDisputed = {
+    TIME_OUT: 1,
+    USER_DISPUTED: 2
 };
