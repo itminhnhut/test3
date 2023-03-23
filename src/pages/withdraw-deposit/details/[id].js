@@ -87,97 +87,7 @@ const OrderDetail = ({ id }) => {
         <MaldivesLayout>
             <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
-                    <div className="flex gap-x-6 w-full items-stretch">
-                        {/* Chi tiết giao dịch */}
-                        <div className="flex flex-col flex-auto min-h-full">
-                            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
-                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
-                                <div>
-                                    <div className="flex justify-between items-start">
-                                        <h2 className="font-semibold">
-                                            {t('payment-method:depsit_from_partners', {
-                                                asset: getAssetCode(orderDetail?.baseAssetId)
-                                            })}
-                                        </h2>
-                                        {getStatusOrder(orderDetail?.status, t)}
-                                    </div>
-                                    <div>
-                                        <span className="txtSecond-2">So luong</span>
-                                        <div className="mt-3 text-2xl font-semibold">
-                                            {side === 'BUY' ? '+' : '-'}
-                                            {formatNumber(orderDetail?.baseQty)} VNDC
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex items-end mt-14 gap-x-6">
-                                    <div className="flex flex-col gap-y-3">
-                                        <span className="txtSecond-2">{t('common:transaction_id')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
-                                    </div>
-                                    <div className="flex flex-col gap-y-3">
-                                        <span className="txtSecond-2">{t('common:time')}</span>
-                                        <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
-                                    </div>
-                                    <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
-
-                                    {/* <div className="flex flex-col gap-y-3">
-                                        <span className="txtSecond-2">{t('common:status')}</span>
-                                        {getStatusOrder(orderDetail?.status, t)}
-                                    </div> */}
-                                </div>
-                            </div>
-                        </div>
-                        {/* Thông tin chuyển khoản */}
-                        <div className="flex flex-col flex-auto min-h-full">
-                            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
-                            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
-                                <div className="flex justify-between items-start">
-                                    <InfoCard
-                                        content={{
-                                            mainContent: orderDetail?.partnerMetadata?.name,
-                                            subContent: (
-                                                <div className="flex items-center space-x-3">
-                                                    <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
-                                                    <div className="flex space-x-1 items-center">
-                                                        <Clock size={12} />
-                                                        <span>1 Phút</span>
-                                                    </div>
-                                                </div>
-                                            ),
-                                            imgSrc: orderDetail?.partnerMetadata?.avatar
-                                        }}
-                                    />
-                                    <ButtonV2 onClick={() => setOnShowQr((prev) => !prev)} className="flex items-center gap-x-2 w-auto" variants="text">
-                                        <QrCodeScannIcon />
-                                        QR Code
-                                    </ButtonV2>
-                                </div>
-                                <div className="flex flex-col mt-6 gap-y-4">
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
-                                        <span>{orderDetail?.transferMetadata?.note}</span>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">{t('wallet:bank_name')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.bankName} />
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">{t('wallet:account_number')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">Người thụ hưởng</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <span className="txtSecond-2">{t('common:amount')}</span>
-                                        <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(orderDetail?.baseQty)} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <GroupInforCard t={t} orderDetail={orderDetail} side={side} />
                     {/* Lưu ý */}
                     {side === 'BUY' && (
                         <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
@@ -223,6 +133,99 @@ const OrderDetail = ({ id }) => {
         </MaldivesLayout>
     );
 };
+
+const GroupInforCard = ({ t, orderDetail, side }) => (
+    <div className="flex gap-x-6 w-full items-stretch">
+        {/* Chi tiết giao dịch */}
+        <div className="flex flex-col flex-auto min-h-full">
+            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
+            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
+                <div>
+                    <div className="flex justify-between items-start">
+                        <h2 className="font-semibold">
+                            {t('payment-method:depsit_from_partners', {
+                                asset: getAssetCode(orderDetail?.baseAssetId)
+                            })}
+                        </h2>
+                        {getStatusOrder(orderDetail?.status, t)}
+                    </div>
+                    <div>
+                        <span className="txtSecond-2">So luong</span>
+                        <div className="mt-3 text-2xl font-semibold">
+                            {side === 'BUY' ? '+' : '-'}
+                            {formatNumber(orderDetail?.baseQty)} VNDC
+                        </div>
+                    </div>
+                </div>
+                <div className="flex items-end mt-14 gap-x-6">
+                    <div className="flex flex-col gap-y-3">
+                        <span className="txtSecond-2">{t('common:transaction_id')}</span>
+                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                        <span className="txtSecond-2">{t('common:time')}</span>
+                        <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
+                    </div>
+                    <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
+
+                    {/* <div className="flex flex-col gap-y-3">
+                    <span className="txtSecond-2">{t('common:status')}</span>
+                    {getStatusOrder(orderDetail?.status, t)}
+                </div> */}
+                </div>
+            </div>
+        </div>
+        {/* Thông tin chuyển khoản */}
+        <div className="flex flex-col flex-auto min-h-full">
+            <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
+            <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
+                <div className="flex justify-between items-start">
+                    <InfoCard
+                        content={{
+                            mainContent: orderDetail?.partnerMetadata?.name,
+                            subContent: (
+                                <div className="flex items-center space-x-3">
+                                    <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
+                                    <div className="flex space-x-1 items-center">
+                                        <Clock size={12} />
+                                        <span>1 Phút</span>
+                                    </div>
+                                </div>
+                            ),
+                            imgSrc: orderDetail?.partnerMetadata?.avatar
+                        }}
+                    />
+                    <ButtonV2 onClick={() => setOnShowQr((prev) => !prev)} className="flex items-center gap-x-2 w-auto" variants="text">
+                        <QrCodeScannIcon />
+                        QR Code
+                    </ButtonV2>
+                </div>
+                <div className="flex flex-col mt-6 gap-y-4">
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
+                        <span>{orderDetail?.transferMetadata?.note}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-2">{t('wallet:bank_name')}</span>
+                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.bankName} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-2">{t('wallet:account_number')}</span>
+                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-2">Người thụ hưởng</span>
+                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-2">{t('common:amount')}</span>
+                        <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(orderDetail?.baseQty)} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+);
 
 export const getServerSideProps = async ({ locale, params }) => {
     return {

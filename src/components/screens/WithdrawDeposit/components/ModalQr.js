@@ -65,9 +65,9 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount }) => 
                 className="h-[180px] w-full flex justify-center items-center mb-10 rounded-xl"
             >
                 <div ref={content} className="h-[120px] w-[120px] bg-white rounded-md flex items-center justify-center overflow-hidden">
-                    <Image
-                        // src="https://img.vietqr.io/image/970432-146283551_-qr_only.png?amount=1000000&addInfo=CK"
-                        src={getImageQrUrl({ ...bank, amount })}
+                    <img
+                        src="https://img.vietqr.io/image/970432-146283551_-qr_only.png?amount=1000000&addInfo=CK"
+                        // src={getImageQrUrl({ ...bank, amount })}
                         width={108}
                         height={108}
                     />
