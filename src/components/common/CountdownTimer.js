@@ -27,8 +27,8 @@ const getColor = (percent, isDark) => {
 };
 
 const CountdownTimer = ({ size = 80, timeExpire = '2023-03-21T08:32:25.171Z', isDark = true }) => {
-    const [timeLeft, setTimeLeft] = useState(15 * 60); // set initial time in seconds
-    const totalTime = 15 * 60; // set total time in seconds
+    const [timeLeft, setTimeLeft] = useState(1 * 60); // set initial time in seconds
+    const totalTime = 1 * 60; // set total time in seconds
     const radius = 40; // set radius in pixels
     const strokeWidth = 3; // set stroke width in pixels
 

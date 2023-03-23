@@ -58,6 +58,7 @@ const OrderDetail = ({ id }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const [orderDetail, setOrderDetail] = useState(null);
+    const [status, setStatus] = useState({});
     const [onShowQr, setOnShowQr] = useState(false);
     const side = orderDetail?.side;
 
@@ -71,9 +72,11 @@ const OrderDetail = ({ id }) => {
                         displayingId: id + ''
                     }
                 });
+                console.log('data: ', data);
 
                 if (data) {
                     setOrderDetail(data);
+                    setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
                 }
             }
         };
@@ -83,11 +86,12 @@ const OrderDetail = ({ id }) => {
     const onOpenChat = () => {
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
+
     return (
         <MaldivesLayout>
             <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
-                    <GroupInforCard t={t} orderDetail={orderDetail} side={side} />
+                    <GroupInforCard t={t} orderDetail={orderDetail} side={side} setOnShowQr={setOnShowQr} status={status} />
                     {/* Lưu ý */}
                     {side === 'BUY' && (
                         <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
@@ -134,7 +138,7 @@ const OrderDetail = ({ id }) => {
     );
 };
 
-const GroupInforCard = ({ t, orderDetail, side }) => (
+const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => (
     <div className="flex gap-x-6 w-full items-stretch">
         {/* Chi tiết giao dịch */}
         <div className="flex flex-col flex-auto min-h-full">
@@ -157,14 +161,16 @@ const GroupInforCard = ({ t, orderDetail, side }) => (
                         </div>
                     </div>
                 </div>
-                <div className="flex items-end mt-14 gap-x-6">
-                    <div className="flex flex-col gap-y-3">
-                        <span className="txtSecond-2">{t('common:transaction_id')}</span>
-                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
-                    </div>
-                    <div className="flex flex-col gap-y-3">
-                        <span className="txtSecond-2">{t('common:time')}</span>
-                        <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
+                <div className="flex items-end mt-14 gap-x-6 justify-between">
+                    <div className="flex items-end gap-x-6">
+                        <div className="flex flex-col gap-y-3">
+                            <span className="txtSecond-2">{t('common:transaction_id')}</span>
+                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
+                        </div>
+                        <div className="flex flex-col gap-y-3">
+                            <span className="txtSecond-2">{t('common:time')}</span>
+                            <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
+                        </div>
                     </div>
                     <div>{orderDetail?.status === DepWdlStatus.Pending && <CountdownTimer />}</div>
 
