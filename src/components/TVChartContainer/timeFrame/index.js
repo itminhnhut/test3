@@ -103,15 +103,15 @@ export default class TimeFrame extends Component {
         this.updateTimeFrame(initTimeFrame);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { initTimeFrame } = this.props;
-        if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
-            this.updateTimeFrame(this.props.initTimeFrame);
-        }
-        if (prevProps?.symbol !== this.props.symbol) {
-            this.setState({ selectedTime: '60' });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     const { initTimeFrame } = this.props;
+    //     if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
+    //         this.updateTimeFrame(this.props.initTimeFrame);
+    //     }
+    //     if (prevProps?.symbol !== this.props.symbol) {
+    //         this.setState({ selectedTime: '60' });
+    //     }
+    // }
 
     updateTimeFrame = (initTimeFrame) => {
         const { chartType, handleActiveTime } = this.props;

@@ -415,7 +415,7 @@ export class TVChartContainer extends React.PureComponent {
             symbol,
             theme: this.props.theme === 'dark' ? 'Dark' : 'Light',
             datafeed,
-            interval: this.props.interval,
+            interval: interval || this.props.interval,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
             locale: 'en',
