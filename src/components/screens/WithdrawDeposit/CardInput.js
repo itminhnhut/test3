@@ -119,7 +119,7 @@ const CardInput = () => {
                                 <ButtonV2
                                     variants="text"
                                     disabled={+input === availableAsset}
-                                    onClick={() => dispatch(setInput(availableAsset))}
+                                    onClick={() => setAmount(availableAsset)}
                                     className="uppercase font-semibold text-teal !h-10"
                                 >
                                     Max

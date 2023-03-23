@@ -79,6 +79,7 @@ const CardPartner = () => {
                             containerClassname="z-[42]"
                             banks={accountBanks}
                             loading={loadingAccountBanks}
+                            showTooltip={false}
                         />
                     )}
 

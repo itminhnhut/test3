@@ -73,6 +73,7 @@ const DropdownCard = ({
                                     if (onSelect) {
                                         onSelect(item);
                                         setVisible(false);
+                                        setShow(false);
                                     }
                                 }}
                                 disabled={selected?.id === item?._id}
