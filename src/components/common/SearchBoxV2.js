@@ -19,7 +19,7 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
                 }
                 value={value}
                 onChange={(e) => {
-                    onChange(e?.target?.value?.trim());
+                    onChange(e?.target?.value?.trimStart());
                 }}
                 placeholder={placeholder || t('common:search')}
                 onFocus={onFocus}

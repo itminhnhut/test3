@@ -1184,3 +1184,30 @@ export const getOffsetEl = (el) => {
     clone.remove();
     return { w: width, h: height };
 };
+
+const diacriticsMap = [
+    { base: 'a', letters: /[\u00E0-\u00E5]/g },
+    { base: 'd', letters: /[\u010F\u0111]/g },
+    { base: 'e', letters: /[\u00E8-\u00EB]/g },
+    { base: 'i', letters: /[\u00EC-\u00EF]/g },
+    { base: 'n', letters: /[\u00F1\u0148]/g },
+    { base: 'o', letters: /[\u00F2-\u00F6]/g },
+    { base: 'o', letters: /[\u0153]/g },
+    { base: 'u', letters: /[\u00F9-\u00FC]/g },
+    { base: 'y', letters: /[\u00FD\u00FF]/g },
+    { base: '-', letters: /[\u0020\u00A0\u2000-\u200B\u202F]/g }
+];
+
+function removeDiacritics(str) {
+    for (let i = 0; i < diacriticsMap.length; i++) {
+        str = str.replace(diacriticsMap[i].letters, diacriticsMap[i].base);
+    }
+    return str;
+}
+
+export const parseUnormStr = (input) => {
+    return removeDiacritics(input)
+        .replace(/[^a-zA-Z]/g, ' ')
+        .trim()
+        .toLowerCase();
+};

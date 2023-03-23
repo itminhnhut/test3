@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import { getS3Url } from 'redux/actions/utils';
+import { parseUnormStr } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import NoData from 'components/common/V2/TableV2/NoData';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import { API_DEFAULT_BANK_USER, API_GET_USER_BANK_LIST } from 'redux/actions/apis';
 import { ApiStatus } from 'redux/actions/const';
@@ -51,7 +52,20 @@ const index = () => {
             }
         })
             .then(({ status, data }) => {
-                if (status === ApiStatus.SUCCESS) data ? setListUserBank(data) : setListUserBank([]);
+                if (status === ApiStatus.SUCCESS)
+                    data
+                        ? setListUserBank(
+                              data.sort((a, b) => {
+                                  if (a.isDefault && !b.isDefault) {
+                                      return -1; // a should come before b
+                                  }
+                                  if (!a.isDefault && b.isDefault) {
+                                      return 1; // a should come after b
+                                  }
+                                  return 0; // order doesn't matter
+                              })
+                          )
+                        : setListUserBank([]);
             })
             .finally(() => setLoadingListUserBank(false));
     };
@@ -63,7 +77,7 @@ const index = () => {
         if (listUserBank?.length > 0)
             setDataTable(
                 listUserBank.filter(
-                    (item) => item.bankKey.toLowerCase().includes(search.toLowerCase()) || item.bankName.toLowerCase().includes(search.toLowerCase())
+                    (item) => parseUnormStr(item.bankName).includes(parseUnormStr(search)) || item.accountNumber.toLowerCase().includes(search.toLowerCase())
                 )
             );
         setCurrentPage(1);
@@ -140,6 +154,10 @@ const index = () => {
             <div className="mt-12 flex flex-col gap-y-6">
                 {loadingListUserBank ? (
                     <TableSkeletor />
+                ) : dataTable.length === 0 ? (
+                    <div className="flex items-center justify-center py-[72px]">
+                        <NoData isSearch={!!search} />
+                    </div>
                 ) : (
                     dataTable.map((bankAccount, index) => {
                         // 5 * 2 =10
@@ -155,9 +173,9 @@ const index = () => {
                                     <div>
                                         <div>{bankAccount?.bankName}</div>
                                         <div className="mt-2 flex items-center gap-x-3">
-                                            <span className="txtSecond-3">{bankAccount?.accountNumber}</span>
+                                            <span className="txtSecond-2">{bankAccount?.accountNumber}</span>
                                             {bankAccount?.isDefault && (
-                                                <TagV2 className="whitespace-nowrap" type="success">
+                                                <TagV2 className="whitespace-nowrap text-xs font-normal" type="success" icon={false}>
                                                     {t('reference:referral.default')}
                                                 </TagV2>
                                             )}
@@ -184,6 +202,7 @@ const index = () => {
                     <RePagination
                         total={dataTable?.length}
                         isNamiV2
+                        onusMode={false}
                         current={currentPage}
                         pageSize={LIMIT_ROW}
                         name="market_table___list"

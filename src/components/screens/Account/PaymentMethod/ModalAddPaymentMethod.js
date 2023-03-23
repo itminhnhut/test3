@@ -129,7 +129,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
             <div className="txtPri-3 px-8">{t('payment-method:payment_method_add')}</div>
 
             {/* Notice */}
-            <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-8 mb-10 gap-x-4">
+            <div className="p-4 bg-gray-13 dark:bg-dark-4 flex items-center mt-6 mb-8 gap-x-4">
                 <BxsInfoCircle size={24} color={isDark ? colors.gray[7] : colors.gray[1]} />
                 <div className="text-xs leading-[16px]">{t('payment-method:privacy')}</div>
             </div>
