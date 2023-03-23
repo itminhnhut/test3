@@ -3,8 +3,9 @@ import Header from './components/common/Header';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
-
+import OtpModal from 'components/common/OtpModal';
 import useLocationSide from './useLocationSide';
+import ModalOtp from './components/ModalOtp';
 
 const WithdrawDeposit = () => {
     useLocationSide();
