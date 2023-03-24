@@ -16,7 +16,7 @@ const Header = () => {
                 onClick={() => {
                     router.push(PATHS.WALLET.EXCHANGE.DEPOSIT);
                 }}
-                className="max-w-[162px] !capitalize"
+                className="max-w-[162px] capitalize"
             >
                 {t(`payment-method:${query?.side?.toLowerCase()}`)} crypto
             </ButtonV2>

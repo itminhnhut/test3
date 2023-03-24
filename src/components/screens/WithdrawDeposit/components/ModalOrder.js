@@ -59,10 +59,16 @@ export const ORDER_TYPES = {
             `Khiếu nại sẽ chuyển trạng thái của lệnh #${displayingId} sang trạng thái Đang tranh chấp, người dùng bắt buộc phải cung cấp các bằng chứng liên quan đến giao dịch như hình ảnh, tin nhắn,... `,
         showConfirm: true
     },
+    ERROR_MAXIMUM_LIMIT: {
+        icon: ICONS['CANCEL'],
+        title: 'Không thể thực hiện',
+        description: ({ side, token }) => `Bạn đã đạt giới hạn ${side} ${token} trong ngày. Vui lòng thử lại vào ngày mai, xin cảm ơn.`,
+        showConfirm: false
+    },
     ERROR: {
         icon: ICONS['CANCEL'],
         title: 'Không thể thực hiện',
-        description: (errorMsg) => errorMsg || `Bạn đã đạt giới hạn rút VNDC trong ngày. Vui lòng thử lại vào ngày mai, xin cảm ơn.`,
+        description: ({ errMsg }) => errMsg,
         showConfirm: false
     }
 };

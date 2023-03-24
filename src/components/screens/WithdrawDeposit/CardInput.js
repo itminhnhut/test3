@@ -4,7 +4,6 @@ import Card from './components/common/Card';
 import { useDispatch, useSelector } from 'react-redux';
 import { setInput, setLoadingPartner } from 'redux/actions/withdrawDeposit';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
-import { switchAsset } from 'redux/actions/withdrawDeposit';
 import { formatPrice, formatBalance } from 'redux/actions/utils';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
@@ -13,7 +12,7 @@ import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import { createNewOrder } from 'redux/actions/withdrawDeposit';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { ALLOWED_ASSET, SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { PATHS } from 'constants/paths';
@@ -45,12 +44,12 @@ const CardInput = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { side, assetId } = router.query;
-    const assetCode = getAssetCode(+assetId);
+    const assetCode = ALLOWED_ASSET[+assetId];
 
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
 
     const availableAsset = useMemo(
-        () => wallets?.[assetId]?.value - wallets?.[assetId]?.locked_value,
+        () => wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value,
 
         [wallets, assetId]
     );
@@ -143,12 +142,11 @@ const CardInput = () => {
                             router.push(
                                 {
                                     pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
-                                    query: { assetId: +assetId === 72 ? 22 : 72, side }
+                                    query: { side, assetId: +assetId === 72 ? 22 : 72 }
                                 }
                                 // undefined,
                                 // { shallow: true }
                             );
-                            // dispatch(switchAsset(assetId));
                         }}
                     >
                         <span className="uppercase">{assetCode}</span>

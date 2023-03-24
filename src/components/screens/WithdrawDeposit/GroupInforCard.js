@@ -1,13 +1,14 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { shortHashAddress, getAssetCode, formatTime, formatNumber, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
+import { formatTime, formatNumber, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
 import { Clock } from 'react-feather';
 import { QrCodeScannIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
+import { ALLOWED_ASSET } from 'redux/reducers/withdrawDeposit';
 
 const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
     return (
@@ -20,7 +21,7 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                         <div className="flex justify-between items-start">
                             <h2 className="font-semibold">
                                 {t('payment-method:depsit_from_partners', {
-                                    asset: getAssetCode(orderDetail?.baseAssetId)
+                                    asset: ALLOWED_ASSET[orderDetail?.baseAssetId]
                                 })}
                             </h2>
                             <OrderStatusTag status={orderDetail?.status} />

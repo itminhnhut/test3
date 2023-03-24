@@ -18,12 +18,6 @@ export const setInput = (value) => {
     };
 };
 
-export const switchAsset = (currentAssetId) => {
-    return (dispatch) => {
-        dispatch({ type: types.SET_ASSET_ID, payload: currentAssetId === 72 ? 22 : 72 });
-    };
-};
-
 export const setPartnerBank = (bank) => {
     return (dispatch) => {
         dispatch({ type: types.SET_PARTNER_BANK, payload: bank });

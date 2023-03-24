@@ -8,9 +8,18 @@ export const SIDE = {
     SELL: 'SELL'
 };
 
+export const ALLOWED_ASSET = {
+    72: 'VNDC',
+    22: 'USDT'
+};
+
+export const ALLOWED_ASSET_ID = {
+    VNDC: 72,
+    USDT: 22
+};
+
 export const initialState = {
     input: '',
-    assetId: 72,
     accountBank: null,
     partnerBank: null,
     partner: null,
@@ -21,8 +30,6 @@ export default (state = initialState, action) => {
     switch (action.type) {
         case types.SET_WITHDRAW_DEPOSIT_AMOUNT:
             return { ...state, input: action.payload };
-        case types.SET_ASSET_ID:
-            return { ...state, assetId: action.payload };
 
         case types.SET_LOADING_PARTNER:
             return { ...state, loadingPartner: action.payload };
