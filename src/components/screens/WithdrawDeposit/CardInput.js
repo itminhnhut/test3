@@ -19,7 +19,6 @@ import { PATHS } from 'constants/paths';
 import { useDebounce } from 'react-use';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
-import { getAssetCode } from 'redux/actions/utils';
 
 const CardInput = () => {
     const { input, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
@@ -143,9 +142,9 @@ const CardInput = () => {
                                 {
                                     pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
                                     query: { side, assetId: +assetId === 72 ? 22 : 72 }
-                                }
-                                // undefined,
-                                // { shallow: true }
+                                },
+                                undefined,
+                                { shallow: true }
                             );
                         }}
                     >
