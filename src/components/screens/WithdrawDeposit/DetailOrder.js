@@ -53,7 +53,7 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const assetCode = ALLOWED_ASSET[+assetId];
+    const assetCode = ALLOWED_ASSET[+orderDetail?.baseAsset];
 
     useEffect(() => {
         if (userSocket) {
@@ -96,6 +96,7 @@ const DetailOrder = ({ id }) => {
     }, [id]);
 
     const onOpenChat = () => {
+        if (window?.fcWidget?.isOpen()) return;
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
 
