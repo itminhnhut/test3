@@ -45,6 +45,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount }) => 
     return (
         <ModalV2
             isVisible={isVisible}
+            // isVisible={true}
             wrapClassName=""
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
@@ -66,8 +67,8 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount }) => 
             >
                 <div ref={content} className="h-[120px] w-[120px] bg-white rounded-md flex items-center justify-center overflow-hidden">
                     <img
-                        src="https://img.vietqr.io/image/970432-146283551_-qr_only.png?amount=1000000&addInfo=CK"
-                        // src={getImageQrUrl({ ...bank, amount })}
+                        // src="https://img.vietqr.io/image/ACB-227041949-qr_only.png?amount=10000000&addInfo=Noi dung chuyen khoan"
+                        src={getImageQrUrl({ ...bank, amount })}
                         width={108}
                         height={108}
                     />

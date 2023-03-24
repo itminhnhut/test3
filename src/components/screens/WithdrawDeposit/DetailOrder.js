@@ -25,6 +25,7 @@ const MODAL_KEY = {
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
 const ModalOrder = dynamic(() => import('./components/ModalOrder'));
+const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
 
 const DetailOrder = ({ id }) => {
     const { t } = useTranslation();
@@ -34,7 +35,6 @@ const DetailOrder = ({ id }) => {
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const [orderDetail, setOrderDetail] = useState(null);
-    console.log('orderDetail:', orderDetail);
     const [status, setStatus] = useState({});
     const [onShowQr, setOnShowQr] = useState(false);
     const side = orderDetail?.side;
@@ -235,6 +235,23 @@ const DetailOrder = ({ id }) => {
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
+            {/* {orderDetail && ( */}
+            <ModalQr
+                isVisible={onShowQr}
+                onClose={() => setOnShowQr(false)}
+                qrCodeUrl={'awegawge'}
+                bank={orderDetail?.transferMetadata}
+                amount={orderDetail?.baseQty}
+            />
+            {/* )} */}
+            <ModalUploadImage isVisible={false} />
+            <ModalOrder
+                isVisible={modalProps.visible}
+                type={modalProps.type}
+                loading={modalProps.loading}
+                onClose={() => setStateModal({ visible: false })}
+                onConfirm={modalProps.onConfirm}
+            />
         </div>
     );
 };
