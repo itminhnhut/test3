@@ -15,10 +15,10 @@ const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: fal
 const BankInfo = dynamic(() => import('./components/BankInfo'), { ssr: false });
 
 const CardPartner = () => {
-    const { partner, partnerBank, accountBank, assetId, input, loadingPartner } = useSelector((state) => state.withdrawDeposit);
+    const { partner, partnerBank, accountBank, input, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
     const router = useRouter();
-    const side = useMemo(() => router.query?.side, [router]);
+    const { side, assetId } = router.query;
     const [visibleModalBank, setVisibleModalBank] = useState(false);
     const [refetchAccBanks, setRefetchAccBanks] = useState(false);
 

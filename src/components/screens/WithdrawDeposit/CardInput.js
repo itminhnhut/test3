@@ -20,9 +20,10 @@ import { PATHS } from 'constants/paths';
 import { useDebounce } from 'react-use';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
+import { getAssetCode } from 'redux/actions/utils';
 
 const CardInput = () => {
-    const { input, assetId, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
+    const { input, partner, partnerBank, accountBank, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
     const [loadingConfirm, setLoadingConfirm] = useState(false);
     const { t } = useTranslation();
@@ -43,7 +44,8 @@ const CardInput = () => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const side = router?.query?.side;
+    const { side, assetId } = router.query;
+    const assetCode = getAssetCode(+assetId);
 
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
 
@@ -52,7 +54,11 @@ const CardInput = () => {
 
         [wallets, assetId]
     );
-    const { data: rate, loading: loadingRate, error } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side), [side, assetId]);
+    const {
+        data: rate,
+        loading: loadingRate,
+        error
+    } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     const validator = () => {
         let isValid = true,
@@ -85,7 +91,7 @@ const CardInput = () => {
             });
 
             if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
-                toast({ text: `Bạn đã đặt thành công lệnh mua ${assetId === 72 ? 'VNDC' : 'USDT'} #${orderResponse.data.displayingId} `, type: 'success' });
+                toast({ text: `Bạn đã đặt thành công lệnh mua ${assetCode} #${orderResponse.data.displayingId} `, type: 'success' });
                 router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + orderResponse.data.displayingId);
             }
         } catch (error) {
@@ -137,15 +143,15 @@ const CardInput = () => {
                             router.push(
                                 {
                                     pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
-                                    query: { assetId: assetId === 72 ? 22 : 72, side }
-                                },
+                                    query: { assetId: +assetId === 72 ? 22 : 72, side }
+                                }
                                 // undefined,
                                 // { shallow: true }
                             );
                             // dispatch(switchAsset(assetId));
                         }}
                     >
-                        <span>{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                        <span className="uppercase">{assetCode}</span>
                         <SyncAltIcon className="rotate-90" size={16} />
                     </ButtonV2>
                 </div>
@@ -156,7 +162,7 @@ const CardInput = () => {
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2">Giá quy đổi</div>
                     <div className="txtPri-1 flex items-center space-x-1">
-                        <span>1 {assetId === 72 ? 'VNDC' : 'USDT'} =</span>
+                        <span>1 {assetCode} =</span>
                         <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatPrice(rate)}</span>
                         <span>VND</span>
                     </div>
@@ -165,14 +171,14 @@ const CardInput = () => {
                     <div className="txtSecond-2">Số lượng {t(`payment-method:${side?.toLowerCase()}`)} tối thiểu</div>
                     <div className="txtPri-1 flex items-center">
                         {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.min, 0)}{' '}
-                        <span className="ml-1">{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                        <span className="ml-1">{assetCode}</span>
                     </div>
                 </div>
                 <div className="flex items-center justify-between ">
                     <div className="txtSecond-2"> Giới hạn trong ngày</div>
                     <div className="txtPri-1 flex items-center">
                         {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(partner?.partnerMetadata?.maintainVolume, 0)}{' '}
-                        <span className="ml-1">{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                        <span className="ml-1">{assetCode}</span>
                     </div>
                 </div>
 
@@ -180,7 +186,7 @@ const CardInput = () => {
                     <div className="txtSecond-2">Số lượng {t(`payment-method:${side?.toLowerCase()}`)} tối đa</div>
                     <div className="txtPri-1 flex items-center">
                         {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.max, 0)}{' '}
-                        <span className="ml-1">{assetId === 72 ? 'VNDC' : 'USDT'}</span>
+                        <span className="ml-1">{assetCode}</span>
                     </div>
                 </div>
                 <div className="flex items-center justify-between ">

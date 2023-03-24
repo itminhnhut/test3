@@ -8,7 +8,7 @@ import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import { formatBalance, getAssetName } from 'redux/actions/utils';
+import { formatBalance, getAssetCode } from 'redux/actions/utils';
 
 import { ORDER_TYPES } from './components/ModalOrder';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
@@ -52,7 +52,7 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const assetName = getAssetName(orderDetail?.baseAssetId);
+    const assetCode = getAssetCode(orderDetail?.baseAssetId);
 
     useEffect(() => {
         if (userSocket) {
@@ -121,7 +121,7 @@ const DetailOrder = ({ id }) => {
                         : {
                               displayingId: id,
                               amount: formatBalance(orderDetail?.baseQty, 0),
-                              token: assetName
+                              token: assetCode
                           }
                 });
             } else {
@@ -156,7 +156,7 @@ const DetailOrder = ({ id }) => {
                 break;
             case PartnerPersonStatus.DISPUTED:
                 type = ORDER_TYPES.CANCEL_ORDER;
-                additionalData = { token: assetName, side: t(`payment-method:${side.toLowerCase()}`) };
+                additionalData = { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
                 break;
             default:
                 break;
