@@ -13,6 +13,8 @@ import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
+const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
+
 const DetailOrder = ({ id }) => {
     const { t } = useTranslation();
     const user = useSelector((state) => state.auth.user) || null;
@@ -142,15 +144,16 @@ const DetailOrder = ({ id }) => {
                     </div>
                 </div>
             </div>
-            {orderDetail && (
-                <ModalQr
-                    isVisible={onShowQr}
-                    onClose={() => setOnShowQr(false)}
-                    qrCodeUrl={'awegawge'}
-                    bank={orderDetail?.transferMetadata}
-                    amount={orderDetail?.baseQty}
-                />
-            )}
+            {/* {orderDetail && ( */}
+            <ModalQr
+                isVisible={onShowQr}
+                onClose={() => setOnShowQr(false)}
+                qrCodeUrl={'awegawge'}
+                bank={orderDetail?.transferMetadata}
+                amount={orderDetail?.baseQty}
+            />
+            {/* )} */}
+            <ModalUploadImage isVisible={false} />
             <ModalOrder
                 isVisible={modalProps.visible}
                 type={modalProps.type}
