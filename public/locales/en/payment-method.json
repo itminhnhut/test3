@@ -7,5 +7,7 @@
     "transaction_details": "Transaction details",
     "depsit_from_partners": "Deposit {{asset}} through partner",
     "sell": "sell",
-    "buy": "buy"
+    "buy": "buy",
+    "buy_title": "Deposit through partner",
+    "sell_title": "Withdraw through partner"
 }

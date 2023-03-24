@@ -7,5 +7,7 @@
     "transaction_details": "Chi tiết giao dịch",
     "depsit_from_partners": "Nạp {{asset}} qua ĐTKD",
     "sell": "bán",
-    "buy": "nạp"
+    "buy": "nạp",
+    "buy_title": "Nạp qua ĐTKD",
+    "sell_title": "Bán qua ĐTKD"
 }

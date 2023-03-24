@@ -3,18 +3,6 @@ import colors from 'styles/colors';
 import { formatTime } from 'redux/actions/utils';
 import classNames from 'classnames';
 
-const testTime = () => {
-    let now = new Date();
-
-    // Add 15 minutes to the current time
-    let fifteenMinutesFromNow = new Date(now.getTime() + 15 * 60000);
-
-    // Get the timestamp for 15 minutes from now
-    let timestamp = fifteenMinutesFromNow.getTime();
-
-    return timestamp;
-};
-
 const getColor = (percent) => {
     if (percent > 1 / 2) return 'text-green-3 dark:text-green-2';
     else if (percent > 1 / 4) return 'text-yellow-2';
@@ -29,10 +17,10 @@ const TOTAL_TIME = 5 * 60; // set total time in seconds
 
 export const timeLeftFromExpireTime = (expireTime) => new Date(expireTime).getTime() - Date.now();
 
-const CountdownTimer = ({ size = 80, totalTime = TOTAL_TIME, radius = RADIUS, strokeWidth = STROKE_WIDTH, timeExpire = '2023-03-21T08:32:25.171Z' }) => {
+const CountdownTimer = ({ size = 80, totalTime = TOTAL_TIME, radius = RADIUS, strokeWidth = STROKE_WIDTH, timeExpire = '2023-03-23T10:03:25.171Z' }) => {
     const [timeLeft, setTimeLeft] = useState(() => {
         const timeExpireInSecond = timeLeftFromExpireTime(timeExpire) / 1000;
-        return timeExpireInSecond < 0 ? 0 : timeExpireInSecond;
+        return timeExpireInSecond <= 0 ? 0 : timeExpireInSecond;
     }); // set initial time in seconds
     const timeLeftRef = useRef(null);
     timeLeftRef.current = timeLeft;
@@ -40,8 +28,8 @@ const CountdownTimer = ({ size = 80, totalTime = TOTAL_TIME, radius = RADIUS, st
     // start the timer and update the time left every second
     useEffect(() => {
         const intervalId = setInterval(function () {
-            setTimeLeft((timeLeft) => timeLeft - 1);
-            if (timeLeftRef.current <= 0) clearInterval(intervalId);
+            setTimeLeft((prevTimeLeft) => (prevTimeLeft <= 1 ? 0 : prevTimeLeft - 1));
+            if (timeLeftRef.current === 0) clearInterval(intervalId);
         }, 1000);
 
         // cleanup function to clear the interval when the component unmounts
@@ -55,23 +43,25 @@ const CountdownTimer = ({ size = 80, totalTime = TOTAL_TIME, radius = RADIUS, st
     const strokeDashoffset = useMemo(() => circumference - (timeLeft / totalTime) * circumference, [circumference, timeLeft, totalTime]);
 
     return (
-        <div style={{ width: radius * 2, height: radius * 2 }} className={classNames('relative', getColor(timeLeft / totalTime))}>
-            <div className={classNames('rounded-full border-[3px] border-divider dark:border-divider-dark h-full w-full flex items-center justify-center')}>
-                <span className="text-lg leading-[28px] font-semibold">{formatTime(timeLeft * 1000, 'mm:ss')}</span>
+        timeLeft > 0 && (
+            <div style={{ width: radius * 2, height: radius * 2 }} className={classNames('relative', getColor(timeLeft / totalTime))}>
+                <div className={classNames('rounded-full border-[3px] border-divider dark:border-divider-dark h-full w-full flex items-center justify-center')}>
+                    <span className="text-lg leading-[28px] font-semibold">{formatTime(timeLeft * 1000, 'mm:ss')}</span>
+                </div>
+                <svg className={classNames('absolute z-20 top-0 left-0 transform -rotate-90')} width={radius * 2} height={radius * 2}>
+                    <circle
+                        className="stroke-current transition-all"
+                        cx={radius}
+                        cy={radius}
+                        r={radius - strokeWidth / 2}
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={circumference}
+                        strokeDashoffset={strokeDashoffset}
+                        fill="transparent"
+                    />
+                </svg>
             </div>
-            <svg className={classNames('absolute z-20 top-0 left-0 transform -rotate-90')} width={radius * 2} height={radius * 2}>
-                <circle
-                    className="stroke-current transition-all"
-                    cx={radius}
-                    cy={radius}
-                    r={radius - strokeWidth / 2}
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    fill="transparent"
-                />
-            </svg>
-        </div>
+        )
     );
 };
 

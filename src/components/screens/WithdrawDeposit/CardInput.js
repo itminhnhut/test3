@@ -16,7 +16,7 @@ import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
-import { PATHS } from 'src/constants/paths';
+import { PATHS } from 'constants/paths';
 import { useDebounce } from 'react-use';
 import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
@@ -134,7 +134,15 @@ const CardInput = () => {
                         className="!text-dominant bg-gray-12 dark:bg-dark-2 hover:opacity-80"
                         variants="text"
                         onClick={() => {
-                            dispatch(switchAsset(assetId));
+                            router.push(
+                                {
+                                    pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
+                                    query: { assetId: assetId === 72 ? 22 : 72, side }
+                                },
+                                // undefined,
+                                // { shallow: true }
+                            );
+                            // dispatch(switchAsset(assetId));
                         }}
                     >
                         <span>{assetId === 72 ? 'VNDC' : 'USDT'}</span>

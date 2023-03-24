@@ -7,49 +7,91 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus } from 'redux/actions/const';
-import ModalOrder, { ORDER_TYPES } from './components/ModalOrder';
+import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { formatBalance, getAssetName } from 'redux/actions/utils';
+
+import { ORDER_TYPES } from './components/ModalOrder';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
+
+const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
+    return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
+};
+
+const MODAL_KEY = {
+    CONFIRM: 'confirm',
+    AFTER_CONFIRM: 'afterConfirm'
+};
 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
+const ModalOrder = dynamic(() => import('./components/ModalOrder'));
+
 const DetailOrder = ({ id }) => {
     const { t } = useTranslation();
-    const user = useSelector((state) => state.auth.user) || null;
+    // const user = useSelector((state) => state.auth.user) || null;
+    const userSocket = useSelector((state) => state.socket.userSocket);
+
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
     const [orderDetail, setOrderDetail] = useState(null);
+    console.log('orderDetail:', orderDetail);
     const [status, setStatus] = useState({});
     const [onShowQr, setOnShowQr] = useState(false);
-    const side = useMemo(() => orderDetail?.side, [orderDetail]);
+    const side = orderDetail?.side;
     const [modalProps, setModalProps] = useState({
-        type: null,
-        visible: false,
-        loading: false,
-        onConfirm: null,
-        additionalData: null
+        [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
 
-    const setStateModal = (_state) => setModalProps((prev) => ({ ...prev, ..._state }));
+    const setModalPropsWithKey = (key, props) =>
+        setModalProps((prev) => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                ...props
+            }
+        }));
+
+    const assetName = getAssetName(orderDetail?.baseAssetId);
 
     useEffect(() => {
-        const fetchData = async () => {
-            if (id) {
-                const { status, data } = await fetchApi({
-                    url: API_GET_ORDER_DETAILS,
-                    options: { method: 'GET' },
-                    params: {
-                        displayingId: id + ''
-                    }
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                setOrderDetail(data);
+                setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
+            });
+        }
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
                 });
+            }
+        };
+    }, [userSocket]);
 
-                if (data && status === ApiStatus.SUCCESS) {
-                    setOrderDetail(data);
-                    setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
+    useEffect(() => {
+        const fetchData = async (id) => {
+            if (id) {
+                try {
+                    const { status, data } = await fetchApi({
+                        url: API_GET_ORDER_DETAILS,
+                        options: { method: 'GET' },
+                        params: {
+                            displayingId: id + ''
+                        }
+                    });
+
+                    if (data && status === ApiStatus.SUCCESS) {
+                        setOrderDetail(data);
+                        setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
+                    }
+                } catch (error) {
+                    console.log('error:', error);
                 }
             }
         };
-        fetchData();
+        fetchData(id);
     }, [id]);
 
     const onOpenChat = () => {
@@ -57,20 +99,52 @@ const DetailOrder = ({ id }) => {
     };
 
     const onMarkOrderHandler = (userStatus) => async () => {
+        const isRejected = userStatus === PartnerPersonStatus.DISPUTED;
         try {
-            setStateModal({ loading: true });
-            const data =
-                userStatus === PartnerPersonStatus.DISPUTED ? await rejectOrder({ displayingId: id }) : await markOrder({ displayingId: id, userStatus });
+            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                loading: true
+            });
+            const data = isRejected ? await rejectOrder({ displayingId: id }) : await markOrder({ displayingId: id, userStatus });
             if (data && data.status === ApiStatus.SUCCESS) {
-                setStateModal({ loading: false, type: ORDER_TYPES.SUCCESS });
-                setOrderDetail(data?.data);
-                setStatus((prev) => ({ status: data?.data?.status, partnerStatus: data?.data?.partnerStatus, userStatus: data?.data?.userStatus }));
+                // close confirm modal
+                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                    loading: false,
+                    visible: false
+                });
+
+                // open after confirm modal
+                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+                    visible: true,
+                    type: isRejected ? ORDER_TYPES.CANCEL_SUCCESS : ORDER_TYPES.BUY_SUCCESS,
+                    additionalData: isRejected
+                        ? id
+                        : {
+                              displayingId: id,
+                              amount: formatBalance(orderDetail?.baseQty, 0),
+                              token: assetName
+                          }
+                });
             } else {
-                setStateModal({ loading: false, type: ORDER_TYPES.ERROR, additionalData: data?.status });
+                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                    loading: false,
+                    visible: false
+                });
+                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+                    visible: true,
+                    type: ORDER_TYPES.ERROR,
+                    additionalData: data?.status
+                });
             }
         } catch (error) {
-            setStateModal({ loading: false, type: ORDER_TYPES.ERROR });
-        } finally {
+            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                loading: false,
+                visible: false
+            });
+            setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+                visible: true,
+                type: ORDER_TYPES.ERROR,
+                additionalData: error
+            });
         }
     };
 
@@ -78,16 +152,21 @@ const DetailOrder = ({ id }) => {
         let type, additionalData;
         switch (userStatus) {
             case PartnerPersonStatus.TRANSFERRED:
-                type = ORDER_TYPES.CONFIRM;
+                type = ORDER_TYPES.CONFIRM_TRANSFERRED;
                 break;
             case PartnerPersonStatus.DISPUTED:
                 type = ORDER_TYPES.CANCEL_ORDER;
-                additionalData = orderDetail?.baseAssetId === 72 ? 'VNDC' : 'USDT';
+                additionalData = { token: assetName, side: t(`payment-method:${side.toLowerCase()}`) };
                 break;
             default:
                 break;
         }
-        setStateModal({ visible: true, type, additionalData, onConfirm: onMarkOrderHandler(userStatus) });
+        setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+            visible: true,
+            type,
+            additionalData,
+            onConfirm: onMarkOrderHandler(userStatus)
+        });
     };
 
     const renderButton = useCallback(
@@ -104,7 +183,7 @@ const DetailOrder = ({ id }) => {
             ) : (
                 status?.userStatus === PartnerPersonStatus.TRANSFERRED && <ButtonV2 className="!whitespace-nowrap min-w-[268px]">Tải ảnh lên</ButtonV2>
             ),
-        [status, onMarkWithStatus]
+        [status]
     );
 
     return (
@@ -151,13 +230,11 @@ const DetailOrder = ({ id }) => {
                     amount={orderDetail?.baseQty}
                 />
             )}
-            <ModalOrder
-                isVisible={modalProps.visible}
-                type={modalProps.type}
-                loading={modalProps.loading}
-                onClose={() => setStateModal({ visible: false })}
-                onConfirm={modalProps.onConfirm}
-            />
+            {/*Modal confirm the order */}
+            <ModalConfirm modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
+
+            {/*Modal After confirm (success, error,...) */}
+            <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
         </div>
     );
 };

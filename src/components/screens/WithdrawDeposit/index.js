@@ -4,11 +4,9 @@ import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
 import OtpModal from 'components/common/OtpModal';
-import useLocationSide from './useLocationSide';
 import ModalOtp from './components/ModalOtp';
 
 const WithdrawDeposit = () => {
-    useLocationSide();
     return (
         <div className="max-w-screen-v3 mx-auto px-4 md:px-0 2xl:max-w-screen-xxl my-20">
             <Header />

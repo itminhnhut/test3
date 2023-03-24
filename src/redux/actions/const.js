@@ -827,7 +827,8 @@ export const UserSocketEvent = {
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
-    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error'
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
 };
 
 export const EarnOrder_Status = {

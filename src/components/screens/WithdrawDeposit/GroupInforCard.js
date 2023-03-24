@@ -44,11 +44,7 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                                 <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
                             </div>
                         </div>
-                        <div>
-                            {(status?.status === PartnerOrderStatus.PENDING) && (
-                                <CountdownTimer timeExpire={orderDetail?.timeExpire} />
-                            )}
-                        </div>
+                        <div>{status?.status === PartnerOrderStatus.PENDING && <CountdownTimer timeExpire={orderDetail?.timeExpire} />}</div>
 
                         {/* <div className="flex flex-col gap-y-3">
                         <span className="txtSecond-2">{t('common:status')}</span>
@@ -85,7 +81,7 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                     <div className="flex flex-col mt-6 gap-y-4">
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
-                            <span>{orderDetail?.transferMetadata?.note}</span>
+                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.note} />
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('wallet:bank_name')}</span>

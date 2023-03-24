@@ -1210,3 +1210,4 @@ export const saveFile = (file, name) => {
     window.URL.revokeObjectURL(url);
 };
 
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);

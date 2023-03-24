@@ -1,22 +1,24 @@
 import React from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { useRouter } from 'next/router';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { PATHS } from 'constants/paths';
+import { useTranslation } from 'next-i18next';
+import { getAssetName } from 'redux/actions/utils';
 const Header = () => {
     const router = useRouter();
-    const side = router?.query?.side;
-    const isSideBuy = side === SIDE.BUY;
+    const query = router?.query;
+    const { t } = useTranslation();
     return (
         <div className="t-common-v2 flex justify-between mb-12">
-            <span>{isSideBuy ? 'Nạp' : 'Rút'} qua DTKD</span>
+            <span>{t(`payment-method:${query?.side?.toLowerCase()}_title`)}</span>
 
             <ButtonV2
                 onClick={() => {
-                    router.push(`?side=${isSideBuy ? 'SELL' : 'BUY'}`);
+                    router.push(PATHS.WALLET.EXCHANGE.DEPOSIT);
                 }}
-                className="max-w-[162px]"
+                className="max-w-[162px] !capitalize"
             >
-                {isSideBuy ? 'Nạp' : 'Rút'} crypto
+                {t(`payment-method:${query?.side?.toLowerCase()}`)} crypto
             </ButtonV2>
         </div>
     );
