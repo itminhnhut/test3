@@ -18,6 +18,7 @@ import Spinner from 'components/svg/Spinner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
+import toast from 'utils/toast';
 
 const LIMIT_ROW = 5;
 
@@ -39,7 +40,6 @@ const index = () => {
     const [isOpenModalAddNew, setIsOpenModalAddNew] = useState(false);
 
     const [loadingSetDefault, setLoadingSetDefault] = useState(false);
-    const [result, setResult] = useState(null);
 
     const fetchListUserBank = () => {
         setLoadingListUserBank(true);
@@ -74,6 +74,7 @@ const index = () => {
     }, []);
 
     useEffect(() => {
+        console.log('parseUnormStr(search): ', parseUnormStr(search));
         if (listUserBank?.length > 0)
             setDataTable(
                 listUserBank.filter(
@@ -97,37 +98,21 @@ const index = () => {
         })
             .then(({ status, data }) => {
                 const isSuccess = status === ApiStatus.SUCCESS;
-                setResult({
-                    isSuccess
-                });
+
                 if (isSuccess) {
+                    toast({ text: t('payment-method:set_default_bank_success'), type: 'success' });
                     fetchListUserBank();
+                } else {
+                    toast({ text: t('payment-method:error_add'), type: 'error' });
                 }
             })
             .catch((e) => {
-                setResult({
-                    isSuccess: false,
-                    msg: t('error:COMMON_ERROR')
-                });
+                toast({ text: t('error:COMMON_ERROR'), type: 'error' });
             })
             .finally(() => {
                 setLoadingSetDefault(null);
             });
     };
-
-    const renderAlertNotification = useCallback(() => {
-        if (!result) return null;
-
-        return (
-            <AlertModalV2
-                isVisible={result}
-                onClose={() => setResult(null)}
-                type={result.isSuccess ? 'success' : 'error'}
-                title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
-                message={result.isSuccess ? '' : result.msg}
-            />
-        );
-    }, [result]);
 
     const _onChangePage = (page) => {
         setCurrentPage(page);
@@ -175,8 +160,8 @@ const index = () => {
                                         <div className="mt-2 flex items-center gap-x-3">
                                             <span className="txtSecond-2">{bankAccount?.accountNumber}</span>
                                             {bankAccount?.isDefault && (
-                                                <TagV2 className="whitespace-nowrap text-xs font-normal" type="success" icon={false}>
-                                                    {t('reference:referral.default')}
+                                                <TagV2 type="success" icon={false}>
+                                                    <span className="text-xs font-normal whitespace-nowrap">{t('reference:referral.default')}</span>
                                                 </TagV2>
                                             )}
                                         </div>
@@ -189,7 +174,7 @@ const index = () => {
                                                 <Spinner color={isDark ? colors.green[2] : colors.green[3]} />
                                             </div>
                                         ) : (
-                                            <ButtonV2 variants="text" className="px-6 !text-sm" onClick={() => handleSetDefault(bankAccount?._id)}>
+                                            <ButtonV2 variants="text" className="px-6 !text-base" onClick={() => handleSetDefault(bankAccount?._id)}>
                                                 {t('reference:referral.set_default')}
                                             </ButtonV2>
                                         ))}
@@ -221,7 +206,6 @@ const index = () => {
                 fetchListUserBank={fetchListUserBank}
             />
             <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
-            {renderAlertNotification()}
         </div>
     );
 };

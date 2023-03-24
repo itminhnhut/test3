@@ -1185,29 +1185,30 @@ export const getOffsetEl = (el) => {
     return { w: width, h: height };
 };
 
-const diacriticsMap = [
-    { base: 'a', letters: /[\u00E0-\u00E5]/g },
-    { base: 'd', letters: /[\u010F\u0111]/g },
-    { base: 'e', letters: /[\u00E8-\u00EB]/g },
-    { base: 'i', letters: /[\u00EC-\u00EF]/g },
-    { base: 'n', letters: /[\u00F1\u0148]/g },
-    { base: 'o', letters: /[\u00F2-\u00F6]/g },
-    { base: 'o', letters: /[\u0153]/g },
-    { base: 'u', letters: /[\u00F9-\u00FC]/g },
-    { base: 'y', letters: /[\u00FD\u00FF]/g },
-    { base: '-', letters: /[\u0020\u00A0\u2000-\u200B\u202F]/g }
-];
+export function parseUnormStr(input) {
+    //Đổi chữ hoa thành chữ thường
+    let slug = input.toLowerCase();
 
-function removeDiacritics(str) {
-    for (let i = 0; i < diacriticsMap.length; i++) {
-        str = str.replace(diacriticsMap[i].letters, diacriticsMap[i].base);
-    }
-    return str;
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    slug = slug.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/gi, ''); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    slug = slug.replace(/\u02C6|\u0306|\u031B/gi, ''); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+
+    // Bỏ dấu câu, kí tự đặc biệt
+    slug = slug.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ');
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, ' ');
+
+    // Bỏ các khoảng trắng liền nhau
+    slug = slug.replace(/ + /g, ' ');
+    slug = slug.trim();
+
+    return slug;
 }
-
-export const parseUnormStr = (input) => {
-    return removeDiacritics(input)
-        .replace(/[^a-zA-Z]/g, ' ')
-        .trim()
-        .toLowerCase();
-};

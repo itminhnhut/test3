@@ -88,6 +88,7 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
         return (
             <AlertModalV2
                 isVisible={result}
+                // isVisible={true}
                 onClose={onCloseAlert}
                 type={result.isSuccess ? 'success' : 'error'}
                 title={result.isSuccess ? t('common:success') : t('payment-method:error_add')}
