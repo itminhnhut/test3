@@ -247,13 +247,6 @@ const DetailOrder = ({ id }) => {
             />
             {/* )} */}
             <ModalUploadImage isVisible={false} />
-            <ModalOrder
-                isVisible={modalProps.visible}
-                type={modalProps.type}
-                loading={modalProps.loading}
-                onClose={() => setStateModal({ visible: false })}
-                onConfirm={modalProps.onConfirm}
-            />
         </div>
     );
 };
