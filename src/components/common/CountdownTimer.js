@@ -38,22 +38,25 @@ const styles = {
 };
 
 const maxCountdown = 5 * 60 * 1000;
+const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-const CountdownTimer = ({ timeExpired = Date.now() + 200 * 1000, size = 80, strokeWidth = 3 }) => {
+const CountdownTimer = ({ timeExpired = Date.now() + 10000, size = 80, strokeWidth = 3 }) => {
     const radius = size / 2;
     const circumference = size * Math.PI;
     const [countDown, setCountDown] = useState(timeExpired - Date.now());
 
-    const strokeDashoffset = () => -(circumference - (countDown / maxCountdown) * circumference) - 2;
+    const strokeDashoffset = () => -(circumference - (countDown / maxCountdown) * circumference);
 
     useState(() => {
         const interval = setInterval(() => {
-            if (countDown < 0) {
-                clearInterval(interval);
-            } else {
-                setCountDown((prev) => prev - 10);
-            }
-        }, 10);
+            setCountDown((prev) => {
+                if (prev - countDownStep < 0) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - countDownStep;
+            });
+        }, countDownStep);
         return () => clearInterval(interval);
     }, []);
 
