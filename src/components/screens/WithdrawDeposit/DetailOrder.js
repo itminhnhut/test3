@@ -8,7 +8,7 @@ import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import { formatBalance } from 'redux/actions/utils';
+import { formatBalance, getAssetCode } from 'redux/actions/utils';
 import { ALLOWED_ASSET } from 'redux/reducers/withdrawDeposit';
 
 import { ORDER_TYPES } from './components/ModalOrder';
@@ -53,7 +53,7 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const assetCode = ALLOWED_ASSET[+orderDetail?.baseAsset];
+    const assetCode = getAssetCode(orderDetail?.baseAssetId)
 
     useEffect(() => {
         if (userSocket) {

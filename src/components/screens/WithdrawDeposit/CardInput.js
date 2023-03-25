@@ -202,8 +202,8 @@ const CardInput = () => {
             <ButtonV2
                 loading={loadingConfirm || loadingPartner}
                 onClick={onMakeOrderHandler}
-                disabled={!partner || loadingPartner}
-                className="disabled:cursor-default"
+                disabled={!partner || !partnerBank ||loadingPartner }
+                className="disabled:cursor-default transition"
             >
                 Xác nhận
             </ButtonV2>

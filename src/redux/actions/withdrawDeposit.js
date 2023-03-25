@@ -1,5 +1,4 @@
 import * as types from './types';
-import { SIDE, initialState } from '../reducers/withdrawDeposit';
 import {
     API_CREATE_ORDER,
     API_GET_DEFAULT_PARTNER,
@@ -33,7 +32,7 @@ export const setPartner = (partner) => {
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
-export const getPartner = ({ params, cancelToken, mounted, callbackFn = () => {} }) => {
+export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
             dispatch(setLoadingPartner(true));
@@ -63,10 +62,10 @@ export const getPartner = ({ params, cancelToken, mounted, callbackFn = () => {}
 
 export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side }) => {
     const res = await Axios.post(API_CREATE_ORDER, {
-        assetId,
+        assetId: +assetId,
         bankAccountId,
         partnerId,
-        quantity,
+        quantity: +quantity,
         side
     });
 
@@ -81,7 +80,7 @@ export const setAccountDefaultBank = async ({ bankAccountId }) => {
     return res.data;
 };
 
-export const markOrder = async ({ displayingId, mode = 'user', userStatus }) => {
+export const markOrder = async ({ displayingId, userStatus, mode = 'user' }) => {
     const res = await Axios.post(API_MARK_PARTNER_ORDER, {
         displayingId,
         userStatus,

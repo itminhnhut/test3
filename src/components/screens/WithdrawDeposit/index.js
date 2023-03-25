@@ -3,20 +3,10 @@ import Header from './components/common/Header';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
-import OtpModal from 'components/common/OtpModal';
 import ModalOtp from './components/ModalOtp';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { useRouter } from 'next/router';
 
 
-// const useLocationSide = () => {
-//     const router = useRouter();
-//     useEffect(() => {
-//         let { side, assetId } = router.query;
 
-//         if(!SIDE[side.toUpperCase()] || !)
-//     }, []);
-// };
 
 const WithdrawDeposit = () => {
     return (
@@ -32,7 +22,7 @@ const WithdrawDeposit = () => {
                     </div>
                 </div>
             </div>
-            <HistoryTable />
+            {/* <HistoryTable /> */}
         </div>
     );
 };
