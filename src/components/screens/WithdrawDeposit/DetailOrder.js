@@ -53,7 +53,9 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const assetCode = ALLOWED_ASSET[+assetId];
+    // console.log('orderDetail: ', orderDetail);
+
+    const assetCode = 72; //ALLOWED_ASSET[+orderDetail.baseAsset];
 
     useEffect(() => {
         if (userSocket) {
