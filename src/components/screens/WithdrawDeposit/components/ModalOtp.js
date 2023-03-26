@@ -8,34 +8,60 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Copy from 'components/svg/Copy';
 
 import { Check } from 'react-feather';
-
-const ModalOtp = ({ isVisible, onClose, className }) => {
-    const [otp, setOtp] = useState();
+import { ApiStatus } from 'redux/actions/const';
+import { useRouter } from 'next/router';
+import toast from 'utils/toast';
+const OTP_REQUIRED_LENGTH = 6;
+const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSuccess }) => {
+    const [otp, setOtp] = useState('');
     const [pasted, setPasted] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     const doPaste = async () => {
         try {
             const data = await navigator?.clipboard?.readText();
+            if(!data) return;
             setOtp(data.replace(/\D/g, '').slice(0, 6));
             setPasted(true);
             setTimeout(() => setPasted(false), 500);
         } catch {}
     };
+
+    const onConfirmOtpHandler = async () => {
+        try {
+            setLoading(true);
+            const res = await onConfirm(otp);
+            if (res && res.status === ApiStatus.SUCCESS) {
+                onSuccess();
+            } else {
+                toast({ text: res?.status || 'ERROR!', type: 'warning' });
+            }
+        } catch (error) {
+            console.log('onConfirm error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <ModalV2
             isVisible={isVisible}
             wrapClassName=""
-            onBackdropCb={onClose}
+            onBackdropCb={() => {
+                onClose();
+                setOtp('');
+            }}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
             <div className="mb-6">
                 <div className="txtPri-3 mb-4">Xác minh</div>
-                <div className="txtSecond-2">Vui lòng nhập mã xác minh đã được gửi đến email của bạn để tiếp tục rút BNB.</div>
+                <div className="txtSecond-2">Vui lòng nhập mã xác minh đã được gửi đến email của bạn để tiếp tục rút {assetCode}.</div>
             </div>
             <OtpInput
                 value={otp}
                 onChange={(otp) => setOtp(otp.replace(/\D/g, ''))}
-                numInputs={6}
+                numInputs={OTP_REQUIRED_LENGTH}
                 placeholder={'------'}
                 isInputNum={true}
                 containerStyle="mb-7 w-full justify-between"
@@ -61,7 +87,9 @@ const ModalOtp = ({ isVisible, onClose, className }) => {
                 </div>
             </div>
             <div className="mt-[52px]">
-                <ButtonV2>Xác nhận</ButtonV2>
+                <ButtonV2 onClick={onConfirmOtpHandler} loading={loading} disabled={otp.length !== OTP_REQUIRED_LENGTH}>
+                    Xác nhận
+                </ButtonV2>
             </div>
         </ModalV2>
     );

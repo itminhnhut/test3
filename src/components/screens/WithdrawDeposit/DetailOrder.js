@@ -9,7 +9,6 @@ import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
 import { formatBalance, getAssetCode } from 'redux/actions/utils';
-import { ALLOWED_ASSET } from 'redux/reducers/withdrawDeposit';
 
 import { ORDER_TYPES } from './components/ModalOrder';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
@@ -44,6 +43,8 @@ const DetailOrder = ({ id }) => {
         [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
 
+    const assetCode = getAssetCode(orderDetail?.baseAssetId);
+
     const setModalPropsWithKey = (key, props) =>
         setModalProps((prev) => ({
             ...prev,
@@ -52,8 +53,6 @@ const DetailOrder = ({ id }) => {
                 ...props
             }
         }));
-
-    const assetCode = getAssetCode(orderDetail?.baseAssetId)
 
     useEffect(() => {
         if (userSocket) {
@@ -237,15 +236,8 @@ const DetailOrder = ({ id }) => {
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
-            {/* {orderDetail && ( */}
-            <ModalQr
-                isVisible={onShowQr}
-                onClose={() => setOnShowQr(false)}
-                qrCodeUrl={'awegawge'}
-                bank={orderDetail?.transferMetadata}
-                amount={orderDetail?.baseQty}
-            />
-            {/* )} */}
+
+
             <ModalUploadImage isVisible={false} />
         </div>
     );
