@@ -73,7 +73,7 @@ const CountdownTimer = ({ total, timeExpired = Date.now() + 10000, size = 80, st
                 <span className={`text-left text-lg font-semibold ${getColor(total / maxCountdown)}`}>{formatTime(total, 'mm:ss')}</span>
 
                 {/* circle border back */}
-                <svg className="text-divider dark:text-divider-dark" style={styles.svg}>
+                <svg className="text-gray-12 dark:text-dark-2" style={styles.svg}>
                     <circle className="stroke-current" cx={radius} cy={radius} r={radius} fill="none" strokeWidth={strokeWidth}></circle>
                 </svg>
 

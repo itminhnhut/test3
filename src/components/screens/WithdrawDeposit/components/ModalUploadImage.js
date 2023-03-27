@@ -22,6 +22,8 @@ const MODE = {
 };
 
 const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, orderId = '', originImage = '' }) => {
+    if (!isVisible) return null;
+
     const { t } = useTranslation();
     const [fileImage, setFileImage] = useState(
         originImage
