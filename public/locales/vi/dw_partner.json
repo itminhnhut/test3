@@ -2,5 +2,7 @@
     "buy_title": "Mua qua ĐTNR",
     "sell_title": "Bán qua ĐTNR",
     "payment_method_description": "Sau khi bấm mua, vui lòng chuyển tiền cho đối tác trong vòng 15 phút trước khi lệnh mua bị huỷ tự động.",
-    "transaction_detail": "Chi tiết giao dịch"
+    "transaction_detail": "Chi tiết giao dịch",
+    "upload_image_success": "Tải ảnh lênh thành công",
+    "upload_image_fail": "Tải ảnh lênh thất bại"
 }

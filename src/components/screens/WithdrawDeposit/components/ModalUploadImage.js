@@ -13,6 +13,8 @@ import styled from 'styled-components';
 import { API_UPLOAD_IMAGE_SERVER_DW, API_UPLOAD_IMAGE_S3 } from 'redux/actions/apis';
 import axios from 'axios';
 import fetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
+import toast from 'utils/toast';
 
 const MODE = {
     USER: 'user',
@@ -40,43 +42,51 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
     };
 
     const onConfirm = async () => {
+        setIsUploading(true);
+        let isUploadFail = false;
+
         try {
             const formData = new FormData();
-            formData.append('file', fileImage.raw[0]);
+            formData.append('image', fileImage.raw[0]);
 
-            setIsUploading(true);
-            const resUpload = await fetchApi({
-                url: API_UPLOAD_IMAGE_S3,
-                options: { method: 'POST' },
-                params: {
-                    image: fileImage.raw[0]
+            const resUpload = await axios.post(API_UPLOAD_IMAGE_S3, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
-            if (resUpload.data) {
-                const res = await fetchApi({
+            if (resUpload?.data?.status === ApiStatus.SUCCESS) {
+                const { status, data } = await fetchApi({
                     url: API_UPLOAD_IMAGE_SERVER_DW,
                     options: { method: 'POST' },
                     params: {
-                        image: 'https://nami-dev.sgp1.digitaloceanspaces.com/upload/deposit-withdraw/1234-NeLuSJZULqGl.jpeg',
+                        image: resUpload?.data?.data?.image,
                         displayingId: '191APL',
                         mode: mode
                     }
                 });
+
+                if (status === ApiStatus.SUCCESS) {
+                    toast({
+                        text: t('dw_partner:upload_image_success'),
+                        type: 'success'
+                    });
+                } else {
+                    isUploadFail = true;
+                }
+            } else {
+                isUploadFail = true;
             }
-
-            setIsUploading(false);
-
-            // const res = await axios({
-            //     method: 'post',
-            //     url: API_UPLOAD_IMAGE,
-            //     data: formData,
-            //     headers: { 'Content-Type': 'multipart/form-data' }
-            // });
-
-            console.log('res: ', res);
         } catch (error) {
-            console.log('Cannot upload file image: ', error);
+            isUploadFail = true;
+        } finally {
+            isUploadFail &&
+                toast({
+                    text: t('dw_partner:upload_image_fail'),
+                    type: 'error'
+                });
+            setIsUploading(false);
+            onClose();
         }
     };
 
@@ -95,7 +105,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
             <h1 className="txtPri-3 font-semibold mb-8">{t('profile:or_upload_image')}</h1>
             <DashBorder className="h-[418px] flex justify-center items-center flex-col">
                 {fileImage ? (
-                    <img className="mx-auto object-contain max-h-full max-w-full py-6" src={fileImage?.src} alt="Transfer confirm image" />
+                    <img className="mx-auto object-contain max-h-full max-w-full py-6 px-4" src={fileImage?.src} alt="Transfer confirm image" />
                 ) : (
                     <UploadAvatar className="!bg-none" t={t} onDropCustomAvatar={onDropCustomAvatar} />
                 )}

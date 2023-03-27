@@ -43,6 +43,7 @@ const DetailOrder = ({ id }) => {
         [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
         [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
+    const [openUploadImgModal, setOpenUploadImgModal] = useState(true);
 
     const setModalPropsWithKey = (key, props) =>
         setModalProps((prev) => ({
@@ -246,7 +247,7 @@ const DetailOrder = ({ id }) => {
                 amount={orderDetail?.baseQty}
             />
             {/* )} */}
-            <ModalUploadImage isVisible={false} />
+            <ModalUploadImage isVisible={openUploadImgModal} onClose={() => setOpenUploadImgModal(false)} />
         </div>
     );
 };
