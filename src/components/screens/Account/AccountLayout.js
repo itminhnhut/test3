@@ -67,22 +67,21 @@ export default function AccountLayout({ children }) {
                 <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
                     <AccountAvatar currentAvatar={auth?.user?.avatar} />
                     <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center">
-                        <div className="flex flex-col md:flex-row items-center md:items-start">
-                            <div className="mb-3 md:mb-0">
-                                <div className="text-xl md:text-2xl !leading-7 mb-2 font-semibold">
+                        <div className="">
+                            <div className="mb-2 flex items-center">
+                                <div className="text-xl md:text-2xl !leading-7 font-semibold">
                                     {auth?.user?.name || auth?.user?.username || auth?.user?.email}
                                 </div>
-                                <TextCopyable
-                                    text={auth?.user?.code}
-                                    className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
-                                />
+                                {{
+                                    [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
+                                    [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                                    [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
+                                }[auth?.user?.kyc_status] || null}
                             </div>
-
-                            {{
-                                [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
-                                [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                                [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
-                            }[auth?.user?.kyc_status] || null}
+                            <TextCopyable
+                                text={auth?.user?.code}
+                                className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
+                            />
                         </div>
                         {auth?.user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE && (
                             <Button
