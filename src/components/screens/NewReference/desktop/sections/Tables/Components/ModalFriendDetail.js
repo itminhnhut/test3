@@ -8,7 +8,7 @@ import { formatNumber } from 'redux/actions/utils';
 
 import UserCircle from 'components/svg/UserCircle';
 
-import classNames from 'classNames';
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
 const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption }) => {

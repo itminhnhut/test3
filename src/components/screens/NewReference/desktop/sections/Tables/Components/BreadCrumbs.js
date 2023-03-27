@@ -1,6 +1,6 @@
 import { BreadCrumbIcon } from 'src/components/common/Icons';
+import classNames from 'classnames';
 
-import classNames from 'classNames';
 import PropTypes from 'prop-types';
 
 const BreadCrumbs = ({ level, parentName, breadcrumbs, language, onChangeBreadCrumb }) => {
