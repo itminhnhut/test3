@@ -1,7 +1,7 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatNumber, formatTime, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatTime, formatPhoneNumber, getS3Url, formatBalance } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
@@ -12,6 +12,7 @@ import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import Countdown from 'react-countdown';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
+import Skeletor from 'components/common/Skeletor';
 
 const INFOR_LIST = ['Nội dung chuyển khoản', 'Ngân hàng', 'Số tài khoản', 'Người thụ hưởng', 'Số lượng'];
 
@@ -32,12 +33,16 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                 <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_detail')}</h1>
                 <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
-                        <h2 className="font-semibold">
-                            {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners`, {
-                                asset: assetCode
-                            })}
-                        </h2>
-                        <OrderStatusTag status={status?.status} />
+                        {!side ? (
+                            <Skeletor width="200px" />
+                        ) : (
+                            <h2 className="font-semibold">
+                                {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners`, {
+                                    asset: assetCode
+                                })}
+                            </h2>
+                        )}
+                        {!status ? <Skeletor width="150px" /> : <OrderStatusTag status={status?.status} />}
                     </div>
                     <div>
                         <span className="txtSecond-2">{t('dw_partner:amount')}</span>
@@ -111,22 +116,21 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">Người thụ hưởng</span>
+
                             <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('common:amount')}</span>
-                            <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(orderDetail?.baseQty)} />
-                        </div>
-                        {assetCode === 'USDT' && (
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">Giá trị quy đổi</span>
+                            {loadingRate ? (
+                                <Skeletor width="100px" />
+                            ) : (
                                 <TextCopyable
                                     className="gap-x-1 font-semibold"
-                                    showingText={`${formatNumber(orderDetail?.baseQty)} VNDC`}
-                                    text={formatNumber(orderDetail?.baseQty)}
+                                    showingText={`${formatBalance(orderDetail?.baseQty * rate)} VND`}
+                                    text={formatBalance(orderDetail?.baseQty * rate)}
                                 />
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>

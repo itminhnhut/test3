@@ -4,6 +4,8 @@ import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import SvgCancelCircle from 'components/svg/CancelCircle';
 
 import { BxsErrorAltIcon, CancelCircleFillIcon } from 'components/svg/SvgIcon';
+import Skeletor from './Skeletor';
+import { isNull, isUndefined } from 'lodash';
 
 const OrderStatusTag = ({ icon = true, className, status }) => {
     const { t } = useTranslation();
@@ -40,11 +42,9 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             break;
     }
 
-    return (
-        <TagV2 icon={icon} className={`ml-auto ${className}`} type={type}>
-            {label}
-        </TagV2>
-    );
+    return <TagV2 icon={icon} className={`ml-auto ${className}`} type={type}>
+        {label}
+    </TagV2>;
 };
 
 export default OrderStatusTag;
