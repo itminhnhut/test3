@@ -21,9 +21,16 @@ const MODE = {
     PARTNER: 'partner'
 };
 
-const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, mode = MODE.USER, orderId = '', initImage = '' }) => {
+const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, orderId = '', originImage = '' }) => {
     const { t } = useTranslation();
-    const [fileImage, setFileImage] = useState(null);
+    const [fileImage, setFileImage] = useState(
+        originImage
+            ? {
+                  raw: null, // Init file to upload
+                  src: originImage
+              }
+            : null
+    );
     const [isUploading, setIsUploading] = useState(false);
 
     const onDropCustomAvatar = (images) => {
@@ -36,7 +43,6 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
                 raw: images, // Init file to upload
                 src: event?.target?.result
             });
-            // setOpenConfirmModal(true);
         };
         reader.readAsDataURL(file);
     };
@@ -77,7 +83,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
             } else {
                 isUploadFail = true;
             }
-        } catch (error) {
+        } catch {
             isUploadFail = true;
         } finally {
             isUploadFail &&
@@ -98,7 +104,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
         <ModalV2
             isVisible={isVisible}
             // isVisible={true}
-            wrapClassName=""
+            // wrapClassName=""
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
@@ -112,13 +118,24 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
             </DashBorder>
 
             <div className="space-y-3 mt-8">
-                {isReselect && fileImage?.src && (
-                    <ButtonV2 variants="secondary" onClick={reselect}>
-                        {t('profile:reselect')}
-                    </ButtonV2>
-                )}
+                {!!originImage &&
+                    fileImage?.src &&
+                    (fileImage?.raw ? (
+                        <>
+                            <ButtonV2 loading={isUploading} onClick={onConfirm}>
+                                {t('common:confirm')}
+                            </ButtonV2>
+                            <ButtonV2 disabled={isUploading} variants="secondary" onClick={reselect}>
+                                {t('profile:reselect')}
+                            </ButtonV2>
+                        </>
+                    ) : (
+                        <ButtonV2 variants="secondary" onClick={reselect}>
+                            {t('profile:reselect')}
+                        </ButtonV2>
+                    ))}
 
-                {!isReselect && fileImage?.src && (
+                {!originImage && fileImage?.src && (
                     <>
                         <ButtonV2 loading={isUploading} onClick={onConfirm}>
                             {t('common:confirm')}

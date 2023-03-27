@@ -46,7 +46,6 @@ const DetailOrder = ({ id }) => {
         [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
         [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
-    const [openUploadImgModal, setOpenUploadImgModal] = useState(true);
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -284,7 +283,12 @@ const DetailOrder = ({ id }) => {
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
 
-            <ModalUploadImage isVisible={state.isShowUploadImg} onClose={() => setState({ isShowUploadImg: false })} orderId={id} />
+            <ModalUploadImage
+                isVisible={state.isShowUploadImg}
+                onClose={() => setState({ isShowUploadImg: false })}
+                orderId={id}
+                originImage={state?.orderDetail?.userUploadImage}
+            />
         </div>
     );
 };
