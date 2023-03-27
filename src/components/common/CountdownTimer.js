@@ -44,7 +44,7 @@ const CountdownTimer = ({ total, timeExpired = Date.now() + 10000, size = 80, st
     const radius = size / 2;
     const circumference = size * Math.PI;
 
-    const strokeDashoffset = () => -(circumference - (total / maxCountdown) * circumference);
+    const strokeDashoffset = -(circumference - (total / maxCountdown) * circumference);
 
     return (
         <div>
@@ -69,13 +69,12 @@ const CountdownTimer = ({ total, timeExpired = Date.now() + 10000, size = 80, st
                     <circle
                         className="stroke-current transition-all"
                         strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset()}
+                        strokeDashoffset={strokeDashoffset}
                         r={radius}
                         cx={radius}
                         cy={radius}
                         fill="transparent"
                         strokeLinecap="round"
-                        // stroke={getColor(countDown / maxCountdown)}
                         strokeWidth={strokeWidth}
                     ></circle>
                 </svg>

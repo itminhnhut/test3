@@ -81,10 +81,14 @@ const CardInput = () => {
                 isValid = false;
                 msg = `Amount must not be smaller than ${formatPrice(min, 0)}`;
             }
+            if (state.amount > availableAsset) {
+                isValid = false;
+                msg = `Amount must not be greater than your ${assetCode} balance`;
+            }
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [orderConfig, state.amount]);
+    }, [orderConfig, state.amount, availableAsset]);
 
     return (
         <>
@@ -190,13 +194,25 @@ const CardInput = () => {
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
                     onClick={!state.needOtp ? onMakeOrderHandler : () => setState({ showOtp: true })}
-                    disabled={!partner || (!partnerBank && side === SIDE.BUY) || loadingPartner || !validator.isValid}
+                    disabled={
+                        !partner ||
+                        (!partnerBank && side === SIDE.BUY) ||
+                        loadingPartner ||
+                        !validator.isValid ||
+                        (side === SIDE.SELL && state.amount > availableAsset)
+                    }
                     className="disabled:cursor-default transition"
                 >
-                    Xác nhận
+                    {t('common:confirm')}
                 </ButtonV2>
             </Card>
-            <ModalOtp onSuccess={onMakeOrderSuccess} onConfirm={onMakeOrderWithOtpHandler} isVisible={state.showOtp} onClose={() => setState({ showOtp: false })} assetCode={assetCode} />
+            <ModalOtp
+                onSuccess={onMakeOrderSuccess}
+                onConfirm={onMakeOrderWithOtpHandler}
+                isVisible={state.showOtp}
+                onClose={() => setState({ showOtp: false })}
+                assetCode={assetCode}
+            />
         </>
     );
 };

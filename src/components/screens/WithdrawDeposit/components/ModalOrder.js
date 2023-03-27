@@ -4,8 +4,10 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { isFunction } from 'redux/actions/utils';
 import classNames from 'classnames';
 import { ORDER_TYPES } from '../constants';
+import { useRouter } from 'next/router';
 
 const ModalOrder = ({ isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
+    const router = useRouter()
     return (
         <ModalV2
             isVisible={isVisible}
@@ -19,7 +21,7 @@ const ModalOrder = ({ isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, a
                     <div className="txtPri-3 mb-4">{type.title}</div>
                     <div className="txtSecond-2 ">{isFunction(type.description) ? additionalData && type.description(additionalData) : type.description}</div>
                     {type.showConfirm && isFunction(type.showConfirm) ? (
-                        type.showConfirm()
+                        type.showConfirm(router)
                     ) : (
                         <ButtonV2 loading={loading} disabled={loading} onClick={!onConfirm ? onClose : () => onConfirm?.()} className="transition-all mt-10">
                             Xác nhận

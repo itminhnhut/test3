@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { formatPhoneNumber, formatTime, filterSearch } from 'redux/actions/utils';
+import { formatPhoneNumber, filterSearch } from 'redux/actions/utils';
+import { formatTime } from 'utils/reference-utils';
 import { setPartner } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import { API_GET_PARTNERS } from 'redux/actions/apis';
@@ -53,7 +54,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner 
                             <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
                             <div className="flex space-x-1 items-center">
                                 <Clock size={12} />
-                                <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), 'ss')} giây</span>
+                                <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), 'mm:ss [giây]')}</span>
                             </div>
                         </div>
                     )
@@ -68,7 +69,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner 
                                         <span>{formatPhoneNumber(partner?.phone)}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>1 Phút</span>
+                                            <span>{formatTime(Math.abs(partner?.analyticMetadata?.avgTime), 'mm:ss [giây]')}</span>
                                         </div>
                                     </div>
                                 ),

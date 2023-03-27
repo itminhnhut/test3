@@ -1,7 +1,8 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatTime, formatNumber, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
+import { formatNumber, formatTime, formatPhoneNumber, getS3Url } from 'redux/actions/utils';
+
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
 import { Clock } from 'react-feather';
@@ -9,24 +10,37 @@ import { QrCodeScannIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import Countdown from 'react-countdown';
+import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import useFetchApi from 'hooks/useFetchApi';
+
+const INFOR_LIST = ['Nội dung chuyển khoản', 'Ngân hàng', 'Số tài khoản', 'Người thụ hưởng', 'Số lượng'];
 
 const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode }) => {
+    const {
+        data: rate,
+        loading: loadingRate,
+        error
+    } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId: +orderDetail?.baseAssetId, side } }, Boolean(orderDetail?.baseAssetId) && Boolean(side), [
+        side,
+        orderDetail?.baseAssetId
+    ]);
+
     return (
         <div className="flex gap-x-6 w-full items-stretch">
             {/* Chi tiết giao dịch */}
             <div className="flex flex-col flex-auto  min-h-full">
-                <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
+                <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_detail')}</h1>
                 <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
                         <h2 className="font-semibold">
-                            {t('payment-method:depsit_from_partners', {
+                            {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners`, {
                                 asset: assetCode
                             })}
                         </h2>
                         <OrderStatusTag status={status?.status} />
                     </div>
                     <div>
-                        <span className="txtSecond-2">So luong</span>
+                        <span className="txtSecond-2">{t('dw_partner:amount')}</span>
                         <div className="mt-3 text-2xl font-semibold">
                             {side === 'BUY' ? '+' : '-'}
                             {formatNumber(orderDetail?.baseQty)} {assetCode}
@@ -59,7 +73,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
             </div>
             {/* Thông tin chuyển khoản */}
             <div className="flex flex-col flex-auto min-h-full">
-                <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
+                <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_bank_receipt')}</h1>
                 <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                     <div className="flex justify-between items-start">
                         <InfoCard
@@ -70,7 +84,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                                         <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>1 Phút</span>
+                                            <span>{formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm:ss')}</span>
                                         </div>
                                     </div>
                                 ),
@@ -103,6 +117,16 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                             <span className="txtSecond-2">{t('common:amount')}</span>
                             <TextCopyable className="gap-x-1 font-semibold" text={formatNumber(orderDetail?.baseQty)} />
                         </div>
+                        {assetCode === 'USDT' && (
+                            <div className="flex items-center justify-between">
+                                <span className="txtSecond-2">Giá trị quy đổi</span>
+                                <TextCopyable
+                                    className="gap-x-1 font-semibold"
+                                    showingText={`${formatNumber(orderDetail?.baseQty)} VNDC`}
+                                    text={formatNumber(orderDetail?.baseQty)}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

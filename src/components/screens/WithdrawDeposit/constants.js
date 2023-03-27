@@ -1,8 +1,12 @@
 import { TYPES } from 'components/common/V2/TagV2';
 import { PartnerOrderStatus } from 'redux/actions/const';
 import { BxsInfoCircle, TimeLapseIcon, BxsErrorIcon, CancelIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
+import { PATHS } from 'constants/paths';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
-export const REPORT_ABLE_TIME = 3 * 60 * 1000;
+// time in seconds
+export const REPORT_ABLE_TIME = 3 * 60;
+
 export const DisputedType = {
     REJECTED: 1,
     REPORT: 2
@@ -89,7 +93,11 @@ export const ORDER_TYPES = {
         icon: ICONS['CHECK'],
         title: 'Huỷ giao dịch thành công',
         description: (displayingId) => `Bạn đã hủy thành công giao dịch ${displayingId}`,
-        showConfirm: false
+        showConfirm: (router) => (
+            <ButtonV2 onClick={() => router.push(PATHS.WITHDRAW_DEPOSIT.DEFAULT)} className="transition-all mt-10">
+                Rút lại
+            </ButtonV2>
+        )
     },
     REPORT_SUCCESS: {
         icon: ICONS['CHECK'],

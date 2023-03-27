@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
@@ -8,13 +8,12 @@ import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import { formatBalance, getAssetCode } from 'redux/actions/utils';
+import { getAssetCode } from 'redux/actions/utils';
 
-import { ORDER_TYPES } from './components/ModalOrder';
-import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
+import Countdown from 'react-countdown';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -24,6 +23,25 @@ const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false })
 const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
 const ModalOrder = dynamic(() => import('./components/ModalOrder'));
 const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
+
+const ReportButton = ({ timeExpire, onMarkWithStatus }) => {
+    return timeExpire ? (
+        <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
+            {(props) => (
+                <ButtonV2
+                    disabled={props.total > REPORT_ABLE_TIME * 1000}
+                    onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
+                    className="px-6 disabled:!cursor-default"
+                    variants="secondary"
+                >
+                    Khiếu nại 
+                </ButtonV2>
+            )}
+        </Countdown>
+    ) : (
+        <></>
+    );
+};
 
 const DetailOrder = ({ id }) => {
     const { t } = useTranslation();
@@ -72,6 +90,7 @@ const DetailOrder = ({ id }) => {
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                console.log('data:', data);
                 setState({
                     orderDetail: data
                 });
@@ -134,7 +153,7 @@ const DetailOrder = ({ id }) => {
                 ) : (
                     status?.userStatus === PartnerPersonStatus.TRANSFERRED && (
                         <ButtonV2 onClick={() => setState({ isShowUploadImg: true })} className="!whitespace-nowrap min-w-[268px]">
-                            Tải ảnh lên
+                            {Boolean(state.orderDetail.userUploadImage) ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'}
                         </ButtonV2>
                     )
                 )
@@ -148,16 +167,9 @@ const DetailOrder = ({ id }) => {
                         onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TAKE)}
                         className="!whitespace-nowrap px-[62.5px]"
                     >
-                        {t('wallet:transfer_already')}{' '}
+                        {t('wallet:transfer_already')}
                     </ButtonV2>
-                    <ButtonV2
-                        disabled={new Date(state.orderDetail?.timeExpire).getTime() - Date.now() > REPORT_ABLE_TIME}
-                        onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
-                        className="px-6"
-                        variants="secondary"
-                    >
-                        Khiếu nại
-                    </ButtonV2>
+                    <ReportButton timeExpire={state.orderDetail?.timeExpire} onMarkWithStatus={onMarkWithStatus} />
                 </>
             ) : (
                 <></>
@@ -193,7 +205,6 @@ const DetailOrder = ({ id }) => {
                         </div>
                     </div>
                 )}
-
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
@@ -207,6 +218,7 @@ const DetailOrder = ({ id }) => {
                     </div>
                 </div>
             </div>
+
             {state.orderDetail && (
                 <ModalQr
                     isVisible={state.isShowQr}

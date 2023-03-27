@@ -12,13 +12,14 @@ import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
 
 const LIMIT_ROW = 10;
 
 const getColumns = (t, user) => [
     {
-        key: '_id',
-        dataIndex: '_id',
+        key: 'displayingId',
+        dataIndex: 'displayingId',
         title: t('common:transaction_id'),
         align: 'center',
         width: 150,
@@ -28,7 +29,7 @@ const getColumns = (t, user) => [
             //     <span>{shortHashAddress(v, 8, 6)}</span>
             //     <CopyIcon data={v} size={16} className="cursor-pointer" />
             // </div>
-            <TextCopyable className="gap-x-1" showingText={v ? `${shortHashAddress(v, 3, 4)}` : undefined} text={v} />
+            <TextCopyable className="gap-x-1" showingText={v} text={v} />
         )
     },
     {
@@ -183,6 +184,7 @@ const HistoryTable = () => {
                 scroll={{ x: true }}
                 loading={loadingDataTable}
                 onRowClick={(transaction) => {
+                    router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId);
                     console.log('transaction:', transaction);
                 }}
                 height={404}
