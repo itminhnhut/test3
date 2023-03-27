@@ -151,7 +151,7 @@ const DetailOrder = ({ id }) => {
                         </ButtonV2>
                     </>
                 ) : (
-                    status?.userStatus === PartnerPersonStatus.TRANSFERRED && (
+                 status.status !== PartnerOrderStatus.SUCCESS &&   status?.userStatus === PartnerPersonStatus.TRANSFERRED && (
                         <ButtonV2 onClick={() => setState({ isShowUploadImg: true })} className="!whitespace-nowrap min-w-[268px]">
                             {Boolean(state.orderDetail.userUploadImage) ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'}
                         </ButtonV2>
