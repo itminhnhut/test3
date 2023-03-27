@@ -8,11 +8,11 @@ import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
-import { formatBalance } from 'redux/actions/utils';
-import { ALLOWED_ASSET } from 'redux/reducers/withdrawDeposit';
+import { formatBalance, getAssetCode } from 'redux/actions/utils';
 
 import { ORDER_TYPES } from './components/ModalOrder';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -35,15 +35,32 @@ const DetailOrder = ({ id }) => {
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
-    const [orderDetail, setOrderDetail] = useState(null);
-    const [status, setStatus] = useState({});
-    const [onShowQr, setOnShowQr] = useState(false);
-    const side = orderDetail?.side;
+
+    const [state, set] = useState({
+        orderDetail: null,
+        isShowQr: false,
+        isShowUploadImg: false
+    });
+
     const [modalProps, setModalProps] = useState({
         [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
         [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
     const [openUploadImgModal, setOpenUploadImgModal] = useState(true);
+
+    const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
+
+    const side = useMemo(() => state.orderDetail?.side, [state.orderDetail]);
+    const status = useMemo(
+        () => ({
+            status: state.orderDetail?.status,
+            userStatus: state.orderDetail?.userStatus,
+            partnerStatus: state.orderDetail?.partnerStatus
+        }),
+        [state.orderDetail]
+    );
+
+    const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
     const setModalPropsWithKey = (key, props) =>
         setModalProps((prev) => ({
@@ -54,13 +71,12 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const assetCode = ALLOWED_ASSET[+orderDetail?.baseAsset];
-
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                setOrderDetail(data);
-                setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
+                setState({
+                    orderDetail: data
+                });
             });
         }
         return () => {
@@ -85,8 +101,9 @@ const DetailOrder = ({ id }) => {
                     });
 
                     if (data && status === ApiStatus.SUCCESS) {
-                        setOrderDetail(data);
-                        setStatus({ status: data?.status, userStatus: data?.userStatus, partnerStatus: data?.partnerStatus });
+                        setState({
+                            orderDetail: data
+                        });
                     }
                 } catch (error) {
                     console.log('error:', error);
@@ -123,7 +140,7 @@ const DetailOrder = ({ id }) => {
                         ? id
                         : {
                               displayingId: id,
-                              amount: formatBalance(orderDetail?.baseQty, 0),
+                              amount: formatBalance(state.orderDetail?.baseQty, 0),
                               token: assetCode
                           }
                 });
@@ -151,15 +168,15 @@ const DetailOrder = ({ id }) => {
         }
     };
 
-    const onMarkWithStatus = (userStatus) => {
+    const onMarkWithStatus = (userStatus, disputedType) => {
         let type, additionalData;
         switch (userStatus) {
             case PartnerPersonStatus.TRANSFERRED:
                 type = ORDER_TYPES.CONFIRM_TRANSFERRED;
                 break;
             case PartnerPersonStatus.DISPUTED:
-                type = ORDER_TYPES.CANCEL_ORDER;
-                additionalData = { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
+                type = disputedType === 'report' ? ORDER_TYPES.REPORT : ORDER_TYPES.CANCEL_ORDER;
+                additionalData = disputedType === 'report' ? { displayingId: id } : { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
                 break;
             default:
                 break;
@@ -174,29 +191,57 @@ const DetailOrder = ({ id }) => {
 
     const renderButton = useCallback(
         () =>
-            status?.status === PartnerOrderStatus.PENDING && status?.userStatus === PartnerPersonStatus.PENDING ? (
+            side === SIDE.BUY ? (
+                status?.status === PartnerOrderStatus.PENDING && status?.userStatus === PartnerPersonStatus.PENDING ? (
+                    <>
+                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED)} className="!whitespace-nowrap px-[62.5px]">
+                            {t('wallet:transfer_already')}{' '}
+                        </ButtonV2>
+                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
+                            Huỷ giao dịch
+                        </ButtonV2>
+                    </>
+                ) : (
+                    status?.userStatus === PartnerPersonStatus.TRANSFERRED && (
+                        <ButtonV2 onClick={() => setState({ isShowUploadImg: true })} className="!whitespace-nowrap min-w-[268px]">
+                            Tải ảnh lên
+                        </ButtonV2>
+                    )
+                )
+            ) : status?.partnerStatus === PartnerPersonStatus.PENDING ? (
+                <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
+                    Huỷ giao dịch
+                </ButtonV2>
+            ) : status?.partnerStatus === PartnerPersonStatus.TRANSFERRED ? (
                 <>
                     <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED)} className="!whitespace-nowrap px-[62.5px]">
                         {t('wallet:transfer_already')}{' '}
                     </ButtonV2>
                     <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
-                        Huỷ giao dịch
+                        Khiếu nại
                     </ButtonV2>
                 </>
             ) : (
-                status?.userStatus === PartnerPersonStatus.TRANSFERRED && <ButtonV2 className="!whitespace-nowrap min-w-[268px]">Tải ảnh lên</ButtonV2>
+                <></>
             ),
-        [status]
+        [side, , status]
     );
 
     return (
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
-                <GroupInforCard t={t} orderDetail={orderDetail} side={side} setOnShowQr={setOnShowQr} status={status} />
+                <GroupInforCard
+                    assetCode={assetCode}
+                    t={t}
+                    orderDetail={state.orderDetail}
+                    side={side}
+                    setModalQr={() => setState({ isShowQr: true })}
+                    status={status}
+                />
                 {/* Lưu ý */}
-                {side === 'BUY' && (
+                {side === SIDE.BUY && (
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
-                        <div className="flex items-center gap-x-2 text-gray-1 dark:text-darkBlue-5">
+                        <div className="flex font-semibold items-center space-x-2 ">
                             <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
                             <span>{t('wallet:note')}</span>
                         </div>
@@ -214,7 +259,7 @@ const DetailOrder = ({ id }) => {
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
-                    <div className={`flex gap-x-4 ${side !== 'BUY' && 'hidden'}`}>{renderButton()}</div>
+                    <div className={`flex gap-x-4 `}>{renderButton()}</div>
 
                     <div className="flex justify-end w-full">
                         <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
@@ -224,13 +269,13 @@ const DetailOrder = ({ id }) => {
                     </div>
                 </div>
             </div>
-            {orderDetail && (
+            {state.orderDetail && (
                 <ModalQr
-                    isVisible={onShowQr}
-                    onClose={() => setOnShowQr(false)}
+                    isVisible={state.isShowQr}
+                    onClose={() => setState({ isShowQr: false })}
                     qrCodeUrl={'awegawge'}
-                    bank={orderDetail?.transferMetadata}
-                    amount={orderDetail?.baseQty}
+                    bank={state.orderDetail?.transferMetadata}
+                    amount={state.orderDetail?.baseQty}
                 />
             )}
             {/*Modal confirm the order */}
@@ -238,16 +283,8 @@ const DetailOrder = ({ id }) => {
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
-            {/* {orderDetail && ( */}
-            <ModalQr
-                isVisible={onShowQr}
-                onClose={() => setOnShowQr(false)}
-                qrCodeUrl={'awegawge'}
-                bank={orderDetail?.transferMetadata}
-                amount={orderDetail?.baseQty}
-            />
-            {/* )} */}
-            <ModalUploadImage isVisible={openUploadImgModal} onClose={() => setOpenUploadImgModal(false)} />
+
+            <ModalUploadImage isVisible={state.isShowUploadImg} onClose={() => setState({ isShowUploadImg: false })} orderId={id} />
         </div>
     );
 };

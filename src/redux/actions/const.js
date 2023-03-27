@@ -881,6 +881,10 @@ export const GET_PARTNER_STATUS = {
     INVALID_AMOUNT: 'INVALID_AMOUNT'
 };
 
+export const ApiResultCreateOrder = {
+    MISSING_OTP: 'MISSING_OTP'
+};
+
 export const PartnerOrderStatus = {
     PENDING: 0,
     SUCCESS: 1,

@@ -30,7 +30,7 @@ const redirectFormatting = (side, assetId) => {
     let redirectObj = { permanent: false };
 
     // invalid side & invalid assetId
-    if (!side || !assetId || (!SIDE[uppercaseSide] && !ALLOWED_ASSET[+assetId]))
+    if (!SIDE[uppercaseSide] && !ALLOWED_ASSET[+assetId])
         return {
             ...redirectObj,
             destination: defaultUrl
@@ -60,23 +60,22 @@ const redirectFormatting = (side, assetId) => {
             destination: `${defaultDestiny}?side=${uppercaseSide}&assetId=${defaultAsset}`
         };
 
-    return {};
+    return null;
 };
 
 export const getServerSideProps = async (context) => {
     const { side, assetId } = context.query;
 
     const redirectFormat = redirectFormatting(side, assetId);
-    const redirectObj = !isEmpty(redirectFormat)
-        ? {
-              redirect: {
-                  ...redirectFormat
-              }
-          }
-        : {};
 
     return {
-        ...redirectObj,
+        ...(redirectFormat
+            ? {
+                  redirect: {
+                      ...redirectFormat
+                  }
+              }
+            : {}),
         props: {
             ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner']))
         }

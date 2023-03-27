@@ -21,7 +21,7 @@ const MODE = {
     PARTNER: 'partner'
 };
 
-const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, mode = MODE.USER }) => {
+const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, mode = MODE.USER, orderId = '', initImage = '' }) => {
     const { t } = useTranslation();
     const [fileImage, setFileImage] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
@@ -61,7 +61,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
                     options: { method: 'POST' },
                     params: {
                         image: resUpload?.data?.data?.image,
-                        displayingId: '191APL',
+                        displayingId: orderId,
                         mode: mode
                     }
                 });

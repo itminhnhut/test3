@@ -40,25 +40,24 @@ const styles = {
 const maxCountdown = 5 * 60 * 1000;
 const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-const CountdownTimer = ({ timeExpired = Date.now() + 10000, size = 80, strokeWidth = 3 }) => {
+const CountdownTimer = ({ total, timeExpired = Date.now() + 10000, size = 80, strokeWidth = 3 }) => {
     const radius = size / 2;
     const circumference = size * Math.PI;
-    const [countDown, setCountDown] = useState(timeExpired - Date.now());
 
-    const strokeDashoffset = () => -(circumference - (countDown / maxCountdown) * circumference);
+    const strokeDashoffset = () => -(circumference - (total / maxCountdown) * circumference);
 
-    useState(() => {
-        const interval = setInterval(() => {
-            setCountDown((prev) => {
-                if (prev - countDownStep < 0) {
-                    clearInterval(interval);
-                    return 0;
-                }
-                return prev - countDownStep;
-            });
-        }, countDownStep);
-        return () => clearInterval(interval);
-    }, []);
+    // useState(() => {
+    //     const interval = setInterval(() => {
+    //         setCountDown((prev) => {
+    //             if (prev - countDownStep < 0) {
+    //                 clearInterval(interval);
+    //                 return 0;
+    //             }
+    //             return prev - countDownStep;
+    //         });
+    //     }, countDownStep);
+    //     return () => clearInterval(interval);
+    // }, [timeExpired]);
 
     return (
         <div>
@@ -71,7 +70,7 @@ const CountdownTimer = ({ timeExpired = Date.now() + 10000, size = 80, strokeWid
                 // style={Object.assign({}, countdownSizeStyles)}
             >
                 {/* time */}
-                <span className={`text-left text-lg font-semibold ${getColor(countDown / maxCountdown)}`}>{formatTime(new Date(countDown), 'mm:ss')}</span>
+                <span className={`text-left text-lg font-semibold ${getColor(total / maxCountdown)}`}>{formatTime(total, 'mm:ss')}</span>
 
                 {/* circle border back */}
                 <svg className="text-divider dark:text-divider-dark" style={styles.svg}>
@@ -79,7 +78,7 @@ const CountdownTimer = ({ timeExpired = Date.now() + 10000, size = 80, strokeWid
                 </svg>
 
                 {/* circle border front (timer) */}
-                <svg style={styles.svg} className={getColor(countDown / maxCountdown) + ''}>
+                <svg style={styles.svg} className={getColor(total / maxCountdown) + ''}>
                     <circle
                         className="stroke-current transition-all"
                         strokeDasharray={circumference}

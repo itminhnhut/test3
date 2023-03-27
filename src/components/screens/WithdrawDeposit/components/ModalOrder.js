@@ -29,8 +29,7 @@ export const ORDER_TYPES = {
     BUY_SUCCESS: {
         icon: ICONS['CHECK'],
         title: 'Xác nhận thành công',
-        description: (additional) =>
-            `Bạn đã chuyển thành công +${additional.amount} ${additional.token} vào tài khoản đối tác cho giao dịch ${additional.displayingId}`,
+        description: ({ token, amount, displayingId }) => `Bạn đã chuyển thành công +${amount} ${token} vào tài khoản đối tác cho giao dịch ${displayingId}`,
         showConfirm: false
     },
     CANCEL_SUCCESS: {
@@ -48,14 +47,14 @@ export const ORDER_TYPES = {
     },
     CANCEL_ORDER: {
         icon: ICONS['ERROR'],
-        title: 'Huỷ giao dịch.',
+        title: 'Huỷ giao dịch',
         description: ({ side, token }) => `Bạn có chắc chắn huỷ lệnh ${side} ${token}?`,
         showConfirm: true
     },
     REPORT: {
         icon: ICONS['ERROR'],
         title: 'Khiếu nại',
-        description: (displayingId) =>
+        description: ({displayingId}) =>
             `Khiếu nại sẽ chuyển trạng thái của lệnh #${displayingId} sang trạng thái Đang tranh chấp, người dùng bắt buộc phải cung cấp các bằng chứng liên quan đến giao dịch như hình ảnh, tin nhắn,... `,
         showConfirm: true
     },
