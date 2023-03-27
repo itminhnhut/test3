@@ -2117,24 +2117,33 @@ production stylesheet in assets/built/screen.css
         }
     }
 
+    table {
+        width: 100%;
+    }
     /*
 
-  Hey! You reached the end.
+    Hey! You reached the end.
 
-  Hope you enjoyed this CSS file, if you have any suggestions
-  for improvements that might be useful for everyone who uses
-  this theme, you can find the open source repository for it
-  here: https://github.com/tryghost/casper
+    Hope you enjoyed this CSS file, if you have any suggestions
+    for improvements that might be useful for everyone who uses
+    this theme, you can find the open source repository for it
+    here: https://github.com/tryghost/casper
 
-  Or, if you've just scrolled all the way to the bottom of the
-  file to add some of your own styles. Well, you've come to
-  the right place. Onward!
+    Or, if you've just scrolled all the way to the bottom of the
+    file to add some of your own styles. Well, you've come to
+    the right place. Onward!
 
-   */
+    */
+
 }
 
 
 .dark #ghost_content table span {
     color: #e2e8f0 !important;
 }
-  
+
+
+.dark #ghost_content table td {
+    border: 1px solid #e2e8f0 !important;
+
+}
