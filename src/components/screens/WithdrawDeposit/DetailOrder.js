@@ -34,7 +34,7 @@ const ReportButton = ({ timeExpire, onMarkWithStatus }) => {
                     className="px-6 disabled:!cursor-default"
                     variants="secondary"
                 >
-                    Khiếu nại 
+                    Khiếu nại
                 </ButtonV2>
             )}
         </Countdown>
@@ -161,7 +161,8 @@ const DetailOrder = ({ id }) => {
                 <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED)} className="px-6" variants="secondary">
                     Huỷ giao dịch
                 </ButtonV2>
-            ) : status?.partnerStatus === PartnerPersonStatus.TRANSFERRED ? (
+            ) : status?.status === PartnerOrderStatus.PENDING &&
+              status?.partnerStatus === PartnerPersonStatus.TRANSFERRED ? (
                 <>
                     <ButtonV2
                         onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TAKE)}

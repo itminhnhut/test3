@@ -14,10 +14,10 @@ const WithdrawDeposit = () => {
             <Header />
             <div className="mb-20">
                 <div className="flex -m-3 flex-wrap">
-                    <div className="w-full md:w-1/2 p-3">
+                    <div className="w-full md:w-1/2 flex p-3">
                         <CardInput />
                     </div>
-                    <div className="w-full md:w-1/2 p-3">
+                    <div className="w-full md:w-1/2 flex p-3">
                         <CardPartner />
                     </div>
                 </div>

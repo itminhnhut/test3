@@ -73,6 +73,12 @@ const CardInput = () => {
         if (!orderConfig?.max || !orderConfig?.min) {
         } else {
             const { min, max } = orderConfig;
+
+            if (state.amount > availableAsset && side === SIDE.SELL) {
+                isValid = false;
+                msg = `Amount must not be greater than your ${assetCode} balance`;
+            }
+
             if (state.amount > max) {
                 isValid = false;
                 msg = `Amount must not be greater than ${formatPrice(max, 0)}`;
@@ -81,10 +87,6 @@ const CardInput = () => {
                 isValid = false;
                 msg = `Amount must not be smaller than ${formatPrice(min, 0)}`;
             }
-            if (state.amount > availableAsset) {
-                isValid = false;
-                msg = `Amount must not be greater than your ${assetCode} balance`;
-            }
         }
 
         return { isValid, msg, isError: !isValid };
@@ -92,7 +94,7 @@ const CardInput = () => {
 
     return (
         <>
-            <Card className="min-h-[444px]">
+            <Card className="w-full">
                 <div className="flex mb-4 -m-1 pt-6 relative">
                     <div className="flex-1 p-1 ">
                         <label htmlFor="HAHA" className="txtSecond-3 absolute left-0 top-0">
@@ -146,7 +148,7 @@ const CardInput = () => {
                     </div>
                 </div>
 
-                <RecommendAmount setAmount={(value) => setState({ amount: value })} amount={state.amount} />
+                <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} />
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">Giá quy đổi</div>

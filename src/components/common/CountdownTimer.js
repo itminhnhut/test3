@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { formatTime } from 'redux/actions/utils';
+import styled from 'styled-components';
 
 const getColor = (percent) => {
     if (percent > 1 / 2) return 'text-green-3 dark:text-green-2';

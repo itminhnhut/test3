@@ -35,6 +35,8 @@ const useMakeOrder = ({ setState, input }) => {
                 onMakeOrderSuccess(assetCode, orderResponse.data);
             } else if (orderResponse.status === ApiResultCreateOrder.MISSING_OTP) {
                 setState({ needOtp: true, showOtp: true });
+            } else {
+                toast({ text: orderResponse.status, type: 'warning' });
             }
         } catch (error) {
             console.log('error:', error);

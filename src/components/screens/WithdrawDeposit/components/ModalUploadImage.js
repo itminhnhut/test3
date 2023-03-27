@@ -105,8 +105,6 @@ const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, ord
     return (
         <ModalV2
             isVisible={isVisible}
-            // isVisible={true}
-            // wrapClassName=""
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
