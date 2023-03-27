@@ -1,0 +1,8 @@
+{
+    "buy_title": "Deposit through partner",
+    "sell_title": "Withdraw through partner",
+    "payment_method_description": "Sau khi bấm mua, vui lòng chuyển tiền cho đối tác trong vòng 15 phút trước khi lệnh mua bị huỷ tự động.",
+    "transaction_details": "Transaction details",
+    "upload_image_success": "Upload image success",
+    "upload_image_fail": "Upload image failed"
+}

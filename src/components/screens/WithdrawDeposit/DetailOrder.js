@@ -222,7 +222,12 @@ const DetailOrder = ({ id }) => {
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
 
-            <ModalUploadImage isVisible={state.isShowUploadImg} onClose={() => setState({ isShowUploadImg: false })} />
+            <ModalUploadImage
+                isVisible={state.isShowUploadImg}
+                onClose={() => setState({ isShowUploadImg: false })}
+                orderId={id}
+                originImage={state?.orderDetail?.userUploadImage}
+            />
         </div>
     );
 };

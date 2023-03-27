@@ -13,15 +13,24 @@ import styled from 'styled-components';
 import { API_UPLOAD_IMAGE_SERVER_DW, API_UPLOAD_IMAGE_S3 } from 'redux/actions/apis';
 import axios from 'axios';
 import fetchApi from 'utils/fetch-api';
+import { ApiStatus } from 'redux/actions/const';
+import toast from 'utils/toast';
 
 const MODE = {
     USER: 'user',
     PARTNER: 'partner'
 };
 
-const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, mode = MODE.USER }) => {
+const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, orderId = '', originImage = '' }) => {
     const { t } = useTranslation();
-    const [fileImage, setFileImage] = useState(null);
+    const [fileImage, setFileImage] = useState(
+        originImage
+            ? {
+                  raw: null, // Init file to upload
+                  src: originImage
+              }
+            : null
+    );
     const [isUploading, setIsUploading] = useState(false);
 
     const onDropCustomAvatar = (images) => {
@@ -34,49 +43,56 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
                 raw: images, // Init file to upload
                 src: event?.target?.result
             });
-            // setOpenConfirmModal(true);
         };
         reader.readAsDataURL(file);
     };
 
     const onConfirm = async () => {
+        setIsUploading(true);
+        let isUploadFail = false;
+
         try {
             const formData = new FormData();
-            formData.append('file', fileImage.raw[0]);
+            formData.append('image', fileImage.raw[0]);
 
-            setIsUploading(true);
-            const resUpload = await fetchApi({
-                url: API_UPLOAD_IMAGE_S3,
-                options: { method: 'POST' },
-                params: {
-                    image: fileImage.raw[0]
+            const resUpload = await axios.post(API_UPLOAD_IMAGE_S3, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
                 }
             });
 
-            if (resUpload.data) {
-                const res = await fetchApi({
+            if (resUpload?.data?.status === ApiStatus.SUCCESS) {
+                const { status, data } = await fetchApi({
                     url: API_UPLOAD_IMAGE_SERVER_DW,
                     options: { method: 'POST' },
                     params: {
-                        image: 'https://nami-dev.sgp1.digitaloceanspaces.com/upload/deposit-withdraw/1234-NeLuSJZULqGl.jpeg',
-                        displayingId: '191APL',
+                        image: resUpload?.data?.data?.image,
+                        displayingId: orderId,
                         mode: mode
                     }
                 });
+
+                if (status === ApiStatus.SUCCESS) {
+                    toast({
+                        text: t('dw_partner:upload_image_success'),
+                        type: 'success'
+                    });
+                } else {
+                    isUploadFail = true;
+                }
+            } else {
+                isUploadFail = true;
             }
-
+        } catch {
+            isUploadFail = true;
+        } finally {
+            isUploadFail &&
+                toast({
+                    text: t('dw_partner:upload_image_fail'),
+                    type: 'error'
+                });
             setIsUploading(false);
-
-            // const res = await axios({
-            //     method: 'post',
-            //     url: API_UPLOAD_IMAGE,
-            //     data: formData,
-            //     headers: { 'Content-Type': 'multipart/form-data' }
-            // });
-
-            console.log('res: ', res);
-        } catch (error) {
-            console.log('Cannot upload file image: ', error);
+            onClose();
         }
     };
 
@@ -88,27 +104,38 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, m
         <ModalV2
             isVisible={isVisible}
             // isVisible={true}
-            wrapClassName=""
+            // wrapClassName=""
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
             <h1 className="txtPri-3 font-semibold mb-8">{t('profile:or_upload_image')}</h1>
             <DashBorder className="h-[418px] flex justify-center items-center flex-col">
                 {fileImage ? (
-                    <img className="mx-auto object-contain max-h-full max-w-full py-6" src={fileImage?.src} alt="Transfer confirm image" />
+                    <img className="mx-auto object-contain max-h-full max-w-full py-6 px-4" src={fileImage?.src} alt="Transfer confirm image" />
                 ) : (
                     <UploadAvatar className="!bg-none" t={t} onDropCustomAvatar={onDropCustomAvatar} />
                 )}
             </DashBorder>
 
             <div className="space-y-3 mt-8">
-                {isReselect && fileImage?.src && (
-                    <ButtonV2 variants="secondary" onClick={reselect}>
-                        {t('profile:reselect')}
-                    </ButtonV2>
-                )}
+                {!!originImage &&
+                    fileImage?.src &&
+                    (fileImage?.raw ? (
+                        <>
+                            <ButtonV2 loading={isUploading} onClick={onConfirm}>
+                                {t('common:confirm')}
+                            </ButtonV2>
+                            <ButtonV2 disabled={isUploading} variants="secondary" onClick={reselect}>
+                                {t('profile:reselect')}
+                            </ButtonV2>
+                        </>
+                    ) : (
+                        <ButtonV2 variants="secondary" onClick={reselect}>
+                            {t('profile:reselect')}
+                        </ButtonV2>
+                    ))}
 
-                {!isReselect && fileImage?.src && (
+                {!originImage && fileImage?.src && (
                     <>
                         <ButtonV2 loading={isUploading} onClick={onConfirm}>
                             {t('common:confirm')}
