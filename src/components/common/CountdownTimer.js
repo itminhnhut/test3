@@ -1,7 +1,5 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import colors from 'styles/colors';
+import { useState } from 'react';
 import { formatTime } from 'redux/actions/utils';
-import classNames from 'classnames';
 
 const getColor = (percent) => {
     if (percent > 1 / 2) return 'text-green-3 dark:text-green-2';
@@ -9,59 +7,94 @@ const getColor = (percent) => {
     return 'text-red-2';
 };
 
-const getCircumference = (radius) => 2 * Math.PI * radius;
+const styles = {
+    countdownContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+        margin: 'auto'
+    },
+    svg: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        transform: 'rotateY(-180deg) rotateZ(-90deg)',
+        overflow: 'visible'
+    },
+    button: {
+        fontSize: 16,
+        padding: '15px 40px',
+        margin: '10px auto 30px',
+        display: 'block',
+        backgroundColor: '#4d4d4d',
+        color: 'lightgray',
+        border: 'none',
+        cursor: 'pointer',
+        outline: 0
+    }
+};
 
-const RADIUS = 40; // set radius in pixels
-const STROKE_WIDTH = 3; // set stroke width in pixels
-const TOTAL_TIME = 5 * 60; // set total time in seconds
+const maxCountdown = 5 * 60 * 1000;
+const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-export const timeLeftFromExpireTime = (expireTime) => new Date(expireTime).getTime() - Date.now();
+const CountdownTimer = ({ timeExpired = Date.now() + 10000, size = 80, strokeWidth = 3 }) => {
+    const radius = size / 2;
+    const circumference = size * Math.PI;
+    const [countDown, setCountDown] = useState(timeExpired - Date.now());
 
-const CountdownTimer = ({ size = 80, totalTime = TOTAL_TIME, radius = RADIUS, strokeWidth = STROKE_WIDTH, timeExpire = '2023-03-23T10:03:25.171Z' }) => {
-    const [timeLeft, setTimeLeft] = useState(() => {
-        const timeExpireInSecond = timeLeftFromExpireTime(timeExpire) / 1000;
-        return timeExpireInSecond <= 0 ? 0 : timeExpireInSecond;
-    }); // set initial time in seconds
-    const timeLeftRef = useRef(null);
-    timeLeftRef.current = timeLeft;
+    const strokeDashoffset = () => -(circumference - (countDown / maxCountdown) * circumference);
 
-    // start the timer and update the time left every second
-    useEffect(() => {
-        const intervalId = setInterval(function () {
-            setTimeLeft((prevTimeLeft) => (prevTimeLeft <= 1 ? 0 : prevTimeLeft - 1));
-            if (timeLeftRef.current === 0) clearInterval(intervalId);
-        }, 1000);
-
-        // cleanup function to clear the interval when the component unmounts
-        return () => {
-            clearInterval(intervalId);
-        };
+    useState(() => {
+        const interval = setInterval(() => {
+            setCountDown((prev) => {
+                if (prev - countDownStep < 0) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - countDownStep;
+            });
+        }, countDownStep);
+        return () => clearInterval(interval);
     }, []);
 
-    // calculate the stroke dash offset based on the time left and the total time
-    const circumference = useMemo(() => getCircumference(radius), [radius]);
-    const strokeDashoffset = useMemo(() => circumference - (timeLeft / totalTime) * circumference, [circumference, timeLeft, totalTime]);
-
     return (
-        timeLeft > 0 && (
-            <div style={{ width: radius * 2, height: radius * 2 }} className={classNames('relative', getColor(timeLeft / totalTime))}>
-                <div className={classNames('rounded-full border-[3px] border-divider dark:border-divider-dark h-full w-full flex items-center justify-center')}>
-                    <span className="text-lg leading-[28px] font-semibold">{formatTime(timeLeft * 1000, 'mm:ss')}</span>
-                </div>
-                <svg className={classNames('absolute z-20 top-0 left-0 transform -rotate-90')} width={radius * 2} height={radius * 2}>
+        <div>
+            <div
+                className="flex justify-center items-center relative m-auto"
+                style={{
+                    height: size,
+                    width: size
+                }}
+                // style={Object.assign({}, countdownSizeStyles)}
+            >
+                {/* time */}
+                <span className={`text-left text-lg font-semibold ${getColor(countDown / maxCountdown)}`}>{formatTime(new Date(countDown), 'mm:ss')}</span>
+
+                {/* circle border back */}
+                <svg className="text-divider dark:text-divider-dark" style={styles.svg}>
+                    <circle className="stroke-current" cx={radius} cy={radius} r={radius} fill="none" strokeWidth={strokeWidth}></circle>
+                </svg>
+
+                {/* circle border front (timer) */}
+                <svg style={styles.svg} className={getColor(countDown / maxCountdown) + ''}>
                     <circle
                         className="stroke-current transition-all"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={strokeDashoffset()}
+                        r={radius}
                         cx={radius}
                         cy={radius}
-                        r={radius - strokeWidth / 2}
-                        strokeWidth={strokeWidth}
-                        strokeDasharray={circumference}
-                        strokeDashoffset={strokeDashoffset}
                         fill="transparent"
-                    />
+                        strokeLinecap="round"
+                        // stroke={getColor(countDown / maxCountdown)}
+                        strokeWidth={strokeWidth}
+                    ></circle>
                 </svg>
             </div>
-        )
+        </div>
     );
 };
 

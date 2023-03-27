@@ -303,3 +303,5 @@ export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_b
 export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'dw_partner/partner_order_detail';
 export const API_MARK_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/mark_partner_order';
 export const API_REJECT_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/reject_partner_order';
+export const API_UPLOAD_IMAGE_S3 = API_PREFIX + 'partner/disputed_upload';
+export const API_UPLOAD_IMAGE_SERVER_DW = API_V3_PREFIX + 'dw_partner/partner_order_upload';

@@ -46,6 +46,9 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                             </div>
                         </div>
                         <div>{status?.status === PartnerOrderStatus.PENDING && <CountdownTimer timeExpire={orderDetail?.timeExpire} />}</div>
+                        <div>
+                            <CountdownTimer timeExpire={Date.now() + 5 * 60 * 1000} />
+                        </div>
 
                         {/* <div className="flex flex-col gap-y-3">
                         <span className="txtSecond-2">{t('common:status')}</span>

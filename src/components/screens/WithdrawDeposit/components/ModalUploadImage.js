@@ -10,10 +10,19 @@ import DomToImage from 'dom-to-image';
 import { useTranslation } from 'next-i18next';
 import { UploadAvatar } from 'components/screens/Account/AccountAvatar';
 import styled from 'styled-components';
+import { API_UPLOAD_IMAGE_SERVER_DW, API_UPLOAD_IMAGE_S3 } from 'redux/actions/apis';
+import axios from 'axios';
+import fetchApi from 'utils/fetch-api';
 
-const ModalUploadImage = ({ isVisible, onClose, className, isReselect = true }) => {
+const MODE = {
+    USER: 'user',
+    PARTNER: 'partner'
+};
+
+const ModalUploadImage = ({ isVisible, onClose, className, isReselect = false, mode = MODE.USER }) => {
     const { t } = useTranslation();
     const [fileImage, setFileImage] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     const onDropCustomAvatar = (images) => {
         if (!images || !images?.length) return;
@@ -30,8 +39,45 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = true }) 
         reader.readAsDataURL(file);
     };
 
-    const onConfirm = () => {
-        // Confirm upload image call API
+    const onConfirm = async () => {
+        try {
+            const formData = new FormData();
+            formData.append('file', fileImage.raw[0]);
+
+            setIsUploading(true);
+            const resUpload = await fetchApi({
+                url: API_UPLOAD_IMAGE_S3,
+                options: { method: 'POST' },
+                params: {
+                    image: fileImage.raw[0]
+                }
+            });
+
+            if (resUpload.data) {
+                const res = await fetchApi({
+                    url: API_UPLOAD_IMAGE_SERVER_DW,
+                    options: { method: 'POST' },
+                    params: {
+                        image: 'https://nami-dev.sgp1.digitaloceanspaces.com/upload/deposit-withdraw/1234-NeLuSJZULqGl.jpeg',
+                        displayingId: '191APL',
+                        mode: mode
+                    }
+                });
+            }
+
+            setIsUploading(false);
+
+            // const res = await axios({
+            //     method: 'post',
+            //     url: API_UPLOAD_IMAGE,
+            //     data: formData,
+            //     headers: { 'Content-Type': 'multipart/form-data' }
+            // });
+
+            console.log('res: ', res);
+        } catch (error) {
+            console.log('Cannot upload file image: ', error);
+        }
     };
 
     const reselect = () => {
@@ -41,6 +87,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = true }) 
     return (
         <ModalV2
             isVisible={isVisible}
+            // isVisible={true}
             wrapClassName=""
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
@@ -55,7 +102,7 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = true }) 
             </DashBorder>
 
             <div className="space-y-3 mt-8">
-                {!isReselect && fileImage?.src && (
+                {isReselect && fileImage?.src && (
                     <ButtonV2 variants="secondary" onClick={reselect}>
                         {t('profile:reselect')}
                     </ButtonV2>
@@ -63,8 +110,10 @@ const ModalUploadImage = ({ isVisible, onClose, className, isReselect = true }) 
 
                 {!isReselect && fileImage?.src && (
                     <>
-                        <ButtonV2 onClick={onConfirm}>{t('common:confirm')}</ButtonV2>
-                        <ButtonV2 variants="secondary" onClick={reselect}>
+                        <ButtonV2 loading={isUploading} onClick={onConfirm}>
+                            {t('common:confirm')}
+                        </ButtonV2>
+                        <ButtonV2 disabled={isUploading} variants="secondary" onClick={reselect}>
                             {t('profile:reselect')}
                         </ButtonV2>
                     </>
