@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { API_GET_PARTNER_BANKS, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
-import { getPartner, setAccountBank, setPartnerBank } from 'redux/actions/withdrawDeposit';
+import { getPartner, setAccountBank, setPartnerBank, setLoadingPartner } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -37,15 +37,26 @@ const CardPartner = () => {
     const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side, refetchAccBanks]);
 
     useEffect(() => {
+        let mounted = false;
         const source = axios.CancelToken.source();
         dispatch(
             getPartner({
                 params: { quantity: !input ? 0 : input, assetId, side },
-                cancelToken: source.token
+                cancelToken: source.token,
+                callbackFn: () => {
+                    if (mounted && !loadingPartner) {
+                        dispatch(setLoadingPartner(true));
+                        return;
+                    }
+                    dispatch(setLoadingPartner(false));
+                }
             })
         );
 
-        return () => source.cancel();
+        return () => {
+            mounted = true;
+            source.cancel();
+        };
     }, [input, assetId, side]);
 
     useEffect(() => {

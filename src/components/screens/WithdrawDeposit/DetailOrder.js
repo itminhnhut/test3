@@ -53,9 +53,7 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    // console.log('orderDetail: ', orderDetail);
-
-    const assetCode = 72; //ALLOWED_ASSET[+orderDetail.baseAsset];
+    const assetCode = ALLOWED_ASSET[+orderDetail?.baseAsset];
 
     useEffect(() => {
         if (userSocket) {
@@ -98,6 +96,7 @@ const DetailOrder = ({ id }) => {
     }, [id]);
 
     const onOpenChat = () => {
+        if (window?.fcWidget?.isOpen()) return;
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
 
@@ -248,13 +247,6 @@ const DetailOrder = ({ id }) => {
             />
             {/* )} */}
             <ModalUploadImage isVisible={false} />
-            <ModalOrder
-                isVisible={modalProps.visible}
-                type={modalProps.type}
-                loading={modalProps.loading}
-                onClose={() => setStateModal({ visible: false })}
-                onConfirm={modalProps.onConfirm}
-            />
         </div>
     );
 };

@@ -11,6 +11,7 @@ import { ApiStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
+import { useRouter } from 'next/router';
 
 const LIMIT_ROW = 10;
 
@@ -103,60 +104,69 @@ const HistoryTable = () => {
         t,
         i18n: { language }
     } = useTranslation();
+    const router = useRouter();
 
-    const [currentPage, setCurrentPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [dataTable, setDataTable] = useState([]);
     const [hasNext, setHasNext] = useState(false);
     const user = useSelector((state) => state.auth.user) || null;
+    const { side } = router.query;
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
 
-    const fetchData = () => {
-        setLoadingDataTable(true);
+    useEffect(() => {
+        const fetchData = () => {
+            setLoadingDataTable(true);
 
-        Axios.get(API_GET_HISTORY_DW_PARTNERS, {
-            params: {
-                page: currentPage,
-                pageSize: LIMIT_ROW,
-                lastId: dataTable[dataTable.length - 1]?._id ?? null,
-                mode: 'partner',
-                side: 'BUY',
-                status: activeTab === 0 ? null : TABS[activeTab]?.status
-            }
-        })
-            .then(({ data: res }) => {
-                setHasNext(res.data?.hasNext);
-
-                if (res.status === ApiStatus.SUCCESS && res.data?.orders) {
-                    setDataTable(res.data.orders);
-                } else {
-                    setDataTable([]);
+            Axios.get(API_GET_HISTORY_DW_PARTNERS, {
+                params: {
+                    page: currentPage,
+                    pageSize: LIMIT_ROW,
+                    lastId: dataTable[dataTable.length - 1]?._id ?? null,
+                    mode: 'user',
+                    side,
+                    status: activeTab === 0 ? null : TABS[activeTab]?.status
                 }
             })
-            .catch((err) => {
-                setDataTable([]);
-            })
-            .finally(() => {
-                setLoadingDataTable(false);
-            });
-    };
+                .then(({ data: res }) => {
+                    setHasNext(res.data?.hasNext);
 
-    useEffect(() => {
-        setCurrentPage(0);
-        fetchData();
-    }, [activeTab]);
+                    if (res.status === ApiStatus.SUCCESS && res.data?.orders) {
+                        setDataTable(res.data.orders);
+                    } else {
+                        setDataTable([]);
+                    }
+                })
+                .catch((err) => {
+                    setDataTable([]);
+                })
+                .finally(() => {
+                    setLoadingDataTable(false);
+                });
+        };
 
-    useEffect(() => {
         fetchData();
-    }, [currentPage]);
+    }, [activeTab, currentPage]);
+
+    // useEffect(() => {
+    //     setCurrentPage(0);
+    //     fetchData();
+    // }, [activeTab]);
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, [currentPage]);
 
     return (
         <div className="space-y-6">
             <div className="txtPri-3 ">Lịch sử lệnh</div>
             <TabV2
                 activeTabKey={activeTab}
-                onChangeTab={(key) => setActiveTab(key)}
+                onChangeTab={(key) => {
+                    setActiveTab(key);
+                    setCurrentPage(0);
+                }}
                 tabs={TABS.map((tab) => ({
                     key: tab.key,
                     children: <div className="">{tab.localized}</div>

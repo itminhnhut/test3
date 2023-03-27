@@ -74,7 +74,6 @@ export const getServerSideProps = async (context) => {
               }
           }
         : {};
-    console.log('adaaad:', redirectObj);
 
     return {
         ...redirectObj,

@@ -33,7 +33,7 @@ export const setPartner = (partner) => {
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
-export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
+export const getPartner = ({ params, cancelToken, mounted, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
             dispatch(setLoadingPartner(true));
@@ -57,7 +57,6 @@ export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
             console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
         } finally {
             callbackFn();
-            dispatch(setLoadingPartner(false));
         }
     };
 };
