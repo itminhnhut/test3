@@ -8,33 +8,32 @@ import { Clock } from 'react-feather';
 import { QrCodeScannIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
-import { ALLOWED_ASSET } from 'redux/reducers/withdrawDeposit';
+import Countdown from 'react-countdown';
 
-const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
+const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode }) => {
     return (
         <div className="flex gap-x-6 w-full items-stretch">
             {/* Chi tiết giao dịch */}
-            <div className="flex flex-col flex-auto min-h-full">
+            <div className="flex flex-col flex-auto  min-h-full">
                 <h1 className="text-2xl font-semibold">{t('payment-method:transaction_details')}</h1>
-                <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
+                <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
+                    <div className="flex justify-between items-start">
+                        <h2 className="font-semibold">
+                            {t('payment-method:depsit_from_partners', {
+                                asset: assetCode
+                            })}
+                        </h2>
+                        <OrderStatusTag status={status?.status} />
+                    </div>
                     <div>
-                        <div className="flex justify-between items-start">
-                            <h2 className="font-semibold">
-                                {t('payment-method:depsit_from_partners', {
-                                    asset: ALLOWED_ASSET[orderDetail?.baseAssetId]
-                                })}
-                            </h2>
-                            <OrderStatusTag status={orderDetail?.status} />
-                        </div>
-                        <div>
-                            <span className="txtSecond-2">So luong</span>
-                            <div className="mt-3 text-2xl font-semibold">
-                                {side === 'BUY' ? '+' : '-'}
-                                {formatNumber(orderDetail?.baseQty)} VNDC
-                            </div>
+                        <span className="txtSecond-2">So luong</span>
+                        <div className="mt-3 text-2xl font-semibold">
+                            {side === 'BUY' ? '+' : '-'}
+                            {formatNumber(orderDetail?.baseQty)} {assetCode}
                         </div>
                     </div>
-                    <div className="flex items-end mt-14 gap-x-6 justify-between">
+
+                    <div className="flex items-end gap-x-6 justify-between">
                         <div className="flex items-end gap-x-6">
                             <div className="flex flex-col gap-y-3">
                                 <span className="txtSecond-2">{t('common:transaction_id')}</span>
@@ -45,15 +44,16 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                                 <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
                             </div>
                         </div>
-                        <div>{status?.status === PartnerOrderStatus.PENDING && <CountdownTimer timeExpire={orderDetail?.timeExpire} />}</div>
                         <div>
-                            <CountdownTimer timeExpire={Date.now() + 5 * 60 * 1000} />
+                            {status?.status === PartnerOrderStatus.PENDING && (
+                                <Countdown
+                                    date={new Date(orderDetail?.timeExpire).getTime()}
+                                    renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
+                                >
+                                    {(props) => <CountdownTimer {...props} />}
+                                </Countdown>
+                            )}
                         </div>
-
-                        {/* <div className="flex flex-col gap-y-3">
-                        <span className="txtSecond-2">{t('common:status')}</span>
-                        {getStatusOrder(orderDetail?.status, t)}
-                    </div> */}
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@ const GroupInforCard = ({ t, orderDetail, side, setOnShowQr, status }) => {
                                 imgSrc: orderDetail?.partnerMetadata?.avatar
                             }}
                         />
-                        <ButtonV2 onClick={() => setOnShowQr((prev) => !prev)} className="flex items-center gap-x-2 w-auto" variants="text">
+                        <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
                             <QrCodeScannIcon />
                             QR Code
                         </ButtonV2>

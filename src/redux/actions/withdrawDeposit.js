@@ -61,23 +61,10 @@ export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     };
 };
 
-export const createNewOrder =
-    (otpNeeded = false) =>
-    async ({ assetId, bankAccountId, partnerId, quantity, side, otp }) => {
-        let url = otpNeeded ? API_CREATE_ORDER_WITH_OTP : API_CREATE_ORDER,
-            body = {
-                assetId: +assetId,
-                bankAccountId,
-                partnerId,
-                quantity: +quantity,
-                side
-            };
-
-        const res = await Axios.post(url, otpNeeded ? { ...body, otp } : body);
-        return res.data;
-    };
-
-
+export const createNewOrder = async ({ assetId, bankAccountId, partnerId, quantity, side, otp }) => {
+    const res = await Axios.post(API_CREATE_ORDER, { assetId: +assetId, bankAccountId, partnerId, quantity: +quantity, side, otp });
+    return res.data;
+};
 
 export const setAccountDefaultBank = async ({ bankAccountId }) => {
     const res = await Axios.post(API_SET_USER_BANK_ACCOUNT, {

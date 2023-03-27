@@ -8,9 +8,6 @@ import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 
-export const createOrderWithoutOtp = createNewOrder();
-export const createOrderWithOtp = createNewOrder(true);
-
 const useMakeOrder = ({ setState, input }) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
@@ -26,7 +23,7 @@ const useMakeOrder = ({ setState, input }) => {
     const onMakeOrderHandler = async () => {
         try {
             setState({ loadingConfirm: true });
-            const orderResponse = await createOrderWithoutOtp({
+            const orderResponse = await createNewOrder({
                 assetId,
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
                 partnerId: partner?.partnerId,
@@ -47,7 +44,7 @@ const useMakeOrder = ({ setState, input }) => {
     };
 
     const onMakeOrderWithOtpHandler = async (otp) => {
-        const orderResponse = await createOrderWithOtp({
+        const orderResponse = await createNewOrder({
             assetId,
             bankAccountId: accountBank?._id,
             partnerId: partner?.partnerId,

@@ -22,7 +22,7 @@ const WithdrawDeposit = () => {
                     </div>
                 </div>
             </div>
-            {/* <HistoryTable /> */}
+            <HistoryTable />
         </div>
     );
 };
