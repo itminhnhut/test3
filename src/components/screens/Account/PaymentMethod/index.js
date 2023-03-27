@@ -74,7 +74,6 @@ const index = () => {
     }, []);
 
     useEffect(() => {
-        console.log('parseUnormStr(search): ', parseUnormStr(search));
         if (listUserBank?.length > 0)
             setDataTable(
                 listUserBank.filter(

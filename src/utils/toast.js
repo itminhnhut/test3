@@ -1,6 +1,7 @@
 import React from 'react';
 import { toast as rcToast } from 'react-toastify';
 import useDarkMode from 'hooks/useDarkMode';
+import { CloseIcon } from 'components/svg/SvgIcon';
 
 const types = {
     default: null,
@@ -64,15 +65,26 @@ const NamiToast = ({ render, text, type }) => {
     const [themeMode] = useDarkMode();
     const content = render ? render(text) : text;
     return (
-        <div className="flex space-x-3 whitespace-nowrap">
-            <span className="mr-3">{types?.[type]?.[themeMode] ? types?.[type]?.[themeMode] : null}</span>
+        <div className="flex items-center space-x-3">
+            <span className="mr-4">{types?.[type]?.[themeMode] ? types?.[type]?.[themeMode] : null}</span>
             {content}
         </div>
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 1000 }) => {
-    return rcToast(<NamiToast render={render} text={text} type={type} />, { autoClose: duration });
+const toast = ({ text = '', render = undefined, type = 'default', duration = 5000 }) => {
+    return rcToast(<NamiToast render={render} text={text} type={type} />, {
+        className: 'flex items-center justify-between min-w-[375px] max-w-[756px]',
+        bodyClassName: 'flex items-center justify-center',
+        autoClose: duration,
+        pauseOnHover: true,
+        closeOnClick: false,
+        closeButton: ({ closeToast }) => (
+            <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
+                <CloseIcon size={24} color="currentColor" />
+            </button>
+        )
+    });
 };
 
 export default toast;
