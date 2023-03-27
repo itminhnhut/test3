@@ -69,14 +69,29 @@
         "login_to_view": "Login to view",
         "login_to_continue": "Login to continue"
     },
-    "referral": {
-        "faq": "FAQ",
-        "term": "Term",
+    "tabs": {
         "info": "Info",
-        "recent_activities": "Recent Activities",
+        "faq": "FAQ",
         "statistic": "Statistic",
         "friend_list": "Friend List",
+        "commission_histories": "Commission Histories"
+    },
+    "friend_list": {
+        "filter": {
+            "referral_date": "Referral Date",
+            "total_commissions": "Total Commissions",
+            "reset": "Reset",
+            "search_id": "Search by Nami ID",
+            "placeholder_search": "Enter Nami ID",
+            "export": "Export"
+        }
+    },
+    "referral": {
+        "total_commissions": "Total Commissions",
         "commission_histories": "Commission Histories",
+        "referral_date": "Ngày giới thiệu",
+        "term": "Term",
+        "recent_activities": "Recent Activities",
         "introduce1": "Introduce Nami to your friends",
         "introduce2": "Earn unlimited passive income",
         "introduce3": "Up to 20% commission every time your friends complete a trade on Nami Exchange",
@@ -124,8 +139,6 @@
         "referrer": "Referrer",
         "no_commission": "Not having any commission",
         "number_of_friends": "Number of Friends",
-        "total_commissions": "Total Commissions",
-        "referral_date": "Referral Date",
         "status": "Status",
         "kyc": "KYC",
         "not_kyc": "Not KYC yet",

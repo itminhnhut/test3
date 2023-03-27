@@ -10,13 +10,13 @@ import { CopyIcon } from '../../PopupModal';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import QRCode from 'qrcode.react';
 import showNotification from 'utils/notificationService';
-import QRCodeScanFilled from 'components/svg/QRCodeFilled';
-import FacebookFilled from 'components/svg/FacebookFilled';
-import TwitterFilled from 'components/svg/TwitterFilled';
-import TelegramFilled from 'components/svg/TelegramFilled';
-import RedditFilled from 'components/svg/RedditFilled';
-import ModalV2 from 'components/common/V2/ModalV2';
-import Partner from 'components/svg/Partner';
+// import QRCodeScanFilled from 'components/svg/QRCodeFilled';
+// import FacebookFilled from 'components/svg/FacebookFilled';
+// import TwitterFilled from 'components/svg/TwitterFilled';
+// import TelegramFilled from 'components/svg/TelegramFilled';
+// import RedditFilled from 'components/svg/RedditFilled';
+// import ModalV2 from 'components/common/V2/ModalV2';
+// import Partner from 'components/svg/Partner';
 import { NoData } from '../../mobile';
 import FetchApi from 'utils/fetch-api';
 import fetchAPI from 'utils/fetch-api';
@@ -36,11 +36,32 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 import { useSelector } from 'react-redux';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+// import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { data } from 'autoprefixer';
+
+// import QRCodeScanFilled from 'components/svg/QRCodeFilled';
+// import FacebookFilled from 'components/svg/FacebookFilled';
+// import TwitterFilled from 'components/svg/TwitterFilled';
+// import TelegramFilled from 'components/svg/TelegramFilled';
+// import RedditFilled from 'components/svg/RedditFilled';
+// import ModalV2 from 'components/common/V2/ModalV2';
+// import Partner from 'components/svg/Partner';
+// import Spinner from 'components/svg/Spinner';
+
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const AlertModalV2 = dynamic(() => import('components/common/V2/ModalV2/AlertModalV2'), { ssr: false });
+const QRCodeScanFilled = dynamic(() => import('components/svg/QRCodeFilled'), { ssr: false });
+const FacebookFilled = dynamic(() => import('components/svg/FacebookFilled'), { ssr: false });
+const TwitterFilled = dynamic(() => import('components/svg/TwitterFilled'), { ssr: false });
+const TelegramFilled = dynamic(() => import('components/svg/TelegramFilled'), { ssr: false });
+const RedditFilled = dynamic(() => import('components/svg/RedditFilled'), { ssr: false });
+const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
+const Partner = dynamic(() => import('components/svg/Partner'), { ssr: false });
+const Spinner = dynamic(() => import('components/svg/Spinner'), { ssr: false });
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
-import Spinner from 'components/svg/Spinner';
 
 const formatter = Intl.NumberFormat('en', {
     notation: 'compact'
@@ -120,13 +141,11 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             {/* Card banner slogan */}
             <div className="w-full bg-[#0C0C0C] ">
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
-                    <div
-                        style={{
-                            backgroundImage: `url(${getS3Url(`/images/reference/background_desktop_2.png`)})`
-                        }}
-                        className="h-full bg-cover bg-center"
-                    >
-                        <div className="py-20 container">
+                    <div className="bg-cover bg-center w-[1484px] h-[430px]">
+                        <div className="absolute -z-10">
+                            <Image src={getS3Url(`/images/reference/background_desktop_2.png`)} width="1184" height="430" objectFit="cover" />
+                        </div>
+                        <div className="py-20 container absolute">
                             <ModalShareRefCode t={t} code={data?.defaultRefCode?.code} open={openShareModal} onClose={() => setOpenShareModal(false)} />
                             {showRef && (
                                 <RefDetail
@@ -187,12 +206,19 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
 
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4">
                 {auth ? (
-                    <div className="container  bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-8">
+                    <div className="container  bg-white dark:bg-darkBlue-3 grid grid-cols-2 rounded-2xl p-6">
                         <div className="border-r dark:border-divider-dark pr-8">
                             <div className="w-full flex justify-between items-center">
                                 <div className="flex gap-4 items-center mb-10">
                                     <div className="flex relative items-center">
-                                        <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" />
+                                        <Image
+                                            width="80"
+                                            height="80"
+                                            objectFit="fill"
+                                            className="rounded-full"
+                                            src={user?.avatar || '/images/default_avatar.png'}
+                                        />
+                                        {/* <img src={user?.avatar || '/images/default_avatar.png'} className="h-full w-20 h-20 rounded-full object-fit" /> */}
                                         <div className="absolute bottom-[-1px] right-[-1px]">{ReferralLevelIcon(data?.rank ?? 1, 32)}</div>
                                     </div>
                                     <div className="h-full flex flex-col">
@@ -200,7 +226,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                             {auth?.name ?? auth?.username ?? auth?.email ?? auth?.namiID ?? t('common:unknown')}
                                         </p>
                                         <span className="text-txtSecondary dark:text-txtSecondary-dark leading-6">
-                                            <span className="uppercase">{t('reference:referral.ranking')}: </span>
+                                            <span>{t('reference:referral.ranking')}: </span>
                                             <span className="text-teal font-semibold">{rank[data?.rank?.toString() ?? user?.rank_id?.toString() ?? '1']}</span>
                                         </span>
                                     </div>
@@ -227,9 +253,9 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                 </div>
                                 <div className="w-full flex flex-col leading-5">
                                     <div className="w-full flex justify-between text-teal">
-                                        <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
+                                        <div>Spot: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
                                         {data?.rank !== 5 ? (
-                                            <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                            <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                         ) : null}
                                     </div>
                                     <div className="w-full flex justify-between text-blue-crayola">
@@ -569,19 +595,19 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
 
     return (
         <ModalV2 isVisible={open} onBackdropCb={onClose} className="w-[36.75rem]">
-            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title')}</p>
+            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title_3')}</p>
             <div ref={ref} className="h-[380px] w-[524px] rounded-xl p-6 py-4 relative overflow-hidden">
                 <img className="absolute inset-0" src={getS3Url('/images/reference/bg_share_ref_code.png')} alt="" />
                 <div className="absolute inset-x-4">
                     <img width={99} src={getS3Url('/images/logo/nami-logo-v2.png')} alt="Nami exchange" />
                     <div className="mt-12">
-                        <p className="text-2xl text-teal font-semibold mb-4">{t('reference:referral.share.title_2')}</p>
+                        <p className="text-2xl text-teal font-semibold mb-4">{t('reference:referral.share.title_4')}</p>
                         <p className="mr-48">
                             <span
                                 className="font-semibold text-white"
                                 dangerouslySetInnerHTML={{
                                     __html: t('reference:referral.share.content', {
-                                        percent: `<span class='font-semibold text-3xl text-teal'>20%</span>`
+                                        percent: `<span class='font-semibold text-3xl text-teal'>40%</span>`
                                     })
                                 }}
                             />
@@ -592,9 +618,10 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
                     <img className="absolute inset-x-0" src={getS3Url('/images/reference/bg_share_ref_code_2.png')} alt="" />
                     <div className="flex-1 z-10">
                         <div className="text-txtSecondary-dark whitespace-nowrap">{t('reference:referral.share.scan_and_join')}</div>
-                        <p className="text-lg text-white font-semibold">
-                            {t('reference:referral.share.id_referral')}: {code}
-                        </p>
+                        <div className="text-lg text-white font-semibold">
+                            <span className="mr-3">{t('reference:referral.share.id_referral')}</span>
+                            <span>{code}</span>
+                        </div>
                     </div>
                     <div className="p-[.375rem] bg-white rounded z-10">
                         <QRCode value={'https://nami.exchange/ref/' + code} size={68} />

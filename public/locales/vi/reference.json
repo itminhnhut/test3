@@ -67,24 +67,38 @@
         "login_to_view": "Đăng nhập để xem",
         "login_to_continue": "Đăng nhập ngay"
     },
-    "referral": {
-        "faq": "Câu hỏi thường gặp",
-        "term": "Điều khoản",
+    "tabs": {
         "info": "Thông tin",
-        "recent_activities": "Hoạt động gần đây",
-        "statistic": "Thống kê",
+        "faq": "Câu hỏi thường gặp",
+        "statistic": "Biểu đồ",
         "friend_list": "Danh sách bạn bè",
-        "commission_histories": "Lịch sử hoa hồng",
-        "introduce1": "Giới thiệu Nami đến bạn bè",
-        "introduce2": " Kiếm thêm thu nhập không giới hạn",
-        "introduce3": "Nhận đến 20% hoa hồng mỗi khi bạn bè của bạn thực hiện giao dịch trên Nami Exchange",
-        "readmore": "Xem thêm",
+        "commission_histories": "Lịch sử hoàn phí"
+    },
+    "friend_list": {
+        "filter": {
+            "referral_date": "Ngày giới thiệu",
+            "total_commissions": "Tổng hoa hồng",
+            "reset": "Đặt lại",
+            "search_id": "Tìm theo Nami ID",
+            "placeholder_search": "Nhập Nami ID",
+            "export": "Xuất file"
+        }
+    },
+    "referral": {
+        "commission_histories": "Lịch sử hoàn phí",
+        "term": "Điều khoản",
+        "referral_date": "Ngày giới thiệu",
+        "recent_activities": "Hoạt động gần đây",
+        "introduce1": "Mời bạn bè mới",
+        "introduce2": "Thêm thu nhập thụ động",
+        "introduce3": "Mời bạn bè tận hưởng ưu đãi giao dịch không tính phí và nhận hoa hồng đến 250 USDT",
+        "readmore": "Xem thêm tại",
         "referral_policy": "Cơ chế giới thiệu",
         "referral_code": "Mã giới thiệu",
         "rate": "Bạn nhận: {{value1}}% - Bạn bè nhận: {{value2}}%",
         "ref_link": "Liên kết giới thiệu",
         "invite_friends": "Mời bạn bè",
-        "ranking": "Hạng",
+        "ranking": "Cấp",
         "diamond": "Kim cương",
         "platinum": "Bạch kim",
         "gold": "Vàng",
@@ -92,7 +106,7 @@
         "normal": "Thường",
         "exchange_volume": "KLGD Exchange",
         "futures_volume": "KLGD Futures",
-        "current_volume": "KLGD hiện tại",
+        "current_volume": "Volume hiện tại",
         "next_level": "Cấp tiếp theo",
         "referral_code_management": "Quản lý mã giới thiệu",
         "invite_your_friends": "Mời bạn bè ngay",
@@ -114,16 +128,16 @@
         "indirect": "Gián tiếp",
         "you_get": "Bạn nhận",
         "friends_get": "Bạn bè nhận",
-        "new_friends": "Bạn bè mới",
+        "reward_commission": "Nhận hoa hồng",
+        "new_friends": "Người dùng mới nhất",
         "rank": "Hạng",
         "level": "Cấp bậc",
         "type": "Loại",
+        "type_commission": "Loại hoa hồng",
         "new_friend": "Bạn bè mới",
         "referrer": "Người giới thiệu",
         "no_commission": "Không có lịch sử hoa hồng",
         "number_of_friends": "Số lượng bạn bè",
-        "total_commissions": "Tổng hoa hồng",
-        "referral_date": "Ngày giới thiệu",
         "status": "Tình trạng",
         "kyc": "Đã KYC",
         "not_kyc": "Chưa KYC",
@@ -181,10 +195,12 @@
         "share": {
             "title": "Chia sẻ",
             "title_2": "Giới thiệu Nami đến bạn bè",
-            "content": "Nhận đến {{percent}} hoa hồng mỗi khi bạn bè của bạn thực hiện giao dịch trên Nami Exchange",
-            "scan_and_join": "Quét QRcode để nhận mã giới thiệu",
-            "id_referral": "Mã giới thiệu",
-            "btn": "Chia sẻ"
+            "title_3": "Chia sẻ mã giới thiệu",
+            "title_4": "Tham gia Nami Exchange",
+            "content": "Cùng nhau kiếm tiền dễ dàng với tỷ lệ hoa hồng lên đến {{percent}}",
+            "id_referral": "ID giới thiệu",
+            "btn": "Tải xuống",
+            "scan_and_join": "Quét mã và tham gia ngay"
         }
     }
 }

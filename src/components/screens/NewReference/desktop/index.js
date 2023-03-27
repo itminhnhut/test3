@@ -6,18 +6,24 @@ import { API_NEW_REFERRAL_OVERVIEW, API_NEW_REFERRAL_CONFIG } from 'redux/action
 import { useSelector } from 'react-redux';
 import { useWindowSize } from 'react-use';
 import { commisionConfig } from 'config/referral';
-import Commission from './sections/Commission';
+// import Commission from './sections/Commission';
 import Tables from './sections/Tables';
-import Charts from './sections/Charts';
-import QnA from './sections/QnA';
+// import Charts from './sections/Charts';
+// import QnA from './sections/QnA';
 import classnames from 'classnames';
-import FriendList from 'components/screens/NewReference/desktop/sections/Tables/FriendList';
-import CommissionHistory from 'components/screens/NewReference/desktop/sections/Tables/CommissionHistory';
+// import FriendList from 'components/screens/NewReference/desktop/sections/Tables/FriendList';
+// import CommissionHistory from 'components/screens/NewReference/desktop/sections/Tables/CommissionHistory';
 
 import dynamic from 'next/dynamic';
 import { DESKTOP_NAV_HEIGHT } from 'components/common/NavBar/constants';
 
+const Charts = dynamic(() => import('./sections/Charts'), { ssr: false });
+const QnA = dynamic(() => import('./sections/QnA'), { ssr: false });
+const Commission = dynamic(() => import('./sections/Commission'), { ssr: false });
+
 const Overview = dynamic(() => import('./sections/Overview'), { ssr: false });
+const FriendList = dynamic(() => import('./sections/Tables/FriendList'), { ssr: false });
+const CommissionHistory = dynamic(() => import('./sections/Tables/CommissionHistory'), { ssr: false });
 
 const tabs = {
     Overview: 'overview',
@@ -106,19 +112,19 @@ const RefDesktopScreen = () => {
                 <div className="w-full container max-w-screen-v3 2xl:max-w-screen-xxl m-auto px-4 !mb-[7.5rem]">
                     <Tabs ref={tabRef} tab={tab} className="gap-6 border-b border-divider dark:border-divider-dark mb-12" isMobile>
                         <TabItem className="!text-left !px-0" value={tabs.Overview} onClick={() => handleClickTab(tabs.Overview)}>
-                            {t('reference:referral.info')}
+                            {t('reference:tabs.info')}
                         </TabItem>
                         <TabItem className="!text-left !px-0" value={tabs.Chart} onClick={() => handleClickTab(tabs.Chart)}>
-                            {t('reference:referral.statistic')}
+                            {t('reference:tabs.statistic')}
                         </TabItem>
                         <TabItem className="!text-left !px-0" value={tabs.FriendList} onClick={() => handleClickTab(tabs.FriendList)}>
-                            {t('reference:referral.friend_list')}
+                            {t('reference:tabs.friend_list')}
                         </TabItem>
                         <TabItem className="!text-left !px-0" value={tabs.CommissionHistory} onClick={() => handleClickTab(tabs.CommissionHistory)}>
-                            {t('reference:referral.commission_histories')}
+                            {t('reference:tabs.commission_histories')}
                         </TabItem>
                         <TabItem className="!text-left !px-0" value={tabs.FAQandTerm} onClick={() => handleClickTab(tabs.FAQandTerm)}>
-                            FAQ
+                            {t('reference:tabs.faq')}
                         </TabItem>
                     </Tabs>
                     <div className="flex flex-col gap-8">
