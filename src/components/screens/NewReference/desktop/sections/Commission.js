@@ -83,9 +83,7 @@ const Commission = ({ t, language, id }) => {
 
     const renderNewFriends = useMemo(() => {
         return !lastedFriends.length ? (
-            <>
-                <NoData className="my-20" text={t('reference:referral.no_friends')} />
-            </>
+            <NoData className="my-20" text={t('reference:referral.no_friends')} />
         ) : (
             lastedFriends.map((data) => (
                 <div key={data.userId} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
@@ -114,7 +112,7 @@ const Commission = ({ t, language, id }) => {
                         </div>
                         <div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral:level')}</span>
-                            <span className="float-right">{data?.level - 1 || '_'}</span>
+                            <span className="float-right">{`F${data?.level - 1}`}</span>
                         </div>
                     </div>
                 </div>

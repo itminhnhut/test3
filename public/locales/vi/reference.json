@@ -84,6 +84,11 @@
             "export": "Xuất file"
         }
     },
+    "withdrawal": {
+        "title": "Đăng ký Đối tác nạp rút",
+        "content": "Đăng ký đối tác nạp rút thành công",
+        "success": "Chúc mừng bạn đã thành công trở thành đối tác nạp rút của Nami Exchange."
+    },
     "referral": {
         "commission_histories": "Lịch sử hoàn phí",
         "term": "Điều khoản",

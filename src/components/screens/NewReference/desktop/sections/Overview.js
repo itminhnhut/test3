@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import ReferralLevelIcon from 'components/svg/RefIcons';
 import { Progressbar } from 'components/screens/NewReference/mobile/sections/Info';
 import { RegisterPartnerModal } from 'components/screens/NewReference/mobile/sections/Overview';
@@ -10,23 +10,15 @@ import { CopyIcon } from '../../PopupModal';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import QRCode from 'qrcode.react';
 import showNotification from 'utils/notificationService';
-// import QRCodeScanFilled from 'components/svg/QRCodeFilled';
-// import FacebookFilled from 'components/svg/FacebookFilled';
-// import TwitterFilled from 'components/svg/TwitterFilled';
-// import TelegramFilled from 'components/svg/TelegramFilled';
-// import RedditFilled from 'components/svg/RedditFilled';
-// import ModalV2 from 'components/common/V2/ModalV2';
-// import Partner from 'components/svg/Partner';
 import { NoData } from '../../mobile';
 import FetchApi from 'utils/fetch-api';
 import fetchAPI from 'utils/fetch-api';
 import { FacebookShareButton, RedditShareButton, TelegramShareButton, TwitterShareButton } from 'next-share';
 import { useTranslation } from 'next-i18next';
-import { API_KYC_STATUS, API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT, API_PARTNER_REGISTER } from 'redux/actions/apis';
+import { API_KYC_STATUS, API_NEW_REFERRAL, API_NEW_REFERRAL_SET_DEFAULT, API_PARTNER_REGISTER, API_POST_PARTNER } from 'redux/actions/apis';
 import FriendList from '../../mobile/sections/Info/FriendList';
 import colors from 'styles/colors';
 import { IconLoading } from 'components/common/Icons';
-import { ApiStatus } from 'redux/actions/const';
 import ReactDOM from 'react-dom';
 import domtoimage from 'dom-to-image-more';
 import { throttle } from 'lodash';
@@ -36,17 +28,6 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 import { useSelector } from 'react-redux';
-// import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import { data } from 'autoprefixer';
-
-// import QRCodeScanFilled from 'components/svg/QRCodeFilled';
-// import FacebookFilled from 'components/svg/FacebookFilled';
-// import TwitterFilled from 'components/svg/TwitterFilled';
-// import TelegramFilled from 'components/svg/TelegramFilled';
-// import RedditFilled from 'components/svg/RedditFilled';
-// import ModalV2 from 'components/common/V2/ModalV2';
-// import Partner from 'components/svg/Partner';
-// import Spinner from 'components/svg/Spinner';
 
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
@@ -59,6 +40,8 @@ const TelegramFilled = dynamic(() => import('components/svg/TelegramFilled'), { 
 const RedditFilled = dynamic(() => import('components/svg/RedditFilled'), { ssr: false });
 const ModalV2 = dynamic(() => import('components/common/V2/ModalV2'), { ssr: false });
 const Partner = dynamic(() => import('components/svg/Partner'), { ssr: false });
+// const Withdrawal = dynamic(() => import('components/svg/Withdrawal'), { ssr: false });
+
 const Spinner = dynamic(() => import('components/svg/Spinner'), { ssr: false });
 import { useDispatch } from 'react-redux';
 import { getMe } from 'redux/actions/user';
@@ -69,6 +52,7 @@ const formatter = Intl.NumberFormat('en', {
 
 const policyLinkVI = 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-co-che-gioi-thieu-moi-tren-nami-exchange';
 const policyLinkEN = 'https://nami.exchange/support/announcement/nami-news/officially-apply-the-new-referral-mechanism-on-nami-exchange';
+const STATUS_OK = 'ok';
 
 const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading }) => {
     const [showRef, setShowRef] = useState(false);
@@ -76,8 +60,16 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
     const youGet = 100 - friendsGet;
     const [showRegisterPartner, setShowRegisterPartner] = useState(false);
     const [kyc, setKyc] = useState(null);
+    const [partner, setPartner] = useState(null);
+
     const [isPartner, setIsPartner] = useState(true);
+    const [isWithdrawal, setIsWithdrawal] = useState(false);
     const [openShareModal, setOpenShareModal] = useState(false);
+
+    const [isModalWithDrawal, setIsModalWithDrawal] = useState(false);
+
+    const toggleWithdrawal = () => setIsModalWithDrawal((prev) => !prev);
+
     const {
         i18n: { language }
     } = useTranslation();
@@ -96,34 +88,59 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             setShowRegisterPartner(true);
         }
     };
-    useEffect(() => {
-        fetchAPI({
-            url: API_KYC_STATUS,
-            options: {
-                method: 'GET'
-            }
-        }).then(({ status, data }) => {
-            if (status === ApiStatus.SUCCESS) {
-                setKyc(data);
-            }
-        });
 
-        fetchAPI({
-            url: API_PARTNER_REGISTER,
-            options: {
-                method: 'GET'
-            }
-        }).then(({ status, data }) => {
-            if (status === ApiStatus.SUCCESS) {
-                if (data?.phone?.length && data?.social_link?.length) {
-                    setIsPartner(true);
-                } else {
-                    setIsPartner(false);
+    const apiKYC = fetchAPI({
+        url: API_KYC_STATUS,
+        options: {
+            method: 'GET'
+        }
+    });
+    const apiPartner = fetchAPI({
+        url: API_PARTNER_REGISTER,
+        options: {
+            method: 'GET'
+        }
+    });
+
+    useEffect(() => {
+        Promise.all([apiKYC, apiPartner])
+            .then((value) => {
+                const [dataKYC = {}, dataPartner = {}] = value || [];
+                if (dataKYC?.status === STATUS_OK) setKyc(dataKYC?.data || {});
+                if (dataPartner?.status === STATUS_OK) {
+                    const { phone, social_link, status } = dataPartner?.data || {};
+                    if (phone || social_link) {
+                        status === 1 ? setIsWithdrawal(true) : setIsWithdrawal(false);
+                    } else {
+                        setIsPartner(false);
+                    }
+                    setPartner(dataPartner?.data);
                 }
-            } else {
-            }
-        });
+            })
+            .catch((err) => console.error(err));
     }, [user?.code]);
+
+    const handleRegisterWithdrawal = async () => {
+        try {
+            const { data } = await FetchApi({
+                url: API_POST_PARTNER,
+                options: {
+                    method: 'POST'
+                },
+                params: {
+                    ...partner,
+                    is_partner_trading: true
+                }
+            });
+            console.log('data', data);
+            if (data) {
+                setIsModalWithDrawal(true);
+                setIsWithdrawal(true);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const rank = {
         1: t('reference:referral.normal'),
@@ -187,8 +204,16 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <span className="ml-2">{t('reference:referral.partner.button')}</span>
                                     </button>
                                 )}
-                                {/* { */}
-                                {/*     (isPartner || !user) && */}
+
+                                {!isWithdrawal && (
+                                    <button
+                                        onClick={() => handleRegisterWithdrawal()}
+                                        className="flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold"
+                                    >
+                                        <Image src="/images/reference/register_withdrawal.png" width="24" height="24" />
+                                        <span className="ml-2">{t('reference:withdrawal.title')}</span>
+                                    </button>
+                                )}
                                 <div
                                     className="px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold"
                                     onClick={() => router.push(policyLink)}
@@ -374,6 +399,13 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                     </div>
                 )}
             </div>
+            <ModalV2 isVisible={isModalWithDrawal} className="w-[30.5rem]" onBackdropCb={toggleWithdrawal}>
+                <div className="flex justify-center">
+                    <Image src="/images/reference/withdrawal.png" width="124" height="124" />
+                </div>
+                <div className="text-txtPrimary dark:text-gray-4 text-2xl mt-6 mb-4 text-center">{t('reference:withdrawal.content')}</div>
+                <div className="text-gray-9 dark:text-gray-7 text-center">{t('reference:withdrawal.success')}</div>
+            </ModalV2>
             <AlertModalV2
                 isVisible={isOpenModalKyc}
                 type="error"

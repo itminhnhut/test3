@@ -86,6 +86,11 @@
             "export": "Export"
         }
     },
+    "withdrawal": {
+        "title": "Register Withdrawal Partner",
+        "content": "Sign up for a successful withdrawal partner",
+        "success": "Congratulations on successfully becoming a deposit and withdrawal partner of Nami Exchange."
+    },
     "referral": {
         "total_commissions": "Total Commissions",
         "commission_histories": "Commission Histories",

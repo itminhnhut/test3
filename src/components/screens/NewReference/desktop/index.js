@@ -1,21 +1,19 @@
-import { useTranslation } from 'next-i18next';
 import React, { useRef, useState, useEffect } from 'react';
+
+import dynamic from 'next/dynamic';
+import { useTranslation } from 'next-i18next';
+
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
+import { DESKTOP_NAV_HEIGHT } from 'components/common/NavBar/constants';
+
 import FetchApi from 'utils/fetch-api';
 import { API_NEW_REFERRAL_OVERVIEW, API_NEW_REFERRAL_CONFIG } from 'redux/actions/apis';
 import { useSelector } from 'react-redux';
 import { useWindowSize } from 'react-use';
-import { commisionConfig } from 'config/referral';
-// import Commission from './sections/Commission';
-import Tables from './sections/Tables';
-// import Charts from './sections/Charts';
-// import QnA from './sections/QnA';
-import classnames from 'classnames';
-// import FriendList from 'components/screens/NewReference/desktop/sections/Tables/FriendList';
-// import CommissionHistory from 'components/screens/NewReference/desktop/sections/Tables/CommissionHistory';
 
-import dynamic from 'next/dynamic';
-import { DESKTOP_NAV_HEIGHT } from 'components/common/NavBar/constants';
+import { commisionConfig } from 'config/referral';
+
+import classnames from 'classnames';
 
 const Charts = dynamic(() => import('./sections/Charts'), { ssr: false });
 const QnA = dynamic(() => import('./sections/QnA'), { ssr: false });
@@ -27,7 +25,6 @@ const CommissionHistory = dynamic(() => import('./sections/Tables/CommissionHist
 
 const tabs = {
     Overview: 'overview',
-    // LastedActivities: 'lasted_activities',
     Chart: 'chart',
     FriendList: 'friendlist',
     CommissionHistory: 'commissionhistory',

@@ -263,6 +263,7 @@ export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account'
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';
 
 // new referral
+export const API_POST_PARTNER = API_V3_PREFIX + 'users/partner';
 export const API_NEW_REFERRAL_CONFIG = API_V3_PREFIX + 'users/referral/commission-config';
 export const API_NEW_REFERRAL = API_V3_PREFIX + 'users/referral';
 export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + 'users/referral';
