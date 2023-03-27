@@ -46,19 +46,6 @@ const CountdownTimer = ({ total, timeExpired = Date.now() + 10000, size = 80, st
 
     const strokeDashoffset = () => -(circumference - (total / maxCountdown) * circumference);
 
-    // useState(() => {
-    //     const interval = setInterval(() => {
-    //         setCountDown((prev) => {
-    //             if (prev - countDownStep < 0) {
-    //                 clearInterval(interval);
-    //                 return 0;
-    //             }
-    //             return prev - countDownStep;
-    //         });
-    //     }, countDownStep);
-    //     return () => clearInterval(interval);
-    // }, [timeExpired]);
-
     return (
         <div>
             <div

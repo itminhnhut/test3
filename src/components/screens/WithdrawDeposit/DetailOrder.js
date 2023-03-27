@@ -13,14 +13,11 @@ import { formatBalance, getAssetCode } from 'redux/actions/utils';
 import { ORDER_TYPES } from './components/ModalOrder';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType } from './constants';
+import useMarkOrder from './hooks/useMarkOrder';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
-};
-
-const MODAL_KEY = {
-    CONFIRM: 'confirm',
-    AFTER_CONFIRM: 'afterConfirm'
 };
 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
@@ -70,6 +67,8 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
+    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side });
+
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
@@ -95,7 +94,7 @@ const DetailOrder = ({ id }) => {
                         url: API_GET_ORDER_DETAILS,
                         options: { method: 'GET' },
                         params: {
-                            displayingId: id + ''
+                            displayingId: id
                         }
                     });
 
@@ -117,86 +116,18 @@ const DetailOrder = ({ id }) => {
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
 
-    const onMarkOrderHandler = (userStatus) => async () => {
-        const isRejected = userStatus === PartnerPersonStatus.DISPUTED;
-        try {
-            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
-                loading: true
-            });
-            const data = isRejected ? await rejectOrder({ displayingId: id }) : await markOrder({ displayingId: id, userStatus });
-            if (data && data.status === ApiStatus.SUCCESS) {
-                // close confirm modal
-                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
-                    loading: false,
-                    visible: false
-                });
-
-                // open after confirm modal
-                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
-                    visible: true,
-                    type: isRejected ? ORDER_TYPES.CANCEL_SUCCESS : ORDER_TYPES.BUY_SUCCESS,
-                    additionalData: isRejected
-                        ? id
-                        : {
-                              displayingId: id,
-                              amount: formatBalance(state.orderDetail?.baseQty, 0),
-                              token: assetCode
-                          }
-                });
-            } else {
-                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
-                    loading: false,
-                    visible: false
-                });
-                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
-                    visible: true,
-                    type: ORDER_TYPES.ERROR,
-                    additionalData: data?.status
-                });
-            }
-        } catch (error) {
-            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
-                loading: false,
-                visible: false
-            });
-            setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
-                visible: true,
-                type: ORDER_TYPES.ERROR,
-                additionalData: error
-            });
-        }
-    };
-
-    const onMarkWithStatus = (userStatus, disputedType) => {
-        let type, additionalData;
-        switch (userStatus) {
-            case PartnerPersonStatus.TRANSFERRED:
-                type = ORDER_TYPES.CONFIRM_TRANSFERRED;
-                break;
-            case PartnerPersonStatus.DISPUTED:
-                type = disputedType === 'report' ? ORDER_TYPES.REPORT : ORDER_TYPES.CANCEL_ORDER;
-                additionalData = disputedType === 'report' ? { displayingId: id } : { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
-                break;
-            default:
-                break;
-        }
-        setModalPropsWithKey(MODAL_KEY.CONFIRM, {
-            visible: true,
-            type,
-            additionalData,
-            onConfirm: onMarkOrderHandler(userStatus)
-        });
-    };
-
     const renderButton = useCallback(
         () =>
             side === SIDE.BUY ? (
                 status?.status === PartnerOrderStatus.PENDING && status?.userStatus === PartnerPersonStatus.PENDING ? (
                     <>
-                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED)} className="!whitespace-nowrap px-[62.5px]">
+                        <ButtonV2
+                            onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TRANSFERRED)}
+                            className="!whitespace-nowrap px-[62.5px]"
+                        >
                             {t('wallet:transfer_already')}{' '}
                         </ButtonV2>
-                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
+                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED)} className="px-6" variants="secondary">
                             Huỷ giao dịch
                         </ButtonV2>
                     </>
@@ -207,23 +138,31 @@ const DetailOrder = ({ id }) => {
                         </ButtonV2>
                     )
                 )
-            ) : status?.partnerStatus === PartnerPersonStatus.PENDING ? (
-                <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
+            ) : status?.status === PartnerOrderStatus.PENDING && status?.partnerStatus === PartnerPersonStatus.PENDING ? (
+                <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED)} className="px-6" variants="secondary">
                     Huỷ giao dịch
                 </ButtonV2>
             ) : status?.partnerStatus === PartnerPersonStatus.TRANSFERRED ? (
                 <>
-                    <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED)} className="!whitespace-nowrap px-[62.5px]">
+                    <ButtonV2
+                        onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TAKE)}
+                        className="!whitespace-nowrap px-[62.5px]"
+                    >
                         {t('wallet:transfer_already')}{' '}
                     </ButtonV2>
-                    <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED)} className="px-6" variants="secondary">
+                    <ButtonV2
+                        disabled={new Date(state.orderDetail?.timeExpire).getTime() - Date.now() > REPORT_ABLE_TIME}
+                        onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
+                        className="px-6"
+                        variants="secondary"
+                    >
                         Khiếu nại
                     </ButtonV2>
                 </>
             ) : (
                 <></>
             ),
-        [side, , status]
+        [side, state.orderDetail, status]
     );
 
     return (
