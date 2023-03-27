@@ -51,8 +51,8 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount }) => 
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
             <div className="text-center mb-6">
-                <div className="txtPri-3 mb-1">{bank?.accountName}</div>
-                <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mb-2">Chủ tài khoản</div>
+                <div className="text-xs leading-4 text-txtSecondary dark:text-txtSecondary-dark mb-1">Chủ tài khoản</div>
+                <div className="txtPri-3 mb-8">{bank?.accountName}</div>
                 <div className="txtPri-3">{bank?.bankName}</div>
             </div>
 
