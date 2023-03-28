@@ -31,11 +31,7 @@ const CardPartner = () => {
         data: banks,
         loading: loadingBanks,
         error
-    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, Boolean(partner) && side === SIDE.BUY, [
-        input,
-        assetId,
-        partner
-    ]);
+    } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, partner && side === SIDE.BUY, [input, assetId, partner]);
 
     const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side, refetchAccBanks]);
 
@@ -104,9 +100,10 @@ const CardPartner = () => {
                             selectedBank={partnerBank}
                             onSelect={(bank) => dispatch(setPartnerBank(bank))}
                             banks={banks}
-                            loading={loadingBanks || loadingPartner}
+                            loading={loadingPartner}
                             containerClassname="z-40"
                             t={t}
+                            loadingBanks={loadingBanks}
                         />
                     )}
                 </div>

@@ -15,11 +15,11 @@ import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } fro
 import useMarkOrder from './hooks/useMarkOrder';
 import Countdown from 'react-countdown';
 import toast from 'utils/toast';
-import { get } from 'lodash';
 import classNames from 'classnames';
+import Custom404 from 'pages/404';
 
-const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
-    return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
+const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
+    return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
 const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
@@ -57,7 +57,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     const [state, set] = useState({
         orderDetail: null,
         isShowQr: false,
-        isShowUploadImg: false
+        isShowUploadImg: false,
+        firstLoad: true
     });
 
     const [modalProps, setModalProps] = useState({
@@ -131,6 +132,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }
                 } catch (error) {
                     console.log('error:', error);
+                } finally {
+                    setState({ firstLoad: false });
                 }
             }
         };
@@ -150,10 +153,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         if (!state.orderDetail) return;
 
         const isPartner = mode === MODE.PARTNER;
-        const side = get(state?.orderDetail, 'side');
-        const myStatus = get(state?.orderDetail, `${mode}Status`);
-        const theirStatus = get(state?.orderDetail, `${isPartner ? MODE.USER : MODE.PARTNER}Status`);
-        const orderStatus = get(state?.orderDetail, 'status');
+        const side = state.orderDetail?.side;
+        const myStatus = state.orderDetail[`${mode}Status`];
+        const theirStatus = state.orderDetail[`${isPartner ? MODE.USER : MODE.PARTNER}Status`];
+        const orderStatus = state.orderDetail?.status;
 
         ({
             [SIDE.BUY]: {
@@ -170,7 +173,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             } else {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                    text: 'Tôi đã nhận tiền'
+                                    text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
                             }
@@ -182,7 +185,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     secondaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                        text: 'Huỷ giao dịch'
+                                        text: t('common:cancel_order')
                                     };
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
@@ -194,7 +197,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                                     primaryBtn = {
                                         function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                                     };
                                 }
                             }
@@ -253,20 +256,21 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         }[side.toUpperCase()].render());
 
         return (
-            <>
+            <div className="flex gap-x-4">
                 {primaryBtn && (
                     <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px]', primaryBtn?.class)}>
                         {/* //!whitespace-nowrap px-[62.5px] */}
                         {primaryBtn?.text}
                     </ButtonV2>
                 )}
+
                 {secondaryBtn && (
                     <ButtonV2 onClick={secondaryBtn?.function} className={classNames('px-6 !w-auto', secondaryBtn?.class)} variants="secondary">
                         {secondaryBtn?.text}
                     </ButtonV2>
                 )}
                 {reportBtn}
-            </>
+            </div>
         );
     }, [mode, state?.orderDetail]);
     const notes = { __html: t('dw_partner:notes') };
@@ -298,7 +302,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
-                    <div className="flex gap-x-4">{renderButton()}</div>
+                    {renderButton()}
 
                     <div className="flex justify-end ">
                         <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
@@ -309,22 +313,24 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 </div>
             </div>
 
-            {state.orderDetail ||
-                (true && (
-                    <ModalQr
-                        isVisible={state.isShowQr}
-                        onClose={() => setState({ isShowQr: false })}
-                        qrCodeUrl={'awegawge'}
-                        bank={state.orderDetail?.transferMetadata}
-                        amount={state.orderDetail?.baseQty}
-                        t={t}
-                    />
-                ))}
+            {state.orderDetail && (
+                <ModalQr
+                    isVisible={state.isShowQr}
+                    onClose={() => setState({ isShowQr: false })}
+                    bank={state.orderDetail?.transferMetadata}
+                    amount={state.orderDetail?.baseQty}
+                    t={t}
+                />
+            )}
             {/*Modal confirm the order */}
-            <ModalConfirm modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
+            <ModalConfirm mode={mode} modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
 
             {/*Modal After confirm (success, error,...) */}
-            <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
+            <ModalConfirm
+                mode={mode}
+                modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })}
+            />
 
             <ModalUploadImage
                 isVisible={state.isShowUploadImg}

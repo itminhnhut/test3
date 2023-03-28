@@ -19,7 +19,7 @@ const OrderDetail = ({ id }) => {
 export const getServerSideProps = async ({ locale, params }) => {
     return {
         props: {
-            ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'payment-method', 'profile', 'dw_partner'])),
+            ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'payment-method', 'profile', 'dw_partner', '404', 'footer'])),
             id: params?.id
         }
     };
