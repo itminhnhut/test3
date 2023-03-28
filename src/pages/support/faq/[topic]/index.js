@@ -85,11 +85,9 @@ const FaqTopics = (props) => {
                             '!text-txtTextBtn dark:!text-txtPrimary-dark dark:!bg-hover-dark': item.displaySlug === router?.query?.group
                         })}
                     >
-                        <Link>
-                            <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-lg px-6'>
-                                {item?.title}
-                            </a>
-                        </Link>
+                        <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-lg px-6'>
+                            {item?.title}
+                        </a>
                     </div>
                 </Link>
             ))
