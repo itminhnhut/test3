@@ -9,12 +9,15 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useFetchApi from 'hooks/useFetchApi';
 import axios from 'axios';
 import Card from './components/common/Card';
+import { useTranslation } from 'next-i18next';
 
 const ModalBankDefault = dynamic(() => import('./components/ModalBankDefault'), { ssr: false });
 const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: false });
 const BankInfo = dynamic(() => import('./components/BankInfo'), { ssr: false });
 
 const CardPartner = () => {
+    const { t } = useTranslation();
+
     const { partner, partnerBank, accountBank, input, loadingPartner } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -68,9 +71,9 @@ const CardPartner = () => {
     const accountBankAction = useMemo(
         () => (
             <div className="mt-6 px-4 space-y-3">
-                <ButtonV2 className="text-base font-semibold">Thêm tài khoản ngân hàng</ButtonV2>
+                <ButtonV2 className="text-base font-semibold">{t('dw_partner:add_bank_account')}</ButtonV2>
                 <ButtonV2 onClick={() => setVisibleModalBank(true)} variants="text" className="text-base font-semibold">
-                    Chỉnh sửa mặc định
+                    {t('dw_partner:edit_default_bank')}
                 </ButtonV2>
             </div>
         ),
@@ -91,10 +94,11 @@ const CardPartner = () => {
                             banks={accountBanks}
                             loading={loadingAccountBanks}
                             showTooltip={false}
+                            t={t}
                         />
                     )}
 
-                    <PartnerInfo quantity={input} assetId={assetId} side={side} loadingPartner={loadingPartner} selectedPartner={partner} />
+                    <PartnerInfo quantity={input} assetId={assetId} side={side} loadingPartner={loadingPartner} selectedPartner={partner} t={t} />
                     {side === SIDE.BUY && partner && (
                         <BankInfo
                             selectedBank={partnerBank}
@@ -102,6 +106,7 @@ const CardPartner = () => {
                             banks={banks}
                             loading={loadingBanks || loadingPartner}
                             containerClassname="z-40"
+                            t={t}
                         />
                     )}
                 </div>
@@ -111,6 +116,7 @@ const CardPartner = () => {
                 toggleRefetch={toggleRefetchAccBanks}
                 onClose={() => setVisibleModalBank(false)}
                 isVisible={visibleModalBank}
+                t={t}
             />
         </>
     );

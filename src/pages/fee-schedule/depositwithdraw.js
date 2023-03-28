@@ -338,7 +338,7 @@ const ROW_SKELETON = {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet', 'dw_partner']))
     }
 });
 

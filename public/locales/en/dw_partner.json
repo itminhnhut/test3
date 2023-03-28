@@ -1,8 +1,8 @@
 {
     "buy_title": "Buy via Partner",
     "sell_title": "Sell via Partner",
-    "payment_method_description": "Sau khi bấm mua, vui lòng chuyển tiền cho đối tác trong vòng 15 phút trước khi lệnh mua bị huỷ tự động.",
     "transaction_detail": "Transaction details",
+    "order_history": "Order History",
     "transaction_bank_receipt": "Transaction Bank Infor",
     "transfer_already": "Bank transfer completed",
     "take_money_already": "Confirm received money",

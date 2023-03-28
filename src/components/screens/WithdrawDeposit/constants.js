@@ -44,29 +44,29 @@ export const ALLOWED_ASSET_ID = {
 export const TABS = [
     {
         key: 0,
-        localized: 'Tất cả'
+        localized: 'common:all'
     },
     {
         key: 1,
-        localized: 'Thành công',
+        localized: 'common:completed',
         status: PartnerOrderStatus.SUCCESS,
         type: TYPES.SUCCESS
     },
     {
         key: 2,
-        localized: 'Đang xử lý',
+        localized: 'common:pending',
         status: PartnerOrderStatus.PENDING,
         type: TYPES.WARNING
     },
     {
         key: 3,
-        localized: 'Đã từ chối',
+        localized: 'common:declined',
         status: PartnerOrderStatus.REJECTED,
         type: TYPES.FAILED
     },
     {
         key: 4,
-        localized: 'Đang tranh chấp',
+        localized: 'common:disputing',
         status: PartnerOrderStatus.DISPUTED,
         type: TYPES.FAILED
     }
