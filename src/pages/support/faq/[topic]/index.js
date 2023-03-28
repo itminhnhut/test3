@@ -85,9 +85,11 @@ const FaqTopics = (props) => {
                             '!text-txtTextBtn dark:!text-txtPrimary-dark dark:!bg-hover-dark': item.displaySlug === router?.query?.group
                         })}
                     >
-                        <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-lg px-6'>
-                            {item?.title}
-                        </a>
+                        <Link>
+                            <a className='line-clamp-2 block font-normal text-sm sm:font-semibold sm:text-lg px-6'>
+                                {item?.title}
+                            </a>
+                        </Link>
                     </div>
                 </Link>
             ))
@@ -142,26 +144,24 @@ const FaqTopics = (props) => {
         }
 
         return data?.map((article) => (
-            <a
-                href={
-                    PATHS.SUPPORT.FAQ +
-                    `/${router?.query?.topic}/${article.slug}${isApp ? '?source=app' : ''
-                    }`
-                }
-                key={article.uuid}
-                className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:text-txtTextBtn dark:hover:text-teal'
-            >
-                <a className='w-full'>
-                    <div>
-                        <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
-                            {article?.title}{' '}
-                        </div>
-                        <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
-                            {formatTime(article.created_at, 'dd/MM/yyyy')}
+            <Link key={article.uuid} href={
+                PATHS.SUPPORT.FAQ +
+                `/${router?.query?.topic}/${article.slug}${isApp ? '?source=app' : ''
+                }`
+            }>
+                <a className='block text-sm font-medium mb-[18px] lg:text-[16px] lg:mb-8 hover:text-txtTextBtn dark:hover:text-teal'>
+                    <div className='w-full'>
+                        <div>
+                            <div className='text-txtPrimary dark:text-gray-4 font-normal text-base hover:text-txtTextBtn dark:hover:text-teal'>
+                                {article?.title}{' '}
+                            </div>
+                            <div className='mt-2 text-txtSecondary dark:text-darkBlue-5 font-normal text-xs leading-4 mb-8'>
+                                {formatTime(article.created_at, 'dd/MM/yyyy')}
+                            </div>
                         </div>
                     </div>
                 </a>
-            </a>
+            </Link>
         ))
     }, [currentGroup, articles, language])
 
