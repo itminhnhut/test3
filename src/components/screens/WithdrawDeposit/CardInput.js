@@ -208,7 +208,7 @@ const CardInput = () => {
                         </div>
                     </div>
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t('dw_partner:need_transfer')}</div>
+                        <div className="txtSecond-2">{t('dw_partner:will_transfer')}</div>
 
                         <Tooltip place="top" effect="solid" isV3 id="rating">
                             <div className="max-w-[300px] ">{formatBalance(input * rate, 0)}</div>

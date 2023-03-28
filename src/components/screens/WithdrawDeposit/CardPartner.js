@@ -79,7 +79,7 @@ const CardPartner = () => {
     return (
         <>
             <Card className=" ">
-                <div className="txtSecond-2 mb-4">Thông tin thanh toán</div>
+                <div className="txtSecond-2 mb-4">{t('dw_partner:payment_infor')}</div>
                 <div className="space-y-4">
                     {side === SIDE.SELL && (
                         <BankInfo
