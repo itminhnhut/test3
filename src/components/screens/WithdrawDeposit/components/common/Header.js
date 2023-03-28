@@ -10,7 +10,7 @@ const Header = () => {
     const { t } = useTranslation();
     return (
         <div className="t-common-v2 flex justify-between mb-12">
-            <span>{t(`payment-method:${query?.side?.toLowerCase()}_title`)}</span>
+            <span>{t(`dw_partner:${query?.side?.toLowerCase()}_title`)}</span>
 
             <ButtonV2
                 onClick={() => {
@@ -18,7 +18,7 @@ const Header = () => {
                 }}
                 className="max-w-[162px] capitalize"
             >
-                {t(`payment-method:${query?.side?.toLowerCase()}`)} crypto
+                {t(`common:${query?.side?.toLowerCase()}`)} crypto
             </ButtonV2>
         </div>
     );

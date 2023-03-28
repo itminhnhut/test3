@@ -161,7 +161,7 @@ const HistoryTable = () => {
 
     return (
         <div className="space-y-6">
-            <div className="txtPri-3 ">Lịch sử lệnh</div>
+            <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>
             <TabV2
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
@@ -170,7 +170,7 @@ const HistoryTable = () => {
                 }}
                 tabs={TABS.map((tab) => ({
                     key: tab.key,
-                    children: <div className="">{tab.localized}</div>
+                    children: <div className="">{t(tab.localized)}</div>
                 }))}
             />
             <TableV2
@@ -183,10 +183,7 @@ const HistoryTable = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={loadingDataTable}
-                onRowClick={(transaction) => {
-                    router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId);
-                    console.log('transaction:', transaction);
-                }}
+                onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
                 className="border border-divider dark:border-divider-dark rounded-lg pt-4"
                 tableStyle={{
@@ -200,7 +197,7 @@ const HistoryTable = () => {
                     onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
                     language
                 }}
-                emptyTextContent={'Không có giao dịch nào'}
+                emptyTextContent={t('common:no_data')}
             />
         </div>
     );

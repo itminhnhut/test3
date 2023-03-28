@@ -12,7 +12,7 @@ import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 const OTP_REQUIRED_LENGTH = 6;
-const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSuccess }) => {
+const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSuccess, t }) => {
     const [otp, setOtp] = useState('');
     const [pasted, setPasted] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
     const doPaste = async () => {
         try {
             const data = await navigator?.clipboard?.readText();
-            if(!data) return;
+            if (!data) return;
             setOtp(data.replace(/\D/g, '').slice(0, 6));
             setPasted(true);
             setTimeout(() => setPasted(false), 500);
@@ -47,6 +47,7 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
     return (
         <ModalV2
             isVisible={isVisible}
+            // isVisible={true}
             wrapClassName=""
             onBackdropCb={() => {
                 onClose();
@@ -55,8 +56,8 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
             <div className="mb-6">
-                <div className="txtPri-3 mb-4">Xác minh</div>
-                <div className="txtSecond-2">Vui lòng nhập mã xác minh đã được gửi đến email của bạn để tiếp tục rút {assetCode}.</div>
+                <div className="txtPri-3 mb-4">{t('dw_partner:verify')}</div>
+                <div className="txtSecond-2">{t('dw_partner:otp_code_send_to_email')}</div>
             </div>
             <OtpInput
                 value={otp}
@@ -72,9 +73,9 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
             />
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
-                    <span className="txtSecond-2">Không nhận được?</span>
+                    <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
                     <ButtonV2 variants="text" className="!w-auto">
-                        Gửi lại mã
+                        {t('dw_partner:resend_otp')}
                     </ButtonV2>
                 </div>
 
@@ -82,13 +83,13 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
                     <div className="w-4 h-4">{pasted ? <Check size={16} /> : <Copy color="currentColor" />}</div>
 
                     <ButtonV2 variants="text" className="font-semibold text-base">
-                        Dán
+                        {t('common:paste')}
                     </ButtonV2>
                 </div>
             </div>
             <div className="mt-[52px]">
                 <ButtonV2 onClick={onConfirmOtpHandler} loading={loading} disabled={otp.length !== OTP_REQUIRED_LENGTH}>
-                    Xác nhận
+                    {t('common:confirm')}
                 </ButtonV2>
             </div>
         </ModalV2>

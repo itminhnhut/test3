@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { DefaultAvatar } from 'src/redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { BxsUserIcon } from 'components/svg/SvgIcon';
+import { useTranslation } from 'next-i18next';
 
 const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
@@ -21,6 +22,8 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
 };
 
 const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) => {
+    const { t } = useTranslation();
+
     return (
         <div
             className={classNames('flex justify-between w-full', {
@@ -41,8 +44,8 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) 
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    mainContent={'Đối tác'}
-                    subContent={'Không có đối tác khả dụng'}
+                    mainContent={t('dw_partner:partner')}
+                    subContent={t('dw_partner:no_partner')}
                 />
             ) : (
                 <>

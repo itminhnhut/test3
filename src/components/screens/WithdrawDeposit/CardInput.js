@@ -10,7 +10,7 @@ import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
+import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useDebounce } from 'react-use';
@@ -33,6 +33,8 @@ const CardInput = () => {
         needOtp: false
     });
 
+    // const [limitWithdraw, setLimitWithdraw] = useState(null);
+
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
@@ -52,6 +54,12 @@ const CardInput = () => {
     useEffect(() => {
         dispatch(setLoadingPartner(true));
     }, [state.amount]);
+
+    const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
+        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId, quantity: state.amount } },
+        Boolean(side) && Boolean(assetId),
+        [state.amount]
+    );
 
     // reset needOtp state
     useEffect(() => setState({ needOtp: false }), [state.amount, partner, accountBank]);
@@ -76,16 +84,23 @@ const CardInput = () => {
 
             if (state.amount > availableAsset && side === SIDE.SELL) {
                 isValid = false;
-                msg = `Amount must not be greater than your ${assetCode} balance`;
+                msg = t('common:global_notice.balance_insufficient');
+                // msg = `Amount must not be greater than your ${assetCode} balance`;
             }
 
             if (state.amount > max) {
                 isValid = false;
-                msg = `Amount must not be greater than ${formatPrice(max, 0)}`;
+                msg = t('dw_partner:error.max_amount', {
+                    amount: formatPrice(max, 0),
+                    asset: assetCode
+                });
             }
             if (state.amount < min) {
                 isValid = false;
-                msg = `Amount must not be smaller than ${formatPrice(min, 0)}`;
+                msg = t('dw_partner:error.min_amount', {
+                    amount: formatPrice(max, 0),
+                    asset: assetCode
+                });
             }
         }
 
@@ -98,10 +113,10 @@ const CardInput = () => {
                 <div className="flex mb-4 -m-1 pt-6 relative">
                     <div className="flex-1 p-1 ">
                         <label htmlFor="HAHA" className="txtSecond-3 absolute left-0 top-0">
-                            Số lượng
+                            {t('common:amount')}
                         </label>
                         <TradingInput
-                            id="HAHA"
+                            id="TradingInput"
                             value={state.amount}
                             allowNegative={false}
                             thousandSeparator={true}
@@ -112,7 +127,7 @@ const CardInput = () => {
                             errorTooltip={false}
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
-                            placeHolder="Nhập số lượng tài sản"
+                            placeHolder={t('wallet:input_amount')}
                             renderTail={
                                 side === SIDE.SELL && (
                                     <ButtonV2
@@ -151,7 +166,7 @@ const CardInput = () => {
                 <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} />
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">Giá quy đổi</div>
+                        <div className="txtSecond-2">{t('dw_partner:rate')}</div>
                         <div className="txtPri-1 flex items-center space-x-1">
                             <span>1 {assetCode} =</span>
                             <span>{loadingRate ? <Skeletor width="40px" height="15px" /> : formatPrice(rate)}</span>
@@ -159,29 +174,41 @@ const CardInput = () => {
                         </div>
                     </div>
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">Số lượng {t(`payment-method:${side?.toLowerCase()}`)} tối thiểu</div>
+                        <div className="txtSecond-2">{t('dw_partner:min_amount')}</div>
                         <div className="txtPri-1 flex items-center">
                             {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.min, 0)}{' '}
                             <span className="ml-1">{assetCode}</span>
                         </div>
                     </div>
-                    <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2"> Giới hạn trong ngày</div>
-                        <div className="txtPri-1 flex items-center">
-                            {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(partner?.partnerMetadata?.maintainVolume, 0)}{' '}
-                            <span className="ml-1">{assetCode}</span>
-                        </div>
-                    </div>
+
+                    {side === 'SELL' && (
+                        <>
+                            <div className="flex items-center justify-between ">
+                                <div className="txtSecond-2">{t('dw_partner:daily_limit')}</div>
+                                <div className="txtPri-1 flex items-center">
+                                    {loadingLimitWithdraw ? <Skeletor width="50px" /> : !limitWithdraw ? '--' : formatPrice(limitWithdraw?.limit, 0)}{' '}
+                                    <span className="ml-1">{assetCode}</span>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-between ">
+                                <div className="txtSecond-2">{t('dw_partner:rest_daily_limit')}</div>
+                                <div className="txtPri-1 flex items-center">
+                                    {loadingLimitWithdraw ? <Skeletor width="50px" /> : !limitWithdraw ? '--' : formatPrice(limitWithdraw?.remain, 0)}{' '}
+                                    <span className="ml-1">{assetCode}</span>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">Số lượng {t(`payment-method:${side?.toLowerCase()}`)} tối đa</div>
+                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
                         <div className="txtPri-1 flex items-center">
                             {loadingPartner ? <Skeletor width="50px" /> : !partner ? '--' : formatPrice(orderConfig?.max, 0)}{' '}
                             <span className="ml-1">{assetCode}</span>
                         </div>
                     </div>
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">Số tiền cần chuyển</div>
+                        <div className="txtSecond-2">{t('dw_partner:will_transfer')}</div>
 
                         <Tooltip place="top" effect="solid" isV3 id="rating">
                             <div className="max-w-[300px] ">{formatBalance(input * rate, 0)}</div>
@@ -205,7 +232,7 @@ const CardInput = () => {
                     }
                     className="disabled:cursor-default transition"
                 >
-                    {t('common:confirm')}
+                    {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
                 </ButtonV2>
             </Card>
             <ModalOtp
@@ -214,6 +241,7 @@ const CardInput = () => {
                 isVisible={state.showOtp}
                 onClose={() => setState({ showOtp: false })}
                 assetCode={assetCode}
+                t={t}
             />
         </>
     );

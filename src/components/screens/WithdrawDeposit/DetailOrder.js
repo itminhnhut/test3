@@ -32,7 +32,7 @@ const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
                     className="px-6 disabled:!cursor-default"
                     variants="secondary"
                 >
-                    Khiếu nại
+                    {t('dw_partner:appeal')}
                 </ButtonV2>
             )}
         </Countdown>
@@ -170,12 +170,12 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Từ chối giao dịch'
+                                    text: t('cancel_order')
                                 };
                             } else {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                    text: 'Tôi đã nhận tiền'
+                                    text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
                             }
@@ -187,7 +187,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     secondaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                        text: 'Huỷ giao dịch'
+                                        text: t('common:cancel_order')
                                     };
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
@@ -199,7 +199,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                                     primaryBtn = {
                                         function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                                     };
                                 }
                             }
@@ -216,11 +216,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Từ chối giao dịch'
+                                    text: t('cancel_order')
                                 };
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                    text: 'Xác nhận'
+                                    text: t('common:confirm')
                                 };
 
                                 return;
@@ -230,7 +230,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
                                     function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.partnerUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                    text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                                 };
                             }
                         } else {
@@ -238,7 +238,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Huỷ giao dịch'
+                                    text: t('common:cancel_order')
                                 };
 
                                 return;
@@ -247,7 +247,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
-                                    text: 'Tôi đã nhận tiền'
+                                    text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
                             }
@@ -275,6 +275,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             </div>
         );
     }, [mode, state?.orderDetail]);
+    const notes = { __html: t('dw_partner:notes') };
 
     return (
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
@@ -288,22 +289,18 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     status={status}
                 />
                 {/* Lưu ý */}
-                {side === SIDE.BUY && (
-                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
-                        <div className="flex font-semibold items-center space-x-2 ">
-                            <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
-                            <span>{t('wallet:note')}</span>
+                {side === SIDE.BUY ||
+                    (true && (
+                        <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
+                            <div className="flex font-semibold items-center space-x-2 ">
+                                <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
+                                <span>{t('wallet:note')}</span>
+                            </div>
+                            <div className="txtSecond-2 mt-2">
+                                <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
+                            </div>
                         </div>
-                        <div className="txtSecond-2 mt-2">
-                            Sử dụng mã QR hoặc sao chép thông tin để chuyển khoản:
-                            <ul className="list-disc ml-6 marker:text-xs">
-                                <li>Đúng số tiền</li>
-                                <li>Đúng nội dung</li>
-                                <li>Thực hiện hành động chuyển khoản trong vòng 15 phút sau khi nhấn nút “Tôi đã chuyển khoản” để lệnh không bị huỷ.</li>
-                            </ul>
-                        </div>
-                    </div>
-                )}
+                    ))}
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
@@ -322,9 +319,9 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 <ModalQr
                     isVisible={state.isShowQr}
                     onClose={() => setState({ isShowQr: false })}
-                    qrCodeUrl={'awegawge'}
                     bank={state.orderDetail?.transferMetadata}
                     amount={state.orderDetail?.baseQty}
+                    t={t}
                 />
             )}
             {/*Modal confirm the order */}
