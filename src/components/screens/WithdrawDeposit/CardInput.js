@@ -41,6 +41,14 @@ const CardInput = () => {
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
+    useDebounce(
+        () => {
+            dispatch(setInput(state.amount));
+        },
+        500,
+        [state.amount]
+    );
+
     const { onMakeOrderWithOtpHandler, onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input });
 
     useEffect(() => {
@@ -55,14 +63,6 @@ const CardInput = () => {
 
     // reset needOtp state
     useEffect(() => setState({ needOtp: false }), [state.amount, partner, accountBank]);
-
-    useDebounce(
-        () => {
-            dispatch(setInput(state.amount));
-        },
-        500,
-        [state.amount]
-    );
 
     const availableAsset = useMemo(
         () => wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value,

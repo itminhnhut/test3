@@ -12,18 +12,33 @@ export const DisputedType = {
     REPORT: 2
 };
 
+export const MODE = {
+    USER: 'user',
+    PARTNER: 'partner'
+};
+
 export const TranferreredType = {
     //user-to-partner
-    U_P: {
+    [MODE.USER]: {
         TAKE: 'TAKE_MONEY',
         TRANSFERRED: 'TRANSFERRED_MONEY'
     },
 
     //partner-to-user
-    P_U: {
+    [MODE.PARTNER]: {
         TAKE: 'TAKE_MONEY',
         TRANSFERRED: 'TRANSFERRED_MONEY'
     }
+};
+
+export const ALLOWED_ASSET = {
+    72: 'VNDC',
+    22: 'USDT'
+};
+
+export const ALLOWED_ASSET_ID = {
+    VNDC: 72,
+    USDT: 22
 };
 
 export const TABS = [

@@ -4,13 +4,14 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
 import dynamic from 'next/dynamic';
+import { MODE } from 'components/screens/WithdrawDeposit/constants';
 
 const DetailOrder = dynamic(() => import('components/screens/WithdrawDeposit/DetailOrder'), { ssr: false });
 
 const OrderDetail = ({ id }) => {
     return (
         <MaldivesLayout>
-            <DetailOrder id={id} />
+            <DetailOrder id={id} mode={MODE.USER} />
         </MaldivesLayout>
     );
 };

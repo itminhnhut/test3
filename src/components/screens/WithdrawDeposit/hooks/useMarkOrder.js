@@ -4,7 +4,7 @@ import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
-const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty }) => {
+const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode }) => {
     const { t } = useTranslation();
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
@@ -43,7 +43,7 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty }) =>
             setModalPropsWithKey(MODAL_KEY.CONFIRM, {
                 loading: true
             });
-            const data = isRejected ? await rejectOrder({ displayingId: id }) : await markOrder({ displayingId: id, userStatus });
+            const data = isRejected ? await rejectOrder({ displayingId: id, mode }) : await markOrder({ displayingId: id, userStatus, mode });
             if (data && data.status === ApiStatus.SUCCESS) {
                 // close confirm modal
                 setModalPropsWithKey(MODAL_KEY.CONFIRM, {
@@ -86,10 +86,10 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty }) =>
         switch (userStatus) {
             case PartnerPersonStatus.TRANSFERRED:
                 switch (statusType) {
-                    case TranferreredType.U_P.TAKE:
+                    case TranferreredType[mode].TAKE:
                         type = ORDER_TYPES.CONFIRM_TAKE_MONEY;
                         break;
-                    case TranferreredType.U_P.TRANSFERRED:
+                    case TranferreredType[mode].TRANSFERRED:
                         type = ORDER_TYPES.CONFIRM_TRANSFERRED;
                         break;
                     default:

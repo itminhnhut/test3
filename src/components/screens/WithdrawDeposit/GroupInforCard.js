@@ -47,8 +47,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                     <div>
                         <span className="txtSecond-2">{t('dw_partner:amount')}</span>
                         <div className="mt-3 text-2xl font-semibold">
-                            {side === 'BUY' ? '+' : '-'}
-                            {formatNumber(orderDetail?.baseQty)} {assetCode}
+                            {!orderDetail ? <Skeletor width="300px" /> : `${side === 'BUY' ? '+' : '-'}${formatNumber(orderDetail?.baseQty)} ${assetCode}`}
                         </div>
                     </div>
 
