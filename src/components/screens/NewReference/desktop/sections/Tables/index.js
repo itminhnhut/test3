@@ -31,6 +31,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
                 hasShadow
                 initDate={data?.value}
                 wrapperClassname="!w-full !h-12"
+                colorX="#8694b2"
                 position={item?.position || 'center'}
                 onChange={(e) => onChange(e?.selection, key)}
             />
@@ -45,19 +46,20 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
                 placeholder={item?.placeholder}
                 onChange={(e) => onChange(e, key)}
                 className={classNames('w-full tracking-[0.005em] pb-0')}
+                classNameInput="!placeholder-gray-1 dark:!placeholder-gray-7"
                 prefix={<Search strokeWidth={2} className="text-gray-1 w-4 h-4" />}
             />
         );
     };
 
-    const Reset = () => {
+    const Reset = ({ item }) => {
         return (
             <button
                 onClick={() => setFilter(config)}
-                className="whitespace-nowrap bg-gray-12 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
+                className="whitespace-nowrap bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
             >
-                Reset
+                {item.title}
             </button>
         );
     };
@@ -65,7 +67,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
     const ListFilter = {
         dateRange: (data) => DatePicker(data),
         input: (data) => Input(data),
-        reset: () => Reset()
+        reset: (data) => Reset(data)
     };
 
     const onChange = (value, key) => {
@@ -87,7 +89,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
     const filterArray = Object.keys(config || []);
     return filterArray.map((key) => (
         <div className={`flex flex-col items-start justify-end w-auto ${config[key]?.childClassName || ''}`} key={key}>
-            <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3 text-xs">{config[key].title}</div>
+            <div className="text-txtSecondary dark:text-txtSecondary-dark mb-3 text-sm">{config[key].label}</div>
             {renderFilter(config[key], key)}
         </div>
     ));

@@ -37,7 +37,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
         <ModalV2 isVisible={isModal} className="w-[30.5rem]" onBackdropCb={toggle}>
             <div className="flex flex-col items-center">
                 <UserCircle size={48} className="mb-3" color="#47cc85" />
-                <span className="text-txtPrimary dark:text-gray-4 leading-5 font-semibold mb-2">{detailFriend?.name || '_'}</span>
+                <span className="text-txtPrimary dark:text-gray-4 leading-5 font-semibold mb-2 text-2xl">{detailFriend?.name || '_'}</span>
                 <span className="text-gray-1 dark:text-gray-7 leading-6">{detailFriend?.code || '_'}</span>
             </div>
             <div className="w-full flex flex-row items-center justify-between h-10 mt-6">

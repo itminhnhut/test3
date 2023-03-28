@@ -11,14 +11,14 @@ const BreadCrumbs = ({ level, parentName, breadcrumbs, language, onChangeBreadCr
                     {breadcrumbs?.map((value, index) => {
                         return (
                             index <= level && (
-                                <li>
+                                <li key={index}>
                                     <div className="flex items-center">
                                         {index > 0 && <BreadCrumbIcon />}
                                         <a
                                             onClick={() => onChangeBreadCrumb(value, index)}
                                             className={classNames('ml-0 text-gray-1 dark:text-gray-7 cursor-pointer', {
                                                 'font-semibold': index === level,
-                                                'dark:text-green-2 text-green-3 !cursor-none': index === level && level > 0,
+                                                '!dark:text-green-2 !text-green-3 !cursor-none': index === level && level > 0,
                                                 'hover:text-blue-6 dark:hover:text-white': index !== level
                                             })}
                                         >

@@ -86,6 +86,7 @@ const FriendList = ({ language, t, id }) => {
                 key: 'selection'
             },
             values: null,
+            label: t('reference:friend_list.filter.referral_date'),
             title: t('reference:friend_list.filter.referral_date'),
             position: 'left',
             childClassName: 'min-w-[240px]'
@@ -98,6 +99,7 @@ const FriendList = ({ language, t, id }) => {
                 key: 'selection'
             },
             values: null,
+            label: t('reference:friend_list.filter.total_commissions'),
             title: t('reference:friend_list.filter.total_commissions'),
             childClassName: 'min-w-[240px]'
         },
@@ -105,11 +107,14 @@ const FriendList = ({ language, t, id }) => {
             type: 'input',
             value: null,
             title: t('reference:friend_list.filter.search_id'),
+            label: t('reference:friend_list.filter.search_id'),
             placeholder: t('reference:friend_list.filter.placeholder_search'),
             childClassName: 'max-w-[240px]'
         },
         reset: {
-            type: t('reference:friend_list.filter.reset')
+            type: 'reset',
+            label: '',
+            title: t('reference:friend_list.filter.reset')
         }
     };
     const [loading, setLoading] = useState(false);
@@ -238,9 +243,9 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'name',
                 dataIndex: 'name',
-                title: '',
+                title: t('reference:referral.name'),
                 align: 'left',
-                width: 180,
+                width: 220,
                 render: (value) => value || '_'
             },
             {
@@ -424,7 +429,7 @@ const FriendList = ({ language, t, id }) => {
                     </div>
                     <ButtonV2
                         variants=""
-                        className="w-[122px] whitespace-nowrap bg-gray-12 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
+                        className="hidden w-[122px] whitespace-nowrap bg-gray-12 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
                     >
                         <ExportIcon />

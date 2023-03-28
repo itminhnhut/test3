@@ -86,7 +86,7 @@ const Commission = ({ t, language, id }) => {
             <NoData className="my-20 !text-base" text={t('reference:referral.no_friends')} />
         ) : (
             lastedFriends.map((data) => (
-                <div key={data.userId} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
+                <div key={`NewFriend-${data.name}`} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
                     <div className="flex gap-2 mb-6 items-center">
                         <UserCircle size={32} />
                         <div>
@@ -120,16 +120,26 @@ const Commission = ({ t, language, id }) => {
         );
     }, [lastedFriends]);
 
+    const total = (data) => {
+        if (data.currency === 22) {
+            return `${+formatNumber(data?.value || 0, 4)} USDT`;
+        }
+        if (data.currency === 72) {
+            return `${+formatNumber(data?.value || 0, 0)} USDT`;
+        }
+        return 0;
+    };
+
     const renderLastedCommissions = useMemo(() => {
         return !lastedCommissions.length ? (
             <NoData className="my-20 !text-base" text={t('reference:referral.no_commission')} />
         ) : (
             lastedCommissions.map((data, index) => (
-                <div key={index}>
+                <div key={`commission-${index}-${data.fromUserCode}`}>
                     <div className="flex flex-col gap-1">
                         <div className="flex w-full justify-between items-center font-semibold leading-6">
-                            <div>{`${data.formUserCode} (${t('reference:referral.level')} F${data?.level || 0})`}</div>
-                            <div className="text-teal">+{formatNumber(data.value, 2)} VNDC</div>
+                            <div>{`${data.fromUserCode} (${t('reference:referral.level')} F${data?.level || 0})`}</div>
+                            <div className="text-teal">{total(data)}</div>
                         </div>
                         <div className="flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm">
                             <div>{formatTime(data.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>

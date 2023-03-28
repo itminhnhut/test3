@@ -63,7 +63,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
     const [partner, setPartner] = useState(null);
 
     const [isPartner, setIsPartner] = useState(true);
-    const [isWithdrawal, setIsWithdrawal] = useState(false);
+    const [isWithdrawal, setIsWithdrawal] = useState(true);
     const [openShareModal, setOpenShareModal] = useState(false);
 
     const [isModalWithDrawal, setIsModalWithDrawal] = useState(false);
@@ -89,27 +89,26 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
         }
     };
 
-    const apiKYC = fetchAPI({
-        url: API_KYC_STATUS,
-        options: {
-            method: 'GET'
-        }
-    });
-    const apiPartner = fetchAPI({
-        url: API_PARTNER_REGISTER,
-        options: {
-            method: 'GET'
-        }
-    });
-
     useEffect(() => {
+        const apiKYC = fetchAPI({
+            url: API_KYC_STATUS,
+            options: {
+                method: 'GET'
+            }
+        });
+        const apiPartner = fetchAPI({
+            url: API_PARTNER_REGISTER,
+            options: {
+                method: 'GET'
+            }
+        });
         Promise.all([apiKYC, apiPartner])
             .then((value) => {
                 const [dataKYC = {}, dataPartner = {}] = value || [];
                 if (dataKYC?.status === STATUS_OK) setKyc(dataKYC?.data || {});
                 if (dataPartner?.status === STATUS_OK) {
                     const { phone, social_link, status } = dataPartner?.data || {};
-                    if (phone || social_link) {
+                    if (phone && social_link) {
                         status === 1 ? setIsWithdrawal(true) : setIsWithdrawal(false);
                     } else {
                         setIsPartner(false);

@@ -63,6 +63,7 @@ const index = ({
     return (
         <div className={className}>
             <ReTable
+                fontSize={16}
                 reference={ref}
                 useRowHover={useRowHover}
                 data={loading ? loader : data}

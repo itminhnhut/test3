@@ -110,6 +110,7 @@
         "gold": "Vàng",
         "official": "Chính thức",
         "normal": "Thường",
+        "name": "Họ tên",
         "exchange_volume": "KLGD Exchange",
         "futures_volume": "KLGD Futures",
         "current_volume": "Volume hiện tại",
