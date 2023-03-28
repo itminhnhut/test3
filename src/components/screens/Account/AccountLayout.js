@@ -63,79 +63,85 @@ export default function AccountLayout({ children }) {
                     backgroundPosition: 'center'
                 }}
             />
-            <Container className="mal-container px-4">
-                <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
-                    <AccountAvatar currentAvatar={auth?.user?.avatar} />
-                    <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center">
-                        <div className="">
-                            <div className="mb-2 flex items-center">
-                                <div className="text-xl md:text-2xl !leading-7 font-semibold">
-                                    {auth?.user?.name || auth?.user?.username || auth?.user?.email}
-                                </div>
-                                {{
-                                    [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
-                                    [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                                    [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
-                                }[auth?.user?.kyc_status] || null}
-                            </div>
-                            <TextCopyable
-                                text={auth?.user?.code}
-                                className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
-                            />
-                        </div>
-                        {auth?.user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE && (
-                            <Button
-                                className="w-[90%] md:w-auto px-6 mt-4 md:mt-0"
-                                onClick={() => {
-                                    router.push(PATHS.ACCOUNT.IDENTIFICATION, null, { scroll: false });
-                                }}
-                            >
-                                {t('profile:verify_account')}
-                            </Button>
-                        )}
-                    </div>
-                </div>
-
-                <div className="flex justify-between items-center border-b border-divider dark:border-divider-dark mt-12">
-                    <div className="flex space-x-6">
-                        {[
-                            {
-                                label: t('navbar:menu.user.profile'),
-                                link: PATHS.ACCOUNT.PROFILE
-                            },
-                            {
-                                label: t('identification:kyc_title'),
-                                link: PATHS.ACCOUNT.IDENTIFICATION
-                            }
-                            // {
-                            //     label: t('reward-center:title'),
-                            //     link: PATHS.ACCOUNT.REWARD_CENTER
-                            // }
-                        ].map((item, index) => {
-                            const isActive = item.link === router.asPath;
-                            return (
-                                <Link scroll={false} href={item.link} key={item.link}>
-                                    <div
-                                        className={classnames('py-4 border-b-2 mb-[-1px] cursor-pointer', {
-                                            'border-transparent text-txtSecondary dark:text-txtSecondary-dark': !isActive,
-                                            'border-teal text-txtPrimary font-semibold dark:text-teal': isActive
-                                        })}
-                                    >
-                                        {item.label}
+            <div className="bg-white dark:bg-dark">
+                <Container className="mal-container px-4">
+                    <div className="flex flex-col md:flex-row items-center md:items-end justify-center md:justify-between">
+                        <AccountAvatar currentAvatar={auth?.user?.avatar} />
+                        <div className="mt-6 md:mt-0 md:ml-4 flex-1 flex flex-col md:flex-row justify-between items-center">
+                            <div className="">
+                                <div className="mb-2 flex items-center">
+                                    <div className="text-xl md:text-2xl !leading-7 font-semibold">
+                                        {auth?.user?.name || auth?.user?.username || auth?.user?.email}
                                     </div>
-                                </Link>
-                            );
-                        })}
+                                    {{
+                                        [KYC_STATUS.NO_KYC]: <KYCUnVerifiedTag t={t} />,
+                                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                                        [KYC_STATUS.APPROVED]: <KYCVerifiedTag t={t} />
+                                    }[auth?.user?.kyc_status] || null}
+                                </div>
+                                <TextCopyable
+                                    text={auth?.user?.code}
+                                    className="text-sm md:text-base text-txtSecondary dark:text-txtSecondary-dark justify-center md:justify-start"
+                                />
+                            </div>
+                            {auth?.user?.kyc_status === KYC_STATUS.NO_KYC && router.asPath === PATHS.ACCOUNT.PROFILE && (
+                                <Button
+                                    className="w-[90%] md:w-auto px-6 mt-4 md:mt-0"
+                                    onClick={() => {
+                                        router.push(PATHS.ACCOUNT.IDENTIFICATION, null, { scroll: false });
+                                    }}
+                                >
+                                    {t('profile:verify_account')}
+                                </Button>
+                            )}
+                        </div>
                     </div>
-                    <span
-                        onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
-                        className="hidden md:inline text-teal cursor-pointer font-semibold hover:underline"
-                    >
-                        {t('fee-structure:see_fee_structures')}
-                    </span>
-                </div>
-                <div className="pb-28">{children}</div>
-            </Container>
+
+                    <div className="flex justify-between items-center border-b border-divider dark:border-divider-dark mt-12">
+                        <div className="flex space-x-6">
+                            {[
+                                {
+                                    label: t('navbar:menu.user.profile'),
+                                    link: PATHS.ACCOUNT.PROFILE
+                                },
+                                {
+                                    label: t('identification:kyc_title'),
+                                    link: PATHS.ACCOUNT.IDENTIFICATION
+                                },
+                                {
+                                    label: t('payment-method:payment_method'),
+                                    link: PATHS.ACCOUNT.PAYMENT_METHOD
+                                }
+                                // {
+                                //     label: t('reward-center:title'),
+                                //     link: PATHS.ACCOUNT.REWARD_CENTER
+                                // }
+                            ].map((item, index) => {
+                                const isActive = item.link === router.asPath;
+                                return (
+                                    <Link scroll={false} href={item.link} key={item.link}>
+                                        <div
+                                            className={classnames('py-4 border-b-2 mb-[-1px] cursor-pointer', {
+                                                'border-transparent text-txtSecondary dark:text-txtSecondary-dark': !isActive,
+                                                'border-teal text-txtPrimary font-semibold dark:text-teal': isActive
+                                            })}
+                                        >
+                                            {item.label}
+                                        </div>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+                        <span
+                            onClick={() => router.push(PATHS.FEE_STRUCTURES.TRADING)}
+                            className="hidden md:inline text-teal cursor-pointer font-semibold hover:underline"
+                        >
+                            {t('fee-structure:see_fee_structures')}
+                        </span>
+                    </div>
+                    <div className="pb-28">{children}</div>
+                </Container>
+            </div>
         </MaldivesLayout>
     );
 }
