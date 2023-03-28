@@ -90,6 +90,7 @@
         "success": "Chúc mừng bạn đã thành công trở thành đối tác nạp rút của Nami Exchange."
     },
     "referral": {
+        "friend_list": "Danh sách bạn bè",
         "commission_histories": "Lịch sử hoàn phí",
         "term": "Điều khoản",
         "referral_date": "Ngày giới thiệu",
@@ -124,7 +125,7 @@
         "add_ref_code": "Thêm mã giới thiệu",
         "update_success": "Cập nhật thành công",
         "no_friends": "Không có bạn bè",
-        "show_more": "Xem thêm",
+        "show_more": "Xem thêm danh sách",
         "modify_note": "Chỉnh sửa ghi chú",
         "confirm": "Xác nhận",
         "add_new_referral": "Thêm giới thiệu mới",
@@ -136,7 +137,7 @@
         "reward_commission": "Nhận hoa hồng",
         "new_friends": "Người dùng mới nhất",
         "rank": "Hạng",
-        "level": "Cấp bậc",
+        "level": "Nhóm",
         "type": "Loại",
         "type_commission": "Loại hoa hồng",
         "new_friend": "Bạn bè mới",

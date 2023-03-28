@@ -83,7 +83,7 @@ const Commission = ({ t, language, id }) => {
 
     const renderNewFriends = useMemo(() => {
         return !lastedFriends.length ? (
-            <NoData className="my-20" text={t('reference:referral.no_friends')} />
+            <NoData className="my-20 !text-base" text={t('reference:referral.no_friends')} />
         ) : (
             lastedFriends.map((data) => (
                 <div key={data.userId} className="p-4 bg-gray-13 dark:bg-dark-2 rounded-xl">
@@ -104,15 +104,15 @@ const Commission = ({ t, language, id }) => {
                     <div className="space-y-3">
                         <div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral:referrer')}</span>
-                            <span className="float-right text-teal font-semibold">{data?.invitedBy?.name || '_'}</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{data?.invitedBy?.name || '_'}</span>
                         </div>
                         <div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">ID người giới thiệu</span>
-                            <span className="float-right">{data?.invitedBy.code || '_'}</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{data?.invitedBy?.code || '_'}</span>
                         </div>
                         <div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('reference:referral:level')}</span>
-                            <span className="float-right">{`F${data?.level - 1}`}</span>
+                            <span className="float-right text-txtPrimary dark:text-gray-4 font-semibold">{`F${data?.level - 1}`}</span>
                         </div>
                     </div>
                 </div>
@@ -122,13 +122,13 @@ const Commission = ({ t, language, id }) => {
 
     const renderLastedCommissions = useMemo(() => {
         return !lastedCommissions.length ? (
-            <NoData className="my-20" text={t('reference:referral.no_commission')} />
+            <NoData className="my-20 !text-base" text={t('reference:referral.no_commission')} />
         ) : (
             lastedCommissions.map((data, index) => (
                 <div key={index}>
                     <div className="flex flex-col gap-1">
                         <div className="flex w-full justify-between items-center font-semibold leading-6">
-                            <div>{`${data.formUserCode} (${t('reference:referral.level')} ${data?.level || 0})`}</div>
+                            <div>{`${data.formUserCode} (${t('reference:referral.level')} F${data?.level || 0})`}</div>
                             <div className="text-teal">+{formatNumber(data.value, 2)} VNDC</div>
                         </div>
                         <div className="flex w-full justify-between items-center text-txtSecondary dark:text-txtSecondary-dark text-sm">
@@ -144,7 +144,7 @@ const Commission = ({ t, language, id }) => {
     }, [lastedCommissions]);
 
     return (
-        <div className="flex gap-8 w-full" id={id}>
+        <div className="flex gap-6 w-full" id={id}>
             {/* Hoa hồng */}
             <RefCard wrapperClassName="!py-6 px-8 w-full max-h-[624px]" isBlack={theme === THEME_MODE.DARK}>
                 <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.reward_commission')}</div>
@@ -153,7 +153,7 @@ const Commission = ({ t, language, id }) => {
             {/* Bạn bè mới */}
             <RefCard wrapperClassName="!py-6 px-8 w-full max-h-[624px]" isBlack={theme === THEME_MODE.DARK}>
                 <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.new_friends')}</div>
-                <div className="max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-8">{renderNewFriends}</div>
+                <div className="max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-4">{renderNewFriends}</div>
             </RefCard>
         </div>
     );

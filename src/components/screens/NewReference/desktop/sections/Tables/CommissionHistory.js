@@ -146,7 +146,8 @@ const CommissionHistory = ({ t, commisionConfig, id }) => {
                 dataIndex: 'level',
                 title: t('reference:referral.level'),
                 align: 'left',
-                width: 100
+                width: 100,
+                render: (data) => <div>{`F${data}`}</div>
             },
             {
                 key: 'kind',

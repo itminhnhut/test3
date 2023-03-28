@@ -47,35 +47,45 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     return isDesktop ? (
         <ModalV2 isVisible={isShow} onBackdropCb={doClose} className="w-[30rem]">
             <p className="text-[22px] py-6 font-semibold">{t('reference:referral.friend_list')}</p>
-            {loading ? (
-                <IconLoading color={colors.teal} />
-            ) : friendList.length ? (
-                <div>
-                    <div className="flex w-full justify-between text-txtSecondary dark:text-txtSecondary-dark text-sm mb-6">
-                        <div>NamiID</div>
-                        <div>{t('reference:referral.referral_date')}</div>
-                    </div>
-                    <div className="flex flex-col gap-4 max-h-[400px] h-full overflow-auto no-scrollbar">
-                        {friendList.map((data, index) => {
-                            return (
-                                <div className="w-full flex items-center justify-between" key={index}>
-                                    <div>{data.code}</div>
-                                    <div>{formatTime(data.invitedAt, 'dd-MM-yyyy')}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    {hasNext.current ? (
-                        <div className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer" onClick={() => setMore(99999999999)}>
-                            {t('reference:referral.show_more')}
+            <div>
+                <div className="flex w-full justify-between text-gray-1 dark:text-gray-7 text-sm mb-6">
+                    <div>NamiID</div>
+                    <div>{t('reference:referral.referral_date')}</div>
+                </div>
+                {loading ? (
+                    <IconLoading color={colors.teal} />
+                ) : friendList.length ? (
+                    <>
+                        <div className="flex flex-col gap-4 max-h-[400px] h-full overflow-auto no-scrollbar">
+                            {friendList.map((data, index) => {
+                                return (
+                                    <div className="w-full flex items-center justify-between" key={index}>
+                                        <div>
+                                            <div className="text-gray-15 dark:text-gray-4">{data.username}</div>
+                                            <div className=" text-sm text-gray-1 dark:text-gray-7">{data.code}</div>
+                                        </div>
+                                        <div>{formatTime(data.invitedAt, 'dd-MM-yyyy')}</div>
+                                    </div>
+                                );
+                            })}
                         </div>
-                    ) : null}
-                </div>
-            ) : (
-                <div className="w-full h-[300px] flex flex-col justify-center items-center text-txtSecondary dark:text-txtSecondary-dark text-sm gap-2">
-                    <NoData text={t('reference:referral.no_friends')} width="120" height="120" />
-                </div>
-            )}
+                        <div>
+                            {hasNext.current ? (
+                                <div
+                                    className="mt-2 text-teal underline text-sm font-medium leading-6 text-center cursor-pointer"
+                                    onClick={() => setMore(99999999999)}
+                                >
+                                    {t('reference:referral.show_more')}
+                                </div>
+                            ) : null}
+                        </div>
+                    </>
+                ) : (
+                    <div className="w-full h-[300px] flex flex-col justify-center items-center text-txtSecondary dark:text-txtSecondary-dark text-sm gap-2">
+                        <NoData text={t('reference:referral.no_friends')} width="120" height="120" />
+                    </div>
+                )}
+            </div>
         </ModalV2>
     ) : (
         <PopupModal

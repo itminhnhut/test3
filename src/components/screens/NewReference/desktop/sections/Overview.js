@@ -419,6 +419,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
 
 export default Overview;
 
+const MAX_LIST = 20;
 const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }) => {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
@@ -505,9 +506,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
                         isDesktop
                     />
                 )}
-                <div className="border-b border-transparent dark:border-divider-dark -mx-6 px-6 pb-3 text-2xl font-semibold">
-                    {t('reference:referral.referral_code_management')}
-                </div>
+                <div className="-mx-6 px-6 pb-3 text-2xl font-semibold">{t('reference:referral.referral_code_management')}</div>
                 <div className="overflow-y-auto flex-1 min-h-0 mb-8 py-6 px-6 -mx-6 bg-gray-10 dark:bg-transparent">
                     {loading ? (
                         <IconLoading color={colors.teal} />
@@ -589,7 +588,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
                     )}
                 </div>
                 <div className="z-20 w-full flex justify-center">
-                    <ButtonV2 disabled={refs.length >= 20} onClick={refs.length >= 20 ? null : () => setShowAddRef(true)}>
+                    <ButtonV2 disabled={refs.length >= MAX_LIST} onClick={refs.length >= MAX_LIST ? null : () => setShowAddRef(true)}>
                         {t('reference:referral.add_ref_code')}
                     </ButtonV2>
                 </div>

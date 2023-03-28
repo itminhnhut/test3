@@ -92,6 +92,9 @@
         "success": "Congratulations on successfully becoming a deposit and withdrawal partner of Nami Exchange."
     },
     "referral": {
+        "reward_commission": "Receive Commission",
+        "type_commission": "Type Commission",
+        "friend_list": "Friend List",
         "total_commissions": "Total Commissions",
         "commission_histories": "Commission Histories",
         "referral_date": "Ngày giới thiệu",
@@ -127,7 +130,7 @@
         "add_ref_code": "Add Referral Code",
         "update_success": "Successful update",
         "no_friends": "Not having any friends",
-        "show_more": "View More",
+        "show_more": "View More List",
         "modify_note": "Modify Note",
         "confirm": "Confirm",
         "add_new_referral": "Add A New Referral",
@@ -138,7 +141,7 @@
         "friends_get": "Friends get",
         "new_friends": "New Friends",
         "rank": "Rank",
-        "level": "Level",
+        "level": "Group",
         "type": "Type",
         "new_friend": "New Friend",
         "referrer": "Referrer",
