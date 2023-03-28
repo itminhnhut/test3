@@ -9,13 +9,13 @@ const RECOMMENT_AMOUNT = {
 const RecommendAmount = ({ amount, setAmount, assetCode }) => {
     const [rcmdAmount, setRcmdAmount] = useState([]);
     useEffect(() => {
-        if (!amount) {
+        if (!amount && assetCode) {
             setRcmdAmount(RECOMMENT_AMOUNT[assetCode]);
         }
     }, [assetCode, amount]);
     return (
         <div className="flex items-center overflow-x-auto space-x-3 pb-3 mb-3">
-            {rcmdAmount.map((amountRcmd) => (
+            {rcmdAmount?.map((amountRcmd) => (
                 <div
                     onClick={() => {
                         setAmount(amountRcmd);

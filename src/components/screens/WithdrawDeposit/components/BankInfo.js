@@ -23,7 +23,8 @@ export const BankInfo = ({
         <DropdownCard
             additionalActions={additionalActions}
             containerClassname={containerClassname}
-            loading={loadingBanks || loading}
+            loading={loading}
+            loadingList={loadingBanks}
             label={
                 <>
                     {showTooltip && (

@@ -8,16 +8,6 @@ export const SIDE = {
     SELL: 'SELL'
 };
 
-export const ALLOWED_ASSET = {
-    72: 'VNDC',
-    22: 'USDT'
-};
-
-export const ALLOWED_ASSET_ID = {
-    VNDC: 72,
-    USDT: 22
-};
-
 export const initialState = {
     input: '',
     accountBank: null,
