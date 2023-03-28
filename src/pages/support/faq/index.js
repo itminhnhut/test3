@@ -171,15 +171,13 @@ const SupportAnnouncement = () => {
                     <div className="flex flex-wrap justify-between w-full mb-8 md:mb-12 lg:mb-[80px]">
                         {renderTopics()}
                         {!loading && categories?.length / 3 !== 0 &&
-                            <Link>
-                                <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
-                                    <TopicItem
-                                        icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
-                                            height="24" />}
-                                        description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
-                                    />
-                                </a>
-                            </Link>
+                            <a className="invisible pointer-event-none block w-[48%] sm:w-[49%] lg:w-[32%] mt-3 md:mt-5">
+                                <TopicItem
+                                    icon={<Image src="/images/icon/ic_exchange.png" layout="responsive" width="24"
+                                        height="24" />}
+                                    description="Check out the latest coin listings and pairs on Exchange, Futures Markets, Launchpad..."
+                                />
+                            </a>
                         }
                     </div>
                     <div className="text-[16px] font-bold md:text-[20px] lg:text-[28px] mb-6 md:mb-8">
