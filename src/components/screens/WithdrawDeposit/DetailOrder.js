@@ -15,11 +15,11 @@ import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } fro
 import useMarkOrder from './hooks/useMarkOrder';
 import Countdown from 'react-countdown';
 import toast from 'utils/toast';
-import { get } from 'lodash';
 import classNames from 'classnames';
+import Custom404 from 'pages/404';
 
-const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
-    return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
+const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
+    return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
 const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
@@ -57,7 +57,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     const [state, set] = useState({
         orderDetail: null,
         isShowQr: false,
-        isShowUploadImg: false
+        isShowUploadImg: false,
+        firstLoad: true
     });
 
     const [modalProps, setModalProps] = useState({
@@ -131,6 +132,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }
                 } catch (error) {
                     console.log('error:', error);
+                } finally {
+                    setState({ firstLoad: false });
                 }
             }
         };
@@ -150,10 +153,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         if (!state.orderDetail) return;
 
         const isPartner = mode === MODE.PARTNER;
-        const side = get(state?.orderDetail, 'side');
-        const myStatus = get(state?.orderDetail, `${mode}Status`);
-        const theirStatus = get(state?.orderDetail, `${isPartner ? MODE.USER : MODE.PARTNER}Status`);
-        const orderStatus = get(state?.orderDetail, 'status');
+        const side = state.orderDetail?.side;
+        const myStatus = state.orderDetail[`${mode}Status`];
+        const theirStatus = state.orderDetail[`${isPartner ? MODE.USER : MODE.PARTNER}Status`];
+        const orderStatus = state.orderDetail?.status;
 
         ({
             [SIDE.BUY]: {
@@ -253,20 +256,21 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         }[side.toUpperCase()].render());
 
         return (
-            <>
+            <div className="flex gap-x-4">
                 {primaryBtn && (
                     <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px]', primaryBtn?.class)}>
                         {/* //!whitespace-nowrap px-[62.5px] */}
                         {primaryBtn?.text}
                     </ButtonV2>
                 )}
+
                 {secondaryBtn && (
                     <ButtonV2 onClick={secondaryBtn?.function} className={classNames('px-6 !w-auto', secondaryBtn?.class)} variants="secondary">
                         {secondaryBtn?.text}
                     </ButtonV2>
                 )}
                 {reportBtn}
-            </>
+            </div>
         );
     }, [mode, state?.orderDetail]);
 
@@ -301,7 +305,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
-                    <div className="flex gap-x-4">{renderButton()}</div>
+                    {renderButton()}
 
                     <div className="flex justify-end ">
                         <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
@@ -322,10 +326,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 />
             )}
             {/*Modal confirm the order */}
-            <ModalConfirm modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
+            <ModalConfirm mode={mode} modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
 
             {/*Modal After confirm (success, error,...) */}
-            <ModalConfirm modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })} />
+            <ModalConfirm
+                mode={mode}
+                modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })}
+            />
 
             <ModalUploadImage
                 isVisible={state.isShowUploadImg}

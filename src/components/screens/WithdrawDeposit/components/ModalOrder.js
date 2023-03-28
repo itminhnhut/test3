@@ -6,8 +6,8 @@ import classNames from 'classnames';
 import { ORDER_TYPES } from '../constants';
 import { useRouter } from 'next/router';
 
-const ModalOrder = ({ isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
-    const router = useRouter()
+const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
+    const router = useRouter();
     return (
         <ModalV2
             isVisible={isVisible}
@@ -18,8 +18,8 @@ const ModalOrder = ({ isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, a
             {type && (
                 <div className="text-center ">
                     <div className="text-dominant flex justify-center mb-6">{type.icon}</div>
-                    <div className="txtPri-3 mb-4">{type.title}</div>
-                    <div className="txtSecond-2 ">{isFunction(type.description) ? additionalData && type.description(additionalData) : type.description}</div>
+                    <div className="txtPri-3 mb-4">{type.title(mode)}</div>
+                    <div className="txtSecond-2 ">{type.description({ ...additionalData, mode })}</div>
                     {type.showConfirm && isFunction(type.showConfirm) ? (
                         type.showConfirm(router)
                     ) : (

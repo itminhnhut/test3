@@ -42,12 +42,16 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                                 })}
                             </h2>
                         )}
-                        {!status ? <Skeletor width="150px" /> : <OrderStatusTag status={status?.status} />}
+                        {!orderDetail ? <Skeletor width="150px" /> : <OrderStatusTag status={status?.status} />}
                     </div>
                     <div>
                         <span className="txtSecond-2">{t('dw_partner:amount')}</span>
                         <div className="mt-3 text-2xl font-semibold">
-                            {!orderDetail ? <Skeletor width="300px" /> : `${side === 'BUY' ? '+' : '-'}${formatNumber(orderDetail?.baseQty)} ${assetCode}`}
+                            {!orderDetail ? (
+                                <Skeletor width="200px" height="30px" />
+                            ) : (
+                                `${side === 'BUY' ? '+' : '-'}${formatNumber(orderDetail?.baseQty)} ${assetCode}`
+                            )}
                         </div>
                     </div>
 
@@ -55,11 +59,15 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                         <div className="flex items-end gap-x-6">
                             <div className="flex flex-col gap-y-3">
                                 <span className="txtSecond-2">{t('common:transaction_id')}</span>
-                                <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
+                                {!orderDetail ? (
+                                    <Skeletor width="100px" />
+                                ) : (
+                                    <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
+                                )}
                             </div>
                             <div className="flex flex-col gap-y-3">
                                 <span className="txtSecond-2">{t('common:time')}</span>
-                                <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
+                                {!orderDetail ? <Skeletor width="100px" /> : <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>}
                             </div>
                         </div>
                         <div>
@@ -81,6 +89,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                 <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
                     <div className="flex justify-between items-start">
                         <InfoCard
+                            loading={!orderDetail}
                             content={{
                                 mainContent: orderDetail?.partnerMetadata?.name,
                                 subContent: (
@@ -103,20 +112,35 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                     <div className="flex flex-col mt-6 gap-y-4">
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
-                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.note} />
+                            {!orderDetail ? (
+                                <Skeletor width="100px" />
+                            ) : (
+                                <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.note} />
+                            )}
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('wallet:bank_name')}</span>
-                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.bankName} />
+                            {!orderDetail ? (
+                                <Skeletor width="100px" />
+                            ) : (
+                                <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.bankName} />
+                            )}
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('wallet:account_number')}</span>
-                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
+                            {!orderDetail ? (
+                                <Skeletor width="100px" />
+                            ) : (
+                                <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
+                            )}
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">Người thụ hưởng</span>
-
-                            <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
+                            {!orderDetail ? (
+                                <Skeletor width="100px" />
+                            ) : (
+                                <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
+                            )}
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('common:amount')}</span>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { DisputedType, MODAL_KEY, ORDER_TYPES, TranferreredType } from '../constants';
+import { DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
@@ -9,17 +9,22 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
         let isRejected = false;
+        const isPartner = mode === MODE.PARTNER;
 
         switch (userStatus) {
             case PartnerPersonStatus.DISPUTED:
                 switch (statusType) {
                     case DisputedType.REPORT:
                         type = ORDER_TYPES.REPORT_SUCCESS;
-                        additionalData = id;
+                        additionalData = {
+                            displayingId: id
+                        };
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_SUCCESS;
-                        additionalData = id;
+                        additionalData = {
+                            displayingId: id
+                        };
                         isRejected = true;
                         break;
                     default:
@@ -27,12 +32,8 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
                 }
                 break;
             case PartnerPersonStatus.TRANSFERRED:
-                type = ORDER_TYPES.BUY_SUCCESS;
-                additionalData = {
-                    displayingId: id,
-                    amount: formatBalance(baseQty, 0),
-                    token: assetCode
-                };
+                type = ORDER_TYPES.TRANSFERRED_SUCCESS;
+                additionalData = { displayingId: id, amount: formatBalance(baseQty, 0), token: assetCode };
                 break;
 
             default:
