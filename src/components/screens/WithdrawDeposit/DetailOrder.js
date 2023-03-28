@@ -11,20 +11,18 @@ import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } f
 import { getAssetCode } from 'redux/actions/utils';
 
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType } from './constants';
+import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
 import Countdown from 'react-countdown';
+import toast from 'utils/toast';
+import { get } from 'lodash';
+import classNames from 'classnames';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
-const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
-const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
-const ModalOrder = dynamic(() => import('./components/ModalOrder'));
-const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
-
-const ReportButton = ({ timeExpire, onMarkWithStatus }) => {
+const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
     return timeExpire ? (
         <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
             {(props) => (
@@ -43,7 +41,12 @@ const ReportButton = ({ timeExpire, onMarkWithStatus }) => {
     );
 };
 
-const DetailOrder = ({ id }) => {
+const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
+const ModalQr = dynamic(() => import('./components/ModalQr'), { ssr: false });
+const ModalOrder = dynamic(() => import('./components/ModalOrder'));
+const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', { ssr: false }));
+
+const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
     // const user = useSelector((state) => state.auth.user) || null;
     const userSocket = useSelector((state) => state.socket.userSocket);
@@ -64,7 +67,7 @@ const DetailOrder = ({ id }) => {
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
-    const side = useMemo(() => state.orderDetail?.side, [state.orderDetail]);
+    const side = state.orderDetail?.side;
     const status = useMemo(
         () => ({
             status: state.orderDetail?.status,
@@ -85,15 +88,19 @@ const DetailOrder = ({ id }) => {
             }
         }));
 
-    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side });
+    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side, mode });
 
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                console.log('data:', data);
                 setState({
                     orderDetail: data
                 });
+
+                // const { status } = data;
+                // if (status === PartnerOrderStatus.SUCCESS) {
+                //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
+                // }
             });
         }
         return () => {
@@ -135,48 +142,133 @@ const DetailOrder = ({ id }) => {
         window?.fcWidget?.open({ name: 'Inbox', replyText: '' });
     };
 
-    const renderButton = useCallback(
-        () =>
-            side === SIDE.BUY ? (
-                status?.status === PartnerOrderStatus.PENDING && status?.userStatus === PartnerPersonStatus.PENDING ? (
-                    <>
-                        <ButtonV2
-                            onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TRANSFERRED)}
-                            className="!whitespace-nowrap px-[62.5px]"
-                        >
-                            {t('wallet:transfer_already')}{' '}
-                        </ButtonV2>
-                        <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED)} className="px-6" variants="secondary">
-                            Huỷ giao dịch
-                        </ButtonV2>
-                    </>
-                ) : (
-                 status.status !== PartnerOrderStatus.SUCCESS &&   status?.userStatus === PartnerPersonStatus.TRANSFERRED && (
-                        <ButtonV2 onClick={() => setState({ isShowUploadImg: true })} className="!whitespace-nowrap min-w-[268px]">
-                            {Boolean(state.orderDetail.userUploadImage) ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'}
-                        </ButtonV2>
-                    )
-                )
-            ) : status?.status === PartnerOrderStatus.PENDING && status?.partnerStatus === PartnerPersonStatus.PENDING ? (
-                <ButtonV2 onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED)} className="px-6" variants="secondary">
-                    Huỷ giao dịch
-                </ButtonV2>
-            ) : status?.status === PartnerOrderStatus.PENDING &&
-              status?.partnerStatus === PartnerPersonStatus.TRANSFERRED ? (
-                <>
-                    <ButtonV2
-                        onClick={() => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType.U_P.TAKE)}
-                        className="!whitespace-nowrap px-[62.5px]"
-                    >
-                        {t('wallet:transfer_already')}
+    const renderButton = useCallback(() => {
+        let primaryBtn = null,
+            secondaryBtn = null,
+            reportBtn = null;
+
+        if (!state.orderDetail) return;
+
+        const isPartner = mode === MODE.PARTNER;
+        const side = get(state?.orderDetail, 'side');
+        const myStatus = get(state?.orderDetail, `${mode}Status`);
+        const theirStatus = get(state?.orderDetail, `${isPartner ? MODE.USER : MODE.PARTNER}Status`);
+        const orderStatus = get(state?.orderDetail, 'status');
+
+        ({
+            [SIDE.BUY]: {
+                render: () => {
+                    if (orderStatus === PartnerOrderStatus.PENDING) {
+                        // partner logic
+                        if (isPartner) {
+                            //user chua chuyen tien
+                            if (theirStatus === PartnerPersonStatus.PENDING) {
+                                secondaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    text: 'Từ chối giao dịch'
+                                };
+                            } else {
+                                primaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                    text: 'Tôi đã nhận tiền'
+                                };
+                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                            }
+                        }
+                        // user logic
+                        else {
+                            if (theirStatus === PartnerPersonStatus.PENDING) {
+                                // user chua chuyen tien
+                                if (myStatus === PartnerPersonStatus.PENDING) {
+                                    secondaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                        text: 'Huỷ giao dịch'
+                                    };
+                                    primaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                        text: t('wallet:transfer_already')
+                                    };
+                                    return;
+                                }
+                                // transferred
+                                if (myStatus === PartnerPersonStatus.TRANSFERRED) {
+                                    primaryBtn = {
+                                        function: () => setState({ isShowUploadImg: true }),
+                                        text: state.orderDetail?.userUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                    };
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            [SIDE.SELL]: {
+                render: () => {
+                    if (orderStatus === PartnerOrderStatus.PENDING) {
+                        //partner logic
+                        if (isPartner) {
+                            //partner chua chuyen tien
+                            if (myStatus === PartnerPersonStatus.PENDING) {
+                                secondaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    text: 'Từ chối giao dịch'
+                                };
+                                primaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                    text: 'Xác nhận'
+                                };
+
+                                return;
+                            }
+
+                            // transferred
+                            if (myStatus === PartnerPersonStatus.TRANSFERRED) {
+                                primaryBtn = {
+                                    function: () => setState({ isShowUploadImg: true }),
+                                    text: state.orderDetail?.partnerUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                };
+                            }
+                        } else {
+                            // partner chua chuyen tien
+                            if (theirStatus === PartnerPersonStatus.PENDING) {
+                                secondaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    text: 'Huỷ giao dịch'
+                                };
+
+                                return;
+                            }
+                            // partner transferred
+                            if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
+                                primaryBtn = {
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    text: 'Tôi đã nhận tiền'
+                                };
+                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                            }
+                        }
+                    }
+                }
+            }
+        }[side.toUpperCase()].render());
+
+        return (
+            <>
+                {primaryBtn && (
+                    <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px]', primaryBtn?.class)}>
+                        {/* //!whitespace-nowrap px-[62.5px] */}
+                        {primaryBtn?.text}
                     </ButtonV2>
-                    <ReportButton timeExpire={state.orderDetail?.timeExpire} onMarkWithStatus={onMarkWithStatus} />
-                </>
-            ) : (
-                <></>
-            ),
-        [side, state.orderDetail, status]
-    );
+                )}
+                {secondaryBtn && (
+                    <ButtonV2 onClick={secondaryBtn?.function} className={classNames('px-6 !w-auto', secondaryBtn?.class)} variants="secondary">
+                        {secondaryBtn?.text}
+                    </ButtonV2>
+                )}
+                {reportBtn}
+            </>
+        );
+    }, [mode, state?.orderDetail]);
 
     return (
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
@@ -209,9 +301,9 @@ const DetailOrder = ({ id }) => {
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
-                    <div className={`flex gap-x-4 `}>{renderButton()}</div>
+                    <div className="flex gap-x-4">{renderButton()}</div>
 
-                    <div className="flex justify-end w-full">
+                    <div className="flex justify-end ">
                         <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
                             <FutureSupportIcon className="mr-2" isDark={isDark} />
                             {t('common:chat_with_support')}
