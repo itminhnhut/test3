@@ -14,8 +14,6 @@ import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
 import Skeletor from 'components/common/Skeletor';
 
-const INFOR_LIST = ['Nội dung chuyển khoản', 'Ngân hàng', 'Số tài khoản', 'Người thụ hưởng', 'Số lượng'];
-
 const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode }) => {
     const {
         data: rate,
@@ -135,7 +133,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                             )}
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="txtSecond-2">Người thụ hưởng</span>
+                            <span className="txtSecond-2">{t('dw_partner:beneficiary')}</span>
                             {!orderDetail ? (
                                 <Skeletor width="100px" />
                             ) : (
