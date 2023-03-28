@@ -1,14 +1,15 @@
 {
-    "buy_title": "Deposit through partner",
-    "sell_title": "Withdraw through partner",
+    "buy_title": "Buy via Partner",
+    "sell_title": "Sell via Partner",
     "payment_method_description": "Sau khi bấm mua, vui lòng chuyển tiền cho đối tác trong vòng 15 phút trước khi lệnh mua bị huỷ tự động.",
     "transaction_detail": "Transaction details",
     "transaction_bank_receipt": "Transaction Bank Infor",
     "transfer_already": "Bank transfer completed",
-    "take_money_already":"Confirm received money",
+    "take_money_already": "Confirm received money",
     "sell_asset_from_partners": "Sell {{asset}} through partner",
     "buy_asset_from_partners": "Buy {{asset}} through partner",
     "upload_image_success": "Upload image success",
     "upload_image_fail": "Upload image failed",
-    "amount": "Amount"
+    "amount": "Amount",
+    "rate": "Rate"
 }

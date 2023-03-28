@@ -10,5 +10,16 @@
     "buy_asset_from_partners": "Mua {{asset}} qua đối tác",
     "upload_image_success": "Tải ảnh lênh thành công",
     "upload_image_fail": "Tải ảnh lênh thất bại",
-    "amount": "Số lượng"
+    "amount": "Số lượng",
+    "rate": "Tỷ giá",
+    "min_amount": "Số lượng tối thiểu",
+    "max_amount": "Số lượng tối đa",
+    "daily_limit": "Giới hạn trong ngày",
+    "rest_daily_limit": "Giới hạn còn lại trong ngày",
+    "need_transfer": "Bạn cần chuyển",
+    "error": {
+        "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
+        "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
+        "miss_input": "Vui lòng nhập số lượng"
+    }
 }

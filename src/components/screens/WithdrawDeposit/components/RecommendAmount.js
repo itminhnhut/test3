@@ -9,7 +9,7 @@ const RECOMMENT_AMOUNT = {
 const RecommendAmount = ({ amount, setAmount, assetCode }) => {
     const [rcmdAmount, setRcmdAmount] = useState([]);
     useEffect(() => {
-        if (!amount) {
+        if (!amount && assetCode) {
             setRcmdAmount(RECOMMENT_AMOUNT[assetCode]);
         }
     }, [assetCode, amount]);
