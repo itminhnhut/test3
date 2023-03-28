@@ -94,14 +94,16 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                setState({
-                    orderDetail: data
-                });
-
-                // const { status } = data;
-                // if (status === PartnerOrderStatus.SUCCESS) {
-                //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
-                // }
+                // make sure the socket displayingId is the current details/[id] page
+                if (data && data.displayingId === id) {
+                    setState({
+                        orderDetail: data
+                    });
+                    // const { status } = data;
+                    // if (status === PartnerOrderStatus.SUCCESS) {
+                    //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
+                    // }
+                }
             });
         }
         return () => {
