@@ -13,6 +13,7 @@ import Countdown from 'react-countdown';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
 import Skeletor from 'components/common/Skeletor';
+import CircleCountdown from './components/common/CircleCountdown';
 
 const INFOR_LIST = ['Nội dung chuyển khoản', 'Ngân hàng', 'Số tài khoản', 'Người thụ hưởng', 'Số lượng'];
 
@@ -70,16 +71,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                                 {!orderDetail ? <Skeletor width="100px" /> : <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>}
                             </div>
                         </div>
-                        <div>
-                            {status?.status === PartnerOrderStatus.PENDING && (
-                                <Countdown
-                                    date={new Date(orderDetail?.timeExpire).getTime()}
-                                    renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
-                                >
-                                    {(props) => <CountdownTimer {...props} />}
-                                </Countdown>
-                            )}
-                        </div>
+                        <div>{status?.status === PartnerOrderStatus.PENDING && <CircleCountdown timeExpire={orderDetail?.timeExpire} />}</div>
                     </div>
                 </div>
             </div>

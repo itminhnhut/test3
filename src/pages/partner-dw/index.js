@@ -1,27 +1,18 @@
 import React from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 
-import dynamic from 'next/dynamic';
-
-const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
-    ssr: false
-});
+import { PATHS } from 'constants/paths';
 
 const index = () => {
-    return (
-        <MaldivesLayout>
-            <PartnerWD />
-        </MaldivesLayout>
-    );
+    return null;
 };
 
 export default index;
 
 export const getServerSideProps = async (context) => {
     return {
-        props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner']))
+        redirect: {
+            destination: PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER,
+            permanent: false
         }
     };
 };

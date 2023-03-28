@@ -90,6 +90,15 @@ const WITHDRAW_DEPOSIT = {
     DETAIL: '/withdraw-deposit/details'
 };
 
+const PARNER_WITHDRAW_DEPOSIT = {
+    DEFAULT: '/partner-dw/',
+    OPEN_ORDER: '/partner-dw/opening-orders',
+    HISTORY_ORDER: '/partner-dw/history-orders',
+    STATS: '/partner-dw/stats',
+    PROFILE: '/partner-dw/profile',
+    HISTORY_REFERRAL: '/partner-dw/history-referral'
+};
+
 export const PATHS = {
     ACCOUNT,
     WALLET,
@@ -101,7 +110,8 @@ export const PATHS = {
     REFERENCE,
     SUPPORT,
     TRANSACTION_HISTORY,
-    WITHDRAW_DEPOSIT
+    WITHDRAW_DEPOSIT,
+    PARNER_WITHDRAW_DEPOSIT
     // Add news path here
 };
 
