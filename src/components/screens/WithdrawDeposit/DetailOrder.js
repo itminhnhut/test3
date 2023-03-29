@@ -194,7 +194,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     };
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                        text: t('wallet:transfer_already')
+                                        text: t('dw_partner:transfer_already')
                                     };
                                     return;
                                 }
