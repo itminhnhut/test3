@@ -10,8 +10,6 @@ import Spinner from 'components/svg/Spinner';
 const DropdownCard = ({
     loading,
     loadingList,
-    show = true,
-    setShow = () => {},
     containerClassname,
     disabled,
     label,
@@ -21,37 +19,36 @@ const DropdownCard = ({
     setSearch,
     data,
     onSelect,
-    additionalActions
+    additionalActions,
+    showDropdownIcon = true
 }) => {
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
     useClickAway(cardRef, () => {
-        if (isVisible && show) {
+        if (isVisible) {
             setVisible(false);
-            setShow(false);
         }
     });
     return (
         <PopoverSelect
             ref={cardRef}
-            open={isVisible && show}
+            open={isVisible}
             containerClassname={{ [containerClassname]: isVisible }}
             label={
                 <div className="bg-gray-12  dark:bg-dark-2 px-4 py-6 rounded-xl w-full">
                     <div className="txtSecond-2 mb-4"> {label}</div>
                     <button
-                        disabled={disabled || loading}
+                        disabled={disabled || loading || loadingList}
                         className="w-full disabled:cursor-default cursor-pointer text-left"
                         onClick={() => {
                             setVisible((prev) => !prev);
-                            setShow((prev) => !prev);
                         }}
                     >
                         <InfoCard
                             loading={loading}
                             content={selected.content}
                             imgSize={imgSize}
-                            endIcon={<ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />}
+                            endIcon={loadingList ?  <Spinner size={20} color="currentColor" /> : showDropdownIcon ? <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} /> : null}
                         />
                     </button>
                 </div>
@@ -75,7 +72,6 @@ const DropdownCard = ({
                                     if (onSelect) {
                                         onSelect(item);
                                         setVisible(false);
-                                        setShow(false);
                                     }
                                 }}
                                 disabled={selected?.id === item?._id}

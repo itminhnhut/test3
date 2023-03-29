@@ -17,7 +17,9 @@ export const BankInfo = ({
     onSelect,
     showTag = false,
     additionalActions,
-    t
+    t,
+    showDropdownIcon,
+    disabled
 }) => {
     const [search, setSearch] = useState('');
     return (
@@ -26,6 +28,8 @@ export const BankInfo = ({
             containerClassname={containerClassname}
             loading={loading}
             loadingList={loadingBanks}
+            showDropdownIcon={showDropdownIcon}
+            disabled={disabled}
             label={
                 <>
                     {showTooltip && (

@@ -150,15 +150,6 @@ const HistoryTable = () => {
         fetchData();
     }, [activeTab, currentPage]);
 
-    // useEffect(() => {
-    //     setCurrentPage(0);
-    //     fetchData();
-    // }, [activeTab]);
-
-    // useEffect(() => {
-    //     fetchData();
-    // }, [currentPage]);
-
     return (
         <div className="space-y-6">
             <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>

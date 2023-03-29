@@ -31,6 +31,12 @@ export const setPartner = (partner) => {
 };
 
 export const setAccountBank = (defaultAccountBank) => (dispatch) => dispatch({ type: types.SET_ACCOUNT_BANK, payload: defaultAccountBank });
+export const setAllowedAmount = (payload) => (dispatch) => {
+    return dispatch({
+        type: types.SET_ALLOWED_AMOUNT,
+        payload
+    });
+};
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
 export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
