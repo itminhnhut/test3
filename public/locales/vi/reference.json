@@ -187,6 +187,7 @@
             "email_placeholder": "Nhập email",
             "social": "Mạng xã hội",
             "social_empty": "Xin vui lòng nhập liên kết mạng xã hội",
+            "social_error": "Social Media Link không đúng định dạng. Vui lòng nhập lại.",
             "phone": "Số điện thoại",
             "phone_placeholder": "Nhập số điện thoại",
             "phone_error": "Số điện thoại không đúng định dạng. Vui lòng nhập lại.",

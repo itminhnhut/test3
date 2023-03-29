@@ -56,7 +56,7 @@ export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
         return (
             <button
                 onClick={() => setFilter(config)}
-                className="whitespace-nowrap bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
+                className="whitespace-nowrap !bg-dark-12 dark:!bg-dark-2 hover:bg-gray-6 text-gray-1 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
             >
                 {item.title}

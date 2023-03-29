@@ -278,19 +278,21 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                 <div className="w-full flex flex-col leading-5">
                                     <div className="w-full flex justify-between text-teal">
                                         <div>Spot: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
-                                        {data?.rank !== 5 ? (
+                                        <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                        {/* {data?.rank !== 5 ? (
                                             <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
-                                        ) : null}
+                                        ) : null} */}
                                     </div>
                                     <div className="w-full flex justify-between text-blue-crayola">
                                         <div>
                                             Futures: {isNaN(data?.volume?.current?.futures) ? '--' : formatter.format(data?.volume?.current?.futures)} USDT
                                         </div>
-                                        {data?.rank !== 5 ? (
+                                        <div>Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT</div>
+                                        {/* {data?.rank !== 5 ? (
                                             <div>
                                                 Futures: {isNaN(data?.volume?.target?.futures) ? '--' : formatter.format(data?.volume?.target?.futures)} USDT
                                             </div>
-                                        ) : null}
+                                        ) : null} */}
                                     </div>
                                 </div>
                             </div>

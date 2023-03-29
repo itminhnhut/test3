@@ -121,13 +121,18 @@ const Commission = ({ t, language, id }) => {
     }, [lastedFriends]);
 
     const total = (data) => {
-        if (data.currency === 22) {
-            return `${+formatNumber(data?.value || 0, 4)} USDT`;
+        const asset = data?.value > 0 ? '+' : '';
+        switch (data.currency) {
+            case 22:
+                return `${asset}${formatNumber(data.value || 0, 4, 0, true)} USDT`;
+            case 72:
+                return `${asset}${formatNumber(data.value || 0, 0, 0, true)} VNDC`;
+            case 1:
+                return `${asset}${formatNumber(data.value || 0, 0, 0, true)} NAMI`;
+            default:
+                return 0;
         }
-        if (data.currency === 72) {
-            return `${+formatNumber(data?.value || 0, 0)} USDT`;
-        }
-        return 0;
+        return data.currency === 22 ? `${asset}${formatNumber(data.value || 0, 4, 0, true)} USDT` : `${asset}${formatNumber(data.value || 0, 0, 0, true)} VNDC`;
     };
 
     const renderLastedCommissions = useMemo(() => {

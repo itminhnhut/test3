@@ -195,6 +195,7 @@
             "social_placeholder": "Enter your Zalo/Facebook/Twiter link",
             "social": "Social Media Link",
             "social_empty": "Please enter your social media link",
+            "social_error": "Invalid social media link. Please try again",
             "no_kyc_title": "Not KYC",
             "no_kyc": "You have not completed KYC, please verify to continue",
             "success": "Congratulations, you've just registered Community Development Partner registration successfully",
@@ -205,6 +206,8 @@
         "share": {
             "title": "Share",
             "title_2": "Introduce Nami to friends",
+            "title_3": "Chia sẻ mã giới thiệu",
+            "title_4": "Tham gia Nami Exchange",
             "content": "Up to {{percent}} commission every time your friends complete a trade on Nami Exchange",
             "scan_and_join": "Scan QRcode to recive referral code",
             "id_referral": "Referral code",

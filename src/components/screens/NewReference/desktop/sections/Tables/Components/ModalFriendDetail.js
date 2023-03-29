@@ -54,7 +54,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                     />
                 </div>
             </div>
-            <div className="bg-[#141921] dark:bg-[#141921] p-4 rounded-xl mt-6">
+            <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6 last:pb-0">
                 <div className={classNames('flex flex-row justify-between', { 'mb-4': level === 0 })}>
                     <div className="text-gray-1 dark:text-gray-7">Tổng hoa hồng</div>
                     <div className="font-semibold">{formatNumber(totalCommission?.receive || 0, 2)}</div>
@@ -81,7 +81,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 </div>
             </div>
 
-            <div className="bg-[#141921] dark:bg-[#141921] p-4 rounded-xl mt-6">
+            <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6">
                 <div className="flex flex-row justify-between mb-4">
                     <div className="text-gray-1 dark:text-gray-7">Spot</div>
                     <div className="font-semibold">{formatNumber(totalOrderVol?.spot || 0, 2)}</div>
@@ -101,7 +101,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                     <div className="w-full flex flex-row items-center mt-8 mb-6">
                         <div className="font-semibold">Thông tin chi tiết</div>
                     </div>
-                    <div className="bg-[#141921] dark:bg-[#141921] p-4 rounded-xl mt-6">
+                    <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6 ">
                         <div className="flex flex-row justify-between mb-4">
                             <div className="text-gray-1 dark:text-gray-7">Mã giới thiệu</div>
                             <div className="font-semibold">
@@ -109,7 +109,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                             </div>
                         </div>
 
-                        <div className="flex flex-row justify-between mb-4">
+                        <div className="flex flex-row justify-between">
                             <div className="text-gray-1 dark:text-gray-7">Bạn nhận/Bạn bè nhận</div>
                             <div className="font-semibold text-teal dark:text-teal-2">
                                 {100 - detailFriend?.relation?.remunerationRate}%/{detailFriend?.relation?.remunerationRate}%

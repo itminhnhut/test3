@@ -326,12 +326,12 @@ const FriendList = ({ language, t, id }) => {
                     const isNotActive = levelFriend >= MAX_BREAD_CRUMB || row?.user_count === 0 || !dataSource?.go_next;
                     return (
                         <div
-                            className={classNames('dark:text-green-2 font-semibold flex flex-row px-[18px] whitespace-nowrap ', {
+                            className={classNames('dark:text-green-2 text-green-3 font-semibold flex flex-row px-[18px] whitespace-nowrap items-center', {
                                 'justify-between': levelFriend < MAX_BREAD_CRUMB
                             })}
                         >
                             <div onClick={() => handleDetailFriend(row)}>Chi tiết</div>
-                            <hr className="h-7 w-[1px] border-[1px] border-solid border-[#222940] mx-3" />
+                            <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-[#222940] border-[#dcdfe6] mx-3" />
                             <div
                                 className={classNames({
                                     'dark:text-green-7 text-gray-1': isNotActive
@@ -429,8 +429,7 @@ const FriendList = ({ language, t, id }) => {
                         <TableFilter config={filters} filter={filter} setFilter={setFilter} resetParentCode={handleResetParentCode} />
                     </div>
                     <ButtonV2
-                        variants=""
-                        className="hidden w-[122px] whitespace-nowrap bg-gray-12 hover:bg-gray-6 text-gray-15 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
+                        className="hidden w-[122px] whitespace-nowrap hover:bg-gray-12 bg-dark-12 dark:bg-dark-2 dark:hover:bg-dark-5 dark:text-gray-7
                         px-4 rounded-md px-auto py-auto font-semibold h-12"
                     >
                         <ExportIcon />
