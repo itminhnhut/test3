@@ -123,7 +123,8 @@ const FriendList = ({ language, t, id }) => {
     const [dataSource, setDataSource] = useState({
         results: [],
         hasNext: false,
-        total: 0
+        total: 0,
+        go_next: true
     });
 
     const [isModalDetail, setIsModalDetail] = useState(false);
@@ -322,7 +323,7 @@ const FriendList = ({ language, t, id }) => {
                 width: 180,
                 fixed: 'right',
                 render: (value, row) => {
-                    const isNotActive = levelFriend >= MAX_BREAD_CRUMB || row?.user_count === 0;
+                    const isNotActive = levelFriend >= MAX_BREAD_CRUMB || row?.user_count === 0 || !dataSource?.go_next;
                     return (
                         <div
                             className={classNames('dark:text-green-2 font-semibold flex flex-row px-[18px] whitespace-nowrap ', {
@@ -351,7 +352,7 @@ const FriendList = ({ language, t, id }) => {
                 useRowHover
                 height={350}
                 limit={LIMIT}
-                className="z-10"
+                className="z-10 rc-table-friendList"
                 loading={loading}
                 columns={columns}
                 scroll={{ x: true }}
@@ -388,7 +389,7 @@ const FriendList = ({ language, t, id }) => {
                             {t('reference:referral.total_direct_commissions')}
                         </div>
                         <div className="space-y-1 text-sm">
-                            {[72, 22, 1, 447, 86].map((assetId) => {
+                            {[72, 22, 1].map((assetId) => {
                                 return (
                                     <div key={assetId} className="flex items-center justify-between">
                                         <span className="text-white">{formatNumber(data?.[type]?.[assetId], 2)}</span>

@@ -33,11 +33,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         }
     };
 
-    useEffect(() => {
-        if (!initDate?.startDate || !initDate?.endDate) {
-            setDate(initDate);
-        }
-    }, [initDate]);
+    // useEffect(() => {
+    //     if (!initDate?.startDate || !initDate?.endDate) {
+    //         setDate(initDate);
+    //     }
+    // }, [initDate]);
 
     useOutsideClick(wrapperRef, handleOutside);
     const Component = !isCalendar ? DateRangePicker : Calendar;
@@ -54,10 +54,15 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             onChange(e);
             handleOutside();
         } else {
+            const newDate = {};
+            if (e?.range1) {
+                const { startDate, endDate, selection } = e?.range1;
+                newDate = { startDate, endDate, selection: selection?.key };
+            } else {
+                newDate = { ...e?.selection };
+            }
             setDate({
-                startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                key: 'selection'
+                ...newDate
             });
         }
     };
@@ -91,7 +96,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             setDate({
                 ...date,
                 startDate: null,
-                endDate: date.startDate
+                endDate: null
             });
         }
     }, [date.startDate]);
@@ -99,16 +104,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     const clearInputData = () => {
         const selection = {
             startDate: null,
-            endDate: null,
-            key: date['key']
+            endDate: new Date(),
+            key: 'selection'
         };
-        setDate({
-            selection: selection
-        });
-        if (!showPicker)
-            onChange({
-                selection: selection
-            });
+        setDate({ selection: selection });
+        if (!showPicker) onChange({ selection: selection });
     };
     // Handle X Close button
     const flag = useRef(false);
@@ -118,8 +118,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             case 'clear':
                 flag.current = true;
 
-                if (isCalendar) onDatesChange(null);
-                else {
+                if (isCalendar) {
+                    onDatesChange(null);
+                } else {
                     clearInputData();
                 }
                 break;
@@ -150,7 +151,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                     onClick={() => onHandleClick('show_modal')}
                 >
                     <div className="flex flex-1 items-center justify-between">
-                        <div className={classNames('px-2 leading-5', { 'dark:text-gray-7 text-gray-1': !date?.startDate && !date.endDate })}>
+                        <div className={classNames('px-2 leading-5', { 'dark:text-gray-7 text-gray-1': !date?.startDate && !date?.endDate })}>
                             {isCalendar && (date ? formatTime(date, 'dd/MM/yyyy') : 'DD/MM/YYYY')}
                             {!isCalendar &&
                                 (date?.startDate ? formatTime(date?.startDate, 'dd/MM/yyyy') : 'DD/MM/YYYY') +
@@ -184,11 +185,11 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                         'absolute left-1/2 z-20 !w-auto -translate-x-1/2': position === 'center'
                     })}
                 >
-                    <DatePickerWrapper noDatePicked={date.startDate === date.endDate} isDark={theme === THEME_MODE.DARK}>
+                    <DatePickerWrapper noDatePicked={date?.startDate === date?.endDate} isDark={theme === THEME_MODE.DARK}>
                         <Component
                             className={classNames(`h-full px-[10px] ${isCalendar ? 'single-select' : ''} w-full`)}
                             date={date}
-                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date(0) : date?.endDate }] : []}
+                            ranges={!isCalendar ? [{ ...date, endDate: !date?.startDate && !date?.endDate ? new Date() : date?.endDate }] : []}
                             months={month ?? 1}
                             onChange={onDatesChange}
                             // moveRangeOnFirstSelection={isCalendar}

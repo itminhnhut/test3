@@ -39,18 +39,22 @@ const AlertModalV2 = ({
         <ModalV2 loading={loading} className="!max-w-[488px]" isVisible={isVisible} onBackdropCb={onClose}>
             <div className="flex flex-col items-center">
                 {getIcon()}
-                <div className="mt-6 mb-4 font-semibold text-2xl">{title}</div>
-                {message && <span className="text-txtSecondary dark:text-txtSecondary-dark text-center text-base">{message}</span>}
+                <div className="mt-6 mb-4 font-semibold text-2xl text-txtPrimary dark:text-gray-4">{title}</div>
+                {message && <span className="text-gray-1 dark:text-gray-7 text-center">{message}</span>}
                 {children}
                 {notes && <span className="mt-2 dark:text-gray-1 text-center text-xs">{notes}</span>}
                 {!customButton && textButton && (
-                    <Button onClick={onConfirm} className="mt-10">
+                    <Button onClick={onConfirm} className="!mt-10 dark:text-green-2 text-green-3">
                         <span>{textButton}</span>
                         {loading && <CircleSpinner />}
                     </Button>
                 )}
                 {customButton && customButton}
-                {type === 'error' && <TextButton onClick={onOpenChat}>{t('common:chat_with_support')}</TextButton>}
+                {type === 'error' && (
+                    <TextButton className="mt-10" onClick={onOpenChat}>
+                        {t('common:chat_with_support')}
+                    </TextButton>
+                )}
             </div>
         </ModalV2>
     );

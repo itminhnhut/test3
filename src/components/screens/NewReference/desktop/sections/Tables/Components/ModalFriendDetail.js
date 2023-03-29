@@ -62,7 +62,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 {level === 0 && (
                     <div className="flex flex-row justify-between mb-4 last:mb-0">
                         <div className="text-gray-1 dark:text-gray-7">Hoa hồng chia sẻ</div>
-                        <div className="font-semibold">{formatNumber(totalCommission?.remuneration || 0, 2)}</div>
+                        <div className="font-semibold">{formatNumber(totalCommission?.remuneration || 0, 2, 0, true)}</div>
                     </div>
                 )}
             </div>

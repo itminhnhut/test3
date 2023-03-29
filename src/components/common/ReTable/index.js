@@ -70,7 +70,6 @@ const ReTable = memo(
         onRowClick,
         sorted,
         cbSort,
-        fontSize,
         ...restProps
     }) => {
         // * Init State
@@ -311,7 +310,6 @@ const ReTable = memo(
                 empty={loading || data?.length <= 0}
                 isDark={currentTheme === THEME_MODE.DARK}
                 useRowHover={useRowHover}
-                fontSize={fontSize}
                 height={height}
                 noBorder={restProps.noBorder}
                 {...tableStyle}
@@ -377,6 +375,7 @@ const ReTableWrapperV2 = styled.div`
 
     .rc-table thead th {
         border-bottom: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
+        border-top: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
         //white-space: nowrap;
     }
 
