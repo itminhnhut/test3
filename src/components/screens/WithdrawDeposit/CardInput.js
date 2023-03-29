@@ -130,6 +130,7 @@ const CardInput = () => {
                                 onValueChange={({ value }) => setState({ amount: value })}
                                 validator={validator}
                                 errorTooltip={false}
+                                decimalScale={assetCode === 'VNDC' ? 0 : 4}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
                                 placeHolder={loadingRate ? '...' : t('wallet:input_amount')}
