@@ -2,6 +2,7 @@ import React, { useRef, useState, Fragment, useMemo, useEffect, useCallback } fr
 import colors from 'styles/colors';
 import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
+import { useSelector } from 'react-redux';
 import { DateRangePicker, Calendar } from 'react-date-range';
 import { ChevronRight, ChevronLeft, X } from 'react-feather';
 import { Transition } from '@headlessui/react';
@@ -22,6 +23,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         t,
         i18n: { language }
     } = useTranslation();
+
+    const { user: auth } = useSelector((state) => state.auth) || null;
+
     const [theme] = useDarkMode();
 
     // Handle custom
@@ -91,16 +95,6 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
 
     const issetValue = isCalendar ? date : date?.startDate || date?.endDate;
 
-    useEffect(() => {
-        if (!date?.endDate && date?.startDate) {
-            setDate({
-                ...date,
-                startDate: null,
-                endDate: null
-            });
-        }
-    }, [date.startDate]);
-
     const clearInputData = () => {
         const selection = {
             startDate: null,
@@ -139,7 +133,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? (
-                <div onClick={() => setShowPicker(!showPicker)}>{text}</div>
+                <div className={classNames({ 'cursor-not-allowed': !auth })} onClick={() => auth && setShowPicker(!showPicker)}>
+                    {text}
+                </div>
             ) : (
                 <div
                     className={classNames(

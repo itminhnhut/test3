@@ -79,25 +79,50 @@
     "friend_list": {
         "filter": {
             "referral_date": "Referral Date",
-            "total_commissions": "Total Commissions",
+            "total_commissions": "Commission Date Range",
             "reset": "Reset",
-            "search_id": "Search by Nami ID",
+            "search_id": "Search Nami ID",
             "placeholder_search": "Enter Nami ID",
             "export": "Export"
+        },
+        "detail": {
+            "volume": "Volume",
+            "total_commission": "Total commission",
+            "commission": "Commission",
+            "payback_commission": "Payback commission",
+            "title": "Details",
+            "received": "You get/ Friend gets",
+            "title_1": "Friend detail"
         }
     },
     "withdrawal": {
-        "title": "Register Withdrawal Partner",
+        "title": "Deposit/Withdrawal Partner",
         "content": "Sign up for a successful withdrawal partner",
-        "success": "Congratulations on successfully becoming a deposit and withdrawal partner of Nami Exchange."
+        "success": "Congratulations, you have successfully registered as a Nami Deposit/Withdrawal Partner!"
+    },
+    "table": {
+        "name": "Name",
+        "id": "Nami ID",
+        "referral_date": "Referral Date",
+        "ranking": "Ranking",
+        "status": "Status",
+        "referred": "Referred",
+        "direct_commission": "Direct Commission",
+        "network_commission": "Network Commission",
+        "friends": "Friends",
+        "detail": "Detail",
+        "tooltip": {
+            "commission": "Total commission from this user",
+            "commission_indirect": "Total commission from this user's network"
+        }
     },
     "referral": {
-        "reward_commission": "Receive Commission",
-        "type_commission": "Type Commission",
+        "reward_commission": "Commission",
+        "type_commission": "Type",
         "friend_list": "Friend List",
         "total_commissions": "Total Commissions",
         "commission_histories": "Commission Histories",
-        "referral_date": "Ngày giới thiệu",
+        "referral_date": "Referral code ",
         "term": "Term",
         "recent_activities": "Recent Activities",
         "introduce1": "Introduce Nami to your friends",
@@ -109,7 +134,7 @@
         "rate": "You get: {{value1}}% - Friends get: {{value2}}%",
         "ref_link": "Referral Link",
         "invite_friends": "Invite Friends",
-        "ranking": "Ranking",
+        "ranking": "RANKING",
         "diamond": "Diamond",
         "platinum": "Platinum",
         "gold": "Gold",
@@ -127,10 +152,9 @@
         "you_friends_get": "You get / Friends get",
         "friends": "Friends",
         "note": "Note",
-        "name": "Name",
-        "add_ref_code": "Add Referral Code",
+        "add_ref_code": "Add new referral code",
         "update_success": "Successful update",
-        "no_friends": "Not having any friends",
+        "no_friends": "No referred friends history",
         "show_more": "View More List",
         "modify_note": "Modify Note",
         "confirm": "Confirm",
@@ -141,12 +165,12 @@
         "you_get": "You get",
         "friends_get": "Friends get",
         "new_friends": "New Friends",
-        "rank": "Rank",
+        "rank": "RANKING",
         "level": "Group",
         "type": "Type",
         "new_friend": "New Friend",
         "referrer": "Referrer",
-        "no_commission": "Not having any commission",
+        "no_commission": "No commission history",
         "number_of_friends": "Number of Friends",
         "status": "Status",
         "kyc": "KYC",
@@ -167,9 +191,9 @@
         "addref_success": "Referral code <span class='text-teal'>{{value}}</span> successfully generated",
         "addref_success_title": "Add code success",
         "addref_error_title": "Add code failed",
-        "addref_error_1": "Please type in all 8 characters",
+        "addref_error_1": "Please enter 8 characters code",
         "addref_error_2": "Referral code already exists",
-        "addref_error_3": "Referral code <span class='text-teal'>{{value}}</span> already exists, please try again!",
+        "addref_error_3": "Referral code <span class='text-teal'>{{value}}</span> has already existed, please enter again!",
         "commission_types": {
             "spot": "Spot",
             "futures": "Futures",
@@ -179,9 +203,10 @@
         "date": "Date",
         "error": "Error",
         "success": "Success",
+        "placeholder_search": "Search Nami ID ",
         "partner": {
             "button": "Partner Registration",
-            "title": "Register Community Partner",
+            "title": "Community Partner Registration    ",
             "fullname": "Full name",
             "fullname_placeholder": "Enter your full name",
             "id": "ID Card/Passport",
@@ -198,7 +223,7 @@
             "social_error": "Invalid social media link. Please try again",
             "no_kyc_title": "Not KYC",
             "no_kyc": "You have not completed KYC, please verify to continue",
-            "success": "Congratulations, you've just registered Community Development Partner registration successfully",
+            "success": "Congratulations, you have successfully registered as a Nami Community Development Partner!",
             "failed": "Community Development Partner registration failed, please contact support.",
             "register": "Register",
             "paste": "Paste"
@@ -206,10 +231,8 @@
         "share": {
             "title": "Share",
             "title_2": "Introduce Nami to friends",
-            "title_3": "Chia sẻ mã giới thiệu",
-            "title_4": "Tham gia Nami Exchange",
             "content": "Up to {{percent}} commission every time your friends complete a trade on Nami Exchange",
-            "scan_and_join": "Scan QRcode to recive referral code",
+            "scan_and_join": "Share",
             "id_referral": "Referral code",
             "btn": "Share"
         }

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import PropTypes from 'prop-types';
 
-const BreadCrumbs = ({ level, parentName, breadcrumbs, language, onChangeBreadCrumb }) => {
+const BreadCrumbs = ({ t, level, parentName, breadcrumbs, language, onChangeBreadCrumb }) => {
     const renderBreadCrumbs = () => {
         return (
             <nav className="flex" aria-label="Breadcrumb">
@@ -35,12 +35,14 @@ const BreadCrumbs = ({ level, parentName, breadcrumbs, language, onChangeBreadCr
     };
 
     if (level === 0) {
-        return <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">Danh sách bạn bè F1</div>;
+        return <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">{t('reference:referral.friend_list')} F1</div>;
     } else {
         return (
             <>
                 <div className="mx-6 mb-8">{renderBreadCrumbs()}</div>
-                <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">{`Chi tiết bạn bè ${parentName}`}</div>
+                <div className="mb-8 mx-6 text-gray-15 dark:text-gray-4 font-semibold text-2xl">
+                    {`${t('reference:friend_list.detail.title_1')} ${parentName}`}
+                </div>
             </>
         );
     }

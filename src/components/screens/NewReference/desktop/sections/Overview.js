@@ -277,8 +277,8 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                 </div>
                                 <div className="w-full flex flex-col leading-5">
                                     <div className="w-full flex justify-between text-teal">
-                                        <div>Spot: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
-                                        <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
+                                        <div>Exchange: {isNaN(data?.volume?.current?.spot) ? '--' : formatter.format(data?.volume?.current?.spot)} USDT</div>
+                                        <div>Exchange: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                         {/* {data?.rank !== 5 ? (
                                             <div>Spot: {isNaN(data?.volume?.target?.spot) ? '--' : formatter.format(data?.volume?.target?.spot)} USDT</div>
                                         ) : null} */}
@@ -485,7 +485,7 @@ const RefDetail = ({ t, isShow = false, refreshData, onClose, rank, defaultRef }
 
     return (
         <>
-            <ModalV2 isVisible={isShow} onBackdropCb={onClose} className="max-w-[884px] h-[90%]" wrapClassName="px-6 flex flex-col">
+            <ModalV2 isVisible={isShow} onBackdropCb={onClose} className="max-w-[884px] h-[90%]" wrapClassName="!px-6 flex flex-col">
                 <AddNewRef
                     // totalRate={commisionConfig?.[rank].direct.futures ?? 20}
                     isShow={showAddRef}
@@ -628,19 +628,19 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
 
     return (
         <ModalV2 isVisible={open} onBackdropCb={onClose} className="w-[36.75rem]">
-            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title_3')}</p>
+            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title')}</p>
             <div ref={ref} className="h-[380px] w-[524px] rounded-xl p-6 py-4 relative overflow-hidden">
                 <img className="absolute inset-0" src={getS3Url('/images/reference/bg_share_ref_code.png')} alt="" />
                 <div className="absolute inset-x-4">
                     <img width={99} src={getS3Url('/images/logo/nami-logo-v2.png')} alt="Nami exchange" />
                     <div className="mt-12">
-                        <p className="text-2xl text-teal font-semibold mb-4">{t('reference:referral.share.title_4')}</p>
+                        <p className="text-2xl text-teal font-semibold mb-4">{t('reference:referral.share.title_2')}</p>
                         <p className="mr-48">
                             <span
                                 className="font-semibold text-white"
                                 dangerouslySetInnerHTML={{
                                     __html: t('reference:referral.share.content', {
-                                        percent: `<span class='font-semibold text-3xl text-teal'>40%</span>`
+                                        percent: `<span class='font-semibold text-3xl text-teal'>20%</span>`
                                     })
                                 }}
                             />

@@ -54,7 +54,7 @@ const DEFAULT_TOKENS = [
 
 const BREADCRUMB = [
     {
-        name: { en: 'Danh sách bạn bè F1', vi: 'Friends list F1' }
+        name: { en: 'Friends list F1', vi: 'Danh sách bạn bè F1' }
     },
     {
         name: { en: 'Nhóm F2', vi: 'Group F2' }
@@ -76,6 +76,10 @@ const FriendList = ({ language, t, id }) => {
         3: t('reference:referral.gold'),
         4: t('reference:referral.platinum'),
         5: t('reference:referral.diamond')
+    };
+    const tooltipCommission = {
+        commission: t('reference:table.tooltip.commission'),
+        commission_indirect: t('reference:table.tooltip.commission_indirect')
     };
     const filters = {
         introduced_on: {
@@ -175,7 +179,7 @@ const FriendList = ({ language, t, id }) => {
 
     const breadcrumbs = useMemo(() => {
         const path = dataSource?.path || [];
-        if (dataSource?.path?.length - 1 !== levelFriend) {
+        if (path?.length > 0 && path?.length - 1 !== levelFriend) {
             setLevelFriend(dataSource?.path?.length - 1);
         }
         return levelFriend > 0
@@ -244,7 +248,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'name',
                 dataIndex: 'name',
-                title: t('reference:referral.name'),
+                title: t('reference:table.name'),
                 align: 'left',
                 width: 220,
                 render: (value) => value || '_'
@@ -252,7 +256,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'code',
                 dataIndex: 'code',
-                title: 'ID',
+                title: t('reference:table.id'),
                 align: 'left',
                 width: 220,
                 render: (value) => (
@@ -264,7 +268,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'invitedAt',
                 dataIndex: 'invitedAt',
-                title: t('reference:referral.referral_date'),
+                title: t('reference:table.referral_date'),
                 align: 'left',
                 width: 180,
                 render: (value) => <div className="font-normal">{value && isValid(new Date(value)) ? formatTime(new Date(value), 'dd/MM/yyyy') : null}</div>
@@ -272,7 +276,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'rank',
                 dataIndex: 'rank',
-                title: t('reference:referral.ranking'),
+                title: t('reference:table.ranking'),
                 align: 'left',
                 width: 120,
                 render: (value) => <div className="font-normal">{rank[value?.toString() ?? '0']}</div>
@@ -280,7 +284,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'kyc_status',
                 dataIndex: 'kyc_status',
-                title: t('reference:referral.status'),
+                title: t('reference:table.status'),
                 align: 'left',
                 width: 150,
                 render: (value) => {
@@ -294,16 +298,15 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'user_count',
                 dataIndex: 'user_count',
-                title: 'Đã giới thiệu',
-                // title: t('reference:referral.total_commission_commissions'),
+                title: t('reference:table.referred'),
                 align: 'left',
                 width: 120,
-                render: (value) => `${formatNumber(value || 0, 2)} người`
+                render: (value) => `${formatNumber(value || 0, 2)} ${t('reference:table.friends')}`
             },
             {
                 key: 'commission.total',
                 dataIndex: ['commission', 'total'],
-                title: t('reference:referral.total_direct_commissions'),
+                title: t('reference:table.direct_commission'),
                 align: 'right',
                 width: 230,
                 render: (value, row) => renderCommissionData(row, 'commission')
@@ -311,7 +314,7 @@ const FriendList = ({ language, t, id }) => {
             {
                 key: 'commission_indirect.total',
                 dataIndex: ['commission_indirect', 'total'],
-                title: t('reference:referral.total_indirect_commissions'),
+                title: t('reference:table.network_commission'),
                 align: 'right',
                 width: 230,
                 render: (value, row) => renderCommissionData(row, 'commission_indirect')
@@ -330,7 +333,7 @@ const FriendList = ({ language, t, id }) => {
                                 'justify-between': levelFriend < MAX_BREAD_CRUMB
                             })}
                         >
-                            <div onClick={() => handleDetailFriend(row)}>Chi tiết</div>
+                            <div onClick={() => handleDetailFriend(row)}>{t('reference:table.detail')}</div>
                             <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-[#222940] border-[#dcdfe6] mx-3" />
                             <div
                                 className={classNames({
@@ -338,7 +341,7 @@ const FriendList = ({ language, t, id }) => {
                                 })}
                                 onClick={() => handleFriendLevel(row, isNotActive)}
                             >
-                                Bạn bè
+                                {t('reference:table.friends')}
                             </div>
                         </div>
                     );
@@ -386,7 +389,8 @@ const FriendList = ({ language, t, id }) => {
                 <Tooltip offset="{'top': 18}" id={type + data?.code} place="top" effect="solid" className={`min-w-[120px]`} isV3>
                     <div className=" w-full">
                         <div className="mb-4 text-white dark:text-txtSecondary-dark text-center text-xs">
-                            {t('reference:referral.total_direct_commissions')}
+                            {/* {t('reference:referral.total_direct_commissions')} */}
+                            {tooltipCommission[type]}
                         </div>
                         <div className="space-y-1 text-sm">
                             {[72, 22, 1].map((assetId) => {
@@ -407,6 +411,8 @@ const FriendList = ({ language, t, id }) => {
     return (
         <div className="flex w-full" id={id}>
             <ModalFriendDetail
+                t={t}
+                language={language}
                 options={options}
                 level={levelFriend}
                 toggle={toggleDetail}
@@ -418,8 +424,9 @@ const FriendList = ({ language, t, id }) => {
             <div className="w-full bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-xl py-8">
                 {/* <div className="font-semibold text-[22px] leading-7 mx-6 mb-8">{t('reference:referral.friend_list')}</div> */}
                 <BreadCrumbs
+                    t={t}
                     level={levelFriend}
-                    parentName={dataSource?.parent_name || '_'}
+                    parentName={dataSource?.parent_name || ''}
                     breadcrumbs={breadcrumbs}
                     onChangeBreadCrumb={handleBreadCrumb}
                     language={language}

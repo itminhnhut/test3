@@ -11,7 +11,13 @@ import UserCircle from 'components/svg/UserCircle';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 
-const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption }) => {
+const KIND = {
+    Spot: { vi: 'KL Spot', en: 'Spot Volume' },
+    Futures: { vi: 'KL Futures', en: 'Futures Volume' },
+    Staking: { vi: 'KL Daily Staking', en: 'Daily Staking Vol' }
+};
+
+const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language }) => {
     const totalCommission = useMemo(() => {
         const commissionByAsset = (detailFriend?.commission || [])?.find((f) => f?.asset === options?.commission) || {};
         return commissionByAsset?.total || {};
@@ -41,7 +47,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
                 <span className="text-gray-1 dark:text-gray-7 leading-6">{detailFriend?.code || '_'}</span>
             </div>
             <div className="w-full flex flex-row items-center justify-between h-10 mt-6">
-                <div className="font-semibold">Hoa hồng</div>
+                <div className="font-semibold">{t('reference:friend_list.detail.commission')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
                         position="top"
@@ -56,18 +62,18 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
             </div>
             <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6 last:pb-0">
                 <div className={classNames('flex flex-row justify-between', { 'mb-4': level === 0 })}>
-                    <div className="text-gray-1 dark:text-gray-7">Tổng hoa hồng</div>
+                    <div className="text-gray-1 dark:text-gray-7">{t('reference:friend_list.detail.total_commission')}</div>
                     <div className="font-semibold">{formatNumber(totalCommission?.receive || 0, 2)}</div>
                 </div>
                 {level === 0 && (
                     <div className="flex flex-row justify-between mb-4 last:mb-0">
-                        <div className="text-gray-1 dark:text-gray-7">Hoa hồng chia sẻ</div>
+                        <div className="text-gray-1 dark:text-gray-7">{t('reference:friend_list.detail.payback_commission')}</div>
                         <div className="font-semibold">{formatNumber(totalCommission?.remuneration || 0, 2, 0, true)}</div>
                     </div>
                 )}
             </div>
             <div className="w-full flex flex-row items-center justify-between h-10 mt-8">
-                <div className="font-semibold">Khối lượng giao dịch</div>
+                <div className="font-semibold">{t('reference:friend_list.detail.volume')}</div>
                 <div className="!w-[98px] h-10">
                     <SelectV2
                         position="top"
@@ -83,15 +89,15 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
 
             <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6">
                 <div className="flex flex-row justify-between mb-4">
-                    <div className="text-gray-1 dark:text-gray-7">Spot</div>
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['Spot']?.[language]}</div>
                     <div className="font-semibold">{formatNumber(totalOrderVol?.spot || 0, 2)}</div>
                 </div>
                 <div className="flex flex-row justify-between mb-4">
-                    <div className="text-gray-1 dark:text-gray-7">Futures</div>
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['Futures']?.[language]}</div>
                     <div className="font-semibold">{formatNumber(totalOrderVol?.futures || 0, 2)}</div>
                 </div>
                 <div className="flex flex-row justify-between mb-4 last:mb-0">
-                    <div className="text-gray-1 dark:text-gray-7">Staking</div>
+                    <div className="text-gray-1 dark:text-gray-7">{KIND['Staking']?.[language]}</div>
                     <div className="font-semibold">{formatNumber(totalOrderVol?.staking || 0, 2)}</div>
                 </div>
             </div>
@@ -99,18 +105,18 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
             {level === 0 && (
                 <>
                     <div className="w-full flex flex-row items-center mt-8 mb-6">
-                        <div className="font-semibold">Thông tin chi tiết</div>
+                        <div className="font-semibold">{t('reference:friend_list.detail.title')}</div>
                     </div>
                     <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6 ">
                         <div className="flex flex-row justify-between mb-4">
-                            <div className="text-gray-1 dark:text-gray-7">Mã giới thiệu</div>
+                            <div className="text-gray-1 dark:text-gray-7">{t('reference:referral.referral_code')}</div>
                             <div className="font-semibold">
                                 <TextCopyable text={detailFriend?.relation?.refCode} />
                             </div>
                         </div>
 
                         <div className="flex flex-row justify-between">
-                            <div className="text-gray-1 dark:text-gray-7">Bạn nhận/Bạn bè nhận</div>
+                            <div className="text-gray-1 dark:text-gray-7">{t('reference:friend_list.detail.received')}</div>
                             <div className="font-semibold text-teal dark:text-teal-2">
                                 {100 - detailFriend?.relation?.remunerationRate}%/{detailFriend?.relation?.remunerationRate}%
                             </div>

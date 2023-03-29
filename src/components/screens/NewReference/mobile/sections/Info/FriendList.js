@@ -10,6 +10,10 @@ import { useRef } from 'react';
 import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
+import InputV2 from 'components/common/V2/InputV2';
+
+import { Search } from 'react-feather';
+import classNames from 'classnames';
 
 const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const { t } = useTranslation();
@@ -17,13 +21,15 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
     const [more, setMore] = useState(10);
     const [loading, setLoading] = useState(false);
     const hasNext = useRef(false);
+    const [search, setSearch] = useState('');
+
     const doClose = () => {
         setFriendList([]);
         onClose();
         setMore(10);
     };
 
-    useEffect(() => {
+    const handleListFriend = _.throttle(async () => {
         setLoading(true);
         FetchApi({
             url: API_NEW_REFERRAL_FRIENDS_BY_REF.replace(':code', code),
@@ -31,6 +37,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                 method: 'GET'
             },
             params: {
+                code: search,
                 limit: more
             }
         }).then(({ data, status }) => {
@@ -42,12 +49,29 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
             }
             setLoading(false);
         });
-    }, [more, code]);
+    }, 300);
+
+    useEffect(() => {
+        handleListFriend();
+    }, [more, code, search]);
+
+    const handleChangeSearch = (value) => {
+        setSearch(value);
+    };
 
     return isDesktop ? (
         <ModalV2 isVisible={isShow} onBackdropCb={doClose} className="w-[30rem]">
-            <p className="text-[22px] py-6 font-semibold">{t('reference:referral.friend_list')}</p>
-            <div>
+            <p className="text-[22px] pb-6 font-semibold">{t('reference:referral.friend_list')}</p>
+            <InputV2
+                allowClear
+                value={search}
+                placeholder={t('reference:referral.placeholder_search')}
+                onChange={handleChangeSearch}
+                className={classNames('w-full tracking-[0.005em] pb-0')}
+                classNameInput="!placeholder-gray-1 dark:!placeholder-gray-7"
+                prefix={<Search strokeWidth={2} className="text-gray-1 w-4 h-4" />}
+            />
+            <div className="mt-8">
                 <div className="flex w-full justify-between text-gray-1 dark:text-gray-7 text-sm mb-6">
                     <div>NamiID</div>
                     <div>{t('reference:referral.referral_date')}</div>
@@ -61,7 +85,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                                 return (
                                     <div className="w-full flex items-center justify-between" key={index}>
                                         <div>
-                                            <div className="text-gray-15 dark:text-gray-4">{data.username}</div>
+                                            <div className="text-gray-15 dark:text-gray-4 font-semibold">{data.username}</div>
                                             <div className=" text-sm text-gray-1 dark:text-gray-7">{data.code}</div>
                                         </div>
                                         <div>{formatTime(data.invitedAt, 'dd-MM-yyyy')}</div>
