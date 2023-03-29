@@ -223,6 +223,13 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) =>
+    formatBalance(value, assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0, acceptNegative);
+
+export const getExactBalanceFiat = (balance, assetCode) => {
+    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
+    return roundByExactDigit(balance, digit);
+};
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
@@ -1211,3 +1218,4 @@ export const saveFile = (file, name) => {
 };
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);

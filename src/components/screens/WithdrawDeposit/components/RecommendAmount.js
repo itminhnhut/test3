@@ -1,32 +1,70 @@
+import useFetchApi from 'hooks/useFetchApi';
+import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
+import { PartnerOrderStatus } from 'redux/actions/const';
 import { formatPrice } from 'redux/actions/utils';
 
-const RECOMMENT_AMOUNT = {
-    VNDC: [100000, 500000, 1000000, 2000000, 5000000],
-    USDT: [50, 100, 500, 1000, 2000, 5000]
+const MAXIMUM_RECOMMEND_LENGTH = 3;
+
+const MULTIPLIES_AMOUNT = {
+    72: [10e4, 10e5, 10e6],
+    22: [10, 10e1, 10e2, 10e3]
 };
 
-const RecommendAmount = ({ amount, setAmount, assetCode }) => {
+const RecommendAmount = ({ amount, setAmount, minimumAllowed, maximumAllowed }) => {
     const [rcmdAmount, setRcmdAmount] = useState([]);
+    const router = useRouter();
+    const { side, assetId } = router?.query;
+    const { data: lastSuccessOrders, loading } = useFetchApi(
+        {
+            url: API_GET_HISTORY_DW_PARTNERS,
+            params: {
+                page: 0,
+                pageSize: MAXIMUM_RECOMMEND_LENGTH,
+                lastId: null,
+                mode: 'user',
+                side,
+                // status: PartnerOrderStatus.SUCCESS,
+                assetId
+            }
+        },
+        side && assetId,
+        [side, assetId]
+    );
+
     useEffect(() => {
-        if (!amount && assetCode) {
-            setRcmdAmount(RECOMMENT_AMOUNT[assetCode]);
+        if (minimumAllowed > 0 && maximumAllowed > 0) {
+            if ((!amount || +amount === 0) && lastSuccessOrders && lastSuccessOrders.orders) {
+                setRcmdAmount(lastSuccessOrders.orders.map((order) => order.baseQty));
+            } else if (amount) {
+                setRcmdAmount(
+                    MULTIPLIES_AMOUNT[assetId]
+                        .map((times) => +amount * times)
+                        .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
+                );
+            }
         }
-    }, [assetCode, amount]);
+    }, [lastSuccessOrders, amount, maximumAllowed, minimumAllowed]);
+
     return (
         <div className="flex items-center overflow-x-auto space-x-3 pb-3 mb-3">
-            {rcmdAmount.length && rcmdAmount?.map((amountRcmd) => (
-                <div
-                    onClick={() => {
-                        setAmount(amountRcmd);
-                        setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
-                    }}
-                    key={amountRcmd}
-                    className="cursor-pointer border dark:border-divider-dark border-divider rounded-full py-3 px-5 txtSecond-3"
-                >
-                    {formatPrice(amountRcmd, 0)}
-                </div>
-            ))}
+            {rcmdAmount.length ? (
+                rcmdAmount.map((amountRcmd, index) => (
+                    <div
+                        onClick={() => {
+                            setAmount(amountRcmd);
+                            setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
+                        }}
+                        key={index}
+                        className="cursor-pointer border min-w-[80px] text-center dark:border-divider-dark border-divider rounded-full py-3 px-5 txtSecond-3"
+                    >
+                        {formatPrice(amountRcmd, 0)}
+                    </div>
+                ))
+            ) : (
+                <></>
+            )}
         </div>
     );
 };

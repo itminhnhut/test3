@@ -1,3 +1,5 @@
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
@@ -883,6 +885,16 @@ export const GET_PARTNER_STATUS = {
 
 export const ApiResultCreateOrder = {
     MISSING_OTP: 'MISSING_OTP'
+};
+
+export const DEFAULT_PARTNER_MIN = {
+    [SIDE.SELL]: 500e3,
+    [SIDE.BUY]: 100e3
+};
+
+export const DEFAULT_PARTNER_MAX = {
+    [SIDE.SELL]: 50e6,
+    [SIDE.BUY]: 50e6
 };
 
 export const PartnerOrderStatus = {

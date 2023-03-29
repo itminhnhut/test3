@@ -10,38 +10,29 @@ import { Clock } from 'react-feather';
 import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
 
-const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner, t }) => {
+const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
-    const [isVisible, setVisible] = useState(false);
-    const [refetch, setRefetch] = useState(false);
 
-    useEffect(() => {
-        setRefetch(true);
-    }, [quantity]);
+    const conditionToFetch = minimumAllowed > 0 && maximumAllowed > 0 && +quantity >= minimumAllowed && +quantity <= maximumAllowed;
 
     const {
         data: partners,
         loading: loadingPartners,
         error
-    } = useFetchApi(
-        { url: API_GET_PARTNERS, params: { quantity: !quantity ? 0 : quantity, assetId, side }, successCallBack: () => setRefetch(false) },
-        isVisible && refetch,
-        [quantity, assetId, side, isVisible, refetch]
-    );
+    } = useFetchApi({ url: API_GET_PARTNERS, params: { quantity: +quantity, assetId, side } }, conditionToFetch, [conditionToFetch, quantity, assetId, side]);
 
     return (
         <DropdownCard
-            show={isVisible}
-            setShow={setVisible}
             loadingList={loadingPartners}
             loading={loadingPartner}
-            disabled={Boolean(!selectedPartner)}
+            disabled={Boolean(!selectedPartner) || !partners || !partners?.length}
             containerClassname="z-[41]"
             label={t('dw_partner:partner')}
             data={partners && filterSearch(partners, ['name'], search)}
             search={search}
             setSearch={setSearch}
+            showDropdownIcon={partners && partners?.length}
             onSelect={(partner) => {
                 dispatch(setPartner(partner));
             }}
