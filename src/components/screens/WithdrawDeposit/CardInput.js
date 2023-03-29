@@ -216,7 +216,7 @@ const CardInput = () => {
 
                         <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default" data-for="rating" id="rating">
                             <div className=" max-w-[150px] truncate">{formatBalance(input * rate, 0)}</div>
-                            <div className="">VNDC</div>
+                            <div className="">VND</div>
                         </div>
                     </div>
                 </div>
