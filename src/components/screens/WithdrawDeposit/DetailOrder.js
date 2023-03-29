@@ -17,6 +17,7 @@ import Countdown from 'react-countdown';
 import toast from 'utils/toast';
 import classNames from 'classnames';
 import Custom404 from 'pages/404';
+import { useBoolean } from 'react-use';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -67,6 +68,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
+    const [refetch, toggleRefetch] = useBoolean(false);
+    console.log('refetch:', refetch)
 
     const side = state.orderDetail?.side;
     const status = useMemo(
@@ -94,14 +97,16 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                setState({
-                    orderDetail: data
-                });
-
-                // const { status } = data;
-                // if (status === PartnerOrderStatus.SUCCESS) {
-                //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
-                // }
+                // make sure the socket displayingId is the current details/[id] page
+                if (data && data.displayingId === id) {
+                    setState({
+                        orderDetail: data
+                    });
+                    // const { status } = data;
+                    // if (status === PartnerOrderStatus.SUCCESS) {
+                    //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
+                    // }
+                }
             });
         }
         return () => {
@@ -138,7 +143,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             }
         };
         fetchData(id);
-    }, [id]);
+    }, [id, refetch]);
 
     const onOpenChat = () => {
         if (window?.fcWidget?.isOpen()) return;
@@ -285,6 +290,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
                     status={status}
+                    refetchOrderDetail={toggleRefetch}
                 />
                 {/* Lưu ý */}
                 {side === SIDE.BUY ||

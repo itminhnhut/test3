@@ -14,7 +14,7 @@ import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
 import Skeletor from 'components/common/Skeletor';
 
-const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode }) => {
+const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail }) => {
     const {
         data: rate,
         loading: loadingRate,
@@ -73,6 +73,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode })
                                 <Countdown
                                     date={new Date(orderDetail?.timeExpire).getTime()}
                                     renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
+                                    onComplete={() => refetchOrderDetail()}
                                 >
                                     {(props) => <CountdownTimer {...props} />}
                                 </Countdown>
