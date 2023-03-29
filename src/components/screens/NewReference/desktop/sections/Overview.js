@@ -406,11 +406,12 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                 <div className="text-gray-9 dark:text-gray-7 text-center">{t('reference:withdrawal.success')}</div>
             </ModalV2>
             <AlertModalV2
-                isVisible={isOpenModalKyc}
                 type="error"
-                title={t('reference:referral.partner.no_kyc_title')}
+                isVisible={isOpenModalKyc}
                 onClose={() => setIsOpenModalKyc(false)}
                 message={t('reference:referral.partner.no_kyc')}
+                buttonClassName="dark:text-green-2 text-green-3"
+                title={t('reference:referral.partner.no_kyc_title')}
             />
         </>
     );

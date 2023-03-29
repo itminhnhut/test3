@@ -24,6 +24,13 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     } = useTranslation();
     const [theme] = useDarkMode();
 
+    // Handle custom
+    const [date, setDate] = useState({
+        startDate: null,
+        endDate: null,
+        key: 'selection'
+    });
+
     const handleOutside = () => {
         if (showPicker) {
             if (!isCalendar) {
@@ -33,21 +40,14 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         }
     };
 
-    // useEffect(() => {
-    //     if (!initDate?.startDate || !initDate?.endDate) {
-    //         setDate(initDate);
-    //     }
-    // }, [initDate]);
-
     useOutsideClick(wrapperRef, handleOutside);
     const Component = !isCalendar ? DateRangePicker : Calendar;
 
-    // Handle custom
-    const [date, setDate] = useState({
-        startDate: null,
-        endDate: null,
-        key: 'selection'
-    });
+    useEffect(() => {
+        if (!initDate?.startDate && !initDate?.endDate) {
+            setDate(initDate);
+        }
+    }, [initDate]);
 
     const onDatesChange = (e) => {
         if (isCalendar) {

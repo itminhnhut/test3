@@ -15,7 +15,8 @@ const AlertModalV2 = ({
     customButton,
     onConfirm,
     notes,
-    loading = false
+    loading = false,
+    buttonClassName = ''
 }) => {
     const { t } = useTranslation();
     const getIcon = () => {
@@ -43,18 +44,20 @@ const AlertModalV2 = ({
                 {message && <span className="text-gray-1 dark:text-gray-7 text-center">{message}</span>}
                 {children}
                 {notes && <span className="mt-2 dark:text-gray-1 text-center text-xs">{notes}</span>}
-                {!customButton && textButton && (
-                    <Button onClick={onConfirm} className="!mt-10 dark:text-green-2 text-green-3">
-                        <span>{textButton}</span>
-                        {loading && <CircleSpinner />}
-                    </Button>
-                )}
-                {customButton && customButton}
-                {type === 'error' && (
-                    <TextButton className="mt-10" onClick={onOpenChat}>
-                        {t('common:chat_with_support')}
-                    </TextButton>
-                )}
+                <div className="mt-10 space-y-3 w-full">
+                    {!customButton && textButton && (
+                        <Button className={buttonClassName} onClick={onConfirm}>
+                            <span>{textButton}</span>
+                            {loading && <CircleSpinner />}
+                        </Button>
+                    )}
+                    {customButton && customButton}
+                    {type === 'error' && (
+                        <TextButton className={buttonClassName} onClick={onOpenChat}>
+                            {t('common:chat_with_support')}
+                        </TextButton>
+                    )}
+                </div>
             </div>
         </ModalV2>
     );
