@@ -88,7 +88,10 @@ export const ICONS = {
 export const ORDER_TYPES = {
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
-        title: ({ mode = MODE.USER, t }) => (mode === MODE.USER ? t('common:confirm') : 'Xác nhận giao dịch'),
+        title: (t, mode = MODE.USER) => {
+            console.log("mode: ", mode);
+            return mode === MODE.USER ? t('common:confirm') : 'Xác nhận giao dịch'
+        },
         description: ({ mode = MODE.USER, t }) =>
             mode === MODE.USER
                 ? t('dw_partner:transfer_confirm_description')
@@ -97,7 +100,7 @@ export const ORDER_TYPES = {
     },
     CONFIRM_TAKE_MONEY: {
         icon: ICONS['INFO'],
-        title: ({ t }) => t('common:confirm'),
+        title: (t) => t('common:confirm'),
         description: ({ mode = MODE.USER, t }) =>
             mode === MODE.USER
                 ? t('dw_partner:transfer_confirm_description')
@@ -106,14 +109,14 @@ export const ORDER_TYPES = {
     },
     TRANSFERRED_SUCCESS: {
         icon: ICONS['SUCCESS'],
-        title: ({ t }) => t('common:success'),
+        title: (t) => t('common:success'),
         description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
             mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công',
         showConfirm: false
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
-        title: ({ mode = MODE.USER, t }) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
         description: ({ displayingId, amount, asset, t }) => t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset }),
         showConfirm: (router, t) => (
             <ButtonV2 onClick={() => router.push(PATHS.WITHDRAW_DEPOSIT.DEFAULT)} className="transition-all mt-10">
@@ -130,7 +133,7 @@ export const ORDER_TYPES = {
 
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
-        title: (mode = MODE.USER, t) => (mode === MODE.USER ? t('common:cancel_order') : 'Từ chối giao dịch'),
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:cancel_order') : 'Từ chối giao dịch'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (mode === MODE.USER) {
                 if (side === 'BUY')

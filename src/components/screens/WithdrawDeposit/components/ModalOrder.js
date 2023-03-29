@@ -5,11 +5,15 @@ import { isFunction } from 'redux/actions/utils';
 import classNames from 'classnames';
 import { ORDER_TYPES } from '../constants';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
     const router = useRouter();
+    const { t } = useTranslation();
+
     return (
         <ModalV2
+            // isVisible={true}
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={loading ? undefined : () => onClose()}
@@ -18,10 +22,10 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
             {type && (
                 <div className="text-center ">
                     <div className="text-dominant flex justify-center mb-6">{type.icon}</div>
-                    <div className="txtPri-3 mb-4">{type.title(mode)}</div>
-                    <div className="txtSecond-2 ">{type.description({ ...additionalData, mode })}</div>
+                    <div className="txtPri-3 mb-4">{type.title(t, mode)}</div>
+                    <div className="txtSecond-2 ">{type.description({ ...additionalData, mode , t})}</div>
                     {type.showConfirm && isFunction(type.showConfirm) ? (
-                        type.showConfirm(router)
+                        type.showConfirm(router, t)
                     ) : (
                         <ButtonV2 loading={loading} disabled={loading} onClick={!onConfirm ? onClose : () => onConfirm?.()} className="transition-all mt-10">
                             {t('common:confirm')}
