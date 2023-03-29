@@ -11,11 +11,12 @@ import { Check } from 'react-feather';
 import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
+import Countdown from 'react-countdown';
 const OTP_REQUIRED_LENGTH = 6;
-const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSuccess, t }) => {
+const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, assetCode, onConfirm, t }) => {
+    console.log('otpExpireTime:', otpExpireTime);
     const [otp, setOtp] = useState('');
     const [pasted, setPasted] = useState(false);
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
     const doPaste = async () => {
@@ -26,22 +27,6 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
             setPasted(true);
             setTimeout(() => setPasted(false), 500);
         } catch {}
-    };
-
-    const onConfirmOtpHandler = async () => {
-        try {
-            setLoading(true);
-            const res = await onConfirm(otp);
-            if (res && res.status === ApiStatus.SUCCESS) {
-                onSuccess();
-            } else {
-                toast({ text: res?.status || 'ERROR!', type: 'warning' });
-            }
-        } catch (error) {
-            console.log('onConfirm error:', error);
-        } finally {
-            setLoading(false);
-        }
     };
 
     return (
@@ -74,9 +59,17 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                     <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
-                    <ButtonV2 variants="text" className="!w-auto">
-                        {t('dw_partner:resend_otp')}
-                    </ButtonV2>
+                    {otpExpireTime && (
+                        <Countdown date={new Date().getTime() + otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
+                            {(props) => {
+                                return (
+                                    <ButtonV2 onClick disabled={props.total > 0} variants="text" className="disabled:!bg-transparent !w-auto">
+                                        {t('dw_partner:resend_otp')}
+                                    </ButtonV2>
+                                );
+                            }}
+                        </Countdown>
+                    )}
                 </div>
 
                 <div className="flex items-center space-x-2 cursor-pointer text-dominant" onClick={pasted ? undefined : async () => await doPaste()}>
@@ -88,7 +81,15 @@ const ModalOtp = ({ isVisible, onClose, className, assetCode, onConfirm, onSucce
                 </div>
             </div>
             <div className="mt-[52px]">
-                <ButtonV2 onClick={onConfirmOtpHandler} loading={loading} disabled={otp.length !== OTP_REQUIRED_LENGTH}>
+                <ButtonV2
+                    onClick={() =>
+                        onConfirm({
+                            email: otp
+                        })
+                    }
+                    loading={loading}
+                    disabled={otp.length !== OTP_REQUIRED_LENGTH}
+                >
                     {t('common:confirm')}
                 </ButtonV2>
             </div>

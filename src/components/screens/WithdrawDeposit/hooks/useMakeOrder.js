@@ -20,7 +20,7 @@ const useMakeOrder = ({ setState, input }) => {
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
-    const onMakeOrderHandler = async () => {
+    const onMakeOrderHandler = async (otp) => {
         try {
             setState({ loadingConfirm: true });
             const orderResponse = await createNewOrder({
@@ -28,13 +28,16 @@ const useMakeOrder = ({ setState, input }) => {
                 bankAccountId: side === SIDE.BUY ? partnerBank?._id : accountBank?._id,
                 partnerId: partner?.partnerId,
                 quantity: input,
-                side
+                side,
+                otp
             });
 
             if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
-                onMakeOrderSuccess(assetCode, orderResponse.data);
-            } else if (orderResponse.status === ApiResultCreateOrder.MISSING_OTP) {
-                setState({ needOtp: true, showOtp: true });
+                if (orderResponse.data.remaining_time) {
+                    setState({ needOtp: true, showOtp: true, otpExpireTime: orderResponse.data.remaining_time });
+                } else {
+                    onMakeOrderSuccess(assetCode, orderResponse.data);
+                }
             } else {
                 toast({ text: orderResponse.status, type: 'warning' });
             }
@@ -45,21 +48,7 @@ const useMakeOrder = ({ setState, input }) => {
         }
     };
 
-    const onMakeOrderWithOtpHandler = async (otp) => {
-        const orderResponse = await createNewOrder({
-            assetId,
-            bankAccountId: accountBank?._id,
-            partnerId: partner?.partnerId,
-            quantity: input,
-            side,
-            otp: {
-                email: otp
-            }
-        });
-        return orderResponse;
-    };
-
-    return { onMakeOrderWithOtpHandler, onMakeOrderSuccess, onMakeOrderHandler };
+    return { onMakeOrderSuccess, onMakeOrderHandler };
 };
 
 export default useMakeOrder;

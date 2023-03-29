@@ -30,7 +30,8 @@ const CardInput = () => {
         amount: '',
         loadingConfirm: false,
         showOtp: false,
-        needOtp: false
+        needOtp: false,
+        otpExpireTime: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const { side, assetId } = router.query;
@@ -59,7 +60,7 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate });
-    const { onMakeOrderWithOtpHandler, onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input });
+    const { onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),
@@ -259,7 +260,7 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={!state.needOtp ? onMakeOrderHandler : () => setState({ showOtp: true })}
+                    onClick={!state.needOtp ? () => onMakeOrderHandler() : () => setState({ showOtp: true })}
                     disabled={
                         !partner ||
                         loadingPartner ||
@@ -274,10 +275,12 @@ const CardInput = () => {
             </Card>
             <ModalOtp
                 onSuccess={onMakeOrderSuccess}
-                onConfirm={onMakeOrderWithOtpHandler}
+                onConfirm={(otp) => onMakeOrderHandler(otp)}
                 isVisible={state.showOtp}
+                otpExpireTime={state.otpExpireTime}
                 onClose={() => setState({ showOtp: false })}
                 assetCode={assetCode}
+                loading={state.loadingConfirm}
                 t={t}
             />
         </>
