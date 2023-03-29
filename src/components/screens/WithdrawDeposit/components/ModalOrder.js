@@ -24,7 +24,7 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                         type.showConfirm(router)
                     ) : (
                         <ButtonV2 loading={loading} disabled={loading} onClick={!onConfirm ? onClose : () => onConfirm?.()} className="transition-all mt-10">
-                            Xác nhận
+                            {t('common:confirm')}
                         </ButtonV2>
                     )}
                 </div>

@@ -54,7 +54,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner,
                             <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
                             <div className="flex space-x-1 items-center">
                                 <Clock size={12} />
-                                <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), `mm:ss [${t('common:seconds')}]`)}</span>
+                                <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), `mm:ss [${t('common:minutes')}]`)}</span>
                             </div>
                         </div>
                     )
@@ -69,7 +69,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, selectedPartner,
                                         <span>{formatPhoneNumber(partner?.phone)}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>{formatTime(Math.abs(partner?.analyticMetadata?.avgTime), `mm:ss [${t('common:seconds')}]`)}</span>
+                                            <span>{formatTime(Math.abs(partner?.analyticMetadata?.avgTime), `mm:ss [${t('common:minutes')}]`)}</span>
                                         </div>
                                     </div>
                                 ),

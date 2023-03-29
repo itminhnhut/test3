@@ -127,7 +127,7 @@ const CardInput = () => {
                             errorTooltip={false}
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
-                            placeHolder={t('wallet:input_amount')}
+                            placeHolder={t('wallet:mobile.input_amount_placeholder')}
                             renderTail={
                                 side === SIDE.SELL && (
                                     <ButtonV2
