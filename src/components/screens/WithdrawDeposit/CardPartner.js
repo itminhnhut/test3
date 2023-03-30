@@ -64,6 +64,7 @@ const CardPartner = () => {
                             additionalActions={accountBankAction}
                             showTag
                             selectedBank={accountBank}
+                            onSelect={(bank) => dispatch(setAccountBank(bank))}
                             containerClassname="z-[42]"
                             banks={sortBy(accountBanks || [], [(o) => -o.isDefault])}
                             loading={loadingAccountBanks}
