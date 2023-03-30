@@ -374,6 +374,7 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table thead th {
+        font-size: 14px;
         border-bottom: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
         // border-top: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
         //white-space: nowrap;
@@ -391,7 +392,7 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table td {
-        font-size: ${({ fontSizeTd }) => (fontSizeTd ? fontSizeTd : '14px')};
+        font-size: 16px;
     }
 
     .rc-table th {

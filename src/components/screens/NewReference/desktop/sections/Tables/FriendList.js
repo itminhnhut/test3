@@ -358,7 +358,6 @@ const FriendList = ({ language, t, id }) => {
                 columns={columns}
                 scroll={{ x: true }}
                 className="border-t border-divider dark:border-divider-dark"
-                tableStyle={{ fontSize: '14px', fontSizeTd: '16px' }}
                 data={dataSource.results || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingPrevNext={{
