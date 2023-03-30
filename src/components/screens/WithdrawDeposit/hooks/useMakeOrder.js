@@ -43,13 +43,15 @@ const useMakeOrder = ({ setState, input }) => {
             } else {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
                     toast({ text: t('common:otp_verify_expired'), type: 'warning' });
+                    setState({ loadingConfirm: false });
+                    return ApiResultCreateOrder.INVALID_OTP;
                 } else {
                     toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
+            setState({ loadingConfirm: false });
         } catch (error) {
             console.log('error:', error);
-        } finally {
             setState({ loadingConfirm: false });
         }
     };

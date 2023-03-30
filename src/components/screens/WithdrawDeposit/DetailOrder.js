@@ -186,7 +186,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 };
                             } else {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
                                     text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = <ReportButtonRender onMarkWithStatus={onMarkWithStatus} timeExpire={state.orderDetail?.timeExpire} t={t} />;

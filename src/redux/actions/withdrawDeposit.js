@@ -1,5 +1,6 @@
 import * as types from './types';
 import {
+    API_APPROVE_PARTNER_ORDER,
     API_CREATE_ORDER,
     API_CREATE_ORDER_WITH_OTP,
     API_GET_DEFAULT_PARTNER,
@@ -84,6 +85,15 @@ export const markOrder = async ({ displayingId, userStatus, mode = 'user' }) => 
     const res = await Axios.post(API_MARK_PARTNER_ORDER, {
         displayingId,
         userStatus,
+        mode
+    });
+
+    return res.data;
+};
+
+export const approveOrder = async ({ displayingId, mode = 'user' }) => {
+    const res = await Axios.post(API_APPROVE_PARTNER_ORDER, {
+        displayingId,
         mode
     });
 

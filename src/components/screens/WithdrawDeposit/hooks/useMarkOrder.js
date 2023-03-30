@@ -2,7 +2,7 @@ import React from 'react';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
-import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
+import { approveOrder, markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
 const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode }) => {
     const { t } = useTranslation();
@@ -10,6 +10,7 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
         let type, additionalData;
         let isRejected = false;
         const isPartner = mode === MODE.PARTNER;
+        const isApprove = statusType === TranferreredType[mode].TAKE;
 
         switch (userStatus) {
             case PartnerPersonStatus.DISPUTED:
@@ -46,7 +47,11 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
             setModalPropsWithKey(MODAL_KEY.CONFIRM, {
                 loading: true
             });
-            const data = isRejected ? await rejectOrder({ displayingId: id, mode }) : await markOrder({ displayingId: id, userStatus, mode });
+            const data = isRejected
+                ? await rejectOrder({ displayingId: id, mode })
+                : isApprove
+                ? await approveOrder({ displayingId: id, mode })
+                : await markOrder({ displayingId: id, userStatus, mode });
             if (data && data.status === ApiStatus.SUCCESS) {
                 // close confirm modal
                 setModalPropsWithKey(MODAL_KEY.CONFIRM, {
