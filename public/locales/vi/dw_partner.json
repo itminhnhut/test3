@@ -22,6 +22,8 @@
     "otp_code_send_to_email": "Nhập mã 6 kí tự đã được gửi đến email của bạn",
     "not_received_otp": "Không nhận được?",
     "resend_otp": "Gửi lại",
+    "verify_2fa": "Mã Google Authenticator",
+    "verify_2fa_description": "Vui lòng nhập mã xác thực trên ứng dụng Google Authenticator để tiếp tục.",
     "add_bank_account": "Thêm tài khoản ngân hàng",
     "edit_default_bank": "Chỉnh sửa mặc định",
     "payment_method": "Phương thức thanh toán",

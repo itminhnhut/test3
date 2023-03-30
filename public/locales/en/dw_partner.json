@@ -22,6 +22,8 @@
     "otp_code_send_to_email": "Please enter the 6-digit code sent to your email.",
     "not_received_otp": "Not receving?",
     "resend_otp": "Resend",
+    "verify_2fa": "Google Authenticator Code",
+    "verify_2fa_description": "Please enter the verification code on the Google Authenticator to continue.",
     "add_bank_account": "Add Bank Account",
     "edit_default_bank": "Edit Your Default Bank ",
     "payment_method": "Payment Method",

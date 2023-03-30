@@ -24,7 +24,6 @@ const CardInput = () => {
     const { t } = useTranslation();
     const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
-    const user = useSelector((state) => state.auth.user) || null;
 
     const router = useRouter();
 
@@ -32,7 +31,7 @@ const CardInput = () => {
         amount: '',
         loadingConfirm: false,
         showOtp: false,
-        needOtp: false,
+        otpMode: null,
         otpExpireTime: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -47,7 +46,7 @@ const CardInput = () => {
         }
     }, [minimumAllowed]);
     // reset otp state
-    useEffect(() => setState({ needOtp: false }), [state.amount, partner, accountBank]);
+    useEffect(() => setState({ otpMode: null }), [state.amount, partner, accountBank]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
         { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId } },
@@ -62,7 +61,7 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate });
-    const { onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input, user });
+    const { onMakeOrderHandler } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),
@@ -256,7 +255,7 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={!state.needOtp ? () => onMakeOrderHandler() : () => setState({ showOtp: true })}
+                    onClick={!state.otpMode ? () => onMakeOrderHandler() : () => setState({ otpMode: 'email', showOtp: true })}
                     disabled={
                         !partner ||
                         loadingPartner ||
@@ -270,14 +269,15 @@ const CardInput = () => {
                 </ButtonV2>
             </Card>
             <ModalOtp
-                onSuccess={onMakeOrderSuccess}
                 onConfirm={(otp) => onMakeOrderHandler(otp)}
                 isVisible={state.showOtp}
                 otpExpireTime={state.otpExpireTime}
-                onClose={() => setState({ showOtp: false })}
-                assetCode={assetCode}
+                onClose={() => {
+                    setState({ showOtp: false });
+                }}
                 loading={state.loadingConfirm}
-                t={t}
+                setOtpMode={(mode) => setState({ otpMode: mode })}
+                otpMode={state.otpMode}
             />
         </>
     );

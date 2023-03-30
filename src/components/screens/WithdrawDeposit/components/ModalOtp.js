@@ -12,11 +12,22 @@ import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
 import toast from 'utils/toast';
 import Countdown from 'react-countdown';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'next-i18next';
 const OTP_REQUIRED_LENGTH = 6;
-const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, assetCode, onConfirm, t }) => {
-    const [otp, setOtp] = useState('');
+const INITAL_OTP_STATE = {
+    email: '',
+    tfa: ''
+};
+
+const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpMode, onConfirm }) => {
+    const [otp, setOtp] = useState(INITAL_OTP_STATE);
     const [pasted, setPasted] = useState(false);
+    const { t } = useTranslation();
     const router = useRouter();
+    const auth = useSelector((state) => state.auth) || null;
+
+    const isTfaEnabled = auth.user?.isTfaEnabled;
 
     const doPaste = async () => {
         try {
@@ -28,6 +39,15 @@ const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, asset
         } catch {}
     };
 
+    const onConfirmHandler = () => {
+        if (isTfaEnabled) {
+            if (otpMode === 'email') setOtpMode('tfa');
+            else onConfirm(otp);
+            return;
+        }
+        onConfirm(otp);
+    };
+
     return (
         <ModalV2
             isVisible={isVisible}
@@ -35,17 +55,17 @@ const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, asset
             wrapClassName=""
             onBackdropCb={() => {
                 onClose();
-                setOtp('');
+                setOtp(INITAL_OTP_STATE);
             }}
-            className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
+            className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
             <div className="mb-6">
-                <div className="txtPri-3 mb-4">{t('dw_partner:verify')}</div>
-                <div className="txtSecond-2">{t('dw_partner:otp_code_send_to_email')}</div>
+                <div className="txtPri-3 mb-4">{otpMode === 'email' ? t('dw_partner:verify') : t('dw_partner:verify_2fa')}</div>
+                <div className="txtSecond-2">{otpMode === 'email' ? t('dw_partner:otp_code_send_to_email') : t('dw_partner:verify_2fa_description')}</div>
             </div>
             <OtpInput
-                value={otp}
-                onChange={(otp) => setOtp(otp.replace(/\D/g, ''))}
+                value={otp?.[otpMode]}
+                onChange={(otp) => setOtp((prev) => ({ ...prev, [otpMode]: otp.replace(/\D/g, '') }))}
                 numInputs={OTP_REQUIRED_LENGTH}
                 placeholder={'------'}
                 isInputNum={true}
@@ -55,25 +75,33 @@ const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, asset
                     // { 'border-red': isError }
                 )}
             />
-            <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                    <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
-                    {otpExpireTime && (
-                        <Countdown date={new Date().getTime() + otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
-                            {(props) => {
-                                return (
-                                    <button
-                                        onClick={onConfirm}
-                                        disabled={!props.completed}
-                                        className="text-dominant disabled:text-txtDisabled dark:text-txtDisabled-dark cursor-default font-semibold !w-auto"
-                                    >
-                                        {t('dw_partner:resend_otp')}
-                                    </button>
-                                );
-                            }}
-                        </Countdown>
-                    )}
-                </div>
+
+            <div
+                className={classNames('flex items-center', {
+                    'justify-between': otpMode === 'email',
+                    'justify-end': otpMode === 'tfa'
+                })}
+            >
+                {otpMode === 'email' && (
+                    <div className="flex items-center space-x-2">
+                        <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
+                        {otpExpireTime && (
+                            <Countdown date={new Date().getTime() + otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
+                                {(props) => {
+                                    return (
+                                        <button
+                                            onClick={onConfirm}
+                                            disabled={!props.completed}
+                                            className="text-dominant disabled:text-txtDisabled dark:text-txtDisabled-dark cursor-default font-semibold !w-auto"
+                                        >
+                                            {t('dw_partner:resend_otp')}
+                                        </button>
+                                    );
+                                }}
+                            </Countdown>
+                        )}
+                    </div>
+                )}
 
                 <div className="flex items-center space-x-2 cursor-pointer text-dominant" onClick={pasted ? undefined : async () => await doPaste()}>
                     <div className="w-4 h-4">{pasted ? <Check size={16} /> : <Copy color="currentColor" />}</div>
@@ -85,13 +113,12 @@ const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, asset
             </div>
             <div className="mt-[52px]">
                 <ButtonV2
-                    onClick={() =>
-                        onConfirm({
-                            email: otp
-                        })
+                    onClick={onConfirmHandler}
+                    loading={loading || auth?.loadingUser}
+                    disabled={
+                        (isTfaEnabled && otpMode === 'tfa' && otp.tfa.length !== OTP_REQUIRED_LENGTH) ||
+                        (otpMode === 'email' && otp.email.length !== OTP_REQUIRED_LENGTH)
                     }
-                    loading={loading}
-                    disabled={otp.length !== OTP_REQUIRED_LENGTH}
                 >
                     {t('common:confirm')}
                 </ButtonV2>
