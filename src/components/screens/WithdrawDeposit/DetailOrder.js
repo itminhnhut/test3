@@ -18,6 +18,7 @@ import toast from 'utils/toast';
 import classNames from 'classnames';
 import Custom404 from 'pages/404';
 import { useBoolean } from 'react-use';
+import ModalLoading from 'components/common/ModalLoading';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -69,6 +70,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const [refetch, toggleRefetch] = useBoolean(false);
+    const [isRefetchOrderDetailAfterCountdown, setIsRefetchOrderDetailAfterCountdown] = useState(false);
 
     const side = state.orderDetail?.side;
     const status = useMemo(
@@ -101,6 +103,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     setState({
                         orderDetail: data
                     });
+                    setIsRefetchOrderDetailAfterCountdown(false);
                     // const { status } = data;
                     // if (status === PartnerOrderStatus.SUCCESS) {
                     //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
@@ -133,6 +136,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         setState({
                             orderDetail: data
                         });
+                        console.log('data: ', data);
+                        if (data?.status !== PartnerOrderStatus.PENDING) {
+                            setIsRefetchOrderDetailAfterCountdown(false);
+                        }
                     }
                 } catch (error) {
                     console.log('error:', error);
@@ -289,21 +296,23 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
                     status={status}
-                    refetchOrderDetail={toggleRefetch}
+                    refetchOrderDetail={() => {
+                        toggleRefetch();
+                        setIsRefetchOrderDetailAfterCountdown(true);
+                    }}
                 />
                 {/* Lưu ý */}
-                {side === SIDE.BUY ||
-                    (true && (
-                        <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
-                            <div className="flex font-semibold items-center space-x-2 ">
-                                <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
-                                <span>{t('wallet:note')}</span>
-                            </div>
-                            <div className="txtSecond-2 mt-2">
-                                <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
-                            </div>
+                {side === SIDE.BUY && (
+                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
+                        <div className="flex font-semibold items-center space-x-2 ">
+                            <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
+                            <span>{t('wallet:note')}</span>
                         </div>
-                    ))}
+                        <div className="txtSecond-2 mt-2">
+                            <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
+                        </div>
+                    </div>
+                )}
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">
@@ -343,6 +352,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 orderId={id}
                 originImage={state?.orderDetail?.userUploadImage}
             />
+            <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
         </div>
     );
 };

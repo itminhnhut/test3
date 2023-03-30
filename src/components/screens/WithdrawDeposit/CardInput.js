@@ -135,7 +135,7 @@ const CardInput = () => {
                                 decimalScale={assetCode === 'VNDC' ? 0 : 4}
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
-                                placeHolder={loadingRate ? '...' : t('wallet:input_amount')}
+                                placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
                                 renderTail={
                                     side === SIDE.SELL && (
                                         <ButtonV2

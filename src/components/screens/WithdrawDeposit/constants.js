@@ -88,10 +88,7 @@ export const ICONS = {
 export const ORDER_TYPES = {
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
-        title: (t, mode = MODE.USER) => {
-            console.log("mode: ", mode);
-            return mode === MODE.USER ? t('common:confirm') : 'Xác nhận giao dịch'
-        },
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:confirm') : 'Xác nhận giao dịch'),
         description: ({ mode = MODE.USER, t }) =>
             mode === MODE.USER
                 ? t('dw_partner:transfer_confirm_description')
