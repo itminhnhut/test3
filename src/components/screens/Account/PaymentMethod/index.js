@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { parseUnormStr } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import NoData from 'components/common/V2/TableV2/NoData';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
@@ -13,21 +13,23 @@ import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import TagV2 from 'components/common/V2/TagV2';
 import RePagination from 'components/common/ReTable/RePagination';
 import ModalAddPaymentMethod from './ModalAddPaymentMethod';
-import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Spinner from 'components/svg/Spinner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import toast from 'utils/toast';
+import { useRouter } from 'next/router';
 
 const LIMIT_ROW = 5;
 
 const index = () => {
     const [search, setSearch] = useState('');
     const user = useSelector((state) => state.auth?.user);
+
     const isOpenModalKyc = useMemo(() => {
         return user ? user?.kyc_status !== 2 : false;
     }, [user]);
+
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
@@ -37,9 +39,24 @@ const index = () => {
     const [listUserBank, setListUserBank] = useState([]);
     const [dataTable, setDataTable] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [isOpenModalAddNew, setIsOpenModalAddNew] = useState(false);
-
     const [loadingSetDefault, setLoadingSetDefault] = useState(false);
+    const router = useRouter();
+    const { isAdd } = router.query;
+
+    const setIsOpenModalAddNew = (value) => {
+        router.replace(
+            {
+                //   pathname: '/...',
+                query: {
+                    isAdd: value ? 'true' : 'false'
+                }
+            },
+            undefined,
+            {
+                shallow: true
+            }
+        );
+    };
 
     const fetchListUserBank = () => {
         setLoadingListUserBank(true);
@@ -69,6 +86,7 @@ const index = () => {
             })
             .finally(() => setLoadingListUserBank(false));
     };
+
     useEffect(() => {
         fetchListUserBank();
     }, []);
@@ -197,7 +215,7 @@ const index = () => {
 
             {/* Popup if user have not KYC yet */}
             <ModalAddPaymentMethod
-                isOpenModalAdd={isOpenModalAddNew}
+                isOpenModalAdd={isAdd?.toLowerCase() === 'true'}
                 onBackdropCb={() => setIsOpenModalAddNew(false)}
                 t={t}
                 user={user}
