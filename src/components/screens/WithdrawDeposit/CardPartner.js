@@ -10,6 +10,7 @@ import useFetchApi from 'hooks/useFetchApi';
 import axios from 'axios';
 import Card from './components/common/Card';
 import { useTranslation } from 'next-i18next';
+import sortBy from 'lodash/sortBy';
 
 const ModalBankDefault = dynamic(() => import('./components/ModalBankDefault'), { ssr: false });
 const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: false });
@@ -56,15 +57,16 @@ const CardPartner = () => {
     return (
         <>
             <Card className=" ">
-                <div className="txtSecond-2 mb-4">{t('dw_partner:payment_infor')}</div>
+                <div className="txtSecond-3 mb-4">{t('dw_partner:payment_infor')}</div>
                 <div className="space-y-4">
                     {side === SIDE.SELL && (
                         <BankInfo
                             additionalActions={accountBankAction}
                             showTag
                             selectedBank={accountBank}
+                            onSelect={(bank) => dispatch(setAccountBank(bank))}
                             containerClassname="z-[42]"
-                            banks={accountBanks}
+                            banks={sortBy(accountBanks || [], [(o) => -o.isDefault])}
                             loading={loadingAccountBanks}
                             showTooltip={false}
                             t={t}
@@ -98,7 +100,7 @@ const CardPartner = () => {
                 </div>
             </Card>
             <ModalBankDefault
-                banks={accountBanks}
+                banks={sortBy(accountBanks || [], [(o) => -o.isDefault])}
                 toggleRefetch={toggleRefetchAccBanks}
                 onClose={() => setVisibleModalBank(false)}
                 isVisible={visibleModalBank}

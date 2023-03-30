@@ -14,9 +14,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
 import Countdown from 'react-countdown';
-import toast from 'utils/toast';
 import classNames from 'classnames';
-import Custom404 from 'pages/404';
 import { useBoolean } from 'react-use';
 import ModalLoading from 'components/common/ModalLoading';
 
@@ -27,16 +25,18 @@ const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additio
 const ReportButtonRender = ({ timeExpire, onMarkWithStatus, t }) => {
     return timeExpire ? (
         <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
-            {(props) => (
-                <ButtonV2
-                    disabled={props.total > REPORT_ABLE_TIME * 1000}
-                    onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
-                    className="px-6 disabled:!cursor-default"
-                    variants="secondary"
-                >
-                    {t('dw_partner:appeal')}
-                </ButtonV2>
-            )}
+            {(props) => {
+                return (
+                    <ButtonV2
+                        disabled={props.total > REPORT_ABLE_TIME * 1000}
+                        onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
+                        className="px-6 disabled:!cursor-default"
+                        variants="secondary"
+                    >
+                        {t('dw_partner:appeal')}
+                    </ButtonV2>
+                );
+            }}
         </Countdown>
     ) : (
         <></>
@@ -93,7 +93,15 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             }
         }));
 
-    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side, mode });
+    const { onMarkWithStatus } = useMarkOrder({
+        baseQty: state.orderDetail?.baseQty,
+        id,
+        assetCode,
+        assetId: state.orderDetail?.baseAssetId,
+        setModalPropsWithKey,
+        side,
+        mode
+    });
 
     useEffect(() => {
         if (userSocket) {
@@ -104,10 +112,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         orderDetail: data
                     });
                     setIsRefetchOrderDetailAfterCountdown(false);
-                    // const { status } = data;
-                    // if (status === PartnerOrderStatus.SUCCESS) {
-                    //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
-                    // }
                 }
             });
         }
@@ -185,7 +189,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} t={t} />;
+                                reportBtn = <ReportButtonRender onMarkWithStatus={onMarkWithStatus} timeExpire={state.orderDetail?.timeExpire} t={t} />;
                             }
                         }
                         // user logic
@@ -257,7 +261,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} t={t} />;
+                                reportBtn = <ReportButtonRender onMarkWithStatus={onMarkWithStatus} timeExpire={state.orderDetail?.timeExpire} t={t} />;
                             }
                         }
                     }
@@ -282,7 +286,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 {reportBtn}
             </div>
         );
-    }, [mode, state?.orderDetail]);
+    }, [mode, state?.orderDetail, t]);
     const notes = { __html: t('dw_partner:notes') };
 
     return (

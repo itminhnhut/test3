@@ -1,10 +1,10 @@
 import React from 'react';
-import { DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
-const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode }) => {
+const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode }) => {
     const { t } = useTranslation();
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
@@ -23,7 +23,9 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_SUCCESS;
                         additionalData = {
-                            displayingId: id
+                            displayingId: id,
+                            side,
+                            assetId
                         };
                         isRejected = true;
                         break;

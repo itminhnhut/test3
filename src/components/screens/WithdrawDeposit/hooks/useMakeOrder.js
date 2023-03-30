@@ -9,7 +9,7 @@ import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 
-const useMakeOrder = ({ setState, input, user }) => {
+const useMakeOrder = ({ setState, input }) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
     const { t } = useTranslation();
@@ -36,7 +36,7 @@ const useMakeOrder = ({ setState, input, user }) => {
 
             if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
                 if (orderResponse.data.remaining_time) {
-                    setState({ needOtp: true, showOtp: true, otpExpireTime: orderResponse.data.remaining_time });
+                    setState({ otpMode: 'email', showOtp: true, otpExpireTime: orderResponse.data.remaining_time });
                 } else {
                     onMakeOrderSuccess(assetCode, orderResponse.data);
                 }

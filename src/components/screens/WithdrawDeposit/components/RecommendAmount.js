@@ -36,8 +36,16 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
 
     useEffect(() => {
         if (minimumAllowed > 0 && maximumAllowed > 0) {
-            if ((!amount || +amount === 0) && lastOrders && lastOrders.orders) {
-                setRcmdAmount(lastOrders.orders.map((order) => order.baseQty));
+            if (!amount) {
+                if (lastOrders && lastOrders.orders.length) {
+                    setRcmdAmount(lastOrders.orders.map((order) => order.baseQty));
+                } else {
+                    setRcmdAmount(
+                        MULTIPLIES_AMOUNT[assetId]
+                            .map((times) => times)
+                            .filter((amountRecommend) => amountRecommend >= minimumAllowed && amountRecommend <= maximumAllowed)
+                    );
+                }
             } else if (amount) {
                 setRcmdAmount(
                     MULTIPLIES_AMOUNT[assetId]
@@ -58,7 +66,7 @@ const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
                             setRcmdAmount((prev) => prev.filter((item) => item !== amountRcmd));
                         }}
                         key={index}
-                        className="cursor-pointer border min-w-[80px] text-center dark:border-divider-dark border-divider rounded-full py-3 px-5 txtSecond-3"
+                        className="cursor-pointer border min-w-[80px] text-center dark:border-divider-dark border-divider rounded-full py-3 px-5 txtSecond-2"
                     >
                         {formatPrice(amountRcmd, 0)}
                     </div>

@@ -17,14 +17,12 @@ import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
 import ModalOtp from './components/ModalOtp';
 import useMakeOrder from './hooks/useMakeOrder';
-import { ALLOWED_ASSET } from './constants';
 import useGetPartner from './hooks/useGetPartner';
 
 const CardInput = () => {
     const { t } = useTranslation();
     const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
-    const user = useSelector((state) => state.auth.user) || null;
 
     const router = useRouter();
 
@@ -32,14 +30,13 @@ const CardInput = () => {
         amount: '',
         loadingConfirm: false,
         showOtp: false,
-        needOtp: false,
+        otpMode: null,
         otpExpireTime: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
-
     // Setting DEFAULT amount
     useEffect(() => {
         if (minimumAllowed) {
@@ -47,7 +44,7 @@ const CardInput = () => {
         }
     }, [minimumAllowed]);
     // reset otp state
-    useEffect(() => setState({ needOtp: false }), [state.amount, partner, accountBank]);
+    useEffect(() => setState({ otpMode: null }), [state.amount, partner, accountBank]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
         { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId } },
@@ -62,7 +59,7 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate });
-    const { onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input, user });
+    const { onMakeOrderHandler } = useMakeOrder({ setState, input });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),
@@ -117,7 +114,11 @@ const CardInput = () => {
                         {side === SIDE.SELL && (
                             <div className="flex space-x-1 text-sm font-semibold items-center">
                                 <div className="txtSecond-3">{t('common:available_balance')}:</div>
-                                <button disabled={+state.amount === maximumAllowed} className="font-semibold" onClick={onMaxHandler}>
+                                <button
+                                    disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
+                                    className="font-semibold"
+                                    onClick={onMaxHandler}
+                                >
                                     {formatBalanceFiat(availableAsset, assetCode)} {assetCode}
                                 </button>
                             </div>
@@ -143,7 +144,7 @@ const CardInput = () => {
                                     side === SIDE.SELL && (
                                         <ButtonV2
                                             variants="text"
-                                            disabled={+state.amount === maximumAllowed || loadingRate}
+                                            disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
                                             onClick={onMaxHandler}
                                             className="uppercase font-semibold text-teal !h-10 "
                                         >
@@ -229,14 +230,6 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
                         <div className="txtPri-1 flex items-center">
-                            {/* {loadingPartner ? (
-                                <Skeletor width="50px" />
-                            ) : !partner ? (
-                                formatPrice(DEFAULT_PARTNER_MAX[side], 0)
-                            ) : (
-                                formatPrice(orderConfig?.max, 0)
-                            )} */}
-
                             {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
 
                             <span className="ml-1">{assetCode}</span>
@@ -258,7 +251,7 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={!state.needOtp ? () => onMakeOrderHandler() : () => setState({ showOtp: true })}
+                    onClick={!state.otpMode ? () => onMakeOrderHandler() : () => setState({ otpMode: 'email', showOtp: true })}
                     disabled={
                         !partner ||
                         loadingPartner ||
@@ -272,14 +265,15 @@ const CardInput = () => {
                 </ButtonV2>
             </Card>
             <ModalOtp
-                onSuccess={onMakeOrderSuccess}
                 onConfirm={(otp) => onMakeOrderHandler(otp)}
                 isVisible={state.showOtp}
                 otpExpireTime={state.otpExpireTime}
-                onClose={() => setState({ showOtp: false })}
-                assetCode={assetCode}
+                onClose={() => {
+                    setState({ showOtp: false });
+                }}
                 loading={state.loadingConfirm}
-                t={t}
+                setOtpMode={(mode) => setState({ otpMode: mode })}
+                otpMode={state.otpMode}
             />
         </>
     );
