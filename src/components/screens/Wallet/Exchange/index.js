@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber as formatWallet, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { MoreHorizIcon } from 'components/svg/SvgIcon';
 
 import { EXCHANGE_ACTION } from 'pages/wallet';
@@ -345,7 +345,7 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder('partner', 'BUY'))}>
                     {t('common:deposit')}
                 </ButtonV2>
                 <ButtonV2

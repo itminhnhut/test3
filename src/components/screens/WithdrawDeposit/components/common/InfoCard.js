@@ -8,12 +8,12 @@ import { useTranslation } from 'next-i18next';
 
 const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
-        <div className="flex items-center space-x-3 ">
-            <div style={{ minWidth: imgSize, minHeight: imgSize }}>
-                {image ?? <Image src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
+        <div className="flex items-center space-x-3">
+            <div style={{ width: imgSize, height: imgSize }}>
+                {image ?? <Image className="rounded-full" src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
             </div>
 
-            <div className="">
+            <div>
                 <div className="txtPri-1 mb-2 text-left line-clamp-2">{mainContent}</div>
                 <div className="txtSecond-3">{subContent}</div>
             </div>

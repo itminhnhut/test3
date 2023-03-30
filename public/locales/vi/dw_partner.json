@@ -27,7 +27,7 @@
     "add_bank_account": "Thêm tài khoản ngân hàng",
     "edit_default_bank": "Chỉnh sửa mặc định",
     "payment_method": "Phương thức thanh toán",
-    "payment_method_description": "Sau khi bấm \"Mua\", vui lòng chuyển tiền cho đối tác trong vòng 15 phút trước khi lệnh mua bị huỷ tự động.",
+    "payment_method_description": "Sau khi bấm \"Mua\", vui lòng chuyển tiền cho đối tác trong vòng 10 phút trước khi lệnh mua bị huỷ tự động.",
     "default": "Mặc định",
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
