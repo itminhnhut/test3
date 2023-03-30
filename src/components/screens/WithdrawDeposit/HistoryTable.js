@@ -208,11 +208,6 @@ const HistoryTable = () => {
                     language
                 }}
                 emptyTextContent={t('common:no_data')}
-                // sort
-                // sorted={restProps.type !== 0}
-                cbSort={(e) => {
-                    console.log('e: ', e);
-                }}
                 customSort={customSort}
             />
         </div>

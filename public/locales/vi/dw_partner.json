@@ -45,6 +45,9 @@
     "cancel_order_success": "Lệnh {{orderId}} mua {{amount}} {{asset}} đã huỷ thành công.",
     "create_new_transaction": "Tạo giao dịch mới",
     "appeal_description": "Khiếu nại sẽ chuyển trạng thái của Lệnh {{orderId}} sang trạng thái Đang tranh chấp, người dùng bắt buộc phải cung cấp các bằng chứng liên quan đến giao dịch như hình ảnh, tin nhắn,...",
+    "enter_amount": "Nhập số lượng",
+    "mins": "phút",
+    "set_as_default": "Đặt làm mặc định",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",

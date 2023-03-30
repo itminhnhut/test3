@@ -110,7 +110,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                     </div>
                     <div className="flex flex-col mt-6 gap-y-4">
                         <div className="flex items-center justify-between">
-                            <span className="txtSecond-2">{t('wallet:transaction_detail')}</span>
+                            <span className="txtSecond-2">{t('dw_partner:transfer_description')}</span>
                             {!orderDetail ? (
                                 <Skeletor width="100px" />
                             ) : (
@@ -118,7 +118,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             )}
                         </div>
                         <div className="flex items-center justify-between">
-                            <span className="txtSecond-2">{t('wallet:bank_name')}</span>
+                            <span className="txtSecond-2">{t('dw_partner:bank')}</span>
                             {!orderDetail ? (
                                 <Skeletor width="100px" />
                             ) : (

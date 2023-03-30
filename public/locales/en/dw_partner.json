@@ -45,6 +45,9 @@
     "cancel_order_success": "Order {{orderId}} to buy {{amount}} {{asset}} has been cancelled successfully.",
     "create_new_transaction": "Create New Order",
     "appeal_description": "Complaint will change the status of Order {{orderId}} to the status of Disputing, the user is required to provide proofs related to the transaction such as pictures, messages,...",
+    "enter_amount": "Enter amount",
+    "mins": "mins",
+    "set_as_default": "Set as Default",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
