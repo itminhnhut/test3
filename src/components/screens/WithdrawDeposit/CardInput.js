@@ -139,7 +139,7 @@ const CardInput = () => {
                                     side === SIDE.SELL && (
                                         <ButtonV2
                                             variants="text"
-                                            disabled={+state.amount === maximumAllowed}
+                                            disabled={+state.amount === maximumAllowed || loadingRate}
                                             onClick={onMaxHandler}
                                             className="uppercase font-semibold text-teal !h-10 "
                                         >
@@ -171,13 +171,7 @@ const CardInput = () => {
                     </div>
                 </div>
                 <div className="mt-4">
-                    <RecommendAmount
-                        minimumAllowed={minimumAllowed}
-                        maximumAllowed={maximumAllowed}
-                        setAmount={(value) => setState({ amount: value })}
-                        assetCode={assetCode}
-                        amount={state.amount}
-                    />
+                    <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} loadingRate={loadingRate} />
                 </div>
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">

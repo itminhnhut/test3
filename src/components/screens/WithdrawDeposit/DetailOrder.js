@@ -69,7 +69,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const [refetch, toggleRefetch] = useBoolean(false);
-    console.log('refetch:', refetch)
 
     const side = state.orderDetail?.side;
     const status = useMemo(
@@ -263,7 +262,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         return (
             <div className="flex gap-x-4">
                 {primaryBtn && (
-                    <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px]', primaryBtn?.class)}>
+                    <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px] px-6', primaryBtn?.class)}>
                         {/* //!whitespace-nowrap px-[62.5px] */}
                         {primaryBtn?.text}
                     </ButtonV2>

@@ -1,6 +1,7 @@
 import useFetchApi from 'hooks/useFetchApi';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
 import { PartnerOrderStatus } from 'redux/actions/const';
 import { formatPrice } from 'redux/actions/utils';
@@ -12,11 +13,12 @@ const MULTIPLIES_AMOUNT = {
     22: [10, 10e1, 10e2, 10e3]
 };
 
-const RecommendAmount = ({ amount, setAmount, minimumAllowed, maximumAllowed }) => {
+const RecommendAmount = ({ amount, setAmount, loadingRate }) => {
+    const { minimumAllowed, maximumAllowed } = useSelector((state) => state.withdrawDeposit);
     const [rcmdAmount, setRcmdAmount] = useState([]);
     const router = useRouter();
     const { side, assetId } = router?.query;
-    const { data: lastSuccessOrders, loading } = useFetchApi(
+    const { data: lastOrders, loading: loadingOrders } = useFetchApi(
         {
             url: API_GET_HISTORY_DW_PARTNERS,
             params: {
@@ -25,7 +27,6 @@ const RecommendAmount = ({ amount, setAmount, minimumAllowed, maximumAllowed }) 
                 lastId: null,
                 mode: 'user',
                 side,
-                // status: PartnerOrderStatus.SUCCESS,
                 assetId
             }
         },
@@ -35,8 +36,8 @@ const RecommendAmount = ({ amount, setAmount, minimumAllowed, maximumAllowed }) 
 
     useEffect(() => {
         if (minimumAllowed > 0 && maximumAllowed > 0) {
-            if ((!amount || +amount === 0) && lastSuccessOrders && lastSuccessOrders.orders) {
-                setRcmdAmount(lastSuccessOrders.orders.map((order) => order.baseQty));
+            if ((!amount || +amount === 0) && lastOrders && lastOrders.orders) {
+                setRcmdAmount(lastOrders.orders.map((order) => order.baseQty));
             } else if (amount) {
                 setRcmdAmount(
                     MULTIPLIES_AMOUNT[assetId]
@@ -45,11 +46,11 @@ const RecommendAmount = ({ amount, setAmount, minimumAllowed, maximumAllowed }) 
                 );
             }
         }
-    }, [lastSuccessOrders, amount, maximumAllowed, minimumAllowed]);
+    }, [lastOrders, amount, maximumAllowed, minimumAllowed]);
 
     return (
         <div className="flex items-center overflow-x-auto space-x-3 pb-3 mb-3">
-            {rcmdAmount.length ? (
+            {!loadingOrders && !loadingRate && rcmdAmount.length ? (
                 rcmdAmount.map((amountRcmd, index) => (
                     <div
                         onClick={() => {
