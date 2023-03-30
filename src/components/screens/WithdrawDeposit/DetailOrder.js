@@ -93,7 +93,15 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             }
         }));
 
-    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side, mode });
+    const { onMarkWithStatus } = useMarkOrder({
+        baseQty: state.orderDetail?.baseQty,
+        id,
+        assetCode,
+        assetId: state.orderDetail?.baseAssetId,
+        setModalPropsWithKey,
+        side,
+        mode
+    });
 
     useEffect(() => {
         if (userSocket) {

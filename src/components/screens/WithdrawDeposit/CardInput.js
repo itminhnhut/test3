@@ -38,7 +38,6 @@ const CardInput = () => {
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
     const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
-
     // Setting DEFAULT amount
     useEffect(() => {
         if (minimumAllowed) {
@@ -114,7 +113,11 @@ const CardInput = () => {
                         {side === SIDE.SELL && (
                             <div className="flex space-x-1 text-sm font-semibold items-center">
                                 <div className="txtSecond-3">{t('common:available_balance')}:</div>
-                                <button disabled={+state.amount === maximumAllowed} className="font-semibold" onClick={onMaxHandler}>
+                                <button
+                                    disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
+                                    className="font-semibold"
+                                    onClick={onMaxHandler}
+                                >
                                     {formatBalanceFiat(availableAsset, assetCode)} {assetCode}
                                 </button>
                             </div>
@@ -140,7 +143,7 @@ const CardInput = () => {
                                     side === SIDE.SELL && (
                                         <ButtonV2
                                             variants="text"
-                                            disabled={+state.amount === maximumAllowed || loadingRate}
+                                            disabled={+state.amount === maximumAllowed || +state.amount === availableAsset || loadingRate}
                                             onClick={onMaxHandler}
                                             className="uppercase font-semibold text-teal !h-10 "
                                         >

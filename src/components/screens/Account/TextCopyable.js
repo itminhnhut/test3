@@ -24,8 +24,15 @@ export default function TextCopyable({ text = '', showingText, className = '', t
     return (
         <span className={className + ' flex items-center'}>
             <span className={'mr-1'}>{showingText ?? text}</span>
-            <CopyToClipboard text={text} onCopy={onCopy} className="cursor-pointer inline-block">
-                {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+            <CopyToClipboard text={text} className="cursor-pointer inline-block">
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onCopy();
+                    }}
+                >
+                    {copied ? <Check size={16} color={colors.teal} /> : <Copy />}
+                </div>
             </CopyToClipboard>
         </span>
     );
