@@ -375,14 +375,18 @@ const FriendList = ({ language, t, id }) => {
         handleResetSearchByCode();
     };
 
+    const handleTotal = (data, assetId, type) => {
+        return assetId === 22 ? formatNumber(data?.[type]?.[assetId], 4) : formatNumber(data?.[type]?.[assetId], 0);
+    };
+
     const renderCommissionData = (data, type = 'commission') => {
         return (
             <div>
                 <p className="text-green-3 relative dark:text-teal inline-block font-semibold nami-underline-dotted" data-tip="" data-for={type + data?.code}>
                     ~ {formatNumber(data?.[type]?.total)} {data?.symbol} VNDC
                 </p>
-                <Tooltip offset="{'top': 18}" id={type + data?.code} place="top" effect="solid" className={`min-w-[120px]`} isV3>
-                    <div className=" w-full">
+                <Tooltip offset={{ top: 18 }} id={type + data?.code} place="top" effect="solid" className={`max-w-[220px]`} isV3>
+                    <div className="w-full">
                         <div className="mb-4 text-white dark:text-txtSecondary-dark text-center text-xs">
                             {/* {t('reference:referral.total_direct_commissions')} */}
                             {tooltipCommission[type]}
@@ -391,7 +395,7 @@ const FriendList = ({ language, t, id }) => {
                             {[72, 22, 1].map((assetId) => {
                                 return (
                                     <div key={assetId} className="flex items-center justify-between">
-                                        <span className="text-white">{formatNumber(data?.[type]?.[assetId], 2)}</span>
+                                        <span className="text-white">{handleTotal(data, assetId, type)}</span>
                                         <span className="text-white dark:text-txtSecondary-dark ml-2">{assetCodeFromId(assetId)}</span>
                                     </div>
                                 );
