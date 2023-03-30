@@ -64,7 +64,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                                         </div>
                                     </div>
                                 ),
-                                imgSrc: partner?.avatar
+                                // imgSrc: partner?.avatar
                             }}
                             endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor" />}
                             endIconPosition="center"

@@ -49,7 +49,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) 
                 />
             ) : (
                 <>
-                    <CardContent imgSize={imgSize} mainContent={content.mainContent} subContent={content.subContent} />
+                    <CardContent imgSize={imgSize} imageSrc={content?.imgSrc} mainContent={content.mainContent} subContent={content.subContent} />
                     {endIcon}
                 </>
             )}
