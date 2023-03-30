@@ -73,8 +73,8 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
             />
             <div className="mt-8">
                 <div className="flex w-full justify-between text-gray-1 dark:text-gray-7 text-sm mb-6">
-                    <div>NamiID</div>
-                    <div>{t('reference:referral.referral_date')}</div>
+                    <div>{t('reference:table.name')}</div>
+                    <div>{t('reference:table.referral_date')}</div>
                 </div>
                 {loading ? (
                     <IconLoading color={colors.teal} />

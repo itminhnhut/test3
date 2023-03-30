@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReferralLevelIcon from 'components/svg/RefIcons';
 import { Progressbar } from 'components/screens/NewReference/mobile/sections/Info';
 import { RegisterPartnerModal } from 'components/screens/NewReference/mobile/sections/Overview';
@@ -9,7 +9,6 @@ import { FriendListIcon, NoteIcon } from '../../mobile/sections/Info/RefDetail';
 import { CopyIcon } from '../../PopupModal';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import QRCode from 'qrcode.react';
-import showNotification from 'utils/notificationService';
 import { NoData } from '../../mobile';
 import FetchApi from 'utils/fetch-api';
 import fetchAPI from 'utils/fetch-api';
@@ -131,7 +130,6 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                     is_partner_trading: true
                 }
             });
-            console.log('data', data);
             if (data) {
                 setIsModalWithDrawal(true);
                 setIsWithdrawal(true);

@@ -138,7 +138,7 @@ const Commission = ({ t, language, id }) => {
 
     const renderLastedCommissions = useMemo(() => {
         return !lastedCommissions.length ? (
-            <NoData className="my-20 !text-base" text={t('reference:referral.no_commission')} />
+            <NoData className="my-20 !text-base" text={t('reference:referral.no_recent_activities')} />
         ) : (
             lastedCommissions.map((data, index) => (
                 <div key={`commission-${index}-${data.fromUserCode}`}>
@@ -163,7 +163,7 @@ const Commission = ({ t, language, id }) => {
         <div className="flex gap-6 w-full" id={id}>
             {/* Hoa hồng */}
             <RefCard wrapperClassName="!py-6 px-8 w-full max-h-[624px]" isBlack={theme === THEME_MODE.DARK}>
-                <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.reward_commission')}</div>
+                <div className="font-semibold text-[22px] leading-7 py-3 mb-6">{t('reference:referral.recent_activities')}</div>
                 <div className="max-h-[calc(624px-124px)] overflow-y-auto pr-5 -mr-5 space-y-8">{renderLastedCommissions}</div>
             </RefCard>
             {/* Bạn bè mới */}

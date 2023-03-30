@@ -95,7 +95,7 @@
     },
     "withdrawal": {
         "title": "Đăng ký ĐTNR",
-        "content": "Đăng ký ĐTNR",
+        "content": "Đăng ký ĐTNR thành công",
         "success": "Chúc mừng bạn đã thành công trở thành đối tác nạp rút của Nami Exchange."
     },
     "table": {
@@ -153,13 +153,13 @@
         "show_more": "Xem thêm danh sách",
         "modify_note": "Chỉnh sửa ghi chú",
         "confirm": "Xác nhận",
-        "add_new_referral": "Thêm giới thiệu mới",
+        "add_new_referral": "Thêm mã giới thiệu mới",
         "commission_rate": "Tỷ lệ hoa hồng",
         "direct": "Trực tiếp",
         "indirect": "Gián tiếp",
         "you_get": "Bạn nhận",
         "friends_get": "Bạn bè nhận",
-        "reward_commission": "Hoa hồng ",
+        "reward_commission": "Hoa hồng",
         "new_friends": "Bạn bè mới",
         "rank": "Hạng",
         "level": "Nhóm",
@@ -169,6 +169,7 @@
         "referrer": "Người giới thiệu",
         "no_commission": "Không có lịch sử hoa hồng",
         "number_of_friends": "Số lượng bạn bè",
+        "no_recent_activities": "Không có lịch sử hoạt động gần đây",
         "status": "Tình trạng",
         "kyc": "Đã KYC",
         "not_kyc": "Chưa KYC",
@@ -200,7 +201,7 @@
         "date": "Thời gian",
         "error": "Lỗi",
         "success": "Thành công",
-        "placeholder_search": "Tìm theo Nami ID",
+        "placeholder_search": "Nhập Nami ID",
         "partner": {
             "button": "Đăng ký đối tác",
             "title": "Đăng ký đối tác cộng đồng",
