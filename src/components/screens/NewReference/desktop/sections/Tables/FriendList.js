@@ -299,7 +299,7 @@ const FriendList = ({ language, t, id }) => {
                 dataIndex: 'user_count',
                 title: t('reference:table.referred'),
                 align: 'left',
-                width: 120,
+                width: 150,
                 render: (value) => `${formatNumber(value || 0, 2)} ${t('reference:table.friends')}`
             },
             {
@@ -328,9 +328,9 @@ const FriendList = ({ language, t, id }) => {
                     const isNotActive = levelFriend >= MAX_BREAD_CRUMB || row?.user_count === 0 || !dataSource?.go_next;
                     return (
                         <div
-                            className={classNames('dark:text-green-2 text-green-3 font-semibold flex flex-row px-[18px] whitespace-nowrap items-center', {
-                                'justify-between': levelFriend < MAX_BREAD_CRUMB
-                            })}
+                            className={classNames(
+                                'dark:text-green-2 text-green-3 font-semibold flex flex-row px-[18px] whitespace-nowrap items-center justify-center'
+                            )}
                         >
                             <div onClick={() => handleDetailFriend(row)}>{t('reference:table.detail')}</div>
                             <hr className="h-7 w-[1px] border-[1px] border-solid dark:border-[#222940] border-[#dcdfe6] mx-3" />
@@ -354,11 +354,11 @@ const FriendList = ({ language, t, id }) => {
                 useRowHover
                 height={350}
                 limit={LIMIT}
-                className="z-10 rc-table-friendList"
                 loading={loading}
                 columns={columns}
                 scroll={{ x: true }}
-                pagingClassName="border-none"
+                className="border-t border-divider dark:border-divider-dark"
+                tableStyle={{ fontSize: '14px', fontSizeTd: '16px' }}
                 data={dataSource.results || []}
                 rowKey={(item) => `${item?.key}`}
                 pagingPrevNext={{
