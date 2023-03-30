@@ -100,7 +100,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                         <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>{formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm:ss')}</span>
+                                            <span>{formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm')} {t('dw_partner:mins')}</span>
                                         </div>
                                     </div>
                                 ),
