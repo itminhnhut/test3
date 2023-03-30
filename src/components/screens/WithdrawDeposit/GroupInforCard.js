@@ -1,7 +1,7 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatNumber, formatTime, formatPhoneNumber, getS3Url, formatBalance } from 'redux/actions/utils';
+import { formatNumber, formatTime, formatPhoneNumber, getS3Url, formatBalance, formatBalanceFiat } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
@@ -48,7 +48,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             {!orderDetail ? (
                                 <Skeletor width="200px" height="30px" />
                             ) : (
-                                `${side === 'BUY' ? '+' : '-'}${formatNumber(orderDetail?.baseQty)} ${assetCode}`
+                                `${side === 'BUY' ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, assetCode)} ${assetCode}`
                             )}
                         </div>
                     </div>
@@ -148,8 +148,8 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             ) : (
                                 <TextCopyable
                                     className="gap-x-1 font-semibold"
-                                    showingText={`${formatBalance(orderDetail?.baseQty * rate)} VND`}
-                                    text={formatBalance(orderDetail?.baseQty * rate)}
+                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
+                                    text={formatBalance(orderDetail?.quoteQty, 0)}
                                 />
                             )}
                         </div>

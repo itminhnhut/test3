@@ -223,8 +223,11 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
-export const formatBalanceFiat = (value, assetCode, acceptNegative = false) =>
-    formatBalance(value, assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0, acceptNegative);
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
+    const isVNDC = assetCode === 'VNDC';
+    const isUSDT = assetCode === 'USDT';
+    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+};
 
 export const getExactBalanceFiat = (balance, assetCode) => {
     const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
