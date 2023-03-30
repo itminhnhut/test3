@@ -17,7 +17,7 @@ const KIND = {
     Staking: { vi: 'KL Daily Staking', en: 'Daily Staking Vol' }
 };
 
-const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language }) => {
+const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onChangeOption, defaultOption, t, language, assetConfig }) => {
     const totalCommission = useMemo(() => {
         const commissionByAsset = (detailFriend?.commission || [])?.find((f) => f?.asset === options?.commission) || {};
         return commissionByAsset?.total || {};
@@ -40,7 +40,8 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
     }, [options]);
 
     const handleTotal = (type, value) => {
-        return type === 22 ? formatNumber(value, 4, 0, true) : formatNumber(value, 0, 0, true);
+        const symbol = assetConfig.find((f) => f.id === type) || {};
+        return formatNumber(value, symbol?.assetDigit, 0, true);
     };
 
     return (

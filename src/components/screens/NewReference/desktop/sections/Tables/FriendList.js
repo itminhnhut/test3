@@ -10,6 +10,8 @@ import TableV2 from 'components/common/V2/TableV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 
+import { useSelector } from 'react-redux';
+
 import FetchApi from 'utils/fetch-api';
 import { assetCodeFromId } from 'utils/reference-utils';
 
@@ -66,6 +68,8 @@ const MAX_BREAD_CRUMB = 3;
 const LIMIT = 10;
 
 const FriendList = ({ language, t, id }) => {
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
     const rank = {
         1: t('reference:referral.normal'),
         2: t('reference:referral.official'),
@@ -376,7 +380,8 @@ const FriendList = ({ language, t, id }) => {
     };
 
     const handleTotal = (data, assetId, type) => {
-        return assetId === 22 ? formatNumber(data?.[type]?.[assetId], 4) : formatNumber(data?.[type]?.[assetId], 0);
+        const symbol = assetConfig.find((f) => f.id === assetId) || {};
+        return formatNumber(data?.[type]?.[assetId], symbol?.assetDigit);
     };
 
     const renderCommissionData = (data, type = 'commission') => {
@@ -411,11 +416,12 @@ const FriendList = ({ language, t, id }) => {
         <div className="flex w-full" id={id}>
             <ModalFriendDetail
                 t={t}
-                language={language}
                 options={options}
+                language={language}
                 level={levelFriend}
                 toggle={toggleDetail}
                 isModal={isModalDetail}
+                assetConfig={assetConfig}
                 detailFriend={detailFriend}
                 defaultOption={DEFAULT_TOKENS}
                 onChangeOption={handleChangeOption}

@@ -6,6 +6,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import RefCard from '../../RefCard';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import UserCircle from 'components/svg/UserCircle';
+import { useSelector } from 'react-redux';
 
 const tier = {
     1: {
@@ -56,6 +57,8 @@ const KING = {
 };
 
 const Commission = ({ t, language, id }) => {
+    const assetConfig = useSelector((state) => state.utils.assetConfig);
+
     const [lastedCommissions, setLastedCommissions] = useState([]);
     const [lastedFriends, setLastedFriends] = useState([]);
     const [theme] = useDarkMode();
@@ -129,16 +132,8 @@ const Commission = ({ t, language, id }) => {
 
     const total = (data) => {
         const asset = data?.value > 0 ? '+' : '';
-        switch (data.currency) {
-            case 22:
-                return `${asset}${formatNumber(data.value || 0, 4, 0, true)} USDT`;
-            case 72:
-                return `${asset}${formatNumber(data.value || 0, 0, 0, true)} VNDC`;
-            case 1:
-                return `${asset}${formatNumber(data.value || 0, 0, 0, true)} NAMI`;
-            default:
-                return 0;
-        }
+        const symbol = assetConfig.find((f) => f.id === data.currency) || {};
+        return `${asset}${formatNumber(data.value || 0, symbol?.assetDigit, 0, true)} ${symbol?.assetCode}`;
     };
 
     const renderLastedCommissions = useMemo(() => {
