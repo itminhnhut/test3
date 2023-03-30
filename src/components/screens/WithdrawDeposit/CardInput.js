@@ -24,6 +24,8 @@ const CardInput = () => {
     const { t } = useTranslation();
     const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
+    const user = useSelector((state) => state.auth.user) || null;
+
     const router = useRouter();
 
     const [state, set] = useState({
@@ -60,7 +62,7 @@ const CardInput = () => {
     } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId, side } }, Boolean(side) && Boolean(assetId), [side, assetId]);
 
     useGetPartner({ assetId, side, amount: state.amount, rate });
-    const { onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input });
+    const { onMakeOrderSuccess, onMakeOrderHandler } = useMakeOrder({ setState, input, user });
 
     const availableAsset = useMemo(
         () => getExactBalanceFiat(wallets?.[+assetId]?.value - wallets?.[+assetId]?.locked_value, assetCode),

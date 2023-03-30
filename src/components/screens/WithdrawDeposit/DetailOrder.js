@@ -23,7 +23,7 @@ const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additio
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
-const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
+const ReportButtonRender = ({ timeExpire, onMarkWithStatus, t }) => {
     return timeExpire ? (
         <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
             {(props) => (
@@ -49,7 +49,7 @@ const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', {
 
 const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
-    // const user = useSelector((state) => state.auth.user) || null;
+    // const user = useSelector((state) => state.auth) || null;
     const userSocket = useSelector((state) => state.socket.userSocket);
 
     const [currentTheme] = useDarkMode();
@@ -179,7 +179,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} t={t} />;
                             }
                         }
                         // user logic
@@ -251,7 +251,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} t={t} />;
                             }
                         }
                     }
