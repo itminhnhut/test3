@@ -36,10 +36,11 @@ const CardPartner = () => {
     const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side, refetchAccBanks]);
 
     useEffect(() => {
-        if (accountBanks && accountBanks.length) {
+        // default accountBank apply when accountBank = null
+        if (accountBanks && accountBanks.length && !accountBank) {
             dispatch(setAccountBank(accountBanks.find((bank) => bank.isDefault)));
         }
-    }, [accountBanks]);
+    }, [accountBanks, accountBank]);
 
     const toggleRefetchAccBanks = () => setRefetchAccBanks((prev) => !prev);
 

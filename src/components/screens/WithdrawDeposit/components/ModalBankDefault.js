@@ -86,7 +86,8 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch,
                                                 </TagV2>
                                             )}
                                         </div>
-                                    )
+                                    ),
+                                    imgSrc: bank?.bankLogo
                                 }}
                                 endIcon={
                                     bank._id === bankAccountId && (
