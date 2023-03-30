@@ -238,11 +238,15 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div>
 
-                        <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
+                        {/* <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
                             <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
-                        </Tooltip>
+                        </Tooltip> */}
 
-                        <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default" data-for="will-transfer-receive" id="will-transfer-receive">
+                        <div
+                            data-tip=""
+                            className="inline-flex txtPri-1 space-x-1 !cursor-default"
+                            // data-for="will-transfer-receive" id="will-transfer-receive"
+                        >
                             {loadingRate ? <Skeletor width="70px" /> : <div className=" max-w-[150px] truncate">{formatBalanceFiat(input * rate, 'VNDC')}</div>}
 
                             <div className="">VND</div>

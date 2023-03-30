@@ -15,7 +15,7 @@ const Header = () => {
 
             <ButtonV2
                 onClick={() => {
-                    side === SIDE.SELL ? router.push(PATHS.WALLET.EXCHANGE.DEPOSIT) : router.push(PATHS.WALLET.EXCHANGE.WITHDRAW);
+                    side === SIDE.SELL ? router.push(PATHS.WALLET.EXCHANGE.WITHDRAW) : router.push(PATHS.WALLET.EXCHANGE.DEPOSIT);
                 }}
                 className="max-w-[162px] capitalize items-center"
             >
