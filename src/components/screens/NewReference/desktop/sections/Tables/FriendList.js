@@ -26,11 +26,7 @@ const BreadCrumbs = dynamic(() => import('./Components/BreadCrumbs'), { ssr: fal
 
 const NoKYCTag = ({ t }) => <TagV2 className="whitespace-nowrap">{t('reference:referral.not_kyc')}</TagV2>;
 
-const KYCPendingTag = ({ t }) => (
-    <TagV2 className="whitespace-nowrap" type="warning">
-        {t('reference:referral.pending_kyc')}
-    </TagV2>
-);
+// const KYCPendingTag = ({ t }) => <TagV2 className="whitespace-nowrap type="warning">{t('reference:referral.pending_kyc')}</TagV2>;
 const KYCApprovedTag = ({ t }) => (
     <TagV2 className="whitespace-nowrap text-green-3 dark:text-teal" type="success">
         {t('reference:referral.kyc')}
@@ -180,7 +176,7 @@ const FriendList = ({ language, t, id }) => {
     const breadcrumbs = useMemo(() => {
         const path = dataSource?.path || [];
         if (path?.length > 0 && path?.length - 1 !== levelFriend) {
-            setLevelFriend(dataSource?.path?.length - 1);
+            setLevelFriend(path?.length - 1);
         }
         return levelFriend > 0
             ? BREADCRUMB?.map((value, key) => {
@@ -287,13 +283,12 @@ const FriendList = ({ language, t, id }) => {
                 title: t('reference:table.status'),
                 align: 'left',
                 width: 150,
-                render: (value) => {
-                    return {
-                        [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
-                        [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
-                        [KYC_STATUS.APPROVED]: <KYCApprovedTag t={t} />
-                    }[value];
-                }
+                render: (value) => (value === 2 ? <KYCApprovedTag t={t} /> : <NoKYCTag t={t} />)
+                // return {
+                //     [KYC_STATUS.NO_KYC]: <NoKYCTag t={t} />,
+                //     [KYC_STATUS.PENDING_APPROVAL]: <KYCPendingTag t={t} />,
+                //     [KYC_STATUS.APPROVED]: <KYCApprovedTag t={t} />
+                // }[value];
             },
             {
                 key: 'user_count',

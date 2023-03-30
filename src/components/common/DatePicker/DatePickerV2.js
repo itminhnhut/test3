@@ -29,11 +29,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     const [theme] = useDarkMode();
 
     // Handle custom
-    const [date, setDate] = useState({
-        startDate: null,
-        endDate: null,
-        key: 'selection'
-    });
+    const [date, setDate] = useState();
 
     const handleOutside = () => {
         if (showPicker) {
@@ -49,7 +45,7 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
 
     useEffect(() => {
         if (!initDate?.startDate && !initDate?.endDate) {
-            setDate(initDate);
+            setDate({ ...initDate, ...(!initDate?.key && { key: 'selection' }) });
         }
     }, [initDate]);
 
@@ -58,15 +54,8 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
             onChange(e);
             handleOutside();
         } else {
-            const newDate = {};
-            if (e?.range1) {
-                const { startDate, endDate, selection } = e?.range1;
-                newDate = { startDate, endDate, selection: selection?.key };
-            } else {
-                newDate = { ...e?.selection };
-            }
             setDate({
-                ...newDate
+                ...(e?.selection || {})
             });
         }
     };
@@ -98,12 +87,13 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     const clearInputData = () => {
         const selection = {
             startDate: null,
-            endDate: new Date(),
-            key: 'selection'
+            endDate: null,
+            key: date?.key || 'selector'
         };
-        setDate({ selection: selection });
-        if (!showPicker) onChange({ selection: selection });
+        setDate({ ...selection });
+        if (!showPicker) onChange({ ...selection });
     };
+
     // Handle X Close button
     const flag = useRef(false);
 
