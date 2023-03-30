@@ -136,7 +136,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         setState({
                             orderDetail: data
                         });
-                        console.log('data: ', data);
                         if (data?.status !== PartnerOrderStatus.PENDING) {
                             setIsRefetchOrderDetailAfterCountdown(false);
                         }

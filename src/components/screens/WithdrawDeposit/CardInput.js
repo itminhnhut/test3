@@ -83,20 +83,22 @@ const CardInput = () => {
             msg = null;
         if (+state.amount > availableAsset && side === SIDE.SELL) {
             isValid = false;
-            msg = t('common:global_notice.balance_insufficient');
-        }
-
-        if (+state.amount > maximumAllowed) {
+            msg = t('wallet:errors.invalid_insufficient_balance');
+        } else if (+state.amount > maximumAllowed) {
             isValid = false;
             msg = t('dw_partner:error.max_amount', {
                 amount: formatBalanceFiat(maximumAllowed, assetCode),
                 asset: assetCode
             });
-        }
-        if (+state.amount < minimumAllowed) {
+        } else if (+state.amount < minimumAllowed) {
             isValid = false;
             msg = t('dw_partner:error.min_amount', {
                 amount: formatBalanceFiat(minimumAllowed, assetCode),
+                asset: assetCode
+            });
+        } else if (side === 'SELL' && +state.amount > limitWithdraw?.remain) {
+            isValid = false;
+            msg = t('dw_partner:error.reach_limit_withdraw', {
                 asset: assetCode
             });
         }

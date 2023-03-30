@@ -21,7 +21,7 @@ const getColumns = (t, user) => [
         key: 'displayingId',
         dataIndex: 'displayingId',
         title: t('common:transaction_id'),
-        align: 'center',
+        align: 'left',
         width: 150,
         fixed: 'left',
         render: (v) => (

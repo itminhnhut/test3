@@ -18,7 +18,7 @@ const useMakeOrder = ({ setState, input, user }) => {
     const assetCode = getAssetCode(+assetId);
 
     const onMakeOrderSuccess = (assetCode, order) => {
-        toast({ text: `Bạn đã đặt thành công lệnh ${side.toLowerCase()} ${assetCode} #${order.displayingId} `, type: 'success' });
+        // toast({ text: `Bạn đã đặt thành công lệnh ${side.toLowerCase()} ${assetCode} #${order.displayingId} `, type: 'success' });
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
@@ -44,7 +44,9 @@ const useMakeOrder = ({ setState, input, user }) => {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
                     toast({ text: t('common:otp_verify_expired'), type: 'warning' });
                 } else {
-                    toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
+                    if (orderResponse?.status === 'NOT_FOUND_PARTNER') {
+                        toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
+                    } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }
         } catch (error) {
