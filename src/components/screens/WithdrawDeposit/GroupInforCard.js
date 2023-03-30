@@ -75,7 +75,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                     renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
                                     onComplete={() => refetchOrderDetail()}
                                 >
-                                    {(props) => <CountdownTimer {...props} />}
+                                    {(props) => <CountdownTimer maxCountdown={orderDetail?.countdownTime} {...props} />}
                                 </Countdown>
                             )}
                         </div>
