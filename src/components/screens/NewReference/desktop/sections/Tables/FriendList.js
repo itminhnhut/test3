@@ -350,6 +350,7 @@ const FriendList = ({ language, t, id }) => {
 
         return (
             <TableV2
+                sort
                 skip={0}
                 useRowHover
                 height={350}
