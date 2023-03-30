@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { shortHashAddress, getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
+import { getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
@@ -111,6 +111,7 @@ const HistoryTable = () => {
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [dataTable, setDataTable] = useState([]);
     const [hasNext, setHasNext] = useState(false);
+    const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
 
@@ -127,7 +128,8 @@ const HistoryTable = () => {
                     lastId: dataTable[dataTable.length - 1]?._id ?? null,
                     mode: 'user',
                     side,
-                    status: activeTab === 0 ? null : TABS[activeTab]?.status
+                    status: activeTab === 0 ? null : TABS[activeTab]?.status,
+                    ...curSort
                 }
             })
                 .then(({ data: res }) => {
@@ -148,7 +150,24 @@ const HistoryTable = () => {
         };
 
         fetchData();
-    }, [activeTab, currentPage]);
+    }, [activeTab, currentPage, curSort]);
+
+    useEffect(() => {
+        setCurrentPage(0);
+    }, [curSort]);
+
+    const customSort = (tableSorted) => {
+        const output = {};
+
+        for (const key in tableSorted) {
+            if (tableSorted.hasOwnProperty(key)) {
+                output.sortBy = key;
+                output.sortType = tableSorted[key] ? 1 : -1;
+            }
+
+            setCurSort(output);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -165,7 +184,7 @@ const HistoryTable = () => {
                 }))}
             />
             <TableV2
-                // sort={['created_at']}
+                sort={['quoteQty']}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
@@ -189,6 +208,12 @@ const HistoryTable = () => {
                     language
                 }}
                 emptyTextContent={t('common:no_data')}
+                // sort
+                // sorted={restProps.type !== 0}
+                cbSort={(e) => {
+                    console.log('e: ', e);
+                }}
+                customSort={customSort}
             />
         </div>
     );
