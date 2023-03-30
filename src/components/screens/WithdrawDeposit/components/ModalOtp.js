@@ -1,19 +1,16 @@
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import OtpInput from 'react-otp-input';
-import styled from 'styled-components';
-import colors from 'styles/colors';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Copy from 'components/svg/Copy';
 
 import { Check } from 'react-feather';
-import { ApiStatus } from 'redux/actions/const';
 import { useRouter } from 'next/router';
-import toast from 'utils/toast';
 import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
+
 const OTP_REQUIRED_LENGTH = 6;
 const INITAL_OTP_STATE = {
     email: '',
@@ -24,16 +21,23 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
     const [otp, setOtp] = useState(INITAL_OTP_STATE);
     const [pasted, setPasted] = useState(false);
     const { t } = useTranslation();
-    const router = useRouter();
     const auth = useSelector((state) => state.auth) || null;
 
     const isTfaEnabled = auth.user?.isTfaEnabled;
+
+    const onChangeHandler = (value) => {
+        const formatVal = value.replace(/\D/g, '').slice(0, 6);
+        setOtp((prev) => ({ ...prev, [otpMode]: formatVal }));
+        if (formatVal.length === OTP_REQUIRED_LENGTH) {
+            setTimeout(onConfirmHandler, 150);
+        }
+    };
 
     const doPaste = async () => {
         try {
             const data = await navigator?.clipboard?.readText();
             if (!data) return;
-            setOtp(data.replace(/\D/g, '').slice(0, 6));
+            onChangeHandler(data);
             setPasted(true);
             setTimeout(() => setPasted(false), 500);
         } catch {}
@@ -65,7 +69,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
             </div>
             <OtpInput
                 value={otp?.[otpMode]}
-                onChange={(otp) => setOtp((prev) => ({ ...prev, [otpMode]: otp.replace(/\D/g, '') }))}
+                onChange={onChangeHandler}
                 numInputs={OTP_REQUIRED_LENGTH}
                 placeholder={'------'}
                 isInputNum={true}
@@ -116,8 +120,8 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
                     onClick={onConfirmHandler}
                     loading={loading || auth?.loadingUser}
                     disabled={
-                        (isTfaEnabled && otpMode === 'tfa' && otp.tfa.length !== OTP_REQUIRED_LENGTH) ||
-                        (otpMode === 'email' && otp.email.length !== OTP_REQUIRED_LENGTH)
+                        (isTfaEnabled && otpMode === 'tfa' && otp['tfa'].length !== OTP_REQUIRED_LENGTH) ||
+                        (otpMode === 'email' && otp['email']?.length !== OTP_REQUIRED_LENGTH)
                     }
                 >
                     {t('common:confirm')}

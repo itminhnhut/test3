@@ -17,7 +17,6 @@ import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
 import ModalOtp from './components/ModalOtp';
 import useMakeOrder from './hooks/useMakeOrder';
-import { ALLOWED_ASSET } from './constants';
 import useGetPartner from './hooks/useGetPartner';
 
 const CardInput = () => {
@@ -229,14 +228,6 @@ const CardInput = () => {
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
                         <div className="txtPri-1 flex items-center">
-                            {/* {loadingPartner ? (
-                                <Skeletor width="50px" />
-                            ) : !partner ? (
-                                formatPrice(DEFAULT_PARTNER_MAX[side], 0)
-                            ) : (
-                                formatPrice(orderConfig?.max, 0)
-                            )} */}
-
                             {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
 
                             <span className="ml-1">{assetCode}</span>
