@@ -1233,7 +1233,6 @@ export const filterSearch = (originDataset, keys, searchValue) => {
 
     return originDataset.filter((item) => {
         for (const key of keys) {
-            console.log('key: ', item, key, parseUnormStr(item[key]));
             if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
         }
         return false;
