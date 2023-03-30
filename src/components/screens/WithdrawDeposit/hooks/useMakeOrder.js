@@ -1,4 +1,5 @@
 import { PATHS } from 'constants/paths';
+import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
@@ -8,9 +9,10 @@ import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
 
-const useMakeOrder = ({ setState, input }) => {
+const useMakeOrder = ({ setState, input, user }) => {
     const { partnerBank, accountBank, partner } = useSelector((state) => state.withdrawDeposit);
     const router = useRouter();
+    const { t } = useTranslation();
 
     const { side, assetId } = router.query;
     const assetCode = getAssetCode(+assetId);
@@ -39,7 +41,11 @@ const useMakeOrder = ({ setState, input }) => {
                     onMakeOrderSuccess(assetCode, orderResponse.data);
                 }
             } else {
-                toast({ text: orderResponse.status, type: 'warning' });
+                if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
+                    toast({ text: t('common:otp_verify_expired'), type: 'warning' });
+                } else {
+                    toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
+                }
             }
         } catch (error) {
             console.log('error:', error);

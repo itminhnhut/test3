@@ -8,9 +8,9 @@ import Skeletor from './Skeletor';
 import { isNull, isUndefined } from 'lodash';
 
 const OrderStatusTag = ({ icon = true, className, status }) => {
-    if(!status) return null;
+    // if(!status) return null;
     const { t } = useTranslation();
-
+    
     const { PENDING, SUCCESS, REJECTED, DISPUTED } = PartnerOrderStatus;
     let type = '';
     let label = '';

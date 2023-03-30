@@ -14,7 +14,6 @@ import toast from 'utils/toast';
 import Countdown from 'react-countdown';
 const OTP_REQUIRED_LENGTH = 6;
 const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, assetCode, onConfirm, t }) => {
-    console.log('otpExpireTime:', otpExpireTime);
     const [otp, setOtp] = useState('');
     const [pasted, setPasted] = useState(false);
     const router = useRouter();
@@ -63,9 +62,13 @@ const ModalOtp = ({ isVisible, onClose, className, otpExpireTime, loading, asset
                         <Countdown date={new Date().getTime() + otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
                             {(props) => {
                                 return (
-                                    <ButtonV2 onClick disabled={props.total > 0} variants="text" className="disabled:!bg-transparent !w-auto">
+                                    <button
+                                        onClick={onConfirm}
+                                        disabled={!props.completed}
+                                        className="text-dominant disabled:text-txtDisabled dark:text-txtDisabled-dark cursor-default font-semibold !w-auto"
+                                    >
                                         {t('dw_partner:resend_otp')}
-                                    </ButtonV2>
+                                    </button>
                                 );
                             }}
                         </Countdown>

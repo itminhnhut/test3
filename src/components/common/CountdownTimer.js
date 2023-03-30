@@ -41,13 +41,15 @@ const styles = {
 const maxCountdown = 5 * 60 * 1000;
 const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-const CountdownTimer = ({ total, size = 80, strokeWidth = 3 }) => {
+const CountdownTimer = ({ total, completed, size = 80, strokeWidth = 3 }) => {
     const radius = size / 2;
     const circumference = size * Math.PI;
 
     const strokeDashoffset = -(circumference - (total / maxCountdown) * circumference);
 
-    return (
+    return completed ? (
+        <></>
+    ) : (
         <div>
             <div
                 className="flex justify-center items-center relative m-auto"

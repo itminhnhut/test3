@@ -8,6 +8,7 @@ import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner }
 
 const useGetPartner = ({ assetId, side, amount, rate }) => {
     const { input, loadingPartner, partner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
+    console.log('input:', input);
 
     const dispatch = useDispatch();
 
@@ -24,28 +25,29 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
         }
     }, [rate, side, assetCode]);
 
-    useDebounce(
-        () => {
-            dispatch(setInput(amount));
-        },
-        500,
-        [amount]
-    );
+    // useDebounce(() => {}, 500, [amount]);
 
     useEffect(() => {
-        dispatch(setLoadingPartner(true));
-    }, [amount]);
+        let timeout = setTimeout(() => {
+            dispatch(setInput(amount));
+        }, 200);
+        if (+amount >= minimumAllowed && +amount <= maximumAllowed) {
+            dispatch(setLoadingPartner(true));
+        }
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [amount, minimumAllowed, maximumAllowed]);
 
     useEffect(() => {
         let mounted = false;
         const source = axios.CancelToken.source();
         const fetchPartner = () => {
             if (+input < minimumAllowed || +input > maximumAllowed || !input) {
+                // stop showing partner
+                // set loading to false to prevent
                 dispatch(setPartner(null));
-
-                if (loadingPartner) {
-                    dispatch(setLoadingPartner(false));
-                }
+                dispatch(setLoadingPartner(false));
                 return;
             }
             dispatch(
