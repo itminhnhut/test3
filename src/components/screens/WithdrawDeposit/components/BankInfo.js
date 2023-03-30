@@ -44,7 +44,7 @@ export const BankInfo = ({
                 </>
             }
             imgSize={40}
-            data={banks && filterSearch(banks, ['bankName', 'bankKey'], search)}
+            data={banks && filterSearch(banks, ['bankName', 'bankKey', 'accountNumber'], search)}
             search={search}
             setSearch={setSearch}
             onSelect={onSelect ? (bank) => onSelect(bank) : undefined}

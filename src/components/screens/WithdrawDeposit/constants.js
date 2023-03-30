@@ -100,7 +100,7 @@ export const ORDER_TYPES = {
         title: (t) => t('common:confirm'),
         description: ({ mode = MODE.USER, t }) =>
             mode === MODE.USER
-                ? t('dw_partner:transfer_confirm_description')
+                ? t('dw_partner:take_money_confirm_description')
                 : 'Khi ấn vào nút xác nhận, bạn đã nhận được tiền từ người mua, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi xác nhận.',
         showConfirm: true
     },
