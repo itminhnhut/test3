@@ -807,6 +807,20 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
+export function dwLinkBuilder(type, side, payload) {
+    // Deposit: BUY
+    // Withdraw: SELL
+    switch (type) {
+        case 'crypto':
+            if (side === 'BUY') return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
+            else return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
+        case 'partner':
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side.toUpperCase()}`;
+        default:
+            break;
+    }
+}
+
 export function setTransferModal(payload) {
     // source look like
     // payload = {

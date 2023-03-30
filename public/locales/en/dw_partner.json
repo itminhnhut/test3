@@ -27,7 +27,7 @@
     "add_bank_account": "Add Bank Account",
     "edit_default_bank": "Edit Your Default Bank ",
     "payment_method": "Payment Method",
-    "payment_method_description": "After clicking \"Buy\", please transfer the amount to the partner within 15 minutes before the buy order is automatically canceled.",
+    "payment_method_description": "After clicking \"Buy\", please transfer the amount to the partner within 10 minutes before the buy order is automatically canceled.",
     "default": "Default",
     "partner": "Partner",
     "no_partner": "No partner found",

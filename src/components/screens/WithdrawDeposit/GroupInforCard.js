@@ -13,8 +13,11 @@ import Countdown from 'react-countdown';
 import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
 import useFetchApi from 'hooks/useFetchApi';
 import Skeletor from 'components/common/Skeletor';
+import { MODE } from './constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Divider from 'components/common/Divider';
 
-const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail }) => {
+const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
     const {
         data: rate,
         loading: loadingRate,
@@ -86,6 +89,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
             <div className="flex flex-col flex-auto min-h-full">
                 <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_bank_receipt')}</h1>
                 <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
+                    {mode === MODE.USER && side === SIDE.SELL && <div className="txtSecond-3 mb-4">{t('dw_partner:partner')}</div>}
                     <div className="flex justify-between items-start">
                         <InfoCard
                             loading={!orderDetail}
@@ -103,11 +107,23 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                 imgSrc: orderDetail?.partnerMetadata?.avatar
                             }}
                         />
-                        <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
-                            <QrCodeScannIcon />
-                            QR Code
-                        </ButtonV2>
+                        {mode === MODE.USER && side === SIDE.BUY && (
+                            <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
+                                <QrCodeScannIcon />
+                                QR Code
+                            </ButtonV2>
+                        )}
                     </div>
+
+                    {/* Divider */}
+                    {mode === MODE.USER && side === SIDE.SELL && (
+                        <div>
+                            <Divider className="w-full !my-4" />
+                            <div className="txtSecond-3">{t('dw_partner:payment_method')}</div>
+                        </div>
+                    )}
+
+                    {/* Phương thức nhận tiền */}
                     <div className="flex flex-col mt-6 gap-y-4">
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('dw_partner:transfer_description')}</span>

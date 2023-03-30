@@ -293,6 +293,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
                 <GroupInforCard
+                    mode={mode}
                     assetCode={assetCode}
                     t={t}
                     orderDetail={state.orderDetail}

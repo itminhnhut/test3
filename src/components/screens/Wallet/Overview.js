@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, useRef } from 'react';
-import { formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber as formatWallet, getS3Url, getV1Url, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { Trans, useTranslation } from 'next-i18next';
 import { SECRET_STRING } from 'utils';
 import { useDispatch } from 'react-redux';
@@ -239,14 +239,10 @@ const OverviewWallet = (props) => {
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder('partner', 'BUY'))}>
                     {t('common:deposit')}
                 </ButtonV2>
-                <ButtonV2
-                    onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
-                    className="px-6"
-                    variants="secondary"
-                >
+                <ButtonV2 onClick={() => router.push(dwLinkBuilder('partner', 'SELL'))} className="px-6" variants="secondary">
                     {t('common:withdraw')}
                 </ButtonV2>
                 <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">
@@ -464,17 +460,17 @@ const ModalConvertSmallBalance = ({ isShowModalConvertSmallBalance }) => {
                             {item === DEPOSIT
                                 ? t('common:deposit')
                                 : item === WITHDRAW
-                                    ? t('common:withdraw')
-                                    : item === TRANSFER
-                                        ? t('common:transfer')
-                                        : null}
+                                ? t('common:withdraw')
+                                : item === TRANSFER
+                                ? t('common:transfer')
+                                : null}
                         </ButtonV2>
                     </div>
                 ))}
             </div>
         </ModalV2>
-    )
-}
+    );
+};
 
 const ModalAction = ({ isShowAction, onBackdropCb, onHandleClick, t }) => {
     const keys = Object.keys(isShowAction);
