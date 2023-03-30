@@ -11,6 +11,7 @@ import axios from 'axios';
 import Card from './components/common/Card';
 import { useTranslation } from 'next-i18next';
 import sortBy from 'lodash/sortBy';
+import { PATHS } from 'constants/paths';
 
 const ModalBankDefault = dynamic(() => import('./components/ModalBankDefault'), { ssr: false });
 const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: false });
@@ -45,7 +46,9 @@ const CardPartner = () => {
     const accountBankAction = useMemo(
         () => (
             <div className="mt-6 px-4 space-y-3">
-                <ButtonV2 className="text-base font-semibold">{t('dw_partner:add_bank_account')}</ButtonV2>
+                <ButtonV2 onClick={() => router.push(`${PATHS?.ACCOUNT?.PAYMENT_METHOD}?isAdd=true`)} className="text-base font-semibold">
+                    {t('dw_partner:add_bank_account')}
+                </ButtonV2>
                 <ButtonV2 onClick={() => setVisibleModalBank(true)} variants="text" className="text-base font-semibold">
                     {t('dw_partner:edit_default_bank')}
                 </ButtonV2>
