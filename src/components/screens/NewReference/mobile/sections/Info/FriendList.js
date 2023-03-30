@@ -85,7 +85,7 @@ const FriendList = ({ owner, isShow, onClose, code, isDesktop = false }) => {
                                 return (
                                     <div className="w-full flex items-center justify-between" key={index}>
                                         <div>
-                                            <div className="text-gray-15 dark:text-gray-4 font-semibold">{data.username}</div>
+                                            <div className="text-gray-15 dark:text-gray-4 font-semibold">{data.name}</div>
                                             <div className=" text-sm text-gray-1 dark:text-gray-7">{data.code}</div>
                                         </div>
                                         <div>{formatTime(data.invitedAt, 'dd-MM-yyyy')}</div>

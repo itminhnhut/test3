@@ -39,6 +39,10 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
         return defaultOption.find((f) => f.value === options.orderVol)?.value;
     }, [options]);
 
+    const handleTotal = (type, value) => {
+        return type === 22 ? formatNumber(value, 4, 0, true) : formatNumber(value, 0, 0, true);
+    };
+
     return (
         <ModalV2 isVisible={isModal} className="w-[30.5rem]" onBackdropCb={toggle}>
             <div className="flex flex-col items-center">
@@ -63,12 +67,12 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
             <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6 last:pb-0">
                 <div className={classNames('flex flex-row justify-between', { 'mb-4': level === 0 })}>
                     <div className="text-gray-1 dark:text-gray-7">{t('reference:friend_list.detail.total_commission')}</div>
-                    <div className="font-semibold">{formatNumber(totalCommission?.receive || 0, 2)}</div>
+                    <div className="font-semibold">{handleTotal(valueCommission, totalCommission?.receive)}</div>
                 </div>
                 {level === 0 && (
                     <div className="flex flex-row justify-between mb-4 last:mb-0">
                         <div className="text-gray-1 dark:text-gray-7">{t('reference:friend_list.detail.payback_commission')}</div>
-                        <div className="font-semibold">{formatNumber(totalCommission?.remuneration || 0, 2, 0, true)}</div>
+                        <div className="font-semibold">{handleTotal(valueCommission, totalCommission?.remuneration)}</div>
                     </div>
                 )}
             </div>
@@ -90,15 +94,15 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
             <div className="bg-dark-13 dark:bg-dark-4 p-4 rounded-xl mt-6">
                 <div className="flex flex-row justify-between mb-4">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['Spot']?.[language]}</div>
-                    <div className="font-semibold">{formatNumber(totalOrderVol?.spot || 0, 2)}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.spot)}</div>
                 </div>
                 <div className="flex flex-row justify-between mb-4">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['Futures']?.[language]}</div>
-                    <div className="font-semibold">{formatNumber(totalOrderVol?.futures || 0, 2)}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.futures)}</div>
                 </div>
                 <div className="flex flex-row justify-between mb-4 last:mb-0">
                     <div className="text-gray-1 dark:text-gray-7">{KIND['Staking']?.[language]}</div>
-                    <div className="font-semibold">{formatNumber(totalOrderVol?.staking || 0, 2)}</div>
+                    <div className="font-semibold">{handleTotal(valueOrderVol, totalOrderVol?.staking)}</div>
                 </div>
             </div>
 
