@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import TradingInput from 'components/trade/TradingInput';
+import TradingInputV2 from 'components/trade/TradingInputV2';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
@@ -16,6 +16,7 @@ import { useTranslation } from 'next-i18next';
 import ModalOtp from './components/ModalOtp';
 import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
+import { isNumber } from 'lodash';
 
 const CardInput = () => {
     const { t } = useTranslation();
@@ -73,7 +74,19 @@ const CardInput = () => {
         setState({ amount: formatBalanceFiat(max, assetCode) });
     };
 
+    const [hasRendered, setHasRendered] = useState(false);
     const validator = useMemo(() => {
+        if (!hasRendered) {
+            return { isValid: true, msg: '', isError: false };
+        }
+
+        if (!state.amount)
+            return {
+                isValid: false,
+                msg: t('dw_partner:error.miss_input'),
+                isError: true
+            };
+
         let isValid = true,
             msg = null;
         if (maximumAllowed === 0 || minimumAllowed === 0) {
@@ -102,7 +115,13 @@ const CardInput = () => {
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode]);
+    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode, hasRendered, limitWithdraw]);
+
+    const handleFocusInput = () => {
+        if (!hasRendered) {
+            setHasRendered(true);
+        }
+    };
 
     return (
         <>
@@ -127,9 +146,9 @@ const CardInput = () => {
                     </div>
                     <div className="flex  -m-1  relative">
                         <div className="flex-1 p-1 ">
-                            <TradingInput
-                                id="TradingInput"
-                                value={loadingRate ? '' : state.amount}
+                            <TradingInputV2
+                                id="TradingInputV2"
+                                value={loadingRate ? '0' : state.amount}
                                 allowNegative={false}
                                 thousandSeparator={true}
                                 containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
@@ -141,6 +160,8 @@ const CardInput = () => {
                                 allowedDecimalSeparators={[',', '.']}
                                 clearAble
                                 placeHolder={loadingRate ? '...' : t('dw_partner:enter_amount')}
+                                errorEmpty
+                                onFocus={handleFocusInput}
                                 renderTail={
                                     side === SIDE.SELL && (
                                         <ButtonV2
@@ -260,7 +281,7 @@ const CardInput = () => {
                     disabled={
                         !partner ||
                         loadingPartner ||
-                        !validator.isValid ||
+                        !validator?.isValid ||
                         (!partnerBank && side === SIDE.BUY) ||
                         (side === SIDE.SELL && +state.amount > availableAsset)
                     }
