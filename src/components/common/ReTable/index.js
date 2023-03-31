@@ -374,7 +374,9 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table thead th {
+        font-size: 14px;
         border-bottom: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
+        // border-top: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
         //white-space: nowrap;
     }
 
@@ -387,6 +389,10 @@ const ReTableWrapperV2 = styled.div`
         border-top-width: 0;
         text-align: left;
         font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
+    }
+
+    .rc-table td {
+        font-size: 16px;
     }
 
     .rc-table th {
