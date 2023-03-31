@@ -63,7 +63,7 @@ const getColumns = (t, user, side) => [
         align: 'left',
         width: 189,
         render: (v) =>
-            side === SIDE.BUY ? (
+            side === SIDE.SELL ? (
                 <>
                     <div className="txtPri-2 mb-1">{v?.name}</div>
                     <div className="txtSecond-3">{v?.code}</div>
@@ -82,7 +82,7 @@ const getColumns = (t, user, side) => [
         align: 'left',
         width: 189,
         render: (v) =>
-            side === SIDE.SELL ? (
+            side === SIDE.BUY ? (
                 <>
                     <div className="txtPri-2 mb-1">{v?.name}</div>
                     <span className="txtSecond-3">{v?.code}</span>
@@ -184,7 +184,7 @@ const HistoryTable = () => {
                 }}
                 tabs={TABS.map((tab) => ({
                     key: tab.key,
-                    children: <div className="">{t(tab.localized)}</div>
+                    children: <div>{t(tab.localized)}</div>
                 }))}
             />
             <TableV2

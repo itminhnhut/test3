@@ -120,16 +120,12 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
                 <>
                     <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
                         {mode === 'email' && <div className="txtPri-3 mb-4"> {t('dw_partner:verify')}</div>}
-                        {mode === 'email' && (
-                            <div className="txtSecond-2 mb-4">
-                                {isTfaEnabled ? t('dw_partner:verify_2fa_description') : t('dw_partner:otp_code_send_to_email')}
-                            </div>
-                        )}
+                        {mode === 'email' && <div className="txtSecond-2 mb-4">{t('dw_partner:otp_code_send_to_email')}</div>}
                     </div>
 
                     {isTfaEnabled && (
                         <div className="text-sm font-medium mb-4">
-                            {mode === 'email' ? 'Mã xác thực được gửi tới email của bạn' : t('dw_partner:verify_2fa')}
+                            {mode === 'email' ? t('dw_partner:email_verification_code') : t('dw_partner:verify_2fa')}
                         </div>
                     )}
                     <OtpInput

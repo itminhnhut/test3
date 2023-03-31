@@ -48,19 +48,19 @@ export const TABS = [
     },
     {
         key: 1,
-        localized: 'common:completed',
+        localized: 'transaction-history:completed',
         status: PartnerOrderStatus.SUCCESS,
         type: TYPES.SUCCESS
     },
     {
         key: 2,
-        localized: 'common:pending',
+        localized: 'common:processing',
         status: PartnerOrderStatus.PENDING,
         type: TYPES.WARNING
     },
     {
         key: 3,
-        localized: 'common:declined',
+        localized: 'common:denined',
         status: PartnerOrderStatus.REJECTED,
         type: TYPES.FAILED
     },
@@ -114,7 +114,8 @@ export const ORDER_TYPES = {
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
-        description: ({ displayingId, amount, asset, t }) => t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset }),
+        description: ({ displayingId, amount, asset, side, t }) =>
+            t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
         showConfirm: ({ router, t, assetId, side }) => {
             return (
                 <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
