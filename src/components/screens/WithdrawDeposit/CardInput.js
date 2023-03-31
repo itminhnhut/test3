@@ -12,8 +12,6 @@ import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
-import { useDebounce } from 'react-use';
-import Tooltip from 'components/common/Tooltip';
 import { useTranslation } from 'next-i18next';
 import ModalOtp from './components/ModalOtp';
 import useMakeOrder from './hooks/useMakeOrder';
@@ -91,26 +89,29 @@ const CardInput = () => {
 
         let isValid = true,
             msg = null;
-        if (+state.amount > availableAsset && side === SIDE.SELL) {
-            isValid = false;
-            msg = t('wallet:errors.invalid_insufficient_balance');
-        } else if (+state.amount > maximumAllowed) {
-            isValid = false;
-            msg = t('dw_partner:error.max_amount', {
-                amount: formatBalanceFiat(maximumAllowed, assetCode),
-                asset: assetCode
-            });
-        } else if (+state.amount < minimumAllowed) {
-            isValid = false;
-            msg = t('dw_partner:error.min_amount', {
-                amount: formatBalanceFiat(minimumAllowed, assetCode),
-                asset: assetCode
-            });
-        } else if (side === 'SELL' && +state.amount > limitWithdraw?.remain) {
-            isValid = false;
-            msg = t('dw_partner:error.reach_limit_withdraw', {
-                asset: assetCode
-            });
+        if (maximumAllowed === 0 || minimumAllowed === 0) {
+        } else {
+            if (+state.amount > availableAsset && side === SIDE.SELL) {
+                isValid = false;
+                msg = t('wallet:errors.invalid_insufficient_balance');
+            } else if (+state.amount > maximumAllowed) {
+                isValid = false;
+                msg = t('dw_partner:error.max_amount', {
+                    amount: formatBalanceFiat(maximumAllowed, assetCode),
+                    asset: assetCode
+                });
+            } else if (+state.amount < minimumAllowed) {
+                isValid = false;
+                msg = t('dw_partner:error.min_amount', {
+                    amount: formatBalanceFiat(minimumAllowed, assetCode),
+                    asset: assetCode
+                });
+            } else if (side === 'SELL' && +state.amount > limitWithdraw?.remain) {
+                isValid = false;
+                msg = t('dw_partner:error.reach_limit_withdraw', {
+                    asset: assetCode
+                });
+            }
         }
 
         return { isValid, msg, isError: !isValid };

@@ -1,10 +1,8 @@
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { ApiResultCreateOrder, ApiStatus } from 'redux/actions/const';
-import { getAssetCode } from 'redux/actions/utils';
 import { createNewOrder } from 'redux/actions/withdrawDeposit';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import toast from 'utils/toast';
@@ -15,9 +13,8 @@ const useMakeOrder = ({ setState, input }) => {
     const { t } = useTranslation();
 
     const { side, assetId } = router.query;
-    const assetCode = getAssetCode(+assetId);
 
-    const onMakeOrderSuccess = (assetCode, order) => {
+    const onMakeOrderSuccess = (order) => {
         // toast({ text: `Bạn đã đặt thành công lệnh ${side.toLowerCase()} ${assetCode} #${order.displayingId} `, type: 'success' });
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
@@ -36,9 +33,11 @@ const useMakeOrder = ({ setState, input }) => {
 
             if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
                 if (orderResponse.data.remaining_time) {
-                    setState({ otpMode: 'email', showOtp: true, otpExpireTime: orderResponse.data.remaining_time });
+                    setState({ otpMode: 'email', showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
                 } else {
-                    onMakeOrderSuccess(assetCode, orderResponse.data);
+                    // no need to setLoading to false if user has successfully created an order
+                    onMakeOrderSuccess(orderResponse.data);
+                    return;
                 }
             } else {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
