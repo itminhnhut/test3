@@ -47,7 +47,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
             [otpMode]: formatVal
         };
         if (formatVal.length === OTP_REQUIRED_LENGTH) {
-            setTimeout(confirm, 150);
+            setTimeout(confirm, 100);
         }
     };
 
@@ -66,7 +66,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
             const response = await onConfirm(otpRef.current);
             if (response === ApiResultCreateOrder.INVALID_OTP) {
                 setState({ isError: true });
-                onChangeHandler('');
+                // onChangeHandler('');
             }
         } catch (error) {}
     };
@@ -104,12 +104,13 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
                 isInputNum={true}
                 containerStyle="mb-7 w-full justify-between"
                 inputStyle={classNames(
-                    '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 '
+                    '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 '
                 )}
-                focusStyle={classNames('border-teal', {
-                    '!border-red': state.isError
+                focusStyle={classNames('border ', {
+                    '!border-red': state.isError,
+                    '!border-teal': !state.isError
                 })}
-                shouldAutoFocus
+                // shouldAutoFocus
                 hasErrored={state.isError}
                 errorStyle={classNames('border-red border')}
             />
@@ -124,13 +125,13 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
                     <div className="flex items-center space-x-2">
                         <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
                         {otpExpireTime && (
-                            <Countdown date={new Date().getTime() + otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
+                            <Countdown date={otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
                                 {(props) => {
                                     return (
                                         <button
-                                            onClick={onConfirm}
+                                            onClick={() => onConfirm()}
                                             disabled={!props.completed}
-                                            className="text-dominant disabled:text-txtDisabled dark:text-txtDisabled-dark cursor-default font-semibold !w-auto"
+                                            className="text-dominant cursor-pointer disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark disabled:cursor-default font-semibold !w-auto"
                                         >
                                             {t('dw_partner:resend_otp')}
                                         </button>

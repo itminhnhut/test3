@@ -1,7 +1,7 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatNumber, formatTime, formatPhoneNumber, getS3Url, formatBalance, formatBalanceFiat } from 'redux/actions/utils';
+import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
@@ -10,23 +10,12 @@ import { QrCodeScannIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import Countdown from 'react-countdown';
-import { API_GET_ORDER_PRICE } from 'redux/actions/apis';
-import useFetchApi from 'hooks/useFetchApi';
 import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Divider from 'components/common/Divider';
 
 const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
-    const {
-        data: rate,
-        loading: loadingRate,
-        error
-    } = useFetchApi({ url: API_GET_ORDER_PRICE, params: { assetId: +orderDetail?.baseAssetId, side } }, Boolean(orderDetail?.baseAssetId) && Boolean(side), [
-        side,
-        orderDetail?.baseAssetId
-    ]);
-
     return (
         <div className="flex gap-x-6 w-full items-stretch">
             {/* Chi tiết giao dịch */}
@@ -100,7 +89,9 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                         <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>{formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm')} {t('dw_partner:mins')}</span>
+                                            <span>
+                                                {formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm')} {t('dw_partner:mins')}
+                                            </span>
                                         </div>
                                     </div>
                                 ),
@@ -159,15 +150,12 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                         </div>
                         <div className="flex items-center justify-between">
                             <span className="txtSecond-2">{t('common:amount')}</span>
-                            {loadingRate ? (
-                                <Skeletor width="100px" />
-                            ) : (
-                                <TextCopyable
-                                    className="gap-x-1 font-semibold"
-                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
-                                    text={formatBalance(orderDetail?.quoteQty, 0)}
-                                />
-                            )}
+
+                            <TextCopyable
+                                className="gap-x-1 font-semibold"
+                                showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
+                                text={formatBalance(orderDetail?.quoteQty, 0)}
+                            />
                         </div>
                     </div>
                 </div>

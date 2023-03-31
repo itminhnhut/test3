@@ -48,7 +48,8 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                                 <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), `mm [${t('dw_partner:mins')}]`)}</span>
                             </div>
                         </div>
-                    )
+                    ),
+                    imgSrc: selectedPartner?.avatar
                 },
                 item: (partner) =>
                     selectedPartner && (
@@ -64,7 +65,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                                         </div>
                                     </div>
                                 ),
-                                // imgSrc: partner?.avatar
+                                imgSrc: partner?.avatar
                             }}
                             endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor" />}
                             endIconPosition="center"

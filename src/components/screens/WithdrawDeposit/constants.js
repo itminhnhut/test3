@@ -5,7 +5,7 @@ import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 
 // time in seconds
-export const REPORT_ABLE_TIME = 5 * 60;
+export const REPORT_ABLE_TIME = 3 * 60;
 
 export const DisputedType = {
     REJECTED: 1,
