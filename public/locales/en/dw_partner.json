@@ -20,6 +20,7 @@
     "will_received": "You will receive",
     "verify": "Verify ",
     "otp_code_send_to_email": "Please enter the 6-digit code sent to your email.",
+    "email_verification_code": "Email verification code",
     "not_received_otp": "Not receving?",
     "resend_otp": "Resend",
     "verify_2fa": "Google Authenticator Code",
