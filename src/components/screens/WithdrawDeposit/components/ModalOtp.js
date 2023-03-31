@@ -5,7 +5,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Copy from 'components/svg/Copy';
 
-import { Check } from 'react-feather';
+import { Check, X } from 'react-feather';
 import { useRouter } from 'next/router';
 import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
@@ -102,15 +102,36 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
                 setState({ otp: INITAL_OTP_STATE, isError: false });
             }}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
+            customHeader={() => (
+                <div className="pt-8 pb-6 flex justify-end">
+                    <div
+                        className="cursor-pointer hover:opacity-80"
+                        onClick={() => {
+                            onClose();
+                            setState({ otp: INITAL_OTP_STATE, isError: false });
+                        }}
+                    >
+                        <X size={24} />
+                    </div>
+                </div>
+            )}
         >
             {state.modes.map((mode) => (
                 <>
-                    <div className="mb-6">
-                        <div className="txtPri-3 mb-4">{mode === 'email' ? t('dw_partner:verify') : t('dw_partner:verify_2fa')}</div>
-                        <div className="txtSecond-2 border-">
-                            {mode === 'email' ? t('dw_partner:otp_code_send_to_email') : t('dw_partner:verify_2fa_description')}
-                        </div>
+                    <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
+                        {mode === 'email' && <div className="txtPri-3 mb-4"> {t('dw_partner:verify')}</div>}
+                        {mode === 'email' && (
+                            <div className="txtSecond-2 mb-4">
+                                {isTfaEnabled ? t('dw_partner:verify_2fa_description') : t('dw_partner:otp_code_send_to_email')}
+                            </div>
+                        )}
                     </div>
+
+                    {isTfaEnabled && (
+                        <div className="text-sm font-medium mb-4">
+                            {mode === 'email' ? 'Mã xác thực được gửi tới email của bạn' : t('dw_partner:verify_2fa')}
+                        </div>
+                    )}
                     <OtpInput
                         ref={mode === 'email' ? otpInputRef : undefined}
                         value={state.otp?.[mode]}
