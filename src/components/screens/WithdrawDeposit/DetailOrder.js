@@ -17,6 +17,8 @@ import Countdown from 'react-countdown';
 import classNames from 'classnames';
 import { useBoolean } from 'react-use';
 import ModalLoading from 'components/common/ModalLoading';
+import NeedLoginV2 from 'components/common/NeedLoginV2';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -50,7 +52,6 @@ const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', {
 
 const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
-    // const user = useSelector((state) => state.auth) || null;
     const userSocket = useSelector((state) => state.socket.userSocket);
 
     const [currentTheme] = useDarkMode();
@@ -288,6 +289,20 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         );
     }, [mode, state?.orderDetail, t]);
     const notes = { __html: t('dw_partner:notes') };
+
+    // Handle not Login or not KYC:
+    const auth = useSelector((state) => state.auth.user) || null;
+
+    if (!auth) {
+        return (
+            <div className="h-[480px] flex items-center justify-center">
+                <NeedLoginV2 addClass="flex items-center justify-center" />
+            </div>
+        );
+    }
+
+    if (auth && auth?.kyc_status !== 2) return <ModalNeedKyc isOpenModalKyc={true} />;
+    // End handle not Login || not KYC
 
     return (
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">

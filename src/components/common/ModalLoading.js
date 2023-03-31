@@ -3,8 +3,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
 const ModalLoading = ({ isVisible, onBackdropCb }) => {
+    if (!isVisible) return null;
     const [currentTheme] = useDarkMode();
-    const isDark = currentTheme === THEME_MODE.DARK;
 
     return (
         <ModalV2
@@ -15,7 +15,7 @@ const ModalLoading = ({ isVisible, onBackdropCb }) => {
             closeButton={false}
         >
             <div className="min-w-0 bg-transparent"></div>
-            <Spiner isDark={isDark} />
+            <Spiner isDark={currentTheme === THEME_MODE.DARK} isCustom={true} />
         </ModalV2>
     );
 };

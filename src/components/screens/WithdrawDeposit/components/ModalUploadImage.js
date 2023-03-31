@@ -1,12 +1,7 @@
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
-import { QRCode } from 'react-qrcode-logo';
-import Image from 'next/image';
-import { getS3Url, saveFile } from 'redux/actions/utils';
-import useDarkMode from 'hooks/useDarkMode';
+import React, { useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import ModalV2 from 'components/common/V2/ModalV2';
-import DomToImage from 'dom-to-image';
 import { useTranslation } from 'next-i18next';
 import { UploadAvatar } from 'components/screens/Account/AccountAvatar';
 import styled from 'styled-components';
@@ -104,13 +99,14 @@ const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, ord
 
     return (
         <ModalV2
+            // isVisible={true}
             isVisible={isVisible}
             onBackdropCb={onClose}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`, { className })}
         >
             <h1 className="txtPri-3 font-semibold mb-8">{t('profile:or_upload_image')}</h1>
             <DashBorder className="h-[418px] flex justify-center items-center flex-col">
-                {fileImage ? (
+                {fileImage?.src ? (
                     <img className="mx-auto object-contain max-h-full max-w-full py-6 px-4" src={fileImage?.src} alt="Transfer confirm image" />
                 ) : (
                     <UploadAvatar className="!bg-none" t={t} onDropCustomAvatar={onDropCustomAvatar} />

@@ -10,7 +10,7 @@ import { isNull, isUndefined } from 'lodash';
 const OrderStatusTag = ({ icon = true, className, status }) => {
     // if(!status) return null;
     const { t } = useTranslation();
-    
+
     const { PENDING, SUCCESS, REJECTED, DISPUTED } = PartnerOrderStatus;
     let type = '';
     let label = '';
@@ -27,7 +27,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             type = TYPES.FAILED;
             label = (
                 <div className="flex items-center gap-x-2">
-                    <CancelCircleFillIcon size={16} /> {t('common:denined')}
+                    {icon && <CancelCircleFillIcon size={16} />} {t('common:denined')}
                 </div>
             );
             break;
@@ -35,7 +35,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             type = TYPES.FAILED;
             label = (
                 <div className="flex items-center gap-x-2">
-                    <BxsErrorAltIcon size={16} /> {t('common:disputing')}
+                    {icon && <BxsErrorAltIcon size={16} />} {t('common:disputing')}
                 </div>
             );
             break;

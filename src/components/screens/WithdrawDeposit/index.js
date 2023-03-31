@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Header from './components/common/Header';
 import CardInput from './CardInput';
 import CardPartner from './CardPartner';
 import HistoryTable from './HistoryTable';
-import ModalOtp from './components/ModalOtp';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import { useSelector } from 'react-redux';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
@@ -12,7 +11,7 @@ const WithdrawDeposit = () => {
     const auth = useSelector((state) => state.auth.user) || null;
 
     return (
-        <div className=" px-4 py-20">
+        <div className="px-4 py-20">
             {auth ? (
                 <div className="max-w-screen-v3 2xl:max-w-screen-xxl mx-auto">
                     <Header />
