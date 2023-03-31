@@ -1,14 +1,12 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useDebounce } from 'react-use';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
-import { getAssetCode, getExactBalanceFiat } from 'redux/actions/utils';
+import { getAssetCode } from 'redux/actions/utils';
 import { getPartner, setAllowedAmount, setInput, setLoadingPartner, setPartner } from 'redux/actions/withdrawDeposit';
 
 const useGetPartner = ({ assetId, side, amount, rate }) => {
-    const { input, loadingPartner, partner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
-    console.log('input:', input);
+    const { input, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
 
     const dispatch = useDispatch();
 
@@ -24,8 +22,6 @@ const useGetPartner = ({ assetId, side, amount, rate }) => {
             );
         }
     }, [rate, side, assetCode]);
-
-    // useDebounce(() => {}, 500, [amount]);
 
     useEffect(() => {
         let timeout = setTimeout(() => {
