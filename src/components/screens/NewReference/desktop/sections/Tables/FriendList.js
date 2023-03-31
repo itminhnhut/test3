@@ -66,6 +66,7 @@ const BREADCRUMB = [
 ];
 const MAX_BREAD_CRUMB = 3;
 const LIMIT = 10;
+const MILLISECOND = 1;
 
 const FriendList = ({ language, t, id }) => {
     const assetConfig = useSelector((state) => state.utils.assetConfig);
@@ -143,7 +144,7 @@ const FriendList = ({ language, t, id }) => {
 
     const formatDate = (value, type) => {
         if (type === 'startDate') return value?.startDate ? new Date(value?.startDate).getTime() : null;
-        if (type === 'endDate') return value?.endDate ? new Date(value?.endDate).getTime() + 86400000 : null;
+        if (type === 'endDate') return value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
     };
 
     const getListFriends = _.throttle(async () => {
