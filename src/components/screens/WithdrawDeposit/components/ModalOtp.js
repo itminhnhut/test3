@@ -202,7 +202,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
             ))}
 
             <div className="mt-[52px]">
-                <ButtonV2 onClick={confirm} loading={loading || auth?.loadingUser} disabled={!isValidInput(state.otp)}>
+                <ButtonV2 onClick={async () => await onConfirmHandler(state.otp)} loading={loading || auth?.loadingUser} disabled={!isValidInput(state.otp)}>
                     {t('common:confirm')}
                 </ButtonV2>
             </div>
