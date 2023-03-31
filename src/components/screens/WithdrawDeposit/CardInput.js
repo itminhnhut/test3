@@ -168,7 +168,7 @@ const CardInput = () => {
                                             onClick={onMaxHandler}
                                             className="uppercase font-semibold text-teal !h-10 "
                                         >
-                                            {t('common:max')}
+                                            MAX
                                         </ButtonV2>
                                     )
                                 }
