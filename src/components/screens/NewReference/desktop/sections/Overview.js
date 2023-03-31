@@ -201,8 +201,8 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <span className="ml-2">{t('reference:referral.partner.button')}</span>
                                     </button>
                                 )}
-
-                                {!isWithdrawal && (
+                                // NOTE: ẩn đối tác kinh doanhh
+                                {/* {!isWithdrawal && (
                                     <button
                                         onClick={() => handleRegisterWithdrawal()}
                                         className="flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold"
@@ -210,7 +210,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <Image src="/images/reference/register_withdrawal.png" width="24" height="24" />
                                         <span className="ml-2">{t('reference:withdrawal.title')}</span>
                                     </button>
-                                )}
+                                )} */}
                                 <div
                                     className="px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold"
                                     onClick={() => router.push(policyLink)}
