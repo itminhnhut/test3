@@ -112,7 +112,7 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
+                        additionalData = { token: assetCode, side: side };
                         break;
                     default:
                         break;
