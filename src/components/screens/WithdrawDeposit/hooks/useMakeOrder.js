@@ -15,7 +15,6 @@ const useMakeOrder = ({ setState, input }) => {
     const { side, assetId } = router.query;
 
     const onMakeOrderSuccess = (order) => {
-        // toast({ text: `Bạn đã đặt thành công lệnh ${side.toLowerCase()} ${assetCode} #${order.displayingId} `, type: 'success' });
         router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + order.displayingId);
     };
 
@@ -31,11 +30,10 @@ const useMakeOrder = ({ setState, input }) => {
                 otp
             });
 
-            if (orderResponse && orderResponse.status === ApiStatus.SUCCESS) {
+            if (orderResponse && (orderResponse.status === ApiStatus.SUCCESS || orderResponse.status === ApiResultCreateOrder.TOO_MUCH_REQUEST)) {
                 if (orderResponse.data.remaining_time) {
-                    setState({ otpMode: 'email', showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
+                    setState({ showOtp: true, otpExpireTime: new Date().getTime() + orderResponse.data.remaining_time });
                 } else {
-                    // no need to setLoading to false if user has successfully created an order
                     onMakeOrderSuccess(orderResponse.data);
                     return;
                 }
@@ -43,7 +41,7 @@ const useMakeOrder = ({ setState, input }) => {
                 if (orderResponse?.status === ApiResultCreateOrder.INVALID_OTP) {
                     toast({ text: t('common:otp_verify_expired'), type: 'warning' });
                     setState({ loadingConfirm: false });
-                    return ApiResultCreateOrder.INVALID_OTP;
+                    return orderResponse;
                 } else {
                     if (orderResponse?.status === 'NOT_FOUND_PARTNER') {
                         toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });

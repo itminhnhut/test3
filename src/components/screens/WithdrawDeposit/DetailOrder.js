@@ -11,36 +11,15 @@ import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } f
 import { getAssetCode } from 'redux/actions/utils';
 
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } from './constants';
+import { MODAL_KEY, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
-import Countdown from 'react-countdown';
 import classNames from 'classnames';
 import { useBoolean } from 'react-use';
 import ModalLoading from 'components/common/ModalLoading';
+import AppealButton from './components/AppealButton';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
-};
-
-const ReportButtonRender = ({ timeExpire, onMarkWithStatus, t }) => {
-    return timeExpire ? (
-        <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
-            {(props) => {
-                return (
-                    <ButtonV2
-                        disabled={props.total > REPORT_ABLE_TIME * 1000}
-                        onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
-                        className="px-6 disabled:!cursor-default"
-                        variants="secondary"
-                    >
-                        {t('dw_partner:appeal')}
-                    </ButtonV2>
-                );
-            }}
-        </Countdown>
-    ) : (
-        <></>
-    );
 };
 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
@@ -189,7 +168,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender onMarkWithStatus={onMarkWithStatus} timeExpire={state.orderDetail?.timeExpire} t={t} />;
+                                reportBtn = (
+                                    <AppealButton
+                                        onMarkWithStatus={onMarkWithStatus}
+                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        timeExpire={state.orderDetail?.timeExpire}
+                                    />
+                                );
                             }
                         }
                         // user logic
@@ -261,7 +246,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
                                     text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender onMarkWithStatus={onMarkWithStatus} timeExpire={state.orderDetail?.timeExpire} t={t} />;
+                                reportBtn = (
+                                    <AppealButton
+                                        onMarkWithStatus={onMarkWithStatus}
+                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        timeExpire={state.orderDetail?.timeExpire}
+                                    />
+                                );
                             }
                         }
                     }

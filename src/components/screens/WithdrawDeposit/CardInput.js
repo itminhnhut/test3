@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import TradingInputV2 from 'components/trade/TradingInputV2';
+import dynamic from 'next/dynamic';
 import Card from './components/common/Card';
 import { useSelector } from 'react-redux';
 import { SyncAltIcon } from 'components/svg/SvgIcon';
@@ -7,16 +8,16 @@ import { getAssetCode, formatBalanceFiat, getExactBalanceFiat } from 'redux/acti
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
-import RecommendAmount from './components/RecommendAmount';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
-import ModalOtp from './components/ModalOtp';
 import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
-import { isNumber } from 'lodash';
+
+const ModalOtp = dynamic(() => import('./components/ModalOtp'));
+const RecommendAmount = dynamic(() => import('./components/RecommendAmount'));
 
 const CardInput = () => {
     const { t } = useTranslation();
@@ -29,7 +30,6 @@ const CardInput = () => {
         amount: '',
         loadingConfirm: false,
         showOtp: false,
-        otpMode: null,
         otpExpireTime: null
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -42,8 +42,6 @@ const CardInput = () => {
             setState({ amount: minimumAllowed });
         }
     }, [minimumAllowed]);
-    // reset otp state
-    useEffect(() => setState({ otpMode: null }), [state.amount, partner, accountBank]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
         { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId } },
@@ -277,7 +275,7 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={!state.otpMode ? () => onMakeOrderHandler() : () => setState({ otpMode: 'email', showOtp: true })}
+                    onClick={() => onMakeOrderHandler()}
                     disabled={
                         !partner ||
                         loadingPartner ||
@@ -290,6 +288,7 @@ const CardInput = () => {
                     {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
                 </ButtonV2>
             </Card>
+
             <ModalOtp
                 onConfirm={(otp) => onMakeOrderHandler(otp)}
                 isVisible={state.showOtp}
@@ -298,8 +297,6 @@ const CardInput = () => {
                     setState({ showOtp: false });
                 }}
                 loading={state.loadingConfirm}
-                setOtpMode={(mode) => setState({ otpMode: mode })}
-                otpMode={state.otpMode}
             />
         </>
     );

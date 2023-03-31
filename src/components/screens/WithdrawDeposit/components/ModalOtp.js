@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import OtpInput from 'react-otp-input';
 import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
@@ -11,73 +11,86 @@ import Countdown from 'react-countdown';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 import { ApiResultCreateOrder } from 'redux/actions/const';
+import Spinner from 'components/svg/Spinner';
 
 const OTP_REQUIRED_LENGTH = 6;
+
 const INITAL_OTP_STATE = {
     email: '',
     tfa: ''
 };
 
-const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpMode, onConfirm }) => {
+const OTP_MODE = ['email', 'tfa'];
+
+const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => {
     const [state, set] = useState({
         otp: INITAL_OTP_STATE,
-        pasted: false,
-        isError: false
+        pasted: {
+            email: false,
+            tfa: false
+        },
+        isError: false,
+        modes: OTP_MODE
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
     const { t } = useTranslation();
     const auth = useSelector((state) => state.auth) || null;
-    const otpRef = useRef(state.otp);
+    const otpInputRef = useRef();
+
+    // set focus on first input
+    const onFocusFirstInput = () => otpInputRef?.current?.focusInput(0);
 
     const isTfaEnabled = auth.user?.isTfaEnabled;
 
-    const onChangeHandler = (value) => {
+    useEffect(() => {
+        if (!isTfaEnabled) {
+            setState({ modes: OTP_MODE.slice(0, 1) });
+        }
+    }, [isTfaEnabled]);
+    const isValidInput = useCallback(
+        (otpState) => {
+            return state.modes.reduce((result, mode) => {
+                return result && otpState[mode].length === OTP_REQUIRED_LENGTH;
+            }, true);
+        },
+        [state.modes]
+    );
+
+    const onChangeHandler = (value, mode) => {
         if (state.isError) setState({ isError: false });
         const formatVal = value.replace(/\D/g, '').slice(0, 6);
-        setState({
-            otp: {
-                ...otpRef.current,
-                [otpMode]: formatVal
-            }
-        });
-        otpRef.current = {
-            ...otpRef.current,
-            [otpMode]: formatVal
+        const newOtp = {
+            ...state['otp'],
+            [mode]: formatVal
         };
-        if (formatVal.length === OTP_REQUIRED_LENGTH) {
-            setTimeout(confirm, 100);
+        setState({ otp: newOtp });
+
+        if (isValidInput(newOtp)) {
+            setTimeout(async () => await onConfirmHandler(newOtp), 100);
         }
     };
 
-    const doPaste = async () => {
+    const onConfirmHandler = async (otp) => {
         try {
-            const data = await navigator?.clipboard?.readText();
-            if (!data) return;
-            onChangeHandler(data);
-            setState({ pasted: true });
-            setTimeout(() => setState({ pasted: false }), 500);
-        } catch {}
-    };
-
-    const onConfirmHandler = async () => {
-        try {
-            const response = await onConfirm(otpRef.current);
-            if (response === ApiResultCreateOrder.INVALID_OTP) {
-                setState({ isError: true });
-                // onChangeHandler('');
+            const response = await onConfirm(otp);
+            if (response?.status === ApiResultCreateOrder.INVALID_OTP) {
+                onFocusFirstInput();
+                setState({ otp: INITAL_OTP_STATE, isError: true });
             }
         } catch (error) {}
     };
 
-    const confirm = async () => {
-        if (isTfaEnabled) {
-            if (otpMode === 'email') setOtpMode('tfa');
-            else await onConfirmHandler();
-            return;
-        }
-        await onConfirmHandler();
+    const doPaste = async (mode) => {
+        try {
+            const data = await navigator?.clipboard?.readText();
+            if (!data) return;
+            onChangeHandler(data, mode);
+            const pastedState = (newState) => ({ ...state.pasted, [mode]: newState });
+            setState({ pasted: pastedState(true) });
+            setTimeout(() => setState({ pasted: pastedState(false) }), 300);
+        } catch {}
     };
 
     return (
@@ -86,79 +99,89 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, otpMode, setOtpM
             wrapClassName=""
             onBackdropCb={() => {
                 onClose();
-                setState({ otp: INITAL_OTP_STATE });
+                setState({ otp: INITAL_OTP_STATE, isError: false });
             }}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            <div className="mb-6">
-                <div className="txtPri-3 mb-4">{otpMode === 'email' ? t('dw_partner:verify') : t('dw_partner:verify_2fa')}</div>
-                <div className="txtSecond-2 border-">
-                    {otpMode === 'email' ? t('dw_partner:otp_code_send_to_email') : t('dw_partner:verify_2fa_description')}
-                </div>
-            </div>
-            <OtpInput
-                value={state.otp?.[otpMode]}
-                onChange={onChangeHandler}
-                numInputs={OTP_REQUIRED_LENGTH}
-                placeholder={'------'}
-                isInputNum={true}
-                containerStyle="mb-7 w-full justify-between"
-                inputStyle={classNames(
-                    '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 '
-                )}
-                focusStyle={classNames('border ', {
-                    '!border-red': state.isError,
-                    '!border-teal': !state.isError
-                })}
-                // shouldAutoFocus
-                hasErrored={state.isError}
-                errorStyle={classNames('border-red border')}
-            />
-
-            <div
-                className={classNames('flex items-center', {
-                    'justify-between': otpMode === 'email',
-                    'justify-end': otpMode === 'tfa'
-                })}
-            >
-                {otpMode === 'email' && (
-                    <div className="flex items-center space-x-2">
-                        <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
-                        {otpExpireTime && (
-                            <Countdown date={otpExpireTime} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
-                                {(props) => {
-                                    return (
-                                        <button
-                                            onClick={() => onConfirm()}
-                                            disabled={!props.completed}
-                                            className="text-dominant cursor-pointer disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark disabled:cursor-default font-semibold !w-auto"
-                                        >
-                                            {t('dw_partner:resend_otp')}
-                                        </button>
-                                    );
-                                }}
-                            </Countdown>
-                        )}
+            {state.modes.map((mode) => (
+                <>
+                    <div className="mb-6">
+                        <div className="txtPri-3 mb-4">{mode === 'email' ? t('dw_partner:verify') : t('dw_partner:verify_2fa')}</div>
+                        <div className="txtSecond-2 border-">
+                            {mode === 'email' ? t('dw_partner:otp_code_send_to_email') : t('dw_partner:verify_2fa_description')}
+                        </div>
                     </div>
-                )}
+                    <OtpInput
+                        ref={mode === 'email' ? otpInputRef : undefined}
+                        value={state.otp?.[mode]}
+                        onChange={(val) => onChangeHandler(val, mode)}
+                        numInputs={OTP_REQUIRED_LENGTH}
+                        placeholder={'------'}
+                        isInputNum={true}
+                        containerStyle="mb-7 w-full justify-between"
+                        inputStyle={classNames(
+                            '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 '
+                        )}
+                        focusStyle={classNames('border ', {
+                            '!border-red': state.isError,
+                            '!border-teal': !state.isError
+                        })}
+                        hasErrored={state.isError}
+                        errorStyle={classNames('border-red border')}
+                    />
 
-                <div className="flex items-center space-x-2 cursor-pointer text-dominant" onClick={state.pasted ? undefined : async () => await doPaste()}>
-                    <div className="w-4 h-4">{state.pasted ? <Check size={16} /> : <Copy color="currentColor" />}</div>
+                    <div
+                        className={classNames('flex items-center', {
+                            'justify-between': mode === 'email',
+                            'justify-end': mode === 'tfa'
+                        })}
+                    >
+                        {mode === 'email' && (
+                            <div className="flex items-center space-x-2">
+                                <span className="txtSecond-2">{t('dw_partner:not_received_otp')}</span>
+                                <Countdown
+                                    key={otpExpireTime?.toString()}
+                                    now={() => Date.now()}
+                                    date={otpExpireTime}
+                                    renderer={({ completed, formatted: { minutes, seconds } }) =>
+                                        !completed ? (
+                                            <span className="font-semibold text-teal">
+                                                {minutes}:{seconds}
+                                            </span>
+                                        ) : loading ? (
+                                            <Spinner />
+                                        ) : (
+                                            <button
+                                                onClick={() => {
+                                                    onConfirm();
+                                                }}
+                                                disabled={loading}
+                                                className="text-dominant cursor-pointer disabled:text-txtDisabled dark:disabled:text-txtDisabled-dark disabled:cursor-default font-semibold !w-auto"
+                                            >
+                                                {t('dw_partner:resend_otp')}
+                                            </button>
+                                        )
+                                    }
+                                />
+                            </div>
+                        )}
 
-                    <ButtonV2 variants="text" className="font-semibold text-base">
-                        {t('common:paste')}
-                    </ButtonV2>
-                </div>
-            </div>
+                        <div
+                            className="flex items-center space-x-2 cursor-pointer text-dominant"
+                            onClick={state.pasted[mode] ? undefined : async () => await doPaste(mode)}
+                        >
+                            <div className="w-4 h-4">{state.pasted[mode] ? <Check size={16} /> : <Copy color="currentColor" />}</div>
+
+                            <ButtonV2 variants="text" className="font-semibold text-base">
+                                {t('common:paste')}
+                            </ButtonV2>
+                        </div>
+                    </div>
+                </>
+            ))}
+
             <div className="mt-[52px]">
-                <ButtonV2
-                    onClick={confirm}
-                    loading={loading || auth?.loadingUser}
-                    disabled={
-                        (isTfaEnabled && otpMode === 'tfa' && state.otp['tfa'].length !== OTP_REQUIRED_LENGTH) ||
-                        (otpMode === 'email' && state.otp['email']?.length !== OTP_REQUIRED_LENGTH)
-                    }
-                >
+                <ButtonV2 onClick={confirm} loading={loading || auth?.loadingUser} disabled={!isValidInput(state.otp)}>
                     {t('common:confirm')}
                 </ButtonV2>
             </div>

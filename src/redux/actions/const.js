@@ -884,7 +884,8 @@ export const GET_PARTNER_STATUS = {
 };
 
 export const ApiResultCreateOrder = {
-    INVALID_OTP: 'INVALID_OTP'
+    INVALID_OTP: 'INVALID_OTP',
+    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST'
 };
 
 export const DEFAULT_PARTNER_MIN = {
