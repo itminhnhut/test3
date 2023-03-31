@@ -13,10 +13,11 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, user) => [
+const getColumns = (t, user, side) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
@@ -24,13 +25,7 @@ const getColumns = (t, user) => [
         align: 'left',
         width: 150,
         fixed: 'left',
-        render: (v) => (
-            // <div className="flex items-center gap-x-2">
-            //     <span>{shortHashAddress(v, 8, 6)}</span>
-            //     <CopyIcon data={v} size={16} className="cursor-pointer" />
-            // </div>
-            <TextCopyable className="gap-x-1" showingText={v} text={v} />
-        )
+        render: (v) => <TextCopyable className="gap-x-1" showingText={v} text={v} />
     },
     {
         key: 'baseAssetId',
@@ -67,28 +62,37 @@ const getColumns = (t, user) => [
         title: t('common:from'),
         align: 'left',
         width: 189,
-        render: (v) => (
-            <div className="">
-                <div className="txtPri-2 mb-1">{v?.name}</div>
-                <div className="txtSecond-3">{v?.code}</div>
-            </div>
-        )
+        render: (v) =>
+            side === SIDE.BUY ? (
+                <>
+                    <div className="txtPri-2 mb-1">{v?.name}</div>
+                    <div className="txtSecond-3">{v?.code}</div>
+                </>
+            ) : (
+                <>
+                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
+                    <div className="txtSecond-3">{user?.code}</div>
+                </>
+            )
     },
     {
-        key: '_',
-        dataIndex: '_',
+        key: 'partnerMetadata',
+        dataIndex: 'partnerMetadata',
         title: t('common:to'),
         align: 'left',
         width: 189,
-        render: (row) => {
-            // const config = assetConfig?.find((e) => e?.id === item?.currency);
-            return (
-                <div className="">
+        render: (v) =>
+            side === SIDE.SELL ? (
+                <>
+                    <div className="txtPri-2 mb-1">{v?.name}</div>
+                    <span className="txtSecond-3">{v?.code}</span>
+                </>
+            ) : (
+                <>
                     <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <div className="txtSecond-3">{user?.code}</div>
-                </div>
-            );
-        }
+                    <span className="txtSecond-3">{user?.code}</span>
+                </>
+            )
     },
     {
         key: 'status',
@@ -96,7 +100,7 @@ const getColumns = (t, user) => [
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 182,
-        render: (v) => <OrderStatusTag status={v} />
+        render: (v) => <OrderStatusTag status={v} icon={false} />
     }
 ];
 
@@ -189,7 +193,7 @@ const HistoryTable = () => {
                 skip={0}
                 useRowHover
                 data={dataTable}
-                columns={getColumns(t, user)}
+                columns={getColumns(t, user, side)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={loadingDataTable}

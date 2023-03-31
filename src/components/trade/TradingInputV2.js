@@ -160,7 +160,7 @@ const TradingInputV2 = ({
             </div>
             <div
                 className={classNames(`text-xs text-red transition-all duration-200 max-h-[0px] overflow-hidden`, {
-                    'max-h-[30px] mt-2': isError && validator?.msg && !errorTooltip
+                    'max-h-[35px] mt-2': isError && validator?.msg && !errorTooltip
                 })}
             >
                 <div className="flex items-center space-x-1 ">
@@ -171,7 +171,7 @@ const TradingInputV2 = ({
             <div
                 className={classNames(
                     'text-xs text-txtSecondary dark:text-txtSecondary-dark transition-all duration-200 max-h-[0px] overflow-hidden',
-                    { 'max-h-[30px] pt-2': isFocus && !isError && textDescription },
+                    { 'max-h-[35px] pt-2': isFocus && !isError && textDescription },
                     descClassName
                 )}
             >
