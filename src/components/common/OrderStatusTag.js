@@ -21,7 +21,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             break;
         case SUCCESS:
             type = TYPES.SUCCESS;
-            label = t('common:success');
+            label = t('transaction-history:completed');
             break;
         case REJECTED:
             type = TYPES.FAILED;

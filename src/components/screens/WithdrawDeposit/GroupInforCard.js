@@ -154,7 +154,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             <TextCopyable
                                 className="gap-x-1 font-semibold"
                                 showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
-                                text={formatBalance(orderDetail?.quoteQty, 0)}
+                                text={orderDetail?.quoteQty}
                             />
                         </div>
                     </div>

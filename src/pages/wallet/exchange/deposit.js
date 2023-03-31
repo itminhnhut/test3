@@ -2,12 +2,12 @@ import ExchangeDeposit from 'components/screens/Wallet/Exchange/ExchangeDeposit'
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-const Deposit = () => <ExchangeDeposit/>
+const Deposit = () => <ExchangeDeposit />;
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'modal'])
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'wallet', 'modal', 'dw_partner']))
     }
-})
+});
 
-export default Deposit
+export default Deposit;
