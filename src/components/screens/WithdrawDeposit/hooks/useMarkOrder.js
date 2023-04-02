@@ -4,7 +4,7 @@ import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { approveOrder, markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
-const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode }) => {
+const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode, toggleRefetch }) => {
     const { t } = useTranslation();
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
@@ -65,6 +65,8 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                     type,
                     additionalData
                 });
+
+                toggleRefetch();
             } else {
                 setModalPropsWithKey(MODAL_KEY.CONFIRM, {
                     loading: false,

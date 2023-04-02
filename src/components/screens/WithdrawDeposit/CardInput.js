@@ -143,10 +143,10 @@ const CardInput = () => {
                         )}
                     </div>
                     <div className="flex  -m-1  relative">
-                        <div key={Date.now()} className="flex-1 p-1 ">
+                        <div className="flex-1 p-1 ">
                             <TradingInputV2
                                 id="TradingInputV2"
-                                value={loadingRate ? '0' : state.amount}
+                                value={loadingRate ? '' : state.amount}
                                 allowNegative={false}
                                 thousandSeparator={true}
                                 containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"

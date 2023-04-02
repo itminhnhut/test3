@@ -80,7 +80,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         assetId: state.orderDetail?.baseAssetId,
         setModalPropsWithKey,
         side,
-        mode
+        mode,
+        toggleRefetch
     });
 
     useEffect(() => {
