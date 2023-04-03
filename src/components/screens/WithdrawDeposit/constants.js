@@ -127,7 +127,7 @@ export const ORDER_TYPES = {
     REPORT_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
-        description: ({ displayingId }) => `Bạn đã khiếu nại thành công giao dịch ${displayingId}`,
+        description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
         showConfirm: false
     },
 

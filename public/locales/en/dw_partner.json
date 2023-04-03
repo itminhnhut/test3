@@ -40,7 +40,7 @@
     "download": "Download",
     "payment_infor": "Payment Information",
     "bank": "Bank",
-    "no_bank":"No bank found",
+    "no_bank": "No bank found",
     "transfer_description": "Description",
     "transfer_confirm_description": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount received and the content of the transfer before making.",
     "take_money_confirm_description": "When you click the confirm button, you will received the money from partner, please carefully check the amount received and the content of the transfer before making.",
