@@ -14,7 +14,10 @@ const OpenOrderTable = dynamic(() => import('components/screens/WithdrawDeposit/
 const PartnerDepositWithdraw = ({ id, url }) => {
     return (
         <MaldivesLayout>
-            <PartnerWD>{url === PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER && <OpenOrderTable />}</PartnerWD>
+            <PartnerWD>
+                {url === PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER && <OpenOrderTable />}
+                {url === PATHS.PARNER_WITHDRAW_DEPOSIT.STATS && <div>Hello</div>}
+            </PartnerWD>
         </MaldivesLayout>
     );
 };
