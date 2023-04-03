@@ -53,53 +53,48 @@ const getColumns = (t, user, side) => [
         dataIndex: 'quoteQty',
         title: t('common:amount'),
         align: 'right',
-        width: 189,
+        width: 140,
         render: (v) => formatNumber(v)
     },
     {
         key: 'partnerMetadata',
         dataIndex: 'partnerMetadata',
-        title: t('common:from'),
+        title: t('dw_partner:partner'),
         align: 'left',
         width: 189,
-        render: (v) =>
-            side === SIDE.SELL ? (
-                <>
-                    <div className="txtPri-2 mb-1">{v?.name}</div>
-                    <div className="txtSecond-3">{v?.code}</div>
-                </>
-            ) : (
-                <>
-                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <div className="txtSecond-3">{user?.code}</div>
-                </>
-            )
+        render: (v) => (
+            <>
+                <div className="txtPri-2 mb-1">{v?.name}</div>
+                <div className="txtSecond-3">{v?.code}</div>
+            </>
+        )
     },
-    {
-        key: 'partnerMetadata',
-        dataIndex: 'partnerMetadata',
-        title: t('common:to'),
-        align: 'left',
-        width: 189,
-        render: (v) =>
-            side === SIDE.BUY ? (
-                <>
-                    <div className="txtPri-2 mb-1">{v?.name}</div>
-                    <span className="txtSecond-3">{v?.code}</span>
-                </>
-            ) : (
-                <>
-                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <span className="txtSecond-3">{user?.code}</span>
-                </>
-            )
-    },
+    // {
+    //     key: 'partnerMetadata',
+    //     dataIndex: 'partnerMetadata',
+    //     title: side === SIDE.BUY ? t('dw_partner:partner') : t('dw_partner:user'),
+    //     // title: t('common:to'),
+    //     align: 'left',
+    //     width: 185,
+    //     render: (v) =>
+    //         side === SIDE.BUY ? (
+    //             <>
+    //                 <div className="txtPri-2 mb-1">{v?.name}</div>
+    //                 <span className="txtSecond-3">{v?.code}</span>
+    //             </>
+    //         ) : (
+    //             <>
+    //                 <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
+    //                 <span className="txtSecond-3">{user?.code}</span>
+    //             </>
+    //         )
+    // },
     {
         key: 'status',
         dataIndex: 'status',
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
-        width: 182,
+        width: 185,
         render: (v) => <OrderStatusTag status={v} icon={false} />
     }
 ];

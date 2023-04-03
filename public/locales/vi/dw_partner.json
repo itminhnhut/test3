@@ -40,7 +40,7 @@
     "download": "Tải xuống",
     "payment_infor": "Thông tin thanh toán",
     "bank": "Ngân hàng",
-    "no_bank":"Không tìm thấy ngân hàng",
+    "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
     "transfer_confirm_description": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
     "take_money_confirm_description": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
