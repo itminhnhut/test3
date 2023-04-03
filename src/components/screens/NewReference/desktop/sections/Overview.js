@@ -201,7 +201,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <span className="ml-2">{t('reference:referral.partner.button')}</span>
                                     </button>
                                 )}
-                                // NOTE: ẩn đối tác kinh doanhh
+                                {/* NOTE: ẩn đối tác kinh doanh */}
                                 {/* {!isWithdrawal && (
                                     <button
                                         onClick={() => handleRegisterWithdrawal()}
