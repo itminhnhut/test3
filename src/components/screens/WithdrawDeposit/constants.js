@@ -17,6 +17,11 @@ export const MODE = {
     PARTNER: 'partner'
 };
 
+export const TYPE_DW = {
+    PARTNER: 'partner',
+    CRYPTO: 'crypto'
+};
+
 export const TranferreredType = {
     //user-to-partner
     [MODE.USER]: {
