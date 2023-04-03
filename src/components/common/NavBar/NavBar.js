@@ -374,7 +374,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <Image objectFit="cover" width={48} height={48} src={avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
+                                <img width={48} height={48} className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover" src={avatar || DefaultAvatar} alt="avatar_user" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>
