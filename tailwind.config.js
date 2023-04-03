@@ -418,7 +418,20 @@ module.exports = {
                     'linear-gradient(285.88deg, rgba(98, 255, 104, 0.24) 6.52%, rgba(50, 244, 110, 0.59) 38.97%, rgba(45, 225, 96, 0.53) 65.02%, #3BE29C 91.4%)',
                 'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
-                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')"
+                'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
+                'progress-gradient': `linear-gradient(101.26deg,${commonColors.lightTeal} -5.29%,${commonColors.teal} 100%)`,
+                'nao-corner': "url('/images/nao/bg-corner.webp')",
+                'nao-corner-mb': "url('/images/nao/bg-corner-mb.webp')"
+            },
+            backgroundSize: {
+                auto: 'auto',
+                cover: 'cover',
+                contain: 'contain',
+                inherit: 'inherit',
+                initial: 'initial',
+                revert: 'revert',
+                unset: 'unset',
+                full: '100% 100%',
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

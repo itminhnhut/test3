@@ -136,7 +136,7 @@ function Day({day, range, setRange}) {
         className={classNames('text-center text-onus-white text-sm h-full py-1', {
             '!text-onus-grey': disabled,
             'text-onus-green': isSameDay(day, now),
-            'bg-onus-green/[.2]': inRange,
+            'bg-green-2/[.2]': inRange,
             'bg-onus-base rounded-full !text-onus-white': isSelected,
             'rounded-l-full !bg-onus-base': isStart,
             'rounded-r-full !bg-onus-base !text-onus-white': isEnd,

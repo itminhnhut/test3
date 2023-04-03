@@ -147,7 +147,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
-            <div className="bg-nao-bgShadow text-nao-white min-h-full font-inter">
+            <div className="bg-gray-13 dark:bg-dark-dark text-gray-15 dark:text-gray-7 min-h-full font-inter">
 
                 <AlertContext.Provider value={{
                     alert: alert.current,
@@ -176,8 +176,8 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
 const Background = styled.div.attrs({
     className: 'min-w-full min-h-screen flex flex-col justify-between'
 })`
-    background-image:${({ width }) => `url(${getS3Url(`/images/nao/bg-dashboard${width <= 780 ? '_mb' : ''}.png`)})`};
-    background-repeat: no-repeat;     
+    /* background-image:${({ width }) => `url(${getS3Url(`/images/nao/bg-dashboard${width <= 780 ? '_mb' : ''}.png`)})`}; */
+    background-repeat: no-repeat;
     background-size: cover;
     background-position: center top;
 `

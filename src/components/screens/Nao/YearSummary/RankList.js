@@ -77,7 +77,7 @@ function RankList({
             {width <= 640 ? (
                 <CardNao noBg className='mt-6 !py-[1.125rem] !px-3'>
                     <div
-                        className='flex mx-3 gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]'>
+                        className='flex mx-3 gap-6 text-gray-1 dark:text-gray-7 text-sm font-medium pb-2 border-b border-nao-grey/[0.2]'>
                         <div className='min-w-[31px]'>{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
@@ -92,7 +92,7 @@ function RankList({
                                             <div className='min-w-0'>
                                                 <p className='text-sm font-bold'>{record.name}</p>
                                                 <span
-                                                    className='text-sm text-nao-grey font-medium break-words'><span className='hidden xsm:inline'>ID: </span>{record.onus_user_id}</span>
+                                                    className='text-sm text-gray-1 dark:text-gray-7 font-medium break-words'><span className='hidden xsm:inline'>ID: </span>{record.onus_user_id}</span>
                                             </div>
                                             <ImageNao
                                                 className='w-[44px] h-[44px] object-cover rounded-full'
@@ -104,7 +104,7 @@ function RankList({
                                                 const value = record[item.valueKey];
                                                 return <div key={item.valueKey} className='flex justify-between'>
                                                     <span
-                                                        className='text-sm text-nao-grey font-medium'>{item.label}</span>
+                                                        className='text-sm text-gray-1 dark:text-gray-7 font-medium'>{item.label}</span>
                                                     {item.render ? item.render(value) : value}
                                                 </div>;
                                             })}
@@ -118,11 +118,11 @@ function RankList({
             ) : (
                 <Table loading={false} noItemsMessage={t('nao:contest:no_rank')} dataSource={restUsers}>
                     <Column minWidth={50}
-                            className='text-nao-grey font-medium' title={t('nao:contest:rank')}
+                            className='text-gray-1 dark:text-gray-7 font-medium' title={t('nao:contest:rank')}
                             fieldName={rankFieldName} cellRender={renderRank} />
                     <Column minWidth={200} title={t('nao:contest:name')} fieldName='name'
                             cellRender={renderUser} />
-                    <Column minWidth={150} className='text-nao-text capitalize' title={'ID ONUS Futures'}
+                    <Column minWidth={150} className='text-gray-15 dark:text-gray-4 capitalize' title={'ID ONUS Futures'}
                             fieldName='onus_user_id' />
                     {information.map(item => {
                         return <Column
@@ -136,7 +136,7 @@ function RankList({
                     })}
                 </Table>
             )}
-            <div className='text-nao-grey font-medium text-sm mt-6'>
+            <div className='text-gray-1 dark:text-gray-7 font-medium text-sm mt-6'>
                 <span>{t('nao:year_summary:last_time_update')}{': '}</span><span>{format(new Date(data.last_time_update), 'HH:mm:ss dd/MM/yyy')}</span>
                 </div>
         </div>

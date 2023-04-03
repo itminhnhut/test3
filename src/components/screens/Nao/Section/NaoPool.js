@@ -45,7 +45,7 @@ const getAssets = createSelector(
     }
 );
 
-const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) =>  <span className="text-sm text-nao-grey leading-6"> {isShowLabel ?``: null }${formatNumber(price, digitsPrice)}</span>
+const SubPrice = ({ price, digitsPrice = 3, isShowLabel = true }) =>  <span className="text-sm text-gray-1 dark:text-gray-7 leading-6"> {isShowLabel ?``: null }${formatNumber(price, digitsPrice)}</span>
 
 const NaoPool = ({ dataSource, assetNao }) => {
     const { t } = useTranslation();
@@ -64,7 +64,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     const HistoryPriceItem = ({s3Url, total, digitsTotal, usdPrice, digitsUsdPrice=3, isUSDT =  false}) => (
         <div className='flex-col flex-1 text-left lg:text-right gap-2'>
-            <div className="text-nao-white font-semibold flex items-center lg:justify-end lg:min-w-[150px] leading-6">
+            <div className="text-gray-15 dark:text-gray-7 font-semibold flex items-center lg:justify-end lg:min-w-[150px] leading-6">
                 <span className="mr-2">{formatNumber(total, digitsTotal)}</span>
                 { !isUSDT ? <img src={getS3Url(s3Url)} width={20} height={20} alt="" /> :
                     <AssetLogo assetId={22}  size={20} />
@@ -103,7 +103,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                                 {index !== 0 && width < 992 && <Divider className="my-4 sm:my-[10px]" />}
                                 <div className='flex items-center w-full justify-between flex-wrap gap-[0.75rem] sm:gap-2 '>
                                     <div className="flex flex-col w-full lg:w-auto">
-                                        <span className="text-sm text-nao-grey leading-6">
+                                        <span className="text-sm text-gray-1 dark:text-gray-7 leading-6">
                                             {t('nao:pool:week', { value: weekNumber })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                         </span>
                                         <SubPrice price={sumUSDT} digitsPrice={assetConfig[22]?.assetDigit ?? 3}/>
@@ -220,7 +220,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
 
     const PoolPriceItem = ({s3Url, price, usdPrice, digitsPrice, digitsUsdPrice= 3, isUSDT = false}) => (
         <div className='flex-col flex-1 text-left lg:text-right'>
-            <div className="text-nao-white sm:text-lg font-semibold flex items-center lg:justify-end leading-6 space-x-2 lg:min-w-[150px]">
+            <div className="text-gray-15 dark:text-gray-7 sm:text-lg font-semibold flex items-center lg:justify-end leading-6 space-x-2 lg:min-w-[150px]">
                 <span>{formatNumber(price, digitsPrice)}</span>
                 { !isUSDT ? <img src={getS3Url(s3Url)} width={20} height={20} alt="" /> :
                     <AssetLogo assetId={22}  size={20} />
@@ -235,28 +235,28 @@ const NaoPool = ({ dataSource, assetNao }) => {
             <div className="flex items-center flex-wrap justify-between gap-4">
                 <div>
                     <TextLiner  className="normal-case lg:text-white">{t('nao:pool:title')}</TextLiner>
-                    <span className="text-nao-grey">{t('nao:pool:description')}</span>
+                    <span className="text-gray-1 dark:text-gray-7">{t('nao:pool:description')}</span>
                 </div>
                 <ButtonNao className="py-2 px-7 !rounded-md text-sm font-semibold leading-6" onClick={() => router.push('/nao/stake')}>Stake NAO</ButtonNao>
             </div>
             <div className="pt-6 flex items-center flex-wrap gap-[21px]">
                 <CardNao className="sm:!px-10 sm:!py-12 sm:!flex-row sm:items-center !min-h-[124px]">
-                    <label className="text-nao-text font-medium sm:text-lg">{t('nao:pool:nao_staked')}</label>
+                    <label className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg">{t('nao:pool:nao_staked')}</label>
                     <div className='sm:text-right flex flex-col gap-1 mt-4 sm:mt-0'>
                         <div className="text-[1.375rem] font-semibold flex items-center space-x-2">
                             <span className="leading-8">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</span>
                             <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                         </div>
-                        <span className="text-sm text-nao-grey leading-6">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
+                        <span className="text-sm text-gray-1 dark:text-gray-7 leading-6">${formatNumber(data.totalStakedVNDC * (referencePrice['VNDC'] ?? 1), 3)}</span>
                     </div>
                 </CardNao>
                 <CardNao className="sm:!px-10 sm:!py-12 sm:!flex-row sm:items-center !min-h-[124px]">
-                    <label className="text-nao-text font-medium sm:text-lg">{t('nao:pool:participants')}</label>
+                    <label className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg">{t('nao:pool:participants')}</label>
                     <div className='sm:text-right flex flex-col gap-1 mt-4 sm:mt-0'>
                         <div className="text-[1.375rem] font-semibold leading-8">
                             {data.totalUsers}
                         </div>
-                        <div className="text-sm text-nao-grey" dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}></div>
+                        <div className="text-sm text-gray-1 dark:text-gray-7" dangerouslySetInnerHTML={{ __html: t('nao:pool:participants_today', { value: dataSource?.totalUserToday ?? 0 }) }}></div>
                     </div>
                 </CardNao>
 
@@ -318,7 +318,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                 </div>
                 <div className="h-[1px] bg-nao-line my-6 sm:my-8"></div>
                 <div className="flex items-center justify-between">
-                    <label className="text-nao-text font-medium sm:text-lg">{t('nao:pool:revenue_history')}</label>
+                    <label className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg">{t('nao:pool:revenue_history')}</label>
                     {listHitory.length > 0 &&
                         <div className="flex space-x-2 opacity-50">
                             <img onClick={() => onNavigate(false)} className="cursor-pointer" src={getS3Url('/images/nao/ic_chevron.png')} width={24} height={24} alt="" />
@@ -342,7 +342,7 @@ const NaoPool = ({ dataSource, assetNao }) => {
                         :
                         <div className={`flex items-center justify-center flex-col m-auto`}>
                             <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                            <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
+                            <div className="text-xs text-gray-1 dark:text-gray-7 mt-1">{t('nao:pool:history_nodata')}</div>
                         </div>
                     }
                 </div>

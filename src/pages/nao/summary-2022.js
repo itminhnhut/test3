@@ -30,7 +30,7 @@ export default function () {
 
     const renderPNLRate = (value, className = '') => {
         return <span
-            className={classNames('text-sm text-right text-nao-green2 font-medium', className)}
+            className={classNames('text-sm text-right text-teal font-medium', className)}
         >{value} %</span>;
     };
 
@@ -45,7 +45,7 @@ export default function () {
             <div className='grid grid-cols-1 md:grid-cols-2 mt-14'>
                 <div className='flex flex-col justify-center'>
                     <h4 className='font-semibold text-[2.125rem] leading-10 text-center md:text-left'>{t('nao:year_summary:title')} 2022</h4>
-                    <p className='text-lg text-nao-text mt-2 text-center md:text-left'>
+                    <p className='text-lg text-gray-15 dark:text-gray-4 mt-2 text-center md:text-left'>
                         {t('nao:year_summary:content')}{' '}
                         <a href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
                            target='_blank'

@@ -74,6 +74,8 @@ const colors = {
         5: '#1e77eb'
     },
 
+    dominant: '#47cc85',
+
     onus: {
         bg: '#1B222D',
         bg2: '#36445A',

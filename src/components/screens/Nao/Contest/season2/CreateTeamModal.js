@@ -247,7 +247,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 <div className="mt-8">
                     <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
                         backgroundColor={colors.nao.tooltip2} arrowColor="transparent" id="tooltip-list-team" >
-                        <div className="font-medium text-sm text-nao-grey2 "  >
+                        <div className="font-medium text-sm text-gray-1 dark:text-gray-72 "  >
                             {t('nao:contest:tooltip_create_team')}
                         </div>
                     </Tooltip>

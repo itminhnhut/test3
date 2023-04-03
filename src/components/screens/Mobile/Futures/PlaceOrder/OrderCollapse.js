@@ -54,7 +54,7 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
     return (
         <div className="w-full">
             <div className="relative flex w-full h-[56px] text-sm order-collapse">
-                <Side className={`bg-onus-green rounded-l-[6px] text-white ${className} ${disabledClass ? 'border-[1px] border-onus-green' : ''}`}
+                <Side className={`bg-green-2 rounded-l-[6px] text-white ${className} ${disabledClass ? 'border-[1px] border-green-2' : ''}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.BUY, pairPrice?.ask)}>
                     <div className={`truncate`} style={style()}>{t('common:buy')}&nbsp;
                         {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}

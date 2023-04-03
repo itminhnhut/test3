@@ -84,7 +84,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const empty = () => {
         return (
             <div className={`pt-[148px] lg:pt-[172px] flex items-start justify-center flex-col m-auto`}>
-                <div className="text-tiny font-medium text-nao-grey">{t('nao:contest:no_rank')}</div>
+                <div className="text-tiny font-medium text-gray-1 dark:text-gray-7">{t('nao:contest:no_rank')}</div>
             </div>
         );
     };
@@ -102,22 +102,22 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                             className="rounded-full w-12 h-12 absolute left-4 bottom-0 translate-y-6"
                                             src={item?.avatar ? item?.avatar : getS3Url('/images/contest/img_name.png')}
                                         />
-                                        <div className="text-[32px] font-semibold text-nao-green absolute right-4">#{index + 1}</div>
+                                        <div className="text-[32px] font-semibold text-teal absolute right-4">#{index + 1}</div>
                                     </div>
                                     <div className="mt-8 px-4">
                                         <div className="leading-8">
                                             <div className="font-semibold">{item.name}</div>
                                         </div>
-                                        <div className="text-nao-text font-normal text-sm ">{item.onus_user_id}</div>
+                                        <div className="text-gray-15 dark:text-gray-4 font-normal text-sm ">{item.onus_user_id}</div>
                                         <div className="bg-rank-line h-[1px] my-6"></div>
 
                                         <div className="flex flex-row justify-between items-center">
-                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
+                                            <div className="text-gray-1 dark:text-gray-7 font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
                                             <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
                                         </div>
                                         <div className="flex flex-row justify-between items-center mt-1">
-                                            <div className="text-nao-grey font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
-                                            <div className="text-nao-green font-semibold leading-8">{formatNumber(item?.total_order, 0)}</div>
+                                            <div className="text-gray-1 dark:text-gray-7 font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-teal font-semibold leading-8">{formatNumber(item?.total_order, 0)}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +127,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                 ) : (
                     empty()
                 )}
-                <div className="mt-6 text-xs text-nao-grey font-medium">
+                <div className="mt-6 text-xs text-gray-1 dark:text-gray-7 font-medium">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             </>
@@ -136,7 +136,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
 
     const renderLastUpdate = () => {
         return (
-            <div className="mt-4 lg:mt-6 text-xs text-nao-grey font-medium">
+            <div className="mt-4 lg:mt-6 text-xs text-gray-1 dark:text-gray-7 font-medium">
                 {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
             </div>
         );
@@ -150,7 +150,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                         <Table classWrapper="mt-[172px]" loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={data?.users || []}>
                             <Column
                                 minWidth={90}
-                                className="text-nao-grey font-medium"
+                                className="text-gray-1 dark:text-gray-7 font-medium"
                                 title={t('nao:contest:rank')}
                                 fieldName="special_rank_metadata"
                                 cellRender={renderRank}
@@ -160,7 +160,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                 title={t('nao:contest:id_onus_futures')}
                                 minWidth={150}
                                 sortable={true}
-                                className="text-nao-text capitalize"
+                                className="text-gray-15 dark:text-gray-4 capitalize"
                                 fieldName="onus_user_id"
                             />
                             <Column
@@ -194,7 +194,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
             <>
                 {data?.users?.length > 0 ? (
                     <CardNao noBg className="mt-[168px] !py-[1.125rem] !px-3 inline lg:hidden">
-                        <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                        <div className="flex mx-3 gap-4 sm:gap-6 text-gray-1 dark:text-gray-7 text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                             <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                             <div>{t('nao:contest:information')}</div>
                         </div>
@@ -207,7 +207,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                             <div className="flex flex-row justify-between">
                                                 <div className="leading-6 text-sm">
                                                     <div className="font-semibold ">{item.name}</div>
-                                                    <div className="text-nao-text font-medium">ID: {truncate(item.onus_user_id, 15)}</div>
+                                                    <div className="text-gray-15 dark:text-gray-4 font-medium">ID: {truncate(item.onus_user_id, 15)}</div>
                                                 </div>
                                                 <Image
                                                     className="!rounded-full"
@@ -217,11 +217,11 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                                 />
                                             </div>
                                             <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-nao-text ">{t('nao:contest:volume')}</div>
+                                                <div className="text-gray-15 dark:text-gray-4 ">{t('nao:contest:volume')}</div>
                                                 <div className="">{formatNumber(item?.total_volume, 0)} VNDC</div>
                                             </div>
                                             <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-nao-text ">{t('nao:contest:total_trades')}</div>
+                                                <div className="text-gray-15 dark:text-gray-4 ">{t('nao:contest:total_trades')}</div>
                                                 <div className="text-right">{formatNumber(item?.total_order, 0)}</div>
                                             </div>
                                         </div>
@@ -249,9 +249,9 @@ const ListRankings = ({ isList, type, data, loading }) => {
                     <Image src={config.bg_champ} width="306px" height="198px" />
                 </div>
                 <div className="flex flex-row font-semibold leading-8 mt-4 justify-center">
-                    <span className="text-nao-green mr-1">{config?.total}</span> {config.title[language]}
+                    <span className="text-teal mr-1">{config?.total}</span> {config.title[language]}
                 </div>
-                <div className="text-nao-text text-sm font-normal text-center mt-1 leading-3">
+                <div className="text-gray-15 dark:text-gray-4 text-sm font-normal text-center mt-1 leading-3">
                     {config.des[language]}: {config.total_klgd}
                 </div>
             </div>

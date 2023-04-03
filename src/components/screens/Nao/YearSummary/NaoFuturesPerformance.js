@@ -70,11 +70,11 @@ function NaoFuturesPerformance() {
                 />
                 <div className='order-first gap-2 md:order-last flex gap-last'>
                     <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filters.currency !== WalletCurrency.VNDC })}
+                        className={classNames({ '!bg-gray-12 dark:bg-dark-2 !font-normal': filters.currency !== WalletCurrency.VNDC })}
                         onClick={() => changeFilters({ currency: WalletCurrency.VNDC })}
                     >{isMobile ? 'VNDC' : 'Futures VNDC'}</ButtonNao>
                     <ButtonNao
-                        className={classNames({ '!bg-nao-bg3 !font-normal': filters.currency !== WalletCurrency.USDT })}
+                        className={classNames({ '!bg-gray-12 dark:bg-dark-2 !font-normal': filters.currency !== WalletCurrency.USDT })}
                         onClick={() => changeFilters({ currency: WalletCurrency.USDT })}
                     >{isMobile ? 'USDT' : 'Futures USDT'}</ButtonNao>
                 </div>
@@ -83,21 +83,21 @@ function NaoFuturesPerformance() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
                 <span
-                    className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:volume_trades')}</span>
+                    className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:volume_trades')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.volume, 0)} {assetCodeFromId(filters.currency)}</span>
-                <span className='text-nao-grey text-sm mt-2'>${formatNumber(data.statistic?.volume_usdt, 0)}</span>
+                <span className='text-gray-1 dark:text-gray-7 text-sm mt-2'>${formatNumber(data.statistic?.volume_usdt, 0)}</span>
             </div>
 
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
                 <span
-                    className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:order_number')}</span>
+                    className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:order_number')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_transaction, 0)}</span>
             </div>
 
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
-                <span className='text-lg text-nao-text font-medium leading-7'>{t('nao:year_summary:user_count')}</span>
+                <span className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:user_count')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_user, 0)}</span>
             </div>
@@ -134,7 +134,7 @@ const RangePopover = ({
             <>
                 <Popover.Button>
                     <div
-                        className='text-sm pl-4 pr-2 h-10 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]'>
+                        className='text-sm pl-4 pr-2 h-10 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]'>
                         <span className='mr-1'>{getOptionString(active)}</span>
                         <img alt='' src={getS3Url('/images/nao/ic_arrow_bottom.png')} height='16' width='16' />
                     </div>
@@ -149,7 +149,7 @@ const RangePopover = ({
                     leaveTo='opacity-0 translate-y-1'
                 >
                     <Popover.Panel
-                        className='absolute min-w-[10rem] shadow-onlyLight top-8 right-0 z-50 bg-nao-bg3 rounded-xl mt-3'>
+                        className='absolute min-w-[10rem] shadow-onlyLight top-8 right-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl mt-3'>
                         <div className='font-medium text-xs flex flex-col'>
                             {[2022, ...range(12, 5, -1)]
                                 .map(option => {

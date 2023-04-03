@@ -39,7 +39,7 @@ const ContesRules = ({
         if (now < CONTEST_TIME.START) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-nao-text', classNameContainer)}>{t('nao:contest:start_in')}</div>
+                    <div className={classNames('font-light text-sm sm:text-[1rem] text-gray-15 dark:text-gray-4', classNameContainer)}>{t('nao:contest:start_in')}</div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
@@ -61,7 +61,7 @@ const ContesRules = ({
         } else if (now >= CONTEST_TIME.START && now < CONTEST_TIME.END) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-nao-text', classNameContainer)}>{t('nao:contest:end_in')}</div>
+                    <div className={classNames('font-light text-sm sm:text-[1rem] text-gray-15 dark:text-gray-4', classNameContainer)}>{t('nao:contest:end_in')}</div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
@@ -114,15 +114,15 @@ const ContesRules = ({
     return (
         <section className="contest_rules pt-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
-                <div className="font-semibold leading-[40px] mb:leading-[0px] text-[28px] mb:text-2xl mb:text-nao-green">{t('nao:contest:tournament')}</div>
+                <div className="font-semibold leading-[40px] mb:leading-[0px] text-[28px] mb:text-2xl mb:text-teal">{t('nao:contest:tournament')}</div>
                 <div className="font-semibold text-[24px] sm:text-[34px] leading-[48px] pt-4">
                     <div>{title?.[language]}</div>
                     <div>{title_champion?.[language]}</div>
                 </div>
 
-                <div className="text-nao-text text-sm sm:text-mb pt-4 mb:pt-6 leading-9">
+                <div className="text-gray-15 dark:text-gray-4 text-sm sm:text-mb pt-4 mb:pt-6 leading-9">
                     {t('nao:contest:description')}
-                    <span className="text-nao-green font-semibold">{total_rewards}</span>
+                    <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
                 <div className="w-full border-[1px] border-dashed border-nao-grey rounded-[6px]  py-1 mt-4 mb:mt-3 flex flex-row items-center justify-center order-2">
                     {renderCountDown('!text-sm !font-normal leading-6 !mr-2', '!text-[16px] !font-semibold !leading-8')}
@@ -174,7 +174,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
             return (
                 <div className="flex items-center space-x-1 bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px] w-max">
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} width={16} height={16} />
-                    <div className="text-nao-green ">{t('nao:going_on')}</div>
+                    <div className="text-teal ">{t('nao:going_on')}</div>
                 </div>
             );
         } else {
@@ -201,7 +201,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="absolute top-12 min-w-[90vw] sm:min-w-max translate-x-[calc(50%-70px)] sm:translate-x-0 right-1/2 sm:left-0 z-50 bg-nao-bg3 rounded-xl w-full">
+                        <Popover.Panel className="absolute top-12 min-w-[90vw] sm:min-w-max translate-x-[calc(50%-70px)] sm:translate-x-0 right-1/2 sm:left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl w-full">
                             <div className="py-1 shadow-onlyLight font-medium text-sm flex flex-col rounded-xl overflow-hidden text-left">
                                 {seasonsFilter.map((item, index) => (
                                     <div

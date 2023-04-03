@@ -61,7 +61,7 @@ const StakeOrders = ({ assetConfig }) => {
             minutes = differenceInMinutes(date, new Date());
         }
         const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:unlock_status', { value: formatDate(minutes) }) : t('common:success');
-        const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-nao-yellow' : 'text-nao-green';
+        const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-nao-yellow' : 'text-teal';
         return <div className={`font-medium ${color}`}>{title}</div>
     }
 
@@ -72,7 +72,7 @@ const StakeOrders = ({ assetConfig }) => {
                 {i !== 0 && <Divider className="w-full !my-4" />}
                 <div className="">
                     <div className="flex items-center justify-between">
-                        <div className="text-nao-text font-semibold leading-6">
+                        <div className="text-gray-15 dark:text-gray-4 font-semibold leading-6">
                             <Skeletor width={100} height={10} />
                         </div>
                         <div className="flex items-center space-x-2">
@@ -106,14 +106,14 @@ const StakeOrders = ({ assetConfig }) => {
                                     {idx !== 0 && <Divider className="w-full !my-4" />}
                                     <div className="">
                                         <div className="flex items-center justify-between">
-                                            <div className="text-nao-text font-semibold leading-6">{t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO</div>
+                                            <div className="text-gray-15 dark:text-gray-4 font-semibold leading-6">{t(`nao:pool:${item?.type === 1 ? 'lock2' : 'unlock'}`)} NAO</div>
                                             <div className="flex items-center space-x-2">
                                                 <div className="text-lg font-semibold leading-7">{formatNumber(item?.amount, assetConfig[447]?.assetDigit ?? 2)}</div>
                                                 <img src={getS3Url('/images/nao/ic_nao.png')} width={20} height={20} alt="" />
                                             </div>
                                         </div>
                                         <div className="flex items-center justify-between leading-6 text-sm pt-2">
-                                            <div className="text-nao-grey">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
+                                            <div className="text-gray-1 dark:text-gray-7">{formatTime(item?.createdAt, 'dd/MM/yyyy HH:mm:ss')}</div>
                                             {renderStatus(item)}
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@ const StakeOrders = ({ assetConfig }) => {
                         <div className="flex flex-col justify-center items-center">
                             <div className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
                                 <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130} height={130} />
-                                <div className="text-xs text-nao-grey mt-1">{t('nao:pool:no_transaction_history')}</div>
+                                <div className="text-xs text-gray-1 dark:text-gray-7 mt-1">{t('nao:pool:no_transaction_history')}</div>
                             </div>
                         </div>
                     }

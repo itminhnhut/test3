@@ -404,7 +404,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                                 {t('futures:profit_margin')}
                             </TabItem>
                         </div>
-                        <div className="absolute top-0 min-h-[45px] dark:bg-onus-green opacity-[0.2] w-[200%] right-[-10%]"></div>
+                        <div className="absolute top-0 min-h-[45px] dark:bg-green-2 opacity-[0.2] w-[200%] right-[-10%]"></div>
                     </div>
                 ) : (
                     <div className="px-[20px] text-gray-1 flex items-center justify-around mx-[-20px] bg-[#F2FCFC] dark:bg-darkBlue-4 w-[calc(100% + 40px)] mt-5 font-semibold">

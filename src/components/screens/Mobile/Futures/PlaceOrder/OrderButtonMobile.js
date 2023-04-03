@@ -143,7 +143,7 @@ const OrderButtonMobile = ({
             <div
                 onClick={onHandleSave}
                 className={`${
-                    isBuy ? 'bg-onus-green' : 'bg-onus-red'
+                    isBuy ? 'bg-green-2' : 'bg-red-2'
                 } text-white text-sm h-[56px] rounded-[6px] flex flex-col items-center justify-center ${classNameError}`}
             >
                 <div className="font-semibold text-center">

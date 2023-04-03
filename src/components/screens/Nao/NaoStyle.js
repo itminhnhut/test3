@@ -11,9 +11,9 @@ import Skeletor from 'components/common/Skeletor';
 import _ from 'lodash';
 
 export const TextLiner = styled.div.attrs({
-    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-nao-white'
+    className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-gray-15 dark:text-gray-7'
 })`
-    background: ${({ liner }) => liner && `linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)`};
+    background: ${({ liner }) => liner && colors.dominant};
     -webkit-background-clip: ${({ liner }) => liner && `text`};
     -webkit-text-fill-color: ${({ liner }) => liner && `transparent`};
     background-clip: ${({ liner }) => liner && `text`};
@@ -26,7 +26,7 @@ export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
-        { 'bg-nao-bg/[0.15]': !noBg }
+        { 'bg-white dark:bg-darkBlue-3': !noBg }
     )
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>
@@ -35,7 +35,7 @@ export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
 `;
 
 export const SectionNao = styled.div.attrs(({ noBg }) => ({
-    className: classNames({ 'bg-nao-bg/[0.15]': !noBg })
+    className: classNames({ 'bg-white dark:bg-darkBlue-3': !noBg })
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>
         noBg &&
@@ -50,12 +50,12 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'border border-nao-blue2 !bg-nao-bg3': border,
-        'text-opacity-20 text-nao-white !bg-nao-bg3': disabled,
-        'bg-nao-bg4': !disabled
+        'border border-dominant !bg-gray-12 !dark:bg-dark-2 !text-gray-15 !dark:text-white': border,
+        'text-opacity-20 text-gray-15 dark:text-gray-7 !bg-gray-12 dark:bg-dark-2': disabled,
+        'bg-nao-bg4 text-white': !disabled
     })
 }))`
-    background: ${({ active, isActive }) => (isActive ? (active ? colors.nao.blue2 : '') : colors.nao.blue2)};
+    background: ${({ active, isActive }) => (isActive ? (active ? colors.dominant : '') : colors.dominant)};
 `;
 
 export const BackgroundHeader = styled.div.attrs({
@@ -67,7 +67,7 @@ export const BackgroundHeader = styled.div.attrs({
 export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
     className: `rounded-lg transition-all`
 }))`
-    background: ${({ background }) => (background ? background : 'linear-gradient(101.26deg, #093DD1 -5.29%, #49E8D5 113.82%)')};
+    background: ${({ background }) => (background ? background : colors.dominant)};
     width: ${({ percent }) => `${percent > 100 ? 100 : percent}%`};
     height: ${({ height }) => `${height || 6}px`};
 `;
@@ -185,7 +185,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ref={header}
                     className={classNames(
                         'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden min-w-max w-full',
-                        'px-3 nao-table-header flex items-center text-nao-grey text-sm font-medium justify-between',
+                        'px-3 nao-table-header flex items-center text-gray-1 dark:text-gray-7 text-sm font-medium justify-between',
                         // 'pr-7'
                         classHeader
                     )}
@@ -271,7 +271,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ) : (
                         <div className={`flex items-center justify-center flex-col m-auto`}>
                             <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                            <div className="text-xs text-nao-grey mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
+                            <div className="text-xs text-gray-1 dark:text-gray-7 mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
                         </div>
                     )}
                 </div>
@@ -281,7 +281,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
 };
 
 export const getColor = (value) => {
-    return !!value ? (value > 0 ? 'text-nao-green2' : 'text-nao-red') : '';
+    return !!value ? (value > 0 ? 'text-teal' : 'text-red') : '';
 };
 
 export const renderPnl = (data, item) => {
@@ -442,7 +442,7 @@ export const TabsNao = styled.div.attrs({
         bottom: 0;
         height: 2px;
         width: 100%;
-        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
+        background: ${colors.dominant};
     }
 `;
 
@@ -460,7 +460,7 @@ export const TabItemNao = styled.div.attrs({
         inset: 0;
         border-radius: 12px 12px 0px 0px;
         padding: 2px;
-        background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%);
+        background: ${colors.dominant};
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -476,7 +476,7 @@ export const TabItemNao = styled.div.attrs({
         border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
         height: ${({ active }) => (active ? 0 : '2px')};
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
-        background: linear-gradient(101.26deg, #49e8d5 -5.29%, #093dd1 113.82%);
+        background: ${colors.dominant};
     }
     &::before {
         content: '';

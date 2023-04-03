@@ -207,64 +207,78 @@ const NaoPerformance = memo(() => {
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
-                    <TextLiner liner={width < 992}
-                               className="text-nao lg:text-white">{t('nao:onus_performance:title')}</TextLiner>
-                    <span
-                        className="text-sm sm:text-[1rem] text-nao-grey">{t('nao:onus_performance:description')}</span>
+                    <TextLiner liner={width < 992} className="text-nao lg:text-white">
+                        {t('nao:onus_performance:title')}
+                    </TextLiner>
+                    <span className="text-sm sm:text-[1rem] text-grey-1 dark:text-gray-7">{t('nao:onus_performance:description')}</span>
                 </div>
                 <div className="flex flex-wrap gap-2 w-full lg:w-auto justify-between lg:justify-end">
-                    <RangePopover language={language} active={days.find(d => d.value === filter.day)}
-                                  onChange={handleChangeDateRange} className="flex order-last lg:order-first"
-                                  popoverClassName={'lg:mr-2 '}/>
-                    <div className="order-first gap-2 lg:order-last flex gap-last">
-                        <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.VNDC })}
+                    <RangePopover
+                        language={language}
+                        active={days.find((d) => d.value === filter.day)}
+                        onChange={handleChangeDateRange}
+                        className="flex order-last"
+                        popoverClassName={'lg:mr-2 '}
+                    />
+                    <div className="order-first gap-2 flex gap-last">
+                        <button
+                            type="BUTTON"
+                            className={classNames(
+                                'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.VNDC }
+                            )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.VNDC)}
-                        >Futures VNDC</ButtonNao>
-                        <ButtonNao
-                            className={classNames({ '!bg-nao-bg3 !font-normal': filter.marginCurrency !== WalletCurrency.USDT })}
+                        >
+                            Futures VNDC
+                        </button>
+                        <button
+                            type="BUTTON"
+                            className={classNames(
+                                'flex flex-col justify-center h-full px-4 text-sm rounded-[800px] border-[1px] border-divider dark:border-divider-dark cursor-pointer whitespace-nowrap dark:text-txtSecondary-dark text-txtSecondary',
+                                { '!border-teal bg-teal bg-opacity-10 !text-teal font-semibold': filter.marginCurrency === WalletCurrency.USDT }
+                            )}
                             onClick={() => handleChangeMarginCurrency(WalletCurrency.USDT)}
-                        >Futures USDT</ButtonNao>
+                        >
+                            Futures USDT
+                        </button>
                     </div>
                 </div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
                 <CardNao>
-                    <label
-                        className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
+                    <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}</div>
-                        <span
-                            className="text-sm text-nao-grey">{dataSource ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3) : '-'} </span>
+                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
+                            {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
+                        </div>
+                        <span className="text-sm text-grey-1 dark:text-gray-7">
+                            {dataSource
+                                ? '$' + formatPrice(referencePrice[`${assetCodeFromId(filter.marginCurrency)}/USD`] * dataSource?.notionalValue, 3)
+                                : '-'}{' '}
+                        </span>
                     </div>
                 </CardNao>
                 <CardNao>
-                    <label
-                        className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
+                    <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}</div>
-                        <span
-                            className="text-sm text-nao-grey">{dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}</span>
+                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
+                            {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
+                        </div>
+                        <span className="text-sm text-grey-1 dark:text-gray-7">
+                            {dataSource ? formatNumber(dataSource?.userCount, 0) + ' ' + t('nao:onus_performance:users') : '-'}
+                        </span>
                     </div>
                 </CardNao>
                 <CardNao noBg>
                     <div className="flex items-center justify-between">
-                        <label
-                            className="text-nao-text font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
+                        <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
                         <Popover className="relative flex">
-                            {({
-                                open,
-                                close
-                            }) => (
+                            {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div
-                                            className="text-sm px-2 py-1 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
-                                            {filterFeeAsset.find(a => a.id === fee)?.label || '--'}
-                                            <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16"
-                                                 width="16"/>
+                                        <div className="text-sm px-2 py-1 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
+                                            {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
+                                            <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16" />
                                         </div>
                                     </Popover.Button>
                                     <Transition
@@ -276,16 +290,21 @@ const NaoPerformance = memo(() => {
                                         leaveFrom="opacity-100 translate-y-0"
                                         leaveTo="opacity-0 translate-y-1"
                                     >
-                                        <Popover.Panel
-                                            className="absolute top-8 left-0 z-50 bg-nao-bg3 rounded-md mt-1">
-                                            <div
-                                                className="px-2 py-[2] min-w-[72px] shadow-onlyLight font-medium text-xs flex flex-col">
+                                        <Popover.Panel className="absolute top-8 left-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-md mt-1">
+                                            <div className="px-2 py-[2] min-w-[72px] shadow-onlyLight font-medium text-xs flex flex-col">
                                                 {assets.map((item, index) => (
-                                                    <span onClick={() => {
-                                                        setFee(item?.id);
-                                                        close();
-                                                    }} key={index}
-                                                          className={`py-[1px] my-[2px] cursor-pointer ${item?.assetCode === fee ? 'text-nao-white' : 'text-nao-text'}`}>{item?.assetCode}</span>
+                                                    <span
+                                                        onClick={() => {
+                                                            setFee(item?.id);
+                                                            close();
+                                                        }}
+                                                        key={index}
+                                                        className={`py-[1px] my-[2px] cursor-pointer ${
+                                                            item?.assetCode === fee ? 'text-gray-15 dark:text-gray-7' : 'text-gray-1 dark:text-gray-7'
+                                                        }`}
+                                                    >
+                                                        {item?.assetCode}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </Popover.Panel>
@@ -295,16 +314,16 @@ const NaoPerformance = memo(() => {
                         </Popover>
                     </div>
                     <div className="pt-4">
-                        <div
-                            className="text-nao-white text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
-                        <span className="text-sm text-nao-grey">{feeFilter.ratio}%</span>
+                        <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">{feeFilter.total}</div>
+                        <span className="text-sm text-grey-1 dark:text-gray-7">{feeFilter.ratio}%</span>
                     </div>
                 </CardNao>
             </div>
-            {
-                dataSource?.lastTimeUpdate && <div
-                    className="mt-6 text-sm text-nao-grey font-medium leading-6">{t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}</div>
-            }
+            {dataSource?.lastTimeUpdate && (
+                <div className="mt-6 text-sm text-grey-1 dark:text-gray-7 font-medium leading-6">
+                    {t('nao:contest:last_updated_time_dashboard', { minute: 5 })}: {formatTime(new Date(dataSource?.lastTimeUpdate))}
+                </div>
+            )}
         </section>
     );
 });
@@ -324,7 +343,7 @@ const RangePopover = ({
             <>
                 <Popover.Button>
                     <div
-                        className="text-sm pl-4 pr-2 h-10 bg-nao-bg3 rounded-md flex items-center justify-between text-nao-white min-w-[72px]">
+                        className="text-sm pl-4 pr-2 h-10 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
                         <span className="mr-1">{active[language]}</span>
                         <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16"/>
                     </div>
@@ -339,7 +358,7 @@ const RangePopover = ({
                     leaveTo="opacity-0 translate-y-1"
                 >
                     <Popover.Panel
-                        className="absolute min-w-[14.5rem] shadow-onlyLight top-8 left-0 md:left-auto md:right-0 z-50 bg-nao-bg3 rounded-xl mt-3">
+                        className="absolute min-w-[14.5rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl mt-3">
                         <div className="font-medium text-xs flex flex-col">
                             {days.map((day, index) => {
                                 const isActive = active.value === day.value;
@@ -368,9 +387,9 @@ const RangePopover = ({
 };
 
 const Days = styled.div.attrs({
-    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-nao-white text-sm bg-nao-bg3 select-none text-center'
+    className: 'px-4 py-2 rounded-[6px] cursor-pointer text-gray-15 dark:text-gray-7 text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
 })`
-  background: ${({ active }) => active ? colors.nao.blue2 : ''};
+  background: ${({ active }) => active ? colors.dominant : ''};
   font-weight: ${({ active }) => active ? '600' : '400'}
 `;
 

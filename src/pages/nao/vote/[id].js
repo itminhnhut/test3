@@ -119,18 +119,18 @@ export default function Vote() {
         return (
             <>
                 <div className="text-[1.375rem] leading-8 lg:text-xl lg:col-span-2 sm:col-span-3">
-                    <h5 className="text-nao-white sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
+                    <h5 className="text-gray-15 dark:text-gray-7 sm:text-xl lg:text-2xl pt-10 font-semibold mb-5">
                         {t("nao:vote:nao_description")}
                     </h5>
                     <div
-                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7 mb-5"
+                        className="description text-gray-1 dark:text-gray-7 text-sm lg:text-[1rem] leading-7 mb-5"
                         dangerouslySetInnerHTML={{
                             __html:
                                 voteDescription && voteDescription[language],
                         }}
                     ></div>
                     <div
-                        className="description text-nao-grey text-sm lg:text-[1rem] leading-7"
+                        className="description text-gray-1 dark:text-gray-7 text-sm lg:text-[1rem] leading-7"
                         dangerouslySetInnerHTML={{
                             __html: t("nao:vote:vote_notice"),
                         }}
@@ -197,7 +197,7 @@ export default function Vote() {
         <LayoutNaoToken>
             <div className="grid lg:grid-cols-3 gap-8 pr-3 justify-between pt-10 items-start flex-wrap">
                 <div className="lg:col-span-2 sm:col-span-3">
-                    <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                    <h3 className="lg:text-[2.125rem] lg:leading-[3rem] text-[1.625rem] leading-[2.3755rem] font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                         {voteName && voteName[language]}
                     </h3>
 
@@ -207,7 +207,7 @@ export default function Vote() {
                     <CardNao className="!min-h-0 gap-7 lg:w-full !min-w-[280px]">
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem] text-nao-text">
+                                <span className="text-[0.875rem] text-gray-15 dark:text-gray-4">
                                     {t("nao:vote:voted_for")}
                                 </span>
                                 <div className="flex flex-row">
@@ -232,10 +232,10 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.75rem] leading-6">
+                                <span className="text-gray-1 dark:text-gray-7 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                <span className="text-[0.75rem] text-gray-15 dark:text-gray-4">{`${formatNumber(
                                     (totalVoteYes / totalPool) * 100,
                                     2
                                 )}%`}</span>
@@ -243,7 +243,7 @@ export default function Vote() {
                         </div>
                         <div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-[0.875rem] text-nao-text">
+                                <span className="text-[0.875rem] text-gray-15 dark:text-gray-4">
                                     {t("nao:vote:rejected")}
                                 </span>
                                 <div className="flex flex-row">
@@ -269,17 +269,17 @@ export default function Vote() {
                                 />
                             </div>
                             <div className="flex flex-row justify-between">
-                                <span className="text-nao-grey text-[0.75rem] leading-6">
+                                <span className="text-gray-1 dark:text-gray-7 text-[0.75rem] leading-6">
                                     {t("nao:vote:vote_rating")}
                                 </span>
-                                <span className="text-[0.75rem] text-nao-text">{`${formatNumber(
+                                <span className="text-[0.75rem] text-gray-15 dark:text-gray-4">{`${formatNumber(
                                     (totalVoteNo / totalPool) * 100,
                                     2
                                 )}%`}</span>
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem] text-nao-text">
+                            <span className="text-[0.875rem] text-gray-15 dark:text-gray-4">
                                 {t("common:status")}
                             </span>
                             <div className="flex flex-row items-center">
@@ -323,7 +323,7 @@ export default function Vote() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
-                            <span className="text-[0.875rem] text-nao-text">
+                            <span className="text-[0.875rem] text-gray-15 dark:text-gray-4">
                                 {" "}
                                 {t("nao:vote:your_vote")}
                             </span>
@@ -401,28 +401,28 @@ const VoteProposalModal = ({
                 >
                     <div className="rounded-lg pt-10 px-6 pb-[50px] bg-nao-bgModal mx-4 flex flex-col items-center justify-between gap-5">
                         <div className="w-full flex flex-row items-center">
-                            <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                            <h3 className="text-[1.375rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                                 {t("nao:vote:vote_for_proposal")}
                             </h3>
                         </div>
-                        <p className="text-nao-grey text-[0.875rem] leading-6">
+                        <p className="text-gray-1 dark:text-gray-7 text-[0.875rem] leading-6">
                             {summary}
                         </p>
                         <CardNao className="!min-h-0 w-full">
                             <div className="flex flex-row justify-between">
                                 <div className="">
-                                    <span className="font-semibold text-nao-white leading-6">
+                                    <span className="font-semibold text-gray-15 dark:text-gray-7 leading-6">
                                         {t("nao:vote:voting_power")}
                                     </span>
                                     <p
-                                        className="text-sm text-nao-text leading-6"
+                                        className="text-sm text-gray-15 dark:text-gray-4 leading-6"
                                         style={{ lineHeight: "24px" }}
                                     >
                                         {formatTime(new Date(), "dd/MM/yyyy")}
                                     </p>
                                 </div>
                                 <div className="flex flex-row gap-1 items-center">
-                                    <span className="text-nao-white text-lg lg:text-3xl font-semibold">
+                                    <span className="text-gray-15 dark:text-gray-7 text-lg lg:text-3xl font-semibold">
                                         {formatNumber(numberOfNao, 2)}
                                     </span>
                                     <img
@@ -456,7 +456,7 @@ const VoteProposalModal = ({
                             </div>
                         )}
 
-                        <p className="text-nao-grey text-sm">
+                        <p className="text-gray-1 dark:text-gray-7 text-sm">
                             {t("nao:vote:vote_remind")}
                         </p>
                     </div>
@@ -486,12 +486,12 @@ const VoteSuccessModal = ({ onClose, summary, type }) => {
                         <div className="m-auto">
                             <SvgSuccessfulCircle className="w-[80px] h-[80px]" />
                         </div>
-                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-nao-white">
+                        <h3 className="text-[1.375rem] lg:text-[1.5rem] leading-8 font-semibold pb-[6px] max-w-[700px] text-gray-15 dark:text-gray-7">
                             {type
                                 ? t("nao:vote:voted_successfully")
                                 : t("nao:vote:rejected_successfully")}
                         </h3>
-                        <p className="text-nao-grey text-center">{summary}</p>
+                        <p className="text-gray-1 dark:text-gray-7 text-center">{summary}</p>
                         <ButtonNao
                             className="py-2 px-7 !rounded-md text-sm font-semibold leading-6 !bg-[#1A2E41]"
                             onClick={onClose}

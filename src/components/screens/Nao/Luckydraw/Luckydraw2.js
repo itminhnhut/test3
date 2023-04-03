@@ -291,7 +291,7 @@ const Luckydraw = ({ platform }) => {
                         <div
                             className={classNames('text-sm flex items-center justify-center space-x-2', {
                                 'text-darkBlue-5': platform === 'nami',
-                                'text-nao-text2': platform === 'frame',
+                                'text-gray-15 dark:text-gray-42': platform === 'frame',
                                 '!text-xs': xs
                             })}
                         >
@@ -315,7 +315,7 @@ const Luckydraw = ({ platform }) => {
                             <div
                                 className={classNames('text-center text-xs mt-3', {
                                     'text-darkBlue-5': platform === 'nami',
-                                    'text-nao-text2': platform === 'frame'
+                                    'text-gray-15 dark:text-gray-42': platform === 'frame'
                                 })}
                             >
                                 <div>

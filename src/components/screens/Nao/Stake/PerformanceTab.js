@@ -98,7 +98,7 @@ const PerformanceTab = ({
                 </div>
                 <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
             </div>
-            <span className={`text-sm text-nao-grey leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
+            <span className={`text-sm text-gray-1 dark:text-gray-7 leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
                     ${formatNumber((data.estimateUSD?.[assetId] || 0) * (data.percent / 100 || 0), 0)}
                 </span>
         </div>;
@@ -117,7 +117,7 @@ const PerformanceTab = ({
                 </div>
                 <img src={getS3Url(logoPath)} width={20} height={20} alt=""/>
             </div>
-            <span className={`text-sm text-nao-grey leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
+            <span className={`text-sm text-gray-1 dark:text-gray-7 leading-6 ${[72, 86].includes(assetId) ? 'float-right': ''}`}>
                     ${formatNumber((item.interestUSD?.[assetId] || 0), 0)}
                 </span>
         </div>;
@@ -129,10 +129,10 @@ const PerformanceTab = ({
             <>
                 <div>
                     <TextLiner className="pb-1">{t('nao:pool:per_overview')}</TextLiner>
-                    <div className="text-nao-grey text-sm">{t('nao:pool:per_description')}</div>
+                    <div className="text-gray-1 dark:text-gray-7 text-sm">{t('nao:pool:per_description')}</div>
                     <CardNao className="divide-nao-line divide-y mt-6">
                         <div className="pb-4">
-                            <label className="text-nao-text font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
+                            <label className="text-gray-15 dark:text-gray-4 font-medium leading-6 ">{t('nao:pool:total_staked')}</label>
                             <div className="mt-4">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center mr-8">
@@ -141,7 +141,7 @@ const PerformanceTab = ({
                                         <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt=""/>
                                     </div>
                                     <div
-                                        className="text-nao-grey text-sm">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</div>
+                                        className="text-gray-1 dark:text-gray-7 text-sm">{formatNumber(data.totalStaked, assetNao?.assetDigit ?? 8)}</div>
                                 </div>
                                 <div className="my-2">
                                     <div className="w-full bg-[#000000] rounded-lg">
@@ -155,7 +155,7 @@ const PerformanceTab = ({
                         </div>
                         <div className="py-4">
                             <label
-                                className="text-nao-text font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
+                                className="text-gray-15 dark:text-gray-4 font-medium leading-6 ">{t('nao:pool:total_revenue')}</label>
                             <div className="flex items-center mt-4">
                                 <div
                                     className="text-[22px font-semibold leading-8 mr-2">≈ {formatNumber(data.totalProfit, 0)} VNDC
@@ -167,7 +167,7 @@ const PerformanceTab = ({
                             <Tooltip id="tooltip-est-this-week"/>
                             <div className="space-x-2 flex items-center">
                                 <label
-                                    className="text-nao-text font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
+                                    className="text-gray-15 dark:text-gray-4 font-medium leading-6 ">{t('nao:pool:per_est_revenue')}</label>
                                 <div data-tip={t('nao:pool:tooltip_est_this_week')} data-for="tooltip-est-this-week">
                                     <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20}
                                          width={20}/>
@@ -191,7 +191,7 @@ const PerformanceTab = ({
                 </div>
                 <div className="mt-10">
                     <TextLiner className="pb-1">{t('common:transaction_history')}</TextLiner>
-                    <div className="text-nao-grey text-sm">{t('nao:pool:history_description')}</div>
+                    <div className="text-gray-1 dark:text-gray-7 text-sm">{t('nao:pool:history_description')}</div>
                     <Tabs tab={tab}>
                         <TabItem active={tab === 0} onClick={() => onSetTab(0)}>{t('nao:pool:profit')}</TabItem>
                         <TabItem active={tab === 1} onClick={() => onSetTab(1)}>Stake</TabItem>
@@ -204,7 +204,7 @@ const PerformanceTab = ({
                                         <Fragment key={index}>
                                             {index !== 0 && <Divider className="w-full !my-4"/>}
                                             <div>
-                                                <div className="text-nao-grey text-sm">
+                                                <div className="text-gray-1 dark:text-gray-7 text-sm">
                                                     {t('nao:pool:week', { value: listHitory.length - index })} {formatTime(item.fromTime, 'dd/MM/yyyy')} - {formatTime(item.toTime, 'dd/MM/yyyy')}
                                                 </div>
                                                 <div className="mt-1">
@@ -233,7 +233,7 @@ const PerformanceTab = ({
                                     className={`flex items-center justify-center flex-col m-auto h-full min-h-[300px]`}>
                                     <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={130}
                                          height={130}/>
-                                    <div className="text-xs text-nao-grey mt-1">{t('nao:pool:history_nodata')}</div>
+                                    <div className="text-xs text-gray-1 dark:text-gray-7 mt-1">{t('nao:pool:history_nodata')}</div>
                                 </div>
                             </div>
                         }
@@ -250,7 +250,7 @@ const PerformanceTab = ({
                     <div className="text-center mt-6">
                         <TextLiner
                             className="!text-lg !w-full !pb-0 !normal-case">{t('nao:pool:you_not_staked')}</TextLiner>
-                        <div className="text-sm text-nao-grey mt-4">{t('nao:pool:share_revenue_nodata')}</div>
+                        <div className="text-sm text-gray-1 dark:text-gray-7 mt-4">{t('nao:pool:share_revenue_nodata')}</div>
                     </div>
                 </div>
                 <div className={`absolute w-full ${isSmall ? 'bottom-[30px] ' : '-ml-4 bottom-[60px] '}`}>
@@ -270,7 +270,7 @@ const Tabs = styled.div.attrs({
         content: "";
         position: absolute;
         height: 100%;
-        background-color: ${() => colors.nao.blue2};
+        background-color: ${() => colors.dominant};
         transform: ${({ tab }) => `translate(${tab * 100}%,0)`};
         width: calc(100% / 2);
         transition: all 0.2s;
@@ -283,7 +283,7 @@ const TabItem = styled.div.attrs(({ active }) => ({
     className: classnames(
         'py-2 leading-6 w-1/2 h-full flex items-center justify-center z-[2] capitalize ',
         { 'font-semibold': active },
-        { 'text-nao-text font-medium': !active }
+        { 'text-gray-15 dark:text-gray-4 font-medium': !active }
     )
 }))`
 

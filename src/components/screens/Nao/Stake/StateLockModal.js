@@ -132,9 +132,9 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='18' width='18' alt="" />
                     </BackgroundHeader>
                     <div className="px-4 py-6">
-                        <label className="text-nao-green text-2xl font-semibold leading-[50px]">{t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO</label>
+                        <label className="text-teal text-2xl font-semibold leading-[50px]">{t(`nao:pool:${isLock ? 'lock' : 'unlock'}`)} NAO</label>
                         <div className="flex items-center justify-between">
-                            <div className="text-nao-text font-medium leading-6 text-sm">{isLock ? t('nao:pool:input_lock') : t('nao:pool:input_unlock')}</div>
+                            <div className="text-gray-15 dark:text-gray-4 font-medium leading-6 text-sm">{isLock ? t('nao:pool:input_lock') : t('nao:pool:input_unlock')}</div>
                             <div className="flex items-center">
                                 <img src={getS3Url('/images/nao/ic_nao.png')} alt="" width="20" height="20" />
                                 <div className='ml-2 text-lg font-semibold text-nao-blue'>NAO</div>
@@ -148,13 +148,13 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 allowNegative={false}
                                 type="text"
                                 labelClassName="hidden"
-                                className={`flex-grow text-2xl font-semibold text-nao-white w-full `}
+                                className={`flex-grow text-2xl font-semibold text-gray-15 dark:text-gray-7 w-full `}
                                 containerClassName={`w-full border-none !bg-transparent !p-0`}
                                 value={amount}
                                 decimalScale={assetNao?.assetDigit}
                                 onValueChange={onChangeAmount}
                                 renderTail={() => (
-                                    <div className="text-nao-text font-medium text-sm">NAO</div>
+                                    <div className="text-gray-15 dark:text-gray-4 font-medium text-sm">NAO</div>
                                 )}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
@@ -167,7 +167,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                 : <div />
                             }
                             <div className="text-sm font-medium leading-6 flex justify-end">
-                                <div className="text-nao-text">{t('nao:available')}:</div>&nbsp;
+                                <div className="text-gray-15 dark:text-gray-4">{t('nao:available')}:</div>&nbsp;
                                 <span>{formatNumber(balance, assetNao?.assetDigit ?? 0)} NAO</span>
                             </div>
                         </div>
@@ -201,19 +201,19 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                         {isLock &&
                             <div className="mt-8">
                                 <Tooltip id="tooltip-profit-est" />
-                                <label className="text-sm text-nao-text font-medium leading-6">{t('nao:pool:lock_overview')}</label>
+                                <label className="text-sm text-gray-15 dark:text-gray-4 font-medium leading-6">{t('nao:pool:lock_overview')}</label>
                                 <CardNao noBg stroke="1.5" className="mt-2 !py-5 space-y-2">
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:qty_lock')}</div>
+                                        <div className="text-gray-15 dark:text-gray-4 font-medium leading-6">{t('nao:pool:qty_lock')}</div>
                                         <span className="font-semibold">{formatNumber(data?.availableStaked, assetNao?.assetDigit ?? 8)} NAO</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
+                                        <div className="text-gray-15 dark:text-gray-4 font-medium leading-6">{t('nao:pool:est_apy_2')}</div>
                                         <span className="font-semibold">{formatNumber(data?.apy, 2)}%</span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
                                         <div className="space-x-2 flex items-center">
-                                            <div className="text-nao-text font-medium leading-6">{t('nao:pool:est_profit')}</div>
+                                            <div className="text-gray-15 dark:text-gray-4 font-medium leading-6">{t('nao:pool:est_profit')}</div>
                                             <div data-tip={t('nao:pool:tooltip_profit_est')} data-for="tooltip-profit-est" >
                                                 <img className="min-w-[20px]" src={getS3Url('/images/nao/ic_help.png')} height={20} width={20} />
                                             </div>
@@ -221,7 +221,7 @@ const StateLockModal = ({ visible = true, onClose, isLock, onConfirm, assetNao, 
                                         <span className="font-semibold">~{formatNumber(data?.profitEstimated, 0) + ' VNDC'} </span>
                                     </div>
                                     <div className="text-sm flex justify-between items-center">
-                                        <div className="text-nao-text font-medium leading-6">{t('nao:pool:lock_duration')}</div>
+                                        <div className="text-gray-15 dark:text-gray-4 font-medium leading-6">{t('nao:pool:lock_duration')}</div>
                                         <span className="font-semibold">{data?.duration ?? 7} {t('nao:pool:days')}</span>
                                     </div>
                                 </CardNao>
@@ -270,22 +270,22 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
             <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
             <div className='text-sm mt-6 divide-onus-bg2 divide-y '>
                 <div className="flex items-center justify-between pb-3">
-                    <label className="text-nao-grey">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
+                    <label className="text-gray-1 dark:text-gray-7">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
                     <span>{formatNumber(amount, decimal)} NAO</span>
                 </div>
                 {/* <div className="flex items-center justify-between py-3">
-                    <label className="text-nao-grey">{t('nao:pool:est_revenue')}</label>
+                    <label className="text-gray-1 dark:text-gray-7">{t('nao:pool:est_revenue')}</label>
                     <span>{formatNumber(revenue, decimal)} NAO</span>
                 </div> */}
                 <div className="flex items-center justify-between pt-3">
-                    <label className="text-nao-grey">{isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}</label>
+                    <label className="text-gray-1 dark:text-gray-7">{isLock ? t('nao:pool:lock_duration') : t('nao:pool:time_to_get_back')}</label>
                     <span>{isLock ? `${data?.duration ?? 7} ${t('nao:pool:days')}` : formatTime(timeTogetBack, 'HH:mm:ss dd/MM/yyyy')} </span>
                 </div>
             </div>
             {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>
                 <CheckBox onusMode={true} active={checked}
                     boxContainerClassName={`rounded-[2px] ${checked ? '' : '!bg-onus-bg2'}`} />
-                <span className="ml-3 whitespace-nowrap text-nao-grey font-medium text-xs">
+                <span className="ml-3 whitespace-nowrap text-gray-1 dark:text-gray-7 font-medium text-xs">
                     {t('nao:pool:not_show_message')}
                 </span>
             </div> */}

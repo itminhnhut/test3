@@ -155,7 +155,7 @@ const ContestPerRanks = ({
                     id="tooltip-personal-rank"
                 >
                     <div
-                        className="font-medium text-sm text-nao-grey2 "
+                        className="font-medium text-sm text-gray-1 dark:text-gray-72 "
                         dangerouslySetInnerHTML={{
                             __html: minVolumeInd?.isHtml ? t('nao:contest:tooltip_personal', { value: minVolumeInd[language] }) : minVolumeInd[language]
                         }}
@@ -178,11 +178,11 @@ const ContestPerRanks = ({
                     )}
                 </div>
                 <div className="flex items-center gap-3 text-sm">
-                    <ButtonNao onClick={() => onFilter('volume')} className={`px-4 py-2 !rounded-md ${tab === 'volume' ? 'font-semibold' : '!bg-nao-bg3'}`}>
+                    <ButtonNao onClick={() => onFilter('volume')} className={`px-4 py-2 !rounded-md ${tab === 'volume' ? 'font-semibold' : '!bg-gray-12 dark:bg-dark-2'}`}>
                         {t('nao:contest:volume')}
                     </ButtonNao>
                     {showPnl && (
-                        <ButtonNao onClick={() => onFilter('pnl')} className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-nao-bg3'}`}>
+                        <ButtonNao onClick={() => onFilter('pnl')} className={`px-4 py-2 !rounded-md   ${tab === 'pnl' ? 'font-semibold' : '!bg-gray-12 dark:bg-dark-2'}`}>
                             {t('nao:contest:per_pnl')}
                         </ButtonNao>
                     )}
@@ -260,7 +260,7 @@ const ContestPerRanks = ({
             )}
             {width <= 640 ? (
                 <CardNao noBg className="mt-5 !py-[18px] !px-3">
-                    <div className="flex mx-3 gap-4 sm:gap-6 text-nao-grey text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                    <div className="flex mx-3 gap-4 sm:gap-6 text-gray-1 dark:text-gray-7 text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
@@ -269,7 +269,7 @@ const ContestPerRanks = ({
                             dataSource.map((item, index) => {
                                 return (
                                     <div key={index} className={`flex gap-4 sm:gap-6 p-3 ${index % 2 !== 0 ? 'bg-nao/[0.15] rounded-lg' : ''}`}>
-                                        <div className="min-w-[31px] text-nao-grey text-sm font-medium">
+                                        <div className="min-w-[31px] text-gray-1 dark:text-gray-7 text-sm font-medium">
                                             {loading ? (
                                                 <Skeletor width={24} height={24} circle />
                                             ) : item?.[rank] && item?.[rank] <= top_ranks_per ? (
@@ -291,7 +291,7 @@ const ContestPerRanks = ({
                                                         <label className="font-semibold leading-6 capitalize">{capitalize(item?.name)}</label>
                                                         {item?.is_onus_master && <TickFbIcon size={16} />}
                                                     </div>
-                                                    <div className="font-medium leading-6 cursor-pointer text-nao-grey">ID: {item?.onus_user_id}</div>
+                                                    <div className="font-medium leading-6 cursor-pointer text-gray-1 dark:text-gray-7">ID: {item?.onus_user_id}</div>
                                                 </div>
                                                 <div className="">
                                                     <ImageNao
@@ -302,21 +302,21 @@ const ContestPerRanks = ({
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between pt-2 font-medium">
-                                                <label className="leading-6 text-nao-grey">{t('nao:contest:volume')}</label>
+                                                <label className="leading-6 text-gray-1 dark:text-gray-7">{t('nao:contest:volume')}</label>
                                                 <span className="text-right">
                                                     {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                                 </span>
                                             </div>
                                             {!previous && (
                                                 <div className="flex items-center justify-between pt-1 font-medium">
-                                                    <label className="leading-6 text-nao-grey">{t('common:ext_gate:time')}</label>
+                                                    <label className="leading-6 text-gray-1 dark:text-gray-7">{t('common:ext_gate:time')}</label>
                                                     <span className="text-right">
                                                         {formatNumber(item?.time, 2)} {t('common:hours')}
                                                     </span>
                                                 </div>
                                             )}
                                             <div className="flex items-center justify-between pt-1 font-medium">
-                                                <label className="leading-6 text-nao-grey">
+                                                <label className="leading-6 text-gray-1 dark:text-gray-7">
                                                     {t(`nao:contest:${tab === 'pnl' ? 'per_pnl' : 'total_trades'}`)}
                                                 </label>
                                                 {tab === 'pnl' ? (
@@ -334,16 +334,16 @@ const ContestPerRanks = ({
                         ) : (
                             <div className={`flex items-center justify-center flex-col m-auto`}>
                                 <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                                <div className="mt-1 text-xs text-nao-grey">{t('nao:contest:no_rank')}</div>
+                                <div className="mt-1 text-xs text-gray-1 dark:text-gray-7">{t('nao:contest:no_rank')}</div>
                             </div>
                         )}
                     </div>
                 </CardNao>
             ) : (
                 <Table loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={dataSource}>
-                    <Column minWidth={50} className="font-medium text-nao-grey" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
+                    <Column minWidth={50} className="font-medium text-gray-1 dark:text-gray-7" title={t('nao:contest:rank')} fieldName={rank} cellRender={renderRank} />
                     <Column minWidth={200} className="font-semibold capitalize" title={t('nao:contest:name')} fieldName="name" cellRender={renderName} />
-                    <Column minWidth={150} className="text-nao-text" title={'ID NAO Futures'} fieldName="onus_user_id" />
+                    <Column minWidth={150} className="text-gray-15 dark:text-gray-4" title={'ID NAO Futures'} fieldName="onus_user_id" />
                     <Column
                         minWidth={150}
                         align="right"
@@ -386,7 +386,7 @@ const ContestPerRanks = ({
                 </Table>
             )}
             {lastUpdated && lastUpdatedTime.current && (
-                <div className="mt-6 text-sm font-medium leading-6 text-nao-grey">
+                <div className="mt-6 text-sm font-medium leading-6 text-gray-1 dark:text-gray-7">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(lastUpdatedTime.current, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             )}

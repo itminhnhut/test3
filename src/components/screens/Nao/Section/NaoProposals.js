@@ -47,7 +47,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
                         {t("nao:vote:title")}
                         {/* Proposals */}
                     </TextLiner>
-                    <span className="text-nao-grey">
+                    <span className="text-gray-1 dark:text-gray-7">
                         {t("nao:vote:description")}
                         {/* Track proposal statuses and vote on changes. */}
                     </span>
@@ -97,14 +97,14 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         <SvgCancelCircle size={24} className="min-w-[24px]" />
                     )}
 
-                    <span className="text-nao-text font-medium sm:text-lg ml-2">
+                    <span className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}
                     </span>
                 </div>
                 <div className="lg:col-span-1 col-span-3 lg:max-w-[340px]">
                     <div className="flex flex-row justify-between mb-3">
                         <div>
-                            <span className="text-sm text-nao-grey leading-6">
+                            <span className="text-sm text-gray-1 dark:text-gray-7 leading-6">
                                 {t("nao:vote:voted_for")}:
                             </span>
                             <span className="font-semibold ml-2">
@@ -158,7 +158,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         />
                     </div>
                     <div className="flex flex-row justify-between">
-                        <span className="text-nao-grey text-[0.75rem] leading-6">
+                        <span className="text-gray-1 dark:text-gray-7 text-[0.75rem] leading-6">
                             {t("nao:vote:vote_rating")}
                         </span>
                         <div className="flex flex-row gap-2">

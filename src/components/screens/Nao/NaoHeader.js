@@ -88,7 +88,7 @@ const NaoHeader = memo(({ onDownload }) => {
                 className="min-w-[2.5rem]"
             />
             <div
-                className={`flex items-center text-nao-text font-medium ${width > 820 ? "space-x-10" : "space-x-4"
+                className={`flex items-center text-gray-15 dark:text-gray-4 font-medium ${width > 820 ? "space-x-10" : "space-x-4"
                 }`}
             >
                 {width > 820 && (
@@ -128,7 +128,7 @@ const NaoHeader = memo(({ onDownload }) => {
                     <>
                         <ButtonNao
                             onClick={() => router.push("/nao/stake")}
-                            className="!rounded-md h-10 px-6 text-nao-white"
+                            className="!rounded-md h-10 px-6 text-gray-15 dark:text-gray-7"
                         >
                             Stake NAO
                         </ButtonNao>
@@ -211,7 +211,7 @@ const Drawer = ({
                         />
                     </div>
                     <div className="pt-10 px-6 pb-[50px] flex flex-col items-center justify-between h-[calc(100%-65px)] overflow-y-auto">
-                        <div className="text-[1.25rem] font-medium text-nao-text space-y-11 text-center">
+                        <div className="text-[1.25rem] font-medium text-gray-15 dark:text-gray-4 space-y-11 text-center">
                             {category.map((item) => (
                                 <div
                                     key={item.label}
@@ -253,7 +253,7 @@ const Drawer = ({
                                     height="32"
                                     width="32"
                                 />
-                                <div className="text-nao-text text-xs font-semibold ml-2">
+                                <div className="text-gray-15 dark:text-gray-4 text-xs font-semibold ml-2">
                                     {t("nao:nao_token:get_buy_now")}
                                 </div>
                             </div>
@@ -287,9 +287,9 @@ const Drawer = ({
 
 const Language = styled.div.attrs({
     className:
-        "px-3 text-xs py-[3px] md:py-[1px] md:px-4 md:text-sm rounded-[4px] cursor-pointer text-nao-white  font-semibold nao:leading-[26px]",
+        "px-3 text-xs py-[3px] md:py-[1px] md:px-4 md:text-sm rounded-[4px] cursor-pointer text-gray-15 dark:text-gray-7  font-semibold nao:leading-[26px]",
 })`
-  background: ${({ active }) => (active ? colors.nao.blue2 : "")};
+  background: ${({ active }) => (active ? colors.dominant : "")};
 `;
 
 export default NaoHeader;

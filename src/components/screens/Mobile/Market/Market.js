@@ -289,9 +289,9 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                             className={cn(
                                 'h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
                                 {
-                                    'bg-onus-red':
+                                    'bg-red-2':
                                         item.change24h < 0,
-                                    'bg-onus-green':
+                                    'bg-green-2':
                                         item.change24h >= 0,
                                 }
                             )}

@@ -24,11 +24,11 @@ const LuckyInfoModal = ({ visible = true, onClose, volume }) => {
                     <label className='text-[#02FFFE] text-xl leading-7 font-semibold'>{t('nao:luckydraw:conditions')}</label>
                     <div className='pt-[1.125rem]'>{t('nao:luckydraw:ticket_des', { vndc: '100,000,000', nao: '100' })}</div>
                     <div className='pt-10'>
-                        <div className="text-nao-text2 text-sm leading-5">{t('nao:luckydraw:vol_trade')}</div>
+                        <div className="text-gray-15 dark:text-gray-42 text-sm leading-5">{t('nao:luckydraw:vol_trade')}</div>
                         <div className="font-semibold leading-6 pt-2">{formatNumber(volume, 0)} VNDC</div>
                     </div>
                     <div className='pt-6 w-full'>
-                        <div className='flex items-center justify-between text-nao-text2 text-xs pb-2'>
+                        <div className='flex items-center justify-between text-gray-15 dark:text-gray-42 text-xs pb-2'>
                             <div>{formatNumber(volume, 0)}</div>
                             <div>100,000,000</div>
                         </div>

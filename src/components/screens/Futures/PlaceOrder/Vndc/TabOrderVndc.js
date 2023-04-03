@@ -14,7 +14,7 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                         'mr-[-1px] spot-place-orders-tab capitalize text-txtSecondary dark:text-txtSecondary-dark block--left',
                         {
                             ' active z-[2]': side === VndcFutureOrderType.Side.BUY,
-                            '!bg-onus-green': side === VndcFutureOrderType.Side.BUY && isMobile,
+                            '!bg-green-2': side === VndcFutureOrderType.Side.BUY && isMobile,
                             'dark:bg-bgInput-dark bg-bgInput': !isMobile,
                             'bg-onus-input': isMobile
                         },
@@ -26,7 +26,7 @@ const TabOrderVndc = ({ side, setSide, className = '', isMobile, height = 32 }) 
                 </div>
                 <svg
                     style={{ height: height }}
-                    className={`!w-[34px] spot-place-orders-tab arrow z-[1] 
+                    className={`!w-[34px] spot-place-orders-tab arrow z-[1]
                     ${side === VndcFutureOrderType.Side.SELL ? 'sell' : 'buy'} ${isMobile ? 'bg-onus-input ' : 'dark:bg-bgInput-dark bg-bgInput'}`}
                     preserveAspectRatio="none"
                     xmlns="http://www.w3.org/2000/svg"

@@ -213,7 +213,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         type="primary"
                         componentType="button"
                         title={t(`futures:mobile.close_all_positions.preview`)}
-                        className="!rounded-md text-nao-white! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
+                        className="!rounded-md text-gray-15 dark:text-gray-7! !h-12 mt-8 !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                 </div>
             </Modal>
@@ -269,7 +269,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         onClick={() => doShow('choose')}
                         componentType="button"
                         title={t('common:back')}
-                        className="!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
+                        className="!rounded-md text-gray-15 dark:text-gray-7! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                     <Button
                         disabled={state?.orders?.length === 0}
@@ -278,7 +278,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         type="primary"
                         componentType="button"
                         title={t('common:confirm')}
-                        className={`!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]`}
+                        className={`!rounded-md text-gray-15 dark:text-gray-7! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]`}
                     />
                 </div>
             </Modal>
@@ -385,7 +385,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         onClick={() => doShow('choose')}
                         componentType="button"
                         title={t('common:back')}
-                        className="!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
+                        className="!rounded-md text-gray-15 dark:text-gray-7! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                     <Button
                         onusMode
@@ -393,7 +393,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         type="primary"
                         componentType="button"
                         title={t('common:confirm')}
-                        className="!rounded-md text-nao-white! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
+                        className="!rounded-md text-gray-15 dark:text-gray-7! !text-base !font-semibold !leading-[22px] !tracking-[-0.02em]"
                     />
                 </div>
             </Modal>
@@ -414,5 +414,3 @@ export default CloseOrdersByCondtionMobile;
 const IsMoreIcon = <svg width="12" height="6" viewBox="0 0 12 6" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M6.28138 5.7215C6.12551 5.87578 5.87449 5.87578 5.71862 5.7215L0.629212 0.684296C0.375223 0.432913 0.553236 -1.08813e-06 0.910592 -1.05689e-06L11.0894 -1.67029e-07C11.4468 -1.35788e-07 11.6248 0.432913 11.3708 0.684297L6.28138 5.7215Z" fill="#8492A7" />
 </svg>
-
-

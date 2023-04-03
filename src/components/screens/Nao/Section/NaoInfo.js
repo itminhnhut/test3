@@ -17,32 +17,32 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
         <section id="nao_info" className="flex items-center justify-between pt-10 sm:pt-20 flex-wrap gap-8">
             <div className="flex items-center">
                 <BackgroundImage>
-                    <img src={getS3Url('/images/nao/ic_nao_large.png')} className='w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]' alt="" />
+                    <img src={getS3Url('/images/nao/ic_nao_large.png')} className="w-[62px] h-[62px] sm:w-[80px] sm:h-[80px]" alt="" />
                 </BackgroundImage>
                 <div className="flex flex-col justify-between leading-10">
                     <div>
-                        <div className="text-2xl sm:text-[2.25rem] font-semibold text-nao-white">{t('nao:project_info')}</div>
+                        <div className="text-2xl sm:text-[2.25rem] font-semibold text-gray-15 dark:text-gray-7">{t('nao:project_info')}</div>
                         <div className="text-lg sm:text-[1.25rem] flex items-center pt-1 flex-wrap">
                             <label className="text-nao-blue uppercase text-[1.25re] font-semibold">NAO</label>
                             <span className="mx-2">•</span>
-                            <div className="font-light text-nao-white capitalize">Nami frame futures</div>
+                            <div className="font-light text-gray-15 dark:text-gray-7 capitalize">Nami frame futures</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="flex bg-nao-bg2 rounded-xl p-6 sm:px-8 sm:py-[26px] flex-1 sm:flex-none flex-col sm:flex-row">
+            <div className="flex bg-white dark:bg-nao-bg2 bg-nao-corner-mb md:bg-nao-corner bg-full rounded-xl p-6 sm:px-8 sm:py-[26px] flex-1 sm:flex-none flex-col sm:flex-row">
                 <div className="flex flex-col">
-                    <label className="text-nao-text font-medium sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
+                    <label className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
                     <div className="">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center mr-8">
                                 <span className="font-semibold mr-1 leading-7">22,250,000</span>
-                                <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
+                                <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                             </div>
-                            <div className="text-nao-grey text-sm">100,000,000</div>
+                            <div className="text-gray-1 dark:text-gray-7 text-sm">100,000,000</div>
                         </div>
                         <div className="my-2">
-                            <div className="w-full bg-[#000000] rounded-lg">
+                            <div className="w-full bg-gray-11 dark:bg-dark-1 rounded-lg">
                                 <Progressbar percent={(22250000 / 100000000) * 100} />
                             </div>
                         </div>
@@ -50,34 +50,34 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                     </div>
                 </div>
                 <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-nao-line sm:mx-6 my-6 sm:my-0"></div>
-                <div className='flex flex-col justify-between gap-3'>
+                <div className="flex flex-col justify-between gap-3">
                     <div className="flex items-center justify-between text-sm space-x-10">
-                        <label className="text-nao-text font-medium">{t('nao:holders_wallet')}</label>
+                        <label className="text-gray-15 dark:text-gray-4 font-medium">{t('nao:holders_wallet')}</label>
                         <div className="flex items-center space-x-2">
-                            {
-                                ammData
-                                    ?<div className='font-semibold'>{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
-                                    :<div className='font-semibold'>-</div>
-                            }
-                            <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
+                            {ammData ? (
+                                <div className="font-semibold">{formatNumber(holders_wallet, assetNao?.assetDigit ?? 8)}</div>
+                            ) : (
+                                <div className="font-semibold">-</div>
+                            )}
+                            <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between text-sm space-x-10">
-                        <label className="text-nao-text font-medium">{t('nao:liq_pools')}</label>
+                        <label className="text-gray-15 dark:text-gray-4 font-medium">{t('nao:liq_pools')}</label>
                         <div className="flex items-center space-x-2">
-                            {
-                                ammData
-                                    ?<div className='font-semibold'>{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
-                                    :<div className='font-semibold'>-</div>
-                            }
-                            <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
+                            {ammData ? (
+                                <div className="font-semibold">{formatNumber(ammData, assetNao?.assetDigit ?? 8)}</div>
+                            ) : (
+                                <div className="font-semibold">-</div>
+                            )}
+                            <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                         </div>
                     </div>
                     <div className="flex items-center justify-between text-sm space-x-10">
-                        <label className="text-nao-text font-medium">{t('nao:governance_pool')}</label>
+                        <label className="text-gray-15 dark:text-gray-4 font-medium">{t('nao:governance_pool')}</label>
                         <div className="flex items-center space-x-2">
-                            <div className='font-semibold'>{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
-                            <img src={getS3Url("/images/nao/ic_nao.png")} width={16} height={16} alt="" />
+                            <div className="font-semibold">{formatNumber(dataSource?.totalStaked, assetNao?.assetDigit ?? 8)}</div>
+                            <img src={getS3Url('/images/nao/ic_nao.png')} width={16} height={16} alt="" />
                         </div>
                     </div>
                 </div>

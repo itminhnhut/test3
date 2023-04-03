@@ -78,7 +78,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                 return (
                                     isMobile ?
                                         <CardNao noBg className="mb-[16px] px-[4px] py-[16px] !max-w-[330px]" key={item._id}>
-                                            <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
+                                            <div className="flex px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-nao-grey/[0.2] items-center align-middle w-full h-full min-h-[56px]">
                                                 <div className='h-[48px] w-[48px] flex justify-center items-center'>
                                                     <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                                 </div>
@@ -86,12 +86,12 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                     <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                         {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                     </div>
-                                                    <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                    <div className='uppercase h-auto flex items-center leading-8 text-teal font-semibold text-base'>
                                                         {item.group_name}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
+                                            <div className="flex pt-[8px] px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-nao-grey/[0.2] h-full w-full justify-between">
                                                 <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
@@ -102,7 +102,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                         </CardNao>
                                         :
                                         <CardNao noBg className="!flex !flex-row mb-[16px] !min-h-[100px] !py-[8px] !px-[12px]" key={item._id}>
-                                            <div className="flex px-3 gap-4 sm:gap-6 text-nao-white text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
+                                            <div className="flex px-3 gap-4 sm:gap-6 text-gray-15 dark:text-gray-7 text-sm font-medium border-nao-grey/[0.2] items-center align-middle h-full">
                                                 <div className='h-[48px] w-[48px] flex justify-center items-center'>
                                                     <ImageNao src={item.group_avatar} className="rounded-[50%] h-full w-full object-cover" />
                                                 </div>
@@ -110,12 +110,12 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                     <div className='h-auto font-normal capitalize flex items-center text-xs leading-6'>
                                                         {LeaderFlag} {t('nao:contest:team_lead')}: {capitalize(item.leader_name)}
                                                     </div>
-                                                    <div className='uppercase h-auto flex items-center leading-8 text-nao-green font-semibold text-base'>
+                                                    <div className='uppercase h-auto flex items-center leading-8 text-teal font-semibold text-base'>
                                                         {item.group_name}
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center pt-[8px] gap-[16px] text-nao-white text-sm font-medium border-nao-grey/[0.2] h-full justify-evenly">
+                                            <div className="flex items-center pt-[8px] gap-[16px] text-gray-15 dark:text-gray-7 text-sm font-medium border-nao-grey/[0.2] h-full justify-evenly">
                                                 <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
@@ -165,4 +165,3 @@ const LeaderFlag = <svg className="mr-1" width="14" height="16" viewBox="0 0 14 
         </linearGradient>
     </defs>
 </svg>
-
