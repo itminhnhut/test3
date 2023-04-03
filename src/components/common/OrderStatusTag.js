@@ -8,6 +8,7 @@ import Skeletor from './Skeletor';
 import { isNull, isUndefined } from 'lodash';
 
 const OrderStatusTag = ({ icon = true, className, status }) => {
+    // if(!status) return null;
     const { t } = useTranslation();
 
     const { PENDING, SUCCESS, REJECTED, DISPUTED } = PartnerOrderStatus;
@@ -16,17 +17,17 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
     switch (status) {
         case PENDING:
             type = TYPES.WARNING;
-            label = t('common:pending');
+            label = t('common:processing');
             break;
         case SUCCESS:
             type = TYPES.SUCCESS;
-            label = t('common:success');
+            label = t('transaction-history:completed');
             break;
         case REJECTED:
             type = TYPES.FAILED;
             label = (
                 <div className="flex items-center gap-x-2">
-                    <CancelCircleFillIcon size={16} /> {t('common:declined')}
+                    {icon && <CancelCircleFillIcon size={16} />} {t('common:denined')}
                 </div>
             );
             break;
@@ -34,7 +35,7 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             type = TYPES.FAILED;
             label = (
                 <div className="flex items-center gap-x-2">
-                    <BxsErrorAltIcon size={16} /> {t('common:disputing')}
+                    {icon && <BxsErrorAltIcon size={16} />} {t('common:disputing')}
                 </div>
             );
             break;
@@ -42,9 +43,11 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
             break;
     }
 
-    return <TagV2 icon={icon} className={`ml-auto ${className}`} type={type}>
-        {label}
-    </TagV2>;
+    return (
+        <TagV2 icon={icon} className={`ml-auto ${className}`} type={type}>
+            {label}
+        </TagV2>
+    );
 };
 
 export default OrderStatusTag;

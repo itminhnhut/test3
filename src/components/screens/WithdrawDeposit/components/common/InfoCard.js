@@ -4,15 +4,16 @@ import classNames from 'classnames';
 import { DefaultAvatar } from 'src/redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { BxsUserIcon } from 'components/svg/SvgIcon';
+import { useTranslation } from 'next-i18next';
 
 const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
-        <div className="flex items-center space-x-3 ">
-            <div style={{ minWidth: imgSize, minHeight: imgSize }}>
-                {image ?? <Image src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
+        <div className="flex items-center space-x-3">
+            <div style={{ width: imgSize, height: imgSize }}>
+                {image ?? <Image className="rounded-full" src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
             </div>
 
-            <div className="">
+            <div>
                 <div className="txtPri-1 mb-2 text-left line-clamp-2">{mainContent}</div>
                 <div className="txtSecond-3">{subContent}</div>
             </div>
@@ -20,7 +21,9 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     );
 };
 
-const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) => {
+const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, emptyContent }) => {
+    const { t } = useTranslation();
+
     return (
         <div
             className={classNames('flex justify-between w-full', {
@@ -41,12 +44,12 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) 
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    mainContent={'Đối tác'}
-                    subContent={'Không có đối tác khả dụng'}
+                    mainContent={emptyContent?.mainContent || t('dw_partner:partner')}
+                    subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />
             ) : (
                 <>
-                    <CardContent imgSize={imgSize} mainContent={content.mainContent} subContent={content.subContent} />
+                    <CardContent imgSize={imgSize} imageSrc={content?.imgSrc} mainContent={content.mainContent} subContent={content.subContent} />
                     {endIcon}
                 </>
             )}

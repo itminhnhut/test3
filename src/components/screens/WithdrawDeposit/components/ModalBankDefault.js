@@ -14,7 +14,7 @@ import toast from 'utils/toast';
 import { filterSearch } from 'redux/actions/utils';
 import NoData from 'components/common/V2/TableV2/NoData';
 
-const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch }) => {
+const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch, t }) => {
     const [search, setSearch] = useState('');
     const [bankAccountId, setBankAccountId] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -86,7 +86,8 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch 
                                                 </TagV2>
                                             )}
                                         </div>
-                                    )
+                                    ),
+                                    imgSrc: bank?.bankLogo
                                 }}
                                 endIcon={
                                     bank._id === bankAccountId && (
@@ -109,7 +110,7 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch 
                     disabled={!filter.length || !bankAccountId || (filter.length && bankAccountId === filter.find((bank) => bank.isDefault)?._id)}
                     loading={loading}
                 >
-                    Đặt làm mặc định
+                    {t('dw_partner:set_as_default')}
                 </ButtonV2>
             </div>
         </ModalV2>

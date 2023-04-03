@@ -13,14 +13,17 @@ export const initialState = {
     accountBank: null,
     partnerBank: null,
     partner: null,
-    loadingPartner: false
+    loadingPartner: false,
+    minimumAllowed: 0,
+    maximumAllowed: 0
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
         case types.SET_WITHDRAW_DEPOSIT_AMOUNT:
             return { ...state, input: action.payload };
-
+        case types.SET_ALLOWED_AMOUNT:
+            return { ...state, minimumAllowed: action.payload.min, maximumAllowed: action.payload.max };
         case types.SET_LOADING_PARTNER:
             return { ...state, loadingPartner: action.payload };
 

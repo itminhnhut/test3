@@ -1,9 +1,9 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { shortHashAddress, getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
+import { getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
@@ -13,24 +13,19 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, user) => [
+const getColumns = (t, user, side) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
         title: t('common:transaction_id'),
-        align: 'center',
+        align: 'left',
         width: 150,
         fixed: 'left',
-        render: (v) => (
-            // <div className="flex items-center gap-x-2">
-            //     <span>{shortHashAddress(v, 8, 6)}</span>
-            //     <CopyIcon data={v} size={16} className="cursor-pointer" />
-            // </div>
-            <TextCopyable className="gap-x-1" showingText={v} text={v} />
-        )
+        render: (v) => <TextCopyable className="gap-x-1" showingText={v} text={v} />
     },
     {
         key: 'baseAssetId',
@@ -67,28 +62,37 @@ const getColumns = (t, user) => [
         title: t('common:from'),
         align: 'left',
         width: 189,
-        render: (v) => (
-            <div className="">
-                <div className="txtPri-2 mb-1">{v?.name}</div>
-                <div className="txtSecond-3">{v?.code}</div>
-            </div>
-        )
+        render: (v) =>
+            side === SIDE.SELL ? (
+                <>
+                    <div className="txtPri-2 mb-1">{v?.name}</div>
+                    <div className="txtSecond-3">{v?.code}</div>
+                </>
+            ) : (
+                <>
+                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
+                    <div className="txtSecond-3">{user?.code}</div>
+                </>
+            )
     },
     {
-        key: '_',
-        dataIndex: '_',
+        key: 'partnerMetadata',
+        dataIndex: 'partnerMetadata',
         title: t('common:to'),
         align: 'left',
         width: 189,
-        render: (row) => {
-            // const config = assetConfig?.find((e) => e?.id === item?.currency);
-            return (
-                <div className="">
+        render: (v) =>
+            side === SIDE.BUY ? (
+                <>
+                    <div className="txtPri-2 mb-1">{v?.name}</div>
+                    <span className="txtSecond-3">{v?.code}</span>
+                </>
+            ) : (
+                <>
                     <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <div className="txtSecond-3">{user?.code}</div>
-                </div>
-            );
-        }
+                    <span className="txtSecond-3">{user?.code}</span>
+                </>
+            )
     },
     {
         key: 'status',
@@ -96,7 +100,7 @@ const getColumns = (t, user) => [
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 182,
-        render: (v) => <OrderStatusTag status={v} />
+        render: (v) => <OrderStatusTag status={v} icon={false} />
     }
 ];
 
@@ -111,6 +115,7 @@ const HistoryTable = () => {
     const [activeTab, setActiveTab] = useState(TABS[0].key);
     const [dataTable, setDataTable] = useState([]);
     const [hasNext, setHasNext] = useState(false);
+    const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
 
@@ -127,7 +132,8 @@ const HistoryTable = () => {
                     lastId: dataTable[dataTable.length - 1]?._id ?? null,
                     mode: 'user',
                     side,
-                    status: activeTab === 0 ? null : TABS[activeTab]?.status
+                    status: activeTab === 0 ? null : TABS[activeTab]?.status,
+                    ...curSort
                 }
             })
                 .then(({ data: res }) => {
@@ -148,20 +154,28 @@ const HistoryTable = () => {
         };
 
         fetchData();
-    }, [activeTab, currentPage]);
+    }, [activeTab, currentPage, curSort]);
 
-    // useEffect(() => {
-    //     setCurrentPage(0);
-    //     fetchData();
-    // }, [activeTab]);
+    useEffect(() => {
+        setCurrentPage(0);
+    }, [curSort]);
 
-    // useEffect(() => {
-    //     fetchData();
-    // }, [currentPage]);
+    const customSort = (tableSorted) => {
+        const output = {};
+
+        for (const key in tableSorted) {
+            if (tableSorted.hasOwnProperty(key)) {
+                output.sortBy = key;
+                output.sortType = tableSorted[key] ? 1 : -1;
+            }
+
+            setCurSort(output);
+        }
+    };
 
     return (
         <div className="space-y-6">
-            <div className="txtPri-3 ">Lịch sử lệnh</div>
+            <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>
             <TabV2
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
@@ -170,23 +184,20 @@ const HistoryTable = () => {
                 }}
                 tabs={TABS.map((tab) => ({
                     key: tab.key,
-                    children: <div className="">{tab.localized}</div>
+                    children: <div>{t(tab.localized)}</div>
                 }))}
             />
             <TableV2
-                // sort={['created_at']}
+                sort={['quoteQty']}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
                 data={dataTable}
-                columns={getColumns(t, user)}
+                columns={getColumns(t, user, side)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={loadingDataTable}
-                onRowClick={(transaction) => {
-                    router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId);
-                    console.log('transaction:', transaction);
-                }}
+                onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
                 className="border border-divider dark:border-divider-dark rounded-lg pt-4"
                 tableStyle={{
@@ -200,7 +211,8 @@ const HistoryTable = () => {
                     onChangeNextPrev: (e) => setCurrentPage((prevPage) => prevPage + e),
                     language
                 }}
-                emptyTextContent={'Không có giao dịch nào'}
+                emptyTextContent={t('common:no_data')}
+                customSort={customSort}
             />
         </div>
     );

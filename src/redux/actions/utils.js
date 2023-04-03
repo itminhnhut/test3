@@ -223,6 +223,16 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
+    const isVNDC = assetCode === 'VNDC';
+    const isUSDT = assetCode === 'USDT';
+    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+};
+
+export const getExactBalanceFiat = (balance, assetCode) => {
+    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
+    return roundByExactDigit(balance, digit);
+};
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
@@ -797,6 +807,20 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
+export function dwLinkBuilder(type, side, payload) {
+    // Deposit: BUY
+    // Withdraw: SELL
+    switch (type) {
+        case 'crypto':
+            if (side === 'BUY') return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
+            else return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
+        case 'partner':
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side.toUpperCase()}`;
+        default:
+            break;
+    }
+}
+
 export function setTransferModal(payload) {
     // source look like
     // payload = {
@@ -1193,10 +1217,46 @@ export const getOffsetEl = (el) => {
     return { w: width, h: height };
 };
 
+export function parseUnormStr(input) {
+    //Đổi chữ hoa thành chữ thường
+    let slug = input.toLowerCase();
+
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    slug = slug.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/gi, ''); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    slug = slug.replace(/\u02C6|\u0306|\u031B/gi, ''); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+
+    // Bỏ dấu câu, kí tự đặc biệt
+    slug = slug.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ');
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, ' ');
+
+    // Bỏ các khoảng trắng liền nhau
+    slug = slug.replace(/ + /g, ' ');
+    slug = slug.trim();
+
+    return slug;
+}
+
 export const filterSearch = (originDataset, keys, searchValue) => {
-    const lowercaseSearch = searchValue.toLowerCase();
-    const copyDataSet = cloneDeep(originDataset);
-    return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
+    if (!searchValue) return originDataset;
+
+    return originDataset.filter((item) => {
+        for (const key of keys) {
+            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+        }
+        return false;
+    });
+    // const lowercaseSearch = searchValue.toLowerCase();
+    // const copyDataSet = cloneDeep(originDataset);
+    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
 };
 
 export const saveFile = (file, name) => {
@@ -1211,3 +1271,4 @@ export const saveFile = (file, name) => {
 };
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);

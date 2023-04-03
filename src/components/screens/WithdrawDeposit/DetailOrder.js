@@ -11,34 +11,17 @@ import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } f
 import { getAssetCode } from 'redux/actions/utils';
 
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_KEY, REPORT_ABLE_TIME, DisputedType, TranferreredType, MODE } from './constants';
+import { MODAL_KEY, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
-import Countdown from 'react-countdown';
-import toast from 'utils/toast';
 import classNames from 'classnames';
-import Custom404 from 'pages/404';
+import { useBoolean } from 'react-use';
+import ModalLoading from 'components/common/ModalLoading';
+import AppealButton from './components/AppealButton';
+import NeedLoginV2 from 'components/common/NeedLoginV2';
+import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
-};
-
-const ReportButtonRender = ({ timeExpire, onMarkWithStatus }) => {
-    return timeExpire ? (
-        <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
-            {(props) => (
-                <ButtonV2
-                    disabled={props.total > REPORT_ABLE_TIME * 1000}
-                    onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
-                    className="px-6 disabled:!cursor-default"
-                    variants="secondary"
-                >
-                    Khiếu nại
-                </ButtonV2>
-            )}
-        </Countdown>
-    ) : (
-        <></>
-    );
 };
 
 const GroupInforCard = dynamic(() => import('./GroupInforCard'), { ssr: false });
@@ -48,7 +31,6 @@ const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', {
 
 const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
-    // const user = useSelector((state) => state.auth.user) || null;
     const userSocket = useSelector((state) => state.socket.userSocket);
 
     const [currentTheme] = useDarkMode();
@@ -67,6 +49,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
+    const [refetch, toggleRefetch] = useBoolean(false);
+    const [isRefetchOrderDetailAfterCountdown, setIsRefetchOrderDetailAfterCountdown] = useState(false);
 
     const side = state.orderDetail?.side;
     const status = useMemo(
@@ -89,19 +73,27 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             }
         }));
 
-    const { onMarkWithStatus } = useMarkOrder({ baseQty: state.orderDetail?.baseQty, id, assetCode, setModalPropsWithKey, side, mode });
+    const { onMarkWithStatus } = useMarkOrder({
+        baseQty: state.orderDetail?.baseQty,
+        id,
+        assetCode,
+        assetId: state.orderDetail?.baseAssetId,
+        setModalPropsWithKey,
+        side,
+        mode,
+        toggleRefetch
+    });
 
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                setState({
-                    orderDetail: data
-                });
-
-                // const { status } = data;
-                // if (status === PartnerOrderStatus.SUCCESS) {
-                //     toast({ text: `Lệnh ${id} đã được hoàn thành`, type: 'success' });
-                // }
+                // make sure the socket displayingId is the current details/[id] page
+                if (data && data.displayingId === id) {
+                    setState({
+                        orderDetail: data
+                    });
+                    setIsRefetchOrderDetailAfterCountdown(false);
+                }
             });
         }
         return () => {
@@ -129,6 +121,9 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         setState({
                             orderDetail: data
                         });
+                        if (data?.status !== PartnerOrderStatus.PENDING) {
+                            setIsRefetchOrderDetailAfterCountdown(false);
+                        }
                     }
                 } catch (error) {
                     console.log('error:', error);
@@ -138,7 +133,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             }
         };
         fetchData(id);
-    }, [id]);
+    }, [id, refetch]);
 
     const onOpenChat = () => {
         if (window?.fcWidget?.isOpen()) return;
@@ -168,14 +163,20 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Từ chối giao dịch'
+                                    text: t('cancel_order')
                                 };
                             } else {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                    text: 'Tôi đã nhận tiền'
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                                reportBtn = (
+                                    <AppealButton
+                                        onMarkWithStatus={onMarkWithStatus}
+                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        timeExpire={state.orderDetail?.timeExpire}
+                                    />
+                                );
                             }
                         }
                         // user logic
@@ -185,11 +186,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     secondaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                        text: 'Huỷ giao dịch'
+                                        text: t('common:cancel_order')
                                     };
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                        text: t('wallet:transfer_already')
+                                        text: t('dw_partner:transfer_already')
                                     };
                                     return;
                                 }
@@ -197,7 +198,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                                     primaryBtn = {
                                         function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                                     };
                                 }
                             }
@@ -214,11 +215,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Từ chối giao dịch'
+                                    text: t('cancel_order')
                                 };
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
-                                    text: 'Xác nhận'
+                                    text: t('common:confirm')
                                 };
 
                                 return;
@@ -228,7 +229,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
                                     function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.partnerUploadImage ? 'Chỉnh sửa hình ảnh' : 'Tải ảnh lên'
+                                    text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                                 };
                             }
                         } else {
@@ -236,7 +237,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
-                                    text: 'Huỷ giao dịch'
+                                    text: t('common:cancel_order')
                                 };
 
                                 return;
@@ -245,9 +246,15 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
-                                    text: 'Tôi đã nhận tiền'
+                                    text: t('dw_partner:take_money_already')
                                 };
-                                reportBtn = <ReportButtonRender timeExpire={state.orderDetail?.timeExpire} />;
+                                reportBtn = (
+                                    <AppealButton
+                                        onMarkWithStatus={onMarkWithStatus}
+                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        timeExpire={state.orderDetail?.timeExpire}
+                                    />
+                                );
                             }
                         }
                     }
@@ -258,7 +265,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         return (
             <div className="flex gap-x-4">
                 {primaryBtn && (
-                    <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px]', primaryBtn?.class)}>
+                    <ButtonV2 onClick={primaryBtn?.function} className={classNames('min-w-[286px] px-6', primaryBtn?.class)}>
                         {/* //!whitespace-nowrap px-[62.5px] */}
                         {primaryBtn?.text}
                     </ButtonV2>
@@ -272,18 +279,38 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 {reportBtn}
             </div>
         );
-    }, [mode, state?.orderDetail]);
+    }, [mode, state?.orderDetail, t]);
+    const notes = { __html: t('dw_partner:notes') };
+
+    // Handle not Login or not KYC:
+    const auth = useSelector((state) => state.auth.user) || null;
+
+    if (!auth) {
+        return (
+            <div className="h-[480px] flex items-center justify-center">
+                <NeedLoginV2 addClass="flex items-center justify-center" />
+            </div>
+        );
+    }
+
+    if (auth && auth?.kyc_status !== 2) return <ModalNeedKyc isOpenModalKyc={true} />;
+    // End handle not Login || not KYC
 
     return (
         <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
                 <GroupInforCard
+                    mode={mode}
                     assetCode={assetCode}
                     t={t}
                     orderDetail={state.orderDetail}
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
                     status={status}
+                    refetchOrderDetail={() => {
+                        toggleRefetch();
+                        setIsRefetchOrderDetailAfterCountdown(true);
+                    }}
                 />
                 {/* Lưu ý */}
                 {side === SIDE.BUY && (
@@ -293,12 +320,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             <span>{t('wallet:note')}</span>
                         </div>
                         <div className="txtSecond-2 mt-2">
-                            Sử dụng mã QR hoặc sao chép thông tin để chuyển khoản:
-                            <ul className="list-disc ml-6 marker:text-xs">
-                                <li>Đúng số tiền</li>
-                                <li>Đúng nội dung</li>
-                                <li>Thực hiện hành động chuyển khoản trong vòng 15 phút sau khi nhấn nút “Tôi đã chuyển khoản” để lệnh không bị huỷ.</li>
-                            </ul>
+                            <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
                         </div>
                     </div>
                 )}
@@ -320,9 +342,9 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 <ModalQr
                     isVisible={state.isShowQr}
                     onClose={() => setState({ isShowQr: false })}
-                    qrCodeUrl={'awegawge'}
                     bank={state.orderDetail?.transferMetadata}
                     amount={state.orderDetail?.baseQty}
+                    t={t}
                 />
             )}
             {/*Modal confirm the order */}
@@ -341,6 +363,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 orderId={id}
                 originImage={state?.orderDetail?.userUploadImage}
             />
+            <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
         </div>
     );
 };

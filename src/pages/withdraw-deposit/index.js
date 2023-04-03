@@ -78,7 +78,7 @@ export const getServerSideProps = async (context) => {
               }
             : {}),
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner']))
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner', 'transaction-history']))
         }
     };
 };

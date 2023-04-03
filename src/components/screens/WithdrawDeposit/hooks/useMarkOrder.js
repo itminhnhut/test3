@@ -1,15 +1,16 @@
 import React from 'react';
-import { DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
-import { markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
+import { approveOrder, markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
-const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode }) => {
+const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode, toggleRefetch }) => {
     const { t } = useTranslation();
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
         let isRejected = false;
         const isPartner = mode === MODE.PARTNER;
+        const isApprove = statusType === TranferreredType[mode].TAKE;
 
         switch (userStatus) {
             case PartnerPersonStatus.DISPUTED:
@@ -23,7 +24,9 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_SUCCESS;
                         additionalData = {
-                            displayingId: id
+                            displayingId: id,
+                            side,
+                            assetId
                         };
                         isRejected = true;
                         break;
@@ -44,7 +47,11 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
             setModalPropsWithKey(MODAL_KEY.CONFIRM, {
                 loading: true
             });
-            const data = isRejected ? await rejectOrder({ displayingId: id, mode }) : await markOrder({ displayingId: id, userStatus, mode });
+            const data = isRejected
+                ? await rejectOrder({ displayingId: id, mode })
+                : isApprove
+                ? await approveOrder({ displayingId: id, mode })
+                : await markOrder({ displayingId: id, userStatus, mode });
             if (data && data.status === ApiStatus.SUCCESS) {
                 // close confirm modal
                 setModalPropsWithKey(MODAL_KEY.CONFIRM, {
@@ -58,6 +65,8 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
                     type,
                     additionalData
                 });
+
+                toggleRefetch();
             } else {
                 setModalPropsWithKey(MODAL_KEY.CONFIRM, {
                     loading: false,
@@ -105,7 +114,7 @@ const useMarkOrder = ({ id, assetCode, setModalPropsWithKey, side, baseQty, mode
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, side: t(`payment-method:${side.toLowerCase()}`) };
+                        additionalData = { token: assetCode, side: side };
                         break;
                     default:
                         break;

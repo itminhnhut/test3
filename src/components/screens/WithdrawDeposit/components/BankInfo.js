@@ -16,7 +16,10 @@ export const BankInfo = ({
     selectedBank,
     onSelect,
     showTag = false,
-    additionalActions
+    additionalActions,
+    t,
+    showDropdownIcon,
+    disabled
 }) => {
     const [search, setSearch] = useState('');
     return (
@@ -25,24 +28,23 @@ export const BankInfo = ({
             containerClassname={containerClassname}
             loading={loading}
             loadingList={loadingBanks}
+            showDropdownIcon={showDropdownIcon}
+            disabled={disabled}
             label={
                 <>
                     {showTooltip && (
                         <Tooltip place="top" effect="solid" isV3 id="payment-method-description">
-                            <div className="max-w-[300px] py-3 text-sm z-50">
-                                Số tiền cần chuyển phải được chuyển vào tài khoản của đối tác trong vòng 15 phút kể từ khi xác nhận để giao dịch được diễn ra
-                                thành công.
-                            </div>
+                            <div className="max-w-[300px] py-3 text-sm z-50">{t('dw_partner:payment_method_description')}</div>
                         </Tooltip>
                     )}
 
                     <div data-tip="" className="inline-flex !cursor-default" data-for="payment-method-description" id="payment-method-description">
-                        <div className={classNames({ 'nami-underline-dotted': showTooltip })}>Phương thức thanh toán</div>
+                        <div className={classNames({ 'nami-underline-dotted': showTooltip })}>{t('dw_partner:payment_method')}</div>
                     </div>
                 </>
             }
             imgSize={40}
-            data={banks && filterSearch(banks, ['bankName', 'bankKey'], search)}
+            data={banks && filterSearch(banks, ['bankName', 'bankKey', 'accountNumber'], search)}
             search={search}
             setSearch={setSearch}
             onSelect={onSelect ? (bank) => onSelect(bank) : undefined}
@@ -57,6 +59,10 @@ export const BankInfo = ({
                     ),
                     imgSrc: selectedBank?.bankLogo
                 },
+                emptyContent: {
+                    mainContent: t('dw_partner:bank'),
+                    subContent: t('dw_partner:no_bank')
+                },
                 item: (item) => {
                     return (
                         <InfoCard
@@ -68,7 +74,7 @@ export const BankInfo = ({
 
                                         {showTag && item.isDefault && (
                                             <TagV2 icon={false} type="success">
-                                                Mặc định
+                                                {t('dw_partner:default')}
                                             </TagV2>
                                         )}
                                     </div>
