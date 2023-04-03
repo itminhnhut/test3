@@ -168,7 +168,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
 
                                         // if(detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
-                                            
+
                                         //     priorityKey = get(detailTx, 'result.categoy')
                                         // }
                                         formatKeyData = (
@@ -297,27 +297,30 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         : t('transaction-history:modal_detail.list_assets_convert')}
                                 </div>
                                 <div className="p-4  space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
-                                    {(
-                                        (detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && detailTx?.additionalData?.assets) 
-                                        // ||
-                                        // (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
-                                    )?.map((asset) => {
-                                        const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
-                                        const isUSDT = _.assetCode === 'USDT';
-                                        const isVNDC = _.assetCode === 'VNDC';
-                                        return (
-                                            <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
-                                                <div className="">{_?.assetCode || NULL_ASSET}</div>
-                                                <div className={classNames('font-semibold')}>
-                                                    {isVNDC
-                                                        ? customFormatBalance(asset.value, 0, true)
-                                                        : isUSDT
-                                                        ? customFormatBalance(asset.value, 4, true)
-                                                        : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                    {detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE &&
+                                        detailTx?.additionalData?.assets
+                                            // ||
+                                            // (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
+                                            ?.map((asset) => {
+                                                const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
+                                                const isUSDT = _.assetCode === 'USDT';
+                                                const isVNDC = _.assetCode === 'VNDC';
+                                                return (
+                                                    <div
+                                                        key={_?.id}
+                                                        className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center"
+                                                    >
+                                                        <div className="">{_?.assetCode || NULL_ASSET}</div>
+                                                        <div className={classNames('font-semibold')}>
+                                                            {isVNDC
+                                                                ? customFormatBalance(asset.value, 0, true)
+                                                                : isUSDT
+                                                                ? customFormatBalance(asset.value, 4, true)
+                                                                : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                 </div>
                             </div>
                         )}
