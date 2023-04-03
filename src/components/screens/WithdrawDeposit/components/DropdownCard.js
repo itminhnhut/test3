@@ -47,6 +47,7 @@ const DropdownCard = ({
                         <InfoCard
                             loading={loading}
                             content={selected.content}
+                            emptyContent={selected.emptyContent}
                             imgSize={imgSize}
                             endIcon={loadingList ?  <Spinner size={20} color="currentColor" /> : showDropdownIcon ? <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} /> : null}
                         />
