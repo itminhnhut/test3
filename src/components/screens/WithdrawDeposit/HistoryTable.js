@@ -54,8 +54,7 @@ const getColumns = (t, user, side) => [
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        // render: (v) => formatNumber(v)
-        render: (v) => formatNumber(10000000000)
+        render: (v) => formatNumber(v)
     },
     {
         key: 'partnerMetadata',
