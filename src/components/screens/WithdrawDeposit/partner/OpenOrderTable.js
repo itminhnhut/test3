@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TableV2 from 'components/common/V2/TableV2';
 import Countdown from 'react-countdown';
 import CircleCountdown from '../components/common/CircleCountdown';
