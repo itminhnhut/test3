@@ -14,13 +14,20 @@ const CryptoDeposit = dynamic(() => import('components/screens/WithdrawDeposit/u
     ssr: false
 });
 
-const PartnerDepositWithdraw = ({ type, side }) => {
+const CryptoWithdraw = dynamic(() => import('components/screens/WithdrawDeposit/users/Crypto/Withdraw'), {
+    ssr: false
+});
+
+const WithdrawDeposit = dynamic(() => import('components/screens/WithdrawDeposit'), {
+    ssr: false
+});
+
+const PartnerDepositWithdraw = ({ type, side, assetId }) => {
     return (
         <MaldivesLayout>
             <UserWD id={type}>
-                {type === TYPE_DW.CRYPTO && (side === SIDE.BUY ? <CryptoDeposit /> : <>CryptoWithdraw</>)}
-                {type === TYPE_DW.PARTNER && (side === SIDE.BUY ? <>PartnerBuy</> : <>PartnerSell</>)}
-                {/* {url === PATHS.WITHDRAW_DEPOSIT.PARTNER && <div>DW partner</div>} */}
+                {type === TYPE_DW.CRYPTO && (side === SIDE.BUY ? <CryptoDeposit assetId={assetId} /> : <CryptoWithdraw assetId={assetId} />)}
+                {type === TYPE_DW.PARTNER && <WithdrawDeposit />}
             </UserWD>
         </MaldivesLayout>
     );
@@ -39,7 +46,8 @@ export const getServerSideProps = async (context) => {
         props: {
             ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner'])),
             type,
-            side
+            side,
+            assetId
         }
     };
 };

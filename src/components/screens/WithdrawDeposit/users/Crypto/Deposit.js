@@ -20,7 +20,6 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import QRCode, { QRCodeSVG } from 'qrcode.react';
 import Empty from 'components/common/Empty';
-
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import Axios from 'axios';
@@ -34,7 +33,6 @@ import format from 'date-fns/format';
 import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -233,7 +231,7 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
     );
 };
 
-const CryptoDeposit = () => {
+const CryptoDeposit = ({ assetId }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const [status, setStatus] = useState(null);
@@ -244,7 +242,6 @@ const CryptoDeposit = () => {
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
 
     // Use Hooks
-    const router = useRouter();
     const focused = useWindowFocus();
     const [currentTheme] = useDarkMode();
     const {
@@ -782,15 +779,15 @@ const CryptoDeposit = () => {
     }, [state.selectedNetwork, state.selectedAsset]);
 
     useEffect(() => {
-        const asset = get(router?.query, 'asset', 'VNDC');
+        // const asset = get(router?.query, 'asset', 'VNDC');
 
-        if (paymentConfigs && asset) {
-            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === asset);
+        if (paymentConfigs && assetId) {
+            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === assetId);
             const defaultNetwork = selectedAsset?.networkList?.find((o) => o.isDefault) || selectedAsset?.networkList?.[0];
             selectedAsset && setState({ selectedAsset });
             defaultNetwork && setState({ selectedNetwork: defaultNetwork });
         }
-    }, [router, paymentConfigs]);
+    }, [assetId, paymentConfigs]);
 
     useEffect(() => {
         let interval;
