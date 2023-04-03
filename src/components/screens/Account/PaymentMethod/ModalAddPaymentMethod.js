@@ -145,8 +145,9 @@ const ModalAddPaymentMethod = ({ isOpenModalAdd, onBackdropCb, t, isDark, user, 
                 >
                     <div className="w-full border p-6 rounded-xl border-green-border_light dark:border-none flex items-center gap-x-3">
                         {user?.avatar ? (
-                            <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
+                            <img src={user?.avatar} alt="avatar_user" className="rounded-full w-12 h-12 bg-cover" />
                         ) : (
+                            // <Image width={48} height={48} objectFit="cover" src={user?.avatar} alt="avatar_user" className="rounded-full" />
                             <BxsUserCircle size={48} />
                         )}
                         <div>
