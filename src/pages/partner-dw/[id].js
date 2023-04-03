@@ -3,6 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PATHS } from 'constants/paths';
+import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -16,7 +17,7 @@ const PartnerDepositWithdraw = ({ id, url }) => {
         <MaldivesLayout>
             <PartnerWD>
                 {url === PATHS.PARNER_WITHDRAW_DEPOSIT.OPEN_ORDER && <OpenOrderTable />}
-                {url === PATHS.PARNER_WITHDRAW_DEPOSIT.STATS && <div>Hello</div>}
+                {url === PATHS.PARNER_WITHDRAW_DEPOSIT.STATS && <TabStatistic />}
             </PartnerWD>
         </MaldivesLayout>
     );
