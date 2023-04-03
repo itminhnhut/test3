@@ -27,7 +27,6 @@ export default PartnerDepositWithdraw;
 
 export const getServerSideProps = async (context) => {
     const { id } = context.params;
-    console.log('__________here: ', context?.url, context?.resolvedUrl);
 
     const existedId = Object.values(PATHS.PARNER_WITHDRAW_DEPOSIT).reduce((result, path) => {
         return result || id === path.replace(PATHS.PARNER_WITHDRAW_DEPOSIT.DEFAULT, '');
