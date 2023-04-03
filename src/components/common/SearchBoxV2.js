@@ -19,14 +19,14 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChan
                 }
                 value={value}
                 onChange={(e) => {
-                    onChange(e?.target?.value?.trim());
+                    onChange(e?.target?.value?.trimStart());
                 }}
                 placeholder={placeholder || t('common:search')}
                 onFocus={onFocus}
             />
             <CloseIcon
                 size={width ? (width >= 768 ? 20 : 16) : 20}
-                className={`cursor-pointer ${value ? 'visible' : 'invisible'}`}
+                className={`cursor-pointer ${value ? 'opacity-100' : 'opacity-0'}`}
                 onClick={() => onChange('')}
             />
         </div>

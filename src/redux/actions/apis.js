@@ -63,6 +63,11 @@ export const API_GET_PAYMENT_CONFIG = API_V3_PREFIX + 'payment/config';
 export const API_WITHDRAW_v3 = API_V3_PREFIX + 'payment/withdraw';
 export const API_GET_DEPWDL_HISTORY = API_V3_PREFIX + 'payment/deposit_withdraw_history';
 export const API_WITHDRAW_V4 = API_V3_PREFIX + 'payment/withdraw_v4';
+export const API_DEFAULT_BANK_USER = API_V3_PREFIX + 'payment/default_user_bank_accounts';
+export const API_GET_USER_BANK_LIST = API_V3_PREFIX + 'payment/user_bank_accounts';
+export const API_GET_BANK_ACCOUNT_NAME = API_V3_PREFIX + 'payment/bank_account_name';
+export const API_GET_BANK_AVAILABLE = API_V3_PREFIX + 'payment/available_banks';
+export const API_ADD_USER_BANK_ACCOUNT = API_PREFIX + 'deposit/add_user_bank_account';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';

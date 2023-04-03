@@ -107,7 +107,7 @@
         "transfer_source_wallet_issues": "Vui lòng chọn ví nguồn",
         "transfer_destination_wallet_issues": "Vui lòng chọn ví đích",
         "invalid_amount": "Giá trị không hợp lệ",
-        "invalid_kyc_status": "Bạn cần hoàn tất xác thực tài khoản (KYC) để thực hiện thao tác này. Tham khảo thêm.",
+        "invalid_kyc_status": "Vui lòng xác minh tài khoản để tiếp tục sử dụng tính năng.",
         "decimal_scale_limit": "Số lượng rút có phần thập phân tối đa 8 chữ số",
         "withdraw_disabled": "Chức năng Rút hiện đang bảo trì, vui lòng thử lại sau.",
         "minimum_amount": "Số lượng tối thiểu {{min}}",
