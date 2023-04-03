@@ -59,6 +59,10 @@ export const BankInfo = ({
                     ),
                     imgSrc: selectedBank?.bankLogo
                 },
+                emptyContent: {
+                    mainContent: t('dw_partner:bank'),
+                    subContent: t('dw_partner:no_bank')
+                },
                 item: (item) => {
                     return (
                         <InfoCard

@@ -36,12 +36,12 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
     const { t } = useTranslation();
-    const auth = useSelector((state) => state.auth) || null;
+    let auth = useSelector((state) => state.auth) || null;
     const otpInputRef = useRef();
+    const parentTfaRef = useRef();
 
     // set focus on first input
     const onFocusFirstInput = () => otpInputRef?.current?.focusInput(0);
-
     const isTfaEnabled = auth.user?.isTfaEnabled;
 
     useEffect(() => {
@@ -66,6 +66,12 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
             [mode]: formatVal
         };
         setState({ otp: newOtp });
+
+        // change focus to first tfa input
+        if (mode === 'email' && formatVal.length === OTP_REQUIRED_LENGTH && isTfaEnabled) {
+            const input = parentTfaRef.current?.firstChild?.firstChild?.firstChild;
+            input.focus();
+        }
 
         if (isValidInput(newOtp)) {
             setTimeout(async () => await onConfirmHandler(newOtp), 100);
@@ -95,6 +101,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
 
     return (
         <ModalV2
+            animateModal={false}
             isVisible={isVisible}
             wrapClassName=""
             onBackdropCb={() => {
@@ -117,7 +124,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
             )}
         >
             {state.modes.map((mode) => (
-                <>
+                <div key={mode}>
                     <div className={classNames('mb-6', { '!mb-8': isTfaEnabled })}>
                         {mode === 'email' && <div className="txtPri-3 mb-4"> {t('dw_partner:verify')}</div>}
                         {mode === 'email' && (
@@ -132,24 +139,28 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
                             {mode === 'email' ? 'Mã xác thực được gửi tới email của bạn' : t('dw_partner:verify_2fa')}
                         </div>
                     )}
-                    <OtpInput
-                        ref={mode === 'email' ? otpInputRef : undefined}
-                        value={state.otp?.[mode]}
-                        onChange={(val) => onChangeHandler(val, mode)}
-                        numInputs={OTP_REQUIRED_LENGTH}
-                        placeholder={'------'}
-                        isInputNum={true}
-                        containerStyle="mb-7 w-full justify-between"
-                        inputStyle={classNames(
-                            '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 '
-                        )}
-                        focusStyle={classNames('border ', {
-                            '!border-red': state.isError,
-                            '!border-teal': !state.isError
-                        })}
-                        hasErrored={state.isError}
-                        errorStyle={classNames('border-red border')}
-                    />
+                    <div ref={mode === 'tfa' ? parentTfaRef : undefined}>
+                        <OtpInput
+                            key={mode}
+                            ref={mode === 'email' ? otpInputRef : undefined}
+                            value={state.otp?.[mode]}
+                            onChange={(val) => onChangeHandler(val, mode)}
+                            numInputs={OTP_REQUIRED_LENGTH}
+                            placeholder={'------'}
+                            isInputNum={true}
+                            containerStyle="mb-7 w-full justify-between"
+                            inputStyle={classNames(
+                                '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 ',
+                                {
+                                    'focus:!border-teal': !state.isError,
+                                    '!border-red': state.isError
+                                }
+                            )}
+                            shouldAutoFocus={mode === 'email'}
+                            hasErrored={state.isError}
+                            errorStyle={classNames('border-red border')}
+                        />
+                    </div>
 
                     <div
                         className={classNames('flex items-center', {
@@ -198,7 +209,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
                             </ButtonV2>
                         </div>
                     </div>
-                </>
+                </div>
             ))}
 
             <div className="mt-[52px]">

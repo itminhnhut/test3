@@ -21,7 +21,7 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     );
 };
 
-const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) => {
+const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, emptyContent }) => {
     const { t } = useTranslation();
 
     return (
@@ -44,8 +44,8 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading }) 
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    mainContent={t('dw_partner:partner')}
-                    subContent={t('dw_partner:no_partner')}
+                    mainContent={emptyContent?.mainContent || t('dw_partner:partner')}
+                    subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />
             ) : (
                 <>
