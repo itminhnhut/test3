@@ -43,9 +43,9 @@ const SpotOrderList = (props) => {
             }
         ];
         return (
-            <Tabs tab={activeTab} className="gap-8 border-b border-divider dark:border-divider-dark px-6">
+            <Tabs tab={activeTab} className="gap-6 border-b border-divider dark:border-divider-dark px-6">
                 {tabs?.map((tab) => (
-                    <TabItem key={tab.value} V2 className="!text-left !px-0" value={tab.value} onClick={(isClick) => isClick && setActiveTab(tab.value)}>
+                    <TabItem key={tab.value} V2 className="!text-left !px-0 !text-sm" value={tab.value} onClick={(isClick) => isClick && setActiveTab(tab.value)}>
                         {tab.label}
                     </TabItem>
                 ))}

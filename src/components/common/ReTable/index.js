@@ -426,6 +426,7 @@ const ReTableWrapperV2 = styled.div`
         z-index: 15;
         ::after {
             visibility: ${({ shadowWithFixedCol }) => (shadowWithFixedCol ? 'visible' : 'hidden')};
+            ${({ empty }) => (empty ? { height: '100%', minHeight: '0px !important' } : '')};
             /* box-shadow: ${({ isDark }) => (isDark ? 'inset -10px 0 8px -8px #263459' : 'inset -10px 0 8px -8px #f2f4f6')} !important; */
         }
     }
