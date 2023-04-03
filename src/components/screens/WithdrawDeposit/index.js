@@ -25,7 +25,7 @@ const WithdrawDeposit = () => {
                             </div>
                         </div>
                     </div>
-                    {/* <HistoryTable /> */}
+                    <HistoryTable />
                 </div>
             ) : (
                 <div className="h-[480px] flex items-center justify-center">
