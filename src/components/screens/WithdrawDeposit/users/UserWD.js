@@ -32,18 +32,6 @@ const TABS = [
     }
 ];
 
-const getTitle = (type, side, t) => {
-    switch (type) {
-        case TYPE_DW.CRYPTO:
-            return side === SIDE.BUY ? t('common:deposit') : t('common:withdraw');
-        case TYPE_DW.PARTNER:
-            // return side === SIDE.BUY ? t('dw_partner:buy_title') : t('dw_partner:sell_title');
-            return side === SIDE.BUY ? t('common:buy') : t('common:sell');
-        default:
-            return t('common:deposit');
-    }
-};
-
 const UserWD = ({ type, children, side }) => {
     const {
         t,
