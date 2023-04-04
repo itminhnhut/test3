@@ -123,7 +123,7 @@ export const ORDER_TYPES = {
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
         showConfirm: ({ router, t, assetId, side }) => {
             return (
-                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
+                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>
             );
