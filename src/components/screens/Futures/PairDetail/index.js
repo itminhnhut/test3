@@ -41,7 +41,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [lastPriceMinW, setLastPriceMinW] = useState(0);
 
     const [activePairList, setActivePairList] = useState(false);
-    const [pairListMode, setPairListMode] = useState('');
+    const [pairListMode, setPairListMode] = useState(pairConfig?.quoteAsset);
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
     // state, vars for information modal (Trading rules)
