@@ -54,9 +54,7 @@ const getColumns = (t, user, side) => [
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        render: (v, item) => {
-            return formatNumber(v);
-        }
+        render: (v) => formatNumber(v)
     },
     {
         key: 'partnerMetadata',
@@ -185,7 +183,7 @@ const HistoryTable = () => {
                 }))}
             />
             <TableV2
-                sort={['quoteQty']}
+                sort={['baseQty']}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
