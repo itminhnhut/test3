@@ -44,7 +44,7 @@ function TagV2({ type = TYPES.DEFAULT, children, className = '', icon = true }) 
             className={classnames(
                 className,
                 `flex items-center leading-7 rounded-full w-fit px-3 md:px-4 py-1 ${
-                    style?.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
+                    style && style?.backgroundColor ? style.backgroundColor : 'bg-gray-11 dark:bg-divider-dark/[0.5]'
                 }`
             )}
         >

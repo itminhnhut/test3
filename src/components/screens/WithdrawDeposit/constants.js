@@ -120,7 +120,12 @@ export const ORDER_TYPES = {
         icon: ICONS['SUCCESS'],
         title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
         description: ({ displayingId, amount, asset, side, t }) =>
-            t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
+            t('dw_partner:cancel_order_success', {
+                orderId: displayingId,
+                amount: amount,
+                asset: asset,
+                side: t(`common:${side.toLowerCase()}`).toLowerCase()
+            }),
         showConfirm: ({ router, t, assetId, side }) => {
             return (
                 <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
