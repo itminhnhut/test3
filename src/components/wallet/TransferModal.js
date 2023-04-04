@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, formatWallet, getLoginUrl, setTransferModal, walletLinkBuilder } from 'redux/actions/utils';
 import { WalletType } from 'redux/actions/const';
 import { useTranslation } from 'next-i18next';
 import { POST_WALLET_TRANSFER } from 'redux/actions/apis';
@@ -26,6 +26,8 @@ import HrefButton from 'components/common/V2/ButtonV2/HrefButton';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import SwapWarning from 'components/svg/SwapWarning';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const DEFAULT_STATE = {
     fromWallet: WalletType.SPOT,
@@ -741,7 +743,8 @@ const TransferModal = ({ isMobile, alert }) => {
                         {renderAvailableWallet()}
                         <AddCircleColorIcon
                             className="cursor-pointer"
-                            onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            // onClick={() => handleKycRequest(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }))}
+                            onClick={() => handleKycRequest(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}
                         />
                     </div>
                 </div>

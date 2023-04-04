@@ -480,11 +480,19 @@ const CheckedDoubleIcon = ({ color, size }) => (
     </svg>
 );
 
-const BxsBookIcon = ({ size, color, ...props }) => (
-    <svg {...props} width={size || 12} height={size || 12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+const BxsBookIcon = ({ size, color, isButton, className, ...props }) => (
+    <svg
+        {...props}
+        className={`${!isButton ? (color ? color : 'text-[#8694B3]') : ''} ${className}`}
+        width={size || 12}
+        height={size || 12}
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             d="M3.006 9H10.5V2a1 1 0 0 0-1-1H3c-.603 0-1.5.4-1.5 1.5v7c0 1.1.897 1.5 1.5 1.5h7.5v-1H3.006c-.231-.006-.506-.098-.506-.5s.275-.494.506-.5zM4 3h4.5v1H4V3z"
-            fill={color || '#8694B3'}
+            fill="currentColor"
         />
     </svg>
 );

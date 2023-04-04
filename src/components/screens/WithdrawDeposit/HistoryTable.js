@@ -49,12 +49,14 @@ const getColumns = (t, user, side) => [
         render: (v) => formatTime(v, 'HH:mm:ss dd/MM/yyyy')
     },
     {
-        key: 'quoteQty',
-        dataIndex: 'quoteQty',
+        key: 'baseQty',
+        dataIndex: 'baseQty',
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        render: (v) => formatNumber(v)
+        render: (v, item) => {
+            return formatNumber(v);
+        }
     },
     {
         key: 'partnerMetadata',

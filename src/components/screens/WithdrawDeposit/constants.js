@@ -17,6 +17,11 @@ export const MODE = {
     PARTNER: 'partner'
 };
 
+export const TYPE_DW = {
+    PARTNER: 'partner',
+    CRYPTO: 'crypto'
+};
+
 export const TranferreredType = {
     //user-to-partner
     [MODE.USER]: {
@@ -105,11 +110,11 @@ export const ORDER_TYPES = {
         showConfirm: true
     },
     TRANSFERRED_SUCCESS: {
+        isHideBtnConfirm: true,
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
         description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
-            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công',
-        showConfirm: false
+            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công'
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
