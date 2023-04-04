@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ALLOWED_ASSET, ALLOWED_ASSET_ID, TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { WalletCurrency } from 'utils/reference-utils';
 
 const UserWD = dynamic(() => import('components/screens/WithdrawDeposit/users/UserWD'), {
     ssr: false
@@ -25,7 +26,7 @@ const WithdrawDeposit = dynamic(() => import('components/screens/WithdrawDeposit
 const PartnerDepositWithdraw = ({ type, side, assetId }) => {
     return (
         <MaldivesLayout>
-            <UserWD id={type}>
+            <UserWD type={type} side={side}>
                 {type === TYPE_DW.CRYPTO && (side === SIDE.BUY ? <CryptoDeposit assetId={assetId} /> : <CryptoWithdraw assetId={assetId} />)}
                 {type === TYPE_DW.PARTNER && <WithdrawDeposit />}
             </UserWD>
@@ -44,7 +45,7 @@ export const getServerSideProps = async (context) => {
     return {
         ...(redirectUrl ? { redirect: { destination: redirectUrl, permanent: false } } : {}),
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner'])),
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner', 'transaction-history'])),
             type,
             side,
             assetId
@@ -57,20 +58,22 @@ const redirectFormatting = (side = 'BUY', assetId, type) => {
         if (type === TYPE_DW.PARTNER && ALLOWED_ASSET[+assetId]) {
             return null;
         }
-        if (type === TYPE_DW.CRYPTO && +assetId) {
+        if (type === TYPE_DW.CRYPTO && WalletCurrency[assetId]) {
             return null;
         }
     }
 
     let sideFormat = SIDE.BUY;
-    let assetIdFormat = ALLOWED_ASSET_ID['VNDC'];
+    let assetIdFormat = type === TYPE_DW.PARTNER ? ALLOWED_ASSET_ID['VNDC'] : 'USDT';
 
-    if (SIDE[side.toUpperCase()]) {
-        sideFormat = side.toUpperCase();
+    if (SIDE[side?.toUpperCase()]) {
+        sideFormat = side?.toUpperCase();
     }
 
     if (type === TYPE_DW.PARTNER && ALLOWED_ASSET[+assetId]) {
         assetIdFormat = assetId;
+    } else if (type === TYPE_DW.CRYPTO && WalletCurrency[assetId?.toUpperCase()]) {
+        assetIdFormat = assetId?.toUpperCase();
     }
 
     const baseUrl = type === TYPE_DW.CRYPTO ? PATHS.WITHDRAW_DEPOSIT.DEFAULT : PATHS.WITHDRAW_DEPOSIT.PARTNER;

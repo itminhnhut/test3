@@ -54,6 +54,8 @@
     "mins": "phút",
     "set_as_default": "Đặt làm mặc định",
     "disputed_success": "Bạn đã khiếu nại thành công giao dịch {{orderId}}",
+    "dw_title": "Nạp/Rút",
+    "deposit_withdraw_guide": "Hướng dẫn nạp/rút tài sản",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",

@@ -36,6 +36,8 @@ import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -835,7 +837,7 @@ const ExchangeDeposit = () => {
                         <div
                             className="flex items-center font-semibold text-teal cursor-pointer"
                             onClick={() => {
-                                router.push(dwLinkBuilder('partner', 'BUY'));
+                                router.push(dwLinkBuilder(TYPE_DW.PARTNER, SIDE.BUY));
                             }}
                         >
                             <span className="mr-2">{t('dw_partner:buy_title')}</span>

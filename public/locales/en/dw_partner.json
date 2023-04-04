@@ -54,6 +54,8 @@
     "mins": "mins",
     "set_as_default": "Set as Default",
     "disputed_success": "Transaction {{orderId}} has been disputed successfully",
+    "dw_title": "Deposit/Withdraw",
+    "deposit_withdraw_guide": "Deposit and withdraw guides",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",

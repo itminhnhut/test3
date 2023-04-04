@@ -26,6 +26,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import EstBalance from 'components/common/EstBalance';
 import NoData from 'components/common/V2/TableV2/NoData';
 import TransferSmallBalanceToNami from 'components/common/TransferSmallBalanceToNami';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     hideSmallAsset: false,
@@ -345,11 +347,12 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder('partner', 'BUY'))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}>
                     {t('common:deposit')}
                 </ButtonV2>
                 <ButtonV2
-                    onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    // onClick={() => router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }))}
+                    onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL))}
                     className="px-6"
                     variants="secondary"
                 >
@@ -415,10 +418,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     <button
                         onClick={() =>
                             router.push(
-                                walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                    type: 'crypto',
-                                    asset: curAssetCodeAction
-                                })
+                                dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, curAssetCodeAction)
+                                // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                //     type: 'crypto',
+                                //     asset: curAssetCodeAction
+                                // })
                             )
                         }
                     >
@@ -427,10 +431,11 @@ const ExchangeWallet = ({ allAssets, estBtc, estUsd, usdRate, marketWatch, isSma
                     <button
                         onClick={() =>
                             router.push(
-                                walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
-                                    type: 'crypto',
-                                    asset: curAssetCodeAction
-                                })
+                                dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, curAssetCodeAction)
+                                // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, {
+                                //     type: 'crypto',
+                                //     asset: curAssetCodeAction
+                                // })
                             )
                         }
                     >
@@ -744,7 +749,8 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li
                     className={cssLi}
                     onClick={() =>
-                        router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, item?.assetCode || assetName))
                     }
                 >
                     {utils?.translator('common:deposit')}
@@ -752,7 +758,8 @@ const RenderOperationLink2 = ({ isShow, onClick, item, popover, assetName, utils
                 <li
                     className={cssLi}
                     onClick={() =>
-                        router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto', asset: item?.assetCode || assetName }))
+                        router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL, item?.assetCode || assetName))
                     }
                 >
                     {utils?.translator('common:withdraw')}
