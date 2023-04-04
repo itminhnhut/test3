@@ -7,6 +7,8 @@ import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
 
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
+    if (!isOpenModalKyc) return null;
+
     const { t } = useTranslation(['common', 'wallet']);
     const [currentLocale] = useLanguage();
     const { width } = useWindowSize();

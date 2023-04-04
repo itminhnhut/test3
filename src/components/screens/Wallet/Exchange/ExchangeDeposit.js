@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
+import { dwLinkBuilder, formatTime, formatWallet, getS3Url, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Check, ChevronLeft, ChevronRight, Search, Slash, X } from 'react-feather';
@@ -36,6 +36,8 @@ import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -831,14 +833,14 @@ const ExchangeDeposit = () => {
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className="mal-container px-4">
                     <div className="flex items-center justify-between mb-10">
-                        <span className="font-semibold text-[2rem] leading-[3rem]">{t('common:deposit')}</span>
+                        <span className="font-semibold text-[2rem] leading-[3rem]">{`${t('common:buy')} Crypto`}</span>
                         <div
                             className="flex items-center font-semibold text-teal cursor-pointer"
                             onClick={() => {
-                                router.push(PATHS.WALLET.EXCHANGE.WITHDRAW + '?asset=' + state.selectedAsset?.assetCode);
+                                router.push(dwLinkBuilder(TYPE_DW.PARTNER, SIDE.BUY));
                             }}
                         >
-                            <span className="mr-2">{t('wallet:withdraw_crypto')}</span>
+                            <span className="mr-2">{t('dw_partner:buy_title')}</span>
                             <ChevronRight size={16} color={colors.teal} />
                         </div>
                     </div>

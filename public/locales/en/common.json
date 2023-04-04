@@ -96,7 +96,7 @@
     "canceled": "Canceled",
     "last_price": "Last Price",
     "action": "Action",
-    "transaction_history": "Transaction history",
+    "transaction_history": "Transaction History",
     "max": "Max",
     "min": "Min",
     "back": "Back",
@@ -217,7 +217,7 @@
         "buy_nami": "Mua ${currency}",
         "login": "Đăng nhập",
         "close": "Đóng",
-        "confirm": "Xác nhận",
+        "confirm": "Confirm",
         "next": "Tiếp tục",
         "prev": "Trở lại",
         "cancel": "Huỷ bỏ",
@@ -388,5 +388,8 @@
     "amount_of_asset": "Number of assets",
     "amount_of_estimate_nami": "Estimated quantity",
     "view_detail": "View details",
-    "convert_fail": "Conversion failed"
+    "convert_fail": "Conversion failed",
+    "disputing": "Disputing",
+    "denined": "Denied",
+    "processing": "Processing"
 }

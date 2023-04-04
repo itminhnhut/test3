@@ -171,7 +171,7 @@ const Market = () => {
         const q = subTab[state.subTabIndex].key.toUpperCase()
         if (q === 'ALL') return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b))
         return state?.exchangeMarket?.filter(e => suggestedSymbols.includes(e.b) && e.q === q)
-    }, [state?.exchangeMarket, state.subTabIndex])
+    }, [state?.exchangeMarket, state?.subTabIndex, state?.futuresMarket])
 
 
     // * Render Handler
@@ -238,20 +238,18 @@ const Market = () => {
         // Favorite data handling
         if (tab[state.tabIndex].key === 'favorite') {
             if (favSubTab[state.favType]?.key === 'exchange') {
-                // log.d('Tab Favorite - Exchange')
                 watch = convert?.exchange
             }
             if (favSubTab[state.favType]?.key === 'futures') {
-                // log.d('Tab Favorite - Futures')
                 watch = convert?.futures
             }
 
             if (subTab[state.subTabIndex].key === 'vndc') {
                 // log.d('Tab Exchange - VNDC')
-                watch = watch.filter(e => e.q === 'VNDC')
+                watch = watch?.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt') {
                 // log.d('Tab Exchange - USDT')
-                watch = watch.filter(e => e.q === 'USDT')
+                watch = watch?.filter(e => e.q === 'USDT')
             }
         }
 

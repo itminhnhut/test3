@@ -1,0 +1,51 @@
+{
+    "title": "Transaction History",
+    "tab": {
+        "all": "All",
+        "deposit": "Deposit",
+        "withdraw": "Withdraw",
+        "fiat": "Fiat",
+        "exchange": "Exchange",
+        "futures": "Futures",
+        "convert": "Convert",
+        "transfer": "Transfer",
+        "staking": "Staking Daily",
+        "commission": "Commissions"
+    },
+    "filter": {
+        "all": "All",
+        "asset_type": "Token Type",
+        "time": "Time",
+        "category_type": "Category",
+        "select_time": "Select time"
+    },
+    "completed": "Completed",
+    "asset": "Asset",
+    "time": "Time",
+    "amount": "Amount",
+    "category": "Category",
+    "reset": "Reset",
+    "status": "Status",
+    "wallet": "{{wallet}} Wallet",
+    "click_on_transaction": "Click on each transaction to view detailed information.",
+    "no_transaction_history": "No history",
+    "modal_detail": {
+        "snapshot_value": "Snapshot value",
+        "list_assets": "List of received assets",
+        "list_assets_convert": "List of converted assets",
+        "assets_number": "Asset number",
+        "from": "From",
+        "convert_from": "Cost",
+        "to": "To",
+        "time": "Time",
+        "network": "Network",
+        "avg_price": "Price/Avg price",
+        "txhash": "TxHash",
+        "pair": "Pair",
+        "open_price": "Open price",
+        "close_price": "Close price",
+        "type": "Type",
+        "position_id": "Position ID",
+        "wallet_type": "Wallet Type"
+    }
+}
