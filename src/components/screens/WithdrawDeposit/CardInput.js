@@ -124,7 +124,7 @@ const CardInput = () => {
     return (
         <>
             <Card className="w-full">
-                <div className="">
+                <div>
                     <div className="w-full mb-2 flex justify-between ">
                         <label htmlFor="TradingInput" className="txtSecond-3 ">
                             {t('common:amount')}

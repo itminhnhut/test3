@@ -194,7 +194,7 @@ const HistoryTable = () => {
                 loading={loadingDataTable}
                 onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
-                className="border border-divider dark:border-divider-dark rounded-lg pt-4"
+                className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
                 tableStyle={{
                     fontSize: '16px',
                     padding: '16px',
