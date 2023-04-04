@@ -3,7 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PATHS } from 'constants/paths';
-import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
+// import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -12,6 +12,11 @@ const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partn
 const OpenOrderTable = dynamic(() => import('components/screens/WithdrawDeposit/partner/OpenOrderTable'), {
     ssr: false
 });
+
+const TabStatistic = dynamic(() => import('components/screens/WithdrawDeposit/partner/TabStatistic'), {
+    ssr: false
+});
+
 const PartnerDepositWithdraw = ({ id, url }) => {
     return (
         <MaldivesLayout>
