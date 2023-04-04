@@ -35,11 +35,12 @@ const TABS = [
 const getTitle = (type, side, t) => {
     switch (type) {
         case TYPE_DW.CRYPTO:
-            return side === SIDE.BUY ? `${t('common:deposit')} Crypto` : `${t('common:withdraw')} Crypto`;
+            return side === SIDE.BUY ? t('common:deposit') : t('common:withdraw');
         case TYPE_DW.PARTNER:
-            return side === SIDE.BUY ? t('dw_partner:buy_title') : t('dw_partner:sell_title');
+            // return side === SIDE.BUY ? t('dw_partner:buy_title') : t('dw_partner:sell_title');
+            return side === SIDE.BUY ? t('common:buy') : t('common:sell');
         default:
-            return `${t('common:deposit')} Crypto`;
+            return t('common:deposit');
     }
 };
 
@@ -56,7 +57,7 @@ const UserWD = ({ type, children, side }) => {
         <div className="px-4 pt-20 pb-[120px] bg-gray-13 dark:bg-dark font-normal text-base text-gray-15 dark:text-gray-4 tracking-normal">
             {auth && auth?.kyc_status === 2 ? (
                 <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
-                    <h1 className="mb-8 font-semibold text-[32px] leading-[38px]">{side === SIDE.BUY ? t('common:buy') : t('common:sell')}</h1>
+                    <h1 className="mb-8 font-semibold text-[32px] leading-[38px]">{getTitle(type, side, t)}</h1>
 
                     <div className="relative flex tracking-normal mb-8">
                         <Tabs tab={type} className="gap-8 border-b border-divider dark:border-divider-dark">
@@ -72,7 +73,7 @@ const UserWD = ({ type, children, side }) => {
                             ))}
                         </Tabs>
                         <div className="absolute right-0">
-                            <HrefButton variants="blank" className="w-auto !text-base" href={getLinkSupport(language === 'vi')}>
+                            <HrefButton variants="blank" target="_blank" className="w-auto !text-base" href={getLinkSupport(language === 'vi')}>
                                 <BxsBookIcon size={16} isButton={true} className="mr-2" />
                                 {t('dw_partner:deposit_withdraw_guide')}
                             </HrefButton>
