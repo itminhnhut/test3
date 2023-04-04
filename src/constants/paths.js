@@ -91,13 +91,21 @@ const WITHDRAW_DEPOSIT = {
     DETAIL: '/withdraw-deposit/partner/details'
 };
 
+export const PARTNER_WD_TABS = {
+    OPEN_ORDER: 'opening-orders',
+    HISTORY_ORDER: 'history-orders',
+    STATS: 'stats',
+    PROFILE: 'profile',
+    HISTORY_REFERRAL: 'history-referral'
+};
+
 const PARNER_WITHDRAW_DEPOSIT = {
     DEFAULT: '/partner-dw/',
-    OPEN_ORDER: '/partner-dw/opening-orders',
-    HISTORY_ORDER: '/partner-dw/history-orders',
-    STATS: '/partner-dw/stats',
-    PROFILE: '/partner-dw/profile',
-    HISTORY_REFERRAL: '/partner-dw/history-referral'
+    OPEN_ORDER: `/partner-dw/${PARTNER_WD_TABS.OPEN_ORDER}`,
+    HISTORY_ORDER: `/partner-dw/${PARTNER_WD_TABS.HISTORY_ORDER}`,
+    STATS: `/partner-dw/${PARTNER_WD_TABS.STATS}`,
+    PROFILE: `/partner-dw/${PARTNER_WD_TABS.PROFILE}`,
+    HISTORY_REFERRAL: `/partner-dw/${PARTNER_WD_TABS.HISTORY_REFERRAL}`
 };
 
 export const PATHS = {
