@@ -138,7 +138,7 @@ export const ORDER_TYPES = {
 
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:cancel_order') : 'Từ chối giao dịch'),
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : 'Từ chối giao dịch'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (mode === MODE.USER) {
                 if (side === 'BUY')
