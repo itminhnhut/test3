@@ -96,7 +96,8 @@ export const PARTNER_WD_TABS = {
     HISTORY_ORDER: 'history-orders',
     STATS: 'stats',
     PROFILE: 'profile',
-    HISTORY_REFERRAL: 'history-referral'
+    HISTORY_REFERRAL: 'history-referral',
+    DETAILS: 'details'
 };
 
 const PARNER_WITHDRAW_DEPOSIT = {
@@ -105,7 +106,8 @@ const PARNER_WITHDRAW_DEPOSIT = {
     HISTORY_ORDER: `/partner-dw/${PARTNER_WD_TABS.HISTORY_ORDER}`,
     STATS: `/partner-dw/${PARTNER_WD_TABS.STATS}`,
     PROFILE: `/partner-dw/${PARTNER_WD_TABS.PROFILE}`,
-    HISTORY_REFERRAL: `/partner-dw/${PARTNER_WD_TABS.HISTORY_REFERRAL}`
+    HISTORY_REFERRAL: `/partner-dw/${PARTNER_WD_TABS.HISTORY_REFERRAL}`,
+    DETAILS: `/partner-dw/${PARTNER_WD_TABS.DETAILS}`
 };
 
 export const PATHS = {

@@ -11,7 +11,7 @@ import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } f
 import { getAssetCode } from 'redux/actions/utils';
 
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_KEY, DisputedType, TranferreredType, MODE } from './constants';
+import { MODAL_TYPE, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
 import classNames from 'classnames';
 import { useBoolean } from 'react-use';
@@ -20,7 +20,7 @@ import AppealButton from './components/AppealButton';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
-const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
+export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
@@ -44,8 +44,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     });
 
     const [modalProps, setModalProps] = useState({
-        [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
-        [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -74,14 +74,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         }));
 
     const { onMarkWithStatus } = useMarkOrder({
-        baseQty: state.orderDetail?.baseQty,
-        id,
-        assetCode,
-        assetId: state.orderDetail?.baseAssetId,
         setModalPropsWithKey,
-        side,
         mode,
-        toggleRefetch
+        toggleRefetch,
+        orderDetail: state.orderDetail
     });
 
     useEffect(() => {
@@ -348,13 +344,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 />
             )}
             {/*Modal confirm the order */}
-            <ModalConfirm mode={mode} modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
+            <ModalConfirm
+                mode={mode}
+                modalProps={modalProps[MODAL_TYPE.CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
+            />
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm
                 mode={mode}
-                modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })}
+                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
             />
 
             <ModalUploadImage

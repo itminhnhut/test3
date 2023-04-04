@@ -77,7 +77,7 @@ export const TABS = [
     }
 ];
 
-export const MODAL_KEY = {
+export const MODAL_TYPE = {
     CONFIRM: 'confirm',
     AFTER_CONFIRM: 'afterConfirm'
 };
@@ -121,8 +121,10 @@ export const ORDER_TYPES = {
         title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
         description: ({ displayingId, amount, asset, side, t }) =>
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
-        showConfirm: ({ router, t, assetId, side }) => {
-            return (
+        showConfirm: ({ router, t, assetId, side, mode }) => {
+            return mode === MODE.PARTNER ? (
+                <></>
+            ) : (
                 <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>

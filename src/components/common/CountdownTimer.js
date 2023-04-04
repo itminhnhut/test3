@@ -41,7 +41,7 @@ const styles = {
 const MAX_COUNTDOWN = 5 * 60 * 1000;
 const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-const CountdownTimer = ({ total, maxCountdown = MAX_COUNTDOWN, completed, size = 80, strokeWidth = 3 }) => {
+const CountdownTimer = ({ total, textSize = 16, maxCountdown = MAX_COUNTDOWN, completed, size = 80, strokeWidth = 3 }) => {
     const radius = size / 2;
     const circumference = size * Math.PI;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableV2 from 'components/common/V2/TableV2';
 import Countdown from 'react-countdown';
 import CircleCountdown from '../components/common/CircleCountdown';
@@ -8,15 +8,26 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TagV2 from 'components/common/V2/TagV2';
 import TabV2 from 'components/common/V2/TabV2';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
+import FetchApi from 'utils/fetch-api';
+import { API_GET_HISTORY_DW_PARTNERS, API_GET_OPENING_ORDER } from 'redux/actions/apis';
+import { ApiStatus, PartnerOrderStatus, PartnerPersonStatus, UserSocketEvent } from 'redux/actions/const';
+import { MODAL_TYPE, MODE, TranferreredType } from '../constants';
+import useMarkOrder from '../hooks/useMarkOrder';
+import { ModalConfirm } from '../DetailOrder';
+import { useSelector } from 'react-redux';
 
-const getColumns = () => [
+const getColumns = ({ t, setModalPropsWithKey, toggleRefetch }) => [
     {
         key: 'timeExpire',
         dataIndex: 'timeExpire',
         title: 'Trạng thái',
         align: 'left',
         width: 107,
-        render: (row) => <CircleCountdown size={34} textSize={10} timeExpire={row} />
+        render: (row) => <CircleCountdown onComplete={toggleRefetch} size={34} textSize={10} timeExpire={row} />
     },
     {
         key: 'displayingId',
@@ -62,6 +73,21 @@ const getColumns = () => [
         }
     },
     {
+        key: 'user',
+        dataIndex: 'userMetadata',
+        title: 'Từ',
+        align: 'left',
+        width: 165,
+        render: (row) => {
+            return (
+                <div>
+                    <div className="">{row?.name}</div>
+                    <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
+                </div>
+            );
+        }
+    },
+    {
         key: 'partner',
         dataIndex: 'partnerMetadata',
         title: 'Đến',
@@ -70,8 +96,8 @@ const getColumns = () => [
         render: (row) => {
             return (
                 <div>
-                    <div className="">{row.name}</div>
-                    <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row.code}</div>
+                    <div className="">{row?.name}</div>
+                    <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
                 </div>
             );
         }
@@ -81,197 +107,191 @@ const getColumns = () => [
         dataIndex: '',
         title: '',
         align: 'left',
-        width: 171,
-        render: (row) => {
+        width: 190,
+        render: (order, item) => {
+            const { onMarkWithStatus } = useMarkOrder({
+                setModalPropsWithKey,
+                mode: MODE.PARTNER,
+                orderDetail: order,
+                toggleRefetch
+            });
+            const side = item.side;
+            const btnText = side === SIDE.BUY ? t('dw_partner:take_money_already') : t('common:confirm');
+            const btnDisabled =
+                side === SIDE.BUY ? order?.userStatus !== PartnerPersonStatus.TRANSFERRED : order?.partnerStatus !== PartnerPersonStatus?.PENDING;
             return (
-                <ButtonV2 disabled variants="secondary">
-                    Đã nhận tiền
+                <ButtonV2
+                    disabled={btnDisabled}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        return order.side === SIDE.BUY
+                            ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE)
+                            : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED);
+                    }}
+                    variants="secondary"
+                >
+                    {btnText}
                 </ButtonV2>
             );
         }
     }
 ];
 
-const dataTable = [
-    {
-        status: 0,
-        userStatus: 0,
-        partnerStatus: 0,
-        partnerCommissionRecieved: false,
-        _id: '6422a2ffc970c94477c283e9',
-        displayingId: '794SCE',
-        userId: 18,
-        side: 'BUY',
-        baseQty: 500000,
-        baseAssetId: 72,
-        quoteQty: 500000,
-        quoteAssetId: 24,
-        price: 1,
-        partnerUserId: 1823,
-        partnerMetadata: {
-            _id: '624125493bb388239f5b0bd1',
-            analyticMetadata: {
-                avgTime: 1170217.7826086956,
-                count: 30,
-                totalValue: 81035757
-            },
-            avatar: 'https://thao68.com/wp-content/uploads/2022/02/avatar-sammy-dao-1.jpg',
-            createdAt: '2022-01-06T10:04:32.727Z',
-            name: 'Partner Kidd',
-            orderConfig: {
-                buy: {
-                    min: 100000,
-                    max: 50000000,
-                    status: 1,
-                    partnerMax: 50000000,
-                    partnerMin: 100000
-                },
-                sell: {
-                    min: 500000,
-                    max: 50000000,
-                    status: 1,
-                    partnerMax: 50000000,
-                    partnerMin: 100000
-                }
-            },
-            partnerId: 'P1823',
-            partnerMetadata: {
-                maintainVolume: 200000000
-            },
-            phone: '12345678',
-            startedAt: '2022-01-04T07:08:29.456Z',
-            status: 1,
-            type: 4,
-            updatedAt: '2023-03-28T08:19:00.034Z',
-            userId: 1823,
-            code: 'Nami653PLH1823'
-        },
-        transferMetadata: {
-            bankName: 'DemoBank - Ngân hàng TMCP Demo',
-            bankCode: '970433',
-            accountNumber: '1786237845324',
-            accountName: 'Nhi Tran ',
-            note: 'CK 794SCE NGUYEN DUC TRUNG',
-            QR: '00020101021238570010A00000072701270006970433011317862378453240208QRIBFTTA530370454065000005802VN62300826CK 794SCE NGUYEN DUC TRUNG63043CA6'
-        },
-        createdAt: '2023-03-28T08:19:11.872Z',
-        updatedAt: '2023-03-28T08:19:11.891Z',
-        __v: 0,
-        timeExpire: 1679992200000
-    },
-    {
-        status: 0,
-        userStatus: 0,
-        partnerStatus: 0,
-        partnerCommissionRecieved: false,
-        _id: '6422b1f897be580ee2e95cdc',
-        displayingId: '543PLH',
-        userId: 18,
-        side: 'SELL',
-        baseQty: 1000000,
-        baseAssetId: 72,
-        quoteQty: 1000000,
-        quoteAssetId: 24,
-        price: 1,
-        partnerUserId: 1823,
-        partnerMetadata: {
-            _id: '624125493bb388239f5b0bd1',
-            analyticMetadata: {
-                avgTime: 1170217.7826086956,
-                count: 30,
-                totalValue: 81035757
-            },
-            avatar: 'https://thao68.com/wp-content/uploads/2022/02/avatar-sammy-dao-1.jpg',
-            createdAt: '2022-01-06T10:04:32.727Z',
-            name: 'Partner Kidd',
-            orderConfig: {
-                buy: {
-                    min: 100000,
-                    max: 705032704,
-                    status: 1,
-                    partnerMax: 50000000,
-                    partnerMin: 100000
-                },
-                sell: {
-                    min: 500000,
-                    max: 50000000,
-                    status: 1,
-                    partnerMax: 50000000,
-                    partnerMin: 100000
-                }
-            },
-            partnerId: 'P1823',
-            partnerMetadata: {
-                maintainVolume: 200000000
-            },
-            phone: '12345678',
-            startedAt: '2022-01-04T07:08:29.456Z',
-            status: 1,
-            type: 4,
-            updatedAt: '2023-03-28T09:23:00.056Z',
-            userId: 1823,
-            code: 'Nami653PLH1823'
-        },
-        transferMetadata: {
-            bankName: 'VPBank - Ngân hàng TMCP Việt Nam Thịnh Vượng',
-            bankCode: '970432',
-            accountNumber: '140061476_',
-            accountName: 'NGUYEN DUC TRUNG2',
-            note: 'CK 543PLH NGUYEN DUC TRUNG',
-            QR: '00020101021238540010A000000727012400069704320110140061476_0208QRIBFTTA5303704540710000005802VN62300826CK 543PLH NGUYEN DUC TRUNG630411AD'
-        },
-        createdAt: '2023-03-28T09:23:04.382Z',
-        updatedAt: '2023-03-28T09:23:04.415Z',
-        __v: 0,
-        timeExpire: '2023-03-28T09:28:04.382Z'
-    }
-];
+const LIMIT_ROW = 10;
 
 const OpenOrderTable = () => {
-    const [tab, setTab] = useState(1);
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+    const userSocket = useSelector((state) => state.socket.userSocket);
+
+    const router = useRouter();
+    const [state, set] = useState({
+        data: [],
+        params: {
+            side: SIDE.BUY,
+            page: 0,
+            mode: 'partner',
+            pageSize: LIMIT_ROW,
+            status: PartnerOrderStatus.PENDING
+        },
+        loading: false,
+        hasNext: false,
+        refetch: false
+    });
+
+    const [modalProps, setModalProps] = useState({
+        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+    });
+
+    const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
+
+    const setModalPropsWithKey = (key, props) =>
+        setModalProps((prev) => ({
+            ...prev,
+            [key]: {
+                ...prev[key],
+                ...props
+            }
+        }));
+
+    useEffect(() => {
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                console.log('data', data);
+            });
+        }
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
+                });
+            }
+        };
+    }, [userSocket]);
+
+    useEffect(() => {
+        const fetchOpeningOrders = async () => {
+            try {
+                setState({ loading: true });
+                const { data, status } = await FetchApi({
+                    url: API_GET_HISTORY_DW_PARTNERS,
+                    params: {
+                        ...state.params
+                    }
+                });
+
+                let hasNext = false,
+                    orders = [];
+                if (status === ApiStatus.SUCCESS) {
+                    orders = data.orders;
+                    hasNext = data.hasNext;
+                }
+                setState({
+                    data: orders,
+                    hasNext
+                });
+            } catch (error) {
+            } finally {
+                setState({ loading: false });
+            }
+        };
+        fetchOpeningOrders();
+    }, [state.params, state.refetch]);
 
     return (
-        <div>
-            <div className="mb-3">
-                <TabV2
-                    activeTabKey={tab}
-                    onChangeTab={(key) => setTab(key)}
-                    tabs={[
-                        {
-                            key: 1,
-                            children: <div className="capitalize">Mua</div>
-                        },
-                        {
-                            key: 2,
-                            children: <div className="capitalize">Bán</div>
-                        }
-                    ]}
+        <>
+            <ModalConfirm
+                mode={MODE.PARTNER}
+                modalProps={modalProps[MODAL_TYPE.CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
+            />{' '}
+            <ModalConfirm
+                mode={MODE.PARTNER}
+                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
+            />{' '}
+            <div>
+                <div className="mb-3">
+                    <TabV2
+                        activeTabKey={state.params.side}
+                        onChangeTab={(key) => {
+                            setState({
+                                params: {
+                                    ...state.params,
+                                    side: key
+                                }
+                            });
+                        }}
+                        tabs={[
+                            {
+                                key: SIDE.BUY,
+                                children: <div className="capitalize">{t('dw_partner:buy')}</div>
+                            },
+                            {
+                                key: SIDE.SELL,
+                                children: <div className="capitalize">{t('dw_partner:sell')}</div>
+                            }
+                        ]}
+                    />
+                </div>
+                <TableV2
+                    // sort={['baseQty']}
+                    limit={LIMIT_ROW}
+                    skip={0}
+                    useRowHover
+                    data={state.data}
+                    columns={getColumns({ t, setModalPropsWithKey, toggleRefetch: () => setState({ refetch: !state.refetch }) })}
+                    rowKey={(item) => item?.key}
+                    scroll={{ x: true }}
+                    loading={state.loading}
+                    onRowClick={(transaction) => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + transaction?.displayingId)}
+                    height={404}
+                    className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
+                    tableStyle={{
+                        fontSize: '16px',
+                        padding: '16px',
+                        headerFontStyle: { 'font-size': `14px !important` }
+                    }}
+                    pagingPrevNext={{
+                        page: state.params.page,
+                        hasNext: state.hasNext,
+                        onChangeNextPrev: (e) =>
+                            setState({
+                                params: {
+                                    ...state.params,
+                                    page: state.params.page + e
+                                }
+                            }),
+                        language
+                    }}
+                    emptyTextContent={t('common:no_data')}
+                    // customSort={customSort}
                 />
             </div>
-            <TableV2
-                limit={10}
-                skip={0}
-                useRowHover={false}
-                data={dataTable}
-                columns={getColumns()}
-                rowKey={(item) => item?.key}
-                scroll={{ x: true }}
-                height={404}
-                className="border border-divider dark:border-divider-dark rounded-lg pt-4"
-                tableStyle={{
-                    fontSize: '16px',
-                    padding: '16px',
-                    headerFontStyle: { 'font-size': `14px !important` }
-                }}
-                pagingPrevNext={{
-                    page: 0,
-                    hasNext: false,
-                    onChangeNextPrev: (e) => {},
-                    language: 'vi'
-                }}
-                emptyTextContent={'Không có giao dịch nào'}
-            />
-        </div>
+        </>
     );
 };
 

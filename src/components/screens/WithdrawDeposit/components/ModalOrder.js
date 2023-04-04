@@ -25,7 +25,7 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                     <div className="txtPri-3 mb-4">{type.title(t, mode)}</div>
                     <div className="txtSecond-2 ">{type.description({ ...additionalData, mode, t })}</div>
                     {type.showConfirm && isFunction(type.showConfirm)
-                        ? type.showConfirm({ router, t, assetId: additionalData?.assetId || 72, side: additionalData?.side || 'BUY' })
+                        ? type.showConfirm({ router, t, assetId: additionalData?.assetId || 72, side: additionalData?.side || 'BUY', mode })
                         : !type.isHideBtnConfirm && (
                               <ButtonV2
                                   loading={loading}

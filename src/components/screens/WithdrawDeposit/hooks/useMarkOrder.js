@@ -1,11 +1,21 @@
-import React from 'react';
-import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_KEY, MODE, ORDER_TYPES, TranferreredType } from '../constants';
+import React, { useMemo } from 'react';
+import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_TYPE, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
-import { formatBalance } from 'redux/actions/utils';
+import { formatBalance, getAssetCode } from 'redux/actions/utils';
 import { approveOrder, markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
-import { useTranslation } from 'next-i18next';
-const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, baseQty, mode, toggleRefetch }) => {
-    const { t } = useTranslation();
+const useMarkOrder = ({ setModalPropsWithKey, orderDetail, mode, toggleRefetch }) => {
+    const { assetId, id, side, baseQty } = useMemo(
+        () => ({
+            assetId: orderDetail?.baseAssetId,
+            id: orderDetail?.displayingId,
+            side: orderDetail?.side,
+            baseQty: orderDetail?.baseQty
+        }),
+        [orderDetail]
+    );
+
+    const assetCode = getAssetCode(+assetId);
+
     const onMarkOrderHandler = (userStatus, statusType) => async () => {
         let type, additionalData;
         let isRejected = false;
@@ -44,7 +54,7 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
         }
 
         try {
-            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+            setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
                 loading: true
             });
             const data = isRejected
@@ -54,13 +64,13 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                 : await markOrder({ displayingId: id, userStatus, mode });
             if (data && data.status === ApiStatus.SUCCESS) {
                 // close confirm modal
-                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
                     loading: false,
                     visible: false
                 });
 
                 // open after confirm modal
-                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+                setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
                     visible: true,
                     type,
                     additionalData
@@ -68,22 +78,22 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
 
                 toggleRefetch();
             } else {
-                setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+                setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
                     loading: false,
                     visible: false
                 });
-                setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+                setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
                     visible: true,
                     type: ORDER_TYPES.ERROR,
                     additionalData: data?.status
                 });
             }
         } catch (error) {
-            setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+            setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
                 loading: false,
                 visible: false
             });
-            setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, {
+            setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
                 visible: true,
                 type: ORDER_TYPES.ERROR,
                 additionalData: error
@@ -114,7 +124,7 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, side: side };
+                        additionalData = { token: assetCode, side, id };
                         break;
                     default:
                         break;
@@ -123,7 +133,7 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
             default:
                 break;
         }
-        setModalPropsWithKey(MODAL_KEY.CONFIRM, {
+        setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
             visible: true,
             type,
             additionalData,
