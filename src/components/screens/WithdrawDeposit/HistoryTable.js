@@ -170,7 +170,7 @@ const HistoryTable = () => {
 
     return (
         <div className="space-y-6">
-            <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>
+            <div className="txtPri-3 ">{side === SIDE.BUY ? t('common:deposit') : t('common:withdraw')}</div>
             <TabV2
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
