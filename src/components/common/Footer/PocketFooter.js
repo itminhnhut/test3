@@ -65,7 +65,7 @@ const PocketFooter = ({ currentTheme, active, parentState, auth, width, t, langu
                             className={`mal-footer___pocket__links___group__item__expander ${active?.about ? 'bg-hover dark:bg-hover-dark ' : ' '}`}
                             onClick={() => parentState({ active: { about: !active.about } })}
                         >
-                            {language === LANGUAGE_TAG.VI ? 'Về Nami' : 'About Nami'} Foundation
+                            {language === LANGUAGE_TAG.VI ? 'Về chúng tôi' : 'About Us'}
                             <SvgIcon
                                 name="chevron_down"
                                 size={16}
