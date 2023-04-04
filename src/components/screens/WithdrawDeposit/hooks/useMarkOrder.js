@@ -26,7 +26,8 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                         additionalData = {
                             displayingId: id,
                             side,
-                            assetId
+                            amount: formatBalance(baseQty, 0),
+                            asset: assetCode
                         };
                         isRejected = true;
                         break;
@@ -114,7 +115,12 @@ const useMarkOrder = ({ id, assetCode, assetId, setModalPropsWithKey, side, base
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, side: side };
+                        additionalData = {
+                            token: assetCode,
+                            side: side,
+                            id,
+                            amount: formatBalance(baseQty, 0)
+                        };
                         break;
                     default:
                         break;

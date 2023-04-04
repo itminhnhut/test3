@@ -33,7 +33,7 @@
     "partner": "Partner",
     "no_partner": "No partner found",
     "appeal": "Appeal",
-    "upload_proof": "Upload Proof",
+    "upload_proof": "Upload Proof (Optional)",
     "upload_proof_again": "Upload again",
     "notes": "<li>Check the right account name, account number, and description</li><li>Transfer the right and exact amount; do not round or remove unusual numbers.</li><li>Finish the transfer within five minutes of pressing \"I have transferred\" so that the order is not canceled.</li>",
     "beneficiary": "Beneficiary",
@@ -56,6 +56,8 @@
     "disputed_success": "Transaction {{orderId}} has been disputed successfully",
     "dw_title": "Deposit/Withdraw",
     "deposit_withdraw_guide": "Deposit and withdraw guides",
+    "submit": "Submit",
+    "reselected": "Upload again",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
