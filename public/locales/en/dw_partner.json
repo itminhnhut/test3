@@ -40,7 +40,7 @@
     "download": "Download",
     "payment_infor": "Payment Information",
     "bank": "Bank",
-    "no_bank":"No bank found",
+    "no_bank": "No bank found",
     "transfer_description": "Description",
     "transfer_confirm_description": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount received and the content of the transfer before making.",
     "take_money_confirm_description": "When you click the confirm button, you will received the money from partner, please carefully check the amount received and the content of the transfer before making.",
@@ -54,6 +54,8 @@
     "mins": "mins",
     "set_as_default": "Set as Default",
     "disputed_success": "Transaction {{orderId}} has been disputed successfully",
+    "dw_title": "Deposit/Withdraw",
+    "deposit_withdraw_guide": "Deposit and withdraw guides",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",

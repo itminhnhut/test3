@@ -10,7 +10,7 @@ const Header = () => {
     const { side, assetId } = router?.query;
     const { t } = useTranslation();
     return (
-        <div className="t-common-v2 flex justify-between mb-12">
+        <div className="t-common-v2 items-center flex justify-between mb-12">
             <span>{t(`dw_partner:${side?.toLowerCase()}_title`)}</span>
 
             <ButtonV2

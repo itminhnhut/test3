@@ -24,8 +24,6 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import toast from 'utils/toast';
 import { CopyIcon } from 'components/svg/SvgIcon';
 import Countdown from 'react-countdown-now';
-import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -324,7 +322,7 @@ const INITIAL_STATE = {
     historyPage: 0
 };
 
-const ExchangeWithdraw = () => {
+const CryptoWithdraw = ({ assetId }) => {
     // Init State
     const [resendTimeOut, setResendTimeOut] = useState(null);
     const [state, set] = useState(INITIAL_STATE);
@@ -345,7 +343,7 @@ const ExchangeWithdraw = () => {
     const router = useRouter();
     const focused = useWindowFocus();
 
-    const selectedAsset = useMemo(() => find(paymentConfigs, { assetCode: router?.query?.asset }), [paymentConfigs, router.query]);
+    const selectedAsset = useMemo(() => find(paymentConfigs, { assetCode: assetId }), [paymentConfigs, assetId]);
     const assetBalance = useMemo(() => walletAssets[selectedAsset?.assetId], [walletAssets, selectedAsset]);
     const assetConfig = useMemo(() => find(assetConfigs, { id: selectedAsset?.assetId }), [assetConfigs, selectedAsset]);
 
@@ -450,96 +448,79 @@ const ExchangeWithdraw = () => {
     }, [auth]);
 
     return (
-        <MaldivesLayout>
-            <Background isDark={currentTheme === THEME_MODE.DARK}>
-                <div className="mal-container px-4">
-                    <div className="flex items-center justify-between mb-10">
-                        <span className="font-semibold text-[2rem] leading-[3rem]">{`${t('common:sell')} Crypto`}</span>
-                        <div
-                            className="flex items-center font-semibold text-teal cursor-pointer"
-                            onClick={() => {
-                                router.push(dwLinkBuilder(TYPE_DW.PARTNER, SIDE.SELL));
-                            }}
-                        >
-                            <span className="mr-2">{t('dw_partner:sell_title')}</span>
-                            <ChevronRight size={16} color={colors.teal} />
-                        </div>
-                    </div>
-                    <div
-                        className={classNames(
-                            'w-full mx-auto pt-8 p-6 rounded-3xl sm:w-[453px] space-y-4 bg-white nami-light-shadow',
-                            'dark:border dark:border-divider-dark dark:bg-dark-dark dark:shadow-none'
-                        )}
-                    >
-                        <AmountInput
-                            t={t}
-                            amount={state.amount}
-                            onAmountChange={(amount) => setState({ amount })}
-                            currentAsset={selectedAsset}
-                            errorMessage={amountErrorMessage}
-                            available={assetBalance?.value - assetBalance?.locked_value}
-                            min={informationData.min}
-                            max={informationData.max}
-                            currentTheme={currentTheme}
-                        />
+        <div>
+            <div
+                className={classNames(
+                    'w-full mx-auto pt-8 p-6 rounded-3xl sm:w-[453px] space-y-4 bg-white nami-light-shadow',
+                    'dark:border dark:border-divider-dark dark:bg-dark-dark dark:shadow-none'
+                )}
+            >
+                <AmountInput
+                    t={t}
+                    amount={state.amount}
+                    onAmountChange={(amount) => setState({ amount })}
+                    currentAsset={selectedAsset}
+                    errorMessage={amountErrorMessage}
+                    available={assetBalance?.value - assetBalance?.locked_value}
+                    min={informationData.min}
+                    max={informationData.max}
+                    currentTheme={currentTheme}
+                />
 
-                        <AddressInput t={t} value={state.address} onChange={(address) => setState({ address })} isValid={state.validator?.address} />
+                <AddressInput t={t} value={state.address} onChange={(address) => setState({ address })} isValid={state.validator?.address} />
 
-                        <NetworkInput
-                            t={t}
-                            networkList={selectedAsset?.networkList}
-                            selected={state.selectedNetwork}
-                            onChange={(network) => setState({ selectedNetwork: network })}
-                            currentTheme={currentTheme}
-                        />
+                <NetworkInput
+                    t={t}
+                    networkList={selectedAsset?.networkList}
+                    selected={state.selectedNetwork}
+                    onChange={(network) => setState({ selectedNetwork: network })}
+                    currentTheme={currentTheme}
+                />
 
-                        {state?.selectedNetwork?.memoRegex && (
-                            <MemoInput
-                                t={t}
-                                value={state.memo}
-                                onChange={(memo) => setState({ memo })}
-                                errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
-                            />
-                        )}
-
-                        <Information
-                            className="!mt-6"
-                            assetCode={selectedAsset?.assetCode}
-                            min={formatNumber(informationData.min, assetConfig?.assetDigit)}
-                            max={formatNumber(informationData.max, assetConfig?.assetDigit)}
-                            fee={formatNumber(informationData.fee, assetConfig?.assetDigit)}
-                            receive={formatNumber(+state.amount - state.selectedNetwork?.withdrawFee, assetConfig?.assetDigit)}
-                        />
-
-                        <ButtonV2
-                            className="!mt-10"
-                            disabled={!state.validator?.allPass}
-                            onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}
-                        >
-                            {t('common:withdraw')}
-                        </ButtonV2>
-                    </div>
-                    <ModalConfirm
-                        otpModes={otpModes}
-                        selectedAsset={selectedAsset}
-                        selectedNetwork={state.selectedNetwork}
-                        open={state.openWithdrawConfirm}
-                        closeModal={() => setState({ openWithdrawConfirm: false })}
-                        address={state.address}
-                        memo={state.memo}
-                        amount={state.amount}
-                        assetDigit={assetConfig?.assetDigit}
-                        assetCode={assetConfig?.assetCode}
-                        currentTheme={currentTheme}
+                {state?.selectedNetwork?.memoRegex && (
+                    <MemoInput
+                        t={t}
+                        value={state.memo}
+                        onChange={(memo) => setState({ memo })}
+                        errorMessage={state.validator.memo ? '' : t('wallet:errors.invalid_memo')}
                     />
-                    <div className="mb-32">
-                        <div className="text-2xl font-semibold mb-6 mt-20">{t('wallet:withdraw_history')}</div>
-                        <WithdrawHistory />
-                    </div>
-                </div>
-            </Background>
-            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
-        </MaldivesLayout>
+                )}
+
+                <Information
+                    className="!mt-6"
+                    assetCode={selectedAsset?.assetCode}
+                    min={formatNumber(informationData.min, assetConfig?.assetDigit)}
+                    max={formatNumber(informationData.max, assetConfig?.assetDigit)}
+                    fee={formatNumber(informationData.fee, assetConfig?.assetDigit)}
+                    receive={formatNumber(+state.amount - state.selectedNetwork?.withdrawFee, assetConfig?.assetDigit)}
+                />
+
+                <ButtonV2
+                    className="!mt-10"
+                    disabled={!state.validator?.allPass}
+                    onClick={() => state.validator?.allPass && setState({ openWithdrawConfirm: true })}
+                >
+                    {t('common:withdraw')}
+                </ButtonV2>
+            </div>
+            <ModalConfirm
+                otpModes={otpModes}
+                selectedAsset={selectedAsset}
+                selectedNetwork={state.selectedNetwork}
+                open={state.openWithdrawConfirm}
+                closeModal={() => setState({ openWithdrawConfirm: false })}
+                address={state.address}
+                memo={state.memo}
+                amount={state.amount}
+                assetDigit={assetConfig?.assetDigit}
+                assetCode={assetConfig?.assetCode}
+                currentTheme={currentTheme}
+            />
+            <div>
+                <div className="text-2xl font-semibold mb-6 mt-20">{t('wallet:withdraw_history')}</div>
+                <WithdrawHistory />
+            </div>
+        </div>
     );
 };
 
@@ -670,4 +651,4 @@ function withdrawValidator(
     return result;
 }
 
-export default ExchangeWithdraw;
+export default CryptoWithdraw;

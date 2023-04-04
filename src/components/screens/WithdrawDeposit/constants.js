@@ -17,6 +17,11 @@ export const MODE = {
     PARTNER: 'partner'
 };
 
+export const TYPE_DW = {
+    PARTNER: 'partner',
+    CRYPTO: 'crypto'
+};
+
 export const TranferreredType = {
     //user-to-partner
     [MODE.USER]: {
@@ -105,11 +110,11 @@ export const ORDER_TYPES = {
         showConfirm: true
     },
     TRANSFERRED_SUCCESS: {
+        isHideBtnConfirm: true,
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
         description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
-            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công',
-        showConfirm: false
+            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công'
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
@@ -118,7 +123,7 @@ export const ORDER_TYPES = {
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
         showConfirm: ({ router, t, assetId, side }) => {
             return (
-                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
+                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>
             );
@@ -127,7 +132,7 @@ export const ORDER_TYPES = {
     REPORT_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
-        description: ({ displayingId }) => `Bạn đã khiếu nại thành công giao dịch ${displayingId}`,
+        description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
         showConfirm: false
     },
 

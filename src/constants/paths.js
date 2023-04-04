@@ -86,8 +86,9 @@ const TRANSACTION_HISTORY = {
 };
 
 const WITHDRAW_DEPOSIT = {
-    DEFAULT: '/withdraw-deposit',
-    DETAIL: '/withdraw-deposit/details'
+    DEFAULT: '/withdraw-deposit/crypto',
+    PARTNER: '/withdraw-deposit/partner',
+    DETAIL: '/withdraw-deposit/partner/details'
 };
 
 const PARNER_WITHDRAW_DEPOSIT = {

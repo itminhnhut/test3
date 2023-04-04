@@ -124,7 +124,7 @@ const CardInput = () => {
     return (
         <>
             <Card className="w-full">
-                <div className="">
+                <div>
                     <div className="w-full mb-2 flex justify-between ">
                         <label htmlFor="TradingInput" className="txtSecond-3 ">
                             {t('common:amount')}
@@ -142,8 +142,8 @@ const CardInput = () => {
                             </div>
                         )}
                     </div>
-                    <div className="flex  -m-1  relative">
-                        <div className="flex-1 p-1 ">
+                    <div className="flex flex-wrap -m-1">
+                        <div className="flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
                                 value={loadingRate ? '' : state.amount}
@@ -176,7 +176,7 @@ const CardInput = () => {
                         </div>
                         <div className="w-24 p-1">
                             <ButtonV2
-                                className="!text-dominant bg-gray-12 dark:bg-dark-2 hover:opacity-80"
+                                className="!text-dominant w-full bg-gray-12 dark:bg-dark-2 hover:opacity-80"
                                 variants="text"
                                 onClick={() => {
                                     router.push(
@@ -190,7 +190,7 @@ const CardInput = () => {
                                 }}
                             >
                                 <span className="uppercase">{assetCode}</span>
-                                <SyncAltIcon className="rotate-90" size={16} />
+                                <SyncAltIcon className=" rotate-90" size={16} />
                             </ButtonV2>
                         </div>
                     </div>

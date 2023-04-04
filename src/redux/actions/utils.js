@@ -39,6 +39,8 @@ import utilsSelectors from 'redux/selectors/utilsSelectors';
 import { useRouter } from 'next/router';
 import { log } from 'utils';
 import { cloneDeep } from 'lodash';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -807,17 +809,16 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
-export function dwLinkBuilder(type, side, payload) {
+export function dwLinkBuilder(type, side, assetId) {
     // Deposit: BUY
     // Withdraw: SELL
     switch (type) {
-        case 'crypto':
-            if (side === 'BUY') return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
-            else return `${PATHS.WALLET.EXCHANGE.WITHDRAW}?type=${payload?.type || 'crypto'}&asset=${payload?.asset || 'USDT'}`;
-        case 'partner':
-            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side.toUpperCase()}`;
+        case TYPE_DW.CRYPTO:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.PARTNER:
+            return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
         default:
-            break;
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
     }
 }
 
