@@ -124,7 +124,7 @@ const CardInput = () => {
     return (
         <>
             <Card className="w-full">
-                <div>
+                <div className="mb-4">
                     <div className="w-full mb-2 flex justify-between ">
                         <label htmlFor="TradingInput" className="txtSecond-3 ">
                             {t('common:amount')}
@@ -195,9 +195,9 @@ const CardInput = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-4">
+                {/* <div>
                     <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} loadingRate={loadingRate} />
-                </div>
+                </div> */}
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>
