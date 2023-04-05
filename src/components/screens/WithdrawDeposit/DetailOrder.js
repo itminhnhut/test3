@@ -172,7 +172,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
                                         timeDispute={state?.orderDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
@@ -194,14 +194,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     };
                                     return;
                                 }
-                                // transferred
-                                if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                    primaryBtn = {
-                                        function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                    };
-                                }
                             }
+                        }
+                    }
+                    // order status !PENDING
+                    else {
+                        // neu user da chuyen tien -> se luon hien button upload proof
+                        if (myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }
@@ -250,12 +253,22 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
                                         timeDispute={state?.orderDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
                                 );
                             }
+                        }
+                    }
+                    // order status !PENDING
+                    else {
+                        // neu partner da chuyen tien -> se luon hien button upload proof
+                        if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }

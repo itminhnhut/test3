@@ -11,12 +11,7 @@ const AppealButton = ({ timeExpire, timeDispute = REPORT_ABLE_TIME, onMarkWithSt
         <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
             {(props) => {
                 return (
-                    <ButtonV2
-                        disabled={props.total > timeDispute}
-                        onClick={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT)}
-                        className="px-6 disabled:!cursor-default"
-                        variants="secondary"
-                    >
+                    <ButtonV2 disabled={props.total > timeDispute} onClick={onMarkWithStatus} className="px-6 disabled:!cursor-default" variants="secondary">
                         {t('dw_partner:appeal')}
                     </ButtonV2>
                 );
