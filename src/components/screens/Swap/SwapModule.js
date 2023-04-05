@@ -12,7 +12,17 @@ import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { useAsync, useDebounce } from 'react-use';
 import { Trans, useTranslation } from 'next-i18next';
 import { find, orderBy, uniqBy } from 'lodash';
-import { formatPrice, formatSwapRate, formatWallet, getDecimalScale, getLoginUrl, countDecimals, walletLinkBuilder, safeToFixed } from 'redux/actions/utils';
+import {
+    formatPrice,
+    formatSwapRate,
+    formatWallet,
+    getDecimalScale,
+    getLoginUrl,
+    countDecimals,
+    walletLinkBuilder,
+    safeToFixed,
+    dwLinkBuilder
+} from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { ApiStatus } from 'redux/actions/const';
 import { PATHS } from 'constants/paths';
@@ -30,6 +40,8 @@ import { CloseIcon, SyncAltIcon, ArrowDropDownIcon } from 'components/svg/SvgIco
 import NoData from 'components/common/V2/TableV2/NoData';
 import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
+import { TYPE_DW } from '../WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -304,7 +316,8 @@ const SwapModule = ({ width, pair }) => {
         if (!auth) {
             // router.push(getLoginUrl('sso', 'login'));
         } else {
-            router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
+            // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto', asset: state?.fromAsset || 'USDT' }));
+            router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, state?.fromAsset));
         }
     }, [state.fromAsset, auth]);
 

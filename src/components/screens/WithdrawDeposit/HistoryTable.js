@@ -49,57 +49,52 @@ const getColumns = (t, user, side) => [
         render: (v) => formatTime(v, 'HH:mm:ss dd/MM/yyyy')
     },
     {
-        key: 'quoteQty',
-        dataIndex: 'quoteQty',
+        key: 'baseQty',
+        dataIndex: 'baseQty',
         title: t('common:amount'),
         align: 'right',
-        width: 189,
+        width: 140,
         render: (v) => formatNumber(v)
     },
     {
         key: 'partnerMetadata',
         dataIndex: 'partnerMetadata',
-        title: t('common:from'),
+        title: t('dw_partner:partner'),
         align: 'left',
         width: 189,
-        render: (v) =>
-            side === SIDE.SELL ? (
-                <>
-                    <div className="txtPri-2 mb-1">{v?.name}</div>
-                    <div className="txtSecond-3">{v?.code}</div>
-                </>
-            ) : (
-                <>
-                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <div className="txtSecond-3">{user?.code}</div>
-                </>
-            )
+        render: (v) => (
+            <>
+                <div className="txtPri-2 mb-1">{v?.name}</div>
+                <div className="txtSecond-3">{v?.code}</div>
+            </>
+        )
     },
-    {
-        key: 'partnerMetadata',
-        dataIndex: 'partnerMetadata',
-        title: t('common:to'),
-        align: 'left',
-        width: 189,
-        render: (v) =>
-            side === SIDE.BUY ? (
-                <>
-                    <div className="txtPri-2 mb-1">{v?.name}</div>
-                    <span className="txtSecond-3">{v?.code}</span>
-                </>
-            ) : (
-                <>
-                    <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-                    <span className="txtSecond-3">{user?.code}</span>
-                </>
-            )
-    },
+    // {
+    //     key: 'partnerMetadata',
+    //     dataIndex: 'partnerMetadata',
+    //     title: side === SIDE.BUY ? t('dw_partner:partner') : t('dw_partner:user'),
+    //     // title: t('common:to'),
+    //     align: 'left',
+    //     width: 185,
+    //     render: (v) =>
+    //         side === SIDE.BUY ? (
+    //             <>
+    //                 <div className="txtPri-2 mb-1">{v?.name}</div>
+    //                 <span className="txtSecond-3">{v?.code}</span>
+    //             </>
+    //         ) : (
+    //             <>
+    //                 <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
+    //                 <span className="txtSecond-3">{user?.code}</span>
+    //             </>
+    //         )
+    // },
     {
         key: 'status',
         dataIndex: 'status',
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
-        width: 182,
+        width: 185,
         render: (v) => <OrderStatusTag status={v} icon={false} />
     }
 ];
@@ -175,7 +170,7 @@ const HistoryTable = () => {
 
     return (
         <div className="space-y-6">
-            <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>
+            <div className="txtPri-3 ">{t('common:global_label.history')}</div>
             <TabV2
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
@@ -188,7 +183,7 @@ const HistoryTable = () => {
                 }))}
             />
             <TableV2
-                sort={['quoteQty']}
+                sort={['baseQty']}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
@@ -199,7 +194,7 @@ const HistoryTable = () => {
                 loading={loadingDataTable}
                 onRowClick={(transaction) => router.push(PATHS.WITHDRAW_DEPOSIT.DETAIL + '/' + transaction.displayingId)}
                 height={404}
-                className="border border-divider dark:border-divider-dark rounded-lg pt-4"
+                className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg pt-4"
                 tableStyle={{
                     fontSize: '16px',
                     padding: '16px',

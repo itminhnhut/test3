@@ -19,6 +19,8 @@ import styled from 'styled-components';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Types from 'components/screens/Account/types';
 import EstBalance from 'components/common/EstBalance';
+import { TYPE_DW } from '../WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     // ...
@@ -69,10 +71,11 @@ const OverviewWallet = (props) => {
                     onClick={() =>
                         onHandleClick(
                             'deposit_exchange',
-                            walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                type: 'crypto',
-                                asset: allAssets[i]?.assetCode
-                            })
+                            dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, allAssets[i]?.assetCode)
+                            // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                            //     type: 'crypto',
+                            //     asset: allAssets[i]?.assetCode
+                            // })
                         )
                     }
                     className="mr-3"
@@ -189,12 +192,13 @@ const OverviewWallet = (props) => {
                 if (href) {
                     router.push(href);
                 } else {
-                    router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, { type: 'crypto' }));
+                    router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY));
                 }
                 break;
             case WITHDRAW + EXCHANGE:
                 flag.current = true;
-                router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
+                router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL));
+                // router.push(walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.WITHDRAW, { type: 'crypto' }));
                 break;
             case TRANSFER + EXCHANGE:
                 flag.current = true;
@@ -239,10 +243,10 @@ const OverviewWallet = (props) => {
     const ListButton = ({ className }) => {
         return (
             <div className={className}>
-                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder('partner', 'BUY'))}>
+                <ButtonV2 className="px-6" onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY))}>
                     {t('common:deposit')}
                 </ButtonV2>
-                <ButtonV2 onClick={() => router.push(dwLinkBuilder('partner', 'SELL'))} className="px-6" variants="secondary">
+                <ButtonV2 onClick={() => router.push(dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.SELL))} className="px-6" variants="secondary">
                     {t('common:withdraw')}
                 </ButtonV2>
                 <ButtonV2 onClick={() => dispatch(setTransferModal({ isVisible: true }))} className="px-6" variants="secondary">

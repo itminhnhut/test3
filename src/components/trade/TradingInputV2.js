@@ -129,14 +129,14 @@ const TradingInputV2 = ({
                     <input
                         value={value}
                         disabled
-                        className={classNames('ml-2 flex-grow text-right', { 'mr-2': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
+                        className={classNames('ml-2 flex-grow text-right', { 'pr-2': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
                     />
                 ) : (
                     <NumberFormat
                         thousandSeparator
                         getInputRef={(ref) => (inputRef.current = ref)}
                         type="text"
-                        className={classNames('ml-2 flex-grow text-right', { 'mr-2': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
+                        className={classNames('ml-2 flex-grow text-right', { 'w-[95%]': !!renderTail, 'text-sm font-medium': onusMode }, inputClassName)}
                         onFocus={_onFocus}
                         onBlur={_onBlur}
                         autoComplete="off"
@@ -154,6 +154,7 @@ const TradingInputV2 = ({
                         })}
                     >
                         <X onClick={onClear} size={16} className="cursor-pointer" color={isDark ? colors.darkBlue5 : colors.gray[1]} />
+                        
                     </div>
                 )}
                 <div className={classNames('', tailContainerClassName)}>{renderTail && isFunction(renderTail) ? renderTail() : renderTail}</div>

@@ -119,25 +119,25 @@ const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, ord
                     (fileImage?.raw ? (
                         <>
                             <ButtonV2 loading={isUploading} onClick={onConfirm}>
-                                {t('common:confirm')}
+                                {t('dw_partner:submit')}
                             </ButtonV2>
                             <ButtonV2 disabled={isUploading} variants="secondary" onClick={reselect}>
-                                {t('profile:reselect')}
+                                {t('dw_partner:reselected')}
                             </ButtonV2>
                         </>
                     ) : (
                         <ButtonV2 variants="secondary" onClick={reselect}>
-                            {t('profile:reselect')}
+                            {t('dw_partner:reselected')}
                         </ButtonV2>
                     ))}
 
                 {!originImage && fileImage?.src && (
                     <>
                         <ButtonV2 loading={isUploading} onClick={onConfirm}>
-                            {t('common:confirm')}
+                            {t('dw_partner:submit')}
                         </ButtonV2>
                         <ButtonV2 disabled={isUploading} variants="secondary" onClick={reselect}>
-                            {t('profile:reselect')}
+                            {t('dw_partner:reselected')}
                         </ButtonV2>
                     </>
                 )}

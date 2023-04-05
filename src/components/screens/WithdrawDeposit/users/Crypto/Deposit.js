@@ -11,7 +11,6 @@ import { find, get, isFunction, keyBy } from 'lodash';
 import { useSelector } from 'react-redux';
 import { PATHS } from 'constants/paths';
 
-import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import useOutsideClick from 'hooks/useOutsideClick';
 import useWindowFocus from 'hooks/useWindowFocus';
 import useWindowSize from 'hooks/useWindowSize';
@@ -21,7 +20,6 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import Skeletor from 'components/common/Skeletor';
 import QRCode, { QRCodeSVG } from 'qrcode.react';
 import Empty from 'components/common/Empty';
-
 import styled from 'styled-components';
 import colors from 'styles/colors';
 import Axios from 'axios';
@@ -35,9 +33,6 @@ import format from 'date-fns/format';
 import TagV2 from 'components/common/V2/TagV2';
 import ModalV2 from 'components/common/V2/ModalV2';
 import Copy from 'components/svg/Copy';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
-import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     loadingConfigs: false,
@@ -236,7 +231,7 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
     );
 };
 
-const ExchangeDeposit = () => {
+const CryptoDeposit = ({ assetId }) => {
     // Init State
     const [state, set] = useState(INITIAL_STATE);
     const [status, setStatus] = useState(null);
@@ -247,7 +242,6 @@ const ExchangeDeposit = () => {
     const assetConfig = useSelector((state) => state.utils.assetConfig) || [];
 
     // Use Hooks
-    const router = useRouter();
     const focused = useWindowFocus();
     const [currentTheme] = useDarkMode();
     const {
@@ -785,15 +779,15 @@ const ExchangeDeposit = () => {
     }, [state.selectedNetwork, state.selectedAsset]);
 
     useEffect(() => {
-        const asset = get(router?.query, 'asset', 'VNDC');
+        // const asset = get(router?.query, 'asset', 'VNDC');
 
-        if (paymentConfigs && asset) {
-            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === asset);
+        if (paymentConfigs && assetId) {
+            const selectedAsset = find(paymentConfigs, (o) => o?.assetCode === assetId);
             const defaultNetwork = selectedAsset?.networkList?.find((o) => o.isDefault) || selectedAsset?.networkList?.[0];
             selectedAsset && setState({ selectedAsset });
             defaultNetwork && setState({ selectedNetwork: defaultNetwork });
         }
-    }, [router, paymentConfigs]);
+    }, [assetId, paymentConfigs]);
 
     useEffect(() => {
         let interval;
@@ -829,94 +823,79 @@ const ExchangeDeposit = () => {
     ];
 
     return (
-        <MaldivesLayout>
-            <Background isDark={currentTheme === THEME_MODE.DARK}>
-                <div className="mal-container px-4">
-                    <div className="flex items-center justify-between mb-10">
-                        <span className="font-semibold text-[2rem] leading-[3rem]">{`${t('common:buy')} Crypto`}</span>
-                        <div
-                            className="flex items-center font-semibold text-teal cursor-pointer"
-                            onClick={() => {
-                                router.push(dwLinkBuilder(TYPE_DW.PARTNER, SIDE.BUY));
+        <>
+            <div>
+                <div className="grid grid-cols-2 gap-6">
+                    <div
+                        className={classNames(
+                            'rounded-3xl p-6 space-y-4 nami-light-shadow bg-white',
+                            'dark:border dark:border-divider-dark dark:shadow-none dark:bg-dark-dark'
+                        )}
+                    >
+                        <CryptoSelect t={t} selected={state?.selectedAsset} />
+                        <NetworkSelect
+                            t={t}
+                            selected={state.selectedNetwork}
+                            networkList={state.selectedAsset?.networkList}
+                            onSelect={(value) => {
+                                setState({
+                                    selectedNetwork: value
+                                });
                             }}
-                        >
-                            <span className="mr-2">{t('dw_partner:buy_title')}</span>
-                            <ChevronRight size={16} color={colors.teal} />
+                        />
+
+                        <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                            <p className="mb-2 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:deposit_address')}</p>
+                            {renderAddressInput()}
+                        </div>
+                        {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
+                            <div className="relative bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
+                                <p className="mb-2 dark:text-txtSecondary-dark">Memo</p>
+                                {renderMemoInput()}
+                            </div>
+                        )}
+
+                        <div className="flex items-center justify-between !mt-6">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}</span>
+                            <span className="font-semibold">
+                                <span className="mr-2">{Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm)}</span>
+                                <span>{t('wallet:network_confirmation')}</span>
+                            </span>
                         </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-6">
-                        <div
-                            className={classNames(
-                                'rounded-3xl p-6 space-y-4 nami-light-shadow bg-white',
-                                'dark:border dark:border-divider-dark dark:shadow-none dark:bg-dark-dark'
-                            )}
-                        >
-                            <CryptoSelect t={t} selected={state?.selectedAsset} />
-                            <NetworkSelect
-                                t={t}
-                                selected={state.selectedNetwork}
-                                networkList={state.selectedAsset?.networkList}
-                                onSelect={(value) => {
-                                    setState({
-                                        selectedNetwork: value
-                                    });
-                                }}
-                            />
-
-                            <div className="relative bg-gray-13 dark:bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
-                                <p className="mb-2 text-txtSecondary dark:text-txtSecondary-dark">{t('wallet:deposit_address')}</p>
-                                {renderAddressInput()}
-                            </div>
-                            {state.address?.addressTag && state.selectedNetwork?.memoRegex && (
-                                <div className="relative bg-darkBlue-3 rounded-xl px-4 pt-5 pb-6 cursor-pointer">
-                                    <p className="mb-2 dark:text-txtSecondary-dark">Memo</p>
-                                    {renderMemoInput()}
-                                </div>
-                            )}
-
-                            <div className="flex items-center justify-between !mt-6">
-                                <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('wallet:expected_unlock')}</span>
-                                <span className="font-semibold">
-                                    <span className="mr-2">{Math.max(state.selectedNetwork?.minConfirm, state.selectedNetwork?.unLockConfirm)}</span>
-                                    <span>{t('wallet:network_confirmation')}</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div
-                            className="rounded-xl flex flex-col justify-between px-8 pt-12 pb-10"
-                            style={{
-                                backgroundImage: `url(${getS3Url(
-                                    `/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
-                                )})`,
-                                backgroundSize: 'cover'
-                            }}
-                        >
-                            <div className="flex items-start justify-center flex-1">{renderQrAddress()}</div>
-                            <div className="mt-8">{renderNotes()}</div>
-                        </div>
+                    <div
+                        className="rounded-xl flex flex-col justify-between px-8 pt-12 pb-10"
+                        style={{
+                            backgroundImage: `url(${getS3Url(
+                                `/images/screen/wallet/bg_mesh_gradient_${currentTheme === THEME_MODE.DARK ? 'dark' : 'light'}.png`
+                            )})`,
+                            backgroundSize: 'cover'
+                        }}
+                    >
+                        <div className="flex items-start justify-center flex-1">{renderQrAddress()}</div>
+                        <div className="mt-8">{renderNotes()}</div>
                     </div>
-
-                    <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
-                    <div className="space-x-3 flex items-center my-6">
-                        {listStatus.map((rs, i) => (
-                            <div
-                                key={i}
-                                onClick={() => setStatus(rs.value)}
-                                className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
-                                    status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
-                                }`}
-                            >
-                                {rs.label}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32">{renderDepHistory()}</div>
                 </div>
-            </Background>
+
+                <div className="text-2xl font-semibold mt-20">{t('wallet:dep_history')}</div>
+                <div className="space-x-3 flex items-center my-6">
+                    {listStatus.map((rs, i) => (
+                        <div
+                            key={i}
+                            onClick={() => setStatus(rs.value)}
+                            className={`px-5 py-3 text-txtSecondary dark:text-txtSecondary-dark ring-1 ring-divider dark:ring-divider-dark w-max rounded-full cursor-pointer ${
+                                status === rs.value ? '!text-teal font-semibold !ring-teal' : ''
+                            }`}
+                        >
+                            {rs.label}
+                        </div>
+                    ))}
+                </div>
+                <div className="bg-white dark:bg-dark dark:border dark:border-divider-dark rounded-xl pt-4 mt-6 mb-32">{renderDepHistory()}</div>
+            </div>
             {renderMemoNotice()}
             {renderPushedOrderNotice()}
-            <ModalNeedKyc isOpenModalKyc={isOpenModalKyc} />
-        </MaldivesLayout>
+        </>
     );
 };
 
@@ -943,4 +922,4 @@ const depositLinkBuilder = (asset) => {
     return `${PATHS.WALLET.EXCHANGE.DEPOSIT}?asset=${asset}`;
 };
 
-export default ExchangeDeposit;
+export default CryptoDeposit;

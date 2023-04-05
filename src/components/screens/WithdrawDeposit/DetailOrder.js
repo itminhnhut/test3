@@ -11,7 +11,7 @@ import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } f
 import { getAssetCode } from 'redux/actions/utils';
 
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_KEY, DisputedType, TranferreredType, MODE } from './constants';
+import { MODAL_TYPE, DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
 import classNames from 'classnames';
 import { useBoolean } from 'react-use';
@@ -20,7 +20,7 @@ import AppealButton from './components/AppealButton';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 
-const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
+export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
 };
 
@@ -44,8 +44,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     });
 
     const [modalProps, setModalProps] = useState({
-        [MODAL_KEY.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
-        [MODAL_KEY.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -74,12 +74,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         }));
 
     const { onMarkWithStatus } = useMarkOrder({
-        baseQty: state.orderDetail?.baseQty,
-        id,
-        assetCode,
-        assetId: state.orderDetail?.baseAssetId,
         setModalPropsWithKey,
-        side,
         mode,
         toggleRefetch
     });
@@ -162,17 +157,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             //user chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('cancel_order')
                                 };
                             } else {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                     text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
                                         timeDispute={state?.orderDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
@@ -185,23 +180,27 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 // user chua chuyen tien
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     secondaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                         text: t('common:cancel_order')
                                     };
                                     primaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                        function: () =>
+                                            onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
                                         text: t('dw_partner:transfer_already')
                                     };
                                     return;
                                 }
-                                // transferred
-                                if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                    primaryBtn = {
-                                        function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                    };
-                                }
                             }
+                        }
+                    }
+                    // order status is PENDING or DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu user da chuyen tien -> se luon hien button upload proof
+                        if (myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }
@@ -214,11 +213,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             //partner chua chuyen tien
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('cancel_order')
                                 };
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
                                     text: t('common:confirm')
                                 };
 
@@ -236,7 +235,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             // partner chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:cancel_order')
                                 };
 
@@ -245,17 +244,27 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             // partner transferred
                             if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                     text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
-                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                        timeDispute={state?.ordeDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
                                 );
                             }
+                        }
+                    }
+                    // order status is PENDING, DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu partner da chuyen tien -> se luon hien button upload proof
+                        if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }
@@ -348,13 +357,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 />
             )}
             {/*Modal confirm the order */}
-            <ModalConfirm mode={mode} modalProps={modalProps[MODAL_KEY.CONFIRM]} onClose={() => setModalPropsWithKey(MODAL_KEY.CONFIRM, { visible: false })} />
+            <ModalConfirm
+                mode={mode}
+                modalProps={modalProps[MODAL_TYPE.CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
+            />
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm
                 mode={mode}
-                modalProps={modalProps[MODAL_KEY.AFTER_CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_KEY.AFTER_CONFIRM, { visible: false })}
+                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
+                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
             />
 
             <ModalUploadImage

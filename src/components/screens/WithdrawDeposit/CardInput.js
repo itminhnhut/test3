@@ -124,7 +124,7 @@ const CardInput = () => {
     return (
         <>
             <Card className="w-full">
-                <div className="">
+                <div className="mb-4">
                     <div className="w-full mb-2 flex justify-between ">
                         <label htmlFor="TradingInput" className="txtSecond-3 ">
                             {t('common:amount')}
@@ -142,8 +142,8 @@ const CardInput = () => {
                             </div>
                         )}
                     </div>
-                    <div className="flex  -m-1  relative">
-                        <div className="flex-1 p-1 ">
+                    <div className="flex flex-wrap -m-1">
+                        <div className="flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
                                 value={loadingRate ? '' : state.amount}
@@ -176,7 +176,7 @@ const CardInput = () => {
                         </div>
                         <div className="w-24 p-1">
                             <ButtonV2
-                                className="!text-dominant bg-gray-12 dark:bg-dark-2 hover:opacity-80"
+                                className="!text-dominant w-full bg-gray-12 dark:bg-dark-2 hover:opacity-80"
                                 variants="text"
                                 onClick={() => {
                                     router.push(
@@ -190,14 +190,14 @@ const CardInput = () => {
                                 }}
                             >
                                 <span className="uppercase">{assetCode}</span>
-                                <SyncAltIcon className="rotate-90" size={16} />
+                                <SyncAltIcon className=" rotate-90" size={16} />
                             </ButtonV2>
                         </div>
                     </div>
                 </div>
-                <div className="mt-4">
+                {/* <div>
                     <RecommendAmount setAmount={(value) => setState({ amount: value })} assetCode={assetCode} amount={state.amount} loadingRate={loadingRate} />
-                </div>
+                </div> */}
                 <div className="space-y-2 mb-10">
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t('dw_partner:rate')}</div>

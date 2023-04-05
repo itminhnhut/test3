@@ -3,6 +3,7 @@ import { PartnerOrderStatus } from 'redux/actions/const';
 import { BxsInfoCircle, TimeLapseIcon, BxsErrorIcon, CancelIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
 import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // time in seconds
 export const REPORT_ABLE_TIME = 3 * 60 * 1000;
@@ -15,6 +16,11 @@ export const DisputedType = {
 export const MODE = {
     USER: 'user',
     PARTNER: 'partner'
+};
+
+export const TYPE_DW = {
+    PARTNER: 'partner',
+    CRYPTO: 'crypto'
 };
 
 export const TranferreredType = {
@@ -72,7 +78,7 @@ export const TABS = [
     }
 ];
 
-export const MODAL_KEY = {
+export const MODAL_TYPE = {
     CONFIRM: 'confirm',
     AFTER_CONFIRM: 'afterConfirm'
 };
@@ -105,20 +111,22 @@ export const ORDER_TYPES = {
         showConfirm: true
     },
     TRANSFERRED_SUCCESS: {
+        isHideBtnConfirm: true,
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
         description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
-            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công',
-        showConfirm: false
+            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công'
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
         description: ({ displayingId, amount, asset, side, t }) =>
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
-        showConfirm: ({ router, t, assetId, side }) => {
-            return (
-                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
+        showConfirm: ({ router, t, assetId, side, mode }) => {
+            return mode === MODE.PARTNER ? (
+                <></>
+            ) : (
+                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>
             );
@@ -127,13 +135,13 @@ export const ORDER_TYPES = {
     REPORT_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
-        description: ({ displayingId }) => `Bạn đã khiếu nại thành công giao dịch ${displayingId}`,
+        description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
         showConfirm: false
     },
 
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:cancel_order') : 'Từ chối giao dịch'),
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : 'Từ chối giao dịch'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (mode === MODE.USER) {
                 if (side === 'BUY')
@@ -195,4 +203,57 @@ export const TIME_FILTER = [
     //     localized: 'dw_partner:filter.custom',
     //     value: 'custom'
     // }
+];
+
+export const fiatFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: 72,
+        localized: ALLOWED_ASSET['72']
+    },
+    {
+        key: 22,
+        localized: ALLOWED_ASSET['22']
+    }
+];
+
+export const sideFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: SIDE.BUY,
+        localized: 'common:BUY'
+    },
+    {
+        key: SIDE.SELL,
+        localized: 'common:SELL'
+    }
+];
+
+export const statusFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: PartnerOrderStatus.SUCCESS,
+        localized: 'common:success'
+    },
+    {
+        key: PartnerOrderStatus.PENDING,
+        localized: 'common:processing'
+    },
+    {
+        key: PartnerOrderStatus.REJECTED,
+        localized: 'common:denined'
+    },
+    {
+        key: PartnerOrderStatus.DISPUTED,
+        localized: 'common:disputing'
+    }
 ];

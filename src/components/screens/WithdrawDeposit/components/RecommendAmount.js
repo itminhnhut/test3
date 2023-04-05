@@ -9,7 +9,7 @@ import { formatPrice } from 'redux/actions/utils';
 const MAXIMUM_RECOMMEND_LENGTH = 3;
 
 const MULTIPLIES_AMOUNT = {
-    72: [10e4, 10e5, 10e6],
+    72: [10e3,10e4, 10e5, 10e6],
     22: [10, 10e1, 10e2, 10e3]
 };
 

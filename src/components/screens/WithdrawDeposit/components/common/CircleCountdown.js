@@ -2,9 +2,9 @@ import CountdownTimer from 'components/common/CountdownTimer';
 import React from 'react';
 import Countdown from 'react-countdown';
 
-const CircleCountdown = ({ timeExpire, size = 80, textSize }) => {
+const CircleCountdown = ({ timeExpire, size = 80, textSize, onComplete }) => {
     return timeExpire ? (
-        <Countdown date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
+        <Countdown onComplete={onComplete} date={new Date(timeExpire).getTime()} renderer={({ props, ...countdownProps }) => props.children(countdownProps)}>
             {(props) => (
                 <div className="inline-block">
                     <CountdownTimer textSize={textSize} size={size} {...props} />
