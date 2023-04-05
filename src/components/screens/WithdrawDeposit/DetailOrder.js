@@ -190,14 +190,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     };
                                     return;
                                 }
-                                // transferred
-                                if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                    primaryBtn = {
-                                        function: () => setState({ isShowUploadImg: true }),
-                                        text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                    };
-                                }
                             }
+                        }
+                    }
+                    // order status is PENDING or DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu user da chuyen tien -> se luon hien button upload proof
+                        if (myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }
@@ -252,6 +255,16 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     />
                                 );
                             }
+                        }
+                    }
+                    // order status is PENDING, DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
+                        // neu partner da chuyen tien -> se luon hien button upload proof
+                        if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
+                            primaryBtn = {
+                                function: () => setState({ isShowUploadImg: true }),
+                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                            };
                         }
                     }
                 }

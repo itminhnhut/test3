@@ -170,7 +170,7 @@ const HistoryTable = () => {
 
     return (
         <div className="space-y-6">
-            <div className="txtPri-3 ">{t('dw_partner:order_history')}</div>
+            <div className="txtPri-3 ">{t('common:global_label.history')}</div>
             <TabV2
                 activeTabKey={activeTab}
                 onChangeTab={(key) => {
