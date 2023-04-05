@@ -315,3 +315,6 @@ export const API_REJECT_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/reject_partn
 export const API_UPLOAD_IMAGE_S3 = API_PREFIX + 'partner/disputed_upload';
 export const API_UPLOAD_IMAGE_SERVER_DW = API_V3_PREFIX + 'dw_partner/partner_order_upload';
 export const API_CHECK_LIMIT_WITHDRAW = API_V3_PREFIX + 'spot/partner_order_limit';
+
+export const API_GET_COMMISSION_REPORT_PARTNER = API_V3_PREFIX + 'dw_partner/partner_commission_report';
+export const API_GET_COMMISSION_STATISTIC_PARTNER = API_V3_PREFIX + 'dw_partner/partner_commission_statistic';

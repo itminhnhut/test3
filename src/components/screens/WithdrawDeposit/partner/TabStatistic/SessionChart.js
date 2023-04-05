@@ -58,15 +58,17 @@ const SessionChart = () => {
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 1001)),
+                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 10898789)),
+                // data: Array.from({ length: chartLabels.length }, () => 100),
                 backgroundColor: colors.purple[1]
                 // stack: 'pnl'
             },
             {
                 fill: false,
                 label: false,
-                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 1001)),
-                backgroundColor: colors.green[6]
+                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 10898789)),
+                backgroundColor: colors.green[6],
+                borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 }
                 // stack: 'pnl'
             }
         ]
@@ -77,9 +79,10 @@ const SessionChart = () => {
         maintainAspectRatio: false,
         indexAxis: 'x',
         barPercentage: 0.15,
-        borderRadius: 3,
+
         borderSkipped: false,
         plugins: {
+            title: { align: 'left' },
             tooltip: {
                 // callbacks: {
                 //     label: function (context) {
@@ -111,37 +114,41 @@ const SessionChart = () => {
         },
         scales: {
             x: {
+                beginAtZero: false,
                 stacked: true,
                 ticks: {
                     color: colors.darkBlue5,
                     showLabelBackdrop: false,
                     padding: 8,
                     fontSize: 12,
-                    lineHeight: 16
+                    lineHeight: 16,
+                    crossAlign: 'near'
                 },
                 grid: {
                     display: false,
-                    drawBorder: false
+                    drawBorder: true
                     // borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
                 }
             },
             y: {
                 stacked: true,
-                beginAtZero: true,
                 ticks: {
                     color: colors.darkBlue5,
                     callback: function (value, index, ticks) {
-                        return formatPrice(value) + 'K';
+                        return formatPrice(value);
                     },
                     crossAlign: 'far',
                     padding: 8,
                     fontSize: 12,
-                    lineHeight: 16
+                    lineHeight: 16,
+                    beginAtZero: true
                 },
                 grid: {
                     drawTicks: false,
                     borderDash: [1, 4],
                     borderDashOffset: 1,
+                    // display: false,
+                    drawBorder: false,
                     // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
                     // borderDash: [1, 4],
                     // // color: colors.divider.DEFAULT,
@@ -167,7 +174,7 @@ const SessionChart = () => {
                 <div className="flex items-center justify-between">
                     {/* Tabs */}
                     <div>
-                        <Tabs tab={typeTab} className="gap-6">
+                        <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
                             <TabItem className="!px-0" value={0} active={typeTab === 0} onClick={() => setTypeTab(0)}>
                                 Tổng nạp rút
                             </TabItem>

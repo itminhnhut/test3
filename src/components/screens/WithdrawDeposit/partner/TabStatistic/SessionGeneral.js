@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import { useTranslation } from 'next-i18next';
 import { TIME_FILTER } from '../../constants';
@@ -6,6 +6,24 @@ import classNames from 'classnames';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
 import { formatPercentage } from 'redux/actions/utils';
+import useFetchApi from 'hooks/useFetchApi';
+import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
+import Skeletor from 'components/common/Skeletor';
+
+const mockData = {
+    totalCommission: {
+        totalValue: [],
+        convertedCommissionValue: 0
+    },
+    totalPartnerOrderVolume: {
+        _id: 0,
+        sumBuy: 36000,
+        sumSell: 50053000,
+        convertedBuyVolume: 36000,
+        convertedSellVolume: 50053000
+    },
+    commissionRate: null
+};
 
 const SessionGeneral = () => {
     const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
@@ -18,6 +36,49 @@ const SessionGeneral = () => {
             key: 'selection'
         }
     });
+
+    useEffect(() => {
+        if (timeTab !== 'custom') {
+            const date = new Date();
+            switch (timeTab) {
+                case TIME_FILTER[0].value:
+                    date.setDate(date.getDate() - 1);
+                    break;
+                case TIME_FILTER[1].value:
+                    date.setDate(date.getDate() - 7);
+                    break;
+                case TIME_FILTER[2].value:
+                    date.setDate(date.getDate() - 31);
+                    break;
+                default:
+                    break;
+            }
+            date.toLocaleDateString();
+            setFilter({
+                range: {
+                    startDate: date.getTime(),
+                    endDate: Date.now(),
+                    key: 'selection'
+                }
+            });
+            return;
+        } else {
+            setFilter({
+                range: {
+                    startDate: new Date(filter?.range?.startDate ?? null).getTime(),
+                    endDate: new Date(filter?.range?.endDate ?? null).getTime(),
+                    key: 'selection'
+                }
+            });
+        }
+    }, [timeTab]);
+
+    const { data, loading, error } = useFetchApi(
+        { url: API_GET_COMMISSION_REPORT_PARTNER, params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate } },
+        true,
+        [filter]
+    );
+
     return (
         <div>
             {/* Header */}
@@ -74,7 +135,16 @@ const SessionGeneral = () => {
                         {/* top */}
                         <div>
                             <h1 className="txtSecond-3">Tổng hoa hồng</h1>
-                            <div className="pt-4 txtPri-5">{formatNumber(71900000, 0)}</div>
+                            <div className="pt-4 txtPri-5">
+                                {loading ? (
+                                    <Skeletor width="100px" />
+                                ) : (
+                                    formatNumber(
+                                        data?.totalCommission.totalValue.filter((item) => item !== null).reduce((acc, val) => acc + val, 0),
+                                        0
+                                    )
+                                )}
+                            </div>
                         </div>
 
                         {/* divider */}
@@ -83,14 +153,16 @@ const SessionGeneral = () => {
                         {/* bottom */}
                         <div>
                             <h1 className="txtSecond-3">Tỷ lệ hoa hồng</h1>
-                            <div className="pt-4 txtPri-5">{formatPercentage(0.182563 * 100, 2)}%</div>
+                            <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
                         </div>
                     </div>
                     <div className="w-1/2 flex flex-col items-end justify-center">
                         <h1 className="txtSecond-3">Tổng khối lượng</h1>
                         <div className="pt-4 txtPri-6">
-                            <span className="text-green-3 dark:text-green-2">719M</span>
-                            <span>/200M</span>
+                            <span className="text-green-3 dark:text-green-2">
+                                {loading ? <Skeletor width="100px" /> : `${data?.totalPartnerOrderVolume.convertedBuyVolume}`}
+                            </span>
+                            /{loading ? <Skeletor width="100px" /> : `${data?.totalPartnerOrderVolume.convertedSellVolume}`}
                         </div>
                     </div>
                 </CardWrapper>
