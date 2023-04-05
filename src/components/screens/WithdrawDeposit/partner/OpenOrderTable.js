@@ -20,7 +20,7 @@ import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
 
-const getColumns = ({ t, setModalPropsWithKey, toggleRefetch }) => [
+const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'timeExpire',
         dataIndex: 'timeExpire',
@@ -109,12 +109,6 @@ const getColumns = ({ t, setModalPropsWithKey, toggleRefetch }) => [
         align: 'left',
         width: 190,
         render: (order, item) => {
-            const { onMarkWithStatus } = useMarkOrder({
-                setModalPropsWithKey,
-                mode: MODE.PARTNER,
-                orderDetail: order,
-                toggleRefetch
-            });
             const side = item.side;
             const btnText = side === SIDE.BUY ? t('dw_partner:take_money_already') : t('common:confirm');
             const btnDisabled =
@@ -125,8 +119,8 @@ const getColumns = ({ t, setModalPropsWithKey, toggleRefetch }) => [
                     onClick={(e) => {
                         e.stopPropagation();
                         return order.side === SIDE.BUY
-                            ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE)
-                            : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED);
+                            ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE, order)
+                            : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED, order);
                     }}
                     variants="secondary"
                 >
@@ -176,6 +170,13 @@ const OpenOrderTable = () => {
                 ...props
             }
         }));
+    const toggleRefetchTable = () => setState({ refetch: !state.refetch });
+
+    const { onMarkWithStatus } = useMarkOrder({
+        setModalPropsWithKey,
+        mode: MODE.PARTNER,
+        toggleRefetch: toggleRefetchTable
+    });
 
     useEffect(() => {
         if (userSocket) {
@@ -263,7 +264,7 @@ const OpenOrderTable = () => {
                     skip={0}
                     useRowHover
                     data={state.data}
-                    columns={getColumns({ t, setModalPropsWithKey, toggleRefetch: () => setState({ refetch: !state.refetch }) })}
+                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch: toggleRefetchTable })}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
                     loading={state.loading}

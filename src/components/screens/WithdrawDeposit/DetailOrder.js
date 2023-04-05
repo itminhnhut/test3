@@ -76,8 +76,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { onMarkWithStatus } = useMarkOrder({
         setModalPropsWithKey,
         mode,
-        toggleRefetch,
-        orderDetail: state.orderDetail
+        toggleRefetch
     });
 
     useEffect(() => {
@@ -158,17 +157,17 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             //user chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('cancel_order')
                                 };
                             } else {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                     text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
                                         timeDispute={state?.orderDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
@@ -181,11 +180,12 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 // user chua chuyen tien
                                 if (myStatus === PartnerPersonStatus.PENDING) {
                                     secondaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                         text: t('common:cancel_order')
                                     };
                                     primaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                        function: () =>
+                                            onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
                                         text: t('dw_partner:transfer_already')
                                     };
                                     return;
@@ -210,11 +210,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             //partner chua chuyen tien
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('cancel_order')
                                 };
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
                                     text: t('common:confirm')
                                 };
 
@@ -232,7 +232,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             // partner chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:cancel_order')
                                 };
 
@@ -241,13 +241,13 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             // partner transferred
                             if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE),
+                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
                                     text: t('dw_partner:take_money_already')
                                 };
                                 reportBtn = (
                                     <AppealButton
-                                        onMarkWithStatus={onMarkWithStatus}
-                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                        timeDispute={state?.ordeDetail?.countdownTimeDispute}
                                         timeExpire={state.orderDetail?.timeExpire}
                                     />
                                 );
