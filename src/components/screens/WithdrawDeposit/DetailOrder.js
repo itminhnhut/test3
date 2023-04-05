@@ -342,7 +342,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 <div className="flex items-center justify-between mt-8">
                     {renderButton()}
 
-                    <div className="flex justify-end ">
+                    <div className="flex justify-end">
                         <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
                             <FutureSupportIcon className="mr-2" isDark={isDark} />
                             {t('common:chat_with_support')}

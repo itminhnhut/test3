@@ -262,12 +262,12 @@ const CardInput = () => {
                             <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
                         </Tooltip> */}
 
-                        <div
-                            data-tip=""
-                            className="inline-flex txtPri-1 space-x-1 !cursor-default"
-                            // data-for="will-transfer-receive" id="will-transfer-receive"
-                        >
-                            {loadingRate ? <Skeletor width="70px" /> : <div className=" max-w-[150px] truncate">{formatBalanceFiat(input * rate, 'VNDC')}</div>}
+                        <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
+                            {loadingRate ? (
+                                <Skeletor width="70px" />
+                            ) : (
+                                <div className=" max-w-[150px] truncate">{formatBalanceFiat(state.amount * rate, 'VNDC')}</div>
+                            )}
 
                             <div className="">VND</div>
                         </div>
