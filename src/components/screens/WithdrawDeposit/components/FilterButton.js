@@ -3,6 +3,7 @@ import DateFilter from './DateFilter';
 import CommonFilter from './common/CommonFilter';
 import { fiatFilter, sideFilter, statusFilter } from '../constants';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { formatLocalTimezoneToUTC } from 'utils/helpers';
 
 const INITIAL_FILTER_LOCALIZED = {
     assetId: null,

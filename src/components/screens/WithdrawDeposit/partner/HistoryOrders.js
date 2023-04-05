@@ -13,6 +13,8 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
+import { formatLocalTimezoneToUTC } from 'utils/helpers';
+import axios from 'axios';
 
 const getColumns = ({ t }) => [
     {
@@ -146,14 +148,22 @@ const HistoryOrders = () => {
     };
 
     useEffect(() => {
+        const source = axios.CancelToken.source();
+        let mounted = false;
         const fetchOrders = async () => {
+            setState({ loading: true });
             try {
-                setState({ loading: true });
+                const { from, to } = state.params;
+                const startDate = from && formatLocalTimezoneToUTC(from);
+                const endDate = to && formatLocalTimezoneToUTC(to + 86400 * 1000);
                 const { data, status } = await FetchApi({
                     url: API_GET_HISTORY_DW_PARTNERS,
                     params: {
-                        ...state.params
-                    }
+                        ...state.params,
+                        from: startDate,
+                        to: endDate
+                    },
+                    cancelToken: source.token
                 });
 
                 let hasNext = false,
@@ -168,10 +178,16 @@ const HistoryOrders = () => {
                 });
             } catch (error) {
             } finally {
-                setState({ loading: false });
+                if (mounted) {
+                    setState({ loading: true, hasNext: false });
+                } else setState({ loading: false });
             }
         };
         fetchOrders();
+        return () => {
+            mounted = true;
+            source.cancel();
+        };
     }, [state.params]);
 
     const customSort = (tableSorted) => {

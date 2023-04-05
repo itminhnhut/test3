@@ -25,7 +25,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'timeExpire',
         dataIndex: 'timeExpire',
-        title: 'Trạng thái',
+        title: t('common:status'),
         align: 'left',
         width: 107,
         render: (row) => <CircleCountdown onComplete={toggleRefetch} size={34} textSize={10} timeExpire={row} />
@@ -33,7 +33,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
-        title: 'Mã giao dịch',
+        title: t('common:transaction_id'),
         align: 'left',
         width: 124,
         render: (row) => <TextCopyable text={row} />
@@ -41,7 +41,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'baseAssetId',
         dataIndex: 'baseAssetId',
-        title: 'Mã giao dịch',
+        title: t('common:asset'),
         align: 'left',
         width: 148,
         render: (row) => {
@@ -56,7 +56,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'createdAt',
         dataIndex: 'createdAt',
-        title: 'Thời gian',
+        title: t('common:time'),
         align: 'left',
         width: 196,
         render: (row) => {
@@ -66,7 +66,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'baseQty',
         dataIndex: 'baseQty',
-        title: 'Số lượng',
+        title: t('common:amount'),
         align: 'right',
         width: 152,
         render: (row) => {
@@ -76,7 +76,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'user',
         dataIndex: 'userMetadata',
-        title: 'Từ',
+        title: t('common:from'),
         align: 'left',
         width: 165,
         render: (row) => {
@@ -91,7 +91,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'partner',
         dataIndex: 'partnerMetadata',
-        title: 'Đến',
+        title: t('common:to'),
         align: 'left',
         width: 165,
         render: (row) => {
@@ -250,11 +250,11 @@ const OpenOrderTable = () => {
                         tabs={[
                             {
                                 key: SIDE.BUY,
-                                children: <div className="capitalize">{t('dw_partner:buy')}</div>
+                                children: <div className="capitalize">{t('common:buy')}</div>
                             },
                             {
                                 key: SIDE.SELL,
-                                children: <div className="capitalize">{t('dw_partner:sell')}</div>
+                                children: <div className="capitalize">{t('common:sell')}</div>
                             }
                         ]}
                     />
