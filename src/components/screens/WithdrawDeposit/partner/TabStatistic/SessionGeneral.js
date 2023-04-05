@@ -94,7 +94,22 @@ const SessionGeneral = () => {
                         </div>
                     </div>
                 </CardWrapper>
-                <CardWrapper className="flex-auto"></CardWrapper>
+                <CardWrapper className="flex-auto flex gap-x-6">
+                    <div className="max-w-[237px] flex flex-col">
+                        <div className="txtPri-5 pb-4">Đối tác nạp rút tiêu biểu</div>
+                        <div className="txtSecond-3 text-left flex items-center flex-auto">
+                            Lorem ipsum dolor sit amet consectetur. Tellus viverra ut a vitae massa sed. Sit elementum tincidunt tortor.
+                        </div>
+                    </div>
+                    <div
+                        className="min-w-[168px] min-h-[168px]"
+                        style={{
+                            // backgroundImage: `url('${getS3Url('/images/reference/background_mobile.png')}')`,
+                            backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
+                            backgroundSize: 'cover'
+                        }}
+                    ></div>
+                </CardWrapper>
             </div>
         </div>
     );
