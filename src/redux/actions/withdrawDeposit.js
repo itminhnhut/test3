@@ -5,6 +5,7 @@ import {
     API_CREATE_ORDER_WITH_OTP,
     API_GET_DEFAULT_PARTNER,
     API_GET_PARTNERS,
+    API_GET_PARTNER_PROFILE,
     API_MARK_PARTNER_ORDER,
     API_REJECT_PARTNER_ORDER,
     API_SET_USER_BANK_ACCOUNT
@@ -40,6 +41,35 @@ export const setAllowedAmount = (payload) => (dispatch) => {
 };
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
+
+// get profile of partner (on mode partner)
+export const getPartnerProfile = () => {
+    return async (dispatch) => {
+        try {
+            dispatch(setLoadingPartner(true));
+            const partner = await FetchApi({
+                url: API_GET_PARTNER_PROFILE
+            });
+            if (partner && partner.status === ApiStatus.SUCCESS) {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: partner.data
+                });
+            } else {
+                dispatch({
+                    type: types.SET_PARTNER,
+                    payload: null
+                });
+            }
+        } catch (error) {
+            console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
+        } finally {
+            dispatch(setLoadingPartner(false));
+        }
+    };
+};
+
+// get partner for withdraw-deposit (on mode user)
 export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {

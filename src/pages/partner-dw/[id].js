@@ -4,9 +4,10 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
 import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
-import { API_PARTNER_REGISTER } from 'redux/actions/apis';
-import useFetchApi from 'hooks/useFetchApi';
 import Spinner from 'components/svg/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPartnerProfile } from 'redux/actions/withdrawDeposit';
+import PartnerProfile from 'components/screens/WithdrawDeposit/partner/Profile';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -21,28 +22,25 @@ const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/p
 });
 
 const PartnerDepositWithdraw = ({ id }) => {
-    const [isPartner, setIsPartner] = useState(false);
-    const { data, loading } = useFetchApi({ url: API_PARTNER_REGISTER }, true);
+    const { partner, loadingPartner } = useSelector((state) => state.withdrawDeposit);
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        if (!loading) {
-            if (data?.phone?.length && data?.social_link?.length) {
-                setIsPartner(true);
-            } else {
-                setIsPartner(false);
-            }
-        }
-    }, [data, loading]);
+        dispatch(getPartnerProfile());
+    }, []);
+
     return (
         <MaldivesLayout>
-            {loading ? (
+            {loadingPartner ? (
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
                     <Spinner size={50} />
                 </div>
-            ) : isPartner ? (
+            ) : Boolean(partner) ? (
                 <PartnerWD>
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
                     {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
+                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
                 </PartnerWD>
             ) : (
                 <div className="text-3xl font-semibold text-center">Please login on partner account!</div>

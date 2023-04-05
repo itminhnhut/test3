@@ -304,10 +304,11 @@ export const API_GET_PARTNER_BANKS = API_V3_PREFIX + 'payment/partner_bank_accou
 export const API_GET_HISTORY_DW_PARTNERS = API_V3_PREFIX + 'dw_partner/partner_order';
 export const API_GET_OPENING_ORDER = API_V3_PREFIX + 'dw_partner/partner_order_opening';
 export const API_GET_ORDER_PRICE = API_V3_PREFIX + 'dw_partner/partner_order_price';
-export const API_CREATE_ORDER = API_V3_PREFIX + 'dw_partner/partner_order_v4';
+export const API_GET_PARTNER_PROFILE = API_V3_PREFIX + 'dw_partner/partner_detail';
 export const API_GET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
-export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
 export const API_GET_ORDER_DETAILS = API_V3_PREFIX + 'dw_partner/partner_order_detail';
+export const API_CREATE_ORDER = API_V3_PREFIX + 'dw_partner/partner_order_v4';
+export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
 export const API_MARK_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/mark_partner_order';
 export const API_APPROVE_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/approve_partner_order';
 
