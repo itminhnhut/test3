@@ -197,8 +197,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             }
                         }
                     }
-                    // order status is DISPUTED
-                    else if (orderStatus === PartnerOrderStatus.DISPUTED) {
+                    // order status is PENDING or DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
                         // neu user da chuyen tien -> se luon hien button upload proof
                         if (myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
@@ -261,8 +261,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             }
                         }
                     }
-                    // order status is DISPUTED
-                    else if (orderStatus === PartnerOrderStatus.DISPUTED) {
+                    // order status is PENDING, DISPUTED
+                    if (orderStatus === PartnerOrderStatus.DISPUTED || orderStatus === PartnerOrderStatus.PENDING) {
                         // neu partner da chuyen tien -> se luon hien button upload proof
                         if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
