@@ -20,9 +20,12 @@ const PopoverSelect = (props, ref) => {
             {props.open && (
                 <div className="absolute left-0 w-full mt-3 bg-white dark:bg-darkBlue-3 border border-divider dark:border-divider-dark rounded-xl shadow-card_light dark:shadow-popover">
                     <div className="py-4">
-                        <div className="px-4 mb-6">
-                            <SearchBox isValueTrim={false} inputClassname="text-base" width="100%" onChange={props.onChange} value={props.value} />
-                        </div>
+                        {props.hasSearchBox && (
+                            <div className="px-4 mb-6">
+                                <SearchBox isValueTrim={false} inputClassname="text-base" width="100%" onChange={props?.onChange} value={props?.value} />
+                            </div>
+                        )}
+
                         {props.children}
                     </div>
                 </div>

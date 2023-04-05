@@ -34,6 +34,7 @@ const DropdownCard = ({
             ref={cardRef}
             open={isVisible}
             containerClassname={{ [containerClassname]: isVisible }}
+            hasSearchBox
             label={
                 <div className="bg-gray-12  dark:bg-dark-2 px-4 py-6 rounded-xl w-full">
                     <div className="txtSecond-2 mb-4"> {label}</div>

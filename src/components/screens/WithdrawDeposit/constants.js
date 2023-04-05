@@ -3,6 +3,7 @@ import { PartnerOrderStatus } from 'redux/actions/const';
 import { BxsInfoCircle, TimeLapseIcon, BxsErrorIcon, CancelIcon, CheckCircleIcon } from 'components/svg/SvgIcon';
 import { PATHS } from 'constants/paths';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // time in seconds
 export const REPORT_ABLE_TIME = 3 * 60 * 1000;
@@ -178,3 +179,56 @@ export const ORDER_TYPES = {
         showConfirm: false
     }
 };
+
+export const fiatFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: 72,
+        localized: ALLOWED_ASSET['72']
+    },
+    {
+        key: 22,
+        localized: ALLOWED_ASSET['22']
+    }
+];
+
+export const sideFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: SIDE.BUY,
+        localized: 'common:BUY'
+    },
+    {
+        key: SIDE.SELL,
+        localized: 'common:SELL'
+    }
+];
+
+export const statusFilter = [
+    {
+        key: null,
+        localized: null
+    },
+    {
+        key: PartnerOrderStatus.SUCCESS,
+        localized: 'common:success'
+    },
+    {
+        key: PartnerOrderStatus.PENDING,
+        localized: 'common:processing'
+    },
+    {
+        key: PartnerOrderStatus.REJECTED,
+        localized: 'common:denined'
+    },
+    {
+        key: PartnerOrderStatus.DISPUTED,
+        localized: 'common:disputing'
+    }
+];

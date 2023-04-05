@@ -4,10 +4,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
 import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
-import { useSelector } from 'react-redux';
-import FetchApi from 'utils/fetch-api';
 import { API_PARTNER_REGISTER } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
 import useFetchApi from 'hooks/useFetchApi';
 import Spinner from 'components/svg/Spinner';
 
@@ -16,6 +13,10 @@ const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partn
 });
 
 const OpenOrderTable = dynamic(() => import('components/screens/WithdrawDeposit/partner/OpenOrderTable'), {
+    ssr: false
+});
+
+const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/partner/HistoryOrders'), {
     ssr: false
 });
 
@@ -41,6 +42,7 @@ const PartnerDepositWithdraw = ({ id }) => {
                 <PartnerWD>
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
+                    {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
                 </PartnerWD>
             ) : (
                 <div className="text-3xl font-semibold text-center">Please login on partner account!</div>

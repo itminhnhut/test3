@@ -19,6 +19,7 @@ import { MODAL_TYPE, MODE, TranferreredType } from '../constants';
 import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
+import { useBoolean } from 'react-use';
 
 const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
@@ -92,7 +93,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
         dataIndex: 'partnerMetadata',
         title: 'Đến',
         align: 'left',
-        width: 152,
+        width: 165,
         render: (row) => {
             return (
                 <div>
@@ -151,9 +152,9 @@ const OpenOrderTable = () => {
             status: PartnerOrderStatus.PENDING
         },
         loading: false,
-        hasNext: false,
-        refetch: false
+        hasNext: false
     });
+    const [refetch, toggleRefetch] = useBoolean();
 
     const [modalProps, setModalProps] = useState({
         [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
@@ -170,18 +171,17 @@ const OpenOrderTable = () => {
                 ...props
             }
         }));
-    const toggleRefetchTable = () => setState({ refetch: !state.refetch });
 
     const { onMarkWithStatus } = useMarkOrder({
         setModalPropsWithKey,
         mode: MODE.PARTNER,
-        toggleRefetch: toggleRefetchTable
+        toggleRefetch: () => {}
     });
 
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                console.log('data', data);
+                toggleRefetch();
             });
         }
         return () => {
@@ -220,7 +220,7 @@ const OpenOrderTable = () => {
             }
         };
         fetchOpeningOrders();
-    }, [state.params, state.refetch]);
+    }, [state.params, refetch]);
 
     return (
         <>
@@ -245,6 +245,7 @@ const OpenOrderTable = () => {
                                     side: key
                                 }
                             });
+                            // setFirstLoad(true);
                         }}
                         tabs={[
                             {
@@ -264,7 +265,7 @@ const OpenOrderTable = () => {
                     skip={0}
                     useRowHover
                     data={state.data}
-                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch: toggleRefetchTable })}
+                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch: () => {} })}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
                     loading={state.loading}
