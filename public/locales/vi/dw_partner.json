@@ -48,7 +48,7 @@
     "cancel_order_buy_description": "Bạn có chắc chắc muốn hủy giao dịch Mua #{{orderId}} với khối lượng {{amount}} {{asset}}? Lưu ý: Số tiền đã chuyển sẽ không được hoàn lại khi hủy giao dịch sau khi đã chuyển khoản.",
     "cancel_order_sell_description": "Bạn có chắc chắc muốn hủy giao dịch Bán #{{orderId}} với khối lượng {{amount}} {{asset}}?",
     "cancel_transaction": "Hủy giao dịch",
-    "cancel_order_success": "Lệnh {{side}} #{{orderId}} {{amount}} {{asset}} đã huỷ thành công.",
+    "cancel_order_success": "Lệnh #{{orderId}} {{side}} {{amount}} {{asset}} đã huỷ thành công.",
     "create_new_transaction": "Tạo giao dịch mới",
     "appeal_description": "Khiếu nại sẽ chuyển trạng thái của Lệnh #{{orderId}} sang trạng thái Đang tranh chấp, người dùng bắt buộc phải cung cấp các bằng chứng liên quan đến giao dịch như hình ảnh, tin nhắn,...",
     "enter_amount": "Nhập số lượng",
