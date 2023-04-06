@@ -35,7 +35,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     // const [pairTicker, setPairTicker] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [dataTable, setDataTable] = useState([]);
-
+    const isTabAll = useRef(false);
     // Handle trendings:
     const [trendingPairs, setTrendingPairs] = useState([]);
 
@@ -69,6 +69,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
 
     const onHandleChange = async (key, value) => {
         let data = await forceData(pairConfigs);
+        isTabAll.current = false;
         setCurTab(key);
         switch (key) {
             case TABS.FUTURES:
@@ -137,6 +138,13 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         if (pairConfigs) getMarketWatch();
     }, [pairConfigs]);
 
+    useEffect(() => {
+        if (search) {
+            isTabAll.current = true;
+            setCurTab(TABS.FUTURES);
+        }
+    }, [search]);
+
     const dataFilter = useMemo(() => {
         let data = [...dataTable];
         data = data.filter((item) => item?.quoteAsset === mode);
@@ -149,8 +157,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
             }
         }
         if (deboundSearch) {
-            data = pairConfigs.filter((item) => item?.quoteAsset === mode);
-            setCurTab(TABS.FUTURES);
+            if (isTabAll.current) data = pairConfigs.filter((item) => item?.quoteAsset === mode);
             return searchSort(data, ['baseAsset', 'quoteAsset'], deboundSearch);
         }
         if (Object.keys(sortBy)?.length) {

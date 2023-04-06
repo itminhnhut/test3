@@ -17,7 +17,7 @@ import { usePrevious } from 'react-use';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
-import FuturesPairList from '../PairList';
+// import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -31,6 +31,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import PriceChangePercent from 'components/common/PriceChangePercent';
+import dynamic from 'next/dynamic';
+const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
