@@ -15,6 +15,8 @@ import NoData from 'components/common/V2/TableV2/NoData';
 import fetchAPI from 'utils/fetch-api';
 import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import { searchSort } from 'redux/actions/utils';
+import useDebounce from 'hooks/useDebounce';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -22,16 +24,18 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     const favoritePairs = useSelector((state) => state.futures.favoritePairs);
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
-    const [curTab, setCurTab] = useState(TABS.FAVOURITE);
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const auth = useSelector((state) => state.auth?.user) || null;
+    const deboundSearch = useDebounce(search, 500);
 
+    const [curTab, setCurTab] = useState(auth ? TABS.FAVOURITE : TABS.FUTURES);
     // Sort function:
     const [sortBy, setSortBy] = useState({}); // undefined = default, true => desc, false => asc
     // const [pairTicker, setPairTicker] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [dataTable, setDataTable] = useState([]);
-
+    const isTabAll = useRef(false);
     // Handle trendings:
     const [trendingPairs, setTrendingPairs] = useState([]);
 
@@ -59,22 +63,15 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         getTrending();
     }, []);
 
+    useEffect(() => {
+        setCurTab(auth ? TABS.FAVOURITE : TABS.FUTURES);
+    }, [!!auth]);
+
     const onHandleChange = async (key, value) => {
-        if (key !== 'quoteAsset') setCurTab(key);
         let data = await forceData(pairConfigs);
+        isTabAll.current = false;
+        setCurTab(key);
         switch (key) {
-            case 'quoteAsset':
-                data = data.filter((item) => item?.quoteAsset === mode);
-                setMode(value);
-                break;
-            case TABS.FAVOURITE:
-                const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
-                if (_data?.length > 0) {
-                    data = _data;
-                } else {
-                    data = data?.filter((i) => SUGGESTED_SYMBOLS?.find((rs) => rs.includes(i?.baseAsset)));
-                }
-                break;
             case TABS.FUTURES:
                 break;
             case TABS.TRENDING:
@@ -141,21 +138,41 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         if (pairConfigs) getMarketWatch();
     }, [pairConfigs]);
 
+    useEffect(() => {
+        if (search) {
+            isTabAll.current = true;
+            setCurTab(TABS.FUTURES);
+        }
+    }, [search]);
+
     const dataFilter = useMemo(() => {
         let data = [...dataTable];
+        data = data.filter((item) => item?.quoteAsset === mode);
+        if (curTab === TABS.FAVOURITE) {
+            const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+            if (_data?.length > 0) {
+                data = _data;
+            } else {
+                data = data?.filter((i) => SUGGESTED_SYMBOLS?.includes(i?.baseAsset));
+            }
+        }
+        if (deboundSearch) {
+            if (isTabAll.current) data = pairConfigs.filter((item) => item?.quoteAsset === mode);
+            return searchSort(data, ['baseAsset', 'quoteAsset'], deboundSearch);
+        }
         if (Object.keys(sortBy)?.length) {
             const _s = Object.entries(sortBy)[0];
             data = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
         }
         return data;
-    }, [dataTable, sortBy, search]);
+    }, [dataTable, sortBy, mode, deboundSearch, curTab, favoritePairs, pairConfigs]);
 
     // End sort function,
     const renderPairListItemsV2 = useCallback(() => {
-        if (dataFilter.length === 0) return <NoData isSearch={!!search} />;
-
+        if (dataFilter.length === 0) return <NoData isAuth={true} isSearch={!!search} />;
         return dataFilter?.map((pair) => {
             const isFavorite = favoritePairs.find((rs) => rs.replace('_', '') === pair.symbol);
+            // if (curTab === TABS.FAVOURITE && !isFavorite) return;
             return (
                 <FuturesPairListItemV2
                     key={`futures_pairListItems_${pair?.pair}`}
@@ -168,7 +185,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 />
             );
         });
-    }, [dataFilter]);
+    }, [dataFilter, curTab, favoritePairs]);
 
     const setSorter = (key) => {
         setSortBy((prev) => (prev?.[key] === undefined ? { [key]: true } : prev?.[key] ? { [key]: false } : { [key]: undefined }));
@@ -199,13 +216,13 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                     />
                     <div className="pl-4 flex items-center text-sm gap-3 text-txtSecondary dark:text-txtSecondary-dark  select-none">
                         <button
-                            onClick={() => onHandleChange('quoteAsset', 'VNDC')}
+                            onClick={() => setMode('VNDC')}
                             className={`${mode === 'VNDC' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
                         >
                             VNDC
                         </button>
                         <button
-                            onClick={() => onHandleChange('quoteAsset', 'USDT')}
+                            onClick={() => setMode('USDT')}
                             className={`${mode === 'USDT' ? 'text-green-3 dark:text-green-2 font-semibold' : 'hover:text-gray-15 dark:hover:text-gray-14'}`}
                         >
                             USDT
@@ -216,6 +233,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 <div className="relative flex tracking-normal mx-4">
                     <Tabs key="tabs_pair_list_info" tab={curTab} className="border-b border-divider dark:border-divider-dark">
                         {Object.values(TABS).map((t) => {
+                            if (!auth && t === TABS.FAVOURITE) return;
                             return (
                                 <TabItem
                                     V2
