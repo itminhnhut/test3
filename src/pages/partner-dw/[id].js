@@ -76,7 +76,7 @@ export const getServerSideProps = async (context) => {
     return {
         ...redirectObj,
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner'])),
+            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner', 'reference'])),
             id
         }
     };

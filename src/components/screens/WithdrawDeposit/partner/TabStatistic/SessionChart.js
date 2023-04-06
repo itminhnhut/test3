@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import { useTranslation } from 'next-i18next';
 import { TIME_FILTER } from '../../constants';
@@ -15,14 +15,39 @@ import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
 
 const TabStatistic = [
-    { value: 'commission', localized: 'reference:total_commissions' },
-    { value: 'depositwithdraw', localized: 'Tổng nạp rút' }
+    { value: 'commission', localized: 'reference:referral.total_commissions' },
+    { value: 'depositwithdraw', localized: 'dw_partner:total_dw' }
 ];
+
+const mockData = {
+    labels: [12, 13],
+    data: [
+        [
+            {
+                side: 'BUY',
+                value: 1058583709
+            },
+            {
+                side: 'SELL',
+                value: 76434000
+            }
+        ],
+        [
+            {
+                side: 'BUY',
+                value: 1800000
+            },
+            {
+                side: 'SELL',
+                value: 0
+            }
+        ]
+    ]
+};
 
 const SessionChart = () => {
     const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
     const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
-    const [chartLabels, setChartLabels] = useState([]);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
 
@@ -72,61 +97,44 @@ const SessionChart = () => {
         }
     }, [timeTab]);
 
-    useEffect(() => {
-        const curDate = new Date();
-        const newLabels = [formatTime(curDate, 'dd/MM')];
-        switch (timeTab) {
-            case TIME_FILTER[0].value: // 1 Tuan
-                for (let i = 1; i < 7; i++) {
-                    // Lấy ngày hôm trước i ngày
-                    const pastDay = subDays(new Date(), 1);
-
-                    // Định dạng ngày theo format 'dd/MM'
-                    newLabels.push(formatTime(pastDay, 'dd/MM'));
-                }
-                break;
-            case 2: // 1 Thang
-                break;
-            case 3: // all
-                break;
-            default:
-                break;
-        }
-        setChartLabels(newLabels);
-    }, [timeTab]);
-
     const { data, loading, error } = useFetchApi(
         {
             url: API_GET_COMMISSION_STATISTIC_PARTNER,
             params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: 72, interval: 'd' }
         },
         true,
-        [filter]
+        [filter, typeTab]
     );
 
-    console.log('data: ', data);
+    const [chartData, setChartData] = useState({
+        labels: [],
+        datasets: []
+    });
 
-    const pnlChartData = {
-        labels: chartLabels,
-        datasets: [
-            {
-                fill: false,
-                label: false,
-                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 10898789)),
-                // data: Array.from({ length: chartLabels.length }, () => 100),
-                backgroundColor: colors.purple[1]
-                // stack: 'pnl'
-            },
-            {
-                fill: false,
-                label: false,
-                data: Array.from({ length: chartLabels.length }, () => Math.floor(Math.random() * 10898789)),
-                backgroundColor: colors.green[6],
-                borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 }
-                // stack: 'pnl'
-            }
-        ]
-    };
+    useEffect(() => {
+        if (!data) return;
+
+        setChartData({
+            labels: mockData.labels,
+            datasets: [
+                {
+                    fill: false,
+                    label: false,
+                    data: data.data.filter((arr) => arr.some((obj) => obj.side === 'BUY')).map((arr) => arr.find((obj) => obj.side === 'BUY').value),
+                    backgroundColor: colors.purple[1]
+                    // stack: 'pnl'
+                },
+                {
+                    fill: false,
+                    label: false,
+                    data: data.data.filter((arr) => arr.some((obj) => obj.side === 'SELL')).map((arr) => arr.find((obj) => obj.side === 'SELL').value),
+                    backgroundColor: colors.green[6],
+                    borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 }
+                    // stack: 'pnl'
+                }
+            ]
+        });
+    }, [data]);
 
     const options = {
         responsive: true,
@@ -230,7 +238,7 @@ const SessionChart = () => {
                     <div>
                         <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
                             {TabStatistic.map((item) => (
-                                <TabItem className="!px-0" value={item.value} onClick={() => setTypeTab(0)}>
+                                <TabItem className="!px-0 select-none" value={item.value} onClick={() => setTypeTab(item.value)}>
                                     {t(item.localized)}
                                 </TabItem>
                             ))}
@@ -286,12 +294,12 @@ const SessionChart = () => {
                     </div>
                 </div>
                 <div className=" w-full max-h-[450px] mt-8">
-                    <ChartJS type="bar" data={pnlChartData} options={options} height="450px" />
+                    <ChartJS type="bar" data={chartData} options={options} height="450px" />
                 </div>
                 {/* Chu thich */}
                 <div className="flex items-center gap-x-4 mt-9">
-                    <Note iconClassName="bg-purple-1" title={'Nap'} />
-                    <Note iconClassName="bg-green-6" title={'Rut'} />
+                    <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
+                    <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
                 </div>
             </CardWrapper>
         </div>

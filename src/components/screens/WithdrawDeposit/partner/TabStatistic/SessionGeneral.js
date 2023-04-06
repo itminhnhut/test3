@@ -5,7 +5,7 @@ import { TIME_FILTER } from '../../constants';
 import classNames from 'classnames';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
-import { formatPercentage } from 'redux/actions/utils';
+import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
@@ -160,13 +160,13 @@ const SessionGeneral = () => {
                         <h1 className="txtSecond-3">Tổng khối lượng</h1>
                         <div className="pt-4 txtPri-6">
                             <span className="text-green-3 dark:text-green-2">
-                                {loading ? <Skeletor width="100px" /> : `${data?.totalPartnerOrderVolume.convertedBuyVolume}`}
+                                {loading ? <Skeletor width="100px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                             </span>
-                            /{loading ? <Skeletor width="100px" /> : `${data?.totalPartnerOrderVolume.convertedSellVolume}`}
+                            /{loading ? <Skeletor width="100px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}
                         </div>
                     </div>
                 </CardWrapper>
-                <CardWrapper className="flex-auto flex gap-x-6">
+                <CardWrapper className="flex-auto flex gap-x-6 justify-between">
                     <div className="max-w-[237px] flex flex-col">
                         <div className="txtPri-5 pb-4">Đối tác nạp rút tiêu biểu</div>
                         <div className="txtSecond-3 text-left flex items-center flex-auto">
