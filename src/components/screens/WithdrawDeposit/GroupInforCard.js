@@ -1,7 +1,7 @@
 import React from 'react';
 import CountdownTimer from '../../common/CountdownTimer';
 import OrderStatusTag from 'components/common/OrderStatusTag';
-import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat } from 'redux/actions/utils';
+import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
@@ -92,9 +92,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                             <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
                                             <div className="flex space-x-1 items-center">
                                                 <Clock size={12} />
-                                                <span>
-                                                    {formatTime(Math.abs(orderDetail?.partnerMetadata?.analyticMetadata?.avgTime), 'mm')} {t('dw_partner:mins')}
-                                                </span>
+                                                <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
                                             </div>
                                         </div>
                                     ),
