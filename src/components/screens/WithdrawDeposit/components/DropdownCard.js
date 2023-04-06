@@ -27,6 +27,7 @@ const DropdownCard = ({
     useClickAway(cardRef, () => {
         if (isVisible) {
             setVisible(false);
+            setSearch('');
         }
     });
     return (
@@ -77,11 +78,13 @@ const DropdownCard = ({
                                 key={item._id}
                                 onClick={() => {
                                     if (onSelect) {
-                                        onSelect(item);
+                                        if (selected?.id !== item?._id) {
+                                            onSelect(item);
+                                        }
                                         setVisible(false);
+                                        setSearch('');
                                     }
                                 }}
-                                disabled={selected?.id === item?._id}
                                 className={classNames('p-3 w-full text-left disabled:cursor-default  transition', {
                                     'cursor-pointer hover:bg-hover-1 dark:hover:bg-hover-dark': Boolean(onSelect),
                                     '!cursor-default': !Boolean(onSelect)

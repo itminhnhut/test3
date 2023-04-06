@@ -343,7 +343,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     {renderButton()}
 
                     <div className="flex justify-end ">
-                        <ButtonV2 onClick={onOpenChat} variants="text" className="!text-sm w-auto">
+                        <ButtonV2 onClick={onOpenChat} variants="text" className="w-auto">
                             <FutureSupportIcon className="mr-2" isDark={isDark} />
                             {t('common:chat_with_support')}
                         </ButtonV2>
