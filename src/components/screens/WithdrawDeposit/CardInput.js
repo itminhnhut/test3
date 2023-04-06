@@ -215,6 +215,14 @@ const CardInput = () => {
                             <span className="ml-1">{assetCode}</span>
                         </div>
                     </div>
+                    <div className="flex items-center justify-between ">
+                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
+                        <div className="txtPri-1 flex items-center">
+                            {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
+
+                            <span className="ml-1">{assetCode}</span>
+                        </div>
+                    </div>
 
                     {side === 'SELL' && (
                         <>
@@ -247,14 +255,6 @@ const CardInput = () => {
                         </>
                     )}
 
-                    <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
-                        <div className="txtPri-1 flex items-center">
-                            {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
-
-                            <span className="ml-1">{assetCode}</span>
-                        </div>
-                    </div>
                     <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div>
 
