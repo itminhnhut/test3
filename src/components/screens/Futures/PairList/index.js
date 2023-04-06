@@ -17,7 +17,6 @@ import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
 import { searchSort } from 'redux/actions/utils';
 import useDebounce from 'hooks/useDebounce';
-import useUpdateEffect from 'hooks/useUpdateEffect';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -64,18 +63,14 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         getTrending();
     }, []);
 
+    useEffect(() => {
+        setCurTab(auth ? TABS.FAVOURITE : TABS.FUTURES);
+    }, [!!auth]);
+
     const onHandleChange = async (key, value) => {
         let data = await forceData(pairConfigs);
         setCurTab(key);
         switch (key) {
-            case TABS.FAVOURITE:
-                const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
-                if (_data?.length > 0) {
-                    data = _data;
-                } else {
-                    data = data?.filter((i) => SUGGESTED_SYMBOLS?.find((rs) => rs.includes(i?.baseAsset)));
-                }
-                break;
             case TABS.FUTURES:
                 break;
             case TABS.TRENDING:
@@ -145,7 +140,17 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     const dataFilter = useMemo(() => {
         let data = [...dataTable];
         data = data.filter((item) => item?.quoteAsset === mode);
+        if (curTab === TABS.FAVOURITE) {
+            const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+            if (_data?.length > 0) {
+                data = _data;
+            } else {
+                data = data?.filter((i) => SUGGESTED_SYMBOLS?.includes(i?.baseAsset));
+            }
+        }
         if (deboundSearch) {
+            data = pairConfigs.filter((item) => item?.quoteAsset === mode);
+            setCurTab(TABS.FUTURES);
             return searchSort(data, ['baseAsset', 'quoteAsset'], deboundSearch);
         }
         if (Object.keys(sortBy)?.length) {
@@ -153,15 +158,14 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
             data = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
         }
         return data;
-    }, [dataTable, sortBy, mode, deboundSearch]);
+    }, [dataTable, sortBy, mode, deboundSearch, curTab, favoritePairs, pairConfigs]);
 
     // End sort function,
     const renderPairListItemsV2 = useCallback(() => {
-        if (dataFilter.length === 0) return <NoData isSearch={!!search} />;
-
+        if (dataFilter.length === 0) return <NoData isAuth={true} isSearch={!!search} />;
         return dataFilter?.map((pair) => {
             const isFavorite = favoritePairs.find((rs) => rs.replace('_', '') === pair.symbol);
-            if (curTab === TABS.FAVOURITE && !isFavorite) return;
+            // if (curTab === TABS.FAVOURITE && !isFavorite) return;
             return (
                 <FuturesPairListItemV2
                     key={`futures_pairListItems_${pair?.pair}`}
