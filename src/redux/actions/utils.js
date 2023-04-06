@@ -1184,3 +1184,23 @@ export const getOffsetEl = (el) => {
     clone.remove();
     return { w: width, h: height };
 };
+
+export const searchSort = (Arr = [], fieldNames = [], strSearch) => {
+    const formatStr = (e) => {
+        return fieldNames.reduce((acc, key) => {
+            return e[acc] + ' ' + e[key];
+        });
+    };
+
+    if (!strSearch) return Arr;
+    return Arr.filter((item) => String(formatStr(item)).toLowerCase().includes(strSearch.toLowerCase())).sort((a, b) => {
+        if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) > formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return 1;
+        } else if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) < formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return -1;
+        } else {
+            if (formatStr(a) > formatStr(b)) return 1;
+            else return -1;
+        }
+    });
+};

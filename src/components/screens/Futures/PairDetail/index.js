@@ -307,6 +307,10 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
         }
     }, [router.query, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
 
+    useEffect(() => {
+        setPairListMode(pairConfig?.quoteAsset);
+    }, [pairConfig?.quoteAsset]);
+
     const RenderInfoModal = () => {
         const renderContent = (title) => {
             if (!currentExchangeConfig?.config) return '-';
