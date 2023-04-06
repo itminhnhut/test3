@@ -238,6 +238,12 @@ body {
         text-gray-1 dark:text-gray-7 tracking-normal;
     }
 
+    .txtSecond-4 {
+        // [size, leading]: [14px, 20px], #768394 -> #8694b2
+        @apply font-normal text-base
+        text-gray-1 dark:text-gray-7 tracking-normal;
+    }
+
     .value-up {
         @apply text-teal;
     }

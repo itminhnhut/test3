@@ -34,13 +34,13 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar }) => {
             });
             return;
         } else {
-            setFilter({
-                range: {
-                    startDate: new Date(filter?.range?.startDate ?? null).getTime(),
-                    endDate: new Date(filter?.range?.endDate ?? null).getTime(),
-                    key: 'selection'
-                }
-            });
+            // setFilter({
+            //     range: {
+            //         startDate: new Date(filter?.range?.startDate ?? null).getTime(),
+            //         endDate: new Date(filter?.range?.endDate ?? null).getTime(),
+            //         key: 'selection'
+            //     }
+            // });
         }
     }, [timeTab]);
 

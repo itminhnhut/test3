@@ -164,6 +164,8 @@ const TabCommissionHistory = () => {
         [categoryConfig, t]
     );
 
+    const [openModalDetail, setOpenModalDetail] = useState(null);
+
     return (
         <div>
             <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" />
@@ -177,9 +179,9 @@ const TabCommissionHistory = () => {
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={state.loading}
-                onRowClick={(transaction) => router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + transaction.displayingId)}
+                onRowClick={(transaction) => setOpenModalDetail(transaction)}
                 height={600}
-                className="bg-white dark:bg-transparent rounded-lg pt-8"
+                className="bg-white dark:bg-transparent pt-8 border border-divider dark:border-divider-dark rounded-xl"
                 tableStyle={{
                     fontSize: '16px',
                     padding: '16px',
@@ -194,7 +196,13 @@ const TabCommissionHistory = () => {
                 emptyTextContent={t('common:no_data')}
                 customSort={customSort}
             />
-            <ModalCommissionHistory />
+            <ModalCommissionHistory
+                t={t}
+                isVisible={openModalDetail}
+                onClose={() => setOpenModalDetail(null)}
+                transaction={openModalDetail}
+                typeCommission={categoryConfig?.[openModalDetail?.category]?.[language]}
+            />
         </div>
     );
 };
