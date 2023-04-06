@@ -62,7 +62,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                 </div>
                             </div>
                             <div>
-                                {status?.status === PartnerOrderStatus.PENDING && (
+                                {status?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
                                     <Countdown
                                         date={new Date(orderDetail?.timeExpire).getTime()}
                                         renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
