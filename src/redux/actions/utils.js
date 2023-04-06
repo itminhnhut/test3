@@ -41,6 +41,8 @@ import { log } from 'utils';
 import { cloneDeep } from 'lodash';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
+import usePrevious from 'hooks/usePrevious';
+import classNames from 'classnames';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1337,3 +1339,42 @@ export const saveFile = (file, name) => {
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+
+export const searchSort = (Arr = [], fieldNames = [], strSearch) => {
+    const formatStr = (e) => {
+        return fieldNames.reduce((acc, key) => {
+            return e[acc] + ' ' + e[key];
+        });
+    };
+
+    if (!strSearch) return Arr;
+    return Arr.filter((item) => String(formatStr(item)).toLowerCase().includes(strSearch.toLowerCase())).sort((a, b) => {
+        if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) > formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return 1;
+        } else if (formatStr(a).toLowerCase().indexOf(strSearch.toLowerCase()) < formatStr(b).toLowerCase().indexOf(strSearch.toLowerCase())) {
+            return -1;
+        } else {
+            if (formatStr(a) > formatStr(b)) return 1;
+            else return -1;
+        }
+    });
+};
+
+export const LastPrice = memo(({ price, className, style }) => {
+    const prevPrice = usePrevious(price);
+    return (
+        <div
+            style={style}
+            className={classNames(
+                '',
+                {
+                    'text-red': price < prevPrice,
+                    'text-teal': price >= prevPrice
+                },
+                className
+            )}
+        >
+            {formatPrice(price)}
+        </div>
+    );
+});
