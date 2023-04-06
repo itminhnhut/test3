@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import TableV2 from 'components/common/V2/TableV2';
 import Countdown from 'react-countdown';
 import CircleCountdown from '../components/common/CircleCountdown';
@@ -20,6 +20,7 @@ import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
 import { useBoolean } from 'react-use';
+import axios from 'axios';
 
 const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
@@ -162,7 +163,10 @@ const OpenOrderTable = () => {
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
-
+    const dataRef = useRef([]);
+    const currentSideRef = useRef(null);
+    dataRef.current = [...state.data];
+    currentSideRef.current = state.params.side;
     const setModalPropsWithKey = (key, props) =>
         setModalProps((prev) => ({
             ...prev,
@@ -175,12 +179,29 @@ const OpenOrderTable = () => {
     const { onMarkWithStatus } = useMarkOrder({
         setModalPropsWithKey,
         mode: MODE.PARTNER,
-        toggleRefetch: () => {}
+        toggleRefetch: () => toggleRefetch()
     });
 
     useEffect(() => {
         if (userSocket) {
-            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
+                if (dataRef.current.length) {
+                    const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
+                    // if newOrder is not in the current data sets -> refetch table
+                    if (!existedOrder && newOrder?.side === currentSideRef.current) {
+                        toggleRefetch();
+                        return;
+                    }
+
+                    // else replace the the existed obj with the newOrder obj
+                    const newOrderList = [...dataRef.current]
+                        .map((order) => (order.displayingId === newOrder.displayingId ? newOrder : order))
+                        .filter((order) => order.status === PartnerOrderStatus.PENDING);
+                    setState({ data: newOrderList });
+                    dataRef.current = newOrderList;
+                    return;
+                }
+
                 toggleRefetch();
             });
         }
@@ -194,6 +215,8 @@ const OpenOrderTable = () => {
     }, [userSocket]);
 
     useEffect(() => {
+        const source = axios.CancelToken.source();
+        let mounted = false;
         const fetchOpeningOrders = async () => {
             try {
                 setState({ loading: true });
@@ -201,7 +224,8 @@ const OpenOrderTable = () => {
                     url: API_GET_HISTORY_DW_PARTNERS,
                     params: {
                         ...state.params
-                    }
+                    },
+                    cancelToken: source.token
                 });
 
                 let hasNext = false,
@@ -216,10 +240,16 @@ const OpenOrderTable = () => {
                 });
             } catch (error) {
             } finally {
-                setState({ loading: false });
+                if (mounted) {
+                    setState({ loading: true, hasNext: false });
+                } else setState({ loading: false });
             }
         };
         fetchOpeningOrders();
+        return () => {
+            mounted = true;
+            source.cancel();
+        };
     }, [state.params, refetch]);
 
     return (
