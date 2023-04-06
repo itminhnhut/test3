@@ -22,41 +22,23 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
     const { data: listBank, loading: loadingRate, error } = useFetchApi({ url: API_GET_BANK_AVAILABLE }, []);
     const bankLogo = listBank?.find((obj) => obj.bank_code === bank?.bankCode)?.logo || '';
 
-    // const onDownLoad = async () => {
-    //     try {
-    //         setDownloading(true);
-
-    //         const scale = 2;
-    //         const option = {
-    //             height: content.current.offsetHeight * scale,
-    //             width: content.current.offsetWidth * scale,
-    //             style: {
-    //                 transform: 'scale(' + scale + ')',
-    //                 transformOrigin: 'top left',
-    //                 width: content.current.offsetWidth + 'px',
-    //                 height: content.current.offsetHeight + 'px'
-    //             }
-    //         };
-    //         await DomToImage.toBlob(content.current, option).then((blob) => {
-    //             return saveFile(new File([blob], `qrCode.png`, { type: 'image/png' }), `qrCode.png`);
-    //         });
-    //     } catch (error) {
-    //         console.log(error);
-    //     } finally {
-    //         setDownloading(false);
-    //     }
-    // };
-
     const downloadCode = () => {
-        const canvas = document.getElementById('QrCodeCanvasId');
-        if (canvas) {
-            const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-            let downloadLink = document.createElement('a');
-            downloadLink.href = pngUrl;
-            downloadLink.download = `QR_Code_Transfer.png`;
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
+        setDownloading(true);
+        try {
+            const canvas = document.getElementById(bank?.QR || 'QrCodeCanvasId');
+            if (canvas) {
+                const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+                let downloadLink = document.createElement('a');
+                downloadLink.href = pngUrl;
+                downloadLink.download = `QR_Code_Transfer.png`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+        } catch (error) {
+            console.log('error when download image: ', error);
+        } finally {
+            setDownloading(false);
         }
     };
 
@@ -85,21 +67,13 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
             >
                 <div ref={content} className="p-1 rounded-md bg-white relative">
                     <QRCode
-                        id="QrCodeCanvasId"
+                        id={bank?.QR || 'QrCodeCanvasId'}
                         // value="00020101021238530010A0000007270123000697043301091990012920208QRIBFTTA5303704540750000005802VN62300826CK 844LEP NGUYEN DUC TRUNG63042373"
                         value={bank?.QR}
                         size={140}
                         eyeRadius={6}
                         quietZone={2}
-                        // logoImage={bankLogoImg}
-                        // logoWidth={24}
-                        // logoHeight={24}
-                        // logoPadding={4}
-                        // logoPaddingStyle="circle"
-                        // logoOpacity={1}
-                        // enableCORS={true}
-                        // logoOnLoad={() => window.alert('Logo loaded successfully')}
-                        // removeQrCodeBehindLogo={true}
+                        enableCORS={true}
                     />
                     {bankLogo && (
                         <img
@@ -111,7 +85,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
                     )}
                 </div>
             </div>
-            <ButtonV2 onClick={() => downloadCode()} disabled={downloading} loading={downloading}>
+            <ButtonV2 onClick={downloadCode} disabled={downloading} loading={downloading}>
                 {t('dw_partner:download')}
             </ButtonV2>
         </ModalV2>
