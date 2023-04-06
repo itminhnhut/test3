@@ -11,10 +11,17 @@ import colors from 'styles/colors';
 import { formatCurrency, formatTime, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
 import { subDays } from 'date-fns';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import useFetchApi from 'hooks/useFetchApi';
+import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
+
+const TabStatistic = [
+    { value: 'commission', localized: 'reference:total_commissions' },
+    { value: 'depositwithdraw', localized: 'Tổng nạp rút' }
+];
 
 const SessionChart = () => {
     const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
-    const [typeTab, setTypeTab] = useState(0);
+    const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
     const [chartLabels, setChartLabels] = useState([]);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -28,6 +35,42 @@ const SessionChart = () => {
             key: 'selection'
         }
     });
+
+    useEffect(() => {
+        if (timeTab !== 'custom') {
+            const date = new Date();
+            switch (timeTab) {
+                case TIME_FILTER[0].value:
+                    date.setDate(date.getDate() - 1);
+                    break;
+                case TIME_FILTER[1].value:
+                    date.setDate(date.getDate() - 7);
+                    break;
+                case TIME_FILTER[2].value:
+                    date.setDate(date.getDate() - 31);
+                    break;
+                default:
+                    break;
+            }
+            date.toLocaleDateString();
+            setFilter({
+                range: {
+                    startDate: date.getTime(),
+                    endDate: Date.now(),
+                    key: 'selection'
+                }
+            });
+            return;
+        } else {
+            setFilter({
+                range: {
+                    startDate: new Date(filter?.range?.startDate ?? null).getTime(),
+                    endDate: new Date(filter?.range?.endDate ?? null).getTime(),
+                    key: 'selection'
+                }
+            });
+        }
+    }, [timeTab]);
 
     useEffect(() => {
         const curDate = new Date();
@@ -51,6 +94,17 @@ const SessionChart = () => {
         }
         setChartLabels(newLabels);
     }, [timeTab]);
+
+    const { data, loading, error } = useFetchApi(
+        {
+            url: API_GET_COMMISSION_STATISTIC_PARTNER,
+            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: 72, interval: 'd' }
+        },
+        true,
+        [filter]
+    );
+
+    console.log('data: ', data);
 
     const pnlChartData = {
         labels: chartLabels,
@@ -175,12 +229,15 @@ const SessionChart = () => {
                     {/* Tabs */}
                     <div>
                         <Tabs tab={typeTab} className="gap-6 border-b border-divider dark:border-divider-dark">
-                            <TabItem className="!px-0" value={0} active={typeTab === 0} onClick={() => setTypeTab(0)}>
-                                Tổng nạp rút
-                            </TabItem>
-                            <TabItem className="!px-0" value={1} active={typeTab === 1} onClick={() => setTypeTab(1)}>
+                            {TabStatistic.map((item) => (
+                                <TabItem className="!px-0" value={item.value} onClick={() => setTypeTab(0)}>
+                                    {t(item.localized)}
+                                </TabItem>
+                            ))}
+
+                            {/* <TabItem className="!px-0" value={1} active={typeTab === 1} onClick={() => setTypeTab(1)}>
                                 Tổng hoa hồng
-                            </TabItem>
+                            </TabItem> */}
                         </Tabs>
                     </div>
 
