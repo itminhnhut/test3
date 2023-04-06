@@ -9,6 +9,7 @@ import { editPartnerConfig, getPartnerProfile } from 'redux/actions/withdrawDepo
 import { ApiStatus } from 'redux/actions/const';
 import toast from 'utils/toast';
 import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
 
 const ProfileSetting = ({ partner, t }) => {
     const [modal, setModal] = useState({
@@ -61,10 +62,26 @@ const ProfileSetting = ({ partner, t }) => {
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-1">Giới hạn khối lượng lệnh:</div>
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-1">
-                            <span className="text-dominant">{formatNumber(orderConfig?.min)}</span>
+                        <div
+                            className={classNames('flex items-center space-x-1', {
+                                'text-gray': orderConfig?.status === 0
+                            })}
+                        >
+                            <span
+                                className={classNames('text-dominant ', {
+                                    '!text-gray': orderConfig?.status === 0
+                                })}
+                            >
+                                {formatNumber(orderConfig?.min)}
+                            </span>
                             <span>-</span>
-                            <span className="text-dominant">{formatNumber(orderConfig?.max)} </span>
+                            <span
+                                className={classNames('text-dominant ', {
+                                    '!text-gray': orderConfig?.status === 0
+                                })}
+                            >
+                                {formatNumber(orderConfig?.max)}{' '}
+                            </span>
                             <span>VNDC</span>
                         </div>
                         <ButtonV2 onClick={() => onOpenModal(side)} className="!w-auto !py-0 !h-auto" variants="text">

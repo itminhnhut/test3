@@ -78,7 +78,10 @@ const ProfileHeader = ({ t, partner, partnerBankDefault, loadingBankDefault }) =
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
                     <div className="txtSecond-2 mb-3">Thời gian xử lý trung bình</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px]">
-                        ~{formatTime(partner?.analyticMetadata?.avgTime, 'm')} {t('common:minute')}
+                        ~
+                        {partner?.analyticMetadata?.avgTime < 60
+                            ? `${partner?.analyticMetadata?.avgTime} ${t('common:second')}`
+                            : `${formatTime(partner?.analyticMetadata?.avgTime, 'm')} ${t('common:minute')}`}
                     </div>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
