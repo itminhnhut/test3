@@ -401,7 +401,7 @@ const Profile = () => {
                 </div>
                 <UserLevelSlice
                     t={t}
-                    className="hidden md:block py-4"
+                    className="hidden md:block"
                     level={state.level}
                     namiBalance={state.namiBalance}
                     currentPercent={currentPercent}
