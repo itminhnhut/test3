@@ -9,6 +9,7 @@ import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
+import FilterTimeTab from 'components/common/FilterTimeTab';
 
 const mockData = {
     totalCommission: {
@@ -26,7 +27,6 @@ const mockData = {
 };
 
 const SessionGeneral = () => {
-    const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
     const { t } = useTranslation();
 
     const [filter, setFilter] = useState({
@@ -36,42 +36,6 @@ const SessionGeneral = () => {
             key: 'selection'
         }
     });
-
-    useEffect(() => {
-        if (timeTab !== 'custom') {
-            const date = new Date();
-            switch (timeTab) {
-                case TIME_FILTER[0].value:
-                    date.setDate(date.getDate() - 1);
-                    break;
-                case TIME_FILTER[1].value:
-                    date.setDate(date.getDate() - 7);
-                    break;
-                case TIME_FILTER[2].value:
-                    date.setDate(date.getDate() - 31);
-                    break;
-                default:
-                    break;
-            }
-            date.toLocaleDateString();
-            setFilter({
-                range: {
-                    startDate: date.getTime(),
-                    endDate: Date.now(),
-                    key: 'selection'
-                }
-            });
-            return;
-        } else {
-            setFilter({
-                range: {
-                    startDate: new Date(filter?.range?.startDate ?? null).getTime(),
-                    endDate: new Date(filter?.range?.endDate ?? null).getTime(),
-                    key: 'selection'
-                }
-            });
-        }
-    }, [timeTab]);
 
     const { data, loading, error } = useFetchApi(
         { url: API_GET_COMMISSION_REPORT_PARTNER, params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate } },
@@ -84,48 +48,7 @@ const SessionGeneral = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="font-semibold text-[20px] leading-6">Báo cáo hoa hồng</div>
-                <div className="flex gap-3">
-                    {TIME_FILTER.map((item) => {
-                        return (
-                            <div
-                                key={item.value}
-                                onClick={() => setTimeTab(item.value)}
-                                className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
-                                    'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== item.value,
-                                    'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === item.value
-                                })}
-                            >
-                                {t(item.localized)}
-                            </div>
-                        );
-                    })}
-                    <DatePickerV2
-                        initDate={filter.range}
-                        onChange={(e) => {
-                            setFilter({
-                                range: {
-                                    startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                                    endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                                    key: 'selection'
-                                }
-                            });
-                        }}
-                        month={2}
-                        hasShadow
-                        position="right"
-                        text={
-                            <div
-                                onClick={() => setTimeTab('custom')}
-                                className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal select-none', {
-                                    'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                    'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
-                                })}
-                            >
-                                {t('dw_partner:filter.custom')}
-                            </div>
-                        }
-                    />
-                </div>
+                <FilterTimeTab filter={filter} setFilter={setFilter} />
             </div>
 
             {/* Body */}

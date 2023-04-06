@@ -38,7 +38,7 @@ const mappingTokensRewardType = (detail) => {
     return assets;
 };
 
-const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
+const ModalCommissionHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
     const [detailTx, setDetailTx] = useState(null);
     const [assetData, setAssetData] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -287,4 +287,4 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
     );
 };
 
-export default React.memo(ModalHistory);
+export default React.memo(ModalCommissionHistory);

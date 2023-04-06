@@ -318,3 +318,4 @@ export const API_CHECK_LIMIT_WITHDRAW = API_V3_PREFIX + 'spot/partner_order_limi
 
 export const API_GET_COMMISSION_REPORT_PARTNER = API_V3_PREFIX + 'dw_partner/partner_commission_report';
 export const API_GET_COMMISSION_STATISTIC_PARTNER = API_V3_PREFIX + 'dw_partner/partner_commission_statistic';
+export const API_GET_COMMISSION_HISTORY_PARTNER = API_V3_PREFIX + 'wallet/history/transaction';

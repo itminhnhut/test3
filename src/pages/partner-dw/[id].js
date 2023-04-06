@@ -24,6 +24,10 @@ const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/p
     ssr: false
 });
 
+const TabCommissionHistory = dynamic(() => import('components/screens/WithdrawDeposit/partner/TabCommissionHistory'), {
+    ssr: false
+});
+
 const PartnerDepositWithdraw = ({ id }) => {
     const [isPartner, setIsPartner] = useState(false);
     const { data, loading } = useFetchApi({ url: API_PARTNER_REGISTER }, true);
@@ -47,6 +51,7 @@ const PartnerDepositWithdraw = ({ id }) => {
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
                     {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
+                    {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
                 </PartnerWD>
             ) : (
                 <div className="text-3xl font-semibold text-center">Please login on partner account!</div>
