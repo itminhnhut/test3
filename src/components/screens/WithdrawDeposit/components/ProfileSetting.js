@@ -1,0 +1,98 @@
+import Switcher from 'components/common/Switcher';
+import ButtonV2 from 'components/common/V2/ButtonV2/Button';
+import SwitchV2 from 'components/common/V2/SwitchV2';
+import React, { useCallback, useState } from 'react';
+import { formatNumber } from 'redux/actions/utils';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import ModalEditDWConfig from './ModalEditDWConfig';
+import { editPartnerConfig, getPartnerProfile } from 'redux/actions/withdrawDeposit';
+import { ApiStatus } from 'redux/actions/const';
+import toast from 'utils/toast';
+import { useDispatch } from 'react-redux';
+
+const ProfileSetting = ({ partner, t }) => {
+    const [modal, setModal] = useState({
+        isOpen: false,
+        side: null
+    });
+
+    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+
+    const onOpenModal = (side) => setModal({ isOpen: true, side });
+    const onCloseModal = () => setModal({ isOpen: false, side: null });
+
+    const onEditOrderConfig = async ({ side, min, max, status }) => {
+        setLoading(true);
+        try {
+            const editResponse = await editPartnerConfig({ side, min, max, status });
+            if (editResponse && editResponse.status === ApiStatus.SUCCESS) {
+                dispatch(
+                    getPartnerProfile(() => {
+                        toast({ text: t('common:success'), type: 'success' });
+                        onCloseModal();
+                        setLoading(false);
+                    })
+                );
+            } else {
+                toast({ text: t('common:feedback_sent_failed'), type: 'warning' });
+                setLoading(false);
+            }
+        } catch (error) {
+            toast({ text: t('common:feedback_sent_failed'), type: 'warning' });
+            setLoading(false);
+        }
+    };
+
+    const editDWConfig = useCallback(
+        ({ side, onOpenModal, onChange, loading }) => {
+            const orderConfig = partner?.orderConfig?.[side.toLowerCase()];
+            return (
+                <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
+                    <div className="flex justify-between items-center mb-4">
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] ">Giao dịch {t(`common:${side}`)}</div>
+                        <SwitchV2
+                            disabled={loading}
+                            checked={orderConfig?.status === 1}
+                            onChange={() => {
+                                onChange({ side: side.toLowerCase(), status: orderConfig?.status === 1 ? 0 : 1, min: orderConfig?.min, max: orderConfig?.max });
+                            }}
+                        />
+                    </div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-1">Giới hạn khối lượng lệnh:</div>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-1">
+                            <span className="text-dominant">{formatNumber(orderConfig?.min)}</span>
+                            <span>-</span>
+                            <span className="text-dominant">{formatNumber(orderConfig?.max)} </span>
+                            <span>VNDC</span>
+                        </div>
+                        <ButtonV2 onClick={() => onOpenModal(side)} className="!w-auto !py-0 !h-auto" variants="text">
+                            {t('common:edit')}
+                        </ButtonV2>
+                    </div>
+                </div>
+            );
+        },
+        [partner, t]
+    );
+    return (
+        <div className="mt-20">
+            <div className="mb-8 text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold">Trạng thái giao dịch</div>
+            <div className="flex flex-wrap -m-3 items-center">
+                <div className="p-3 w-full md:w-1/2">{editDWConfig({ side: SIDE.BUY, onOpenModal, onChange: onEditOrderConfig, loading })}</div>
+                <div className="p-3 w-full md:w-1/2">{editDWConfig({ side: SIDE.SELL, onOpenModal, onChange: onEditOrderConfig, loading })}</div>
+            </div>
+            <ModalEditDWConfig
+                partner={partner}
+                isVisible={modal.isOpen}
+                side={modal.side}
+                loading={loading}
+                onConfirm={onEditOrderConfig}
+                onClose={onCloseModal}
+            />
+        </div>
+    );
+};
+
+export default ProfileSetting;

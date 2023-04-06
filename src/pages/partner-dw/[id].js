@@ -22,7 +22,8 @@ const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/p
 });
 
 const PartnerDepositWithdraw = ({ id }) => {
-    const { partner, loadingPartner } = useSelector((state) => state.withdrawDeposit);
+    const { user, loadingUser } = useSelector((state) => state.auth);
+    console.log('user:', user);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -31,11 +32,11 @@ const PartnerDepositWithdraw = ({ id }) => {
 
     return (
         <MaldivesLayout>
-            {loadingPartner ? (
+            {loadingUser ? (
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
                     <Spinner size={50} />
                 </div>
-            ) : Boolean(partner) ? (
+            ) : user && user.partner_type > 0 ? (
                 <PartnerWD>
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}

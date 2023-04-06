@@ -793,6 +793,31 @@ const ArrowForwardIcon = ({ size = 24, color = '"#fff"' }) => (
     </svg>
 );
 
+const CalendarFillIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M3.333 14.667h9.334c.735 0 1.333-.598 1.333-1.334V4c0-.735-.598-1.333-1.333-1.333h-1.334V1.333H10v1.334H6V1.333H4.667v1.334H3.333C2.598 2.667 2 3.265 2 4v9.333c0 .736.598 1.334 1.333 1.334zm0-10h9.334V6H3.333V4.667z"
+            fill={color}
+        />
+    </svg>
+);
+
+const ContactIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#2ocmtc1tna)">
+            <path
+                d="M10.307 2 9.9 5.513l1.68 1.68a10.03 10.03 0 0 1-4.393 4.394L5.5 9.9l-3.5.407v3.673C8.787 14.367 14.367 8.787 13.98 2h-3.673z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="2ocmtc1tna">
+                <path fill="#fff" transform="rotate(-90 8 8)" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -847,5 +872,7 @@ export {
     QrCodeScannIcon,
     CancelCircleFillIcon,
     BxsErrorAltIcon,
-    ArrowForwardIcon
+    ArrowForwardIcon,
+    CalendarFillIcon,
+    ContactIcon
 };

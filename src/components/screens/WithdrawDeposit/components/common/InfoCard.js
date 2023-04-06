@@ -14,8 +14,9 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
             </div>
 
             <div>
-                <div className="txtPri-1 mb-2 text-left line-clamp-2">{mainContent}</div>
-                <div className="txtSecond-3">{subContent}</div>
+                <div className="txtPri-1 text-left line-clamp-2">{mainContent}</div>
+
+                {subContent && <div className="txtSecond-3 mt-2">{subContent}</div>}
             </div>
         </div>
     );
@@ -49,7 +50,13 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
                 />
             ) : (
                 <>
-                    <CardContent imgSize={imgSize} imageSrc={content?.imgSrc} mainContent={content.mainContent} subContent={content.subContent} />
+                    <CardContent
+                        imgSize={imgSize}
+                        image={content?.icon}
+                        imageSrc={content?.imgSrc}
+                        mainContent={content.mainContent}
+                        subContent={content.subContent}
+                    />
                     {endIcon}
                 </>
             )}

@@ -8,6 +8,7 @@ import {
     API_GET_PARTNER_PROFILE,
     API_MARK_PARTNER_ORDER,
     API_REJECT_PARTNER_ORDER,
+    API_SET_PARTNER_ORDER_CONFIG,
     API_SET_USER_BANK_ACCOUNT
 } from './apis';
 import { ApiStatus } from './const';
@@ -43,7 +44,7 @@ export const setAllowedAmount = (payload) => (dispatch) => {
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
 
 // get profile of partner (on mode partner)
-export const getPartnerProfile = () => {
+export const getPartnerProfile = (successCallback) => {
     return async (dispatch) => {
         try {
             dispatch(setLoadingPartner(true));
@@ -55,6 +56,7 @@ export const getPartnerProfile = () => {
                     type: types.SET_PARTNER,
                     payload: partner.data
                 });
+                successCallback && successCallback();
             } else {
                 dispatch({
                     type: types.SET_PARTNER,
@@ -134,6 +136,17 @@ export const rejectOrder = async ({ displayingId, mode = 'user' }) => {
     const res = await Axios.post(API_REJECT_PARTNER_ORDER, {
         displayingId,
         mode
+    });
+
+    return res.data;
+};
+
+export const editPartnerConfig = async ({ side, min, max, status }) => {
+    const res = await Axios.post(API_SET_PARTNER_ORDER_CONFIG, {
+        side,
+        min,
+        max,
+        status
     });
 
     return res.data;
