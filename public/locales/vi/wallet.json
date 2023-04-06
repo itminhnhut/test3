@@ -181,7 +181,7 @@
         "memo_tips": "Cần cả 2 trường MEMO và Địa chỉ để nạp thành công {{ tokenName }}. Nami sẽ không xử lý các lệnh nạp thiếu thông tin yêu cầu.",
         "memo_wdl_tips": "Trong một số trường hợp, cần có thêm trường thông tin Memo để có thể rút tiền thành công. Nami sẽ không chịu bất kỳ trách nhiệm nào nếu như việc rút tiền của bạn không thành công do thiếu thông tin Memo, vui lòng kiểm tra kỹ trước khi xác nhận rút."
     },
-    "convert_small": "Chuyển số dư nhỏ sang {{ asset }}",
+    "convert_small": "Chuyển số dư nhỏ thành {{ asset }}",
     "convert_small_mobile": "Chuyển đổi sang {{ asset }}",
     "convert_small_balance": "Chuyển đối số dư nhỏ",
     "asset": "Tài sản",
