@@ -17,7 +17,6 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
     const [currentTheme] = useDarkMode();
 
     const [downloading, setDownloading] = useState(false);
-    const content = useRef(null);
 
     const { data: listBank, loading: loadingRate, error } = useFetchApi({ url: API_GET_BANK_AVAILABLE }, []);
     const bankLogo = listBank?.find((obj) => obj.bank_code === bank?.bankCode)?.logo || '';
@@ -25,7 +24,7 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
     const downloadCode = () => {
         setDownloading(true);
         try {
-            const canvas = document.getElementById(bank?.QR || 'QrCodeCanvasId');
+            const canvas = document.getElementById('react-qrcode-logo');
             if (canvas) {
                 const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
                 let downloadLink = document.createElement('a');
@@ -34,9 +33,11 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
                 document.body.appendChild(downloadLink);
                 downloadLink.click();
                 document.body.removeChild(downloadLink);
+            } else {
+                console.log('QRcode: not have canvas');
             }
         } catch (error) {
-            console.log('error when download image: ', error);
+            console.error('error when download image: ', error);
         } finally {
             setDownloading(false);
         }
@@ -65,9 +66,9 @@ const ModalQr = ({ isVisible, onClose, qrCodeUrl, bank, className, amount, t }) 
                 }}
                 className="h-[180px] w-full flex justify-center items-center mb-10 rounded-xl"
             >
-                <div ref={content} className="p-1 rounded-md bg-white relative">
+                <div className="p-1 rounded-md bg-white relative">
                     <QRCode
-                        id={bank?.QR || 'QrCodeCanvasId'}
+                        // id={bank?.QR || 'QrCodeCanvasId'}
                         // value="00020101021238530010A0000007270123000697043301091990012920208QRIBFTTA5303704540750000005802VN62300826CK 844LEP NGUYEN DUC TRUNG63042373"
                         value={bank?.QR}
                         size={140}
