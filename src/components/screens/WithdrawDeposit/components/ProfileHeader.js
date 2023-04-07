@@ -3,7 +3,7 @@ import CreditCard from 'components/svg/CreditCard';
 import numeral from 'numeral';
 import React from 'react';
 import { ChevronRight } from 'react-feather';
-import { formatNumber, formatPhoneNumber, formatTime } from 'redux/actions/utils';
+import { formatNumber, formatPhoneNumber, formatTime, formatTimePartner } from 'redux/actions/utils';
 import InfoCard from './common/InfoCard';
 import Link from 'next/link';
 import { PATHS } from 'constants/paths';
@@ -74,10 +74,7 @@ const ProfileHeader = ({ t, partner, bankDefault, loadingBankDefault }) => {
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
                     <div className="txtSecond-2 mb-3">Thời gian xử lý trung bình</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px]">
-                        ~
-                        {partner?.analyticMetadata?.avgTime < 60
-                            ? `${partner?.analyticMetadata?.avgTime} ${t('common:second')}`
-                            : `${formatTime(partner?.analyticMetadata?.avgTime, 'm')} ${t('common:minute')}`}
+                        ~{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}
                     </div>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
