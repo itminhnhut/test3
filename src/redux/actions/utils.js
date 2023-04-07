@@ -209,10 +209,8 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     }
 }
 
-export function formatTimePartner(t, value) {
-    return !value
-        ? ''
-        : value >= 60 * 60 * 1000 // 1 hour
+export function formatTimePartner(t, value = 0) {
+    return value >= 60 * 60 * 1000 // 1 hour
         ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
         : value >= 60 * 1000 // 1 minute
         ? `${formatTime(value, 'm')} ${t('common:minute')}`
