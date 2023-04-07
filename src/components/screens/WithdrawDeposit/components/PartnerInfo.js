@@ -38,7 +38,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
             selected={{
                 id: selectedPartner?._id,
                 content: selectedPartner && {
-                    mainContent: selectedPartner?.name,
+                    mainContent: selectedPartner?.name?.toLowerCase(),
                     subContent: (
                         <div className="flex items-center space-x-3">
                             <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
@@ -55,7 +55,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                     selectedPartner && (
                         <InfoCard
                             content={{
-                                mainContent: partner?.name,
+                                mainContent: partner && partner?.name?.toLowerCase(),
                                 subContent: (
                                     <div className="flex items-center space-x-3">
                                         <span>{formatPhoneNumber(partner?.phone)}</span>

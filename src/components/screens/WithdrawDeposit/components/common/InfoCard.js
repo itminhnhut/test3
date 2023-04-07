@@ -14,7 +14,7 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
             </div>
 
             <div>
-                <div className="txtPri-1 mb-2 text-left line-clamp-2">{mainContent}</div>
+                <div className="txtPri-1 mb-2 text-left capitalize line-clamp-2">{mainContent}</div>
                 <div className="txtSecond-3">{subContent}</div>
             </div>
         </div>
