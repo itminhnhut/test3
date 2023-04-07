@@ -97,8 +97,8 @@ const CardPartner = () => {
                             containerClassname="z-40"
                             t={t}
                             loadingBanks={loadingBanks}
-                            showDropdownIcon={!loadingBanks && banks && banks.length}
-                            disabled={!banks || !banks?.length}
+                            showDropdownIcon={!loadingBanks && banks && banks.length > 1}
+                            disabled={!banks || banks?.length <= 1}
                         />
                     )}
                 </div>
