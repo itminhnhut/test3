@@ -93,7 +93,7 @@ const CloseIcon = ({ className, onClick, color, size }) => {
             width={size || 24}
             height={size || 24}
             viewBox="0 0 24 24"
-            fill="none"
+            fill={color || defaultColor}
             xmlns="http://www.w3.org/2000/svg"
         >
             <g clipPath="url(#l6hcoftsra)">
@@ -146,6 +146,26 @@ const BxsUserIcon = ({ size = 24, className, color }) => (
         />
     </svg>
 );
+
+const BxsUserCircle = ({ color = '#8694B3', size = 24, fill = 'none', style, className, onClick }) => {
+    return (
+        <svg
+            width={size}
+            height={size}
+            style={style}
+            className={className}
+            onClick={onClick}
+            viewBox="0 0 24 24"
+            fill={fill}
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M12 2C6.579 2 2 6.579 2 12s4.579 10 10 10 10-4.579 10-10S17.421 2 12 2zm0 5c1.727 0 3 1.272 3 3s-1.273 3-3 3c-1.726 0-3-1.272-3-3s1.274-3 3-3zm-5.106 9.772c.897-1.32 2.393-2.2 4.106-2.2h2c1.714 0 3.209.88 4.106 2.2A6.969 6.969 0 0 1 12 19a6.969 6.969 0 0 1-5.106-2.228z"
+                fill="#8694B3"
+            />
+        </svg>
+    );
+};
 
 const BxsBellIcon = ({ size = 24, className, color }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} className={className} viewBox="0 0 25 24" fill={color || 'currentColor'}>
@@ -818,6 +838,22 @@ const ContactIcon = ({ size = 24, color = 'currentColor' }) => (
     </svg>
 );
 
+const PartnerIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <g clip-path="url(#loddpdwmxa)">
+            <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="loddpdwmxa">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -865,6 +901,7 @@ export {
     FireIcon,
     SettingIcon,
     ArrowCompareIcon,
+    BxsUserCircle,
     TimeLapseIcon,
     BxsErrorIcon,
     CancelIcon,
@@ -874,5 +911,6 @@ export {
     BxsErrorAltIcon,
     ArrowForwardIcon,
     CalendarFillIcon,
-    ContactIcon
+    ContactIcon,
+    PartnerIcon
 };
