@@ -209,6 +209,16 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     }
 }
 
+export function formatTimePartner(t, value) {
+    return !value
+        ? ''
+        : value >= 60 * 60 * 1000 // 1 hour
+        ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
+        : value >= 60 * 1000 // 1 minute
+        ? `${formatTime(value, 'm')} ${t('common:minute')}`
+        : `${formatTime(value, 's')} ${t('common:second')}`;
+}
+
 export function getTimeAgo(value, options) {
     if (!value) return;
     const date = value instanceof Date ? value : new Date(value);

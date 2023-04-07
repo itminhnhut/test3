@@ -35,7 +35,7 @@
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Tải lại bằng chứng",
-    "notes": "<li>Kiểm tra đúng thông tin tên tài khoản, số tài khoản và nội dung chuyển khoản</li><li>Chuyển đủ và đúng số lượng, không làm tròn, không bớt số lẻ</li><li>Hoàn tất chuyển khoản trong vòng 5 phút sau khi ấn \"Tôi đã chuyển khoản\" để không bị huỷ lệnh</li>",
+    "notes": "<li>Kiểm tra đúng thông tin tên tài khoản, số tài khoản và nội dung chuyển khoản</li><li>Chuyển đủ và đúng số lượng, không làm tròn, không bớt số lẻ</li><li>Hoàn tất chuyển khoản trong vòng 10 phút sau khi ấn \"Tôi đã chuyển khoản\" để không bị huỷ lệnh</li>",
     "beneficiary": "Người thụ hưởng",
     "download": "Tải xuống",
     "payment_infor": "Thông tin thanh toán",

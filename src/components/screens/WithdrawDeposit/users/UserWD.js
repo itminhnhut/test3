@@ -47,12 +47,12 @@ const UserWD = ({ type, children, side }) => {
                 <div className="max-w-screen-v3 mx-auto 2xl:max-w-screen-xxl">
                     <h1 className="mb-8 font-semibold text-[32px] leading-[38px]">{side === SIDE.BUY ? t('common:deposit') : t('common:withdraw')}</h1>
 
-                    <div className="relative flex tracking-normal mb-8">
+                    <div className="relative justify-between items-center flex flex-wrap sm:flex-nowrap tracking-normal mb-8">
                         <Tabs tab={type} className="gap-8 border-b border-divider dark:border-divider-dark">
                             {TABS?.map((item) => (
                                 <TabItem
                                     V2
-                                    className="!text-left !px-0 !text-base select-none"
+                                    className="md:!text-left !px-0 !text-base select-none"
                                     value={item.value}
                                     onClick={(isClick) => isClick && router.push(dwLinkBuilder(item?.value, side))}
                                 >
@@ -60,8 +60,8 @@ const UserWD = ({ type, children, side }) => {
                                 </TabItem>
                             ))}
                         </Tabs>
-                        <div className="absolute right-0">
-                            <HrefButton variants="blank" target="_blank" className="w-auto !text-base" href={getLinkSupport(language === 'vi')}>
+                        <div className="sm:border-b border-divider dark:border-divider-dark flex justify-center ">
+                            <HrefButton variants="blank" target="_blank" className="!w-auto !py-4 !text-base" href={getLinkSupport(language === 'vi')}>
                                 <BxsBookIcon size={16} isButton={true} className="mr-2" />
                                 {t('dw_partner:deposit_withdraw_guide')}
                             </HrefButton>

@@ -215,6 +215,14 @@ const CardInput = () => {
                             <span className="ml-1">{assetCode}</span>
                         </div>
                     </div>
+                    <div className="flex items-center justify-between ">
+                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
+                        <div className="txtPri-1 flex items-center">
+                            {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
+
+                            <span className="ml-1">{assetCode}</span>
+                        </div>
+                    </div>
 
                     {side === 'SELL' && (
                         <>
@@ -248,26 +256,18 @@ const CardInput = () => {
                     )}
 
                     <div className="flex items-center justify-between ">
-                        <div className="txtSecond-2">{t('dw_partner:max_amount')}</div>
-                        <div className="txtPri-1 flex items-center">
-                            {loadingRate ? <Skeletor width="50px" /> : formatBalanceFiat(maximumAllowed, assetCode)}
-
-                            <span className="ml-1">{assetCode}</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center justify-between ">
                         <div className="txtSecond-2">{t(`dw_partner:${side === SIDE.BUY ? 'will_transfer' : 'will_received'}`)}</div>
 
                         {/* <Tooltip place="top" effect="solid" isV3 id="will-transfer-receive">
                             <div className="max-w-[300px] ">{formatBalanceFiat(input * rate, 'VNDC')}</div>
                         </Tooltip> */}
 
-                        <div
-                            data-tip=""
-                            className="inline-flex txtPri-1 space-x-1 !cursor-default"
-                            // data-for="will-transfer-receive" id="will-transfer-receive"
-                        >
-                            {loadingRate ? <Skeletor width="70px" /> : <div className=" max-w-[150px] truncate">{formatBalanceFiat(input * rate, 'VNDC')}</div>}
+                        <div data-tip="" className="inline-flex txtPri-1 space-x-1 !cursor-default">
+                            {loadingRate ? (
+                                <Skeletor width="70px" />
+                            ) : (
+                                <div className=" max-w-[150px] truncate">{formatBalanceFiat(state.amount * rate, 'VNDC')}</div>
+                            )}
 
                             <div className="">VND</div>
                         </div>

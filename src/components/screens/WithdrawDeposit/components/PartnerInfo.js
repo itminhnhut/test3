@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { formatPhoneNumber, filterSearch } from 'redux/actions/utils';
-import { formatTime } from 'utils/reference-utils';
+import { formatPhoneNumber, filterSearch, formatTime, formatTimePartner } from 'redux/actions/utils';
 import { setPartner } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import { API_GET_PARTNERS } from 'redux/actions/apis';
@@ -45,10 +44,11 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                             <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
                             <div className="flex space-x-1 items-center">
                                 <Clock size={12} />
-                                <span>{formatTime(Math.abs(selectedPartner?.analyticMetadata?.avgTime), `mm [${t('dw_partner:mins')}]`)}</span>
+                                <span>{formatTimePartner(t, selectedPartner?.analyticMetadata?.avgTime)}</span>
                             </div>
                         </div>
                     ),
+
                     imgSrc: selectedPartner?.avatar
                 },
                 item: (partner) =>
@@ -61,10 +61,11 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                                         <span>{formatPhoneNumber(partner?.phone)}</span>
                                         <div className="flex space-x-1 items-center">
                                             <Clock size={12} />
-                                            <span>{formatTime(Math.abs(partner?.analyticMetadata?.avgTime), `mm [${t('dw_partner:mins')}]`)}</span>
+                                            <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
                                         </div>
                                     </div>
                                 ),
+
                                 imgSrc: partner?.avatar
                             }}
                             endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor" />}
