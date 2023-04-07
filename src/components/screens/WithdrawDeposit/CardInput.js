@@ -281,7 +281,7 @@ const CardInput = () => {
                         loadingPartner ||
                         !validator?.isValid ||
                         (!partnerBank && side === SIDE.BUY) ||
-                        (side === SIDE.SELL && +state.amount > availableAsset)
+                        (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain))
                     }
                     className="disabled:cursor-default"
                 >
