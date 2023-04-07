@@ -31,7 +31,8 @@
             "task_center": "Trung tâm nhiệm vụ",
             "referral": "Giới thiệu",
             "api_mng": "Quản lý API",
-            "logout": "Đăng xuất"
+            "logout": "Đăng xuất",
+            "partner": "Đối tác"
         }
     },
     "submenu": {
@@ -108,7 +109,7 @@
     "language": "Ngôn ngữ",
     "no_noti": "Bạn chưa có thông báo mới nào",
     "noti": "Thông báo",
-    "mark_read":"Đọc tất cả",
+    "mark_read": "Đọc tất cả",
     "unread_noti": "thông báo chưa đọc",
     "read_all_noti": "Bạn không còn thông báo nào",
     "not_verified": "Chưa được xác minh",

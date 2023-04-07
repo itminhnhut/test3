@@ -159,7 +159,6 @@ export const NAV_DATA = [
 ];
 
 export const MOBILE_NAV_DATA = [
-    
     // {
     //     key: 10,
     //     title: 'Profile',
@@ -274,7 +273,7 @@ export const MOBILE_NAV_DATA = [
                 url: '/swap',
                 child_lv2: []
             },
-             {
+            {
                 key: 7,
                 title: 'Classic',
                 localized: 'classic',
@@ -431,24 +430,6 @@ export const USER_CP = [
         child_lv1: []
     },
     {
-        key: 1,
-        title: 'Security',
-        localized: 'security',
-        hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: []
-    },
-    {
-        key: 2,
-        title: 'Identify',
-        localized: 'identify',
-        hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: []
-    },
-    {
         key: 4,
         title: 'Referral',
         localized: 'referral',
@@ -459,22 +440,51 @@ export const USER_CP = [
     },
     {
         key: 3,
-        title: 'RewardCenter',
-        localized: 'reward_center',
-        hide: true,
+        title: 'partner',
+        localized: 'partner',
+        isPartner: true,
+        // hide: true,
         isNew: true,
-        url: '/account/reward-center',
+        url: PATHS?.PARNER_WITHDRAW_DEPOSIT?.DEFAULT || '',
         child_lv1: []
-    },
-    {
-        key: 5,
-        title: 'TaskCenter',
-        localized: 'task_center',
-        hide: true,
-        isNew: true,
-        url: '/',
-        child_lv1: []
-    },
+    }
+    // {
+    //     key: 1,
+    //     title: 'Security',
+    //     localized: 'security',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // },
+    // {
+    //     key: 2,
+    //     title: 'Identify',
+    //     localized: 'identify',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // },
+
+    // {
+    //     key: 3,
+    //     title: 'RewardCenter',
+    //     localized: 'reward_center',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/account/reward-center',
+    //     child_lv1: []
+    // },
+    // {
+    //     key: 5,
+    //     title: 'TaskCenter',
+    //     localized: 'task_center',
+    //     hide: true,
+    //     isNew: true,
+    //     url: '/',
+    //     child_lv1: []
+    // }
     // {
     //     key: 6,
     //     title: 'APIManagement',
@@ -484,5 +494,4 @@ export const USER_CP = [
     //     url: getV1Url('/settings/api-management'),
     //     child_lv1: []
     // }
-
 ];

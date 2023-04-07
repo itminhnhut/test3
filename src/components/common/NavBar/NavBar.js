@@ -333,7 +333,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const { avatar, code, kyc_status } = auth;
+        const { avatar, code, kyc_status, partner_type } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
@@ -351,6 +351,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
         USER_CP.map((item) => {
             if (item.hide) return null;
+            if (item.isPartner && partner_type === 0) return null;
             const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
