@@ -86,7 +86,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             <InfoCard
                                 loading={!orderDetail}
                                 content={{
-                                    mainContent: orderDetail?.partnerMetadata?.name,
+                                    mainContent: orderDetail && orderDetail?.partnerMetadata?.name?.toLowerCase(),
                                     subContent: (
                                         <div className="flex items-center space-x-3">
                                             <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
