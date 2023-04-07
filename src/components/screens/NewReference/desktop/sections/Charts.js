@@ -12,6 +12,8 @@ import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
+const MILLISECOND = 1;
+
 const Charts = ({ t, id }) => {
     const timeTabs = [
         {
@@ -63,7 +65,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
     const [filter, setFilter] = useState({
         range: {
             startDate: null,
-            endDate: Date.now(),
+            endDate: null,
             key: 'selection'
         }
     });
@@ -155,6 +157,18 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         }
     ];
 
+    const handleChangeDate = (e) => {
+        const value = e?.selection || {};
+        const startDate = value?.startDate ? new Date(value?.startDate).getTime() : null;
+        const endDate = value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
+        setFilter((prev) => ({
+            ...prev,
+            range: {
+                startDate,
+                endDate
+            }
+        }));
+    };
     const renderChart = () => {
         // const getData = (level) => dataSource.data.map(e => e[level - 1]?.[tab === tags[0].value ? 'count' : 'volume'] ?? [])
         const getData = (level) => dataSource?.data?.map((e) => e[level - 1]?.[type]) ?? [];
@@ -344,15 +358,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     })}
                     <DatePickerV2
                         initDate={filter.range}
-                        onChange={(e) => {
-                            setFilter({
-                                range: {
-                                    startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                                    endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                                    key: 'selection'
-                                }
-                            });
-                        }}
+                        onChange={handleChangeDate}
                         month={2}
                         hasShadow
                         position="right"
