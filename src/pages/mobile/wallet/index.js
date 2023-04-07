@@ -335,7 +335,7 @@ const ExternalWithdrawal = (props) => {
                                 setAmount(floor(Math.min(currentCurr?.available || 0, max), decimalScale));
                             }}
                         >
-                            <span className="px-4 py-2 text-dominant font-semibold">
+                            <span className="px-4 py-2 text-teal font-semibold">
                                 {t('ext_gate:max_opt')}
                             </span>
                             <div

@@ -49,7 +49,7 @@ export default function () {
                         {t('nao:year_summary:content')}{' '}
                         <a href={language === LANGUAGE_TAG.EN ? seeDetailedENURL : seeDetailedVIURL}
                            target='_blank'
-                           className='text-dominant underline cursor-pointer block md:inline'>{t('nao:year_summary:see_detailed_rules')}</a>
+                           className='text-teal underline cursor-pointer block md:inline'>{t('nao:year_summary:see_detailed_rules')}</a>
                     </p>
                 </div>
                 <div className='flex justify-center md:mt-0 mt-10'>

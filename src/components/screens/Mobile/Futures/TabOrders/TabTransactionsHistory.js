@@ -261,7 +261,7 @@ function TabTransactionsHistory({
             </div>
             <div
                 className={classNames('flex items-center p-2 -mr-2', {
-                    'text-dominant': visibleCategoryPicker
+                    'text-teal': visibleCategoryPicker
                 })}
                 onClick={() => setVisibleCategoryPicker(true)}>
                 <span className="mr-1">{t(`futures:mobile:transaction_histories:categories:${category}`)}</span>

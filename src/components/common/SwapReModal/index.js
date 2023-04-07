@@ -64,7 +64,7 @@ const Modal = ({
                         'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
-                        { '!bg-dark-absolute/[0.6] dark:!bg-dark-absolute/[0.8]': onusMode }
+                        { '!bg-black-800/[0.6] dark:!bg-black-800/[0.8]': onusMode }
                     )}
                 />
                 <div
@@ -75,7 +75,7 @@ const Modal = ({
                             'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 ':
                                 !onusMode
                         },
-                        { 'bg-dark-absolute/[0.6] dark:bg-dark-absolute/[0.8] left-0 top-0 w-full h-full p-0': onusMode },
+                        { 'bg-black-800/[0.6] dark:bg-black-800/[0.8] left-0 top-0 w-full h-full p-0': onusMode },
                         containerClassName
                     )}
                 >
@@ -101,7 +101,7 @@ const Modal = ({
                                 ref={wrapperRef}
                                 className={`${onusClassName} ${
                                     center ? 'rounded-xl' : 'rounded-t-xl'
-                                } h-max w-full relative bg-dark-absolute/[0.6] dark:bg-dark-absolute/[0.8] px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}
+                                } h-max w-full relative bg-black-800/[0.6] dark:bg-black-800/[0.8] px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}
                             >
                                 {!center && (
                                     <div

@@ -16,7 +16,7 @@ const CheckBox = ({ active, boxContainerClassName, label, labelClassName, onChan
                     {
                         'rounded-[3.2px]': onusMode,
                         'bg-gray-13 dark:bg-dark-4 !border-divider dark:!border-divider-dark rounded-[3.2px]': onusMode && !active,
-                        '!bg-dominant !border-dominant': onusMode && active
+                        '!bg-teal !border-teal': onusMode && active
                     },
                     boxContainerClassName
                 )}

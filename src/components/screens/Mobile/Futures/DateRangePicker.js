@@ -89,7 +89,7 @@ const Month = ({date, range, setRange}) => {
     }, [date])
 
     return <div id={format(date, 'M-yyyy')} className='mt-6'>
-        <div className='text-center font-semibold text-dominant mb-3'>{format(date, 'LLLL yyyy')}</div>
+        <div className='text-center font-semibold text-teal mb-3'>{format(date, 'LLLL yyyy')}</div>
         <div className='grid grid-cols-7 gap-y-2'>
             {WEEKS.map((w, index) => <div key={index}
                                           className='capitalize text-xs text-txtSecondary dark:text-txtSecondary-dark text-center mb-2'>{w}</div>)}

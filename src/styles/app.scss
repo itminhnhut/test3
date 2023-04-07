@@ -798,13 +798,13 @@ input[type='number'] {
 
         /* Handle */
         &::-webkit-scrollbar-thumb {
-            @apply bg-dominant;
+            @apply bg-teal;
             // background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
         }
 
         /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
-            @apply bg-dominant;
+            @apply bg-teal;
         }
     }
 }
@@ -825,13 +825,13 @@ input[type='number'] {
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-        @apply bg-dominant;
+        @apply bg-teal;
         background-clip: padding-box;
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-        @apply bg-dominant;
+        @apply bg-teal;
     }
 }
 

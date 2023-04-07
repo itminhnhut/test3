@@ -70,14 +70,14 @@ const Modal = ({
                         'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
-                        { '!bg-dark-absolute/[0.6] dark:!bg-dark-absolute/[0.8]': onusMode },
+                        { '!bg-black-800/[0.6] dark:!bg-black-800/[0.8]': onusMode },
                     )}
                 />
                 <div style={{ ...containerStyle }}
                     className={classNames(
                         `fixed min-w-[280px] min-h-[100px] p-4 z-[99999999] rounded-lg dark:drop-shadow-dark`,
                         { 'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 ': !onusMode },
-                        { 'bg-dark-absolute/[0.6] dark:bg-dark-absolute/[0.8] left-0 top-0 w-full h-full p-0': onusMode },
+                        { 'bg-black-800/[0.6] dark:bg-black-800/[0.8] left-0 top-0 w-full h-full p-0': onusMode },
                         containerClassName,
 
                     )}

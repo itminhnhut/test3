@@ -46,10 +46,10 @@ const Button = memo((props) => {
                     style={{ ...style, background: color }}
                     className={`mal-button ${
                         type === 'primary'
-                            ? `${onusMode ? 'bg-dominant text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
+                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
                             : `${onusMode ? 'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}
-                    ${disabled && onusMode ? '!bg-dominant opacity-30' : ''}
+                    ${disabled && onusMode ? '!bg-bgBtnPrimary opacity-30' : ''}
                     `}
                     onClick={() => onClick && !disabled && onClick()}
                 >

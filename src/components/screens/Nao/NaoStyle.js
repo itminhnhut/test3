@@ -50,7 +50,7 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'border border-dominant !bg-gray-12 dark:!bg-dark-2 !text-gray-15 dark:!text-white': border,
+        'border border-teal !bg-gray-12 dark:!bg-dark-2 !text-gray-15 dark:!text-white': border,
         'text-opacity-20 text-gray-15 dark:text-gray-7 !bg-gray-12 dark:bg-dark-2': disabled,
         'bg-nao-bg4 text-white': !disabled
     })

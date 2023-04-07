@@ -118,7 +118,7 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
             <div className="relative">
                 <View id={`guideline-step-${step}`}>
                     <div className="flex items-center justify-between">
-                        <label className="text-dominant font-semibold text-sm">{t(`futures:mobile:guide:step_title_${step}`)}</label>
+                        <label className="text-teal font-semibold text-sm">{t(`futures:mobile:guide:step_title_${step}`)}</label>
                         <div className="cursor-pointer text-white" onClick={() => onClose(true)}>
                             <X width={20} />
                         </div>

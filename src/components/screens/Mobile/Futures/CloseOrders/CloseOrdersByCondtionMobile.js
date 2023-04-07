@@ -202,7 +202,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div>
                     {types.map((closeType, index) => (
                         <div
-                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-dominant border'}`}
+                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-teal border'}`}
                             onClick={() => setType(closeType.type)}>
                             <div className="font-normal text-base leading-6">
                                 {closeType.value}
@@ -263,7 +263,7 @@ const CloseOrdersByCondtionMobile = memo(({
                     >
                         {state?.orders && renderPositionList()}
                     </div>
-                    {/* {state?.orders?.length > 5 && <div className='text-dominant w-full flex justify-center h-4 items-end'>
+                    {/* {state?.orders?.length > 5 && <div className='text-teal w-full flex justify-center h-4 items-end'>
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}
                 </div>

@@ -66,9 +66,9 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md border border-transparent w-full ${
-                        onusMode ? 'hover:border-dominant bg-gray-12 dark:bg-dark-2' : 'bg-gray-10 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-teal bg-gray-12 dark:bg-dark-2' : 'bg-gray-10 dark:bg-darkBlue-3'
                     }`,
-                    { '!border-dominant': !onusMode && isFocus && !isError },
+                    { '!border-teal': !onusMode && isFocus && !isError },
                     { 'border-green-2': onusMode && isFocus },
                     { '!border-red': !onusMode && isError },
                     { '!border-red-2': onusMode && isError },

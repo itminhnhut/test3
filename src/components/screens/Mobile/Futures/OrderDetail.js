@@ -403,7 +403,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-dominant"
+                    <Span className="text-teal"
                           onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
@@ -457,7 +457,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-dominant"
+                    <Span className="text-teal"
                           onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
@@ -536,7 +536,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-dominant"
+                    <Span className="text-teal"
                           onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
                 </Row>
                 <Row>
@@ -591,7 +591,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-dominant"
+                    <Span className="text-teal"
                           onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
                 </Row>
                 <Row>
@@ -1040,7 +1040,7 @@ const FeeMeta = ({
             <div className="flex items-center justify-between w-full">
                 <Label>{t(`futures:mobile:${mode}`)}</Label>
                 <Span
-                    className={fee_metadata.length > 1 ? 'text-dominant' : ''}
+                    className={fee_metadata.length > 1 ? 'text-teal' : ''}
                     onClick={() => fee_metadata.length > 1 && setVisible(!visible)}>
                     {fee_metadata.length > 1 ? visible ? t('common:global_btn:close') : t('common:view_all') :
                         !fee_metadata[0]?.value ? '-' :

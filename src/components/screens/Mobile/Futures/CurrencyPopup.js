@@ -84,7 +84,7 @@ const CurrencyPopup = (props) => {
                     className={classnames(
                         "flex items-center justify-between w-full border bg-gray-13 dark:bg-dark-4 rounded-md px-4 py-[7px]",
                         {
-                            'border-dominant': hoverItemsChose === item.assetCode,
+                            'border-teal': hoverItemsChose === item.assetCode,
                             'border-divider dark:border-divider-dark': hoverItemsChose !== item.assetCode,
                         }
                     )}
@@ -122,7 +122,7 @@ const CurrencyPopup = (props) => {
                                 0.06%
                             </div>
                             {item.ratio !== "0.06%" && (
-                                <div className={`${item?.assetCode === "NAO" ? "text-dominant" : ""} leading-5 font-medium `}>{item.ratio}</div>
+                                <div className={`${item?.assetCode === "NAO" ? "text-teal" : ""} leading-5 font-medium `}>{item.ratio}</div>
                             )}
                         </div>
                     </div>

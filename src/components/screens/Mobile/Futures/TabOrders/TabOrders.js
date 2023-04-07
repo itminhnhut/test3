@@ -323,7 +323,7 @@ export const LoginOrder = () => {
             <div className='text-center' >{t('futures:mobile:login_medium')}</div>
         </div>
         <div onClick={() => emitWebViewEvent('login')}
-            className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+            className='w-[200px] bg-bgBtnPrimary !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
             {t('futures:mobile:login_short')}
         </div>
     </div>);

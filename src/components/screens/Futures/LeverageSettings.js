@@ -231,7 +231,7 @@ const FuturesLeverageSettings = ({
                     <div className="mt-8">{renderConfirmButton()}</div>
                 ) : (
                     <div className={`mt-8 mb-2 cursor-pointer flex items-center justify-center `}>
-                        <div className={`w-[200px] bg-dominant text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`} onClick={onLogin}>
+                        <div className={`w-[200px] bg-bgBtnPrimary text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`} onClick={onLogin}>
                             {t('futures:mobile:login_short')}
                         </div>
                     </div>

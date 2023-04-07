@@ -322,7 +322,7 @@ export default function OrderInformation({ pair }) {
                     </div>
                 ))}
             </div>
-            <div onClick={onViewAll} className="text-dominant text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
+            <div onClick={onViewAll} className="text-teal text-sm font-medium mt-6">{t('futures:view_all_trading_rule')}</div>
         </div>
     );
 }

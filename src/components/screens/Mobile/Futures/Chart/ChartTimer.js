@@ -145,7 +145,7 @@ const Change24h = ({
     return (
         <div className="flex items-center">
             <div
-                className={classNames('pl-2 text-dominant font-medium text-sm',
+                className={classNames('pl-2 text-teal font-medium text-sm',
                     {
                         '!text-red':
                             pairPrice?.priceChangePercent < 0,

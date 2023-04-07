@@ -204,7 +204,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     <div
                         className={classNames('px-2 py-1 text-center leading-[1.375rem]', {
                             'border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': adjustType === ADJUST_TYPE.REMOVE,
-                            'border-b-2 border-dominant text-dominant': adjustType === ADJUST_TYPE.ADD
+                            'border-b-2 border-teal text-teal': adjustType === ADJUST_TYPE.ADD
                         })}
                         onClick={() => _setAdjustType(ADJUST_TYPE.ADD)}
                     >
@@ -213,7 +213,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                     <div
                         className={classNames('px-2 py-1 text-center leading-[1.375rem]', {
                             'border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': adjustType === ADJUST_TYPE.ADD,
-                            'border-b-2 border-dominant text-dominant': adjustType === ADJUST_TYPE.REMOVE
+                            'border-b-2 border-teal text-teal': adjustType === ADJUST_TYPE.REMOVE
                         })}
                         onClick={() => _setAdjustType(ADJUST_TYPE.REMOVE)}
                     >
@@ -239,7 +239,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                                 // onFocus={scrollFocusInput}
                             />
                             <div className="flex items-center" onClick={handleSetMaxAmount}>
-                                <span className="px-4 py-2 text-dominant font-semibold">{t('futures:mobile:adjust_margin:max')}</span>
+                                <span className="px-4 py-2 text-teal font-semibold">{t('futures:mobile:adjust_margin:max')}</span>
                                 <div className="h-full leading-[2.75rem] bg-gray-11 dark:bg-dark-1 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
                                     {assetConfig?.assetCode}
                                 </div>
@@ -289,7 +289,7 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
                         </div>
                     )}
                     <div
-                        className={classNames('flex justify-center items-center bg-dominant align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6', {
+                        className={classNames('flex justify-center items-center bg-bgBtnPrimary align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6', {
                             '!bg-gray-12 dark:!bg-dark-2 text-txtPrimary dark:text-txtBtnPrimary-dark opacity-30': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {

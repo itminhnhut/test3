@@ -11,7 +11,6 @@ const colors = {
 
     dark: {
         dark: '#0c0e14',
-        absolute: '#000',
         1: '#2e333d',
         2: '#1c232e',
         3: '#1f2f46',
@@ -74,8 +73,6 @@ const colors = {
         4: '#d9e9ff',
         5: '#1e77eb'
     },
-
-    dominant: '#47cc85',
 
     onus: {
         bg: '#1B222D',

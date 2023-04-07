@@ -293,7 +293,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
                 <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-gray-12 dark:bg-dark-2 rounded-md">
                     {t('nao:cancel')}
                 </div>
-                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-dominant rounded-md ${loading ? 'opacity-30' : ''}`}>
+                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-bgBtnPrimary rounded-md ${loading ? 'opacity-30' : ''}`}>
                     {t('common:confirm')}
                 </div>
             </div>

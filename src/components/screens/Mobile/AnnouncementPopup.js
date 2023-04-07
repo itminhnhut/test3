@@ -39,7 +39,7 @@ export default function AnnouncementPopup() {
         <div className='flex justify-between items-center'>
             <div className='flex items-center'>
                 <Bell className='mr-3' size={22} />
-                <span className='bg-dominant rounded text-xs text-txtPrimary dark:text-txtPrimary-dark leading-2 font-semibold px-2 py-1'>
+                <span className='bg-teal rounded text-xs text-txtBtnPrimary leading-2 font-semibold px-2 py-1'>
                     {t('common:mobile:announcement')}
                 </span>
             </div>
