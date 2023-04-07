@@ -15,7 +15,7 @@ const ProfileHeader = ({ t, partner, partnerBankDefault, loadingBankDefault }) =
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
-            <div className="py-6 flex -m-3 flex-wrap items-center justify-between">
+            <div className="py-6 flex -m-3 flex-wrap items-center justify-center md:justify-between ">
                 <div className="flex p-3 md:flex-grow items-center">
                     <img className="rounded-full object-cover" src={partner?.avatar} width={80} height={80} />
                     <div className="ml-6">
