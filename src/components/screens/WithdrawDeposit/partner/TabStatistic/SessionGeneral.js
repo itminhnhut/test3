@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { TIME_FILTER } from '../../constants';
-import classNames from 'classnames';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
 import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';
@@ -81,11 +78,11 @@ const SessionGeneral = () => {
                     </div>
                     <div className="w-1/2 flex flex-col items-end justify-center">
                         <h1 className="txtSecond-3">Tổng khối lượng</h1>
-                        <div className="pt-4 txtPri-6">
+                        <div className="pt-4 txtPri-6 flex">
                             <span className="text-green-3 dark:text-green-2">
-                                {loading ? <Skeletor width="100px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
+                                {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}
                             </span>
-                            /{loading ? <Skeletor width="100px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}
+                            {loading ? <Skeletor width="50px" /> : <span>/{formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedSellVolume)}</span>}
                         </div>
                     </div>
                 </CardWrapper>

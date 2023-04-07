@@ -1,19 +1,21 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
-import { TIME_FILTER } from '../../constants';
-import classNames from 'classnames';
 import CardWrapper from 'components/common/CardWrapper';
 import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
 import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import Note from 'components/common/Note';
 import colors from 'styles/colors';
-import { formatCurrency, formatTime, formatPrice, getExchange24hPercentageChange, getV1Url, render24hChange } from 'redux/actions/utils';
-import { subDays } from 'date-fns';
+import { formatTime, formatSwapRate } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
 import FilterTimeTab from 'components/common/FilterTimeTab';
+import DarkNote from 'components/common/DarkNote';
+import ModalV2 from 'components/common/V2/ModalV2';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import moment from 'moment';
+import { isNumber } from 'lodash';
+import FilterTokenTab from 'components/common/FilterTokenTab';
 
 const TabStatistic = [
     { value: 'commission', localized: 'reference:referral.total_commissions' },
@@ -61,25 +63,27 @@ const SessionChart = () => {
         }
     });
 
-    const { data, loading, error } = useFetchApi(
-        {
-            url: API_GET_COMMISSION_STATISTIC_PARTNER,
-            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: 72, interval: 'd' }
-        },
-        true,
-        [filter, typeTab]
-    );
-
+    const [showModalDetail, setShowModalDetail] = useState(null);
+    const [curToken, setCurToken] = useState(72);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
     });
 
+    const { data, loading, error } = useFetchApi(
+        {
+            url: API_GET_COMMISSION_STATISTIC_PARTNER,
+            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: curToken, interval: 'd' }
+        },
+        true,
+        [filter, typeTab, curToken]
+    );
+
     useEffect(() => {
         if (!data) return;
 
         setChartData({
-            labels: mockData.labels,
+            labels: data.labels,
             datasets: [
                 {
                     fill: false,
@@ -110,32 +114,7 @@ const SessionChart = () => {
         plugins: {
             title: { align: 'left' },
             tooltip: {
-                // callbacks: {
-                //     label: function (context) {
-                //         const descriptions = {
-                //             1: 'Mức PNL: ',
-                //             2: ['Tài sản :', 'Vốn: '],
-                //             3: ['Lượng tiền nạp: ', 'Lượng tiền rút: '],
-                //             4: ['Tài sản: ', 'Vốn: ']
-                //         };
-                //         const index = context.dataIndex;
-                //         const text1 =
-                //             descriptions[chart5Config.tab] + (chartData[0][index] >= 0 ? '+' : '') + formatPrice(chartData[0][index], 0) + ' ' + props.currency;
-                //         if (chart5Config.tab === 1) return text1;
-                //         const text2 = descriptions[chart5Config.tab][0] + formatPrice(chartData[0][index], 0) + ' ' + props.currency ?? null;
-                //         const text3 = descriptions[chart5Config.tab][1] + formatPrice(chartData[1][index], 0) + ' ' + props.currency ?? null;
-                //         return [text2, text3];
-                //     },
-                //     // filter: function (context) {
-                //     //     return context.datasetIndex === 0
-                //     // },
-                //     labelTextColor: function (context) {
-                //         return colors.darkBlue;
-                //     }
-                // },
-                // backgroundColor: colors.white,
-                // displayColors: false,
-                // titleColor: colors.gray[2]
+                enabled: false // <-- this option disables tooltips
             }
         },
         scales: {
@@ -152,8 +131,8 @@ const SessionChart = () => {
                 },
                 grid: {
                     display: false,
-                    drawBorder: true
-                    // borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
+                    drawBorder: true,
+                    borderColor: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT
                 }
             },
             y: {
@@ -161,7 +140,7 @@ const SessionChart = () => {
                 ticks: {
                     color: colors.darkBlue5,
                     callback: function (value, index, ticks) {
-                        return formatPrice(value);
+                        return formatSwapRate(value);
                     },
                     crossAlign: 'far',
                     padding: 8,
@@ -175,25 +154,36 @@ const SessionChart = () => {
                     borderDashOffset: 1,
                     // display: false,
                     drawBorder: false,
-                    // color: currentTheme === THEME_MODE.DARK ? colors.divider.dark : colors.divider.DEFAULT,
                     // borderDash: [1, 4],
-                    // // color: colors.divider.DEFAULT,
+                    // color: colors.divider.DEFAULT,
                     color: function (context) {
                         if (context.tick.value === 0) {
-                            return 'rgba(0, 0, 0, 0)';
+                            return 'transparent';
                         }
                         return isDark ? colors.divider.dark : colors.divider.DEFAULT;
                     }
                     // drawBorder: true
                 }
             }
+        },
+        onClick: (event, elements) => {
+            if (elements.length > 0) {
+                // do something with the clicked bar, e.g. update state, show a tooltip, etc.
+                setShowModalDetail(elements[0].index);
+            }
+        },
+        onHover: (event, chartElement) => {
+            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
         }
     };
 
     return (
         <div className="mt-20">
             {/* Header */}
-            <div className="font-semibold text-[20px] leading-6 mb-8">Báo cáo hoa hồng</div>
+            <div className="flex items-center justify-between mb-8">
+                <h1 className="font-semibold text-[20px] leading-6">Báo cáo hoa hồng</h1>
+                <FilterTokenTab curToken={curToken} setCurToken={setCurToken} />
+            </div>
 
             {/* Body */}
             <CardWrapper>
@@ -216,12 +206,81 @@ const SessionChart = () => {
                     <ChartJS type="bar" data={chartData} options={options} height="450px" />
                 </div>
                 {/* Chu thich */}
-                <div className="flex items-center gap-x-4 mt-9">
-                    <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
-                    <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
+                <div className="flex justify-between items-center mt-6">
+                    <div className="flex items-center gap-x-4">
+                        <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
+                        <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
+                    </div>
+                    <DarkNote variants="secondary" title={'Nhấn vào từng cột xem thống kê chi tiết theo ngày'} />
                 </div>
             </CardWrapper>
+            <ModalDetailChart
+                isVisible={isNumber(showModalDetail)}
+                onClose={() => setShowModalDetail(null)}
+                t={t}
+                data={data?.data?.[showModalDetail]}
+                dateString={data?.labels?.[showModalDetail]}
+            />
         </div>
+    );
+};
+
+const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
+    if (!isVisible) return null;
+
+    let buy = 0,
+        sell = 0,
+        totalBuySell = 0;
+
+    data.forEach((item) => {
+        if (item.value) {
+            if (item.side === SIDE.BUY) buy = item.value;
+            else if (item.side === SIDE.SELL) sell = item.value;
+            totalBuySell += item.value;
+        }
+    });
+
+    // Today is 06/04/2023: input '04/03' (MM/dd) => output 04/04/2023
+    // Today is 06/04/2023: input '04/07' (MM/dd) => output 07/04/2022
+    const currentYear = moment().year();
+    const parsedDate = moment(dateString, 'MM/DD').year(currentYear);
+    if (parsedDate.isAfter(moment())) {
+        parsedDate.year(currentYear - 1);
+    }
+
+    return (
+        <ModalV2
+            // isVisible={true}
+            isVisible={isVisible}
+            onBackdropCb={onClose}
+            className={`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider `}
+            wrapClassName="!font-semibold"
+        >
+            <div>
+                <h1 className="text-2xl">Tổng khối lượng nạp rút</h1>
+                <CardWrapper className="!p-4 my-6">
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-4">{t('common:time')}</span>
+                        <div>{formatTime(parsedDate, 'dd/MM/yyyy')}</div>
+                    </div>
+                    <div className="flex items-center justify-between mt-3">
+                        <span className="txtSecond-4">{t('common:total')}</span>
+                        <div>{formatSwapRate(totalBuySell)} VNDC</div>
+                    </div>
+                </CardWrapper>
+                <h3 className="txtSecond-3">{t('common:details')}</h3>
+                <CardWrapper className="!p-4 mt-3">
+                    <div className="flex items-center justify-between">
+                        <span className="txtSecond-4">Khối lượng nạp</span>
+                        <div>{formatSwapRate(buy)} VNDC</div>
+                    </div>
+                    <div className="flex items-center justify-between mt-3">
+                        <span className="txtSecond-4">Khối lượng rút</span>
+                        <div>{formatSwapRate(sell)} VNDC</div>
+                    </div>
+                </CardWrapper>
+            </div>
+        </ModalV2>
     );
 };
 

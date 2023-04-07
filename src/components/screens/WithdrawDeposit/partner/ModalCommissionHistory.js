@@ -1,16 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
-import TagV2 from 'components/common/V2/TagV2';
-import { formatPrice, formatWallet, formatTime, getSymbolObject, shortHashAddress, getAssetCode } from 'redux/actions/utils';
-import { X } from 'react-feather';
-import { API_GET_WALLET_TRANSACTION_HISTORY } from 'redux/actions/apis';
-import axios from 'axios';
-import { ApiStatus } from 'redux/actions/const';
-import Skeletor from 'components/common/Skeletor';
-import TextCopyable from 'components/screens/Account/TextCopyable';
-import { get, isNumber, isString } from 'lodash';
-import classNames from 'classnames';
-import { WalletType, EarnWalletType } from 'redux/actions/const';
+import { formatPrice, formatTime, getAssetCode } from 'redux/actions/utils';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import AssetLogo from 'components/wallet/AssetLogo';
 
