@@ -272,6 +272,7 @@ const OpenOrderTable = () => {
                             setState({
                                 params: {
                                     ...state.params,
+                                    page: 0,
                                     side: key
                                 }
                             });

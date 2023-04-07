@@ -32,7 +32,8 @@ const CardPartner = () => {
         loading: loadingBanks,
         error
     } = useFetchApi({ url: API_GET_PARTNER_BANKS, params: { partnerId: partner?.partnerId } }, partner && side === SIDE.BUY, [input, assetId, partner]);
-
+    
+    console.log('banks:', banks)
     const { data: accountBanks, loading: loadingAccountBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT }, side === SIDE.SELL, [side, refetchAccBanks]);
 
     useEffect(() => {
