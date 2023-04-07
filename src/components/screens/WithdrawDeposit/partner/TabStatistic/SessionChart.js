@@ -13,6 +13,7 @@ import { subDays } from 'date-fns';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
+import FilterTimeTab from 'components/common/FilterTimeTab';
 
 const TabStatistic = [
     { value: 'commission', localized: 'reference:referral.total_commissions' },
@@ -46,7 +47,6 @@ const mockData = {
 };
 
 const SessionChart = () => {
-    const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
     const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -60,42 +60,6 @@ const SessionChart = () => {
             key: 'selection'
         }
     });
-
-    useEffect(() => {
-        if (timeTab !== 'custom') {
-            const date = new Date();
-            switch (timeTab) {
-                case TIME_FILTER[0].value:
-                    date.setDate(date.getDate() - 1);
-                    break;
-                case TIME_FILTER[1].value:
-                    date.setDate(date.getDate() - 7);
-                    break;
-                case TIME_FILTER[2].value:
-                    date.setDate(date.getDate() - 31);
-                    break;
-                default:
-                    break;
-            }
-            date.toLocaleDateString();
-            setFilter({
-                range: {
-                    startDate: date.getTime(),
-                    endDate: Date.now(),
-                    key: 'selection'
-                }
-            });
-            return;
-        } else {
-            setFilter({
-                range: {
-                    startDate: new Date(filter?.range?.startDate ?? null).getTime(),
-                    endDate: new Date(filter?.range?.endDate ?? null).getTime(),
-                    key: 'selection'
-                }
-            });
-        }
-    }, [timeTab]);
 
     const { data, loading, error } = useFetchApi(
         {
@@ -242,56 +206,11 @@ const SessionChart = () => {
                                     {t(item.localized)}
                                 </TabItem>
                             ))}
-
-                            {/* <TabItem className="!px-0" value={1} active={typeTab === 1} onClick={() => setTypeTab(1)}>
-                                Tổng hoa hồng
-                            </TabItem> */}
                         </Tabs>
                     </div>
 
                     {/* Filter */}
-                    <div className="flex gap-3">
-                        {TIME_FILTER.map((item) => {
-                            return (
-                                <div
-                                    key={item.value}
-                                    onClick={() => setTimeTab(item.value)}
-                                    className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
-                                        'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== item.value,
-                                        'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === item.value
-                                    })}
-                                >
-                                    {t(item.localized)}
-                                </div>
-                            );
-                        })}
-                        <DatePickerV2
-                            initDate={filter.range}
-                            onChange={(e) => {
-                                setFilter({
-                                    range: {
-                                        startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                                        endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                                        key: 'selection'
-                                    }
-                                });
-                            }}
-                            month={2}
-                            hasShadow
-                            position="right"
-                            text={
-                                <div
-                                    onClick={() => setTimeTab('custom')}
-                                    className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal select-none', {
-                                        'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': timeTab !== 'custom',
-                                        'text-teal border-teal bg-teal/[.1] !font-semibold': timeTab === 'custom'
-                                    })}
-                                >
-                                    {t('dw_partner:filter.custom')}
-                                </div>
-                            }
-                        />
-                    </div>
+                    <FilterTimeTab filter={filter} setFilter={setFilter} className="mb-6" />
                 </div>
                 <div className=" w-full max-h-[450px] mt-8">
                     <ChartJS type="bar" data={chartData} options={options} height="450px" />

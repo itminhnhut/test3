@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus, PartnerOrderStatus } from 'redux/actions/const';
-import { isNull } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_COMMISSION_HISTORY_PARTNER, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import TagV2 from 'components/common/V2/TagV2';
@@ -26,13 +26,13 @@ const TabCommissionHistory = () => {
         t,
         i18n: { language }
     } = useTranslation();
-    const router = useRouter();
 
     const [state, set] = useState({
         data: [],
         curPage: 0,
         loading: false,
-        hasNext: false
+        hasNext: false,
+        sort: {}
     });
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
 
@@ -70,7 +70,8 @@ const TabCommissionHistory = () => {
                     to: filter?.range?.endDate ? filter.range.endDate : Date.now(),
                     skip: state.curPage * LIMIT_ROW,
                     limit: LIMIT_ROW,
-                    type: 'partnercommission'
+                    type: 'partnercommission',
+                    ...state.sort
                 }
             });
 
@@ -90,19 +91,19 @@ const TabCommissionHistory = () => {
         if (state.curPage === 0) {
             fetchOrder();
         } else setState({ curPage: 0 });
-    }, [filter]);
+    }, [filter, state.sort]);
 
     const customSort = (tableSorted) => {
         const output = {};
 
         for (const key in tableSorted) {
             if (tableSorted.hasOwnProperty(key)) {
-                output.sortBy = key;
-                output.sortType = tableSorted[key] ? 1 : -1;
+                output[`sort[${key}]`] = tableSorted[key] ? 'asc' : 'desc';
             }
         }
+
         setState({
-            ...output
+            sort: output
         });
     };
 
