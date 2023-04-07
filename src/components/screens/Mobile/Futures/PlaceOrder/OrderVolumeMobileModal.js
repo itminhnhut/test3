@@ -4,6 +4,7 @@ import Modal from 'components/common/ReModal';
 import { Minus, Plus, X } from 'react-feather';
 import Slider from 'components/trade/InputSlider';
 import { emitWebViewEvent, formatCurrency, formatNumber, scrollFocusInput } from 'redux/actions/utils';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { useTranslation } from 'next-i18next';
 import TradingInput from 'components/trade/TradingInput';
 import TradingLabel from 'components/trade/TradingLabel';
@@ -22,6 +23,8 @@ const OrderVolumeMobileModal = (props) => {
     const [volume, setVolume] = useState(quoteQty)
     const [percent, setPercent] = useState(0);
     const firstTime = useRef(true);
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     const minQuoteQty = useMemo(() => {
         return pairConfig ? +pairConfig?.filters.find(item => item.filterType === "MIN_NOTIONAL")?.notional : initValue
@@ -90,12 +93,12 @@ const OrderVolumeMobileModal = (props) => {
             <div className='mb-6 flex items-center justify-between font-bold text-lg'>
                 {t('futures:mobile:adjust_volume')}
             </div>
-            <div className='text-xs uppercase text-onus-grey leading-[1.125rem] mb-2'>{t('futures:order_table:volume')}</div>
-            <div className='px-2 mb-5 h-[44px] flex items-center bg-onus-bg2 rounded-[4px]'>
+            <div className='text-xs uppercase text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] mb-2'>{t('futures:order_table:volume')}</div>
+            <div className='px-2 mb-5 h-[44px] flex items-center bg-gray-12 dark:bg-dark-2 rounded-[4px]'>
                 <div className={changeClass}>
                     <Minus
                         size={15}
-                        className='text-onus-white cursor-pointer'
+                        className='text-txtPrimary dark:text-txtPrimary-dark cursor-pointer'
                         onClick={() => volume > minQuoteQty && available && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
                     />
                 </div>
@@ -106,7 +109,7 @@ const OrderVolumeMobileModal = (props) => {
                     decimalScale={decimal}
                     allowNegative={false}
                     thousandSeparator={true}
-                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-onus-bg2'
+                    containerClassName='px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2'
                     inputClassName="!text-center"
                     onValueChange={({ value }) => setVolume(value)}
                     validator={getValidator}
@@ -119,7 +122,7 @@ const OrderVolumeMobileModal = (props) => {
                 <div className={changeClass}>
                     <Plus
                         size={15}
-                        className='text-onus-white cursor-pointer'
+                        className='text-txtPrimary dark:text-txtPrimary-dark cursor-pointer'
                         onClick={() => volume < maxQuoteQty && available && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
                     />
                 </div>
@@ -134,8 +137,9 @@ const OrderVolumeMobileModal = (props) => {
                     axis='x'
                     xmax={100}
                     onChange={({ x }) => available && onChangeVolume(x)}
-                    bgColorActive={colors.onus.slider}
-                    bgColorSlide={colors.onus.slider}
+                    bgColorActive={colors.teal}
+                    bgColorSlide={colors.teal}
+                    BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                     dots={4}
 
                 />

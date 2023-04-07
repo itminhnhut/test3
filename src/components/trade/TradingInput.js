@@ -66,12 +66,12 @@ const TradingInput = ({
             <div
                 className={classNames(
                     `relative flex items-center px-[12px] py-2.5 rounded-md border border-transparent w-full ${
-                        onusMode ? 'hover:border-onus-green bg-onus-input' : 'bg-gray-10 dark:bg-darkBlue-3'
+                        onusMode ? 'hover:border-dominant bg-gray-12 dark:bg-dark-2' : 'bg-gray-10 dark:bg-darkBlue-3'
                     }`,
                     { '!border-dominant': !onusMode && isFocus && !isError },
-                    { 'border-onus-green': onusMode && isFocus },
+                    { 'border-green-2': onusMode && isFocus },
                     { '!border-red': !onusMode && isError },
-                    { '!border-onus-red': onusMode && isError },
+                    { '!border-red-2': onusMode && isError },
                     { 'h-11 sm:h-12': !onusMode },
                     containerClassName
                 )}

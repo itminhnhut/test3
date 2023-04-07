@@ -79,7 +79,7 @@ const AlertModal = memo(forwardRef((props, ref) => {
                 <div className='text-[20px] font-semibold mb-[12px]'>
                     {options.current.title}
                 </div>
-                <div className='mb-3 text-center text-onus-grey font-normal'>
+                <div className='mb-3 text-center text-txtSecondary dark:text-txtSecondary-dark font-normal'>
                     {options.current.messages}
                 </div>
                 <div className='text-gray-1 mb-[30px] text-center'>

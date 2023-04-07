@@ -20,6 +20,7 @@ import { FuturesOrderTypes } from 'redux/reducers/futures';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { IconLoading } from 'components/common/Icons';
 import { API_GET_FUTURES_ORDER, API_PARTIAL_CLOSE_ORDER } from 'redux/actions/apis';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { ApiStatus, DefaultFuturesFee } from 'redux/actions/const';
 import fetchApi from 'utils/fetch-api';
 import { createSelector } from 'reselect';
@@ -57,6 +58,9 @@ const CloseOrderModalMobile = ({
     const [showCustomized, setShowCustomized] = useState(false);
     const [loading, setLoading] = useState(false);
     const context = useContext(AlertContext);
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const indicatorColorClass = isDark ? '!bg-gray-4' : '!bg-white';
 
     const order_value = order?.order_value || 0;
     const side = order?.side;
@@ -275,217 +279,214 @@ const CloseOrderModalMobile = ({
         (!_validator()?.isValid && showCustomized && type !== FuturesOrderTypes.Market))) || loading;
 
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
-        >
+        <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}>
             <div className="flex flex-col ">
-                <div className="text-lg text-onus-white font-bold leading-6 mb-3">
-                    {t('futures:mobile:adjust_margin:close_position')}
-                </div>
-                <div
-                    className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">
+                <div className="text-lg text-txtPrimary dark:text-txtPrimary-dark font-bold leading-6 mb-3">{t('futures:mobile:adjust_margin:close_position')}</div>
+                <div className="text-green-2 font-semibold relative w-max bottom-[-13px] bg-bgPrimary dark:bg-bgPrimary-dark px-[6px] left-[9px]">
                     {order?.symbol} {order?.leverage}x
                 </div>
-                <div className="border border-onus-bg2 p-4 rounded-lg">
+                <div className="border border-divider dark:border-divider-dark p-4 rounded-lg">
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-onus-grey"> {t('futures:mobile:market_price')} </span>
-                        <span className="font-medium">
-                            {formatNumber(lastPrice, configSymbol.decimalScalePrice, 0, true)}
-                        </span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark"> {t('futures:mobile:market_price')} </span>
+                        <span className="font-medium">{formatNumber(lastPrice, configSymbol.decimalScalePrice, 0, true)}</span>
                     </div>
-                    <div className="h-[1px] bg-onus-bg2 w-full my-3"></div>
+                    <div className="h-[1px] bg-gray-12 dark:bg-dark-2 w-full my-3"></div>
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-onus-grey">
-                            {t('futures:mobile:adjust_margin:current_volume')}
-                        </span>
-                        <span className="font-medium">
-                            {formatNumber(order_value, configSymbol.decimalSymbol, 0, true)}
-                        </span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:current_volume')}</span>
+                        <span className="font-medium">{formatNumber(order_value, configSymbol.decimalSymbol, 0, true)}</span>
                     </div>
-                    <div className="h-[1px] bg-onus-bg2 w-full my-3"></div>
+                    <div className="h-[1px] bg-gray-12 dark:bg-dark-2 w-full my-3"></div>
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-onus-grey whitespace-nowrap">
-                            {t('futures:mobile:adjust_margin:est_pnl')}
-                        </span>
-                        {general.profit ?
-                            <div
-                                className={`text-sm font-semibold ${general.profit > 0 ? 'text-onus-green' : 'text-onus-red'}`}>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('futures:mobile:adjust_margin:est_pnl')}</span>
+                        {general.profit ? (
+                            <div className={`text-sm font-semibold ${general.profit > 0 ? 'text-green-2' : 'text-red-2'}`}>
                                 {general.formatProfit} ({general.percent}%)
                             </div>
-                            : <div className="text-sm font-semibold">-</div>
-                        }
+                        ) : (
+                            <div className="text-sm font-semibold">-</div>
+                        )}
                     </div>
                 </div>
-                {order?.status === 1 &&
+                {order?.status === 1 && (
                     <div className="mt-8">
                         <div className="flex items-center space-x-2">
                             <div className="font-semibold">{t('futures:mobile:adjust_margin:close_partially')}</div>
-                            <Switcher onusMode addClass="!bg-onus-white w-[22px] h-[22px]"
-                                      wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
-                                      active={partialClose} onChange={() => setPartialClose(!partialClose)}/>
+                            <Switcher
+                                onusMode
+                                addClass={`w-[22px] h-[22px] ${indicatorColorClass}`}
+                                wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                                active={partialClose}
+                                onChange={() => setPartialClose(!partialClose)}
+                            />
                         </div>
-                        {partialClose && <>
-                            <div className="mt-6">
-                                <div className="flex items-center justify-between mb-2">
-                                    <div className="uppercase text-xs text-onus-grey">
-                                        {t('futures:mobile:adjust_margin:closed_volume')}
+                        {partialClose && (
+                            <>
+                                <div className="mt-6">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark">
+                                            {t('futures:mobile:adjust_margin:closed_volume')}
+                                        </div>
+                                        <div className="flex items-center text-xs">
+                                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:adjust_margin:est_pnl')}:</span>
+                                            &nbsp;
+                                            <span className={general.est_pnl > 0 ? 'text-green-2' : 'text-red-2'}>
+                                                {formatNumber(general.est_pnl, 4, 0, true)}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center text-xs">
-                                        <span
-                                            className="text-onus-grey">{t('futures:mobile:adjust_margin:est_pnl')}:</span>&nbsp;
-                                        <span
-                                            className={general.est_pnl > 0 ? 'text-onus-green' : 'text-onus-red'}>{formatNumber(general.est_pnl, 4, 0, true)}</span>
-                                    </div>
-                                </div>
-                                <div className="px-4 mb-3 h-[44px] flex items-center bg-onus-bg2 rounded-md">
-                                    <div className={changeClass}>
-                                        <Minus
-                                            size={15}
-                                            className="text-onus-white cursor-pointer"
-                                            onClick={() => volume > minQuoteQty &&
-                                                setVolume((prevState) => Number(prevState) - Number(minQuoteQty))
-                                            }
-                                        />
-                                    </div>
-                                    <TradingInput
-                                        onusMode={true}
-                                        label=" "
-                                        value={volume}
-                                        decimalScale={configSymbol.decimalSymbol}
-                                        allowNegative={false}
-                                        thousandSeparator={true}
-                                        containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-onus-bg2"
-                                        inputClassName="!text-center"
-                                        onValueChange={({ value }) => onChangeVolume(value)}
-                                        autoFocus
-                                        inputMode="decimal"
-                                        allowedDecimalSeparators={[',', '.']}
-                                    />
-                                    <div className={changeClass}>
-                                        <Plus
-                                            size={15}
-                                            className="text-onus-white cursor-pointer"
-                                            onClick={() => volume < order_value &&
-                                                setVolume((prevState) => Number(prevState) + Number(minQuoteQty))
-                                            }
-                                        />
-                                    </div>
-                                </div>
-                                <Slider
-                                    useLabel
-                                    positionLabel="top"
-                                    onusMode
-                                    labelSuffix="%"
-                                    x={percent}
-                                    axis="x"
-                                    xmax={100}
-                                    xmin={0}
-                                    onChange={({ x }) => onChangePercent(x)}
-                                    bgColorActive={colors.onus.slider}
-                                    bgColorSlide={colors.onus.slider}
-                                    dots={4}
-                                />
-                            </div>
-                            <div className="mt-6 flex flex-col space-y-4">
-                                <div className="text-sm font-semibold flex items-center space-x-2"
-                                     onClick={() => setShowCustomized(!showCustomized)}
-                                >
-                                    <span> {t('futures:mobile:adjust_margin:advanced_custom')} </span>
-                                    <ChevronDown
-                                        color={colors.onus.grey}
-                                        size={16}
-                                        className={`${showCustomized ? 'rotate-180' : ''} transition-all`}
-                                    />
-                                </div>
-                                {showCustomized &&
-                                    <div className="flex items-center space-x-4">
-                                        <Selectbox
-                                            options={optionsTypes}
-                                            value={type}
-                                            onChange={(e) => {
-                                                setType(e);
-                                                setPrice(lastPrice);
-                                            }}
-                                            keyExpr="value"
-                                            displayExpr="title"
-                                            className="max-w-[8.75rem]"
-                                        />
+                                    <div className="px-4 mb-3 h-[44px] flex items-center bg-gray-12 dark:bg-dark-2 rounded-md">
+                                        <div className={changeClass}>
+                                            <Minus
+                                                size={15}
+                                                className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
+                                                onClick={() => volume > minQuoteQty && setVolume((prevState) => Number(prevState) - Number(minQuoteQty))}
+                                            />
+                                        </div>
                                         <TradingInput
                                             onusMode={true}
-                                            value={type === FuturesOrderTypes.Market ? '' : price}
-                                            decimalScale={configSymbol.decimalScalePrice}
+                                            label=" "
+                                            value={volume}
+                                            decimalScale={configSymbol.decimalSymbol}
                                             allowNegative={false}
                                             thousandSeparator={true}
-                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2"
-                                            inputClassName="!text-left"
-                                            placeholder={getLabel(type)}
-                                            onValueChange={({ value }) => setPrice(value)}
-                                            disabled={type === FuturesOrderTypes.Market}
+                                            containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2"
+                                            inputClassName="!text-center"
+                                            onValueChange={({ value }) => onChangeVolume(value)}
                                             autoFocus
-                                            validator={_validator()}
-                                            labelClassName="!text-sm capitalize"
-                                            label={' '}
-                                            renderTail={() => (
-                                                <span className={`font-medium pl-2 text-onus-grey`}>
-                                                    {configSymbol?.quoteAsset}
-                                                </span>
-                                            )}
+                                            inputMode="decimal"
                                             allowedDecimalSeparators={[',', '.']}
                                         />
+                                        <div className={changeClass}>
+                                            <Plus
+                                                size={15}
+                                                className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
+                                                onClick={() => volume < order_value && setVolume((prevState) => Number(prevState) + Number(minQuoteQty))}
+                                            />
+                                        </div>
                                     </div>
-                                }
-                            </div>
-                            <Tooltip id="pending-vol" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                     className="!mx-7 !-mt-2 !px-3 !py-2 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
-                                     overridePosition={(e) => ({
-                                         left: 0,
-                                         top: e.top
-                                     })}
-                            >
-                            </Tooltip>
-                            <div className="mt-8 flex flex-col space-y-2 text-xs">
-                                <div className="flex items-center">
-                                    <span
-                                        className="text-onus-grey">{t('futures:mobile:adjust_margin:closed_volume')}:</span>&nbsp;
-                                    <span className="font-medium">
-                                        {formatNumber(volume, configSymbol.decimalSymbol, 0, true)}&nbsp;{configSymbol?.quoteAsset}
-                                    </span>
+                                    <Slider
+                                        useLabel
+                                        positionLabel="top"
+                                        onusMode
+                                        labelSuffix="%"
+                                        x={percent}
+                                        axis="x"
+                                        xmax={100}
+                                        xmin={0}
+                                        onChange={({ x }) => onChangePercent(x)}
+                                        bgColorActive={colors.teal}
+                                        bgColorSlide={colors.teal}
+                                        BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
+                                        dots={4}
+                                    />
                                 </div>
-                                <div className="flex items-center">
-                                    <span
-                                        className="text-onus-grey"> {t('futures:mobile:adjust_margin:pending_closed_volume')}:</span>&nbsp;
-                                    <span className="font-medium">
-                                        {formatNumber(general.pendingVol, configSymbol.decimalSymbol, 0, true)}&nbsp;
-                                        {configSymbol?.quoteAsset}
-                                    </span>
-                                    <div className="px-2"
-                                         data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')}
-                                         data-for="pending-vol" id="tooltip-pending-vol">
-                                        <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16}/>
+                                <div className="mt-6 flex flex-col space-y-4">
+                                    <div className="text-sm font-semibold flex items-center space-x-2" onClick={() => setShowCustomized(!showCustomized)}>
+                                        <span> {t('futures:mobile:adjust_margin:advanced_custom')} </span>
+                                        <ChevronDown color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className={`${showCustomized ? 'rotate-180' : ''} transition-all`} />
+                                    </div>
+                                    {showCustomized && (
+                                        <div className="flex items-center space-x-4">
+                                            <Selectbox
+                                                options={optionsTypes}
+                                                value={type}
+                                                onChange={(e) => {
+                                                    setType(e);
+                                                    setPrice(lastPrice);
+                                                }}
+                                                keyExpr="value"
+                                                displayExpr="title"
+                                                className="max-w-[8.75rem]"
+                                            />
+                                            <TradingInput
+                                                onusMode={true}
+                                                value={type === FuturesOrderTypes.Market ? '' : price}
+                                                decimalScale={configSymbol.decimalScalePrice}
+                                                allowNegative={false}
+                                                thousandSeparator={true}
+                                                containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2"
+                                                inputClassName="!text-left"
+                                                placeholder={getLabel(type)}
+                                                onValueChange={({ value }) => setPrice(value)}
+                                                disabled={type === FuturesOrderTypes.Market}
+                                                autoFocus
+                                                validator={_validator()}
+                                                labelClassName="!text-sm capitalize"
+                                                label={' '}
+                                                renderTail={() => (
+                                                    <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
+                                                        {configSymbol?.quoteAsset}
+                                                    </span>
+                                                )}
+                                                allowedDecimalSeparators={[',', '.']}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                                <Tooltip
+                                    id="pending-vol"
+                                    place="top"
+                                    effect="solid"
+                                    backgroundColor="bg-darkBlue-4"
+                                    className="!mx-7 !-mt-2 !px-3 !py-2 !opacity-100 !rounded-lg after:!left-[30%]"
+                                    overridePosition={(e) => ({
+                                        left: 0,
+                                        top: e.top
+                                    })}
+                                    arrowColor={isDark ? colors.dark[2] : colors.dark[1]}
+                                    isV3
+                                ></Tooltip>
+                                <div className="mt-8 flex flex-col space-y-2 text-xs">
+                                    <div className="flex items-center">
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {t('futures:mobile:adjust_margin:closed_volume')}:
+                                        </span>
+                                        &nbsp;
+                                        <span className="font-medium">
+                                            {formatNumber(volume, configSymbol.decimalSymbol, 0, true)}&nbsp;{configSymbol?.quoteAsset}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {' '}
+                                            {t('futures:mobile:adjust_margin:pending_closed_volume')}:
+                                        </span>
+                                        &nbsp;
+                                        <span className="font-medium">
+                                            {formatNumber(general.pendingVol, configSymbol.decimalSymbol, 0, true)}&nbsp;
+                                            {configSymbol?.quoteAsset}
+                                        </span>
+                                        <div
+                                            className="px-2"
+                                            data-tip={t('futures:mobile:adjust_margin:tooltip_pending_close_volume')}
+                                            data-for="pending-vol"
+                                            id="tooltip-pending-vol"
+                                        >
+                                            <img src={getS3Url('/images/icon/ic_help.png')} height={16} width={16} />
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
+                                            {' '}
+                                            {t('futures:mobile:adjust_margin:remaining_volume')}:
+                                        </span>
+                                        &nbsp;
+                                        <span className="font-medium">
+                                            {formatNumber(general.remaining_volume, configSymbol.decimalSymbol, 0, true)}&nbsp;
+                                            {configSymbol?.quoteAsset}
+                                        </span>
                                     </div>
                                 </div>
-                                <div className="flex items-center">
-                                    <span
-                                        className="text-onus-grey"> {t('futures:mobile:adjust_margin:remaining_volume')}:</span>&nbsp;
-                                    <span className="font-medium">
-                                        {formatNumber(general.remaining_volume, configSymbol.decimalSymbol, 0, true)}&nbsp;
-                                        {configSymbol?.quoteAsset}
-                                    </span>
-                                </div>
-                            </div>
-                        </>
-                        }
+                            </>
+                        )}
                     </div>
-                }
+                )}
                 <div className="mt-12">
                     <Button
                         onusMode={true}
                         title={
                             <div className="flex items-center justify-center">
-                                {loading ? (
-                                    <IconLoading color="#FFFFFF" className="!m-0"/>
-                                ) : (
-                                    t('futures:leverage:confirm')
-                                )}
+                                {loading ? <IconLoading color="#FFFFFF" className="!m-0" /> : t('futures:leverage:confirm')}
                             </div>
                         }
                         componentType="button"
@@ -501,4 +502,3 @@ const CloseOrderModalMobile = ({
 };
 
 export default CloseOrderModalMobile;
-

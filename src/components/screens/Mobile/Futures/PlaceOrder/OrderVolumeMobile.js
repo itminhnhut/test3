@@ -7,7 +7,7 @@ const OrderVolumeMobile = memo(({ decimal, pairConfig, setShowEditVolume, quoteQ
     const { t } = useTranslation();
 
     return (
-        <div onClick={() => setShowEditVolume(true)} >
+        <div onClick={() => setShowEditVolume(true)}>
             <TradingInput
                 onusMode={true}
                 thousandSeparator={true}
@@ -17,20 +17,18 @@ const OrderVolumeMobile = memo(({ decimal, pairConfig, setShowEditVolume, quoteQ
                 // onValueChange={({ floatValue = '' }) => setSize(floatValue)}
                 // validator={getValidator('quantity')}
                 decimalScale={decimal}
-                labelClassName='whitespace-nowrap capitalize text-onus-grey'
-                containerClassName="h-[36px] bg-onus-input"
-                tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
+                labelClassName="whitespace-nowrap capitalize text-txtSecondary dark:text-txtSecondary-dark"
+                containerClassName="h-[36px] bg-gray-12 dark:bg-dark-2"
+                tailContainerClassName="flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none"
                 renderTail={() => (
-                    <div className='relative group select-none text-onus-grey'>
-                        <div className='flex items-center'>
-                            {pairConfig?.quoteAsset ?? ''}
-                        </div>
+                    <div className="relative group select-none text-txtSecondary dark:text-txtSecondary-dark">
+                        <div className="flex items-center">{pairConfig?.quoteAsset ?? ''}</div>
                     </div>
                 )}
                 readOnly
-                inputClassName="text-xs !text-center !text-white"
-            // onFocus={() => context.onHiddenBottomNavigation(true)}
-            // onBlur={() => context.onHiddenBottomNavigation(false)}
+                inputClassName="text-xs !text-center"
+                // onFocus={() => context.onHiddenBottomNavigation(true)}
+                // onBlur={() => context.onHiddenBottomNavigation(false)}
             />
         </div>
     );

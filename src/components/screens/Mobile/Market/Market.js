@@ -255,46 +255,41 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         return listItem.map((item) => (
             <div
                 key={item.symbol}
-                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-bg2' : ''}`}
+                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-gray-12 dark:bg-dark-2' : ''}`}
                 onClick={() => {
-                    router.push(`/mobile/futures/${item.symbol}`)
+                    router.push(`/mobile/futures/${item.symbol}`);
                 }}
             >
-                <div className='flex flex-1 items-center'>
+                <div className="flex flex-1 items-center">
                     <AssetLogo assetCode={item.baseAsset} size={30} />
-                    <div className='ml-3'>
-                        <div className='flex items-center text-sm whitespace-nowrap leading-5 mr-2'>
-                            <span className='font-semibold text-onus-white'>{item.baseAsset}</span>
+                    <div className="ml-3">
+                        <div className="flex items-center text-sm whitespace-nowrap leading-5 mr-2">
+                            <span className="font-semibold text-txtPrimary dark:text-txtPrimary-dark">{item.baseAsset}</span>
                             {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
                                 </span> */}
-                            {item.leverageMax && <div className="ml-2 bg-onus-bg3 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">{item.leverageMax}</div>}
+                            {item.leverageMax && (
+                                <div className="ml-2 bg-gray-12 dark:bg-dark-2 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">
+                                    {item.leverageMax}
+                                </div>
+                            )}
                         </div>
-                        <p className='text-xs text-onus-grey'>
-                            $
-                            {formatCurrency(item.volume24h, 1)}
-                        </p>
+                        <p className="text-xs text-txtSecondary dark:text-txtSecondary-dark">${formatCurrency(item.volume24h, 1)}</p>
                     </div>
-
                 </div>
-                <div className='flex items-start justify-end'>
-                    <div className='flex flex-col text-right'>
+                <div className="flex items-start justify-end">
+                    <div className="flex flex-col text-right">
                         <LastPrice price={item.lastPrice} />
-                        <span className='text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap'>
+                        <span className="text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] whitespace-nowrap">
                             ${formatPrice(item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
                         </span>
                     </div>
-                    <div className='flex justify-end ml-6'>
+                    <div className="flex justify-end ml-6">
                         <div
-                            className={cn(
-                                'h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
-                                {
-                                    'bg-red-2':
-                                        item.change24h < 0,
-                                    'bg-green-2':
-                                        item.change24h >= 0,
-                                }
-                            )}
+                            className={cn('h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium', {
+                                'bg-red-2 text-txtBtnPrimary': item.change24h < 0,
+                                'bg-green-2 text-txtBtnPrimary': item.change24h >= 0
+                            })}
                         >
                             {item.change24h > 0 && '+'}
                             {formatNumber(item.change24h, 2, 2, true)} %
@@ -302,7 +297,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                     </div>
                 </div>
             </div>
-        ))
+        ));
 
     }
 
@@ -311,14 +306,14 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
             <div className='mt-4 px-4'>
                 <InputSearch onChange={changeSearch} />
             </div>
-            <div className='border-b border-onus-line'>
+            <div className='border-b border-divider dark:border-divider-dark'>
                 <div ref={refTabsMarkets} className='flex space-x-5 px-4 mt-6 overflow-x-auto overflow-y-hidden'>
                     {Object.values(TABS).map((t) => {
                         return (
                             <div
                                 key={t}
                                 className={cn(
-                                    'flex cursor-pointer text-onus-grey whitespace-nowrap'
+                                    'flex cursor-pointer text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap'
                                 )}
                                 onClick={(e) => {
                                     onChangeTab(t)
@@ -337,7 +332,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                                     className={cn(
                                         `text-sm pb-3 relative font-semibold`,
                                         {
-                                            'tab-active text-onus-white': t === tab.active,
+                                            'tab-active text-txtPrimary dark:text-txtPrimary-dark': t === tab.active,
                                             'ml-2': t === TABS.FAVOURITE
                                         }
                                     )}
@@ -355,8 +350,8 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
                         <div
                             className={classNames(
                                 'min-h-[2rem] flex items-center justify-center px-3 rounded text-sm font-medium',
-                                { 'bg-onus-base': TAGS[tab.active][tag] === tab.tagActive },
-                                { 'bg-onus-bg3': TAGS[tab.active][tag] !== tab.tagActive }
+                                { 'bg-bgTabActive text-txtBtnPrimary': TAGS[tab.active][tag] === tab.tagActive },
+                                { 'bg-gray-12 dark:bg-dark-2': TAGS[tab.active][tag] !== tab.tagActive }
                             )}
                             onClick={() => {
                                 setTab({
@@ -423,14 +418,14 @@ const InputSearch = ({ onChange }) => {
         setValue(_value)
         onChange(_value)
     }
-    return <div className='flex flex-1 items-center bg-onus-input rounded-md py-2 px-4'>
+    return <div className='flex flex-1 items-center bg-gray-12 dark:bg-dark-2 rounded-md py-2 px-4'>
         <Search
             size={20}
-            className='text-onus-grey'
+            className='text-txtSecondary dark:text-txtSecondary-dark'
             strokeWidth={1}
         />
         <input
-            className='flex-1 ml-2 outline-none !placeholder-onus-grey placeholder:font-medium text-sm'
+            className='flex-1 ml-2 outline-none !placeholder-txtSecondary dark:!placeholder-txtSecondary-dark placeholder:font-medium text-sm'
             onChange={({ target: { value: v } }) => handleChange(v)}
             value={value}
             placeholder={t('markets:search_placeholder')}
@@ -452,8 +447,8 @@ const LastPrice = ({ price }) => {
     return (
         <span
             className={cn('text-sm leading-5 font-medium', {
-                'text-onus-red': price < prevPrice,
-                'text-onus-green': price >= prevPrice,
+                'text-red-2': price < prevPrice,
+                'text-green-2': price >= prevPrice,
             })}
         >
             {formatPrice(price)}
@@ -469,8 +464,8 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             }
             onClick={onClick}
         >
-            <span className='text-onus-grey text-xs leading-4'>{title}</span>
-            <SortIcon color={colors.onus.grey} activeColor={colors.onus.base} direction={sortDirection} />
+            <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>{title}</span>
+            <SortIcon color={colors.onus.grey} activeColor={colors.dominant} direction={sortDirection} />
         </div>
     )
 }

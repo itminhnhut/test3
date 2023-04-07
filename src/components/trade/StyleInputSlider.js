@@ -29,7 +29,7 @@ export const Active = styled.div`
 export const SliderBackground = styled.div`
     position: absolute;
     background-color: ${({ isDark, BgColorLine, onusMode }) =>
-        BgColorLine ? BgColorLine : onusMode ? colors.onus.bg2 : isDark ? colors.dark[2] : colors.gray[11]};
+        BgColorLine ? BgColorLine : onusMode ? (isDark ? colors.dark[2] : colors.gray[11]) : isDark ? colors.dark[2] : colors.gray[11]};
     border-radius: 4px;
     user-select: none;
     box-sizing: border-box;
@@ -57,7 +57,7 @@ export const Dot = styled.span`
     box-sizing: content-box;
     background-color: ${({ active, bgColorActive, bgColorDot }) => (active ? (bgColorActive ? bgColorActive : colors.teal) : bgColorDot)};
     z-index: 30;
-    border: ${({ onusMode, active }) => (onusMode && !active ? '3px solid #36445A' : 'none')};
+    border: ${({ onusMode, active, isDark }) => (onusMode && !active ? `3px solid ${isDark ? colors.dark[4] : colors.gray[13]}` : 'none')};
     transition: transform 0.2s; /* Animation */
     /* margin-left:${({ onusMode }) => (onusMode ? 0 : '-4px')} */
 
@@ -89,7 +89,7 @@ export const Thumb = styled.div`
     height: ${({ onusMode, naoMode }) => (naoMode ? '32px' : onusMode ? '20px' : '16px')};
     /* clip-path:${({ onusMode }) => (onusMode ? 'unset' : 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)')}; */
     border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
-    border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? '4px solid #76AEFF' : 'none')};
+    border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? '4px solid #47cc85' : 'none')};
     background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
         naoMode ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)' : bgColorActive ? bgColorActive : colors.teal};
     user-select: none;

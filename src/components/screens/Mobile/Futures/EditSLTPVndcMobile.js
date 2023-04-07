@@ -13,6 +13,7 @@ import Slider from 'components/trade/InputSlider';
 import { Dot, ThumbLabel } from 'components/trade/StyleInputSlider';
 import colors from 'styles/colors';
 import { DefaultFuturesFee, ExchangeOrderEnum, FuturesOrderEnum } from 'redux/actions/const';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { isNumeric } from 'utils';
 import classNames from 'classnames';
 import { createSelector } from 'reselect';
@@ -65,6 +66,9 @@ const EditSLTPVndcMobile = ({
     if (!pairConfig) return null;
     const isChangeSlide = useRef(false);
     const initValue = useRef(null)
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const indicatorColorClass = isDark ? '!bg-gray-4' : '!bg-white';
 
     const getProfitSLTP = (sltp) => {
         const {
@@ -369,10 +373,10 @@ const EditSLTPVndcMobile = ({
                     key={`inputSlider_dot_${i}`}
                     active={active}
                     percentage={i * size}
-                    isDark
+                    isDark={isDark}
                     onusMode
-                    bgColorActive={'#418FFF'}
-                    bgColorDot={colors.onus.bg3}
+                    bgColorActive={colors.teal}
+                    bgColorDot={isDark ? colors.dark[2] : colors.gray[12]}
 
                 />
             );
@@ -383,11 +387,11 @@ const EditSLTPVndcMobile = ({
             //                 onSetValuePercent(i * size, key)
             //             }}
             //             className={classNames(
-            //                 'block absolute text-xs text-onus-grey select-none cursor-pointer',
+            //                 'block absolute text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer',
             //                 {
             //                     'left-1/2 -translate-x-1/2 ml-[3px]': i > 0 && i < dotStep.current,
             //                     '-left-1/2 translate-x-[-80%]': i === dotStep.current,
-            //                     '!text-onus-white': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
+            //                     '!text-txtPrimary dark:text-txtPrimary-dark': Number(i * size) === Number(data[key] > 0 ? percent[key] : 50) && onusMode,
             //                 }
             //             )}
             //         >
@@ -408,7 +412,7 @@ const EditSLTPVndcMobile = ({
         // if (hidden) return;
         const postion = pos.left === 50 ? 0 : pos.left > 50 ? (pos.left - 50) * 2 : -(50 - pos.left) * 2;
         return (
-            <ThumbLabel isZero={pos.left === 0} isDark onusMode bgColorActive={colors.onus.white} className={`left-1/2 translate-x-[-50%] w-max`}>
+            <ThumbLabel isZero={pos.left === 0} isDark={isDark} onusMode bgColorActive={isDark ? colors.white : colors.darkBlue} className={`left-1/2 translate-x-[-50%] w-max`}>
                 {ceil(postion, 0)}%
             </ThumbLabel>
         );
@@ -457,7 +461,7 @@ const EditSLTPVndcMobile = ({
     };
 
     const textColor = (value) => {
-        return value === 0 ? 'text-onus-white' : value > 0 ? 'text-onus-green' : 'text-onus-red';
+        return value === 0 ? 'text-txtPrimary dark:text-txtPrimary-dark' : value > 0 ? 'text-green-2' : 'text-red-2';
     };
 
     return (
@@ -466,20 +470,20 @@ const EditSLTPVndcMobile = ({
 
             <div>
                 <div
-                    className="text-lg font-bold text-onus-white pb-[6px]">{t('futures:mobile:modify_tpsl_title')}</div>
+                    className="text-lg font-bold text-txtPrimary dark:text-txtPrimary-dark pb-[6px]">{t('futures:mobile:modify_tpsl_title')}</div>
                 <div
-                    className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x
+                    className="text-green-2 font-semibold relative w-max bottom-[-13px] bg-bgPrimary dark:bg-bgPrimary-dark px-[6px] left-[9px]">{order?.symbol} {order?.leverage}x
                 </div>
-                <div className="border border-onus-bg2 px-[15px] py-[10px] rounded-lg pt-[21px]">
+                <div className="border border-divider dark:border-divider-dark px-[15px] py-[10px] rounded-lg pt-[21px]">
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-onus-grey">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {t('futures:order_table:open_price')}
                         </span>
                         <span className="font-medium">{formatNumber(data.price, 2, 0, true)}</span>
                     </div>
-                    <div className="h-[1px] bg-onus-bg2 w-full my-[10px]"></div>
+                    <div className="h-[1px] bg-gray-12 dark:bg-dark-2 w-full my-[10px]"></div>
                     <div className="text-sm flex items-center justify-between">
-                        <span className="text-onus-grey">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">
                             {t('futures:tp_sl:mark_price')}
                         </span>
                         <span className="font-medium">{formatNumber(_lastPrice, 2, 0, true)}</span>
@@ -492,21 +496,21 @@ const EditSLTPVndcMobile = ({
                 onClick={onChangeAutoType}
             >
                 <CheckBox onusMode={true} active={autoType}
-                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-onus-grey !bg-onus-bg2'}`} />
-                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
+                    boxContainerClassName={`rounded-[2px] ${autoType ? '' : 'border !border-divider dark:!border-divider-dark !bg-gray-12 dark:!bg-dark-2'}`} />
+                <span className="ml-3 whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs">
                     {t('futures:mobile:auto_type_sltp')}
                 </span>
             </div>
             <div className="pt-8">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
-                        <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
-                        <Switcher onusMode addClass="!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap mr-2">{t('futures:stop_loss')}</label>
+                        <Switcher onusMode addClass={`w-[22px] h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.sl} onChange={() => onSwitch('sl')} />
                     </div>
                     {show.sl && <div className="text-xs flex items-center ">
                         <div
-                            className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:
+                            className="font-normal text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:
                         </div>
                         &nbsp;
                         <div
@@ -516,23 +520,23 @@ const EditSLTPVndcMobile = ({
                 </div>
                 {show.sl &&
                     <>
-                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
+                        <div className="h-[44px] rounded-[6px] w-full bg-gray-12 dark:bg-dark-2 flex mt-4">
                             <TradingInput
                                 onusMode={onusMode}
                                 thousandSeparator
                                 type="text"
                                 placeholder={placeholder('stop_loss')}
                                 labelClassName="hidden"
-                                className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full `}
-                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-onus-bg2' : ''}`, {
-                                    'border-onus-red': !slError.isValid,
+                                className={`flex-grow text-sm font-medium h-[21px] text-txtPrimary dark:text-txtPrimary-dark w-full `}
+                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-gray-12 dark:!bg-dark-2' : ''}`, {
+                                    'border-red-2': !slError.isValid,
                                     'border-none': slError.isValid
                                 })}
                                 value={data.sl}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('sl', e)}
                                 renderTail={() => (
-                                    <span className={`font-medium pl-2 text-onus-grey`}>
+                                    <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
                                         {tabSl === 2 ? '%' : quoteAsset}
                                     </span>
                                 )}
@@ -544,7 +548,7 @@ const EditSLTPVndcMobile = ({
                                 }}
                             />
                         </div>
-                        {!slError?.isValid && slError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-onus-red'><RedDot className='mr-[5px]' />{slError?.msg}</div>}
+                        {!slError?.isValid && slError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-red-2'><RedDot className='mr-[5px]' />{slError?.msg}</div>}
                     </>
                 }
                 <div className={`mt-2 pb-2 ${!show.sl ? 'hidden' : ''}`}>
@@ -555,8 +559,9 @@ const EditSLTPVndcMobile = ({
                         x={percent.sl}
                         axis="x"
                         xmax={100}
-                        bgColorActive={colors.onus.slider}
-                        bgColorSlide={colors.onus.slider}
+                        bgColorActive={colors.teal}
+                        bgColorSlide={colors.teal}
+                        BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                         xStart={50}
                         positionLabel="top"
                         customPercentLabel={customPercentLabel}
@@ -568,13 +573,13 @@ const EditSLTPVndcMobile = ({
             <div className="pt-8 pb-12">
                 <div className='flex items-center justify-between'>
                     <div className='flex items-center mr-2'>
-                        <label className="text-onus-white font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
-                        <Switcher onusMode addClass="!bg-onus-white w-[22px] h-[22px]" wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
+                        <label className="text-txtPrimary dark:text-txtPrimary-dark font-semibold whitespace-nowrap mr-2">{t('futures:take_profit')}</label>
+                        <Switcher onusMode addClass={`w-[22px] h-[22px] ${indicatorColorClass}`} wrapperClass="min-h-[24px] !h-6 min-w-[48px]"
                             active={show.tp} onChange={() => onSwitch('tp')} />
                     </div>
                     {show.tp && <div className="text-xs flex items-center">
                         <div
-                            className="font-normal text-onus-grey whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:
+                            className="font-normal text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap">{t('futures:mobile:pnl_estimate')}:
                         </div>
                         &nbsp;
                         <div
@@ -583,23 +588,23 @@ const EditSLTPVndcMobile = ({
                 </div>
                 {show.tp &&
                     <>
-                        <div className="h-[44px] rounded-[6px] w-full bg-onus-bg2 flex mt-4">
+                        <div className="h-[44px] rounded-[6px] w-full bg-gray-12 dark:bg-dark-2 flex mt-4">
                             <TradingInput
                                 onusMode={onusMode}
                                 thousandSeparator
                                 type="text"
                                 placeholder={placeholder('take_profit')}
                                 labelClassName="hidden"
-                                className={`flex-grow text-sm font-medium h-[21px] text-onus-white w-full`}
-                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-onus-bg2' : ''}`, {
-                                    'border-onus-red': !tpError.isValid,
+                                className={`flex-grow text-sm font-medium h-[21px] text-txtPrimary dark:text-txtPrimary-dark w-full`}
+                                containerClassName={classNames(`w-full !px-3 ${isMobile ? '!bg-gray-12 dark:!bg-dark-2' : ''}`, {
+                                    'border-red-2': !tpError.isValid,
                                     'border-none': tpError.isValid
                                 })}
                                 value={data.tp}
                                 decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                                 onValueChange={(e) => onHandleChange('tp', e)}
                                 renderTail={() => (
-                                    <span className={`font-medium pl-2 text-onus-grey`}>
+                                    <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
                                         {tabTp === 2 ? '%' : quoteAsset}
                                     </span>
                                 )}
@@ -607,7 +612,7 @@ const EditSLTPVndcMobile = ({
                                 allowedDecimalSeparators={[',', '.']}
                             />
                         </div>
-                        {!tpError?.isValid && tpError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-onus-red'><RedDot className='mr-[5px]' />{tpError?.msg}</div>}
+                        {!tpError?.isValid && tpError?.msg.length && <div className='flex items-center mt-2 font-normal text-xs leading-3 text-red-2'><RedDot className='mr-[5px]' />{tpError?.msg}</div>}
                     </>
 
                 }
@@ -619,8 +624,9 @@ const EditSLTPVndcMobile = ({
                         x={percent.tp}
                         axis="x"
                         xmax={100}
-                        bgColorActive={colors.onus.slider}
-                        bgColorSlide={colors.onus.slider}
+                        bgColorActive={colors.teal}
+                        bgColorSlide={colors.teal}
+                        BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                         xStart={50}
                         positionLabel="top"
                         customPercentLabel={customPercentLabel}

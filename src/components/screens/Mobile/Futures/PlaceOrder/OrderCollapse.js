@@ -61,10 +61,10 @@ const OrderCollapse = ({ pairConfig, size, pairPrice, decimals, leverage, isAuth
                     </div>
                     <span>{formatNumber(pairPrice?.ask, decimals.decimalScalePrice, 0, true)}</span>
                 </Side>
-                <Text className={`diff-price ${disabledClass ? 'bg-onus-bg2 !text-onus-grey' : ''}`}>
+                <Text className={`diff-price ${disabledClass ? 'bg-gray-12 dark:bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark' : ''}`}>
                     {formatNumber(pairPrice?.ask - pairPrice?.bid, decimals.decimalScalePrice, 0, true)}
                 </Text>
-                <Side className={`bg-onus-red rounded-r-[6px] text-white items-end ${className} ${disabledClass ? 'border-[1px] border-onus-red' : ''}`}
+                <Side className={`bg-red-2 rounded-r-[6px] text-white items-end ${className} ${disabledClass ? 'border-[1px] border-red-2' : ''}`}
                     onClick={() => onOrder(VndcFutureOrderType.Side.SELL, pairPrice?.bid)}>
                     <div className={`truncate text-right`} style={style()}>{t('common:sell')}&nbsp;
                         {_quoteQty}&nbsp;{pairConfig?.quoteAsset ?? ''}</div>
@@ -118,7 +118,7 @@ const Side = styled.div.attrs({
 `
 
 const Text = styled.div.attrs({
-    className: 'absolute font-medium bg-onus-input text-onus-white text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%] z-[10]'
+    className: 'absolute font-medium bg-divider dark:bg-divider-dark text-txtPrimary dark:text-txtPrimary-dark text-xs rounded-[6px] px-[15px] py-[4px] left-[50%] top-[50%] z-[10]'
 })`
 transform:translate(-50%, -50%)
 `

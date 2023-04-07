@@ -13,6 +13,7 @@ import Tooltip from "components/common/Tooltip";
 import { useSelector } from "react-redux";
 import classnames from 'classnames'
 import { PlusCircle } from 'react-feather';
+import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 
 
 const CurrencyPopup = (props) => {
@@ -29,6 +30,8 @@ const CurrencyPopup = (props) => {
     const [disableForAvailable, setDisableForAvailable] = useState(false);
     const currency = dataRow?.fee_metadata?.close_order?.currency ?? dataRow?.fee_metadata?.place_order?.currency
     const alertContext = useContext(AlertContext);
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     useEffect(() => {
         if (dataRow) {
@@ -79,10 +82,10 @@ const CurrencyPopup = (props) => {
                 <div
                     onClick={() => onChangeCurrency(item, _assetConfigs, availableAsset)}
                     className={classnames(
-                        "flex items-center justify-between w-full border bg-onus-bg rounded-md px-4 py-[7px]",
+                        "flex items-center justify-between w-full border bg-gray-13 dark:bg-dark-4 rounded-md px-4 py-[7px]",
                         {
-                            'border-onus-base': hoverItemsChose === item.assetCode,
-                            'border-onus-bg': hoverItemsChose !== item.assetCode,
+                            'border-dominant': hoverItemsChose === item.assetCode,
+                            'border-divider dark:border-divider-dark': hoverItemsChose !== item.assetCode,
                         }
                     )}
                 >
@@ -101,10 +104,10 @@ const CurrencyPopup = (props) => {
                                 )}
                             </div>
                             <div className="flex items-center space-x-2">
-                                <div className="leading-5 text-onus-grey text-xs">
+                                <div className="leading-5 text-txtSecondary dark:text-txtSecondary-dark text-xs">
                                     {t(`futures:mobile:adjust_margin:available`)} {formatNumber(availableAsset, _assetConfigs.assetDigit)}
                                 </div>
-                                {/* <PlusCircle onClick={() => onBuyToken(item)} size={12} color={colors.onus.base} /> */}
+                                {/* <PlusCircle onClick={() => onBuyToken(item)} size={12} color={colors.dominant} /> */}
                             </div>
                         </div>
                     </div>
@@ -112,14 +115,14 @@ const CurrencyPopup = (props) => {
                         <div className="flex jutify-center items-center space-x-1">
                             <div
                                 className={`${item.ratio !== "0.06%"
-                                    ? "text-onus-grey text-center line-through text-xs"
+                                    ? "text-txtSecondary dark:text-txtSecondary-dark text-center line-through text-xs"
                                     : "text-base font-medium"
                                     } leading-5`}
                             >
                                 0.06%
                             </div>
                             {item.ratio !== "0.06%" && (
-                                <div className={`${item?.assetCode === "NAO" ? "text-onus-base" : ""} leading-5 font-medium `}>{item.ratio}</div>
+                                <div className={`${item?.assetCode === "NAO" ? "text-dominant" : ""} leading-5 font-medium `}>{item.ratio}</div>
                             )}
                         </div>
                     </div>
@@ -222,13 +225,15 @@ const CurrencyPopup = (props) => {
                         effect="solid"
                         arrowColor="transparent"
                         backgroundColor="bg-darkBlue-4"
-                        className="!ml-[136px] !mt-1 !p-2 bg-[#071120] !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-3"
+                        className="!ml-[136px] !mt-1 !p-2 !opacity-100 !rounded-lg !bg-gray-15 dark:!bg-dark-2 after:!left-3"
                         overridePosition={(e) => ({
                             left: 0,
                             top: e.top,
                         })}
+                        arrowColor={isDark ? colors.dark[2] : colors.dark[1]}
+                        isV3
                     >
-                        <div className="font-medium w-[186px] text-xs leading-[18px] text-[#7586AD]">
+                        <div className="font-medium w-[186px] text-xs leading-[18px] text-white dark:text-txtPrimary-dark">
                             {t('futures:mobile:tooltip_popup')}
                         </div>
                     </Tooltip>
@@ -238,7 +243,7 @@ const CurrencyPopup = (props) => {
                 </div>
                 <div className="flex items-center space-x-2 pb-6" onClick={() => setCheckBox(!checkBox)}>
                     <CheckBox onusMode={true} active={checkBox} boxContainerClassName="rounded-[2px]" />
-                    <span className="whitespace-nowrap font-medium text-onus-grey text-xs">
+                    <span className="whitespace-nowrap font-medium text-txtSecondary dark:text-txtSecondary-dark text-xs">
                         {t(`futures:mobile:set_as_default_trading_fee`)}
                     </span>
                 </div>

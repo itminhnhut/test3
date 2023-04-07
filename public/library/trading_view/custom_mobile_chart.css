@@ -1,6 +1,13 @@
+:root {
+    --primary-color: #ffffff;
+}
+.theme-dark {
+    --primary-color: #1B222D;
+}
+
 html, body {
     font-family: 'Inter', Arial, sans-serif;
-    background: #1B222D !important;
+    background: var(--primary-color) !important;
 }
 
 html.theme-dark .chart-page {
@@ -22,11 +29,11 @@ html ._tv-dialog-content .main-properties {
 }
 
 html ._tv-dialog {
-    border-color: #1B222D;
+    border-color: var(--primary-color);
 }
 
 html ._tv-dialog {
-    background: #1B222D;
+    background: var(--primary-color);
 }
 
 html .pane-legend-title__details {

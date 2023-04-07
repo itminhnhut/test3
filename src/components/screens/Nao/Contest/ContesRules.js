@@ -39,7 +39,7 @@ const ContesRules = ({
         if (now < CONTEST_TIME.START) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-gray-15 dark:text-gray-4', classNameContainer)}>{t('nao:contest:start_in')}</div>
+                    <div className={classNames('font-light text-sm sm:text-[1rem] text-txtPrimary dark:text-txtPrimary-dark', classNameContainer)}>{t('nao:contest:start_in')}</div>
                     <Countdown
                         date={CONTEST_TIME.START} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
@@ -61,7 +61,7 @@ const ContesRules = ({
         } else if (now >= CONTEST_TIME.START && now < CONTEST_TIME.END) {
             return (
                 <>
-                    <div className={classNames('font-light text-sm sm:text-[1rem] text-gray-15 dark:text-gray-4', classNameContainer)}>{t('nao:contest:end_in')}</div>
+                    <div className={classNames('font-light text-sm sm:text-[1rem] text-txtPrimary dark:text-txtPrimary-dark', classNameContainer)}>{t('nao:contest:end_in')}</div>
                     <Countdown
                         date={CONTEST_TIME.END} // countdown 60s
                         renderer={({ formatted: { days, hours, minutes, seconds } }) => (
@@ -120,7 +120,7 @@ const ContesRules = ({
                     <div>{title_champion?.[language]}</div>
                 </div>
 
-                <div className="text-gray-15 dark:text-gray-4 text-sm sm:text-mb pt-4 mb:pt-6 leading-9">
+                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm sm:text-mb pt-4 mb:pt-6 leading-9">
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
@@ -169,7 +169,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
         const start = new Date(item?.start).getTime();
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
-            return <div className="text-onus-orange bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:coming_soon_2')}</div>;
+            return <div className="text-yellow-2 bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:coming_soon_2')}</div>;
         } else if (now > start && now < end) {
             return (
                 <div className="flex items-center space-x-1 bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px] w-max">
@@ -178,7 +178,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                 </div>
             );
         } else {
-            return <div className="text-onus-grey bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:ended')}</div>;
+            return <div className="text-txtSecondary dark:text-txtSecondary-dark bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:ended')}</div>;
         }
     };
 
@@ -210,7 +210,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                                             close();
                                         }}
                                         key={index}
-                                        className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-onus-bg2 cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
+                                        className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-gray-11 dark:hover:bg-dark-12 cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
                                     >
                                         <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] font-semibold whitespace-nowrap w-max">{progress(item)}</div>
                                         <span className="leading-6">{item?.title_detail?.[language]} </span>

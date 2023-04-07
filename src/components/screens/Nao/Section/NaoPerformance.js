@@ -371,10 +371,10 @@ const RangePopover = ({
                                         }}
                                         className={classNames(
                                             'flex justify-between items-center py-2 px-4 cursor-pointer leading-6',
-                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-onus-2',
+                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-gray-11 dark:hover:bg-dark-1',
                                         )}>
                                         <span>{day[language]}</span>
-                                        {isActive && <Check size={16} color={colors.onus.base}/>}
+                                        {isActive && <Check size={16} color={colors.dominant}/>}
                                     </div>
                                 );
                             })}

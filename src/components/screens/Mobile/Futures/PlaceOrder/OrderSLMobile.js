@@ -31,9 +31,9 @@ const OrderSLMobile = ({ sl, setSl, decimals, onChangeTpSL, validator, context, 
                 allowNegative={false}
                 onValueChange={({ floatValue = '' }) => setSl(floatValue)}
                 decimalScale={decimals.decimalScalePrice}
-                labelClassName='whitespace-nowrap capitalize text-onus-grey'
-                containerClassName="h-[36px] bg-onus-input"
-                tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
+                labelClassName='whitespace-nowrap capitalize text-txtSecondary dark:text-txtSecondary-dark'
+                containerClassName="h-[36px] bg-gray-12 dark:bg-dark-2"
+                tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => {
                     if (!show) return null
                     return (<div className='relative group select-none' data-tut="order-adjust-btn">

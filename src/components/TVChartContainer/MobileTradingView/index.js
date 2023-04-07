@@ -58,6 +58,8 @@ export class MobileTradingView extends React.PureComponent {
     drawnHighLowArrows = {}
 
     containerId = `${this.props.containerId || CONTAINER_ID}-${this.props.symbol}`;
+    isDark = this.props.theme === 'dark';
+    chartBg = this.isDark ? colors.dark.dark : colors.white;
 
     constructor(props) {
         super(props);
@@ -82,19 +84,18 @@ export class MobileTradingView extends React.PureComponent {
         }
 
         if (prevProps.theme !== this.props.theme) {
-            const newTheme = this.props.theme === 'dark' ? 'Dark' : 'Light';
+            const newTheme = this.isDark ? 'Dark' : 'Light';
             if (
                 this.state.chartStatus === ChartStatus.LOADED &&
                 newTheme !== this.theme &&
                 this.widget
             ) {
                 this.widget.changeTheme(newTheme);
-                const isDark = this.props.theme === 'dark';
                 this.widget.applyOverrides({
                     'scalesProperties.lineColor': '#202C4C',
-                    'paneProperties.background': colors.onus.bg,
-                    'paneProperties.vertGridProperties.color': colors.onus.bg,
-                    'paneProperties.horzGridProperties.color': colors.onus.bg,
+                    'paneProperties.background': this.chartBg,
+                    'paneProperties.vertGridProperties.color': this.chartBg,
+                    'paneProperties.horzGridProperties.color': this.chartBg,
                 });
                 this.theme = newTheme;
             }
@@ -234,9 +235,9 @@ export class MobileTradingView extends React.PureComponent {
         const isMatched = !(order.status === 0 || (order.status === 2 && order.openPrice == null));
         try {
             const color = this.getOrderType(order)
-                .startsWith('BUY') ? colors.onus.green : colors.onus.red;
-            const colorSl = colors.onus.red;
-            const colorTp = colors.onus.green;
+                .startsWith('BUY') ? colors.green[2] : colors.red[2];
+            const colorSl = colors.red[2];
+            const colorTp = colors.green[2];
             const line = this.widget
                 .chart()
                 .createOrderLine()
@@ -296,7 +297,7 @@ export class MobileTradingView extends React.PureComponent {
             }
 
             if (this.props.renderProfit) {
-                const color = order.profit > 0 ? colors.onus.green : colors.onus.red;
+                const color = order.profit > 0 ? colors.green[2] : colors.red[2];
 
                 if (order.close_price != null && (order.profit != null || order.profitToDraw != null)) {
                     const lineProfit = this.widget
@@ -427,10 +428,11 @@ export class MobileTradingView extends React.PureComponent {
         if (!isFullChart) {
             _disabled_features.push('left_toolbar')
         }
+        const newTheme = this.isDark ? 'Dark' : 'Light';
         const widgetOptions = {
             symbol,
             datafeed,
-            theme: 'Dark',
+            theme: newTheme,
             interval: this.props.initTimeFrame,
             container_id: this.containerId,
             library_path: this.props.libraryPath,
@@ -446,11 +448,11 @@ export class MobileTradingView extends React.PureComponent {
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
             autosize: true,
-            loading_screen: { backgroundColor: colors.onus.bg, },
+            loading_screen: { backgroundColor: this.chartBg, },
             studies_overrides: {
-                'volume.volume.color.0': colors.onus.red,
-                'volume.volume.color.1': colors.onus.green,
-                'volume.volume ma.color': colors.onus.red,
+                'volume.volume.color.0': colors.red[2],
+                'volume.volume.color.1': colors.green[2],
+                'volume.volume ma.color': colors.red[2],
                 'volume.volume ma.linewidth': 5,
                 'volume.volume ma.visible': true,
                 'bollinger bands.median.color': '#33FF88',
@@ -484,20 +486,20 @@ export class MobileTradingView extends React.PureComponent {
             this.syncIndicators();
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
-                'scalesProperties.lineColor': colors.onus.bg,
-                'scalesProperties.textColor': colors.onus.grey,
-                'paneProperties.background': colors.onus.bg,
-                'paneProperties.vertGridProperties.color': colors.onus.bg,
-                'paneProperties.horzGridProperties.color': colors.onus.bg,
+                'scalesProperties.lineColor': this.chartBg,
+                'scalesProperties.textColor': isDark ? colors.gray[7] : colors.gray[1],
+                'paneProperties.background': this.chartBg,
+                'paneProperties.vertGridProperties.color': this.chartBg,
+                'paneProperties.horzGridProperties.color': this.chartBg,
 
-                'mainSeriesProperties.candleStyle.borderUpColor': colors.onus.green,
-                'mainSeriesProperties.candleStyle.borderDownColor': colors.onus.red,
-                'mainSeriesProperties.candleStyle.wickUpColor': colors.onus.green,
-                'mainSeriesProperties.candleStyle.wickDownColor': colors.onus.red,
-                'mainSeriesProperties.candleStyle.upColor': colors.onus.green,
-                'mainSeriesProperties.candleStyle.downColor': colors.onus.red,
-                'mainSeriesProperties.hollowCandleStyle.borderColor': colors.onus.green,
-                'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.onus.red,
+                'mainSeriesProperties.candleStyle.borderUpColor': colors.green[2],
+                'mainSeriesProperties.candleStyle.borderDownColor': colors.red[2],
+                'mainSeriesProperties.candleStyle.wickUpColor': colors.green[2],
+                'mainSeriesProperties.candleStyle.wickDownColor': colors.red[2],
+                'mainSeriesProperties.candleStyle.upColor': colors.green[2],
+                'mainSeriesProperties.candleStyle.downColor': colors.red[2],
+                'mainSeriesProperties.hollowCandleStyle.borderColor': colors.green[2],
+                'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.red[2],
 
                 'volumePaneSize': 'tiny'
             });
@@ -541,7 +543,7 @@ export class MobileTradingView extends React.PureComponent {
                 .setText(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
-                .setTextColor(colors.onus.grey)
+                .setTextColor(isDark ? colors.gray[7] : colors.gray[1])
                 .setArrowHeight(7)
             const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
                 .setPrice(low[3])
@@ -550,7 +552,7 @@ export class MobileTradingView extends React.PureComponent {
                 .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
-                .setTextColor(colors.onus.grey)
+                .setTextColor(isDark ? colors.gray[7] : colors.gray[1])
                 .setArrowHeight(7)
 
             this.drawnHighLowArrows = { highArrow, lowArrow };
@@ -601,7 +603,7 @@ export class MobileTradingView extends React.PureComponent {
         return (
             <>
                 <div
-                    className="relative flex flex-grow flex-col h-full bg-onus"
+                    className="relative flex flex-grow flex-col h-full bg-bgPrimary dark:bg-bgPrimary-dark"
                     id="chart-container"
                 >
                     <div
@@ -609,10 +611,10 @@ export class MobileTradingView extends React.PureComponent {
                             'hidden': this.state.chartStatus === ChartStatus.LOADED
                         })}
                     >
-                        <IconLoading color={colors.onus.green} />
+                        <IconLoading color={colors.green[2]} />
                     </div>
                     {this.props.showTimeFrame &&
-                        <div className="w-full border-b border-onus-line py-2 dragHandleArea z-10">
+                        <div className="w-full border-b border-divider dark:border-divider-dark py-2 dragHandleArea z-10">
                             <ChartOptions
                                 pair={this.props.symbol}
                                 pairConfig={this.props.pairConfig}
@@ -706,10 +708,10 @@ const Funding = ({ symbol }) => {
     return (
         <>
             {showModal && <ModalFundingRate onClose={() => setShowModal(false)} t={t} />}
-            <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-onus-line">
+            <div className="flex items-center px-4 pt-3 pb-4 space-x-6 border-b-4 border-divider dark:border-divider-dark">
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className='flex items-center space-x-1' onClick={() => setShowModal(true)}>
-                        <span className="text-onus-textSecondary">Funding:</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">Funding:</span>
                         <div>
                             <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                         </div>
@@ -718,10 +720,10 @@ const Funding = ({ symbol }) => {
                 </div>
                 <div className="w-full flex items-center justify-between space-x-2 text-xs">
                     <div className='flex items-center space-x-1' data-tip={t('common:countdown_tooltip')} data-for="tooltip-countdown">
-                        <Tooltip id={'tooltip-countdown'} place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                            className={`!bg-onus-bg2 !opacity-100 max-w-[300px] !rounded-lg after:!border-t-onus-bg2`}
+                        <Tooltip id={'tooltip-countdown'} place="top" effect="solid" backgroundColor={colors.darkBlue4}
+                            className={`!opacity-100 max-w-[300px] !rounded-lg`} isV3
                         />
-                        <span className="text-onus-textSecondary">{t('futures:countdown')}:</span>
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:countdown')}:</span>
                         <div className="w-3 h-3">
                             <img src={getS3Url('/images/icon/ic_help.png')} height={12} width={12} />
                         </div>
@@ -757,12 +759,12 @@ const ModalFundingRate = ({ onClose, t }) => {
     return <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
     >
         <div className="text-2xl font-semibold text-center">{t('futures:funding_rate')}</div>
-        <div className="text-sm pt-4 text-center text-onus-grey">
-            {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-onus-base font-semibold">{t('common:read_more')}</span>
+        <div className="text-sm pt-4 text-center text-txtSecondary dark:text-txtSecondary-dark">
+            {t('futures:funding_rate_des')} <span onClick={onDetail} className="text-dominant font-semibold">{t('common:read_more')}</span>
         </div>
         <div className="flex items-center space-x-4 pt-8 text-center">
-            <div onClick={onClose} className="w-full bg-onus-bg2 rounded-md px-5 py-3">{t('common:close')}</div>
-            <div onClick={onRedirect} className="w-full bg-onus-base rounded-md px-5 py-3">{t('futures:funding_history')}</div>
+            <div onClick={onClose} className="w-full bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 rounded-md px-5 py-3">{t('common:close')}</div>
+            <div onClick={onRedirect} className="w-full bg-bgBtnPrimary text-txtBtnPrimary rounded-md px-5 py-3">{t('futures:funding_history')}</div>
         </div>
     </Modal>
 }
@@ -785,9 +787,9 @@ MobileTradingView.defaultProps = {
     renderProfit: false,
     ordersList: [],
     studies_overrides: {
-        'volume.volume.color.0': colors.onus.green,
-        'volume.volume.color.1': colors.onus.red,
-        'volume.volume ma.color': colors.onus.red,
+        'volume.volume.color.0': colors.green[2],
+        'volume.volume.color.1': colors.red[2],
+        'volume.volume ma.color': colors.red[2],
         'volume.volume ma.linewidth': 5,
         'volume.volume ma.visible': true,
         'bollinger bands.median.color': '#33FF88',

@@ -7,7 +7,7 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
     const { t } = useTranslation();
     const [isFocus, setIsFocus] = useState(false);
 
-    
+
     return (
         <div className="relative">
             {!isAuth && isFocus &&
@@ -32,9 +32,9 @@ const OrderTPMobile = ({ tp, setTp, decimals, onChangeTpSL, validator, context, 
                 onValueChange={({ floatValue = '' }) => setTp(floatValue)}
                 decimalScale={decimals.decimalScalePrice}
                 validator={validator}
-                labelClassName='whitespace-nowrap capitalize text-onus-grey'
-                containerClassName="h-[36px] bg-onus-input"
-                tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
+                labelClassName='whitespace-nowrap capitalize text-txtSecondary dark:text-txtSecondary-dark'
+                containerClassName="h-[36px] bg-gray-12 dark:bg-dark-2"
+                tailContainerClassName='flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none'
                 renderTail={() => {
                     if(!show) return null
                     return <div className='relative group select-none'

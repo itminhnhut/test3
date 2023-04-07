@@ -146,13 +146,14 @@ const OrderDetail = ({
 
     const getColor = (key, value) => {
         if (key === 'tp') {
-            return value > 0 ? '' : '!text-onus-white';
+            return value > 0 ? '' : '!text-txtPrimary dark:!text-txtPrimary-dark';
         } else {
-            return value > 0 ? '' : '!text-onus-white';
+            return value > 0 ? '' : '!text-txtPrimary dark:!text-txtPrimary-dark';
         }
     };
 
     const renderModify = (metadata, key) => {
+        console.log({key})
         let value = null;
         switch (key) {
             case 'price':
@@ -203,11 +204,11 @@ const OrderDetail = ({
                 value = metadata?.modify_leverage ?
                     <div className="flex items-center justify-between">
                         <div
-                            className="text-left text-onus-green">{getValue(metadata?.modify_leverage?.before, true)}x
+                            className="text-left text-green-2">{getValue(metadata?.modify_leverage?.before, true)}x
                         </div>
-                        &nbsp;<ArrowRight size={14} color={colors.onus.green}/>&nbsp;
+                        &nbsp;<ArrowRight size={14} color={colors.teal}/>&nbsp;
                         <div
-                            className="text-right text-onus-green">{getValue(metadata?.modify_leverage?.after, true)}x
+                            className="text-right text-green-2">{getValue(metadata?.modify_leverage?.after, true)}x
                         </div>
                     </div> : null;
                 return value;
@@ -366,14 +367,14 @@ const OrderDetail = ({
                     <Row>
                         <Label>{t('futures:take_profit')}</Label>
                         <Span
-                            className="text-onus-green">{renderModify(item?.metadata, 'take_profit')}</Span>
+                            className="text-green-2">{renderModify(item?.metadata, 'take_profit')}</Span>
                     </Row>
                 }
                 {item?.metadata?.modify_sl &&
                     <Row>
                         <Label>{t('futures:stop_loss')}</Label>
                         <Span
-                            className="text-onus-red">{renderModify(item?.metadata, 'stop_loss')}</Span>
+                            className="text-red-2">{renderModify(item?.metadata, 'stop_loss')}</Span>
                     </Row>
                 }
                 {item?.metadata?.modify_price &&
@@ -402,7 +403,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-onus-base"
+                    <Span className="text-dominant"
                           onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
@@ -427,7 +428,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>PNL</Label>
-                    <Span className={+item?.metadata?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                    <Span className={+item?.metadata?.profit > 0 ? 'text-green-2' : 'text-red-2'}>
                         {formatNumber(item?.metadata?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(ratio, 2, 0, true)}%)</Span>
                 </Row>
                 <Row className="flex-col items-start w-full">
@@ -456,7 +457,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-onus-base"
+                    <Span className="text-dominant"
                           onClick={() => redirect(`/mobile/futures/order/${item?.metadata?.child_id}`)}>{`#${item?.metadata?.child_id}`}</Span>
                 </Row>
                 <Row>
@@ -522,7 +523,7 @@ const OrderDetail = ({
                     <Span className="flex items-center"
                           onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                         {order?.displaying_id}
-                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
                     </Span>
                 </Row>
                 <Row>
@@ -535,7 +536,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-onus-base"
+                    <Span className="text-dominant"
                           onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
                 </Row>
                 <Row>
@@ -553,7 +554,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:leverage:leverage')}</Label>
-                    <Span className="text-onus-green">{order?.leverage}x</Span>
+                    <Span className="text-green-2">{order?.leverage}x</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:margin')}</Label>
@@ -577,7 +578,7 @@ const OrderDetail = ({
                     <Span className="flex items-center"
                           onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                         {order?.displaying_id}
-                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
                     </Span>
                 </Row>
                 <Row>
@@ -590,7 +591,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-onus-base"
+                    <Span className="text-dominant"
                           onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
                 </Row>
                 <Row>
@@ -612,7 +613,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('futures:leverage:leverage')}</Label>
-                    <Span className="text-onus-green">{order?.leverage}x</Span>
+                    <Span className="text-green-2">{order?.leverage}x</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:margin')}</Label>
@@ -633,7 +634,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>PNL</Label>
-                    <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                    <Span className={+order?.profit > 0 ? 'text-green-2' : 'text-red-2'}>
                         {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(Math.abs(order?.profit / order?.margin) * 100, 2, 0, true)}%)</Span>
                 </Row>
             </>
@@ -659,43 +660,45 @@ const OrderDetail = ({
                     <Span className="flex items-center"
                           onClick={() => navigator.clipboard.writeText(order?.displaying_id)}>
                         {order?.displaying_id}
-                        <Copy color={colors.onus.grey} size={16} className="ml-2 "/>
+                        <Copy color={isDark ? colors.gray[7] : colors.gray[1]} size={16} className="ml-2 "/>
                     </Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:leverage:leverage')}</Label>
-                    <Span className="text-onus-green">{order?.leverage}x</Span>
+                    <Span className="text-green-2">{order?.leverage}x</Span>
                 </Row>
                 {isTabHistory && !isAddedVolOrClose &&
                     <Row>
                         <Label>PNL</Label>
-                        <Span className={+order?.profit > 0 ? 'text-onus-green' : 'text-onus-red'}>
+                        <Span className={+order?.profit > 0 ? 'text-green-2' : 'text-red-2'}>
                             {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(order?.profit / order?.margin * 100, 2, 0, true)}%)</Span>
                     </Row>
                 }
                 <Tooltip id="opening-volume" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                          overridePosition={(e) => ({
                              left: 0,
                              top: e.top
                          })}
+                         arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                 >
                     <div>
                         <label
-                            className="text-sm font-semibold">{t('futures:order_table:opening_volume')}</label>
-                        <div className="text-sm mt-3">{t('futures:order_table:opening_volume_tooltips')}</div>
+                            className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:order_table:opening_volume')}</label>
+                        <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:order_table:opening_volume_tooltips')}</div>
                     </div>
                 </Tooltip>
                 <Tooltip id="closed-volume" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                          overridePosition={(e) => ({
                              left: 0,
                              top: e.top
                          })}
+                         arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                 >
                     <div>
-                        <label className="text-sm font-semibold">{t('futures:order_table:closed_volume')}</label>
-                        <div className="text-sm mt-3">{t('futures:order_table:closed_volume_tooltips')}</div>
+                        <label className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:order_table:closed_volume')}</label>
+                        <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:order_table:closed_volume_tooltips')}</div>
                     </div>
                 </Tooltip>
                 <Row>
@@ -754,25 +757,26 @@ const OrderDetail = ({
                     <Row>
                         <Label>{t('futures:take_profit')}</Label>
                         <Span
-                            className={'text-onus-green'}>{renderSlTp(order?.tp)}</Span>
+                            className={'text-green-2'}>{renderSlTp(order?.tp)}</Span>
                     </Row>
                     <Row>
                         <Label>{t('futures:stop_loss')}</Label>
-                        <Span className={'text-onus-red'}>{renderSlTp(order?.sl)}</Span>
+                        <Span className={'text-red-2'}>{renderSlTp(order?.sl)}</Span>
                     </Row>
                 </>
                 }
                 <Tooltip id="liquidate-price" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                         className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                          overridePosition={(e) => ({
                              left: 0,
                              top: e.top
                          })}
+                         arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                 >
                     <div>
                         <label
-                            className="text-sm font-semibold">{t('futures:mobile:liq_price')}</label>
-                        <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_price')}</div>
+                            className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:mobile:liq_price')}</label>
+                        <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:mobile:info_liquidate_price')}</div>
                     </div>
                 </Tooltip>
                 {
@@ -803,16 +807,17 @@ const OrderDetail = ({
                         <Span>{renderFee(order, 'close_order')}</Span>
                     </Row>
                     <Tooltip id="liquidate-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                             className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                             className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                              overridePosition={(e) => ({
                                  left: 0,
                                  top: e.top
                              })}
+                             arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                     >
                         <div>
                             <label
-                                className="text-sm font-semibold">{t('futures:mobile:liquidate_fee')}</label>
-                            <div className="text-sm mt-3">{t('futures:mobile:info_liquidate_fee')}</div>
+                                className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:mobile:liquidate_fee')}</label>
+                            <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:mobile:info_liquidate_fee')}</div>
                         </div>
                     </Tooltip>
                     <Row>
@@ -827,15 +832,16 @@ const OrderDetail = ({
                     </Row>
                     {!!order?.swap && <>
                         <Tooltip id="swap-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                                 className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                                 className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                                  overridePosition={(e) => ({
                                      left: 0,
                                      top: e.top
                                  })}
+                                 arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                         >
                             <div>
-                                <label className="text-sm font-semibold">{t('futures:mobile:swap_fee')}</label>
-                                <div className="text-sm mt-3">{t('futures:mobile:info_swap_fee')}</div>
+                                <label className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:mobile:swap_fee')}</label>
+                                <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:mobile:info_swap_fee')}</div>
                             </div>
                         </Tooltip>
                         <Row>
@@ -850,15 +856,16 @@ const OrderDetail = ({
                     </>
                     }
                     <Tooltip id="funding-fee" place="top" effect="solid" backgroundColor="bg-darkBlue-4"
-                             className="!mx-7 !-mt-2 !px-3 !py-5 !bg-onus-bg2 !opacity-100 !rounded-lg after:!border-t-onus-bg2 after:!left-[30%]"
+                             className="!mx-7 !-mt-2 !px-3 !py-5 !bg-gray-15 dark:!bg-dark-2 !opacity-100 !rounded-lg after:!left-[30%]"
                              overridePosition={(e) => ({
                                  left: 0,
                                  top: e.top
                              })}
+                             arrowColor={isDark ? colors.dark[2] : colors.gray[15]}
                     >
                         <div>
-                            <label className="text-sm font-semibold">{t('futures:funding_rate')}</label>
-                            <div className="text-sm mt-3">{t('futures:funding_rate_des')}</div>
+                            <label className="text-sm font-semibold text-white dark:text-txtPrimary-dark">{t('futures:funding_rate')}</label>
+                            <div className="text-sm mt-3 text-white dark:text-txtPrimary-dark">{t('futures:funding_rate_des')}</div>
                         </div>
                     </Tooltip>
                     <Row>
@@ -869,7 +876,7 @@ const OrderDetail = ({
                             </div>
                         </Label>
                         <Span
-                            className={order?.funding_fee?.total > 0 ? 'text-onus-green' : 'text-onus-red'}>{renderFee(order, 'funding_fee.total', true)}</Span>
+                            className={order?.funding_fee?.total > 0 ? 'text-green-2' : 'text-red-2'}>{renderFee(order, 'funding_fee.total', true)}</Span>
                     </Row>
                 </>
                 }
@@ -882,13 +889,13 @@ const OrderDetail = ({
     }, [resolution]);
 
     const orderList = useMemo(() => [order], [order]);
-    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-onus-green' : 'text-onus-red';
+    const classNameSide = order?.side === VndcFutureOrderType.Side.BUY ? 'text-green-2' : 'text-red-2';
 
     return (
-        <div className={'bg-onus overflow-hidden'}>
+        <div className={'bg-bgPrimary dark:bg-bgPrimary-dark overflow-hidden'}>
             <div className="relative overflow-auto h-full overflow-x-hidden">
                 <div
-                    className="relative w-full bg-onus z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
+                    className="relative w-full bg-bgPrimary dark:bg-bgPrimary-dark z-[10] flex items-center justify-between min-h-[50px] px-[16px]"
                 >
                     <div className="flex items-center" onClick={() => onClose && onClose()}>
                         {/* <ChevronLeft size={24} /> */}
@@ -912,11 +919,11 @@ const OrderDetail = ({
                         classNameButton="pl-2 py-2"
                         classNamePanel="rounded-md right-0"
                         label={<div
-                            className="text-sm text-onus-grey font-medium">{resolutionLabel}</div>}
+                            className="text-sm text-txtSecondary dark:text-txtSecondary-dark font-medium">{resolutionLabel}</div>}
                     />
                 </div>
 
-                <div className="shadow-order_detail py-[10px] bg-onus h-full">
+                <div className="shadow-order_detail py-[10px] bg-bgPrimary dark:bg-bgPrimary-dark h-full">
                     <div className="min-h-[350px] spot-chart max-w-full"
                          style={{ height: `calc(var(--vh, 1vh) * 100 - 300px)` }}>
                         <MobileTradingView
@@ -929,7 +936,7 @@ const OrderDetail = ({
                             onIntervalChange={setResolution}
                             isVndcFutures={true}
                             ordersList={orderList}
-                            theme={THEME_MODE.DARK}
+                            theme={isDark ? THEME_MODE.DARK : THEME_MODE.LIGHT}
                             mode={ChartMode.FUTURES}
                             showSymbol={false}
                             showIconGuide={false}
@@ -942,7 +949,7 @@ const OrderDetail = ({
                                 .toString())} // Change component key will remount component
                         />
                     </div>
-                    <div className="px-[16px] bg-onus">
+                    <div className="px-[16px] bg-bgPrimary dark:bg-bgPrimary-dark">
                         {!isTabHistory &&
                             <OrderOpenDetail order={order} decimalPrice={decimalPrice} isDark={isDark}
                                              pairConfig={pairConfig} onClose={onClose} decimalSymbol={decimalSymbol}
@@ -952,7 +959,7 @@ const OrderDetail = ({
                         }
                         <div className="pt-5">
                             <div className="font-semibold mb-4">{t('futures:mobile:order_detail')}</div>
-                            <div className="bg-onus-bg3 px-3 rounded-lg">
+                            <div className="bg-gray-12 dark:bg-dark-4 px-3 rounded-lg">
                                 {renderDetails(order)}
                             </div>
                         </div>
@@ -961,7 +968,7 @@ const OrderDetail = ({
                                 <div
                                     className="font-semibold mb-4 text-lg">{t('futures:order_history:adjustment_history')}</div>
                                 {dataSource.map((item, index) => (
-                                    <div key={index} className="bg-onus-bg3 px-3 rounded-lg mb-3">
+                                    <div key={index} className="bg-gray-12 dark:bg-dark-2 px-3 rounded-lg mb-3">
                                         {item?.type === 'MODIFY_MARGIN' && renderLogModifyMargin(item)}
                                         {item?.type === 'REMOVE_MARGIN_FUNDING_FEE' && renderLogRemoveMarginFunding(item)}
                                         {item?.type === 'MODIFY' && renderLogModifySlTp(item)}
@@ -979,11 +986,11 @@ const OrderDetail = ({
 };
 
 const Row = styled.div.attrs({
-    className: 'flex items-center justify-between py-3 border-b border-onus-input2 last:border-0'
+    className: 'flex items-center justify-between py-3 border-b border-divider dark:border-divider-dark last:border-0'
 })``;
 
 const Label = styled.div.attrs(({ isTabOpen }) => ({
-    className: `text-gray-1 text-left text-onus-grey ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
+    className: `text-gray-1 text-left dark:text-txtSecondary-dark ${isTabOpen ? 'text-xs' : 'text-sm'} font-normal`
 }))``;
 
 const Span = styled.div.attrs(({ isTabOpen }) => ({
@@ -1033,7 +1040,7 @@ const FeeMeta = ({
             <div className="flex items-center justify-between w-full">
                 <Label>{t(`futures:mobile:${mode}`)}</Label>
                 <Span
-                    className={fee_metadata.length > 1 ? 'text-onus-base' : ''}
+                    className={fee_metadata.length > 1 ? 'text-dominant' : ''}
                     onClick={() => fee_metadata.length > 1 && setVisible(!visible)}>
                     {fee_metadata.length > 1 ? visible ? t('common:global_btn:close') : t('common:view_all') :
                         !fee_metadata[0]?.value ? '-' :

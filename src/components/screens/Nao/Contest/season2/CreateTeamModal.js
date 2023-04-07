@@ -227,7 +227,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                         <div onClick={onAddAvatar}
                             style={{ backgroundImage: avatar?.url ? `url(${avatar.url})` : null }}
                             className={classnames(
-                                `min-h-[58px] min-w-[58px] rounded-[50%] bg-onus flex flex-col items-center justify-center`,
+                                `min-h-[58px] min-w-[58px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex flex-col items-center justify-center`,
                                 'bg-center bg-cover cursor-pointer',
                                 {
                                     'border-[1px] border-dashed border-nao-blue2': !avatar.url,

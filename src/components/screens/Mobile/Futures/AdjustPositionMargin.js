@@ -193,140 +193,117 @@ const AdjustPositionMargin = ({ order, pairPrice, onClose, forceFetchOrder }) =>
     }
 
     return (
-        <Modal onusMode={true} isVisible={true} onBackdropCb={() => !submitting && onClose()} onusClassName='px-0'>
-            <div
-                className='relative bg-onus-bgModal w-full rounded-t-2xl'>
-                <div className='flex justify-between items-center px-4 pb-6'>
-                    <span
-                        className='text-lg text-onus-white font-bold leading-6'>{t('futures:mobile:adjust_margin:adjust_position_margin')}</span>
+        <Modal onusMode={true} isVisible={true} onBackdropCb={() => !submitting && onClose()} onusClassName="px-0">
+            <div className="relative bg-bgPrimary dark:bg-bgPrimary-dark w-full rounded-t-2xl">
+                <div className="flex justify-between items-center px-4 pb-6">
+                    <span className="text-lg text-txtPrimary dark:text-txtPrimary-dark font-bold leading-6">
+                        {t('futures:mobile:adjust_margin:adjust_position_margin')}
+                    </span>
                 </div>
-                <div className='grid grid-cols-2 font-bold'>
+                <div className="grid grid-cols-2 font-bold">
                     <div
-                        className={
-                            classNames(
-                                'px-2 py-1 text-center leading-[1.375rem]',
-                                {
-                                    'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.REMOVE,
-                                    'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.ADD,
-                                }
-                            )
-                        }
+                        className={classNames('px-2 py-1 text-center leading-[1.375rem]', {
+                            'border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': adjustType === ADJUST_TYPE.REMOVE,
+                            'border-b-2 border-dominant text-dominant': adjustType === ADJUST_TYPE.ADD
+                        })}
                         onClick={() => _setAdjustType(ADJUST_TYPE.ADD)}
                     >
                         {t('futures:mobile:adjust_margin:add')}
                     </div>
                     <div
-                        className={
-                            classNames(
-                                'px-2 py-1 text-center leading-[1.375rem]',
-                                {
-                                    'border-b border-onus-bg2 text-onus-textSecondary': adjustType === ADJUST_TYPE.ADD,
-                                    'border-b-2 border-onus-base text-onus-base': adjustType === ADJUST_TYPE.REMOVE,
-                                }
-                            )
-                        }
+                        className={classNames('px-2 py-1 text-center leading-[1.375rem]', {
+                            'border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': adjustType === ADJUST_TYPE.ADD,
+                            'border-b-2 border-dominant text-dominant': adjustType === ADJUST_TYPE.REMOVE
+                        })}
                         onClick={() => _setAdjustType(ADJUST_TYPE.REMOVE)}
                     >
                         {t('futures:mobile:adjust_margin:remove')}
                     </div>
                 </div>
-                <div className='px-4 pt-6'>
-                    <div className='uppercase text-xs text-onus-textSecondary leading-[1.125rem] pb-2'>
+                <div className="px-4 pt-6">
+                    <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark leading-[1.125rem] pb-2">
                         {t('futures:mobile:adjust_margin:amount')}
                     </div>
                     <ErrorToolTip message={!errorProfit ? error : ''}>
-                        <div
-                            className='flex justify-between items-center pl-4 bg-onus-input2 text-sm rounded-md h-11'>
+                        <div className="flex justify-between items-center pl-4 bg-gray-12 dark:bg-dark-2 text-sm rounded-md h-11">
                             <NumberFormat
                                 thousandSeparator
                                 allowNegative={false}
-                                className='outline-none font-medium flex-1 py-2'
+                                className="outline-none font-medium flex-1 py-2"
                                 value={amount}
                                 onValueChange={({ value }) => setAmount(value)}
                                 decimalScale={assetConfig?.assetDigit}
-                                inputMode='decimal'
+                                inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
                                 placeholder={t('futures:mobile:adjust_margin:amount_placeholder')}
-                            // onFocus={scrollFocusInput}
+                                // onFocus={scrollFocusInput}
                             />
-                            <div
-                                className='flex items-center'
-                                onClick={handleSetMaxAmount}
-                            >
-                                <span className='px-4 py-2 text-onus-base font-semibold'>
-                                    {t('futures:mobile:adjust_margin:max')}
-                                </span>
-                                <div
-                                    className='h-full leading-[2.75rem] bg-onus-grey2 w-16 text-onus-grey font-medium rounded-r-md text-center'>
+                            <div className="flex items-center" onClick={handleSetMaxAmount}>
+                                <span className="px-4 py-2 text-dominant font-semibold">{t('futures:mobile:adjust_margin:max')}</span>
+                                <div className="h-full leading-[2.75rem] bg-gray-11 dark:bg-dark-1 w-16 text-txtSecondary dark:text-txtSecondary-dark font-medium rounded-r-md text-center">
                                     {assetConfig?.assetCode}
                                 </div>
                             </div>
                         </div>
                     </ErrorToolTip>
-                    <div className='mt-4 space-y-2'>
-                        <div className='text-xs leading-[1.125rem]'>
-                            <span
-                                className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:assigned_margin')}</span>
-                            <span className='text-onus-white font-medium'>
+                    <div className="mt-4 space-y-2">
+                        <div className="text-xs leading-[1.125rem]">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark mr-1">{t('futures:mobile:adjust_margin:assigned_margin')}</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium">
                                 {formatNumber(order?.margin, assetConfig?.assetDigit)}
-                                <span className='ml-1'>{assetConfig?.assetCode}</span>
+                                <span className="ml-1">{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs leading-[1.125rem]'>
-                            <span
-                                className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:available')}</span>
-                            <span className='text-onus-white font-medium'>
+                        <div className="text-xs leading-[1.125rem]">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark mr-1">{t('futures:mobile:adjust_margin:available')}</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium">
                                 {formatNumber(floor(+available, assetConfig?.assetDigit), assetConfig?.assetDigit)}
-                                <span className='ml-1'>{assetConfig?.assetCode}</span>
+                                <span className="ml-1">{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs leading-[1.125rem]'>
-                            <span
-                                className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:new_liq_price')}</span>
-                            <span className='text-onus-white font-medium'>
+                        <div className="text-xs leading-[1.125rem]">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark mr-1">{t('futures:mobile:adjust_margin:new_liq_price')}</span>
+                            <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium">
                                 {newLiqPrice > 0 ? formatNumber(newLiqPrice, assetConfig?.assetDigit, 0, true) : '0'}
-                                <span className='ml-1'>{assetConfig?.assetCode}</span>
+                                <span className="ml-1">{assetConfig?.assetCode}</span>
                             </span>
                         </div>
-                        <div className='text-xs leading-[1.125rem]'>
+                        <div className="text-xs leading-[1.125rem]">
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark mr-1">{t('futures:mobile:adjust_margin:profit_ratio')}</span>
                             <span
-                                className='text-onus-textSecondary mr-1'>{t('futures:mobile:adjust_margin:profit_ratio')}</span>
-                            <span className={classNames('font-medium', {
-                                'text-onus-green': percent >= 0,
-                                'text-onus-red': percent < 0
-                            })}>
+                                className={classNames('font-medium', {
+                                    'text-green-2': percent >= 0,
+                                    'text-red-2': percent < 0
+                                })}
+                            >
                                 {(percent > 0 ? '+' : '') + percent + '%'}
                             </span>
                         </div>
                     </div>
-                    {errorProfit &&
-                        <div className='mt-6 leading-3'>
-                            <div className='flex items-start'>
-                                <WarningCircle className='flex-none mr-2' />
-                                <span className='text-xs text-[#FF9F1A]'>{errorProfit}</span>
+                    {errorProfit && (
+                        <div className="mt-6 leading-3">
+                            <div className="flex items-start">
+                                <WarningCircle className="flex-none mr-2" />
+                                <span className="text-xs text-[#FF9F1A]">{errorProfit}</span>
                             </div>
                         </div>
-                    }
+                    )}
                     <div
-                        className={classNames('flex justify-center items-center bg-onus-base align-middle h-12 text-onus-white rounded-md font-bold mt-6', {
-                            '!bg-onus-base opacity-30': !!error || !+amount || !!errorProfit
+                        className={classNames('flex justify-center items-center bg-dominant align-middle h-12 text-txtBtnPrimary rounded-md font-bold mt-6', {
+                            '!bg-gray-12 dark:!bg-dark-2 text-txtPrimary dark:text-txtBtnPrimary-dark opacity-30': !!error || !+amount || !!errorProfit
                         })}
                         onClick={() => {
                             if (!error && !errorProfit && !!+amount && !submitting) {
-                                handleConfirm()
+                                handleConfirm();
                             }
                         }}
                     >
-                        {
-                            submitting
-                                ? <IconLoading color='#FFFFFF' />
-                                : <span>{t('futures:mobile:adjust_margin:confirm_btn')}</span>
-                        }
+                        {submitting ? <IconLoading color="#FFFFFF" /> : <span>{t('futures:mobile:adjust_margin:confirm_btn')}</span>}
                     </div>
                 </div>
             </div>
         </Modal>
-    )
+    );
 }
 
 export default AdjustPositionMargin

@@ -45,9 +45,9 @@ const ModifyOrder = ({
             onBackdropCb={() => onClose()}
             onusClassName="px-0"
         >
-            <div className="relative bg-onus-bgModal w-full rounded-t-2xl">
+            <div className="relative bg-bgPrimary dark:bg-bgPrimary-dark w-full rounded-t-2xl">
                 <div className="flex justify-between items-center px-4">
-                    <span className="text-lg text-onus-white font-bold leading-6">
+                    <span className="text-lg text-txtPrimary dark:text-txtPrimary-dark font-bold leading-6">
                         {t("futures:mobile:adjust_margin:add_volume")}
                     </span>
                 </div>
@@ -56,9 +56,9 @@ const ModifyOrder = ({
                         className={classNames(
                             "px-2 py-1 text-center leading-[1.375rem]",
                             {
-                                "border-b border-onus-bg2 text-onus-textSecondary":
+                                "border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark":
                                     tab === 1,
-                                "border-b-2 border-onus-base text-onus-base":
+                                "border-b-2 border-dominant text-dominant":
                                     tab === 0,
                             }
                         )}
@@ -70,9 +70,9 @@ const ModifyOrder = ({
                         className={classNames(
                             "px-2 py-1 text-center leading-[1.375rem]",
                             {
-                                "border-b border-onus-bg2 text-onus-textSecondary":
+                                "border-b border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark":
                                     tab === 0,
-                                "border-b-2 border-onus-base text-onus-base":
+                                "border-b-2 border-dominant text-dominant":
                                     tab === 1,
                             }
                         )}

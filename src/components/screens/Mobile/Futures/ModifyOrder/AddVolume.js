@@ -19,6 +19,7 @@ import { DefaultFuturesFee, } from "redux/actions/const";
 import { IconLoading } from "components/common/Icons";
 import { API_DCA_ORDER } from "redux/actions/apis";
 import { ApiStatus } from "redux/actions/const";
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import fetchApi from "utils/fetch-api";
 import { AlertContext } from "components/common/layouts/LayoutMobile";
 import { getMaxQuoteQty } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
@@ -72,6 +73,8 @@ const AddVolume = ({
     const [loading, setLoading] = useState(false);
     const context = useContext(AlertContext);
     const available = useSelector(state => getAvailable(state, { assetId: pairConfig?.quoteAssetId }));
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
 
     const getDecimalPrice = (config) => {
         const decimalScalePrice =
@@ -294,12 +297,12 @@ const AddVolume = ({
 
     return (
         <div className="px-4 mt-3">
-            <div className="text-onus-green font-semibold relative w-max bottom-[-13px] bg-onus-bgModal px-[6px] left-[9px]">
+            <div className="text-green-2 font-semibold relative w-max bottom-[-13px] bg-bgPrimary dark:bg-bgPrimary-dark px-[6px] left-[9px]">
                 {order?.symbol} {order?.leverage}x
             </div>
-            <div className="border border-onus-bg2 p-4 rounded-lg">
+            <div className="border border-divider dark:border-divider-dark p-4 rounded-lg">
                 <div className="text-sm flex items-center justify-between">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:order_table:open_price")}
                     </span>
                     <span className="font-medium">
@@ -311,9 +314,9 @@ const AddVolume = ({
                         )}
                     </span>
                 </div>
-                <div className="h-[1px] bg-onus-bg2 w-full my-3"></div>
+                <div className="h-[1px] bg-gray-12 dark:bg-dark-2 w-full my-3"></div>
                 <div className="text-sm flex items-center justify-between">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:mobile:adjust_margin:current_volume")}
                     </span>
                     <span className="font-medium">
@@ -328,14 +331,14 @@ const AddVolume = ({
             </div>
 
             <div className="mt-8">
-                <div className="uppercase text-xs text-onus-grey mb-2">
+                <div className="uppercase text-xs text-txtSecondary dark:text-txtSecondary-dark mb-2">
                     {t('futures:mobile:adjust_margin:added_volume_2')}
                 </div>
-                <div className="px-4 mb-3 h-[44px] flex items-center bg-onus-bg2 rounded-md">
+                <div className="px-4 mb-3 h-[44px] flex items-center bg-gray-12 dark:bg-dark-2 rounded-md">
                     <div className={changeClass}>
                         <Minus
                             size={15}
-                            className="text-onus-white cursor-pointer"
+                            className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
                             onClick={() => volume > minQuoteQty && available &&
                                 setVolume((prevState) => Number(prevState) - Number(minQuoteQty))
                             }
@@ -348,7 +351,7 @@ const AddVolume = ({
                         decimalScale={configSymbol.decimalSymbol}
                         allowNegative={false}
                         thousandSeparator={true}
-                        containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-onus-bg2"
+                        containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] w-[200px] !bg-gray-12 dark:!bg-dark-2"
                         inputClassName="!text-center"
                         onValueChange={({ value }) => onChangeVolume(value)}
                         disabled={!available}
@@ -359,7 +362,7 @@ const AddVolume = ({
                     <div className={changeClass}>
                         <Plus
                             size={15}
-                            className="text-onus-white cursor-pointer"
+                            className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
                             onClick={() => volume < maxQuoteQty && available &&
                                 setVolume((prevState) => Number(prevState) + Number(minQuoteQty))
                             }
@@ -376,8 +379,9 @@ const AddVolume = ({
                     xmax={200}
                     xmin={0}
                     onChange={({ x }) => available && onChangePercent(x)}
-                    bgColorActive={colors.onus.slider}
-                    bgColorSlide={colors.onus.slider}
+                    bgColorActive={colors.teal}
+                    bgColorSlide={colors.teal}
+                    BgColorLine={isDark ? colors.dark[2] : colors.gray[12]}
                     dots={4}
                 />
             </div>
@@ -390,7 +394,7 @@ const AddVolume = ({
                         {t("futures:mobile:adjust_margin:advanced_custom")}
                     </span>
                     <ChevronDown
-                        color={colors.onus.grey}
+                        color={isDark ? colors.gray[7] : colors.gray[1]}
                         size={16}
                         className={`${showCustomized ? "rotate-180" : ""} transition-all`}
                     />
@@ -409,11 +413,11 @@ const AddVolume = ({
                                 displayExpr="title"
                                 className="max-w-[8.75rem]"
                             />
-                            <div className="px-4 h-[44px] flex items-center justify-between bg-onus-bg2 rounded-md w-[calc(100%-8.75rem)]">
+                            <div className="px-4 h-[44px] flex items-center justify-between bg-gray-12 dark:bg-dark-2 rounded-md w-[calc(100%-8.75rem)]">
                                 <div className={changeClass}>
                                     <Minus
                                         size={15}
-                                        className="text-onus-white cursor-pointer"
+                                        className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
                                         onClick={() =>
                                             leverage > pairConfig?.leverageConfig.min &&
                                             setLeverage((prevState) => Number(prevState) - 1)
@@ -427,7 +431,7 @@ const AddVolume = ({
                                     decimalScale={0}
                                     allowNegative={false}
                                     thousandSeparator={true}
-                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-onus-bg2 max-w-[6.25rem] min-w-[50px]"
+                                    containerClassName="px-2.5 flex-grow text-sm font-medium border-none h-[44px] !bg-gray-12 dark:!bg-dark-2 max-w-[6.25rem] min-w-[50px]"
                                     inputClassName="!text-center"
                                     onValueChange={({ value }) => setLeverage(value)}
                                     disabled={!available}
@@ -439,7 +443,7 @@ const AddVolume = ({
                                 <div className={changeClass}>
                                     <Plus
                                         size={15}
-                                        className="text-onus-white cursor-pointer"
+                                        className="text-txtPrimary dark:text-txtPrimary-dark cursor-pointer"
                                         onClick={() =>
                                             leverage < pairConfig?.leverageConfig.max &&
                                             setLeverage((prevState) => Number(prevState) + 1)
@@ -454,7 +458,7 @@ const AddVolume = ({
                             decimalScale={configSymbol.decimalScalePrice}
                             allowNegative={false}
                             thousandSeparator={true}
-                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] border-none !bg-onus-bg2 min-w-[50px]"
+                            containerClassName="px-2.5 flex-grow text-sm font-medium h-[44px] border-none !bg-gray-12 dark:!bg-dark-2 min-w-[50px]"
                             inputClassName="!text-center"
                             onValueChange={({ value }) => setPrice(value)}
                             disabled={type === FuturesOrderTypes.Market}
@@ -463,7 +467,7 @@ const AddVolume = ({
                             labelClassName="!text-sm capitalize"
                             label={getLabel(type)}
                             renderTail={() => (
-                                <span className={`font-medium pl-2 text-onus-grey`}>
+                                <span className={`font-medium pl-2 text-txtSecondary dark:text-txtSecondary-dark`}>
                                     {configSymbol?.quoteAsset}
                                 </span>
                             )}
@@ -474,7 +478,7 @@ const AddVolume = ({
             </div>
             <div className="mt-8 flex flex-col space-y-2 text-xs">
                 <div className="flex items-center">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:mobile:market_price")}:
                     </span>
                     &nbsp;
@@ -485,7 +489,7 @@ const AddVolume = ({
                     </span>
                 </div>
                 <div className="flex items-center">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:margin")}:
                     </span>
                     &nbsp;
@@ -496,7 +500,7 @@ const AddVolume = ({
                     </span>
                 </div>
                 <div className="flex items-center">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:mobile:adjust_margin:average_open_price")}
                     </span>
                     &nbsp;
@@ -512,7 +516,7 @@ const AddVolume = ({
                     </span>
                 </div>
                 <div className="flex items-center">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:mobile:adjust_margin:new_liq_price")}
                     </span>
                     &nbsp;
@@ -529,7 +533,7 @@ const AddVolume = ({
                 </div>
 
                 <div className="flex items-center">
-                    <span className="text-onus-grey">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("futures:mobile:available")}:
                     </span>
                     &nbsp;

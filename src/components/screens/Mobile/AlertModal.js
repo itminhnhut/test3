@@ -81,7 +81,7 @@ const AlertModal = forwardRef((props, ref) => {
                 <div className='text-lg font-semibold mb-3 leading-6'>
                     {options.current.title}
                 </div>
-                <div className={classNames('text-center text-onus-grey font-normal leading-[1.375rem]', options?.current?.textClassname )}
+                <div className={classNames('text-center text-txtSecondary dark:text-txtSecondary-dark font-normal leading-[1.375rem]', options?.current?.textClassname )}
                      dangerouslySetInnerHTML={{__html: options.current.messages}}>
                 </div>
                 {options.current.note && <div className='text-xs text-center mt-[10px] text-[#FF9F1A]'>

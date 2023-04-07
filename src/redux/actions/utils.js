@@ -845,7 +845,7 @@ export const secondToMinutesAndSeconds = (time) => {
 
 export const getPriceColor = (value, onusMode = false) => {
     if (onusMode) {
-        return value === 0 ? '' : value < 0 ? 'text-onus-red' : 'text-onus-green';
+        return value === 0 ? '' : value < 0 ? 'text-red-2' : 'text-green-2';
     } else {
         return value === 0 ? '' : value < 0 ? 'text-red-2 dark:text-red' : 'text-green-3 dark:text-teal';
     }

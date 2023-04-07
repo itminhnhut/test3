@@ -50,19 +50,19 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
     useEffect(() => { calculatePnL({ [`${order.displaying_id}`]: profit }) }, [pairPrice])
 
     return (
-        <div className={`${index != length - 1 && 'border-b items-center h-[66px]'} border-onus-bg2 flex w-full h-[50px] items-end`}>
+        <div className={`${index != length - 1 && 'border-b items-center h-[66px]'} border-divider dark:border-divider-dark flex w-full h-[50px] items-end`}>
             <div className="w-full">
                 <div className="flex w-full justify-between">
                     <div className="font-semibold text-sm leading-[22px]">
                         {order.symbol}
                     </div>
-                    <div className="text-onus-green">
+                    <div className="text-green-2">
                         {profit > 0 ?
-                            <div className="text-onus-green">
+                            <div className="text-green-2">
                                 +{formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
                             </div>
                             :
-                            <div className="text-onus-red">
+                            <div className="text-red-2">
                                 {formatNumber(profit, decimal, 0, true)} {!isMobile && _pairPrice?.quoteAsset}
                             </div>
                         }
@@ -70,25 +70,25 @@ const CloseProfit = ({ length, order, initPairPrice, doShow, calculatePnL, isMob
                 </div>
                 <div className="flex w-full justify-between">
                     <div className="flex w-full justify-start">
-                        <div className="text-onus-green font-medium text-xs leading-[18px]">
+                        <div className="text-green-2 font-medium text-xs leading-[18px]">
                             {/* {`${order.side === 'Buy' ? t('futures:buy_order') : t('futures:sell_order')} / ${order.type === 'Market' ? t('futures:market') : t('futures:limit')}`} */}
                             <div
-                                className={`text-xs font-medium leading-[18px] ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                                className={`text-xs font-medium leading-[18px] ${order.side === FuturesOrderEnum.Side.BUY ? 'text-green-2' : 'text-red-2'}`}>
                                 <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
                                 <span>{renderCellTable('type', order, t, language)}</span>
                             </div>
                         </div>
-                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-onus-grey">
+                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-txtSecondary dark:text-txtSecondary-dark">
                             &nbsp;· ID #{order.displaying_id}
                         </div>
                     </div>
 
                     {profit > 0 ?
-                        (<div className="text-onus-green font-medium text-xs leading-[18px] w-full text-right">
+                        (<div className="text-green-2 font-medium text-xs leading-[18px] w-full text-right">
                             ▴ {percent}%
                         </div>)
                         :
-                        (<div className="text-onus-red font-medium text-xs leading-[18px] w-full text-right">
+                        (<div className="text-red-2 font-medium text-xs leading-[18px] w-full text-right">
                             ▾ {percent}%
                         </div>)
                     }

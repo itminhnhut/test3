@@ -19,8 +19,8 @@ const ExpiredModal = ({ onClose }) => {
             </div>
             <div className="mt-4">
                 <div className="text-center">
-                    <div className="text-onus-white text-lg font-semibold">{t('futures:mobile:invalid_session_title')}</div>
-                    <div className="text-onus-grey text-xs font-medium mt-4">{t('futures:mobile:invalid_session_content')}</div>
+                    <div className="text-txtPrimary dark:text-txtPrimary-dark text-lg font-semibold">{t('futures:mobile:invalid_session_title')}</div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark text-xs font-medium mt-4">{t('futures:mobile:invalid_session_content')}</div>
                 </div>
                 <Button
                     onusMode={true}

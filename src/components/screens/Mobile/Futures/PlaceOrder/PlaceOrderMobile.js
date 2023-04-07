@@ -459,7 +459,7 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
 
     return (
         <>
-            <div className="flex flex-wrap justify-between px-4 pt-6 pb-[10px] relative z-10 bg-onus">
+            <div className="flex flex-wrap justify-between px-4 pt-6 pb-[10px] relative z-10 bg-bgPrimary dark:bg-bgPrimary-dark">
                 {/* {showExpiredModal && <ExpiredModal onClose={() => setShowExpiredModal(false)} />} */}
                 {showEditSLTP && (
                     <EditSLTPVndcMobile

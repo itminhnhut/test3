@@ -246,7 +246,7 @@ const FuturesMobile = () => {
                 <ContestModal />
                 {showOnBoardingModal && <EventModalMobile campaign={campaign.current} onClose={() => setShowOnBoardingModal(false)} />}
                 <Container id="futures-mobile" onScroll={onScroll}>
-                    <Section className="form-order bg-onus" style={{ ...futuresScreen.style }}>
+                    <Section className="form-order bg-bgPrimary dark:bg-bgPrimary-dark" style={{ ...futuresScreen.style }}>
                         <ChartMobile
                             key={'ChartMobile' + state.pair}
                             pair={state.pair}
@@ -273,7 +273,7 @@ const FuturesMobile = () => {
                             decimalSymbol={asset?.assetDigit ?? 0}
                         />
                     </Section>
-                    <Section className="bg-onus" style={{ ...futuresScreen.style }}>
+                    <Section className="bg-bgPrimary dark:bg-bgPrimary-dark" style={{ ...futuresScreen.style }}>
                         <TabOrders
                             scrollSnap={scrollSnap}
                             isVndcFutures={isVndcFutures}

@@ -11,6 +11,7 @@ import numeral from 'numeral';
 import { DangerIcon } from 'src/components/common/Icons';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 import { getOrdersList } from 'redux/actions/futures';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 const CloseOrdersByCondtionMobile = memo(({
     onClose,
@@ -39,6 +40,9 @@ const CloseOrdersByCondtionMobile = memo(({
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const assetConfig = useSelector(state => state.utils.assetConfig);
+    const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
+    const indicatorColorClass = isDark ? '!bg-gray-4' : '!bg-white';
 
     const getOrdersByCloseType = async () => {
         setState({
@@ -192,13 +196,13 @@ const CloseOrdersByCondtionMobile = memo(({
         return (
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                    modalClassName="z-[99999] flex justitfy-center h-full"
-                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-onus-bg3 !overflow-hidden !pt-9'}
-                   containerClassName="!bg-nao-bgModal2/[0.6]"
+                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-9'}
+                   containerClassName=""
             >
                 <div>
                     {types.map((closeType, index) => (
                         <div
-                            className={`h-12 rounded-md mt-2 bg-onus-bg flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-onus-base border'}`}
+                            className={`h-12 rounded-md mt-2 bg-gray-13 dark:bg-dark-4 flex items-center w-full py-3 px-4 justify-between ${closeType.type === type && '!border-dominant border'}`}
                             onClick={() => setType(closeType.type)}>
                             <div className="font-normal text-base leading-6">
                                 {closeType.value}
@@ -225,8 +229,8 @@ const CloseOrdersByCondtionMobile = memo(({
         return (
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                    modalClassName="z-[99999] flex justitfy-center h-full"
-                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-onus-bg3 !overflow-hidden !pt-11'}
-                   containerClassName="!bg-nao-bgModal2/[0.6]"
+                   onusClassName={'!px-4 pb-13 min-h-[200px] rounded-t-[16px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11'}
+                   containerClassName=""
             >
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-[20px] mb-3">
                     <div>{type.includes('PAIR') ? t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) }) : t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair).includes('VNDC') ? 'VNDC' : 'USDT' })}</div>
@@ -237,7 +241,7 @@ const CloseOrdersByCondtionMobile = memo(({
                         <div className="w-[22px]">
                             {DangerIcon({ height: "14", width: "14" })}
                         </div>
-                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-onus-orange w-full">
+                        <div className="text-xs leading-[18px] font-medium tracking-[-0.02em] text-yellow-2 w-full">
                             {t('futures:mobile.close_all_positions.confirm_description')}
                         </div>
                     </div>
@@ -247,7 +251,7 @@ const CloseOrdersByCondtionMobile = memo(({
                             {t('futures:mobile.close_all_positions.position_list')}
                         </div>
                         <div>
-                            <Switcher addClass="!w-[24px] !h-[24px] top-[0px] left-[0px] !bg-white" wrapperClass="!bg-onus-gray !h-[24px] !w-[48px]" onusMode onChange={() => {
+                            <Switcher addClass={`!w-[24px] !h-[24px] top-[0px] left-[0px] ${indicatorColorClass}`} wrapperClass="!h-[24px] !w-[48px]" onusMode onChange={() => {
                                 setShowPositionList(!showPositionList)
                             }} active={showPositionList} />
                         </div>
@@ -259,7 +263,7 @@ const CloseOrdersByCondtionMobile = memo(({
                     >
                         {state?.orders && renderPositionList()}
                     </div>
-                    {/* {state?.orders?.length > 5 && <div className='text-onus-base w-full flex justify-center h-4 items-end'>
+                    {/* {state?.orders?.length > 5 && <div className='text-dominant w-full flex justify-center h-4 items-end'>
                         {showPositionList && isMore && IsMoreIcon}
                     </div>} */}
                 </div>
@@ -288,25 +292,25 @@ const CloseOrdersByCondtionMobile = memo(({
     const renderCloseInfo = () => {
         return (
             <div className="font-normal text-sm leading-5 w-full">
-                <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
+                <div className={`h-11 min-h-full border-b border-divider dark:border-divider-dark flex items-center w-full`} style={{ display: `${type !== 'ALL_PAIR_PENDING' && type !== 'ALL_PENDING' ? 'flex' : 'none'}` }}>
                     <div className="w-full flex justify-between">
-                        <div className='text-onus-grey'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('futures:mobile.close_all_positions.estimated_pnl')}
                         </div>
                         {!totalPnL.includes('-') ? (
-                            <div className='text-onus-green'>
+                            <div className='text-green-2'>
                                 {totalPnL ? '+' : '-'}{totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         ) : (
-                            <div className='text-onus-red'>
+                            <div className='text-red-2'>
                                 {totalPnL} {state?.orders?.length > 0 ? pair && totalPnL && pair.includes('VNDC') ? 'VNDC' : 'USDT' : ''}
                             </div>
                         )}
                     </div>
                 </div>
-                <div className={`h-11 min-h-full border-b border-onus-bg2 flex items-center w-full`}>
+                <div className={`h-11 min-h-full border-b border-divider dark:border-divider-dark flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-onus-grey'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('futures:mobile.close_all_positions.estimated_time')}
                         </div>
                         <div>
@@ -317,7 +321,7 @@ const CloseOrdersByCondtionMobile = memo(({
 
                 <div className={`h-11 min-h-full flex items-center w-full`}>
                     <div className="w-full flex justify-between">
-                        <div className='text-onus-grey'>
+                        <div className='text-txtSecondary dark:text-txtSecondary-dark'>
                             {t('futures:mobile.close_all_positions.estimated_orders')}
                         </div>
                         <div>
@@ -362,8 +366,8 @@ const CloseOrdersByCondtionMobile = memo(({
         return (
             <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999] flex justitfy-center h-full"
-                onusClassName={"!px-9 pb-13 min-h-[304px] !bg-onus-bg3 !overflow-hidden !pt-11 !bottom-[52px] rounded-[16px]"}
-                containerClassName="!bg-nao-bgModal2/[0.6] !px-4"
+                onusClassName={"!px-9 pb-13 min-h-[304px] !bg-bgPrimary dark:!bg-bgPrimary-dark !overflow-hidden !pt-11 !bottom-[52px] rounded-[16px]"}
+                containerClassName="!px-4"
             >
                 <div className="w-full flex justify-center mb-8">
                     {DangerIcon({
@@ -375,7 +379,7 @@ const CloseOrdersByCondtionMobile = memo(({
                 <div className="w-full leading-6 font-semibold tracking-[-0.02em] !text-lg mb-3 text-center">
                     <div>{t(`futures:mobile.close_all_positions.confirm_title.close_all_${type}`, { pair: formatPair(pair) })}</div>
                 </div>
-                <div className="w-full leading-[22ox] font-normal tracking-[-0.02em] !text-base text-center text-onus-grey">
+                <div className="w-full leading-[22ox] font-normal tracking-[-0.02em] !text-base text-center text-txtSecondary dark:text-txtSecondary-dark">
                     <div>{t(`futures:mobile.close_all_positions.confirm_close_pending_description`)}</div>
                 </div>
 

@@ -268,7 +268,7 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
         <Modal onusMode={true} isVisible={true} onBackdropCb={onClose}
             onusClassName="!pt-[48px] !pb-[50px]" >
             <label className="text-[20px] font-semibold leading-6">{t(`nao:pool:confirm_${isLock ? 'lock' : 'unlock'}`)}</label>
-            <div className='text-sm mt-6 divide-onus-bg2 divide-y '>
+            <div className='text-sm mt-6 border-divider dark:border-divider-dark divide-y '>
                 <div className="flex items-center justify-between pb-3">
                     <label className="text-gray-1 dark:text-gray-7">{t(`nao:pool:amount_${isLock ? 'lock' : 'unlock'}`)}</label>
                     <span>{formatNumber(amount, decimal)} NAO</span>
@@ -284,16 +284,16 @@ const AlertModal = ({ onConfirm, onClose, t, isLock, amount, decimal, data, load
             </div>
             {/* <div className="flex items-center mt-6" onClick={onHandleChecked}>
                 <CheckBox onusMode={true} active={checked}
-                    boxContainerClassName={`rounded-[2px] ${checked ? '' : '!bg-onus-bg2'}`} />
+                    boxContainerClassName={`rounded-[2px] ${checked ? '' : '!bg-gray-12 dark:!bg-dark-2'}`} />
                 <span className="ml-3 whitespace-nowrap text-gray-1 dark:text-gray-7 font-medium text-xs">
                     {t('nao:pool:not_show_message')}
                 </span>
             </div> */}
             <div className="flex items-center space-x-2 font-semibold mt-6">
-                <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-onus-bg2 rounded-md">
+                <div onClick={onClose} className="h-[50px] w-full flex items-center justify-center bg-gray-12 dark:bg-dark-2 rounded-md">
                     {t('nao:cancel')}
                 </div>
-                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-onus-base rounded-md ${loading ? 'opacity-30' : ''}`}>
+                <div onClick={onConfirm} className={`h-[50px] w-full flex items-center justify-center bg-dominant rounded-md ${loading ? 'opacity-30' : ''}`}>
                     {t('common:confirm')}
                 </div>
             </div>

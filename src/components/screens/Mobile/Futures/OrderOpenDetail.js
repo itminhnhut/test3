@@ -240,7 +240,7 @@ const OrderOpenDetail = ({
     const isModify = order?.sl > 0 || order?.tp > 0;
 
     return (
-        <div className="p-6 py-5 -mx-6 border-b border-onus-line">
+        <div className="p-6 py-5 -mx-6 border-b border-divider dark:border-divider-dark">
             {visibleModalFees && <CurrencyPopup
                 visibleModalFees={visibleModalFees}
                 setVisibleModalFees={setVisibleModalFees}
@@ -289,11 +289,11 @@ const OrderOpenDetail = ({
 
                 />
             }
-            <div className="flex items-center text-[10px] font-medium text-onus-grey mb-3 leading-[1.125rem]">
+            <div className="flex items-center text-[10px] font-medium text-txtSecondary dark:text-txtSecondary-dark mb-3 leading-[1.125rem]">
                 <div>ID #{order?.displaying_id}</div>
-                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                 <div>{formatTime(order?.opened_at || order?.created_at, 'yyyy-MM-dd')}</div>
-                <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                 <div>{formatTime(order?.opened_at || order?.created_at, 'HH:mm:ss')}</div>
             </div>
             <div className="flex items-center justify-between">
@@ -303,7 +303,7 @@ const OrderOpenDetail = ({
                         <div
                             className="font-semibold leading-[1.375rem] mr-[5px]">{(pairConfig?.baseAsset ?? '-') + '/' + (pairConfig?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-onus-white bg-onus-bg3 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            className="bg-gray-12 dark:bg-dark-2 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
                             {order?.leverage}x
                         </div>
                         {canShare ?
@@ -314,7 +314,7 @@ const OrderOpenDetail = ({
                         }
                     </div>
                     <div
-                        className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                        className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-green-2' : 'text-red-2'}`}>
                         {order?.metadata?.dca_order_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
                         {order?.metadata?.partial_close_metadata && orderStatus.pending && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
                         <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
@@ -324,12 +324,12 @@ const OrderOpenDetail = ({
                 <div className="flex items-center">
                     {orderStatus.pending ?
                         <div
-                            className={`bg-onus-bg3 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'}`}>
+                            className={`bg-gray-12 dark:bg-dark-2 py-[5px] px-4 rounded-[100px] font-semibold text-xs ${orderStatus.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 bg-yellow-2/[0.15]'}`}>
                             {t(`futures:mobile:${orderStatus.cancelled ? 'cancelled_order' : 'pending_order'}`)}
                         </div>
                         :
                         <div className="text-xs text-right" onClick={openShare}>
-                            <div className="text-xs font-medium text-onus-green float-right">
+                            <div className="text-xs font-medium text-green-2 float-right">
                                 <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col text-right"
                                     decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2}
                                     order={order} initPairPrice={dataMarketWatch} isTabHistory={false}
@@ -340,20 +340,20 @@ const OrderOpenDetail = ({
                 </div>
             </div>
             {(isModify || isTabOpen) &&
-                <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
+                <div className="flex rounded-md border border-divider dark:border-divider-dark p-2 mt-3">
                     <OrderItem
                         fullWidth
                         label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
                         value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, !isTabOpen)}
-                        className="text-center border-r border-onus-bg3"
-                        valueClassName={`${!isTabOpen ? 'text-onus-red' : ''}`}
+                        className="text-center border-r border-divider dark:border-divider-dark"
+                        valueClassName={`${!isTabOpen ? 'text-red-2' : ''}`}
                     />
                     <OrderItem
                         fullWidth
                         label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
                         value={isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.tp, !isTabOpen)}
                         className="text-center"
-                        valueClassName={`${!isTabOpen ? 'text-onus-green' : ''}`}
+                        valueClassName={`${!isTabOpen ? 'text-green-2' : ''}`}
                     />
                 </div>
             }
@@ -362,7 +362,7 @@ const OrderOpenDetail = ({
                     label={!isTabOpen ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                     value={!isTabOpen ? formatNumber(price, decimalPrice, 0, true) : renderSlTp(order?.sl)}
                     className="py-[2px] space-y-[2px] mb-2"
-                    valueClassName={`${isTabOpen ? order?.sl > 0 ? 'text-onus-red' : 'text-onus-white' : ''}`}
+                    valueClassName={`${isTabOpen ? order?.sl > 0 ? 'text-red-2' : 'text-txtPrimary dark:text-txtPrimary-dark' : ''}`}
                 />
                 <OrderItem
                     center
@@ -379,7 +379,7 @@ const OrderOpenDetail = ({
                     label={!isTabOpen ? t('futures:mobile:quote_price') : t('futures:take_profit')}
                     value={!isTabOpen ? renderQuoteprice() : renderSlTp(order?.tp)}
                     className="py-[2px] space-y-[2px] "
-                    valueClassName={`${isTabOpen ? order?.tp > 0 ? 'text-onus-green' : 'text-onus-white' : ''}`}
+                    valueClassName={`${isTabOpen ? order?.tp > 0 ? 'text-green-2' : 'text-txtPrimary dark:text-txtPrimary-dark' : ''}`}
                 />
                 <OrderItem
                     center
@@ -401,7 +401,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t('futures:mobile:adjust_margin:add_volume')}
-                            className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
+                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={() => setShowAddVol(true)}
@@ -412,7 +412,7 @@ const OrderOpenDetail = ({
                     <div className="w-full">
                         <Button
                             title={t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}
-                            className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
+                            className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
                             componentType="button"
                             type="primary"
                             onClick={onOpenModify}
@@ -422,7 +422,7 @@ const OrderOpenDetail = ({
                 <div className="w-full">
                     <Button
                         title={t(`common:close`)}
-                        className="!h-[36px] !bg-onus-bg3 !text-onus-grey !font-semibold"
+                        className="!h-[36px] !bg-gray-12 dark:!bg-dark-2 !text-txtSecondary dark:!text-txtSecondary-dark !font-semibold"
                         componentType="button"
                         type="primary"
                         onClick={() => onActions()}

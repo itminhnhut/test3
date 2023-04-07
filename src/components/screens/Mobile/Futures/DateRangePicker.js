@@ -54,7 +54,7 @@ function DateRangePicker({visible, value, onClose, onChange}) {
     }
 
     return <Portal portalId={PORTAL_MODAL_ID}>
-        <div className={classNames('fixed inset-0 bg-onus z-20 p-4', {
+        <div className={classNames('fixed inset-0 bg-bgPrimary dark:bg-bgPrimary-dark z-20 p-4', {
             hidden: !visible
         })}>
             <div className='w-full h-full overflow-y-auto pb-14'>
@@ -62,13 +62,13 @@ function DateRangePicker({visible, value, onClose, onChange}) {
                     return <Month key={index} range={range} setRange={setRange} date={addDays(m, -1)}/>
                 })}
             </div>
-            <div className='bg-onus absolute bottom-4 inset-x-0 px-4 pt-1 grid grid-cols-2 gap-2 font-semibold'>
+            <div className='bg-bgPrimary dark:bg-bgPrimary-dark absolute bottom-4 inset-x-0 px-4 pt-1 grid grid-cols-2 gap-2 font-semibold'>
                 <div
-                    className='h-12 flex justify-center items-center rounded bg-onus-line text-onus-grey'
+                    className='h-12 flex justify-center items-center rounded bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7'
                     onClick={_onCancel}
                 >{t('futures:mobile:transaction_histories:cancel')}</div>
                 <div
-                    className='h-12 flex justify-center items-center rounded bg-onus-base'
+                    className='h-12 flex justify-center items-center rounded bg-bgBtnPrimary text-txtBtnPrimary'
                     onClick={_onOK}
                 >{t('futures:mobile:transaction_histories:done')}</div>
             </div>
@@ -89,10 +89,10 @@ const Month = ({date, range, setRange}) => {
     }, [date])
 
     return <div id={format(date, 'M-yyyy')} className='mt-6'>
-        <div className='text-center font-semibold text-onus-base mb-3'>{format(date, 'LLLL yyyy')}</div>
+        <div className='text-center font-semibold text-dominant mb-3'>{format(date, 'LLLL yyyy')}</div>
         <div className='grid grid-cols-7 gap-y-2'>
             {WEEKS.map((w, index) => <div key={index}
-                                          className='capitalize text-xs text-onus-grey text-center mb-2'>{w}</div>)}
+                                          className='capitalize text-xs text-txtSecondary dark:text-txtSecondary-dark text-center mb-2'>{w}</div>)}
             {weekDays.map(days => days.map((day, index) => {
                 if (isBefore(day, start) || isAfter(day, end)) {
                     return <div key={index}/>
@@ -133,13 +133,13 @@ function Day({day, range, setRange}) {
 
     return <div
         onClick={_handleChangeRange}
-        className={classNames('text-center text-onus-white text-sm h-full py-1', {
-            '!text-onus-grey': disabled,
-            'text-onus-green': isSameDay(day, now),
+        className={classNames('text-center text-txtPrimary dark:text-txtPrimary-dark text-sm h-full py-1', {
+            '!text-txtTabInactive dark:!text-txtTabInactive-dark': disabled,
+            'text-green-2': isSameDay(day, now),
             'bg-green-2/[.2]': inRange,
-            'bg-onus-base rounded-full !text-onus-white': isSelected,
-            'rounded-l-full !bg-onus-base': isStart,
-            'rounded-r-full !bg-onus-base !text-onus-white': isEnd,
+            'bg-bgBtnPrimary rounded-full !text-txtBtnPrimary': isSelected,
+            'rounded-l-full !bg-bgBtnPrimary !text-txtBtnPrimary': isStart,
+            'rounded-r-full !bg-bgBtnPrimary !text-txtBtnPrimary': isEnd,
         })}>
         {format(day, 'd')}
     </div>

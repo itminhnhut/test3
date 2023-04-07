@@ -31,8 +31,8 @@ const Button = memo((props) => {
                     target={target}
                     className={`mal-button ${
                         type === 'primary'
-                            ? `${onusMode ? 'bg-onus-base text-onus-textPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
-                            : `${onusMode ? 'bg-onus-bg2 text-onus-textPrimary dark:bg-onus-bg2 dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
+                            ? `${onusMode ? 'bg-bgBtnPrimary text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
+                            : `${onusMode ? 'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}`}
                 >
                     {title || 'TITLE_NOT_FOUND'}
@@ -46,10 +46,10 @@ const Button = memo((props) => {
                     style={{ ...style, background: color }}
                     className={`mal-button ${
                         type === 'primary'
-                            ? `${onusMode ? 'bg-onus-base text-onus-textPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
-                            : `${onusMode ? 'bg-onus-bg2 text-onus-textPrimary dark:bg-onus-bg2 dark:text-onus-textPrimary': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
+                            ? `${onusMode ? 'bg-dominant text-txtBtnPrimary': 'bg-bgBtnPrimary text-txtBtnPrimary'}`
+                            : `${onusMode ? 'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': 'bg-bgBtnSecondary text-txtBtnSecondary dark:bg-bgBtnSecondary-dark dark:text-txtBtnSecondary-dark'}`
                     } ${disabledStyle} ${className}
-                    ${disabled && onusMode ? '!bg-onus-base opacity-30' : ''}
+                    ${disabled && onusMode ? '!bg-dominant opacity-30' : ''}
                     `}
                     onClick={() => onClick && !disabled && onClick()}
                 >

@@ -5,7 +5,7 @@ import colors from 'styles/colors';
 
 const LoadingPage = () => {
     return (
-        <div className="h-[100vh] w-full bg-onus text-white flex flex-col items-center justify-center">
+        <div className="h-[100vh] w-full bg-bgPrimary dark:bg-bgPrimary-dark text-white flex flex-col items-center justify-center">
             <img src={getS3Url('/images/logo/nami_hawaii.png')} width="100" height="100" />
             <div className="font-medium text-sm pt-[60px] pb-[20px]">Change mindset, make giant steps</div>
             <Loader>

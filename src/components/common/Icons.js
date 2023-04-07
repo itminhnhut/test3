@@ -860,12 +860,12 @@ export const IconCustomCheckbox = ({ color = false }) => (
     </svg>
 );
 
-export const IconFullScreenChart = () => (
+export const IconFullScreenChart = ({ color }) => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M14.668 3.99902H20.0013V9.33162" stroke="#F6F6F6" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M9.33333 19.9967H4V14.6641" stroke="#F6F6F6" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M19.9996 3.99902L13.7773 10.2204" stroke="#F6F6F6" stroke-linecap="round" stroke-linejoin="round" />
-        <path d="M4 19.9967L10.2222 13.7754" stroke="#F6F6F6" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M14.668 3.99902H20.0013V9.33162" stroke={color || "#F6F6F6"} stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M9.33333 19.9967H4V14.6641" stroke={color || "#F6F6F6"} stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M19.9996 3.99902L13.7773 10.2204" stroke={color || "#F6F6F6"} stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M4 19.9967L10.2222 13.7754" stroke={color || "#F6F6F6"} stroke-linecap="round" stroke-linejoin="round" />
     </svg>
 );
 

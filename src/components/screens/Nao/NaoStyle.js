@@ -50,7 +50,7 @@ export const Divider = styled.div.attrs({
 
 export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
     className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'border border-dominant !bg-gray-12 !dark:bg-dark-2 !text-gray-15 !dark:text-white': border,
+        'border border-dominant !bg-gray-12 dark:!bg-dark-2 !text-gray-15 dark:!text-white': border,
         'text-opacity-20 text-gray-15 dark:text-gray-7 !bg-gray-12 dark:bg-dark-2': disabled,
         'bg-nao-bg4 text-white': !disabled
     })
@@ -353,16 +353,16 @@ export const TextField = (props) => {
 
     return (
         <div className="w-full space-y-[6px]">
-            <div className="text-xs leading-6 text-onus-grey">{label}</div>
+            <div className="text-xs leading-6 text-gray-1 dark:text-gray-7">{label}</div>
             <WrapInput error={error} focus={focus}>
                 <input
-                    className={`w-full text-sm ${readOnly ? 'text-onus-grey' : ''} ${className}`}
+                    className={`w-full text-sm ${readOnly ? 'text-gray-1 dark:text-gray-7' : ''} ${className}`}
                     onFocus={onFocus}
                     onBlur={_onBlur}
                     readOnly={readOnly}
                     {...propsTextField}
                 />
-                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-onus-grey whitespace-nowrap`}>{prefix}</div>}
+                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-gray-1 dark:text-gray-7 whitespace-nowrap`}>{prefix}</div>}
             </WrapInput>
             {error && helperText && (
                 <div className="flex items-center space-x-2 text-xs text-nao-red">
@@ -385,7 +385,7 @@ export const WrapInput = styled.div.attrs(({ error }) => ({
         height: 1px;
         bottom: -1px;
         left: 0;
-        background-color: ${() => colors.onus.base};
+        background-color: ${() => colors.dominant};
         transform-origin: bottom left;
         transition: all 0.3s ease-out;
     }

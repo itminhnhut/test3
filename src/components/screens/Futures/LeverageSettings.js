@@ -139,7 +139,7 @@ const FuturesLeverageSettings = ({
     };
 
     const changeClass = `w-5 h-5 flex items-center justify-center rounded-md  ${
-        onusMode ? 'hover:bg-onus-bg2 dark:hover:bg-onus-bg2' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'
+        onusMode ? 'hover:bg-gray-11 dark:hover:bg-dark-1' : 'hover:bg-bgHover dark:hover:bg-bgHover-dark'
     }`;
 
     const onusModal = useCallback(
@@ -156,11 +156,11 @@ const FuturesLeverageSettings = ({
                 </div>
 
                 <div className={`mb-1.5 font-medium text-txtSecondary dark:text-txtSecondary-dark uppercase text-xs`}>{t('futures:leverage:leverage')}</div>
-                <div className={`px-2 flex items-center bg-onus-bg2 dark:bg-onus-bg2 mb-6 h-[44px] rounded-[4px]`}>
+                <div className={`px-2 flex items-center bg-gray-12 dark:bg-dark-2  mb-6 h-[44px] rounded-[4px]`}>
                     <div className={`${changeClass}`}>
                         <Minus
                             size={20}
-                            className={`text-onus-white w-5 cursor-pointer`}
+                            className={`text-txtPrimary dark:text-txtPrimary-dark w-5 cursor-pointer`}
                             onClick={() => _leverage > 1 && _setLeverage((prevState) => Number(prevState) - 1)}
                         />
                     </div>
@@ -171,7 +171,7 @@ const FuturesLeverageSettings = ({
                         value={_leverage}
                         suffix={'x'}
                         decimalScale={0}
-                        containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none !bg-onus-bg2 h-[44px]`}
+                        containerClassName={`min-w-[200px] px-2.5 flex-grow text-sm font-medium border-none !bg-gray-12 dark:!bg-dark-2 h-[44px]`}
                         inputClassName="!text-center"
                         onValueChange={({ value }) => _setLeverage(value)}
                         validator={getValidator}
@@ -183,7 +183,7 @@ const FuturesLeverageSettings = ({
                     <div className={`${changeClass} `}>
                         <Plus
                             size={20}
-                            className={`text-onus-white w-5 cursor-pointer`}
+                            className={`text-txtPrimary dark:text-txtPrimary-dark w-5 cursor-pointer`}
                             onClick={() => _leverage < pairConfig?.leverageConfig?.max && _setLeverage((prevState) => Number(prevState) + 1)}
                         />
                     </div>
@@ -195,9 +195,9 @@ const FuturesLeverageSettings = ({
                         positionLabel={'top'}
                         labelSuffix="x"
                         x={_leverage}
-                        bgColorSlide="#418FFF"
-                        bgColorActive="#418FFF"
-                        // BgColorLine={onusMode ? colors.onus.bg2 : ''}
+                        bgColorSlide={onusMode ? colors.teal : "#418FFF"}
+                        bgColorActive={onusMode ? colors.teal : "#418FFF"}
+                        BgColorLine={onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : ''}
                         axis="x"
                         xmax={pairConfig?.leverageConfig?.max}
                         onChange={({ x }) => (+x === 0 ? _setLeverage(1) : _setLeverage(x))}
@@ -223,15 +223,15 @@ const FuturesLeverageSettings = ({
                 )}
                 <div className="mt-2.5 flex">
                     <div className="pt-1">
-                        <WarningCircle size={16} fill={colors.onus.orange} className="mt-[-2px]" />
+                        <WarningCircle size={16} fill={colors.yellow[2]} className="mt-[-2px]" />
                     </div>
-                    <div className={`pl-2.5 font-medium text-xs text-onus-orange `}>{t('futures:leverage:description')}</div>
+                    <div className={`pl-2.5 font-medium text-xs text-yellow-2 `}>{t('futures:leverage:description')}</div>
                 </div>
                 {isAuth ? (
                     <div className="mt-8">{renderConfirmButton()}</div>
                 ) : (
                     <div className={`mt-8 mb-2 cursor-pointer flex items-center justify-center `}>
-                        <div className={`w-[200px] bg-onus-base text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`} onClick={onLogin}>
+                        <div className={`w-[200px] bg-dominant text-white text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80`} onClick={onLogin}>
                             {t('futures:mobile:login_short')}
                         </div>
                     </div>

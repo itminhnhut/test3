@@ -100,7 +100,7 @@ const LayoutMobile = ({
             >
                 <ReactNotifications className="fixed z-[9000] pointer-events-none w-full h-full"/>
                 <div
-                    className="relative flex-1 bg-onus dark:bg-onus"
+                    className="relative flex-1 bg-bgPrimary dark:bg-bgPrimary-dark"
                 >
                     <AlertContext.Provider value={{
                         alert: alert.current,

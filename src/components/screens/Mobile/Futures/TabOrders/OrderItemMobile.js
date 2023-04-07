@@ -76,11 +76,11 @@ const OrderItemMobile = ({
                     bias =
                         biasValue > 0 ? (
                             <span>
-                                (<span className="text-onus-green">+{formatedBias}</span>)
+                                (<span className="text-green-2">+{formatedBias}</span>)
                             </span>
                         ) : (
                             <span>
-                                (<span className="text-onus-red">{formatedBias}</span>)
+                                (<span className="text-red-2">{formatedBias}</span>)
                             </span>
                         );
                 }
@@ -218,11 +218,11 @@ const OrderItemMobile = ({
     }
 
     const renderStatus = (row) => {
-        const bg = row?.reason_close_code === 5 ? 'text-onus-green' : orderStatus.cancelled ? 'text-onus-grey' : 'text-onus-orange bg-onus-orange/[0.1]'
+        const bg = row?.reason_close_code === 5 ? 'text-green-2' : orderStatus.cancelled ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-yellow-2 bg-yellow-2/[0.15]'
         const text = row?.reason_close_code === 5 ? 'adjust_margin:order_completed' : orderStatus.cancelled ? 'cancelled_order' : 'pending_order'
         return (
             <div
-                className={`bg-onus-bg3 py-1 px-3 rounded-[20px] font-semibold text-xs ${bg}`}>
+                className={`bg-gray-12 dark:bg-dark-2 py-1 px-3 rounded-[20px] font-semibold text-xs ${bg}`}>
                 {t(`futures:mobile:${text}`)}
             </div>
         )
@@ -231,16 +231,16 @@ const OrderItemMobile = ({
     const isModify = order?.sl > 0 || order?.tp > 0;
     const isShortcut = mode === modeOrders.shortcut;
     return (
-        <div className="flex flex-col -mx-4 p-4 border-b-[1px] border-onus-line"
+        <div className="flex flex-col -mx-4 p-4 border-b-[1px] border-divider dark:border-divider-dark"
             onClick={() => !isShortcut && onShowDetail && actions('detail')}
         >
             <div onClick={() => actions('expand')}
                 className="flex items-center justify-between mb-3">
-                <div className="flex items-center text-[10px] font-medium text-onus-grey leading-6">
+                <div className="flex items-center text-[10px] font-medium text-txtSecondary dark:text-txtSecondary-dark leading-6">
                     <div>ID #{order?.displaying_id}</div>
-                    <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                    <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                     <div>{formatTime(order?.opened_at || order?.created_at, 'yyyy-MM-dd')}</div>
-                    <div className="bg-onus-grey h-[2px] w-[2px] rounded-[50%] mx-1"></div>
+                    <div className="bg-gray-1 dark:bg-gray-7 h-[2px] w-[2px] rounded-[50%] mx-1"></div>
                     <div>{formatTime(order?.opened_at || order?.created_at, 'HH:mm:ss')}</div>
                 </div>
                 {isShortcut && !isTabHistory &&
@@ -254,7 +254,7 @@ const OrderItemMobile = ({
                         <div
                             className="font-semibold leading-[1.375rem] mr-[6px]">{(symbol?.baseAsset ?? '-') + '/' + (symbol?.quoteAsset ?? '-')}</div>
                         <div
-                            className="text-onus-white bg-onus-bg3 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
+                            className="text-txtPrimary dark:text-txtPrimary-dark bg-gray-12 dark:bg-dark-2 text-xs font-medium leading-5 px-[7px] rounded-[3px]">
                             {order?.leverage}x
                         </div>
                         {canShare ?
@@ -265,7 +265,7 @@ const OrderItemMobile = ({
                         }
                     </div>
                     <div
-                        className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-onus-green' : 'text-onus-red'}`}>
+                        className={`text-xs font-medium ${order.side === FuturesOrderEnum.Side.BUY ? 'text-green-2' : 'text-red-2'}`}>
                         {order?.metadata?.dca_order_metadata && !order?.metadata?.dca_order_metadata?.is_main_order && <span>{t('futures:mobile:adjust_margin:added_volume')}&nbsp;/&nbsp;</span>}
                         {order?.metadata?.partial_close_metadata && !order?.metadata?.partial_close_metadata?.is_main_order && <span>{t('futures:mobile:adjust_margin:close_partially')}&nbsp;/&nbsp;</span>}
                         <span>{renderCellTable('side', order, t, language)}</span>&nbsp;/&nbsp;
@@ -279,7 +279,7 @@ const OrderItemMobile = ({
                         :
                         <>
                             <div className="text-xs text-right" onClick={() => canShare && actions('modal', 'share')}>
-                                <div className="text-xs font-medium text-onus-green float-right">
+                                <div className="text-xs font-medium text-green-2 float-right">
                                     <OrderProfit key={order.displaying_id} onusMode={true} className="flex flex-col"
                                         order={order} initPairPrice={dataMarketWatch} isTabHistory={isTabHistory}
                                         isMobile decimal={isVndcFutures ? decimalSymbol : decimalSymbol + 2} mode={mode} />
@@ -292,20 +292,20 @@ const OrderItemMobile = ({
             {(!isShortcut || collapse === order?.displaying_id) &&
                 <div onClick={() => isShortcut && onShowDetail && actions('detail')}>
                     {!isTabHistory && (isModify || isTabOpen) &&
-                        <div className="flex rounded-md border border-onus-bg3 p-2 mt-3">
+                        <div className="flex rounded-md border border-divider dark:border-divider-dark p-2 mt-3">
                             <OrderItem
                                 fullWidth
                                 label={isTabOpen ? t('futures:mobile:quote_price') : t('futures:stop_loss')}
                                 value={isTabOpen ? renderQuoteprice() : renderSlTp(order?.sl, true)}
-                                className="text-center border-r border-onus-bg3"
-                                valueClassName={`${!isTabOpen ? 'text-onus-red' : ''}`}
+                                className="text-center border-r border-divider dark:border-divider-dark"
+                                valueClassName={`${!isTabOpen ? 'text-red-2' : ''}`}
                             />
                             <OrderItem
                                 fullWidth
                                 label={isTabOpen ? t('futures:order_table:open_price') : t('futures:take_profit')}
                                 value={isTabOpen ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.tp, true)}
                                 className="text-center"
-                                valueClassName={`${!isTabOpen ? 'text-onus-green' : ''}`}
+                                valueClassName={`${!isTabOpen ? 'text-green-2' : ''}`}
                             />
                         </div>
                     }
@@ -315,7 +315,7 @@ const OrderItemMobile = ({
                             label={isTabPosition ? t('futures:order_table:open_price') : t('futures:stop_loss')}
                             value={isTabPosition ? getOpenPrice(order, dataMarketWatch) : renderSlTp(order?.sl)}
                             className="py-[2px] space-y-[2px] mb-2"
-                            valueClassName={`${!isTabPosition ? 'text-onus-red' : ''}`}
+                            valueClassName={`${!isTabPosition ? 'text-red-2' : ''}`}
                         />
                         <OrderItem
                             center
@@ -332,7 +332,7 @@ const OrderItemMobile = ({
                             label={isTabPosition ? t('futures:mobile:quote_price') : t('futures:take_profit')}
                             value={isTabPosition ? renderQuoteprice() : renderSlTp(order?.tp)}
                             className="py-[2px] space-y-[2px]"
-                            valueClassName={`${!isTabPosition ? 'text-onus-green' : ''}`}
+                            valueClassName={`${!isTabPosition ? 'text-green-2' : ''}`}
                         />
                         <OrderItem
                             center
@@ -353,16 +353,16 @@ const OrderItemMobile = ({
                             {
                                 order.status === VndcFutureOrderType.Status.ACTIVE &&
                                 <Button
-                                    className="bg-onus-bg3 text-onus-gray !h-[36px]"
+                                    className="bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[36px]"
                                     onClick={() => actions('modal', 'add-vol')}> {t('futures:mobile:adjust_margin:add_volume')}</Button>
                             }
                             {!((order?.metadata?.dca_order_metadata || order?.metadata?.partial_close_metadata) && orderStatus.pending) &&
                                 <Button
-                                    className="bg-onus-bg3 text-onus-gray !h-[36px]"
+                                    className="bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[36px]"
                                     onClick={() => actions('modal', 'edit')}> {t(`futures:tp_sl:${isModify ? 'modify' : 'add'}_tpsl`)}</Button>
                             }
                             <Button
-                                className="bg-onus-bg3 text-onus-gray !h-[36px]"
+                                className="bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[36px]"
                                 onClick={() => actions('delete')}>{t('common:close')}</Button>
                         </div>
                     }
@@ -392,11 +392,11 @@ const Row = styled.div.attrs({
 `
 
 const Label = styled.div.attrs({
-    className: `text-xs text-onus-grey min-w-[50px] leading-[1.25rem]`
+    className: `text-xs text-txtSecondary dark:text-txtSecondary-dark min-w-[50px] leading-[1.25rem]`
 })``;
 
 const Button = styled.div.attrs({
-    className: `text-onus-grey bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold w-full`
+    className: `text-txtSecondary dark:text-txtSecondary-dark bg-gray-4 rounded-[4px] h-[30px] flex items-center justify-center text-xs font-semibold w-full`
 })`
   ${'' /* width: calc(50% - 4px) */}
 `;

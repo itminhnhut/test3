@@ -46,8 +46,8 @@ const OrderLeverage = ({ leverage, setLeverage, isAuth, pair, pairConfig, contex
                 onClick={() => setOpenModal(true)}
                 data-tut="order-leverage"
                 className={classnames(
-                    'flex items-center justify-center h-[32px] w-12 text-onus-white border-onus-white leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium',
-                    { '!border-onus-red': !inputValidator('leverage').isValid }
+                    'flex items-center justify-center h-[32px] w-12 text-txtPrimary dark:text-txtPrimary-dark border-divider dark:border-divider-dark leading-8 text-center border-[1px] text-xs px-[5px] rounded-[4px] font-medium',
+                    { '!border-red-2': !inputValidator('leverage').isValid }
                 )}
             >
                 {leverage}x

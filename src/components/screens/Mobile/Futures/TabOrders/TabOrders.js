@@ -26,7 +26,7 @@ import showNotification from 'utils/notificationService';
 import { AlertContext } from 'components/common/layouts/LayoutMobile';
 
 const Button = styled.div.attrs({
-    className: `text-onus-grey bg-gray-4 rounded-[4px] flex items-center justify-center text-xs font-semibold px-3 py-[6px]`
+    className: `text-txtSecondary dark:text-txtSecondary-dark bg-gray-4 rounded-[4px] flex items-center justify-center text-xs font-semibold px-3 py-[6px]`
 })``;
 
 const TabOrders = memo(({
@@ -152,7 +152,7 @@ const TabOrders = memo(({
         switch (isClosingOrders.isClosing) {
             case 'false':
                 button = (<Button
-                    className='bg-onus-bg3 text-onus-gray !h-[32px]'
+                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
                     onClick={() => handleCloseAll()}
                 >
                     {tab === FUTURES_RECORD_CODE.position ? t('futures:mobile.close_all_positions.title') : t('futures:mobile.close_all_positions.title_pending')}
@@ -160,7 +160,7 @@ const TabOrders = memo(({
                 break;
             case 'true':
                 button = (<Button
-                    className='bg-onus-bg3 text-onus-gray !h-[32px]'
+                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
                 >
                     <Spinner className='w-4 h-4' color='#0068FF' />
                     <div className='w-[8px]'></div>
@@ -169,7 +169,7 @@ const TabOrders = memo(({
                 break;
             case 'done':
                 button = (<Button
-                    className='bg-onus-bg3 text-onus-gray !h-[32px]'
+                    className='bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7 !h-[32px]'
                 >
                     {doneIcon}
                     <div className='w-[10px]'></div>
@@ -185,7 +185,7 @@ const TabOrders = memo(({
     return (<div className={`h-full ${isFullScreen ? 'overflow-hidden' : ''}`}>
         {openDetailModal && <Portal portalId='PORTAL_MODAL'>
             <div
-                className={classNames('flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] !bg-onus', { invisible: !openDetailModal }, { visible: openDetailModal })}>
+                className={classNames('flex flex-col absolute top-0 left-0 h-[100vh] w-full z-[20] !bg-bgPrimary dark:!bg-bgPrimary-dark', { invisible: !openDetailModal }, { visible: openDetailModal })}>
                 <OrderDetail order={orderDetail} onClose={onShowDetail} isMobile
                     pairConfig={pairConfigDetail}
                     pairParent={pair} isVndcFutures={isVndcFutures}
@@ -218,7 +218,7 @@ const TabOrders = memo(({
         />}
         {isAuth ? <div className='h-full'>
             {tab !== FUTURES_RECORD_CODE.tradingHistory && tab !== FUTURES_RECORD_CODE.information &&
-                <div className={classNames('sticky bg-onus z-[10] flex items-center justify-between px-4', {
+                <div className={classNames('sticky bg-bgPrimary dark:bg-dark-dark z-[10] flex items-center justify-between px-4', {
                     'top-[108px] py-4': tab !== FUTURES_RECORD_CODE.orderHistory,
                     'top-[42px] py-2': tab === FUTURES_RECORD_CODE.orderHistory
                 })}>
@@ -245,7 +245,7 @@ const TabOrders = memo(({
                 onClick={() => setHideOther(!hideOther)}
             >
                 <CheckBox onusMode={true} active={hideOther} boxContainerClassName='rounded-[2px]' />
-                <span className='ml-3 text-xs font-medium whitespace-nowrap text-onus-grey'>
+                <span className='ml-3 text-xs font-medium whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark'>
                     {t('futures:hide_other_symbols')}
                 </span>
             </div>}
@@ -283,7 +283,7 @@ const TabOrders = memo(({
 });
 
 const TabMobile = styled.div.attrs({
-    className: 'flex items-center px-4 bg-onus border-b border-onus-line h-[38px] overflow-x-auto'
+    className: 'flex items-center px-4 bg-bgPrimary dark:bg-dark-dark border-b border-divider dark:border-divider-dark h-[38px] overflow-x-auto'
 })`
     height: 42px;
     width: 100%;
@@ -297,14 +297,14 @@ const TabMobile = styled.div.attrs({
         bottom: 0;
         width: 32px;
         height: 4px;
-        background-color: ${({ onusMode }) => onusMode ? '#418FFF' : colors.teal};
+        background-color: ${colors.teal};
         left: 50%;
         transform: translate(-50%, 0);
     }
 `;
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: classNames(`text-sm relative font-semibold h-full flex items-center justify-center text-onus-grey mr-8 last:mr-0`, 'whitespace-nowrap', {
-        'active font-semibold text-[#418FFF]': active
+    className: classNames(`text-sm relative font-semibold h-full flex items-center justify-center text-txtSecondary dark:text-txtSecondary-dark mr-8 last:mr-0`, 'whitespace-nowrap', {
+        'active font-semibold !text-teal': active
     })
 }))`
 `;
@@ -317,16 +317,20 @@ const TabContent = styled.div.attrs(({ active }) => ({
 
 export const LoginOrder = () => {
     const { t } = useTranslation();
-    return (<div className='cursor-pointer flex items-center justify-center h-full text-sm py-[10px] min-h-[300px]'>
+    return (<div className='flex flex-col items-center justify-center h-full text-sm py-[10px] min-h-[300px]'>
+        <div className="w-[200px] py-[0.75rem]">
+            <img src="/images/nao/login.png" alt="lg-img" className='w-[132px] block m-auto py-[0.75rem]' />
+            <div className='text-center' >{t('futures:mobile:login_medium')}</div>
+        </div>
         <div onClick={() => emitWebViewEvent('login')}
-            className='w-[200px] bg-onus-base !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
+            className='w-[200px] bg-dominant !text-white font-medium text-center py-2.5 rounded-lg cursor-pointer hover:opacity-80'>
             {t('futures:mobile:login_short')}
         </div>
     </div>);
 };
 
 const TabModeContainer = styled.div.attrs(({ active }) => ({
-    className: 'p-[2px] flex items-center text-xs font-semibold leading-[1.125rem] bg-onus-bg3 rounded-lg relative'
+    className: 'p-[2px] flex items-center text-xs font-semibold leading-[1.125rem] bg-gray-12 dark:bg-dark-2 rounded-lg relative after:bg-white dark:after:bg-dark-4'
 
 }))`
     ::after {
@@ -337,7 +341,6 @@ const TabModeContainer = styled.div.attrs(({ active }) => ({
         bottom: 0;
         left: 0;
         transform: ${({ tab }) => `translate(${tab * 100}%,0)`};
-        background-color: ${() => colors.onus.bg2};
         border-radius: 8px;
         transition: all 0.2s ease-out;
         margin: 2px
@@ -346,7 +349,7 @@ const TabModeContainer = styled.div.attrs(({ active }) => ({
 
 const TabMode = styled.div.attrs(({ active }) => ({
     className: classNames('py-[5px] relative z-[10] min-w-[5rem] text-center', {
-        'text-onus-grey': !active
+        'text-txtSecondary dark:text-txtSecondary-dark': !active
     })
 }))`
 `;

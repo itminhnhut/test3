@@ -39,7 +39,7 @@ export default function Rank1Card({
 
                     <div className='ml-4 md:ml-6 flex flex-1 min-w-0 flex-col justify-center'>
                         <p className='text-lg font-bold'>{record.name}</p>
-                        <span className='text-sm text-onus-textSecondary w-full mr-1 break-words'>{record.onus_user_id}</span>
+                        <span className='text-sm text-txtSecondary dark:text-txtSecondary-dark w-full mr-1 break-words'>{record.onus_user_id}</span>
                     </div>
                 </div>
                 <div className='nao-hashtag-rank1 lg:hidden'>#1</div>

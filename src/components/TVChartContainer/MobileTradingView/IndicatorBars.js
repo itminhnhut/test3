@@ -4,6 +4,7 @@ import colors from 'styles/colors';
 import Reload from 'components/svg/Reload';
 import { IconFullScreenChart } from 'components/common/Icons';
 import classnames from 'classnames'
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 
 export const mainIndicators = [
     {
@@ -56,35 +57,45 @@ const IndicatorBars = ({
             setSubIndicator(value);
         }
     };
+    const [currentTheme] = useDarkMode();
 
     return (
         <div
-            className={classnames(`h-[38px] flex items-center justify-between px-4`, { 'border-t border-onus-line': !fullChart, 'border-b': isDetail })}>
-            <div
-                className="flex items-center text-xs text-onus-grey font-medium justify-between w-full">
+            className={classnames(`h-[38px] flex items-center justify-between px-4`, {
+                'border-t border-divider dark:border-divider-dark': !fullChart,
+                'border-b': isDetail
+            })}
+        >
+            <div className="flex items-center text-xs text-txtSecondary dark:text-txtSecondary-dark font-medium justify-between w-full">
                 <div onClick={handleOpenIndicatorModal}>
-                    <SvgActivity color={colors.onus.white} />
+                    <SvgActivity color={currentTheme === THEME_MODE.DARK ? colors.gray[7] : colors.gray[1]} />
                 </div>
-                {mainIndicators.map(item => (
+                {mainIndicators.map((item) => (
                     <div
                         key={item.value}
-                        className={mainIndicator === item.value ? 'text-onus-white' : ''}
-                        onClick={() => setIndicator(item.value, 'main')}>{item.label}</div>
+                        className={mainIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
+                        onClick={() => setIndicator(item.value, 'main')}
+                    >
+                        {item.label}
+                    </div>
                 ))}
                 <div className="bg-onus-line w-[2px] h-4" />
-                {subIndicators.map(item => (
+                {subIndicators.map((item) => (
                     <div
                         key={item.value}
-                        className={subIndicator === item.value ? 'text-onus-white' : ''}
-                        onClick={() => setIndicator(item.value, 'sub')}>{item.label}</div>
-                ))}
-                {isDetail ?
-                    <Reload onClick={resetComponent} color={colors.onus.white} />
-                    :
-                    <div onClick={() => setFullChart(true)}>
-                        <IconFullScreenChart />
+                        className={subIndicator === item.value ? 'text-txtPrimary dark:text-txtPrimary-dark' : ''}
+                        onClick={() => setIndicator(item.value, 'sub')}
+                    >
+                        {item.label}
                     </div>
-                }
+                ))}
+                {isDetail ? (
+                    <Reload onClick={resetComponent} color={currentTheme === THEME_MODE.DARK ? colors.gray[7] : colors.gray[1]} />
+                ) : (
+                    <div onClick={() => setFullChart(true)}>
+                        <IconFullScreenChart color={currentTheme === THEME_MODE.DARK ? colors.gray[7] : colors.gray[1]} />
+                    </div>
+                )}
             </div>
         </div>
     );

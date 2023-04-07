@@ -189,16 +189,16 @@ function TabTransactionsHistory({
             }
             return <div
                 key={item._id}
-                className="flex justify-between p-4 border-b border-onus-line"
+                className="flex justify-between p-4 border-b border-divider dark:border-divider-dark"
                 onClick={() => setTransactionDetail(item)}
             >
                 <div className="flex items-center">
                     <AssetLogo size={36} assetId={item.currency}/>
                     <div className="ml-2">
                         <div
-                            className="font-medium text-onus-white text-sm">{_renderCategory(item)}</div>
+                            className="font-medium text-txtPrimary dark:text-txtPrimary-dark text-sm">{_renderCategory(item)}</div>
                         <div
-                            className="font-medium text-onus-grey text-xs mr-2 w-32"
+                            className="font-medium text-txtSecondary dark:text-txtSecondary-dark text-xs mr-2 w-32"
                         >
                             {format(new Date(item.created_at), 'yyyy-MM-dd H:mm:ss')}
                         </div>
@@ -206,13 +206,13 @@ function TabTransactionsHistory({
                 </div>
                 <div className="text-right">
                     <div
-                        className="font-medium text-onus-white text-sm"
+                        className="font-medium text-txtPrimary dark:text-txtPrimary-dark text-sm"
                     >
                         <span>{item.money_use > 0 ? '+' : '-'}{formatNumber(Math.abs(item.money_use), decimal, null)}</span>
                         <span className="ml-1">{assetConfig?.assetCode}</span>
                     </div>
                     <div
-                        className="font-medium text-onus-grey text-xs"
+                        className="font-medium text-txtSecondary dark:text-txtSecondary-dark text-xs"
                     >
 
                         {
@@ -246,7 +246,7 @@ function TabTransactionsHistory({
             assetConfig={assetConfigMap[transactionDetail?.currency]}
             language={currentLocale}
         />
-        <div className="sticky top-[2.625rem] bg-onus z-10 flex justify-between text-xs text-onus-grey px-4 pt-2">
+        <div className="sticky top-[2.625rem] bg-bgPrimary dark:bg-bgPrimary-dark z-10 flex justify-between text-xs text-txtSecondary dark:text-txtSecondary-dark px-4 pt-2">
             <div className="flex items-center p-2 -ml-2" onClick={() => setVisibleDateRangePicker(true)}>
                 <span className="mr-1">
                     {range.start && range.end ?
@@ -261,12 +261,12 @@ function TabTransactionsHistory({
             </div>
             <div
                 className={classNames('flex items-center p-2 -mr-2', {
-                    'text-onus-base': visibleCategoryPicker
+                    'text-dominant': visibleCategoryPicker
                 })}
                 onClick={() => setVisibleCategoryPicker(true)}>
                 <span className="mr-1">{t(`futures:mobile:transaction_histories:categories:${category}`)}</span>
                 {visibleCategoryPicker ?
-                    <ChevronUp size={12} color={colors.onus.base}/> :
+                    <ChevronUp size={12} color={colors.dominant}/> :
                     <ChevronDown size={12} color={colors.onus.grey}/>}
             </div>
         </div>
@@ -321,10 +321,10 @@ const CategoryPicker = ({
                     className="flex justify-between items-center"
                     onClick={() => _onChange(c)}
                 >
-                    <span className="text-onus-white leading-6 font-medium">
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark leading-6 font-medium">
                         {t(`futures:mobile:transaction_histories:categories:${c}`)}
                     </span>
-                    {value === c && <Check size={16} color={colors.onus.base}/>}
+                    {value === c && <Check size={16} color={colors.dominant}/>}
                 </div>;
             })}
         </div>
@@ -372,8 +372,8 @@ const TransactionDetail = ({
         onusMode
         onBackdropCb={onClose}
     >
-        <div className="text-onus-white text-center border-b border-onus-bg2 pb-6">
-            <div className="text-sm text-onus-grey leading-[1.375rem] pb-2">
+        <div className="text-txtPrimary dark:text-txtPrimary-dark text-center border-b border-divider dark:border-divider-dark pb-6">
+            <div className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-[1.375rem] pb-2">
                 {_renderCategory(transaction)}
                 {/* {transaction?.category ? t(`futures:mobile:transaction_histories:categories:${transaction?.category}`) : '--'} */}
             </div>
@@ -384,7 +384,7 @@ const TransactionDetail = ({
         </div>
         <div className="pt-6 space-y-4">
             <div className="flex justify-between text-sm leading-[1.375rem]">
-                <span className="text-onus-grey mr-2 whitespace-nowrap">
+                <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2 whitespace-nowrap">
                     {t('futures:mobile:transaction_histories:id')}
                 </span>
                 <div className="flex flex-1 min-w-0 items-center">
@@ -397,7 +397,7 @@ const TransactionDetail = ({
             </div>
             <div className="flex justify-between text-sm leading-[1.375rem]">
                 <span
-                    className="text-onus-grey">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
+                    className="text-txtSecondary dark:text-txtSecondary-dark">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
                 <div className="flex flex-1 min-w-0 items-center">
                     <div className="flex-1 min-w-0 overflow-hidden text-right pl-4">{orderId}</div>
                     {transaction?.category !== 612 && <CopyToClipboard text={orderId}>
@@ -406,12 +406,12 @@ const TransactionDetail = ({
                 </div>
             </div>
             <div className="flex justify-between text-sm">
-                <span className="text-onus-grey">{t('futures:mobile:transaction_histories:time')}</span>
+                <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:transaction_histories:time')}</span>
                 <span>{transaction?.created_at ? format(new Date(transaction?.created_at), 'yyyy-MM-dd H:mm:ss') : '--'}</span>
             </div>
         </div>
         <div
-            className="flex items-center justify-center mt-8 font-bold text-onus-white h-12 rounded bg-onus-base"
+            className="flex items-center justify-center mt-8 font-bold text-txtBtnPrimary h-12 rounded bg-bgBtnPrimary"
             onClick={onClose}
         >{t('futures:mobile:transaction_histories:close')}</div>
     </Modal>;
@@ -420,17 +420,17 @@ const TransactionDetail = ({
 const Loading = () => {
     return range(0, 10)
         .map(i => {
-            return <div key={i} className="flex justify-between animate-pulse p-4 border-b border-onus-line">
+            return <div key={i} className="flex justify-between animate-pulse p-4 border-b border-divider dark:border-divider-dark">
                 <div className="flex items-center">
-                    <div className="!rounded-full bg-darkBlue-3 h-9 !w-9"/>
+                    <div className="!rounded-full bg-gray-12 dark:bg-darkBlue-3 h-9 !w-9"/>
                     <div className="flex flex-col justify-between h-full ml-2">
-                        <div className="rounded bg-darkBlue-3 h-3 w-12"/>
-                        <div className="rounded bg-darkBlue-3 h-2 w-28"/>
+                        <div className="rounded bg-gray-12 dark:bg-darkBlue-3 h-3 w-12"/>
+                        <div className="rounded bg-gray-12 dark:bg-darkBlue-3 h-2 w-28"/>
                     </div>
                 </div>
                 <div className="flex flex-col justify-between items-end">
-                    <div className="rounded bg-darkBlue-3 w-9 h-3"/>
-                    <div className="rounded bg-darkBlue-3 w-14 h-2"/>
+                    <div className="rounded bg-gray-12 dark:bg-darkBlue-3 w-9 h-3"/>
+                    <div className="rounded bg-gray-12 dark:bg-darkBlue-3 w-14 h-2"/>
                 </div>
             </div>;
         });

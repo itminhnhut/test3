@@ -216,7 +216,7 @@ const ContestPerRanks = ({
                                             <span>{capitalize(item?.name)}</span>
                                             {item?.is_onus_master && <TickFbIcon size={16} />}
                                         </div>
-                                        <span className="text-sm font-medium cursor-pointer text-onus-grey">{item?.onus_user_id}</span>
+                                        <span className="text-sm font-medium cursor-pointer text-gray-1 dark:text-gray-7">{item?.onus_user_id}</span>
                                     </div>
                                 </div>
                                 <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>
@@ -226,14 +226,14 @@ const ContestPerRanks = ({
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="flex flex-col mt-auto space-y-1 rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
+                                    <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:volume')}</div>
                                     <span className="font-semibold leading-8">
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
                                 {!previous && (
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('common:ext_gate:time')}</div>
+                                        <div className="text-sm text-gray-1 dark:text-gray-7">{t('common:ext_gate:time')}</div>
                                         <span className="font-semibold leading-8">
                                             {formatNumber(item?.time, 2)} {t('common:hours')}
                                         </span>
@@ -241,7 +241,7 @@ const ContestPerRanks = ({
                                 )}
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
+                                        <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:per_pnl')}</div>
                                         <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                             {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
                                             {formatNumber(item?.pnl, 2, 0, true)}%
@@ -249,7 +249,7 @@ const ContestPerRanks = ({
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
+                                        <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:total_trades')}</div>
                                         <span className={`font-semibold leading-8`}>{formatNumber(item?.total_order)}</span>
                                     </div>
                                 )}

@@ -32,48 +32,48 @@ const OrderConfirm = memo(({ onClose, onConfirm, data, isShowConfirm, disabled, 
             <label className="font-semibold text-[1.25rem] leading-6">{t('futures:preferences:order_confirm')}</label>
             <div className="mt-6">
                 <div className="flex items-center justify-between text-sm">
-                    <div className="text-onus-grey">{t('futures:mobile:leverage_v2')}</div>
-                    <div>{data?.side === 'Buy' ? 'Long' : 'Short'} {data?.baseAsset + '/' + data?.quoteAsset} <span className="text-onus-green">{data?.leverage}x</span></div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:mobile:leverage_v2')}</div>
+                    <div>{data?.side === 'Buy' ? 'Long' : 'Short'} {data?.baseAsset + '/' + data?.quoteAsset} <span className="text-green-2">{data?.leverage}x</span></div>
                 </div>
-                <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                <div className="my-3 h-[1px] w-full bg-gray-12 dark:bg-dark-2"></div>
                 <div className="flex items-center justify-between text-sm">
-                    <div className="text-onus-grey">{t('futures:order_table:type')}</div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:type')}</div>
                     <div>{renderCellTable('type', data, t, language)}</div>
                 </div>
                 {data?.type !== VndcFutureOrderType.Type.MARKET && <>
-                    <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                    <div className="my-3 h-[1px] w-full bg-gray-12 dark:bg-dark-2"></div>
                     <div className="flex items-center justify-between text-sm">
-                        <div className="text-onus-grey">{t('futures:price')}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:price')}</div>
                         <div>{formatNumber(data?.price, decimalSymbol)} {data?.quoteAsset}</div>
                     </div>
                 </>
                 }
-                <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                <div className="my-3 h-[1px] w-full bg-gray-12 dark:bg-dark-2"></div>
                 <div className="flex items-center justify-between text-sm">
-                    <div className="text-onus-grey">{t('futures:margin')}</div>
+                    <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:margin')}</div>
                     <div>{formatNumber(data?.quoteQty / data?.leverage, decimalSymbol)} {data?.quoteAsset}</div>
                 </div>
                 {data?.sl && <>
-                    <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                    <div className="my-3 h-[1px] w-full bg-gray-12 dark:bg-dark-2"></div>
                     <div className="flex items-center justify-between text-sm">
-                        <div className="text-onus-grey">{t('futures:stop_loss')}</div>
-                        <div className="text-onus-red">{formatNumber(data?.sl, decimals?.decimalScalePrice ?? 0)}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:stop_loss')}</div>
+                        <div className="text-red-2">{formatNumber(data?.sl, decimals?.decimalScalePrice ?? 0)}</div>
                     </div>
                 </>
                 }
                 {data?.tp && <>
-                    <div className="my-3 h-[1px] w-full bg-onus-bg2"></div>
+                    <div className="my-3 h-[1px] w-full bg-gray-12 dark:bg-dark-2"></div>
                     <div className="flex items-center justify-between text-sm">
-                        <div className="text-onus-grey">{t('futures:take_profit')}</div>
-                        <div className="text-onus-green">{formatNumber(data?.tp, decimals?.decimalScalePrice ?? 0)}</div>
+                        <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:take_profit')}</div>
+                        <div className="text-green-2">{formatNumber(data?.tp, decimals?.decimalScalePrice ?? 0)}</div>
                     </div>
                 </>
                 }
             </div>
             <div className="mt-6 flex items-center" onClick={onHandleHidden}>
                 <CheckBox onusMode={true} active={hidden}
-                    boxContainerClassName={`rounded-[2px] ${hidden ? '' : 'border-none !bg-onus-bg2'}`} />
-                <span className="ml-3 whitespace-nowrap text-onus-grey font-medium text-xs">
+                    boxContainerClassName={`rounded-[2px] ${hidden ? '' : 'border-none !bg-gray-12 dark:!bg-dark-2'}`} />
+                <span className="ml-3 whitespace-nowrap text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs">
                     {t('futures:mobile:not_show_this_message')}
                 </span>
             </div>

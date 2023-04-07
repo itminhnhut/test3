@@ -35,15 +35,15 @@ export default function AnnouncementPopup() {
 
     if (!open) return null;
 
-    return <div className='fixed inset-x-0 z-50 p-4 bg-red mx-4 mt-3 bg-onus-bg3 rounded'>
+    return <div className='fixed inset-x-0 z-50 p-4 bg-red mx-4 mt-3 bg-gray-12 dark:bg-dark-2 rounded'>
         <div className='flex justify-between items-center'>
             <div className='flex items-center'>
                 <Bell className='mr-3' size={22} />
-                <span className='bg-onus-base rounded text-xs text-onus-white leading-2 font-semibold px-2 py-1'>
+                <span className='bg-dominant rounded text-xs text-txtPrimary dark:text-txtPrimary-dark leading-2 font-semibold px-2 py-1'>
                     {t('common:mobile:announcement')}
                 </span>
             </div>
-            <X className='text-onus-white' onClick={close} />
+            <X className='text-txtPrimary dark:text-txtPrimary-dark' onClick={close} />
         </div>
         <div
             className='h-5 leading-5 font-bold text-white whitespace-nowrap mt-4 relative marquee'
@@ -55,5 +55,3 @@ export default function AnnouncementPopup() {
         </div>
     </div>;
 }
-
-

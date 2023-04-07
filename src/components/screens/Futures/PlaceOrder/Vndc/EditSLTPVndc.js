@@ -41,6 +41,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
     const profit = useRef({ tp: 0, sl: 0 });
     const tabPercent = useRef({ tp: 0, sl: 0 });
     const [currentTheme] = useDarkMode();
+    const isDark = currentTheme === THEME_MODE.DARK;
     const dotStep = useRef(isMobile ? 4 : 6);
 
     const getProfitSLTP = (sltp) => {
@@ -309,7 +310,7 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                             onClick={() => {
                                 onSetValuePercent(i * size, key);
                             }}
-                            className={classNames('block absolute font-medium text-xs text-txtSecondary dark:text-onus-grey select-none cursor-pointer', {
+                            className={classNames('block absolute font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark select-none cursor-pointer', {
                                 'left-1/2 -translate-x-1/2': i > 0 && i < dotStep.current,
                                 '-left-1/2 translate-x-[-80%]': i === dotStep.current
                             })}
@@ -352,8 +353,8 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
             </div>
             <div className="px-5 pt-4 pb-6 text-sm">
                 <div className="mb-3 font-medium flex items-center justify-between">
-                    <span className="text-txtSecondary dark:text-onus-grey">{t('futures:order_table:symbol')}</span>
-                    <span className={isMobile ? 'text-onus-green' : 'text-teal'}>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:symbol')}</span>
+                    <span className={isMobile ? 'text-green-2' : 'text-teal'}>
                         {order?.symbol} {t('futures:tp_sl:perpetual')} {order?.leverage}x
                     </span>
                 </div>
@@ -377,18 +378,18 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                                 onValueChange={(e) => onHandleChange('price', e)}
                                 inputMode="decimal"
                                 allowedDecimalSeparators={[',', '.']}
-                                renderTail={() => <span className="font-medium text-txtSecondary dark:text-onus-grey pl-2">{quoteAsset}</span>}
+                                renderTail={() => <span className="font-medium text-txtSecondary dark:text-txtSecondary-dark pl-2">{quoteAsset}</span>}
                             />
                         </div>
                     ) : (
                         <>
-                            <span className="text-txtSecondary dark:text-onus-grey">{t('futures:order_table:open_price')}</span>
+                            <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:order_table:open_price')}</span>
                             <span className="">{formatNumber(data.price, 2, 0, true) + ' ' + quoteAsset}</span>
                         </>
                     )}
                 </div>
                 <div className="font-medium flex items-center justify-between">
-                    <span className="text-txtSecondary dark:text-onus-grey">{t('futures:tp_sl:mark_price')}</span>
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('futures:tp_sl:mark_price')}</span>
                     <span className="">{formatNumber(_lastPrice, 2, 0, true) + ' ' + quoteAsset}</span>
                 </div>
                 {isMobile ? (
@@ -426,13 +427,13 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                             thousandSeparator
                             type="text"
                             label={t('futures:take_profit')}
-                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-green' : 'text-teal'}`}
+                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-green-2' : 'text-teal'}`}
                             containerClassName={`w-full !py-0 !px-0 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
                             value={tab === 0 ? profit.current.tp : tab === 1 ? data.tp : tabPercent.current.tp}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('tp', e)}
                             renderTail={() => (
-                                <span className={`font-medium ${isMobile ? 'text-onus-green' : 'text-teal'} pl-2`}>{tab === 2 ? '%' : quoteAsset}</span>
+                                <span className={`font-medium ${isMobile ? 'text-green-2' : 'text-teal'} pl-2`}>{tab === 2 ? '%' : quoteAsset}</span>
                             )}
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
@@ -449,23 +450,23 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'tp')}
                         xStart={50}
                         reload={tab}
-                        bgColorActive={isMobile ? colors.onus.green : colors.teal}
-                        bgColorSlide={isMobile ? colors.onus.green : colors.teal}
-                        BgColorLine={isMobile ? colors.onus.grey : null}
+                        bgColorActive={colors.teal}
+                        bgColorSlide={colors.teal}
+                        BgColorLine={isMobile ? (isDark ? colors.dark[2] : colors.gray[12]) : null}
                         onChange={({ x }) => onChangePercent(x, 100, 'tp')}
                     />
                 </div>
                 {data.tp ? (
-                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         {t('futures:tp_sl:when')}&nbsp;
                         <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('futures:tp_sl:mark_price')}&nbsp;</span>
                         {t('futures:tp_sl:reaches')}&nbsp;
                         <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatNumber(data.tp, 0, 0, true)}&nbsp;</span>
                         {t('futures:tp_sl:estimate')}&nbsp;
-                        <span className={isMobile ? 'text-onus-green' : 'text-dominant'}>{profit.current.tp + ' ' + quoteAsset}</span>.
+                        <span className={isMobile ? 'text-green-2' : 'text-dominant'}>{profit.current.tp + ' ' + quoteAsset}</span>.
                     </div>
                 ) : (
-                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">{t('futures:tp_sl:tp_not_set')}&nbsp;</div>
+                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">{t('futures:tp_sl:tp_not_set')}&nbsp;</div>
                 )}
 
                 <div className="my-4 w-full h-[1px] bg-divider dark:bg-onus-line" />
@@ -477,14 +478,14 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                             thousandSeparator
                             type="text"
                             label={t('futures:stop_loss')}
-                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-onus-red' : 'text-red'}`}
+                            className={`flex-grow text-right font-medium h-[21px] ${isMobile ? 'text-red-2' : 'text-red'}`}
                             containerClassName={`w-full !py-0 !px-0 border-none ${isMobile ? 'dark:bg-onus-bg2' : ''}`}
                             value={tab === 0 ? profit.current.sl : tab === 1 ? data.sl : tabPercent.current.sl}
                             // validator={tab === 1 && inputValidator('stop_loss')}
                             decimalScale={countDecimals(decimalScalePrice?.tickSize)}
                             onValueChange={(e) => onHandleChange('sl', e)}
                             renderTail={() => (
-                                <span className={`font-medium ${isMobile ? 'text-onus-red' : 'text-red'} pl-2`}>{tab === 2 ? '%' : quoteAsset}</span>
+                                <span className={`font-medium ${isMobile ? 'text-red-2' : 'text-red'} pl-2`}>{tab === 2 ? '%' : quoteAsset}</span>
                             )}
                             inputMode="decimal"
                             allowedDecimalSeparators={[',', '.']}
@@ -499,28 +500,28 @@ const FuturesEditSLTPVndc = ({ isVisible, order, onClose, status, onConfirm, pai
                         xmax={100}
                         labelSuffix="%"
                         customDotAndLabel={(xmax, pos) => customDotAndLabel(xmax, pos, 'sl')}
-                        bgColorSlide={isMobile ? colors.onus.red : colors.red}
-                        bgColorActive={isMobile ? colors.onus.red : colors.red}
-                        BgColorLine={isMobile ? colors.onus.grey : null}
+                        bgColorSlide={colors.red}
+                        bgColorActive={colors.red}
+                        BgColorLine={isMobile ? (isDark ? colors.dark[2] : colors.gray[12]) : null}
                         xStart={50}
                         reload={tab}
                         onChange={({ x }) => onChangePercent(x, 100, 'sl')}
                     />
                 </div>
                 {data?.sl ? (
-                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                         {t('futures:tp_sl:when')}&nbsp;
                         <span className="text-txtPrimary dark:text-txtPrimary-dark">{t('futures:tp_sl:mark_price')}&nbsp;</span>
                         {t('futures:tp_sl:reaches')}&nbsp;
                         <span className="text-txtPrimary dark:text-txtPrimary-dark">{formatNumber(data.sl, 0, 0, true)}&nbsp;</span>
                         {t('futures:tp_sl:estimate_stop_loss')}&nbsp;
-                        <span className={isMobile ? 'text-onus-red' : 'text-red'}>{profit.current.sl + ' ' + quoteAsset}</span>.
+                        <span className={isMobile ? 'text-red-2' : 'text-red'}>{profit.current.sl + ' ' + quoteAsset}</span>.
                     </div>
                 ) : (
-                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-onus-grey">{t('futures:tp_sl:sl_not_set')}&nbsp;</div>
+                    <div className="mt-7 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">{t('futures:tp_sl:sl_not_set')}&nbsp;</div>
                 )}
 
-                <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-onus-grey">
+                <div className="mt-4 font-medium text-xs text-txtSecondary dark:text-txtSecondary-dark">
                     {/* {t('futures:tp_sl:this_setting')}&nbsp; */}
                     {/* <span className="font-bold">{t('futures:tp_sl:take_profit_stop_loss')}</span>&nbsp; */}
                     {/* {t('futures:tp_sl:automaticcally_cancel')} */}

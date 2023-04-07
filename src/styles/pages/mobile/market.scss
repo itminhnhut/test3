@@ -1,9 +1,9 @@
 .market-mobile {
-  @apply flex flex-col h-full bg-onus-bgModal3;
+  @apply flex flex-col h-full bg-bgPrimary dark:bg-bgPrimary-dark;
   .tab-active {
     &:before {
       content: '';
-      @apply absolute w-8 h-1 bg-onus-base bottom-[-1px] left-1/2 -translate-x-1/2;
+      @apply absolute w-8 h-1 bg-dominant bottom-[-1px] left-1/2 -translate-x-1/2;
     }
   }
 

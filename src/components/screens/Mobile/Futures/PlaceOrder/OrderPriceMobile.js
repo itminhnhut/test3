@@ -17,23 +17,21 @@ const OrderPriceMobile = ({ price, setPrice, decimals, type, context, stopPrice,
             allowNegative={false}
             disabled={disabled}
             validator={validator}
-            onValueChange={({ floatValue = '' }) => stopMarket ? setStopPrice(floatValue) : setPrice(floatValue)}
+            onValueChange={({ floatValue = '' }) => (stopMarket ? setStopPrice(floatValue) : setPrice(floatValue))}
             decimalScale={decimals.decimalScalePrice}
-            labelClassName='whitespace-nowrap capitalize text-onus-grey'
-            containerClassName="h-[36px] bg-onus-input"
-            tailContainerClassName='flex items-center text-onus-grey font-medium text-xs select-none'
+            labelClassName="whitespace-nowrap capitalize text-txtSecondary dark:text-txtSecondary-dark"
+            containerClassName="h-[36px] bg-gray-12 dark:bg-dark-2"
+            tailContainerClassName="flex items-center text-txtSecondary dark:text-txtSecondary-dark font-medium text-xs select-none"
             renderTail={() => (
-                <div className='relative group select-none text-onus-grey'>
-                    <div className='flex items-center'>
-                        {pairConfig?.quoteAsset ?? ''}
-                    </div>
+                <div className="relative group select-none text-txtSecondary dark:text-txtSecondary-dark">
+                    <div className="flex items-center">{pairConfig?.quoteAsset ?? ''}</div>
                 </div>
             )}
             inputClassName={`text-xs !text-center ${disabled ? '!mx-0' : ''}`}
             inputMode="decimal"
             allowedDecimalSeparators={[',', '.']}
-        // onFocus={() => context.onHiddenBottomNavigation(true)}
-        // onBlur={() => context.onHiddenBottomNavigation(false)}
+            // onFocus={() => context.onHiddenBottomNavigation(true)}
+            // onBlur={() => context.onHiddenBottomNavigation(false)}
         />
     );
 };

@@ -114,41 +114,42 @@ const Content = ({title, text, step, onClose, top, goTo, ...props}) => {
     const {t} = useTranslation();
     return (
         <div className="flex flex-col items-center font-inter justify-center" onClick={() => onClose(false)}>
-            {top && <img className="m-auto" src={getS3Url("/images/icon/ic_guide_arrow_onus.png")} width={10}/>}
-            <div className='relative'>
+            {top && <img className="m-auto" src={getS3Url('/images/icon/ic_guide_arrow_onus.png')} width={10} />}
+            <div className="relative">
                 <View id={`guideline-step-${step}`}>
                     <div className="flex items-center justify-between">
-                        <label
-                            className="text-onus-base font-semibold text-sm">{t(`futures:mobile:guide:step_title_${step}`)}</label>
-                        <div className='cursor-pointer text-white' onClick={() => onClose(true)}>
-                            <X width={20}/>
+                        <label className="text-dominant font-semibold text-sm">{t(`futures:mobile:guide:step_title_${step}`)}</label>
+                        <div className="cursor-pointer text-white" onClick={() => onClose(true)}>
+                            <X width={20} />
                         </div>
                     </div>
-                    <div
-                        className="mt-[8px] mb-[16px] text-onus-white text-xs">{t(`futures:mobile:guide:step_${step}`)}</div>
+                    <div className="mt-[8px] mb-[16px] text-txtPrimary dark:text-txtPrimary-dark text-xs">{t(`futures:mobile:guide:step_${step}`)}</div>
                     <div className="flex items-center justify-between font-medium text-white">
-                        <div className='text-sm text-onus-white'>{t('futures:mobile:guide:step')} {step + '/'}<span
-                            className="text-[10px]">8</span></div>
+                        <div className="text-sm text-txtPrimary dark:text-txtPrimary-dark">
+                            {t('futures:mobile:guide:step')} {step + '/'}
+                            <span className="text-[10px]">8</span>
+                        </div>
                     </div>
                 </View>
                 <div
-                    className='absolute bottom-6 right-4 min-w-[60px] px-[10px] bg-onus-base rounded-[4.33333px] text-center text-[10px] text-onus-white'
-                    onClick={() => step === 8 && onClose(true)}>
+                    className="absolute bottom-6 right-4 min-w-[60px] px-[10px] bg-bgBtnPrimary rounded-[4.33333px] text-center text-[10px] text-txtBtnPrimary"
+                    onClick={() => step === 8 && onClose(true)}
+                >
                     {t(step === 8 ? 'common:close' : 'futures:mobile:guide:next')}
                 </div>
             </div>
 
-            {!top && <img className="m-auto rotate-180" src={getS3Url("/images/icon/ic_guide_arrow_onus.png")} width={10}/>}
+            {!top && <img className="m-auto rotate-180" src={getS3Url('/images/icon/ic_guide_arrow_onus.png')} width={10} />}
         </div>
-    )
+    );
 }
 
 const View = styled.div.attrs({
-    className: 'my-[10px] bg-onus-bgModal3 font-inter flex flex-col justify-between'
+    className: 'my-[10px] bg-bgPrimary dark:bg-bgPrimary-dark font-inter flex flex-col justify-between'
 })`
     width: 294px;
 ${'' /* background-color:${colors.darkBlue1}; */}
-    border: 1px solid ${colors.onus.base};
+    border: 1px solid ${colors.dominant};
     opacity: 0.8;
     border-radius: 8px;
     padding: 16px;

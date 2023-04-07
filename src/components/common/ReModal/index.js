@@ -70,14 +70,14 @@ const Modal = ({
                         'absolute z-[9999999] top-0 left-0 w-full h-full transition-opacity duration-200',
                         { 'visible opacity-100': isVisible },
                         { 'invisible opacity-0': !isVisible },
-                        { '!bg-onus-bgModal2/[0.7]': onusMode },
+                        { '!bg-dark-absolute/[0.6] dark:!bg-dark-absolute/[0.8]': onusMode },
                     )}
                 />
                 <div style={{ ...containerStyle }}
                     className={classNames(
                         `fixed min-w-[280px] min-h-[100px] p-4 z-[99999999] rounded-lg dark:drop-shadow-dark`,
                         { 'bg-bgPrimary dark:bg-darkBlue-2 dark:border dark:border-teal-opacity top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 ': !onusMode },
-                        { 'bg-onus-bgModal bg-[transparent] left-0 top-0 w-full h-full p-0': onusMode },
+                        { 'bg-dark-absolute/[0.6] dark:bg-dark-absolute/[0.8] left-0 top-0 w-full h-full p-0': onusMode },
                         containerClassName,
 
                     )}
@@ -102,10 +102,10 @@ const Modal = ({
                     {onusMode ?
                         <div className={`${center ? 'items-center justify-center' : 'justify-end'} h-full flex flex-col relative`}>
                             {!center && <div className="flex-1" onClick={() => onBackdropCb && onBackdropCb()}></div>}
-                            <div ref={wrapperRef} className={`${onusClassName} ${center ? 'rounded-xl' : 'rounded-t-xl'} h-max w-full relative bg-onus-bgModal px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
+                            <div ref={wrapperRef} className={`${onusClassName} ${center ? 'rounded-xl' : 'rounded-t-xl'} h-max w-full relative bg-bgPrimary dark:bg-bgPrimary-dark px-4 pt-11 pb-[3.25rem] max-h-[90%] overflow-y-auto`}>
                                 {!center && <div
                                     style={{ transform: 'translate(-50%,0)' }}
-                                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-onus-white  absolute top-2 left-1/2 "></div>}
+                                    className="h-[4px] w-[48px] rounded-[100px] opacity-[0.16] bg-gray-15 dark:bg-gray-4  absolute top-2 left-1/2 "></div>}
                                 {children}
                             </div>
                         </div>

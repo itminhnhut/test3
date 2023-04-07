@@ -3,7 +3,7 @@ import Skeletor from 'components/common/Skeletor';
 
 const OrderDetailLoading = () => {
     return (
-        <div className="min-h-screen bg-onus">
+        <div className="min-h-screen bg-bgPrimary dark:bg-bgPrimary-dark">
             <div className="flex flex-col items-center pt-2">
                 <Skeletor onusMode width={100} height={15} />
                 <Skeletor onusMode width={100} height={10} />

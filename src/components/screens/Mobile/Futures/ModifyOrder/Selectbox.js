@@ -21,7 +21,7 @@ const Selectbox = ({
             {({ open, close }) => (
                 <>
                     <Popover.Button
-                        className={`w-full h-[44px] bg-onus-bg2 rounded-md px-4 ${className}`}
+                        className={`w-full h-[44px] bg-gray-12 dark:bg-dark-2 rounded-md px-4 ${className}`}
                     >
                         <div className="flex items-center justify-between text-sm font-medium">
                             <div className="w-full text-left whitespace-nowrap">{title}</div>
@@ -44,7 +44,7 @@ const Selectbox = ({
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                     >
-                        <Popover.Panel className="w-full absolute z-50 bg-onus-bg2 rounded-md mt-3">
+                        <Popover.Panel className="w-full absolute z-50 bg-gray-12 dark:bg-dark-2 rounded-md mt-3">
                             <div className="overflow-y-auto overflow-x-hidden px-3 py-4 shadow-onlyLight font-medium text-sm flex flex-col space-y-2">
                                 {options.map((item, index) => {
                                     return (
@@ -53,7 +53,7 @@ const Selectbox = ({
                                             className={`${
                                                 value === item?.[keyExpr]
                                                     ? ""
-                                                    : "text-onus-grey"
+                                                    : "text-txtSecondary dark:text-txtSecondary-dark"
                                             } py-[2px]`}
                                             onClick={() => {
                                                 onChange(item?.[keyExpr], item);

@@ -224,7 +224,7 @@ const ContestTeamRanks = ({
                                             {item?.is_group_master && <TickFbIcon size={18} />}
                                             {/* {item?.[rank] > 0 && <img src={getS3Url(`/images/nao/contest/ic_top_${index + 1}.png`)} width="24" height="24" alt="" />} */}
                                         </div>
-                                        <span className="text-onus-grey text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
+                                        <span className="text-gray-1 dark:text-gray-7 text-sm font-medium cursor-pointer capitalize">{capitalize(item?.leader_name)}</span>
                                     </div>
                                 </div>
                                 <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>
@@ -234,14 +234,14 @@ const ContestTeamRanks = ({
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="rounded-lg">
                                 <div className="flex items-center justify-between gap-2">
-                                    <div className="text-sm text-onus-grey">{t('nao:contest:volume')}</div>
+                                    <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:volume')}</div>
                                     <span className="font-semibold leading-8">
                                         {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                     </span>
                                 </div>
                                 {tab === 'pnl' ? (
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:per_pnl')}</div>
+                                        <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:per_pnl')}</div>
                                         <span className={`font-semibold leading-8 ${getColor(item.pnl)}`}>
                                             {item?.pnl !== 0 && item?.pnl > 0 ? '+' : ''}
                                             {formatNumber(item?.pnl, 2, 0, true)}%
@@ -249,7 +249,7 @@ const ContestTeamRanks = ({
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-sm text-onus-grey">{t('nao:contest:total_trades')}</div>
+                                        <div className="text-sm text-gray-1 dark:text-gray-7">{t('nao:contest:total_trades')}</div>
                                         <span className={`font-semibold leading-8`}>{formatNumber(item?.total_order)}</span>
                                     </div>
                                 )}
