@@ -64,6 +64,7 @@
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
         "miss_input": "Please enter your amount",
         "reach_limit_withdraw": "The daily {{asset}} quantity sold has surpassed the remaining maximum limit",
-        "not_found_partner": "Partner not available"
+        "not_found_partner": "Partner not available",
+        "not_enough_money": "The partner's available balance is not enough to accept this order, please choose another partner"
     }
 }
