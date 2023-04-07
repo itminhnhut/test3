@@ -212,6 +212,9 @@ module.exports = {
                 opacity: 'rgba(34, 176, 46, 0.18)',
                 ...commonColors.green
             },
+            purple: {
+                ...commonColors.purple
+            },
             yellow: {
                 DEFAULT: '#FFD965',
                 100: '#FFC632',
@@ -420,7 +423,7 @@ module.exports = {
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
                 'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
                 'tx-history-detail': "url('/images/screen/transaction-history/detail_bg-light.png')",
-                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')",
+                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')"
             },
             dropShadow: {
                 common: '0px 15px 30px rgba(0, 0, 0, 0.03)',

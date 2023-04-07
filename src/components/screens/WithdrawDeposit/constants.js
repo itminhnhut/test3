@@ -180,6 +180,31 @@ export const ORDER_TYPES = {
     }
 };
 
+export const TIME_FILTER = [
+    {
+        localized: 'dw_partner:filter.a_day',
+        value: 'd',
+        format: 'hh:mm',
+        interval: '1h'
+    },
+    {
+        localized: 'dw_partner:filter.a_week',
+        value: 'w',
+        format: 'dd/MM',
+        interval: '1d'
+    },
+    {
+        localized: 'dw_partner:filter.a_month',
+        value: 'm',
+        format: 'dd/MM',
+        interval: '1d'
+    }
+    // {
+    //     localized: 'dw_partner:filter.custom',
+    //     value: 'custom'
+    // }
+];
+
 export const fiatFilter = [
     {
         key: null,

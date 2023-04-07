@@ -59,11 +59,18 @@
     "deposit_withdraw_guide": "Hướng dẫn nạp/rút tài sản",
     "submit": "Gửi lên",
     "reselected": "Gửi lại bằng chứng",
+    "total_dw": "Tổng nạp/rút",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
         "miss_input": "Vui lòng nhập số lượng",
         "reach_limit_withdraw": "Số lượng bán {{asset}} trong ngày đã vượt giới hạn tối đa còn lại",
         "not_found_partner": "Đối tác không khả dụng"
+    },
+    "filter": {
+        "a_day": "1 Ngày",
+        "a_week": "1 Tuần",
+        "a_month": "1 Tháng",
+        "custom": "Tùy chỉnh"
     }
 }

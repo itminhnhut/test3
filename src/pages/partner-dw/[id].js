@@ -3,9 +3,10 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
-import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
+import { API_PARTNER_REGISTER } from 'redux/actions/apis';
+import useFetchApi from 'hooks/useFetchApi';
 import Spinner from 'components/svg/Spinner';
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import PartnerProfile from 'components/screens/WithdrawDeposit/partner/Profile';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
@@ -16,13 +17,20 @@ const OpenOrderTable = dynamic(() => import('components/screens/WithdrawDeposit/
     ssr: false
 });
 
+const TabStatistic = dynamic(() => import('components/screens/WithdrawDeposit/partner/TabStatistic'), {
+    ssr: false
+});
+
 const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/partner/HistoryOrders'), {
+    ssr: false
+});
+
+const TabCommissionHistory = dynamic(() => import('components/screens/WithdrawDeposit/partner/TabCommissionHistory'), {
     ssr: false
 });
 
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
-
 
     return (
         <MaldivesLayout>
@@ -35,7 +43,8 @@ const PartnerDepositWithdraw = ({ id }) => {
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
                     {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
-                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile  />}
+                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
+                    {id === PARTNER_WD_TABS.HISTORY_REFERRAL && <TabCommissionHistory />}
                 </PartnerWD>
             ) : (
                 <div className="text-3xl font-semibold text-center">Please login on partner account!</div>
@@ -65,7 +74,16 @@ export const getServerSideProps = async (context) => {
     return {
         ...redirectObj,
         props: {
-            ...(await serverSideTranslations(context.locale, ['common', 'navbar', 'modal', 'wallet', 'payment-method', 'dw_partner'])),
+            ...(await serverSideTranslations(context.locale, [
+                'common',
+                'navbar',
+                'modal',
+                'wallet',
+                'payment-method',
+                'dw_partner',
+                'reference',
+                'transaction-history'
+            ])),
             id
         }
     };
