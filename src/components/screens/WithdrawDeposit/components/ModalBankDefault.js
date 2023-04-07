@@ -57,7 +57,7 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch,
             )}
         >
             <div className="px-8 my-6">
-                <div className="txtPri-3 mb-6">Chỉnh sửa mặc định</div>
+                <div className="txtPri-3 mb-6">{t('dw_partner:edit_default_bank')}</div>
                 <SearchBox isValueTrim={false} inputClassname="text-base" width="100%" onChange={(value) => setSearch(value)} value={search} />
             </div>
 

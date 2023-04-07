@@ -22,7 +22,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
             <div className="w-full md:w-2/5 p-3">
                 <div className="flex  flex-col  min-h-full">
                     <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_detail')}</h1>
-                    <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col justify-between">
+                    <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col">
                         <div className="flex justify-between items-start">
                             {!side ? (
                                 <Skeletor width="200px" />
@@ -35,7 +35,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             )}
                             {!orderDetail ? <Skeletor width="150px" /> : <OrderStatusTag status={status?.status} />}
                         </div>
-                        <div>
+                        <div className="mt-14">
                             <span className="txtSecond-2">{t('dw_partner:amount')}</span>
                             <div className="mt-3 text-2xl font-semibold">
                                 {!orderDetail ? (
@@ -46,7 +46,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                             </div>
                         </div>
 
-                        <div className="flex items-end gap-x-6 justify-between">
+                        <div className="flex items-end gap-x-6 justify-between mt-[36px]">
                             <div className="flex items-end gap-x-6">
                                 <div className="flex flex-col gap-y-3">
                                     <span className="txtSecond-2">{t('common:transaction_id')}</span>
@@ -111,7 +111,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                         {mode === MODE.USER && side === SIDE.SELL && (
                             <div>
                                 <Divider className="w-full !my-4" />
-                                <div className="txtSecond-3">{t('dw_partner:payment_method')}</div>
+                                <div className="txtSecond-3">{t('dw_partner:transaction_bank_receipt')}</div>
                             </div>
                         )}
 
