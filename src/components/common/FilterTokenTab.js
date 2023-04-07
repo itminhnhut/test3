@@ -11,11 +11,11 @@ const FilterTokenTab = ({ curToken, setCurToken, className }) => {
                 if (!item.key) return null;
                 return (
                     <div
-                        key={item.value}
-                        onClick={() => setCurToken(item.value)}
-                        className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal', {
-                            'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': curToken !== item.value,
-                            'text-teal border-teal bg-teal/[.1] !font-semibold': curToken === item.value
+                        key={item.key}
+                        onClick={() => setCurToken(item.key)}
+                        className={classNames('px-5 py-3 border rounded-full cursor-pointer font-normal select-none', {
+                            'text-txtSecondary dark:text-txtSecondary-dark border-divider dark:border-divider-dark': curToken !== item.key,
+                            'text-teal border-teal bg-teal/[.1] !font-semibold': curToken === item.key
                         })}
                     >
                         {t(item.localized)}

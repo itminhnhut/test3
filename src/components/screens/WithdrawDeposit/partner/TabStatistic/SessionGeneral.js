@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
+import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { TIME_FILTER } from '../../constants';
-import classNames from 'classnames';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
 import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';

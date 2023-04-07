@@ -373,6 +373,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 onClose={() => setState({ isShowUploadImg: false })}
                 orderId={id}
                 originImage={state?.orderDetail?.userUploadImage}
+                mode={mode}
             />
             <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
         </div>

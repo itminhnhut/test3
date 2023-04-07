@@ -64,26 +64,26 @@ const SessionChart = () => {
     });
 
     const [showModalDetail, setShowModalDetail] = useState(null);
-
-    const { data, loading, error } = useFetchApi(
-        {
-            url: API_GET_COMMISSION_STATISTIC_PARTNER,
-            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: 72, interval: 'd' }
-        },
-        true,
-        [filter, typeTab]
-    );
-
+    const [curToken, setCurToken] = useState(72);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
     });
 
+    const { data, loading, error } = useFetchApi(
+        {
+            url: API_GET_COMMISSION_STATISTIC_PARTNER,
+            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: curToken, interval: 'd' }
+        },
+        true,
+        [filter, typeTab, curToken]
+    );
+
     useEffect(() => {
         if (!data) return;
 
         setChartData({
-            labels: mockData.labels,
+            labels: data.labels,
             datasets: [
                 {
                     fill: false,
@@ -114,32 +114,7 @@ const SessionChart = () => {
         plugins: {
             title: { align: 'left' },
             tooltip: {
-                // callbacks: {
-                //     label: function (context) {
-                //         const descriptions = {
-                //             1: 'Mức PNL: ',
-                //             2: ['Tài sản :', 'Vốn: '],
-                //             3: ['Lượng tiền nạp: ', 'Lượng tiền rút: '],
-                //             4: ['Tài sản: ', 'Vốn: ']
-                //         };
-                //         const index = context.dataIndex;
-                //         const text1 =
-                //             descriptions[chart5Config.tab] + (chartData[0][index] >= 0 ? '+' : '') + formatSwapRate(chartData[0][index], 0) + ' ' + props.currency;
-                //         if (chart5Config.tab === 1) return text1;
-                //         const text2 = descriptions[chart5Config.tab][0] + formatSwapRate(chartData[0][index], 0) + ' ' + props.currency ?? null;
-                //         const text3 = descriptions[chart5Config.tab][1] + formatSwapRate(chartData[1][index], 0) + ' ' + props.currency ?? null;
-                //         return [text2, text3];
-                //     },
-                //     // filter: function (context) {
-                //     //     return context.datasetIndex === 0
-                //     // },
-                //     labelTextColor: function (context) {
-                //         return colors.darkBlue;
-                //     }
-                // },
-                // backgroundColor: colors.white,
-                // displayColors: false,
-                // titleColor: colors.gray[2]
+                enabled: false // <-- this option disables tooltips
             }
         },
         scales: {
@@ -196,10 +171,11 @@ const SessionChart = () => {
                 // do something with the clicked bar, e.g. update state, show a tooltip, etc.
                 setShowModalDetail(elements[0].index);
             }
+        },
+        onHover: (event, chartElement) => {
+            event.native.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
         }
     };
-
-    const [curToken, setCurToken] = useState(null);
 
     return (
         <div className="mt-20">
@@ -230,12 +206,12 @@ const SessionChart = () => {
                     <ChartJS type="bar" data={chartData} options={options} height="450px" />
                 </div>
                 {/* Chu thich */}
-                <div className="flex justify-between items-center">
-                    <div className="flex items-center gap-x-4 mt-9">
+                <div className="flex justify-between items-center mt-6">
+                    <div className="flex items-center gap-x-4">
                         <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
                         <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
                     </div>
-                    <DarkNote title={'Nhấn vào từng cột xem thống kê chi tiết theo ngày'} />
+                    <DarkNote variants="secondary" title={'Nhấn vào từng cột xem thống kê chi tiết theo ngày'} />
                 </div>
             </CardWrapper>
             <ModalDetailChart
