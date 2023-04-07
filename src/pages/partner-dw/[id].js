@@ -8,6 +8,8 @@ import useFetchApi from 'hooks/useFetchApi';
 import Spinner from 'components/svg/Spinner';
 import { useSelector } from 'react-redux';
 import PartnerProfile from 'components/screens/WithdrawDeposit/partner/Profile';
+import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+import colors from 'styles/colors';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
     ssr: false
@@ -31,12 +33,12 @@ const TabCommissionHistory = dynamic(() => import('components/screens/WithdrawDe
 
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
-
+    const [currentTheme] = useDarkMode();
     return (
         <MaldivesLayout>
             {loadingUser ? (
                 <div className="min-h-[50vh] flex w-full justify-center items-center">
-                    <Spinner size={50} />
+                    <Spinner size={50} color={currentTheme === THEME_MODE.DARK ? colors.darkBlue5 : colors.gray['1']} />
                 </div>
             ) : user && user.partner_type > 0 ? (
                 <PartnerWD>

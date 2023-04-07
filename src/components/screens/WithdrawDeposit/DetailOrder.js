@@ -19,6 +19,7 @@ import ModalLoading from 'components/common/ModalLoading';
 import AppealButton from './components/AppealButton';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
+import DarkNote from 'components/common/DarkNote';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -324,10 +325,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 {/* Lưu ý */}
                 {side === SIDE.BUY && (
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
-                        <div className="flex font-semibold items-center space-x-2 ">
-                            <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
-                            <span>{t('wallet:note')}</span>
-                        </div>
+                        <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
                             <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
                         </div>
