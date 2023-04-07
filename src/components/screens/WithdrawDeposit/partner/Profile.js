@@ -3,31 +3,35 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'next-i18next';
 
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
+import { API_DEFAULT_BANK_USER, API_GET_PARTNER_PROFILE, API_GET_USER_BANK_ACCOUNT } from 'redux/actions/apis';
 
 import ProfileHeader from '../components/ProfileHeader';
 import ProfileSetting from '../components/ProfileSetting';
+import { useBoolean } from 'react-use';
 
 const Profile = () => {
-    const { partner } = useSelector((state) => state.withdrawDeposit);
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
+    const [refetch, toggleRefetch] = useBoolean(false);
     const [bankDefault, setBankDefault] = useState(null);
 
-    const { data: partnerBanks, loading, error } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT });
+    const { data: partner, loading: loadingPartner } = useFetchApi({ url: API_GET_PARTNER_PROFILE }, true, [refetch]);
+
+    const { data: banks, loading: loadingBanks } = useFetchApi({ url: API_GET_USER_BANK_ACCOUNT });
+
     useEffect(() => {
-        if (partnerBanks && partnerBanks.length) {
-            setBankDefault(partnerBanks.find((bank) => bank.isDefault));
+        if (!loadingBanks && banks && banks.length) {
+            setBankDefault(banks.find((bank) => bank.isDefault));
         }
-    }, [partnerBanks]);
+    }, [banks, loadingBanks]);
 
     return (
         <div>
-            <ProfileHeader t={t} partner={partner} partnerBankDefault={bankDefault} loadingBankDefault={loading} />
-            <ProfileSetting t={t} partner={partner} />
+            <ProfileHeader t={t} partner={partner} bankDefault={bankDefault} loadingBankDefault={loadingBanks} />
+            <ProfileSetting t={t} partner={partner} loadingPartner={loadingPartner} refetchPartner={toggleRefetch} />
         </div>
     );
 };

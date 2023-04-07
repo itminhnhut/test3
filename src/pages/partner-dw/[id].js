@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
 import dynamic from 'next/dynamic';
 import { PARTNER_WD_TABS, PATHS } from 'constants/paths';
 import TabStatistic from 'components/screens/WithdrawDeposit/partner/TabStatistic';
 import Spinner from 'components/svg/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
-import { getPartnerProfile } from 'redux/actions/withdrawDeposit';
+import {  useSelector } from 'react-redux';
 import PartnerProfile from 'components/screens/WithdrawDeposit/partner/Profile';
 
 const PartnerWD = dynamic(() => import('components/screens/WithdrawDeposit/partner/PartnerWD'), {
@@ -23,12 +22,7 @@ const HistoryOrders = dynamic(() => import('components/screens/WithdrawDeposit/p
 
 const PartnerDepositWithdraw = ({ id }) => {
     const { user, loadingUser } = useSelector((state) => state.auth);
-    console.log('user:', user);
-    const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(getPartnerProfile());
-    }, []);
 
     return (
         <MaldivesLayout>
@@ -41,7 +35,7 @@ const PartnerDepositWithdraw = ({ id }) => {
                     {id === PARTNER_WD_TABS.OPEN_ORDER && <OpenOrderTable />}
                     {id === PARTNER_WD_TABS.STATS && <TabStatistic />}
                     {id === PARTNER_WD_TABS.HISTORY_ORDER && <HistoryOrders />}
-                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile />}
+                    {id === PARTNER_WD_TABS.PROFILE && <PartnerProfile  />}
                 </PartnerWD>
             ) : (
                 <div className="text-3xl font-semibold text-center">Please login on partner account!</div>

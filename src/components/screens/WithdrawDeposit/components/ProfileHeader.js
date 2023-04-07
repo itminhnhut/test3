@@ -11,7 +11,7 @@ import { PATHS } from 'constants/paths';
 import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
 
-const ProfileHeader = ({ t, partner, partnerBankDefault, loadingBankDefault }) => {
+const ProfileHeader = ({ t, partner, bankDefault, loadingBankDefault }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
@@ -39,28 +39,24 @@ const ProfileHeader = ({ t, partner, partnerBankDefault, loadingBankDefault }) =
                     >
                         <InfoCard
                             loading={loadingBankDefault}
-                            imgSize={loadingBankDefault || partnerBankDefault ? 40 : 24}
+                            imgSize={loadingBankDefault || bankDefault ? 40 : 24}
                             content={{
-                                mainContent: !partnerBankDefault ? (
-                                    t('dw_partner:payment_method')
-                                ) : (
-                                    <div className="max-w-[280px]">{partnerBankDefault?.bankName}</div>
-                                ),
-                                subContent: partnerBankDefault && (
+                                mainContent: !bankDefault ? t('dw_partner:payment_method') : <div className="max-w-[280px]">{bankDefault?.bankName}</div>,
+                                subContent: bankDefault && (
                                     <div className="flex space-x-2 items-center ">
-                                        <span>{partnerBankDefault?.accountNumber}</span>
+                                        <span>{bankDefault?.accountNumber}</span>
 
                                         <TagV2 icon={false} type="success">
                                             {t('dw_partner:default')}
                                         </TagV2>
                                     </div>
                                 ),
-                                icon: !partnerBankDefault ? (
+                                icon: !bankDefault ? (
                                     <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark">
                                         <CreditCard size={24} color="currentColor" />
                                     </div>
                                 ) : undefined,
-                                imgSrc: partnerBankDefault && partnerBankDefault?.bankLogo
+                                imgSrc: bankDefault && bankDefault?.bankLogo
                             }}
                             endIcon={
                                 <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">

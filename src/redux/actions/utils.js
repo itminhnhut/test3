@@ -275,6 +275,7 @@ export function formatSpotPrice(price = 0, symbol = '') {
 }
 
 export const formatPhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) return;
     let phone = phoneNumber?.toString();
     if (phone.length !== 10) return phoneNumber;
     return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');

@@ -43,35 +43,6 @@ export const setAllowedAmount = (payload) => (dispatch) => {
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
 
-// get profile of partner (on mode partner)
-export const getPartnerProfile = (successCallback) => {
-    return async (dispatch) => {
-        try {
-            dispatch(setLoadingPartner(true));
-            const partner = await FetchApi({
-                url: API_GET_PARTNER_PROFILE
-            });
-            if (partner && partner.status === ApiStatus.SUCCESS) {
-                dispatch({
-                    type: types.SET_PARTNER,
-                    payload: partner.data
-                });
-                successCallback && successCallback();
-            } else {
-                dispatch({
-                    type: types.SET_PARTNER,
-                    payload: null
-                });
-            }
-        } catch (error) {
-            console.log(`GET ${API_GET_DEFAULT_PARTNER} error:`, error);
-        } finally {
-            dispatch(setLoadingPartner(false));
-        }
-    };
-};
-
-// get partner for withdraw-deposit (on mode user)
 export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
