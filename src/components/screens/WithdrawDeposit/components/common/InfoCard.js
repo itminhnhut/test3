@@ -14,8 +14,7 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
             </div>
 
             <div>
-                <div className="txtPri-1 text-left line-clamp-2">{mainContent}</div>
-
+                <div className="txtPri-1 text-left capitalize line-clamp-2">{mainContent}</div>
                 {subContent && <div className="txtSecond-3 mt-2">{subContent}</div>}
             </div>
         </div>
