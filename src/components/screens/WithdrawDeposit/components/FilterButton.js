@@ -1,32 +1,58 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DateFilter from './DateFilter';
 import CommonFilter from './common/CommonFilter';
 import { fiatFilter, sideFilter, statusFilter } from '../constants';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { formatLocalTimezoneToUTC } from 'utils/helpers';
+import SearchBoxV2 from 'components/common/SearchBoxV2';
+import { FilterWrapper } from 'components/screens/TransactionHistory/TransactionFilter';
+import { isNull } from 'lodash';
+import { useDebounce } from 'react-use';
 
 const INITIAL_FILTER_LOCALIZED = {
     assetId: null,
     status: null,
     side: null
 };
-const FilterButton = ({ setState, filter, t, resetFilter, isResetAble }) => {
+const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
     const [filterLocalized, setFilterLocalized] = useState(INITIAL_FILTER_LOCALIZED);
 
+    const [search, setSearch] = useState(null);
+
+    useDebounce(
+        () => {
+            if (isNull(search)) return;
+            setFilter({
+                displayingId: search.trim().toUpperCase()
+            });
+        },
+        500,
+        [search]
+    );
+
     const onSelectFilter = (item, key) => {
-        setState({
-            params: {
-                ...filter,
-                [key]: item.key,
-                page: 0
-            }
+        setFilter({
+            [key]: item.key,
+            displayingId: ''
         });
         setFilterLocalized((prev) => ({ ...prev, [key]: t(item.localized) }));
+        setSearch(null);
     };
 
     return (
-        <div className="flex flex-wrap md:flex-nowrap -m-3 md:m-0 md:gap-6 items-end">
-            <div className="p-3 md:p-0 w-1/2 md:w-[247px] z-[41]">
+        <div className="flex flex-wrap lg:flex-nowrap -m-3 lg:m-0 lg:gap-6 items-end">
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[246px] z-[42]">
+                <FilterWrapper label={t('common:search')}>
+                    <SearchBoxV2
+                        isValueTrim={false}
+                        wrapperClassname="!h-11"
+                        value={search || ''}
+                        placeholder="Nhập mã lệnh"
+                        onChange={(value) => setSearch(value)}
+                    />
+                </FilterWrapper>
+            </div>
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[246px] z-[42]">
                 <DateFilter
                     t={t}
                     filter={{
@@ -34,28 +60,26 @@ const FilterButton = ({ setState, filter, t, resetFilter, isResetAble }) => {
                         endDate: filter.to
                     }}
                     setFilter={({ startDate, endDate }) => {
-                        setState({
-                            params: {
-                                ...filter,
-                                from: startDate,
-                                to: endDate,
-                                page: 0
-                            }
+                        setFilter({
+                            from: startDate,
+                            to: endDate,
+                            displayingId: ''
                         });
+                        setSearch(null);
                     }}
                 />
             </div>
-            <div className="p-3 md:p-0 w-1/2 md:w-[247px] z-[41] ">
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[156px] z-[41] ">
                 <CommonFilter
                     t={t}
-                    subLabel={'Tiền pháp định'}
+                    subLabel={'Fiat'}
                     boxLabel={filterLocalized?.assetId}
                     data={fiatFilter}
                     active={filter?.assetId}
                     onSelect={(asset) => onSelectFilter(asset, 'assetId')}
                 />
             </div>
-            <div className="p-3 md:p-0 w-1/2 md:w-[247px] z-40">
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[156px] z-40">
                 <CommonFilter
                     t={t}
                     subLabel={t('common:global_label.type')}
@@ -65,7 +89,7 @@ const FilterButton = ({ setState, filter, t, resetFilter, isResetAble }) => {
                     onSelect={(item) => onSelectFilter(item, 'side')}
                 />
             </div>
-            <div className="p-3 md:p-0 w-1/2 md:w-[247px] z-40">
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[156px] z-40">
                 <CommonFilter
                     t={t}
                     subLabel={t('common:global_label.status')}
@@ -75,12 +99,13 @@ const FilterButton = ({ setState, filter, t, resetFilter, isResetAble }) => {
                     onSelect={(item) => onSelectFilter(item, 'status')}
                 />
             </div>
-            <div className="p-3 md:p-0 w-full md:w-[84px]">
+            <div className="p-3 lg:p-0 w-1/2 lg:w-[84px]">
                 <ButtonV2
                     disabled={!isResetAble}
                     onClick={() => {
                         resetFilter();
                         setFilterLocalized(INITIAL_FILTER_LOCALIZED);
+                        setSearch(null);
                     }}
                     variants="secondary"
                     className="!p-4 !text-txtSecondary dark:!text-txtSecondary-dark !h-11"

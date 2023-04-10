@@ -21,9 +21,9 @@ const DateFilter = ({ filter, setFilter, t }) => {
                         endDate: new Date(e?.selection?.endDate || null).getTime()
                     });
                 }}
-                month={width > getWidthByBreakpoint('md') ? 2 : 1}
+                month={width > getWidthByBreakpoint('lg') ? 2 : 1}
                 hasShadow
-                position="left"
+                position={width > getWidthByBreakpoint('md') ? 'left' : 'right'}
                 wrapperClassname="z-40"
                 text={
                     <div

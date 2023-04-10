@@ -30,7 +30,7 @@ const Profile = () => {
 
     return (
         <div>
-            <ProfileHeader t={t} partner={partner} loadingPartner={loadingPartner} bankDefault={bankDefault} loadingBankDefault={loadingBanks} />
+            <ProfileHeader t={t} partner={partner} loadingPartner={loadingPartner} banks={banks} bankDefault={bankDefault} loadingBankDefault={loadingBanks} />
             <ProfileSetting t={t} partner={partner} loadingPartner={loadingPartner} refetchPartner={toggleRefetch} />
         </div>
     );

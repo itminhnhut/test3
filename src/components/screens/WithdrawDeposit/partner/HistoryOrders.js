@@ -77,6 +77,16 @@ const getColumns = ({ t }) => [
         }
     },
     {
+        key: 'commission',
+        dataIndex: '',
+        title: 'Hoa hồng',
+        align: 'right',
+        width: 152,
+        render: (row, item) => {
+            return <div className="text-teal">0</div>;
+        }
+    },
+    {
         key: 'status',
         dataIndex: 'status',
         title: t('common:status'),
@@ -117,6 +127,7 @@ const INITIAL_PARAMS = {
     page: 0,
     mode: 'partner',
     pageSize: LIMIT_ROW,
+    displayingId: '',
     status: null,
     assetId: null,
     side: null,
@@ -145,9 +156,9 @@ const HistoryOrders = () => {
     const resetFilter = () => setState({ params: INITIAL_PARAMS });
     const isResetAble = () => {
         const {
-            params: { status, assetId, side, from, to }
+            params: { status, assetId, side, from, to, displayingId }
         } = state;
-        if (isNull(status) && isNull(from) && isNull(to) && !assetId && !side) return false;
+        if (isNull(status) && isNull(from) && isNull(to) && !assetId && !side && !displayingId) return false;
         return true;
     };
     const [refetch, toggleRefetch] = useBoolean(false);
@@ -248,11 +259,21 @@ const HistoryOrders = () => {
         });
     };
 
+    const onChangeFilter = (addFilters) =>
+        set((prev) => ({
+            ...prev,
+            params: {
+                ...prev.params,
+                ...addFilters,
+                page: 0
+            }
+        }));
+
     return (
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
                 <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
-                <FilterButton t={t} setState={setState} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
+                <FilterButton t={t} setFilter={onChangeFilter} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
             </div>
 
             <TableV2
