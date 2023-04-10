@@ -15,7 +15,6 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import moment from 'moment';
 import { isNumber } from 'lodash';
-import FilterTokenTab from 'components/common/FilterTokenTab';
 
 const TabStatistic = [
     { value: 'depositwithdraw', localized: 'dw_partner:total_dw' },
