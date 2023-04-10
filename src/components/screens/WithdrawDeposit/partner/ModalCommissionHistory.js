@@ -1,6 +1,6 @@
 import React from 'react';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { formatPrice, formatTime, getAssetCode } from 'redux/actions/utils';
+import { formatAbbreviateNumber, formatPercentage, formatTime, getAssetCode } from 'redux/actions/utils';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import AssetLogo from 'components/wallet/AssetLogo';
 
@@ -21,7 +21,7 @@ const ModalCommissionHistory = ({ onClose, isVisible, t, transaction, typeCommis
                 <h1 className="text-2xl">Hoa hồng nạp</h1>
                 <div className="flex flex-col items-center justify-center my-6">
                     <AssetLogo assetCode={'VNDC'} size={80} useNextImg />
-                    <div className="mt-6 text-2xl">+{formatPrice(money_use) + ' ' + getAssetCode(currency)}</div>
+                    <div className="mt-6 text-2xl">+{formatSwapRate(money_use) + ' ' + getAssetCode(currency)}</div>
                     <OrderStatusTag status={1} className="m-auto mt-3" />
                 </div>
                 {/* Card ID */}

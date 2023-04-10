@@ -182,6 +182,10 @@ export const ORDER_TYPES = {
 
 export const TIME_FILTER = [
     {
+        localized: 'common:all',
+        value: 'all'
+    },
+    {
         localized: 'dw_partner:filter.a_day',
         value: 'd',
         format: 'hh:mm',

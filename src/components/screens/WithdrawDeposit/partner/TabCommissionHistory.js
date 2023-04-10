@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { formatBalance, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -65,7 +65,7 @@ const TabCommissionHistory = () => {
             const { statusCode, data, message } = await FetchApi({
                 url: API_GET_COMMISSION_HISTORY_PARTNER,
                 params: {
-                    from: filter?.range?.startDate ? filter.range.startDate : Date.now() - 86400000,
+                    from: filter?.range?.startDate,
                     to: filter?.range?.endDate ? filter.range.endDate : Date.now(),
                     skip: state.curPage * LIMIT_ROW,
                     limit: LIMIT_ROW,
@@ -151,13 +151,13 @@ const TabCommissionHistory = () => {
                 render: (v) => categoryConfig?.[v]?.[language]
             },
             {
-                key: 'main_balance',
-                dataIndex: 'main_balance',
+                key: 'money_use',
+                dataIndex: 'money_use',
                 title: t('common:amount'),
                 align: 'right',
                 width: 200,
                 render: (v) => {
-                    return '+' + formatBalance(v);
+                    return '+' + formatSwapRate(v);
                 }
             }
         ],
@@ -168,7 +168,7 @@ const TabCommissionHistory = () => {
 
     return (
         <div>
-            <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" />
+            <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" isTabAll />
             <TableV2
                 sort={['main_balance']}
                 limit={LIMIT_ROW}
