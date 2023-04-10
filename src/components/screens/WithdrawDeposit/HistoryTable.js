@@ -54,7 +54,7 @@ const getColumns = (t, user, side) => [
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        render: (v, item) => `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, item?.baseAssetId === 22 ? 4 : 0)}`
+        render: (v, item) => `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, item?.baseAssetId === 72 ? 0 : 4)}`
     },
     {
         key: 'partnerMetadata',
