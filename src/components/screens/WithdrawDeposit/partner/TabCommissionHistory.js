@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { convertDateToMs, formatBalance, formatNanNumber, formatPrice, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -60,14 +60,13 @@ const TabCommissionHistory = () => {
     }, []);
 
     const fetchOrder = async () => {
-        console.log('change state filter: ', state.curPage, filter.range);
         setState({ loading: true });
         try {
             const { statusCode, data, message } = await FetchApi({
                 url: API_GET_COMMISSION_HISTORY_PARTNER,
                 params: {
-                    from: filter?.range?.startDate ? filter.range.startDate : Date.now() - 86400000,
-                    to: filter?.range?.endDate ? filter.range.endDate : Date.now(),
+                    from: convertDateToMs(filter?.range?.startDate),
+                    to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
                     skip: state.curPage * LIMIT_ROW,
                     limit: LIMIT_ROW,
                     type: 'partnercommission',
@@ -116,7 +115,7 @@ const TabCommissionHistory = () => {
                 align: 'left',
                 fixed: 'left',
                 width: 244,
-                render: (v) => <TextCopyable className="gap-x-1" showingText={shortHashAddress(v, 5, 8)} text={v} />
+                render: (v) => <TextCopyable className="gap-x-1" showingText={shortHashAddress(v, 10, 6)} text={v} />
             },
             {
                 key: 'currency',
@@ -152,14 +151,12 @@ const TabCommissionHistory = () => {
                 render: (v) => categoryConfig?.[v]?.[language]
             },
             {
-                key: 'main_balance',
-                dataIndex: 'main_balance',
+                key: 'money_use',
+                dataIndex: 'money_use',
                 title: t('common:amount'),
                 align: 'right',
                 width: 200,
-                render: (v) => {
-                    return '+' + formatBalance(v);
-                }
+                render: (v, item) => formatNanNumber(v, +item?.currency === 22 ? 4 : 0)
             }
         ],
         [categoryConfig, t]
@@ -169,7 +166,7 @@ const TabCommissionHistory = () => {
 
     return (
         <div>
-            <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" />
+            <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" isTabAll />
             <TableV2
                 sort={['main_balance']}
                 limit={LIMIT_ROW}
@@ -194,7 +191,7 @@ const TabCommissionHistory = () => {
                     onChangeNextPrev: (e) => setState({ curPage: state.curPage + e }),
                     language
                 }}
-                emptyTextContent={t('common:no_data')}
+                emptyTextContent={t('dw_partner:no_commission_history')}
                 customSort={customSort}
             />
             <ModalCommissionHistory
@@ -202,7 +199,9 @@ const TabCommissionHistory = () => {
                 isVisible={openModalDetail}
                 onClose={() => setOpenModalDetail(null)}
                 transaction={openModalDetail}
-                typeCommission={categoryConfig?.[openModalDetail?.category]?.[language]}
+                sideCommission={categoryConfig?.[openModalDetail?.category]?.[language]}
+                id={openModalDetail?._id}
+                category={categoryConfig}
             />
         </div>
     );

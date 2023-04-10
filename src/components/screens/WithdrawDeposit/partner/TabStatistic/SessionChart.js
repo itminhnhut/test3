@@ -5,7 +5,7 @@ import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
 import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import Note from 'components/common/Note';
 import colors from 'styles/colors';
-import { formatTime, formatSwapRate } from 'redux/actions/utils';
+import { formatTime, formatSwapRate, convertDateToMs } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
@@ -21,32 +21,6 @@ const TabStatistic = [
     { value: 'commission', localized: 'reference:referral.total_commissions' },
     { value: 'depositwithdraw', localized: 'dw_partner:total_dw' }
 ];
-
-const mockData = {
-    labels: [12, 13],
-    data: [
-        [
-            {
-                side: 'BUY',
-                value: 1058583709
-            },
-            {
-                side: 'SELL',
-                value: 76434000
-            }
-        ],
-        [
-            {
-                side: 'BUY',
-                value: 1800000
-            },
-            {
-                side: 'SELL',
-                value: 0
-            }
-        ]
-    ]
-};
 
 const SessionChart = () => {
     const [typeTab, setTypeTab] = useState(TabStatistic[0].value);
@@ -73,7 +47,13 @@ const SessionChart = () => {
     const { data, loading, error } = useFetchApi(
         {
             url: API_GET_COMMISSION_STATISTIC_PARTNER,
-            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: curToken, interval: 'd' }
+            params: {
+                from: convertDateToMs(filter?.range?.startDate),
+                to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
+                type: typeTab,
+                currency: curToken,
+                interval: 'd'
+            }
         },
         true,
         [filter, typeTab, curToken]
@@ -181,7 +161,7 @@ const SessionChart = () => {
         <div className="mt-20">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <h1 className="font-semibold text-[20px] leading-6">Báo cáo hoa hồng</h1>
+                <h1 className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</h1>
                 <FilterTokenTab curToken={curToken} setCurToken={setCurToken} />
             </div>
 
@@ -211,7 +191,7 @@ const SessionChart = () => {
                         <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
                         <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
                     </div>
-                    <DarkNote variants="secondary" title={'Nhấn vào từng cột xem thống kê chi tiết theo ngày'} />
+                    <DarkNote variants="secondary" title={t('dw_partner:notice_chart_details')} />
                 </div>
             </CardWrapper>
             <ModalDetailChart
@@ -257,7 +237,7 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
             wrapClassName="!font-semibold"
         >
             <div>
-                <h1 className="text-2xl">Tổng khối lượng nạp rút</h1>
+                <h1 className="text-2xl">{t('common:volume')}</h1>
                 <CardWrapper className="!p-4 my-6">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
@@ -271,11 +251,11 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
                 <h3 className="txtSecond-3">{t('common:details')}</h3>
                 <CardWrapper className="!p-4 mt-3">
                     <div className="flex items-center justify-between">
-                        <span className="txtSecond-4">Khối lượng nạp</span>
+                        <span className="txtSecond-4">{t('dw_partner:buy_volume')}</span>
                         <div>{formatSwapRate(buy)} VNDC</div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span className="txtSecond-4">Khối lượng rút</span>
+                        <span className="txtSecond-4">{t('dw_partner:sell_volume')}</span>
                         <div>{formatSwapRate(sell)} VNDC</div>
                     </div>
                 </CardWrapper>

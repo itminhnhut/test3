@@ -15,7 +15,7 @@ import { TRANSACTION_TYPES, modalDetailColumn, COLUMNS_TYPE } from './constant';
 import { WalletType, EarnWalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 
-const WalletTypeById = {
+export const WalletTypeById = {
     0: WalletType.SPOT,
     1: WalletType.MARGIN,
     2: WalletType.FUTURES,

@@ -2,26 +2,11 @@ import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
-import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';
+import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
 import FilterTimeTab from 'components/common/FilterTimeTab';
-
-const mockData = {
-    totalCommission: {
-        totalValue: [],
-        convertedCommissionValue: 0
-    },
-    totalPartnerOrderVolume: {
-        _id: 0,
-        sumBuy: 36000,
-        sumSell: 50053000,
-        convertedBuyVolume: 36000,
-        convertedSellVolume: 50053000
-    },
-    commissionRate: null
-};
 
 const SessionGeneral = () => {
     const { t } = useTranslation();
@@ -35,7 +20,13 @@ const SessionGeneral = () => {
     });
 
     const { data, loading, error } = useFetchApi(
-        { url: API_GET_COMMISSION_REPORT_PARTNER, params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate } },
+        {
+            url: API_GET_COMMISSION_REPORT_PARTNER,
+            params: {
+                from: convertDateToMs(filter?.range?.startDate),
+                to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf')
+            }
+        },
         true,
         [filter]
     );
@@ -44,7 +35,7 @@ const SessionGeneral = () => {
         <div>
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <div className="font-semibold text-[20px] leading-6">Báo cáo hoa hồng</div>
+                <div className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</div>
                 <FilterTimeTab filter={filter} setFilter={setFilter} />
             </div>
 
@@ -54,16 +45,9 @@ const SessionGeneral = () => {
                     <div className="w-1/2 pr-7 border-r border-divider dark:border-divider-dark">
                         {/* top */}
                         <div>
-                            <h1 className="txtSecond-3">Tổng hoa hồng</h1>
+                            <h1 className="txtSecond-3">{t('dw_partner:total_commissions')}</h1>
                             <div className="pt-4 txtPri-5">
-                                {loading ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    formatNumber(
-                                        data?.totalCommission.totalValue.filter((item) => item !== null).reduce((acc, val) => acc + val, 0),
-                                        0
-                                    )
-                                )}
+                                {loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalCommission?.convertedCommissionValue, 0)}
                             </div>
                         </div>
 
@@ -72,12 +56,12 @@ const SessionGeneral = () => {
 
                         {/* bottom */}
                         <div>
-                            <h1 className="txtSecond-3">Tỷ lệ hoa hồng</h1>
+                            <h1 className="txtSecond-3">{t('reference:referral.commission_rate')}</h1>
                             <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
                         </div>
                     </div>
                     <div className="w-1/2 flex flex-col items-end justify-center">
-                        <h1 className="txtSecond-3">Tổng khối lượng</h1>
+                        <h1 className="txtSecond-3">{t('dw_partner:total_volume')}</h1>
                         <div className="pt-4 txtPri-6 flex">
                             <span className="text-green-3 dark:text-green-2">
                                 {loading ? <Skeletor width="50px" /> : formatAbbreviateNumber(data?.totalPartnerOrderVolume.convertedBuyVolume)}

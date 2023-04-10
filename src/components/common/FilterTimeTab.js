@@ -4,22 +4,30 @@ import { TIME_FILTER } from 'components/screens/WithdrawDeposit/constants';
 import DatePickerV2 from './DatePicker/DatePickerV2';
 import classNames from 'classnames';
 
-const FilterTimeTab = ({ filter, setFilter, className, positionCalendar }) => {
+const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAll = false }) => {
     const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
     const { t } = useTranslation();
 
     useEffect(() => {
-        if (timeTab !== 'custom') {
+        if (timeTab === TIME_FILTER[0].value) {
+            setFilter({
+                range: {
+                    startDate: null,
+                    endDate: Date.now(),
+                    key: 'selection'
+                }
+            });
+        } else if (timeTab !== 'custom') {
             const date = new Date();
             switch (timeTab) {
-                case TIME_FILTER[0].value:
-                    date.setDate(date.getDate() - 1);
-                    break;
                 case TIME_FILTER[1].value:
-                    date.setDate(date.getDate() - 7);
+                    date.setDate(date.getDate() - 0);
                     break;
                 case TIME_FILTER[2].value:
-                    date.setDate(date.getDate() - 31);
+                    date.setDate(date.getDate() - 6);
+                    break;
+                case TIME_FILTER[3].value:
+                    date.setDate(date.getDate() - 30);
                     break;
                 default:
                     break;
@@ -28,25 +36,18 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar }) => {
             setFilter({
                 range: {
                     startDate: date.getTime(),
-                    endDate: Date.now(),
+                    endDate: new Date(),
                     key: 'selection'
                 }
             });
             return;
-        } else {
-            // setFilter({
-            //     range: {
-            //         startDate: new Date(filter?.range?.startDate ?? null).getTime(),
-            //         endDate: new Date(filter?.range?.endDate ?? null).getTime(),
-            //         key: 'selection'
-            //     }
-            // });
         }
     }, [timeTab]);
 
     return (
         <div className={`flex gap-3 ${className}`}>
-            {TIME_FILTER.map((item) => {
+            {TIME_FILTER.map((item, i) => {
+                if (i === 0 && !isTabAll) return null;
                 return (
                     <div
                         key={item.value}

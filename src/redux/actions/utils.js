@@ -41,6 +41,7 @@ import { log } from 'utils';
 import { cloneDeep } from 'lodash';
 import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
 import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
+import moment from 'moment';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -1283,3 +1284,15 @@ export const saveFile = (file, name) => {
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+
+export function formatNanNumber(value, digits = 0) {
+    const formatedNumber = formatPrice(value, digits);
+    return `+${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+}
+
+export const convertDateToMs = (date = 0, type = 'startOf') => {
+    if (type === 'startOf') {
+        return moment(+date).startOf('day').utc().unix() * 1000;
+    }
+    return moment(+date).endOf('day').utc().unix() * 1000;
+};
