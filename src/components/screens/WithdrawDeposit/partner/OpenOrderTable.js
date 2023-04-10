@@ -319,7 +319,8 @@ const OpenOrderTable = () => {
                             }),
                         language
                     }}
-                    emptyTextContent={t('common:no_data')}
+                    emptyTextContent={t('dw_partner:no_pending_transactions')}
+                    // emptyTextContent={t('common:no_data')}
                     // customSort={customSort}
                 />
             </div>

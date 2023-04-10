@@ -60,7 +60,6 @@ const TabCommissionHistory = () => {
     }, []);
 
     const fetchOrder = async () => {
-        console.log('change state filter: ', state.curPage, filter.range);
         setState({ loading: true });
         try {
             const { statusCode, data, message } = await FetchApi({
@@ -194,7 +193,7 @@ const TabCommissionHistory = () => {
                     onChangeNextPrev: (e) => setState({ curPage: state.curPage + e }),
                     language
                 }}
-                emptyTextContent={t('common:no_data')}
+                emptyTextContent={t('dw_partner:no_commission_history')}
                 customSort={customSort}
             />
             <ModalCommissionHistory

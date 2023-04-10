@@ -1,6 +1,7 @@
 {
     "buy_title": "Buy via Partner",
     "sell_title": "Sell via Partner",
+    "partner_title": "Deposit/Withdraw Partner",
     "transaction_detail": "Transaction Detail",
     "order_history": "Deposit/Withdraw History",
     "transaction_bank_receipt": "Beneficiary Information",
@@ -60,6 +61,20 @@
     "submit": "Submit",
     "reselected": "Upload again",
     "total_dw": "Total Deposit/Withraw",
+    "pending_transaction": "Pending Transactions",
+    "transaction_history": "Transaction histories",
+    "commission_history": "Commission History",
+    "achievement": "Achievement",
+    "no_pending_transactions": "No pending transactions",
+    "report_commission": "Dashboard",
+    "total_commissions": "Total commission",
+    "total_volume": "Total volume",
+    "notice_chart_details": "Click on each column for details",
+    "buy_volume": "Buy volume",
+    "sell_volume": "Sell volume",
+    "no_commission_history": "No commission history",
+    "information": "Information",
+
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
