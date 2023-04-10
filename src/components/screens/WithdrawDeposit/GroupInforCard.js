@@ -6,7 +6,7 @@ import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, format
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import InfoCard from './components/common/InfoCard';
 import { Clock } from 'react-feather';
-import { QrCodeScannIcon } from 'components/svg/SvgIcon';
+import { OrderIcon, QrCodeScannIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import Countdown from 'react-countdown';
@@ -88,8 +88,14 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                 content={{
                                     mainContent: orderDetail && orderDetail?.partnerMetadata?.name?.toLowerCase(),
                                     subContent: (
-                                        <div className="flex items-center space-x-3">
+                                        <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
                                             <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
+                                            <div className="flex space-x-1 items-center">
+                                                <OrderIcon size={16} />
+                                                <span>
+                                                    {orderDetail?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+                                                </span>
+                                            </div>
                                             <div className="flex space-x-1 items-center">
                                                 <Clock size={12} />
                                                 <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>

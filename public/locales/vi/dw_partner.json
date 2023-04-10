@@ -60,6 +60,7 @@
     "submit": "Gửi lên",
     "reselected": "Gửi lại bằng chứng",
     "search_bank": "Tìm ngân hàng",
+    "order": "Lệnh",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",

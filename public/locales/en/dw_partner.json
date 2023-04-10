@@ -60,6 +60,7 @@
     "submit": "Submit",
     "reselected": "Upload again",
     "search_bank": "Search bank",
+    "order": "Order",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
