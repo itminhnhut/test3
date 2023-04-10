@@ -43,8 +43,10 @@ const useMakeOrder = ({ setState, input }) => {
                     setState({ loadingConfirm: false });
                     return orderResponse;
                 } else {
-                    if (orderResponse?.status === 'NOT_FOUND_PARTNER') {
+                    if (orderResponse?.status === ApiResultCreateOrder.NOT_FOUND_PARTNER) {
                         toast({ text: t('dw_partner:error.not_found_partner'), type: 'warning' });
+                    } else if (orderResponse?.status === ApiResultCreateOrder.NOT_ENOUGH_MONEY) {
+                        toast({ text: t('dw_partner:error.not_enough_money'), type: 'warning' });
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }

@@ -250,7 +250,7 @@ export const statusFilter = [
     },
     {
         key: PartnerOrderStatus.PENDING,
-        localized: 'common:processing'
+        localized: 'common:pending'
     },
     {
         key: PartnerOrderStatus.REJECTED,

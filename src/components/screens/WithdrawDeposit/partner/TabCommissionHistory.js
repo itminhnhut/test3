@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatNanNumber, formatPrice, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { convertDateToMs, formatBalance, formatNanNumber, formatPrice, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -65,8 +65,8 @@ const TabCommissionHistory = () => {
             const { statusCode, data, message } = await FetchApi({
                 url: API_GET_COMMISSION_HISTORY_PARTNER,
                 params: {
-                    from: filter?.range?.startDate,
-                    to: filter?.range?.endDate ? filter.range.endDate : Date.now(),
+                    from: convertDateToMs(filter?.range?.startDate),
+                    to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
                     skip: state.curPage * LIMIT_ROW,
                     limit: LIMIT_ROW,
                     type: 'partnercommission',

@@ -854,6 +854,32 @@ const PartnerIcon = ({ size = 24, color = 'currentColor' }) => (
     </svg>
 );
 
+const OrderIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#g1zqepm55a)">
+            <path
+                d="M10.35 2H3.306a.647.647 0 0 0-.64.654v11.358c0 .362.286.655.64.655h9.387c.353 0 .64-.293.64-.655V5.305a.662.662 0 0 0-.166-.44l-2.343-2.65A.635.635 0 0 0 10.35 2zm.21 10.374H5.44a.647.647 0 0 1-.64-.655v-.6c0-.361.286-.654.64-.654h5.12c.353 0 .64.293.64.655v.6a.647.647 0 0 1-.64.654zm0-3.388H5.44a.647.647 0 0 1-.64-.654v-.6c0-.362.286-.655.64-.655h5.12c.353 0 .64.293.64.655v.6a.647.647 0 0 1-.64.654z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="g1zqepm55a">
+                <path fill="#fff" transform="translate(2.666 2)" d="M0 0h10.667v12.667H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsTimeIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M8 1.332a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.667 8a6.674 6.674 0 0 0-6.666-6.667zm0 12a5.34 5.34 0 0 1-5.333-5.333 5.34 5.34 0 0 1 5.334-5.334A5.34 5.34 0 0 1 13.334 8a5.34 5.34 0 0 1-5.333 5.333z"
+            fill={color}
+        />
+        <path d="M8.667 4.668H7.334v4h4V7.335H8.667V4.668z" fill="#8694B3" />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -912,5 +938,7 @@ export {
     ArrowForwardIcon,
     CalendarFillIcon,
     ContactIcon,
-    PartnerIcon
+    PartnerIcon,
+    OrderIcon,
+    BxsTimeIcon
 };

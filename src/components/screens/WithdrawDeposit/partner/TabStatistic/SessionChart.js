@@ -5,7 +5,7 @@ import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
 import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import Note from 'components/common/Note';
 import colors from 'styles/colors';
-import { formatTime, formatSwapRate } from 'redux/actions/utils';
+import { formatTime, formatSwapRate, convertDateToMs } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
@@ -47,7 +47,13 @@ const SessionChart = () => {
     const { data, loading, error } = useFetchApi(
         {
             url: API_GET_COMMISSION_STATISTIC_PARTNER,
-            params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate, type: typeTab, currency: curToken, interval: 'd' }
+            params: {
+                from: convertDateToMs(filter?.range?.startDate),
+                to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
+                type: typeTab,
+                currency: curToken,
+                interval: 'd'
+            }
         },
         true,
         [filter, typeTab, curToken]

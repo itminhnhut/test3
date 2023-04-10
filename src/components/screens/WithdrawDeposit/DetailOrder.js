@@ -323,7 +323,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }}
                 />
                 {/* Lưu ý */}
-                {side === SIDE.BUY && (
+                {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">

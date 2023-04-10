@@ -5,7 +5,7 @@ import TradingInputV2 from 'components/trade/TradingInputV2';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
-import { formatBalanceFiat } from 'redux/actions/utils';
+import { formatBalanceFiat, formatNumber } from 'redux/actions/utils';
 import { isEqual } from 'lodash';
 
 const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfirm }) => {
@@ -123,7 +123,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                             decimalScale={0}
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
-                            placeHolder={t('dw_partner:enter_amount')}
+                            placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? DEFAULT_PARTNER_MIN[side] : DEFAULT_PARTNER_MAX[side], 0)} `}
                             errorEmpty
                             renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
                         />

@@ -29,7 +29,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
         title: t('common:status'),
         align: 'left',
         width: 107,
-        render: (row) => <CircleCountdown onComplete={toggleRefetch} size={34} textSize={10} timeExpire={row} />
+        render: (row, item) => <CircleCountdown countdownTime={item?.countdownTime} onComplete={toggleRefetch} size={34} textSize={10} timeExpire={row} />
     },
     {
         key: 'displayingId',
@@ -70,8 +70,8 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
         title: t('common:amount'),
         align: 'right',
         width: 152,
-        render: (row) => {
-            return formatBalance(row);
+        render: (row, item) => {
+            return `${item.side === SIDE.BUY ? '+' : '-'}` + formatBalance(row);
         }
     },
     {
@@ -89,21 +89,21 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
             );
         }
     },
-    {
-        key: 'partner',
-        dataIndex: 'partnerMetadata',
-        title: t('common:to'),
-        align: 'left',
-        width: 165,
-        render: (row) => {
-            return (
-                <div>
-                    <div className="">{row?.name}</div>
-                    <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
-                </div>
-            );
-        }
-    },
+    // {
+    //     key: 'partner',
+    //     dataIndex: 'partnerMetadata',
+    //     title: t('common:to'),
+    //     align: 'left',
+    //     width: 165,
+    //     render: (row) => {
+    //         return (
+    //             <div>
+    //                 <div className="">{row?.name}</div>
+    //                 <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
+    //             </div>
+    //         );
+    //     }
+    // },
     {
         key: 'action',
         dataIndex: '',
@@ -150,7 +150,9 @@ const OpenOrderTable = () => {
             page: 0,
             mode: 'partner',
             pageSize: LIMIT_ROW,
-            status: PartnerOrderStatus.PENDING
+            status: PartnerOrderStatus.PENDING,
+            sortBy: null,
+            sortType: null
         },
         loading: false,
         hasNext: false
@@ -252,6 +254,23 @@ const OpenOrderTable = () => {
         };
     }, [state.params, refetch]);
 
+    const customSort = (tableSorted) => {
+        const output = {};
+
+        for (const key in tableSorted) {
+            if (tableSorted.hasOwnProperty(key)) {
+                output.sortBy = key;
+                output.sortType = tableSorted[key] ? 1 : -1;
+            }
+        }
+        setState({
+            params: {
+                ...state.params,
+                ...output
+            }
+        });
+    };
+
     return (
         <>
             <ModalConfirm
@@ -265,13 +284,14 @@ const OpenOrderTable = () => {
                 onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
             />{' '}
             <div>
-                <div className="mb-3">
+                <div className="mb-6">
                     <TabV2
                         activeTabKey={state.params.side}
                         onChangeTab={(key) => {
                             setState({
                                 params: {
                                     ...state.params,
+                                    page: 0,
                                     side: key
                                 }
                             });
@@ -290,7 +310,7 @@ const OpenOrderTable = () => {
                     />
                 </div>
                 <TableV2
-                    // sort={['baseQty']}
+                    sort={['baseQty']}
                     limit={LIMIT_ROW}
                     skip={0}
                     useRowHover
@@ -320,8 +340,7 @@ const OpenOrderTable = () => {
                         language
                     }}
                     emptyTextContent={t('dw_partner:no_pending_transactions')}
-                    // emptyTextContent={t('common:no_data')}
-                    // customSort={customSort}
+                    customSort={customSort}
                 />
             </div>
         </>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
-import { formatAbbreviateNumber, formatNanNumber, formatPercentage } from 'redux/actions/utils';
+import { convertDateToMs, formatAbbreviateNumber, formatNanNumber, formatPercentage } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
@@ -20,7 +20,13 @@ const SessionGeneral = () => {
     });
 
     const { data, loading, error } = useFetchApi(
-        { url: API_GET_COMMISSION_REPORT_PARTNER, params: { from: +filter?.range?.startDate, to: +filter?.range?.endDate } },
+        {
+            url: API_GET_COMMISSION_REPORT_PARTNER,
+            params: {
+                from: convertDateToMs(filter?.range?.startDate),
+                to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf')
+            }
+        },
         true,
         [filter]
     );

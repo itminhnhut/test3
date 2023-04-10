@@ -33,6 +33,7 @@
     "default": "Mặc định",
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
+    "user": "Khách hàng",
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Tải lại bằng chứng",
@@ -74,7 +75,8 @@
     "sell_volume": "Khối lượng bán",
     "no_commission_history": "Không có lịch sử hoa hồng",
     "information": "Thông tin",
-
+    "search_bank": "Tìm ngân hàng",
+    "order": "Lệnh",
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
@@ -86,6 +88,8 @@
         "a_day": "1 Ngày",
         "a_week": "1 Tuần",
         "a_month": "1 Tháng",
-        "custom": "Tùy chỉnh"
+        "custom": "Tùy chỉnh",
+        "not_found_partner": "Đối tác không khả dụng",
+        "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác."
     }
 }

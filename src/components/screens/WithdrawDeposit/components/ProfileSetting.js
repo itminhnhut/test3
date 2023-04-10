@@ -60,24 +60,12 @@ const ProfileSetting = ({ partner, t, loadingPartner, refetchPartner }) => {
                                 'text-gray': orderConfig?.status === 0
                             })}
                         >
-                            <span
-                                className={classNames('text-dominant ', {
-                                    '!text-gray': orderConfig?.status === 0
-                                })}
-                            >
-                                {formatNumber(orderConfig?.min)}
-                            </span>
+                            <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.min)}</span>
                             <span>-</span>
-                            <span
-                                className={classNames('text-dominant ', {
-                                    '!text-gray': orderConfig?.status === 0
-                                })}
-                            >
-                                {formatNumber(orderConfig?.max)}{' '}
-                            </span>
+                            <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.max)} </span>
                             <span>VNDC</span>
                         </div>
-                        <ButtonV2 disabled={loading} onClick={() => onOpenModal(side)} className="disabled:!bg-transparent !w-auto !py-0 !h-auto" variants="text">
+                        <ButtonV2 onClick={() => onOpenModal(side)} className="disabled:!bg-transparent !w-auto !py-0 !h-auto" variants="text">
                             {t('common:edit')}
                         </ButtonV2>
                     </div>

@@ -21,13 +21,13 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             const date = new Date();
             switch (timeTab) {
                 case TIME_FILTER[1].value:
-                    date.setDate(date.getDate() - 1);
+                    date.setDate(date.getDate() - 0);
                     break;
                 case TIME_FILTER[2].value:
-                    date.setDate(date.getDate() - 7);
+                    date.setDate(date.getDate() - 6);
                     break;
                 case TIME_FILTER[3].value:
-                    date.setDate(date.getDate() - 31);
+                    date.setDate(date.getDate() - 30);
                     break;
                 default:
                     break;
@@ -36,7 +36,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             setFilter({
                 range: {
                     startDate: date.getTime(),
-                    endDate: Date.now(),
+                    endDate: new Date(),
                     key: 'selection'
                 }
             });

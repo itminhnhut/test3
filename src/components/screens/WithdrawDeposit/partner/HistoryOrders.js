@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FilterButton from '../components/FilterButton';
 import { formatBalance, formatTime, getAssetCode } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { ApiStatus, PartnerOrderStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerOrderStatus, UserSocketEvent } from 'redux/actions/const';
 import { isNull } from 'lodash';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
@@ -15,6 +15,8 @@ import { PATHS } from 'constants/paths';
 import { useRouter } from 'next/router';
 import { formatLocalTimezoneToUTC } from 'utils/helpers';
 import axios from 'axios';
+import { useBoolean } from 'react-use';
+import { useSelector } from 'react-redux';
 
 const getColumns = ({ t }) => [
     {
@@ -75,6 +77,16 @@ const getColumns = ({ t }) => [
         }
     },
     {
+        key: 'commission',
+        dataIndex: '',
+        title: 'Hoa hồng',
+        align: 'right',
+        width: 152,
+        render: (row, item) => {
+            return <div className="text-teal">0</div>;
+        }
+    },
+    {
         key: 'status',
         dataIndex: 'status',
         title: t('common:status'),
@@ -115,6 +127,7 @@ const INITIAL_PARAMS = {
     page: 0,
     mode: 'partner',
     pageSize: LIMIT_ROW,
+    displayingId: '',
     status: null,
     assetId: null,
     side: null,
@@ -131,6 +144,8 @@ const HistoryOrders = () => {
     } = useTranslation();
     const router = useRouter();
 
+    const userSocket = useSelector((state) => state.socket.userSocket);
+
     const [state, set] = useState({
         data: [],
         params: INITIAL_PARAMS,
@@ -141,11 +156,48 @@ const HistoryOrders = () => {
     const resetFilter = () => setState({ params: INITIAL_PARAMS });
     const isResetAble = () => {
         const {
-            params: { status, assetId, side, from, to }
+            params: { status, assetId, side, from, to, displayingId }
         } = state;
-        if (isNull(status) && isNull(from) && isNull(to) && !assetId && !side) return false;
+        if (isNull(status) && isNull(from) && isNull(to) && !assetId && !side && !displayingId) return false;
         return true;
     };
+    const [refetch, toggleRefetch] = useBoolean(false);
+
+    const dataRef = useRef([]);
+    const currentParamsRef = useRef(null);
+    dataRef.current = [...state.data];
+    currentParamsRef.current = { ...state.params };
+
+    useEffect(() => {
+        if (userSocket) {
+            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
+                if (dataRef.current.length) {
+                    const { assetId, side, status } = currentParamsRef.current;
+                    const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
+                    // if newOrder is not in the current data sets with -> refetch table
+                    if (
+                        !existedOrder &&
+                        side &&
+                        newOrder?.side === side &&
+                        assetId &&
+                        newOrder?.baseAssetId === assetId &&
+                        status &&
+                        newOrder?.status === status
+                    ) {
+                        toggleRefetch();
+                    }
+                }
+                toggleRefetch();
+            });
+        }
+        return () => {
+            if (userSocket) {
+                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+                    console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
+                });
+            }
+        };
+    }, [userSocket]);
 
     useEffect(() => {
         const source = axios.CancelToken.source();
@@ -188,7 +240,7 @@ const HistoryOrders = () => {
             mounted = true;
             source.cancel();
         };
-    }, [state.params]);
+    }, [state.params, refetch]);
 
     const customSort = (tableSorted) => {
         const output = {};
@@ -207,11 +259,21 @@ const HistoryOrders = () => {
         });
     };
 
+    const onChangeFilter = (addFilters) =>
+        set((prev) => ({
+            ...prev,
+            params: {
+                ...prev.params,
+                ...addFilters,
+                page: 0
+            }
+        }));
+
     return (
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
                 <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
-                <FilterButton t={t} setState={setState} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
+                <FilterButton t={t} setFilter={onChangeFilter} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
             </div>
 
             <TableV2
