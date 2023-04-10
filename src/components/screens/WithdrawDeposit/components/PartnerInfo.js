@@ -48,7 +48,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                             <div className="flex space-x-1 items-center">
                                 <OrderIcon size={16} />
                                 <span>
-                                    {partner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+                                    {selectedPartner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
                                 </span>
                             </div>
                             <div className="flex space-x-1 items-center">
