@@ -35,8 +35,8 @@ const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
 
 const DEFAULT_PAIR = {
-    fromAsset: 'USDT',
-    toAsset: 'BTC'
+    fromAsset: 'VNDC',
+    toAsset: 'USDT'
 };
 const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
 
@@ -914,7 +914,7 @@ const Input = styled.div.attrs(({ isFocus }) => ({
 }))``;
 
 const AssetList = styled.div.attrs(({ AssetListRef }) => ({
-    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl 
+    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl
     border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
     shadow-card_light dark:shadow-popover`,
     ref: AssetListRef
@@ -922,7 +922,7 @@ const AssetList = styled.div.attrs(({ AssetListRef }) => ({
 
 const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
     className: `text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3 
+    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3
     hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
     ${isChoosed && 'bg-hover dark:bg-hover-dark'} ${className}`,
     key: key,
