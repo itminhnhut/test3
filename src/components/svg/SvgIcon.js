@@ -449,9 +449,9 @@ const BxChevronDown = ({ size = 24, color, ...props }) => {
     );
 };
 
-const SyncAltIcon = ({ size, color, bgColor }) => {
+const SyncAltIcon = ({ size, color, bgColor, ...props }) => {
     return (
-        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width={size || 24} height={size || 24} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
             <g clipPath="url(#0dcfa1hmna)">
                 <path fill={bgColor || 'undefined'} d="M0 24V0h24v24z" />
                 <path d="M8 2 4 6h3v15h2V6h3L8 2zM16 22l4-4h-3V3h-2v15h-3l4 4z" fill={color || '#47CC85'} />
@@ -480,11 +480,19 @@ const CheckedDoubleIcon = ({ color, size }) => (
     </svg>
 );
 
-const BxsBookIcon = ({ size, color, ...props }) => (
-    <svg {...props} width={size || 12} height={size || 12} viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+const BxsBookIcon = ({ size, color, isButton, className, ...props }) => (
+    <svg
+        {...props}
+        className={`${!isButton ? (color ? color : 'text-[#8694B3]') : ''} ${className}`}
+        width={size || 12}
+        height={size || 12}
+        viewBox="0 0 12 12"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+    >
         <path
             d="M3.006 9H10.5V2a1 1 0 0 0-1-1H3c-.603 0-1.5.4-1.5 1.5v7c0 1.1.897 1.5 1.5 1.5h7.5v-1H3.006c-.231-.006-.506-.098-.506-.5s.275-.494.506-.5zM4 3h4.5v1H4V3z"
-            fill={color || '#8694B3'}
+            fill="currentColor"
         />
     </svg>
 );
@@ -639,9 +647,9 @@ const MoreHorizIcon = ({ size, color, onClick }) => {
     );
 };
 
-const BxsInfoCircle = ({ size = 24 }) => (
+const BxsInfoCircle = ({ size = 24, color = '#768394' }) => (
     <svg style={{ minWidth: size }} width={size} height={size} viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill="#768394" />
+        <path d="M12.398 2.344c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zm1 15h-2v-6h2v6zm0-8h-2v-2h2v2z" fill={color} />
     </svg>
 );
 
@@ -677,6 +685,137 @@ const SettingIcon = ({ size = 24, color = '#8694B3', ...props }) => (
             strokeLinecap="round"
             strokeLinejoin="round"
         />
+    </svg>
+);
+
+const ArrowCompareIcon = ({ color, size = 24, ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} {...props} viewBox="0 0 32 32" fill="none">
+        <g clip-path="url(#kvn1hu363a)">
+            <path
+                d="M12.013 18.667H2.667v2.667h9.346v4L17.333 20l-5.32-5.333v4zm7.974-1.333v-4h9.346v-2.667h-9.346v-4L14.667 12l5.32 5.334z"
+                fill={color || '#47CC85'}
+            />
+        </g>
+        <defs>
+            <clipPath id="kvn1hu363a">
+                <path fill="#fff" d="M0 0h32v32H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const TimeLapseIcon = ({ size, color = '#FFC632' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <g clip-path="url(#jnxbzu5ofa)">
+            <path
+                d="M54.133 25.866c-3.9-3.9-9-5.866-14.134-5.866v20L25.866 54.133c7.8 7.8 20.467 7.8 28.3 0 7.8-7.8 7.8-20.467-.033-28.267zm-14.134-19.2C21.6 6.666 6.666 21.6 6.666 40c0 18.4 14.933 33.333 33.333 33.333S73.333 58.4 73.333 40 58.399 6.666 39.999 6.666zm0 60c-14.733 0-26.666-11.933-26.666-26.666s11.933-26.667 26.666-26.667c14.734 0 26.667 11.934 26.667 26.667 0 14.733-11.933 26.666-26.667 26.666z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="jnxbzu5ofa">
+                <path fill="transparent" d="M0 0h80v80H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsErrorIcon = ({ size, color = '#FFC632' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <path
+            d="M42.947 8.44c-1.154-2.18-4.74-2.18-5.894 0l-30 56.666A3.333 3.333 0 0 0 10 70h60c1.17 0 2.254-.613 2.853-1.613a3.32 3.32 0 0 0 .09-3.276L42.948 8.44zM43.333 60h-6.666v-6.667h6.666V60zm-6.666-13.334V30h6.666l.004 16.666h-6.67z"
+            fill={color}
+        />
+    </svg>
+);
+
+const CancelIcon = ({ color = '#F93636', size }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 80 80" fill="none">
+        <path
+            d="M40 6.667C21.565 6.667 6.665 21.567 6.665 40s14.9 33.333 33.333 33.333c18.434 0 33.334-14.9 33.334-33.333S58.433 6.667 39.999 6.667zm16.666 45.3-4.7 4.7L39.999 44.7 28.033 56.667l-4.7-4.7L35.299 40 23.333 28.033l4.7-4.7L39.999 35.3l11.967-11.967 4.7 4.7L44.699 40l11.967 11.967z"
+            fill={color}
+        />
+    </svg>
+);
+
+const FutureSupportIcon = ({ size = 16, className = '', isDark }) => (
+    <svg className={className} width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M13.55 7.01a2.149 2.149 0 0 0-1.361-.49v.027a3.534 3.534 0 0 0-3.392-3.058H7.2a3.541 3.541 0 0 0-3.396 3.058v-.028a2.14 2.14 0 0 0-1.36.49c.1-2.721 2.199-4.876 4.76-4.876h1.597c2.567 0 4.662 2.164 4.748 4.876z"
+            fill={isDark ? '#47CC85' : '#30BF73'}
+        />
+        <path d="M3.814 6.52v.027a4.085 4.085 0 0 0-.054.672v4.92a2.125 2.125 0 0 1-1.317-.485V7.009c.386-.318.871-.491 1.371-.49z" fill="#9FF2C6" />
+        <path d="M2.449 7.012v4.643a2.31 2.31 0 0 1-.85-1.815V8.8a2.301 2.301 0 0 1 .85-1.788z" fill="#0D994E" />
+        <path d="M12.711 10.05v3.578H8.26v-.454h3.993V10.05h.458z" fill="#5BD891" />
+        <path d="M12.188 6.52v.027c.04.221.06.446.058.672v4.92c.481-.009.945-.18 1.317-.485V7.009a2.152 2.152 0 0 0-1.376-.49z" fill="#9FF2C6" />
+        <path d="M13.55 7.012v4.643a2.312 2.312 0 0 0 .85-1.815V8.8a2.3 2.3 0 0 0-.85-1.788zM8.263 13.168H7.105v.454h1.158v-.454z" fill="#0D994E" />
+        <path d="M8.263 12.8H7.105v.373h1.158v-.372zM8.263 13.61H7.105v.34h1.158v-.34z" fill="#9FF2C6" />
+    </svg>
+);
+
+const QrCodeScannIcon = ({ size = 16, color = '#47CC85' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#1dj1n52n6a)">
+            <path
+                d="M6.332 4.332v2h-2v-2h2zm1-1h-4v4h4v-4zm-1 6.333v2h-2v-2h2zm1-1h-4v4h4v-4zm4.333-4.333v2h-2v-2h2zm1-1h-4v4h4v-4zm-4 5.333h1v1h-1v-1zm1 1h1v1h-1v-1zm1-1h1v1h-1v-1zm-2 2h1v1h-1v-1zm1 1h1v1h-1v-1zm1-1h1v1h-1v-1zm1-1h1v1h-1v-1zm0 2h1v1h-1v-1zm3-7h-1.333v-2h-2V1.332h3.333v3.333zm0 10v-3.333h-1.333v2h-2v1.333h3.333zm-13.333 0h3.333v-1.333h-2v-2H1.332v3.333zm0-13.333v3.333h1.333v-2h2V1.332H1.332z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="1dj1n52n6a">
+                <path fill="#fff" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const CancelCircleFillIcon = ({ size = 16, color = '#F93636' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M8 1.332a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.667 8a6.674 6.674 0 0 0-6.666-6.667zm2.805 8.529-.942.942L8 8.941l-1.862 1.862-.943-.942 1.862-1.862-1.862-1.862.943-.943L8 7.056l1.862-1.862.942.943-1.862 1.862 1.862 1.862z"
+            fill={color}
+        />
+    </svg>
+);
+
+const BxsErrorAltIcon = ({ size = 16, color = '#F93636' }) => (
+    <svg width={size} height={size} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path
+            d="M11.139 1.527a.664.664 0 0 0-.472-.195H5.334a.664.664 0 0 0-.471.195L1.529 4.861a.664.664 0 0 0-.195.471v5.333c0 .178.07.347.195.472l3.334 3.333a.664.664 0 0 0 .471.195h5.333c.178 0 .347-.07.472-.195l3.333-3.333a.664.664 0 0 0 .195-.472V5.332a.664.664 0 0 0-.195-.471l-3.333-3.334zm-2.472 9.805H7.334V9.999h1.333v1.333zm0-2.667H7.334v-4h1.333v4z"
+            fill={color}
+        />
+    </svg>
+);
+
+const ArrowForwardIcon = ({ size = 24, color = '"#fff"' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path d="m8 2.667-.94.94 3.72 3.726H2.665v1.333h8.113l-3.72 3.727.94.94L13.333 8 7.999 2.667z" fill={color} />
+    </svg>
+);
+
+const OrderIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#g1zqepm55a)">
+            <path
+                d="M10.35 2H3.306a.647.647 0 0 0-.64.654v11.358c0 .362.286.655.64.655h9.387c.353 0 .64-.293.64-.655V5.305a.662.662 0 0 0-.166-.44l-2.343-2.65A.635.635 0 0 0 10.35 2zm.21 10.374H5.44a.647.647 0 0 1-.64-.655v-.6c0-.361.286-.654.64-.654h5.12c.353 0 .64.293.64.655v.6a.647.647 0 0 1-.64.654zm0-3.388H5.44a.647.647 0 0 1-.64-.654v-.6c0-.362.286-.655.64-.655h5.12c.353 0 .64.293.64.655v.6a.647.647 0 0 1-.64.654z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="g1zqepm55a">
+                <path fill="#fff" transform="translate(2.666 2)" d="M0 0h10.667v12.667H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const BxsTimeIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M8 1.332a6.674 6.674 0 0 0-6.666 6.667 6.674 6.674 0 0 0 6.667 6.666A6.674 6.674 0 0 0 14.667 8a6.674 6.674 0 0 0-6.666-6.667zm0 12a5.34 5.34 0 0 1-5.333-5.333 5.34 5.34 0 0 1 5.334-5.334A5.34 5.34 0 0 1 13.334 8a5.34 5.34 0 0 1-5.333 5.333z"
+            fill={color}
+        />
+        <path d="M8.667 4.668H7.334v4h4V7.335H8.667V4.668z" fill="#8694B3" />
     </svg>
 );
 
@@ -725,5 +864,16 @@ export {
     BxsInfoCircle,
     ShareIcon,
     FireIcon,
-    SettingIcon
+    SettingIcon,
+    ArrowCompareIcon,
+    TimeLapseIcon,
+    BxsErrorIcon,
+    CancelIcon,
+    FutureSupportIcon,
+    QrCodeScannIcon,
+    CancelCircleFillIcon,
+    BxsErrorAltIcon,
+    ArrowForwardIcon,
+    OrderIcon,
+    BxsTimeIcon
 };

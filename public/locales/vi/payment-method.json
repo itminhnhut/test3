@@ -3,5 +3,11 @@
     "payment_method_add": "Thêm phương thức thanh toán",
     "account_number": "Số tài khoản",
     "bank_name": "Tài khoản ngân hàng",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "transaction_details": "Chi tiết giao dịch",
+    "depsit_from_partners": "Nạp {{asset}} qua ĐTKD",
+    "sell": "bán",
+    "buy": "nạp",
+    "buy_title": "Nạp qua ĐTKD",
+    "sell_title": "Bán qua ĐTKD"
 }

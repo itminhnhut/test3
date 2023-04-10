@@ -79,7 +79,7 @@ const Index = () => {
                 isVisible={state.showQR}
                 title={t('modal:scan_qr_to_download')}
                 onBackdropCb={() => setState({ showQR: false })}
-                className="sm:max-w-[488px]  !bg-hover-1 "
+                className="sm:max-w-[488px] dark:!bg-bgContainer-dark  !bg-hover-1 "
             >
                 <div className={`mb-6 text-sm font-bold`}>
                     <div className="text-2xl dark:text-txtPrimary-dark font-semibold">{t('modal:scan_qr_to_download')}</div>
@@ -89,7 +89,7 @@ const Index = () => {
                         <QRCode value={`${APP_URL}#nami_exchange_download_app`} eyeRadius={6} size={150} />
                     </div>
                     <div className="absolute w-full h-full z-0">
-                        <Image layout="fill" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
+                        <Image layout="fill" objectFit="cover" className="rounded-xl" src={getS3Url(`/images/screen/account/bg_transfer_onchain_${currentTheme}.png`)} />
                     </div>
                 </div>
             </ModalV2>
@@ -155,7 +155,7 @@ const Index = () => {
     return (
         <MaldivesLayout navMode={NAVBAR_USE_TYPE.FLUENT}>
             <div className="homepage">
-                <HomeIntroduce trendData={state.trendData} t={t} />
+                <HomeIntroduce width={width} trendData={state.trendData} t={t} />
                 <HomeMarketTrend trendData={state.trendData} />
                 <HomeNews />
                 <HomeAdditional t={t} width={width} currentTheme={currentTheme} />

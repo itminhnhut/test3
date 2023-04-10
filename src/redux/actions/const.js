@@ -1,3 +1,5 @@
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+
 export const EPS = 0.00000001;
 
 export const LOCAL_STORAGE_KEY = {
@@ -827,7 +829,8 @@ export const UserSocketEvent = {
     UPDATE_BALANCE: 'user:update_balance',
     FUTURES_OPEN_ORDER: 'future:update_opening_order',
     FUTURE_DONE_CLOSING_ALL_ORDERS: 'future:done_closing_all_orders',
-    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error'
+    FUTURE_PROCESSING_ORDER_ERROR: 'future:processing_order_error',
+    PARTNER_UPDATE_ORDER: 'PARTNER_UPDATE_ORDER'
 };
 
 export const EarnOrder_Status = {
@@ -875,3 +878,42 @@ export const rateCurrency = {
 };
 
 export const DefaultAvatar = 'https://nami-dev.sgp1.digitaloceanspaces.com/nami.exchange/images/preset_avatar/2/Len_cung_trang_11.png';
+
+export const GET_PARTNER_STATUS = {
+    INVALID_AMOUNT: 'INVALID_AMOUNT'
+};
+
+export const ApiResultCreateOrder = {
+    INVALID_OTP: 'INVALID_OTP',
+    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
+    NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY'
+};
+
+export const DEFAULT_PARTNER_MIN = {
+    [SIDE.SELL]:100e3,
+    [SIDE.BUY]: 100e3
+};
+
+export const DEFAULT_PARTNER_MAX = {
+    [SIDE.SELL]: 500e6,
+    [SIDE.BUY]: 500e6
+};
+
+export const PartnerOrderStatus = {
+    PENDING: 0,
+    SUCCESS: 1,
+    REJECTED: 2,
+    DISPUTED: 3
+};
+
+export const PartnerPersonStatus = {
+    PENDING: 0,
+    TRANSFERRED: 1,
+    DISPUTED: 2
+};
+
+export const PartnerReasonDisputed = {
+    TIME_OUT: 1,
+    USER_DISPUTED: 2
+};

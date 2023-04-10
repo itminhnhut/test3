@@ -2,6 +2,7 @@ import React, { useRef, useState, Fragment, useMemo, useEffect, useCallback } fr
 import colors from 'styles/colors';
 import vi from 'date-fns/locale/vi';
 import en from 'date-fns/locale/en-US';
+import { useSelector } from 'react-redux';
 import { DateRangePicker, Calendar } from 'react-date-range';
 import { ChevronRight, ChevronLeft, X } from 'react-feather';
 import { Transition } from '@headlessui/react';
@@ -22,6 +23,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         t,
         i18n: { language }
     } = useTranslation();
+
+    const { user: auth } = useSelector((state) => state.auth) || null;
+
     const [theme] = useDarkMode();
 
     const handleOutside = () => {
@@ -90,6 +94,16 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
         }
     }, [date.startDate]);
 
+    useEffect(() => {
+        if (initDate) {
+            setDate({
+                ...date,
+                startDate: initDate.startDate,
+                endDate: initDate.endDate
+            });
+        }
+    }, [initDate]);
+
     const clearInputData = () => {
         setDate({
             selection: {
@@ -98,14 +112,14 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
                 key: date['key']
             }
         });
-        if (!showPicker)
-            onChange({
-                selection: {
-                    startDate: null,
-                    endDate: new Date(),
-                    key: date['key']
-                }
-            });
+        // if (!showPicker)
+        onChange({
+            selection: {
+                startDate: null,
+                endDate: new Date(),
+                key: date['key']
+            }
+        });
     };
     // Handle X Close button
     const flag = useRef(false);
@@ -135,7 +149,9 @@ const DatePickerV2 = ({ initDate, isCalendar, onChange, month, position, wrapper
     return (
         <div className={classNames('relative', wrapperClassname)} ref={wrapperRef}>
             {text ? (
-                <div onClick={() => setShowPicker(!showPicker)}>{text}</div>
+                <div className={classNames({ 'cursor-not-allowed': !auth })} onClick={() => auth && setShowPicker(!showPicker)}>
+                    {text}
+                </div>
             ) : (
                 <div
                     className={classNames(

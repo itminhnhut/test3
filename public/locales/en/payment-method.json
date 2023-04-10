@@ -3,5 +3,11 @@
     "payment_method_add": "Add payment method",
     "account_number": "Account number",
     "bank_name": "Bank name",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "transaction_details": "Transaction details",
+    "depsit_from_partners": "Deposit {{asset}} through partner",
+    "sell": "sell",
+    "buy": "buy",
+    "buy_title": "Deposit through partner",
+    "sell_title": "Withdraw through partner"
 }

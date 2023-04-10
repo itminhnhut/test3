@@ -37,6 +37,10 @@ import { CopyIcon, CheckedIcon } from 'components/svg/SvgIcon';
 import { useSelector } from 'react-redux';
 import utilsSelectors from 'redux/selectors/utilsSelectors';
 import { useRouter } from 'next/router';
+import { log } from 'utils';
+import { cloneDeep } from 'lodash';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE as SIDE_DW } from 'redux/reducers/withdrawDeposit';
 
 export function scrollHorizontal(el, parentEl) {
     if (!parentEl || !el) return;
@@ -158,7 +162,7 @@ export function getLoginUrl(mode = 'sso', action = 'login', options = {}) {
 
         const referral = sessionStorage && sessionStorage.getItem('refCode') ? sessionStorage.getItem('refCode') : _options.referral;
 
-        const theme = localStorage?.getItem('theme') ?? 'light';
+        const theme = localStorage?.getItem('theme') ?? 'dark';
 
         let language = 'vi';
         if (!currentUrl.includes('/vi')) language = 'en';
@@ -205,6 +209,16 @@ export function formatTime(value, f = 'yyyy-MM-dd HH:mm') {
     }
 }
 
+export function formatTimePartner(t, value) {
+    return !value
+        ? ''
+        : value >= 60 * 60 * 1000 // 1 hour
+        ? `${formatTime(value, 'h:mm')} ${t('common:hour')}`
+        : value >= 60 * 1000 // 1 minute
+        ? `${formatTime(value, 'm')} ${t('common:minute')}`
+        : `${formatTime(value, 's')} ${t('common:second')}`;
+}
+
 export function getTimeAgo(value, options) {
     if (!value) return;
     const date = value instanceof Date ? value : new Date(value);
@@ -221,6 +235,16 @@ export function formatBalance(value, digits = 2, acceptNegative = false) {
     return numeral(+value).format(`0,0.[${'0'.repeat(digits)}]`, Math.floor);
 }
 
+export const formatBalanceFiat = (value, assetCode, acceptNegative = false) => {
+    const isVNDC = assetCode === 'VNDC';
+    const isUSDT = assetCode === 'USDT';
+    return formatBalance(isVNDC ? Math.round(value) : value, isVNDC ? 0 : isUSDT ? 4 : 0, acceptNegative);
+};
+
+export const getExactBalanceFiat = (balance, assetCode) => {
+    const digit = assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : 0;
+    return roundByExactDigit(balance, digit);
+};
 // Hiển thị cho phí spot tính bằng VNDC, USDT, ATS
 export function formatSpotFee(value) {
     if (isNil(value)) return '0';
@@ -259,6 +283,12 @@ export function formatPrice(price = 0, configs = [], assetCode = '') {
 export function formatSpotPrice(price = 0, symbol = '') {
     return numeral(+price).format(`0,0.[${'0'.repeat(getDecimalSpotPrice(symbol))}]`);
 }
+
+export const formatPhoneNumber = (phoneNumber) => {
+    let phone = phoneNumber?.toString();
+    if (phone.length !== 10) return phoneNumber;
+    return phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+};
 
 export function randomString(length = 15) {
     let result = '';
@@ -789,6 +819,19 @@ export function walletLinkBuilder(walletType, action, payload) {
     }
 }
 
+export function dwLinkBuilder(type, side, assetId) {
+    // Deposit: BUY
+    // Withdraw: SELL
+    switch (type) {
+        case TYPE_DW.CRYPTO:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+        case TYPE_DW.PARTNER:
+            return `${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId || 'USDT'}`;
+        default:
+            return `${PATHS.WITHDRAW_DEPOSIT.DEFAULT}?side=${side}&assetId=${assetId || 'USDT'}`;
+    }
+}
+
 export function setTransferModal(payload) {
     // source look like
     // payload = {
@@ -1184,3 +1227,59 @@ export const getOffsetEl = (el) => {
     clone.remove();
     return { w: width, h: height };
 };
+
+export function parseUnormStr(input) {
+    //Đổi chữ hoa thành chữ thường
+    let slug = input.toLowerCase();
+
+    //Đổi ký tự có dấu thành không dấu
+    slug = slug.replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a');
+    slug = slug.replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e');
+    slug = slug.replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i');
+    slug = slug.replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o');
+    slug = slug.replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u');
+    slug = slug.replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y');
+    slug = slug.replace(/đ/gi, 'd');
+
+    // Một vài bộ encode coi các dấu mũ, dấu chữ như một kí tự riêng biệt nên thêm hai dòng này
+    slug = slug.replace(/\u0300|\u0301|\u0303|\u0309|\u0323/gi, ''); // ̀ ́ ̃ ̉ ̣  huyền, sắc, ngã, hỏi, nặng
+    slug = slug.replace(/\u02C6|\u0306|\u031B/gi, ''); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+
+    // Bỏ dấu câu, kí tự đặc biệt
+    slug = slug.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, ' ');
+    slug = slug.replace(/\`|\~|\!|\@|\#|\||\$|\%|\^|\&|\*|\(|\)|\+|\=|\,|\.|\/|\?|\>|\<|\'|\"|\:|\;|_/gi, ' ');
+
+    // Bỏ các khoảng trắng liền nhau
+    slug = slug.replace(/ + /g, ' ');
+    slug = slug.trim();
+
+    return slug;
+}
+
+export const filterSearch = (originDataset, keys, searchValue) => {
+    if (!searchValue) return originDataset;
+
+    return originDataset.filter((item) => {
+        for (const key of keys) {
+            if (parseUnormStr(item[key]).includes(parseUnormStr(searchValue))) return true;
+        }
+        return false;
+    });
+    // const lowercaseSearch = searchValue.toLowerCase();
+    // const copyDataSet = cloneDeep(originDataset);
+    // return copyDataSet.filter((item) => keys.reduce((result, key) => result || (item?.[key] && item[key].toLowerCase().includes(lowercaseSearch)), false));
+};
+
+export const saveFile = (file, name) => {
+    const a = document.createElement('a');
+    const url = URL.createObjectURL(file);
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+};
+
+export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);

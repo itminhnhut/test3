@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { API_GET_WALLET_CONFIG } from 'redux/actions/apis';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { formatNumber, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, walletLinkBuilder } from 'redux/actions/utils';
 import { BREAK_POINTS } from 'constants/constants';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useRouter } from 'next/router';
@@ -24,6 +24,8 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useSelector } from 'react-redux';
 import WithdrawDepositList from 'components/screens/FeeSchedule/WithdrawDepositList';
 import NoResult from 'components/screens/Support/NoResult';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     search: '',
@@ -78,83 +80,84 @@ const DepositWithdrawFee = () => {
                 key: 'assetCode',
                 dataIndex: 'assetCode',
                 title: 'Coin / Token',
-                width: 80,
+                width: '20%',
                 fixed: 'left',
                 align: 'left',
                 // preventSort: true
-                render: (row, item) =>
+                render: (row, item) => (
                     <div className="flex items-center">
                         <AssetLogo assetCode={item?.assetCode} size={width >= BREAK_POINTS['2xl'] ? 32 : 24} />
                         <span className="ml-2.5 text-base font-semibold">{item?.assetCode}</span>
                     </div>
-                ,
+                )
             },
-            // {
-            //     key: 'fullName',
-            //     dataIndex: 'fullName',
-            //     title: t('common:full_name'),
-            //     width: 80,
-            //     align: 'left'
-            // },
             {
                 key: 'network',
                 dataIndex: 'network',
                 title: t('wallet:network'),
-                width: 160,
+                width: '20%',
                 align: 'left',
                 preventSort: true,
-                render: (row, item) => <div>
-                    {item?.networkList?.map((network, index) => (
-                        <div key={`network__${index}`} className="mb-1 text-base last:mb-0">
-                            {network?.name}
-                        </div>
-                    ))}
-                </div>
+                render: (row, item) => (
+                    <div>
+                        {item?.networkList?.map((network, index) => (
+                            <div key={`network__${index}`} className="mb-1 text-base last:mb-0">
+                                {network?.name}
+                            </div>
+                        ))}
+                    </div>
+                )
             },
             {
                 key: 'deposit_fee',
                 dataIndex: 'deposit_fee',
                 title: t('wallet:deposit_fee'),
-                width: 60,
+                width: '20%',
                 align: 'left',
                 preventSort: true,
-                render: (row, item) => {
-                    const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
-                    return <div>
-                        {item?.networkList?.map((network, index) => (
-                            <div key={`withdrawFee__${index}`} className={index === item?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
-                                {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
-                            </div>
-                        ))}
-                    </div>
-                }
+                render: () => <span className="text-base text-dominant">{t('common:free')}</span>
             },
+
             {
                 key: 'min_withdraw',
                 dataIndex: 'min_withdraw',
                 title: t('wallet:min_withdraw'),
-                width: 100,
+                width: '20%',
                 align: 'right',
                 preventSort: true,
                 render: (row, item) => {
                     const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
-                    return <div>
-                        {item?.networkList?.map((network, index) => (
-                            <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
-                                {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
-                            </div>
-                        ))}
-                    </div>
+                    return (
+                        <div>
+                            {item?.networkList?.map((network, index) => (
+                                <div key={`minWithdraw__${index}`} className="mb-1 text-base last:mb-0">
+                                    {formatNumber(network?.withdrawMin, assetDigit, network?.withdrawMin === 0 ? 6 : 0)}
+                                </div>
+                            ))}
+                        </div>
+                    );
                 }
             },
             {
                 key: 'withdraw_fee',
                 dataIndex: 'withdraw_fee',
                 title: t('wallet:withdraw_fee'),
-                width: 100,
+
+                width: '20%',
                 align: 'right',
                 preventSort: true,
-                render: () => <span className="text-base text-dominant">{t('common:free')}</span>,
+                render: (row, item) => {
+                    const assetDigit = state.configs?.find((o) => o.assetCode === item?.assetCode)?.assetDigit;
+                    return (
+                        <div>
+                            {item?.networkList?.map((network, index) => (
+                                <div key={`withdrawFee__${index}`} className={index === item?.withdrawFee?.length - 1 ? ' text-base' : 'mb-1 text-base'}>
+                                    {formatNumber(network?.withdrawFee, assetDigit, network?.withdrawFee === 0 ? 6 : 0)}
+                                </div>
+                            ))}
+                        </div>
+                    );
+                }
             }
         ];
 
@@ -212,7 +215,6 @@ const DepositWithdrawFee = () => {
             //         }
             //     });
             // });
-
             // data = _data;
         }
 
@@ -230,15 +232,18 @@ const DepositWithdrawFee = () => {
                     columns={columns}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
-                    onRow={(record, index) => ({
-                        onClick: () =>
-                            router.push(
-                                walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                    type: 'crypto',
-                                    asset: record?.raw?.assetCode
-                                })
-                            )
-                    })}
+                    onRow={(record, index) => {
+                        return {
+                            onClick: () =>
+                                router.push(
+                                    // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                    //     type: 'crypto',
+                                    //     asset: record?.raw?.assetCode || record?.assetCode
+                                    // })
+                                    dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, record?.raw?.assetCode || record?.assetCode)
+                                )
+                        };
+                    }}
                     tableStyle={{
                         paddingHorizontal: width >= 768 ? '1.75rem' : '0.75rem',
                         tableStyle: { minWidth: '992px !important' },
@@ -273,7 +278,7 @@ const DepositWithdrawFee = () => {
                 onChange={(value) => {
                     setState({ search: value });
                 }}
-            // width
+                // width
             />
         );
     }, [state.search]);
@@ -336,7 +341,7 @@ const ROW_SKELETON = {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet', 'dw_partner']))
     }
 });
 

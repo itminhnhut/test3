@@ -89,7 +89,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                 key: 'status',
                 dataIndex: 'reason_close_code',
                 title: t('common:status'),
-                align: 'center',
+                align: 'left',
                 width: 178,
                 render: (_row, item) => {
                     const cancelled =

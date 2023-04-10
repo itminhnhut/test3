@@ -8,13 +8,13 @@ import classNames from 'classnames';
 const JOURNEY_DESCRIPTIONS = [
     {
         key: 1,
-        image: 'maxium_performance_1',
+        image: 'maxium_performance',
         localized: 'journey.reason_1',
         href: '/futures'
     },
     {
         key: 2,
-        image: 'crypto_knowledge_1',
+        image: 'crypto_knowledge',
         localized: 'journey.reason_4',
         href: '#'
     },
@@ -53,7 +53,7 @@ const HomeJourney = ({ t, width, currentTheme }) => {
                                     <div className="homepage-journey__group_content___left__item___icon">
                                         <Image
                                             src={getS3Url(
-                                                `/images/screen/homepage/${item.image}${item.image === 'token_saving_cost_1' ? `_${currentTheme}` : ''}.webp`
+                                                `/images/screen/homepage/${item.image}${item.image !== 'master_revenue_1' ? `_${currentTheme}` : ''}.webp`
                                             )}
                                             width={width >= 1366 ? '52' : '44'}
                                             height={width >= 1366 ? '52' : '44'}
