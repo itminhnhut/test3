@@ -15,7 +15,7 @@
     "min_amount": "Min amount",
     "max_amount": "Max amount",
     "daily_limit": "Daily limit",
-    "rest_daily_limit": "Daily remaining limit",
+    "rest_daily_limit": "Remaining limit",
     "will_transfer": "You will transfer",
     "will_received": "You will receive",
     "verify": "Verify",
