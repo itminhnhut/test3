@@ -10,9 +10,8 @@ import { PATHS } from 'constants/paths';
 
 import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
-import Skeletor from 'components/common/Skeletor';
 
-const ProfileHeader = ({ t, partner, bankDefault, loadingPartner, loadingBankDefault }) => {
+const ProfileHeader = ({ t, partner, bankDefault, banks, loadingPartner, loadingBankDefault }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
@@ -24,7 +23,7 @@ const ProfileHeader = ({ t, partner, bankDefault, loadingPartner, loadingBankDef
                         <div className="flex items-center text-txtSecondary dark:text-txtSecondary-dark ">
                             <div className="flex items-center">
                                 <CalendarFillIcon color="currentColor" size={16} />
-                                <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/mm/yyyy')}</div>
+                                <div className="text-txtPrimary dark:text-txtPrimary-dark ml-2">{formatTime(partner?.startedAt, 'dd/MM/yyyy')}</div>
                             </div>
                             <div className="ml-4 flex items-center">
                                 <ContactIcon color="currentColor" size={16} />
@@ -60,9 +59,12 @@ const ProfileHeader = ({ t, partner, bankDefault, loadingPartner, loadingBankDef
                                 imgSrc: bankDefault && bankDefault?.bankLogo
                             }}
                             endIcon={
-                                <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
-                                    <ChevronRight color="currentColor" size={24} />
-                                </div>
+                                banks &&
+                                banks?.length > 1 && (
+                                    <div className="ml-6 text-txtPrimary dark:text-txtPrimary-dark">
+                                        <ChevronRight color="currentColor" size={24} />
+                                    </div>
+                                )
                             }
                             endIconPosition="center"
                         />
@@ -81,7 +83,7 @@ const ProfileHeader = ({ t, partner, bankDefault, loadingPartner, loadingBankDef
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
                     <div className="txtSecond-2 mb-3">Tổng khối lượng GD</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] uppercase">
-                        {numeral(partner?.analyticMetadata?.totalValue).format('0.000a')} VND
+                        {numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND
                     </div>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">

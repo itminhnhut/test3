@@ -43,8 +43,14 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                 content: selectedPartner && {
                     mainContent: selectedPartner?.name?.toLowerCase(),
                     subContent: (
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
                             <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
+                            <div className="flex space-x-1 items-center">
+                                <OrderIcon size={16} />
+                                <span>
+                                    {partner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+                                </span>
+                            </div>
                             <div className="flex space-x-1 items-center">
                                 <Clock size={12} />
                                 <span>{formatTimePartner(t, selectedPartner?.analyticMetadata?.avgTime)}</span>
@@ -64,7 +70,9 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                                         <span>{formatPhoneNumber(partner?.phone)}</span>
                                         <div className="flex space-x-1 items-center">
                                             <OrderIcon size={16} />
-                                            <span>{partner?.analyticMetadata?.count || 0} Lệnh</span>
+                                            <span>
+                                                {partner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+                                            </span>
                                         </div>
                                         <div className="flex space-x-1 items-center">
                                             <BxsTimeIcon size={16} />
