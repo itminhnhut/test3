@@ -161,7 +161,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         if (isPartner) {
                             //user chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
-                                secondaryBtn = {
+                                //secondaryBtn
+                                primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
                                     text: t('cancel_order')
                                 };
@@ -238,7 +239,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         } else {
                             // partner chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
-                                secondaryBtn = {
+                                // secondaryBtn
+                                primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED),
                                     text: t('common:cancel_order')
                                 };
