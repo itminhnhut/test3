@@ -1283,3 +1283,8 @@ export const saveFile = (file, name) => {
 
 export const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
 export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(10, digit)) / Math.pow(10, digit);
+
+export function formatNanNumber(value, digits = 0) {
+    const formatedNumber = formatPrice(value, digits);
+    return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+}

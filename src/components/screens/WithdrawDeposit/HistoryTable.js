@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import TabV2 from 'components/common/V2/TabV2';
 import TableV2 from 'components/common/V2/TableV2';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { getAssetCode, formatTime, formatNumber } from 'redux/actions/utils';
+import { getAssetCode, formatTime, formatNumber, formatNanNumber } from 'redux/actions/utils';
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
@@ -54,7 +54,7 @@ const getColumns = (t, user, side) => [
         title: t('common:amount'),
         align: 'right',
         width: 140,
-        render: (v) => formatNumber(v)
+        render: (v, item) => `${side === SIDE.BUY ? '+' : '-'}${formatNanNumber(v, item?.baseAssetId === 22 ? 4 : 0)}`
     },
     {
         key: 'partnerMetadata',

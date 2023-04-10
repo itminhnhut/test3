@@ -15,7 +15,7 @@
     "min_amount": "Số lượng tối thiểu",
     "max_amount": "Số lượng tối đa",
     "daily_limit": "Giới hạn trong ngày",
-    "rest_daily_limit": "Giới hạn còn lại trong ngày",
+    "rest_daily_limit": "Giới hạn còn lại",
     "will_transfer": "Bạn cần chuyển",
     "will_received": "Bạn sẽ nhận",
     "verify": "Xác thực",
