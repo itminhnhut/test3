@@ -16,6 +16,7 @@ import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Divider from 'components/common/Divider';
 
 const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
+    const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
     return (
         <div className="flex -m-3 flex-wrap items-stretch">
             {/* Chi tiết giao dịch */}
@@ -81,34 +82,43 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                 <div className="flex flex-col min-h-full">
                     <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_bank_receipt')}</h1>
                     <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
-                        {mode === MODE.USER && side === SIDE.SELL && <div className="txtSecond-3 mb-4">{t('dw_partner:partner')}</div>}
+                        {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
+                            <div className="txtSecond-3 mb-4">{t(`dw_partner:${otherMode}`)}</div>
+                        )}
                         <div className="flex justify-between items-start">
                             <InfoCard
                                 loading={!orderDetail}
                                 content={{
-                                    mainContent: orderDetail?.partnerMetadata?.name,
+                                    mainContent: orderDetail?.[`${otherMode}Metadata`]?.name,
                                     subContent: (
                                         <div className="flex items-center space-x-3">
-                                            <span>{formatPhoneNumber(orderDetail?.partnerMetadata?.phone + '')}</span>
-                                            <div className="flex space-x-1 items-center">
-                                                <Clock size={12} />
-                                                <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
-                                            </div>
+                                            <span>
+                                                {orderDetail?.[`${otherMode}Metadata`]?.phone
+                                                    ? formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)
+                                                    : orderDetail?.[`${otherMode}Metadata`]?.code}
+                                            </span>
+                                            {mode === MODE.USER && (
+                                                <div className="flex space-x-1 items-center">
+                                                    <Clock size={12} />
+                                                    <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     ),
-                                    imgSrc: orderDetail?.partnerMetadata?.avatar
+                                    imgSrc: orderDetail?.[`${otherMode}Metadata`]?.avatar
                                 }}
                             />
-                            {mode === MODE.USER && side === SIDE.BUY && (
-                                <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
-                                    <QrCodeScannIcon />
-                                    QR Code
-                                </ButtonV2>
-                            )}
+                            {(side === SIDE.BUY && mode === MODE.USER) ||
+                                (side === SIDE.SELL && mode === MODE.PARTNER && (
+                                    <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
+                                        <QrCodeScannIcon />
+                                        QR Code
+                                    </ButtonV2>
+                                ))}
                         </div>
 
                         {/* Divider */}
-                        {mode === MODE.USER && side === SIDE.SELL && (
+                        {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
                             <div>
                                 <Divider className="w-full !my-4" />
                                 <div className="txtSecond-3">{t('dw_partner:payment_method')}</div>

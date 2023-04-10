@@ -10,8 +10,9 @@ import { PATHS } from 'constants/paths';
 
 import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
+import Skeletor from 'components/common/Skeletor';
 
-const ProfileHeader = ({ t, partner, bankDefault, loadingBankDefault }) => {
+const ProfileHeader = ({ t, partner, bankDefault, loadingPartner, loadingBankDefault }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
