@@ -45,13 +45,13 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
         <DropdownCard
             loadingList={loadingPartners}
             loading={loadingPartner}
-            disabled={!selectedPartner || !partners || partners?.length < 2}
+            disabled={Boolean(!selectedPartner) || !partners || partners?.length <= 1}
             containerClassname="z-[41]"
             label={t('dw_partner:partner')}
             data={partners && filterSearch(partners, ['name', 'phone'], search)}
             search={search}
             setSearch={setSearch}
-            showDropdownIcon={partners && partners?.length > 2}
+            showDropdownIcon={partners && partners?.length > 1}
             onSelect={(partner) => {
                 dispatch(setPartner(partner));
             }}
