@@ -43,7 +43,7 @@ const ModalCommissionHistory = ({ onClose, isVisible, t, transaction, id = '', s
                 <h1 className="text-2xl">{sideCommission}</h1>
                 <div className="flex flex-col items-center justify-center my-6">
                     <AssetLogo assetCode={getAssetCode(currency)} size={80} useNextImg />
-                    <div className="mt-6 text-2xl">{formatNanNumber(money_use, +currency === 22 ? 4 : 0) + ' ' + getAssetCode(currency)}</div>
+                    <div className="mt-6 text-2xl">{formatNanNumber(money_use, +currency === 72 ? 0 : 4) + ' ' + getAssetCode(currency)}</div>
                     <OrderStatusTag status={1} className="m-auto mt-3 !font-normal" />
                 </div>
                 {/* Card ID */}

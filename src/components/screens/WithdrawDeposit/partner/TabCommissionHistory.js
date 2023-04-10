@@ -156,9 +156,9 @@ const TabCommissionHistory = () => {
                 title: t('common:amount'),
                 align: 'right',
                 width: 200,
-                render: (v, item) => formatNanNumber(v, +item?.currency === 22 ? 4 : 0)
+                render: (v, item) => formatNanNumber(v, +item?.currency === 72 ? 0 : 4)
                 // render: (v, item) => {
-                //     const formattedNumber = formatNanNumber(v, +item?.currency === 22 ? 4 : 0);
+                //     const formattedNumber = formatNanNumber(v, +item?.currency === 72 ? 0 : 4);
                 //     if (!formattedNumber) return <span className="text-gray-15 dark:text-gray-4">_</span>;
                 //     return '+' + formattedNumber;
                 // }
