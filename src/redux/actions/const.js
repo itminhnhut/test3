@@ -885,17 +885,19 @@ export const GET_PARTNER_STATUS = {
 
 export const ApiResultCreateOrder = {
     INVALID_OTP: 'INVALID_OTP',
-    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST'
+    TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
+    NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
+    NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY'
 };
 
 export const DEFAULT_PARTNER_MIN = {
-    [SIDE.SELL]: 500e3,
+    [SIDE.SELL]:100e3,
     [SIDE.BUY]: 100e3
 };
 
 export const DEFAULT_PARTNER_MAX = {
-    [SIDE.SELL]: 50e6,
-    [SIDE.BUY]: 50e6
+    [SIDE.SELL]: 500e6,
+    [SIDE.BUY]: 500e6
 };
 
 export const PartnerOrderStatus = {

@@ -20,7 +20,8 @@ const DropdownCard = ({
     data,
     onSelect,
     additionalActions,
-    showDropdownIcon = true
+    showDropdownIcon = true,
+    placeholder
 }) => {
     const cardRef = useRef(null);
     const [isVisible, setVisible] = useState(false);
@@ -64,6 +65,7 @@ const DropdownCard = ({
             }
             value={search}
             onChange={(value) => setSearch(value)}
+            placeholder={placeholder}
         >
             {loadingList ? (
                 <div className="flex justify-center items-center min-h-[200px]">
