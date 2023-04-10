@@ -1287,7 +1287,7 @@ export const roundByExactDigit = (value, digit) => Math.floor(value * Math.pow(1
 
 export function formatNanNumber(value, digits = 0) {
     const formatedNumber = formatPrice(value, digits);
-    return `+${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+    return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
 }
 
 export const convertDateToMs = (date = 0, type = 'startOf') => {
