@@ -5,7 +5,7 @@ import Tabs, { TabItem } from 'src/components/common/Tabs/Tabs';
 import ChartJS from 'components/screens/Portfolio/charts/ChartJS';
 import Note from 'components/common/Note';
 import colors from 'styles/colors';
-import { formatTime, formatSwapRate, convertDateToMs } from 'redux/actions/utils';
+import { formatTime, formatSwapRate, convertDateToMs, formatNanNumber } from 'redux/actions/utils';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_STATISTIC_PARTNER } from 'redux/actions/apis';
@@ -18,8 +18,8 @@ import { isNumber } from 'lodash';
 import FilterTokenTab from 'components/common/FilterTokenTab';
 
 const TabStatistic = [
-    { value: 'commission', localized: 'reference:referral.total_commissions' },
-    { value: 'depositwithdraw', localized: 'dw_partner:total_dw' }
+    { value: 'depositwithdraw', localized: 'dw_partner:total_dw' },
+    { value: 'commission', localized: 'reference:referral.total_commissions' }
 ];
 
 const SessionChart = () => {
@@ -33,12 +33,13 @@ const SessionChart = () => {
         range: {
             startDate: null,
             endDate: Date.now(),
+            interval: 'd',
             key: 'selection'
         }
     });
 
     const [showModalDetail, setShowModalDetail] = useState(null);
-    const [curToken, setCurToken] = useState(72);
+    // const [curToken, setCurToken] = useState(72);
     const [chartData, setChartData] = useState({
         labels: [],
         datasets: []
@@ -51,32 +52,31 @@ const SessionChart = () => {
                 from: convertDateToMs(filter?.range?.startDate),
                 to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
                 type: typeTab,
-                currency: curToken,
-                interval: 'd'
+                currency: 72,
+                interval: filter?.range?.interval || 'd'
             }
         },
         true,
-        [filter, typeTab, curToken]
+        [filter, typeTab]
     );
 
     useEffect(() => {
         if (!data) return;
-
         setChartData({
-            labels: data.labels,
+            labels: filter?.range?.interval ? data.labels.map((week) => `${t('futures:week')} ${week}`) : data.labels,
             datasets: [
                 {
                     fill: false,
                     label: false,
                     data: data.data.filter((arr) => arr.some((obj) => obj.side === 'BUY')).map((arr) => arr.find((obj) => obj.side === 'BUY').value),
-                    backgroundColor: colors.purple[1]
+                    backgroundColor: colors.green[6]
                     // stack: 'pnl'
                 },
                 {
                     fill: false,
                     label: false,
                     data: data.data.filter((arr) => arr.some((obj) => obj.side === 'SELL')).map((arr) => arr.find((obj) => obj.side === 'SELL').value),
-                    backgroundColor: colors.green[6],
+                    backgroundColor: colors.purple[1],
                     borderRadius: { topLeft: 2, topRight: 2, bottomLeft: 0, bottomRight: 0 }
                     // stack: 'pnl'
                 }
@@ -162,7 +162,7 @@ const SessionChart = () => {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <h1 className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</h1>
-                <FilterTokenTab curToken={curToken} setCurToken={setCurToken} />
+                {/* <FilterTokenTab curToken={curToken} setCurToken={setCurToken} /> */}
             </div>
 
             {/* Body */}
@@ -188,8 +188,8 @@ const SessionChart = () => {
                 {/* Chu thich */}
                 <div className="flex justify-between items-center mt-6">
                     <div className="flex items-center gap-x-4">
-                        <Note iconClassName="bg-purple-1" title={t('common:deposit')} />
-                        <Note iconClassName="bg-green-6" title={t('common:withdraw')} />
+                        <Note iconClassName="bg-green-6" title={t('common:deposit')} />
+                        <Note iconClassName="bg-purple-1" title={t('common:withdraw')} />
                     </div>
                     <DarkNote variants="secondary" title={t('dw_partner:notice_chart_details')} />
                 </div>
@@ -245,18 +245,18 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{t('common:total')}</span>
-                        <div>{formatSwapRate(totalBuySell)} VNDC</div>
+                        <div>{formatNanNumber(totalBuySell, 0)} VNDC</div>
                     </div>
                 </CardWrapper>
                 <h3 className="txtSecond-3">{t('common:details')}</h3>
                 <CardWrapper className="!p-4 mt-3">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('dw_partner:buy_volume')}</span>
-                        <div>{formatSwapRate(buy)} VNDC</div>
+                        <div>{formatNanNumber(buy, 0)} VNDC</div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
                         <span className="txtSecond-4">{t('dw_partner:sell_volume')}</span>
-                        <div>{formatSwapRate(sell)} VNDC</div>
+                        <div>{formatNanNumber(sell, 0)} VNDC</div>
                     </div>
                 </CardWrapper>
             </div>

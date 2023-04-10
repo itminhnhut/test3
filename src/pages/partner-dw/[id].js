@@ -84,7 +84,8 @@ export const getServerSideProps = async (context) => {
                 'payment-method',
                 'dw_partner',
                 'reference',
-                'transaction-history'
+                'transaction-history',
+                'futures'
             ])),
             id
         }

@@ -19,6 +19,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             });
         } else if (timeTab !== 'custom') {
             const date = new Date();
+            let interval = null;
             switch (timeTab) {
                 case TIME_FILTER[1].value:
                     date.setDate(date.getDate() - 0);
@@ -28,6 +29,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
                     break;
                 case TIME_FILTER[3].value:
                     date.setDate(date.getDate() - 30);
+                    interval = 'w';
                     break;
                 default:
                     break;
@@ -37,7 +39,8 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
                 range: {
                     startDate: date.getTime(),
                     endDate: new Date(),
-                    key: 'selection'
+                    key: 'selection',
+                    interval
                 }
             });
             return;
