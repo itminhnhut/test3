@@ -48,6 +48,7 @@ export const BankInfo = ({
             search={search}
             setSearch={setSearch}
             onSelect={onSelect ? (bank) => onSelect(bank) : undefined}
+            placeholder={t('dw_partner:search_bank')}
             selected={{
                 id: selectedBank?._id,
                 content: selectedBank && {

@@ -148,7 +148,7 @@ const ModalOtp = ({ isVisible, onClose, otpExpireTime, loading, onConfirm }) => 
                             inputStyle={classNames(
                                 '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4  font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 ',
                                 {
-                                    'focus:!border-teal': !state.isError,
+                                    'focus:!border-teal focus:border': !state.isError,
                                     '!border-red': state.isError
                                 }
                             )}
