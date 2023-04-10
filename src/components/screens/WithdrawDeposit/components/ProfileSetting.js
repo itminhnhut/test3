@@ -63,7 +63,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, refetchPartner }) => {
                             <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.min)}</span>
                             <span>-</span>
                             <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.max)} </span>
-                            <span>VNDC</span>
+                            <span>VND</span>
                         </div>
                         <ButtonV2 onClick={() => onOpenModal(side)} className="disabled:!bg-transparent !w-auto !py-0 !h-auto" variants="text">
                             {t('common:edit')}
