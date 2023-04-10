@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import CardWrapper from 'components/common/CardWrapper';
 import { formatNumber } from 'utils/reference-utils';
-import { formatAbbreviateNumber, formatPercentage } from 'redux/actions/utils';
+import { formatAbbreviateNumber, formatNanNumber, formatPercentage } from 'redux/actions/utils';
 import useFetchApi from 'hooks/useFetchApi';
 import { API_GET_COMMISSION_REPORT_PARTNER } from 'redux/actions/apis';
 import Skeletor from 'components/common/Skeletor';
@@ -41,14 +41,7 @@ const SessionGeneral = () => {
                         <div>
                             <h1 className="txtSecond-3">{t('dw_partner:total_commissions')}</h1>
                             <div className="pt-4 txtPri-5">
-                                {loading ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    formatNumber(
-                                        data?.totalCommission.totalValue.filter((item) => item !== null).reduce((acc, val) => acc + val, 0),
-                                        0
-                                    )
-                                )}
+                                {loading ? <Skeletor width="100px" /> : formatNanNumber(data?.totalCommission?.convertedCommissionValue, 0)}
                             </div>
                         </div>
 

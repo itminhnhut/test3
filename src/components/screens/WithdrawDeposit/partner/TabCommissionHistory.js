@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { formatBalance, formatNanNumber, formatPrice, formatSwapRate, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -115,7 +115,7 @@ const TabCommissionHistory = () => {
                 align: 'left',
                 fixed: 'left',
                 width: 244,
-                render: (v) => <TextCopyable className="gap-x-1" showingText={shortHashAddress(v, 5, 8)} text={v} />
+                render: (v) => <TextCopyable className="gap-x-1" showingText={shortHashAddress(v, 10, 6)} text={v} />
             },
             {
                 key: 'currency',
@@ -156,9 +156,7 @@ const TabCommissionHistory = () => {
                 title: t('common:amount'),
                 align: 'right',
                 width: 200,
-                render: (v) => {
-                    return '+' + formatSwapRate(v);
-                }
+                render: (v, item) => formatNanNumber(v, +item?.currency === 22 ? 4 : 0)
             }
         ],
         [categoryConfig, t]
@@ -201,7 +199,9 @@ const TabCommissionHistory = () => {
                 isVisible={openModalDetail}
                 onClose={() => setOpenModalDetail(null)}
                 transaction={openModalDetail}
-                typeCommission={categoryConfig?.[openModalDetail?.category]?.[language]}
+                sideCommission={categoryConfig?.[openModalDetail?.category]?.[language]}
+                id={openModalDetail?._id}
+                category={categoryConfig}
             />
         </div>
     );
