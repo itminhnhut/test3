@@ -322,7 +322,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     }}
                 />
                 {/* Lưu ý */}
-                {side === SIDE.BUY && (
+                {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
                         <div className="flex font-semibold items-center space-x-2 ">
                             <BxsInfoCircle size={16} fill={'currentColor'} fillInside={'currentColor'} />
