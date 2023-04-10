@@ -157,6 +157,11 @@ const TabCommissionHistory = () => {
                 align: 'right',
                 width: 200,
                 render: (v, item) => formatNanNumber(v, +item?.currency === 22 ? 4 : 0)
+                // render: (v, item) => {
+                //     const formattedNumber = formatNanNumber(v, +item?.currency === 22 ? 4 : 0);
+                //     if (!formattedNumber) return <span className="text-gray-15 dark:text-gray-4">_</span>;
+                //     return '+' + formattedNumber;
+                // }
             }
         ],
         [categoryConfig, t]
