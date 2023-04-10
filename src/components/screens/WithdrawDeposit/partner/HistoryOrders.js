@@ -83,7 +83,7 @@ const getColumns = ({ t }) => [
         align: 'right',
         width: 152,
         render: (row, item) => {
-            console.log('item:', item)
+            console.log('item:', item);
             return <div className="text-teal">{!row ? 0 : formatNumber(row, 4)}</div>;
         }
     },
@@ -169,36 +169,36 @@ const HistoryOrders = () => {
     dataRef.current = [...state.data];
     currentParamsRef.current = { ...state.params };
 
-    useEffect(() => {
-        if (userSocket) {
-            userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
-                if (dataRef.current.length) {
-                    const { assetId, side, status } = currentParamsRef.current;
-                    const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
-                    // if newOrder is not in the current data sets with -> refetch table
-                    if (
-                        !existedOrder &&
-                        side &&
-                        newOrder?.side === side &&
-                        assetId &&
-                        newOrder?.baseAssetId === assetId &&
-                        status &&
-                        newOrder?.status === status
-                    ) {
-                        toggleRefetch();
-                    }
-                }
-                toggleRefetch();
-            });
-        }
-        return () => {
-            if (userSocket) {
-                userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
-                    console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
-                });
-            }
-        };
-    }, [userSocket]);
+    // useEffect(() => {
+    //     if (userSocket) {
+    //         userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
+    //             if (dataRef.current.length) {
+    //                 const { assetId, side, status } = currentParamsRef.current;
+    //                 const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
+    //                 // if newOrder is not in the current data sets with -> refetch table
+    //                 if (
+    //                     !existedOrder &&
+    //                     side &&
+    //                     newOrder?.side === side &&
+    //                     assetId &&
+    //                     newOrder?.baseAssetId === assetId &&
+    //                     status &&
+    //                     newOrder?.status === status
+    //                 ) {
+    //                     toggleRefetch();
+    //                 }
+    //             }
+    //             toggleRefetch();
+    //         });
+    //     }
+    //     return () => {
+    //         if (userSocket) {
+    //             userSocket.removeListener(UserSocketEvent.PARTNER_UPDATE_ORDER, (data) => {
+    //                 console.log('socket removeListener PARTNER_UPDATE_ORDER:', data);
+    //             });
+    //         }
+    //     };
+    // }, [userSocket]);
 
     useEffect(() => {
         const source = axios.CancelToken.source();

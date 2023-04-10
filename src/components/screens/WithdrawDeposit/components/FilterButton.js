@@ -52,7 +52,10 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
                         wrapperClassname="!h-11"
                         value={search || ''}
                         placeholder="Nhập mã lệnh"
-                        onChange={(value) => setSearch(value)}
+                        onChange={(value) => {
+                            const regex = /[^A-Za-z0-9]+/g;
+                            if (!regex.test(value)) setSearch(value);
+                        }}
                     />
                 </FilterWrapper>
             </div>

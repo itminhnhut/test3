@@ -315,7 +315,7 @@ const OpenOrderTable = () => {
                     skip={0}
                     useRowHover
                     data={state.data}
-                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch: () => {} })}
+                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch })}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
                     loading={state.loading}
