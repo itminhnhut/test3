@@ -55,15 +55,11 @@ const ProfileSetting = ({ partner, t, loadingPartner, refetchPartner }) => {
                     </div>
                     <div className="text-txtSecondary dark:text-txtSecondary-dark text-sm mb-1">Giới hạn khối lượng lệnh:</div>
                     <div className="flex items-center justify-between">
-                        <div
-                            className={classNames('flex items-center space-x-1', {
-                                'text-gray': orderConfig?.status === 0
-                            })}
-                        >
+                        <div className={classNames('flex items-center space-x-1')}>
                             <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.min)}</span>
                             <span>-</span>
                             <span className={classNames('text-dominant ')}>{formatNumber(orderConfig?.max)} </span>
-                            <span>VNDC</span>
+                            <span>VND</span>
                         </div>
                         <ButtonV2 onClick={() => onOpenModal(side)} className="disabled:!bg-transparent !w-auto !py-0 !h-auto" variants="text">
                             {t('common:edit')}

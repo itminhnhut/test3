@@ -19,6 +19,7 @@ const CommonFilter = ({ subLabel, boxLabel, onSelect, data, active, t }) => {
             <PopoverSelect
                 ref={ref}
                 open={visible}
+                hideSearch
                 label={
                     <div
                         onClick={() => setVisible((prev) => !prev)}
@@ -49,7 +50,7 @@ const CommonFilter = ({ subLabel, boxLabel, onSelect, data, active, t }) => {
                             <div
                                 key={item.key}
                                 onClick={() => {
-                                    if(active === item.key) return;
+                                    if (active === item.key) return;
                                     onSelect(item);
                                     setVisible(false);
                                 }}

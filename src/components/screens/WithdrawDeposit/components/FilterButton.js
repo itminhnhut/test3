@@ -23,8 +23,12 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
         () => {
             if (isNull(search)) return;
             setFilter({
+                ...INITIAL_FILTER_LOCALIZED,
+                from: null,
+                to: null,
                 displayingId: search.trim().toUpperCase()
             });
+            setFilterLocalized(INITIAL_FILTER_LOCALIZED);
         },
         500,
         [search]
