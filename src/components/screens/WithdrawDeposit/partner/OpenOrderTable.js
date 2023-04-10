@@ -124,7 +124,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
                             ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE, order)
                             : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED, order);
                     }}
-                    variants="secondary"
+                    // variants="secondary"
                 >
                     {btnText}
                 </ButtonV2>

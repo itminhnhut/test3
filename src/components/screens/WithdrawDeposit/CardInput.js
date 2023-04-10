@@ -126,7 +126,7 @@ const CardInput = () => {
             <Card className="w-full">
                 <div className="mb-4">
                     <div className="w-full mb-2 flex justify-between ">
-                        <label htmlFor="TradingInput" className="txtSecond-3 ">
+                        <label htmlFor="TradingInputV2" className="txtSecond-3 ">
                             {t('common:amount')}
                         </label>
                         {side === SIDE.SELL && (
@@ -142,7 +142,7 @@ const CardInput = () => {
                             </div>
                         )}
                     </div>
-                    <div className="flex flex-wrap -m-1">
+                    <div className="flex -m-1">
                         <div className="flex-1 p-1">
                             <TradingInputV2
                                 id="TradingInputV2"
