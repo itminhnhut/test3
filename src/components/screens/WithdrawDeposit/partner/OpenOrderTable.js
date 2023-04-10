@@ -310,7 +310,7 @@ const OpenOrderTable = () => {
                     />
                 </div>
                 <TableV2
-                    sort={['baseQty']}
+                    sort={state.data.length > 1 ? ['baseQty'] : []}
                     limit={LIMIT_ROW}
                     skip={0}
                     useRowHover

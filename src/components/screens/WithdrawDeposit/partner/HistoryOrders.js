@@ -277,7 +277,7 @@ const HistoryOrders = () => {
             </div>
 
             <TableV2
-                sort={state.data.length > 1 ? ['baseQty'] : []}
+                sort={state.data.length > 1 ? ['baseQty','createdAt'] : []}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
