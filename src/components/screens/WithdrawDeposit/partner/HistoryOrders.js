@@ -83,7 +83,6 @@ const getColumns = ({ t }) => [
         align: 'right',
         width: 152,
         render: (row, item) => {
-            console.log('item:', item);
             return <div className="text-teal">{!row ? 0 : formatNumber(row, 4)}</div>;
         }
     },
