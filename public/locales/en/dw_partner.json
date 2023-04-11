@@ -15,7 +15,7 @@
     "min_amount": "Min amount",
     "max_amount": "Max amount",
     "daily_limit": "Daily limit",
-    "rest_daily_limit": "Daily remaining limit",
+    "rest_daily_limit": "Remaining limit",
     "will_transfer": "You will transfer",
     "will_received": "You will receive",
     "verify": "Verify",
@@ -60,6 +60,7 @@
     "submit": "Submit",
     "reselected": "Upload again",
     "search_bank": "Search bank",
+    "order": "Order",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",

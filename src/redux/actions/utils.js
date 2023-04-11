@@ -1388,3 +1388,8 @@ export const LastPrice = memo(({ price, className, style }) => {
         </div>
     );
 });
+
+export function formatNanNumber(value, digits = 0) {
+    const formatedNumber = formatPrice(value, digits);
+    return `${formatedNumber === 'NaN' ? 0 : formatedNumber}`;
+}

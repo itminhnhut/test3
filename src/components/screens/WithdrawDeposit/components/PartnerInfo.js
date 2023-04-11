@@ -10,7 +10,24 @@ import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
 import OrderBook from 'components/trade/OrderBook';
 import { BxsTimeIcon, OrderIcon, TimeLapseIcon } from 'components/svg/SvgIcon';
-import TimeCircle from 'components/svg/TimeCircle';
+
+export const PartnerSubcontent = ({ partner, t }) => (
+    <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
+        <span>{formatPhoneNumber(partner?.phone)}</span>
+        <div className="flex space-x-1 items-center">
+            <OrderIcon size={16} />
+            <span>
+                {partner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+            </span>
+        </div>
+        {partner?.analyticMetadata?.count && (
+            <div className="flex space-x-1 items-center">
+                <BxsTimeIcon size={16} />
+                <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
+            </div>
+        )}
+    </div>
+);
 
 const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t }) => {
     const dispatch = useDispatch();
@@ -28,13 +45,13 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
         <DropdownCard
             loadingList={loadingPartners}
             loading={loadingPartner}
-            disabled={Boolean(!selectedPartner) || !partners || !partners?.length}
+            disabled={Boolean(!selectedPartner) || !partners || partners?.length <= 1}
             containerClassname="z-[41]"
             label={t('dw_partner:partner')}
             data={partners && filterSearch(partners, ['name', 'phone'], search)}
             search={search}
             setSearch={setSearch}
-            showDropdownIcon={partners && partners?.length}
+            showDropdownIcon={partners && partners?.length > 1}
             onSelect={(partner) => {
                 dispatch(setPartner(partner));
             }}
@@ -42,16 +59,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                 id: selectedPartner?._id,
                 content: selectedPartner && {
                     mainContent: selectedPartner?.name?.toLowerCase(),
-                    subContent: (
-                        <div className="flex items-center space-x-3">
-                            <span>{formatPhoneNumber(selectedPartner?.phone || '1234')}</span>
-                            <div className="flex space-x-1 items-center">
-                                <Clock size={12} />
-                                <span>{formatTimePartner(t, selectedPartner?.analyticMetadata?.avgTime)}</span>
-                            </div>
-                        </div>
-                    ),
-
+                    subContent: <PartnerSubcontent partner={selectedPartner} t={t} />,
                     imgSrc: selectedPartner?.avatar
                 },
                 item: (partner) =>
@@ -59,20 +67,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                         <InfoCard
                             content={{
                                 mainContent: partner && partner?.name?.toLowerCase(),
-                                subContent: (
-                                    <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                        <span>{formatPhoneNumber(partner?.phone)}</span>
-                                        <div className="flex space-x-1 items-center">
-                                            <OrderIcon size={16} />
-                                            <span>{partner?.analyticMetadata?.count || 0} Lệnh</span>
-                                        </div>
-                                        <div className="flex space-x-1 items-center">
-                                            <BxsTimeIcon size={16} />
-                                            <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
-                                        </div>
-                                    </div>
-                                ),
-
+                                subContent: <PartnerSubcontent partner={partner} t={t} />,
                                 imgSrc: partner?.avatar
                             }}
                             endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor" />}
