@@ -82,7 +82,7 @@ const ModalBankDefault = ({ isVisible, onClose, className, banks, toggleRefetch,
                                             <span>{bank.accountNumber}</span>
                                             {bank.isDefault && (
                                                 <TagV2 icon={false} type="success">
-                                                    <span className="text-sm">Mặc định</span>
+                                                    <span className="text-sm">{t('dw_partner:default')}</span>
                                                 </TagV2>
                                             )}
                                         </div>

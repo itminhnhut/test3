@@ -93,7 +93,9 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
     );
 
     const onConfirmHandler = async () => {
-        await onConfirm({ side: side.toLowerCase(), min: +amount.min, max: +amount.max });
+        +amount.min === partner?.orderConfig?.[side?.toLowerCase()]?.min && +amount.max === partner?.orderConfig?.[side?.toLowerCase()]?.max
+            ? onClose()
+            : await onConfirm({ side: side.toLowerCase(), min: +amount.min, max: +amount.max });
     };
 
     return (
@@ -134,11 +136,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
             <Button
                 loading={loading}
                 onClick={onConfirmHandler}
-                disabled={
-                    validator.max().isError ||
-                    validator.min().isError ||
-                    (+amount.min === partner?.orderConfig?.[side?.toLowerCase()]?.min && +amount.max === partner?.orderConfig?.[side?.toLowerCase()]?.max)
-                }
+                disabled={validator.max().isError || validator.min().isError}
                 className="disabled:cursor-default mt-10"
                 variants="primary"
             >

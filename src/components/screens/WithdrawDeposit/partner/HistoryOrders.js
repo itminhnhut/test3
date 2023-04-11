@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatTime, getAssetCode } from 'redux/actions/utils';
+import { formatBalance, formatNumber, formatTime, getAssetCode } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -78,12 +78,13 @@ const getColumns = ({ t }) => [
     },
     {
         key: 'commission',
-        dataIndex: '',
+        dataIndex: 'commission',
         title: 'Hoa hồng',
         align: 'right',
         width: 152,
         render: (row, item) => {
-            return <div className="text-teal">0</div>;
+            console.log('item:', item)
+            return <div className="text-teal">{!row ? 0 : formatNumber(row, 4)}</div>;
         }
     },
     {
@@ -277,7 +278,7 @@ const HistoryOrders = () => {
             </div>
 
             <TableV2
-                sort={state.data.length > 1 ? ['baseQty'] : []}
+                sort={state.data.length > 1 ? ['baseQty', 'createdAt'] : []}
                 limit={LIMIT_ROW}
                 skip={0}
                 useRowHover
