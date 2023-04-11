@@ -26,7 +26,7 @@ export const TRANSACTION_TYPES = {
     CONVERTSMALLBALANCE: 'convertsmallbalance',
     REWARD: 'reward',
     FUTURESCOMMISSION: 'futurescommission',
-
+    PARTNERCOMMISSION: 'partnercommission',
     COMMISSION: 'commision'
 };
 
@@ -159,6 +159,13 @@ export const modalDetailColumn = {
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['nami_system'], localized: 'modal_detail.from', type: COLUMNS_TYPE.NAMI_SYSTEM },
         { keys: ['additionalData.reward'], localized: 'modal_detail.assets_number', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
+    ],
+    [TRANSACTION_TYPES.PARTNERCOMMISSION]: [
+        { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
+        { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
+        { keys: ['nami_system'], localized: 'modal_detail.from', type: COLUMNS_TYPE.NAMI_SYSTEM },
+        // { keys: ['additionalData.reward'], localized: 'modal_detail.assets_number', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.STAKING]: [
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },

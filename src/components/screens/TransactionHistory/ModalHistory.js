@@ -41,16 +41,16 @@ const mappingTokensRewardType = (detail) => {
 
 const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
     const [detailTx, setDetailTx] = useState(null);
+    console.log('detailTx:', detailTx);
     const [assetData, setAssetData] = useState(null);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        const controller = new AbortController();
-
+        const source = axios.CancelToken.source();
         const fetchDetail = async (id) => {
             setLoading(true);
             try {
                 const detail = await axios.get(API_GET_WALLET_TRANSACTION_HISTORY + '/' + id, {
-                    signal: controller.signal
+                    cancelToken: source.token
                 });
                 if (detail.data && (detail.data.statusCode === 200 || detail.data.statusCode === ApiStatus.SUCCESS)) {
                     const result = detail.data.data.result;
@@ -73,10 +73,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
         return () => {
             // stop axios on unmount
-            controller.abort();
+            source.cancel();
         };
     }, [id, assetConfig]);
-
     return (
         <ModalV2
             isVisible={isVisible}
@@ -97,7 +96,24 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                     <div className="mb-2">
                         <Skeletor width={100} height={20} />
                     </div>
-                    <Skeletor className="rounded-full" width={100} height={20} />
+
+                    <div className="mb-6">
+                        <Skeletor className="rounded-full" width={100} height={20} />
+                    </div>
+                    <div className="mx-8 w-full dark:bg-darkBlue-3 bg-hover-1 p-4  space-y-1 rounded-xl">
+                        <div className="flex w-full justify-between items-center">
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                        </div>
+                        <div className="flex w-full justify-between items-center">
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                        </div>
+                        <div className="flex w-full justify-between items-center">
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                            <Skeletor className="rounded-full" width={100} height={20} />
+                        </div>
+                    </div>
                 </div>
             ) : (
                 detailTx && (
@@ -140,11 +156,11 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             </div>
                             <div className="mb-3">
                                 {`${detailTx?.result?.money_use > 0 ? '+' : ''} ${
-                                    assetData?.assetCode === 'VNDC'
-                                        ? customFormatBalance(detailTx?.result?.money_use, 0, true)
-                                        : assetData?.assetCode === 'USDT'
-                                        ? customFormatBalance(detailTx?.result?.money_use, 4, true)
-                                        : customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit || 0, true)
+                                    // assetData?.assetCode === 'VNDC'
+                                    customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit, true)
+                                    // : assetData?.assetCode === 'USDT'
+                                    // ? customFormatBalance(detailTx?.result?.money_use, 4, true)
+                                    // : customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit || 0, true)
                                 } ${assetData?.assetCode}`}
                             </div>
                             <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
@@ -167,10 +183,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.COPIEDABLE:
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
 
-                                        // if(detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
-
-                                        //     priorityKey = get(detailTx, 'result.categoy')
-                                        // }
+                                        if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                            // detailTx.result.category === '4'
+                                            // priorityKey = get(detailTx, 'result.categoy')
+                                        }
                                         formatKeyData = (
                                             <TextCopyable
                                                 showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
@@ -184,7 +200,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
 
                                     case COLUMNS_TYPE.RATE:
-                                        additionalData = detailTx?.additionalData;
+                                        additionalData = detailTx?.additionalData || detailTx?.result?.metadata;
 
                                         if (!additionalData) {
                                             formatKeyData = '--';
@@ -224,7 +240,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         )} ${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
-                                        additionalData = detailTx?.additionalData;
+                                        additionalData = detailTx?.additionalData || detailTx?.result?.metadata;
                                         if (!additionalData) return;
                                         const assetLength = additionalData?.assets
                                             ? additionalData?.assets?.length
@@ -289,38 +305,27 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 );
                             })}
                         </div>
-                        {(detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE || detailTx.type === TRANSACTION_TYPES.REWARD) && (
+                        {detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE && (
                             <div className="mx-8 mt-6">
-                                <div className="font-semibold mb-3">
-                                    {detailTx.type === TRANSACTION_TYPES.REWARD
-                                        ? t('transaction-history:modal_detail.list_assets')
-                                        : t('transaction-history:modal_detail.list_assets_convert')}
-                                </div>
+                                <div className="font-semibold mb-3">{t('transaction-history:modal_detail.list_assets_convert')}</div>
                                 <div className="p-4  space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
-                                    {detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE &&
-                                        detailTx?.additionalData?.assets
-                                            // ||
-                                            // (detailTx.type === TRANSACTION_TYPES.REWARD && mappingTokensRewardType(detailTx))
-                                            ?.map((asset) => {
-                                                const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
-                                                const isUSDT = _.assetCode === 'USDT';
-                                                const isVNDC = _.assetCode === 'VNDC';
-                                                return (
-                                                    <div
-                                                        key={_?.id}
-                                                        className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center"
-                                                    >
-                                                        <div className="">{_?.assetCode || NULL_ASSET}</div>
-                                                        <div className={classNames('font-semibold')}>
-                                                            {isVNDC
-                                                                ? customFormatBalance(asset.value, 0, true)
-                                                                : isUSDT
-                                                                ? customFormatBalance(asset.value, 4, true)
-                                                                : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
+                                    {(detailTx?.additionalData?.assets || detailTx?.result?.metadata?.assets || []).map((asset) => {
+                                        const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
+                                        const isUSDT = _.assetCode === 'USDT';
+                                        const isVNDC = _.assetCode === 'VNDC';
+                                        return (
+                                            <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
+                                                <div className="">{_?.assetCode || NULL_ASSET}</div>
+                                                <div className={classNames('font-semibold')}>
+                                                    {isVNDC
+                                                        ? customFormatBalance(asset.value, 0, true)
+                                                        : isUSDT
+                                                        ? customFormatBalance(asset.value, 4, true)
+                                                        : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
