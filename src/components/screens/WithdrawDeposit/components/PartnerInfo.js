@@ -1,35 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { formatPhoneNumber, filterSearch, formatTime, formatTimePartner } from 'redux/actions/utils';
+import { formatPhoneNumber, filterSearch, formatTimePartner } from 'redux/actions/utils';
 import { setPartner } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import { API_GET_PARTNERS } from 'redux/actions/apis';
 import InfoCard from './common/InfoCard';
-import { Clock } from 'react-feather';
 import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
-import OrderBook from 'components/trade/OrderBook';
-import { BxsTimeIcon, OrderIcon, TimeLapseIcon } from 'components/svg/SvgIcon';
+import { BxsTimeIcon, OrderIcon } from 'components/svg/SvgIcon';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-export const PartnerSubcontent = ({ partner, t }) => (
-    <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-        <span>{formatPhoneNumber(partner?.phone)}</span>
-        <div className="flex space-x-1 items-center">
-            <OrderIcon size={16} />
-            <span>
-                {partner?.analyticMetadata?.count || 0} {t('dw_partner:order')}
-            </span>
-        </div>
-        {partner?.analyticMetadata?.count && (
+export const PartnerSubcontent = ({ partner, t, language }) => {
+    const totalOrder = partner?.analyticMetadata?.count || 0;
+    return (
+        <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
+            <span>{formatPhoneNumber(partner?.phone)}</span>
             <div className="flex space-x-1 items-center">
-                <BxsTimeIcon size={16} />
-                <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
+                <OrderIcon size={16} />
+                <span>
+                    {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 0 ? 's' : ''}`}
+                </span>
             </div>
-        )}
-    </div>
-);
+            {totalOrder > 0 ? (
+                <div className="flex space-x-1 items-center">
+                    <BxsTimeIcon size={16} />
+                    <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
+                </div>
+            ) : (
+                <></>
+            )}
+        </div>
+    );
+};
 
-const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t }) => {
+const PartnerInfo = ({ quantity, assetId, side, language, loadingPartner, minimumAllowed, maximumAllowed, selectedPartner, t }) => {
     const dispatch = useDispatch();
     const [search, setSearch] = useState('');
 
@@ -59,7 +63,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                 id: selectedPartner?._id,
                 content: selectedPartner && {
                     mainContent: selectedPartner?.name?.toLowerCase(),
-                    subContent: <PartnerSubcontent partner={selectedPartner} t={t} />,
+                    subContent: <PartnerSubcontent partner={selectedPartner} language={language} t={t} />,
                     imgSrc: selectedPartner?.avatar
                 },
                 item: (partner) =>
@@ -67,7 +71,7 @@ const PartnerInfo = ({ quantity, assetId, side, loadingPartner, minimumAllowed, 
                         <InfoCard
                             content={{
                                 mainContent: partner && partner?.name?.toLowerCase(),
-                                subContent: <PartnerSubcontent partner={partner} t={t} />,
+                                subContent: <PartnerSubcontent language={language} partner={partner} t={t} />,
                                 imgSrc: partner?.avatar
                             }}
                             endIcon={selectedPartner?.partnerId === partner.partnerId && <CheckCircle size={16} color="currentColor" />}
