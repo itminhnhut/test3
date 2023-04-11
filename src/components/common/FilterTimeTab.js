@@ -5,7 +5,7 @@ import DatePickerV2 from './DatePicker/DatePickerV2';
 import classNames from 'classnames';
 
 const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAll = false }) => {
-    const [timeTab, setTimeTab] = useState(TIME_FILTER[0].value);
+    const [timeTab, setTimeTab] = useState(isTabAll ? TIME_FILTER[0].value : TIME_FILTER[1].value);
     const { t } = useTranslation();
 
     useEffect(() => {
