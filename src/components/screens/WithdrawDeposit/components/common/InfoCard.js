@@ -14,8 +14,8 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
             </div>
 
             <div>
-                <div className="txtPri-1 mb-2 text-left capitalize line-clamp-2">{mainContent}</div>
-                <div className="txtSecond-3">{subContent}</div>
+                {mainContent && <div className="txtPri-1 mb-2 text-left capitalize line-clamp-2">{mainContent}</div>}
+                {subContent && <div className="txtSecond-3">{subContent}</div>}
             </div>
         </div>
     );
@@ -44,7 +44,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    mainContent={emptyContent?.mainContent || t('dw_partner:partner')}
+                    mainContent={emptyContent?.mainContent}
                     subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />
             ) : (
