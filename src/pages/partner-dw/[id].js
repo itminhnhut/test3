@@ -85,7 +85,8 @@ export const getServerSideProps = async (context) => {
                 'dw_partner',
                 'reference',
                 'transaction-history',
-                'futures'
+                'futures',
+                'table'
             ])),
             id
         }

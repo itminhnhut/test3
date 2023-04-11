@@ -160,7 +160,7 @@ const SessionChart = () => {
         <div className="mt-20">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
-                <h1 className="font-semibold text-[20px] leading-6">{t('dw_partner:report_commission')}</h1>
+                <h1 className="font-semibold text-[20px] leading-6">{t('table:mini_chart')}</h1>
                 {/* <FilterTokenTab curToken={curToken} setCurToken={setCurToken} /> */}
             </div>
 
@@ -199,12 +199,13 @@ const SessionChart = () => {
                 t={t}
                 data={data?.data?.[showModalDetail]}
                 dateString={data?.labels?.[showModalDetail]}
+                typeTab={typeTab}
             />
         </div>
     );
 };
 
-const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
+const ModalDetailChart = ({ onClose, isVisible, t, data, dateString, typeTab }) => {
     if (!isVisible) return null;
 
     let buy = 0,
@@ -236,7 +237,7 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
             wrapClassName="!font-semibold"
         >
             <div>
-                <h1 className="text-2xl">{t('common:volume')}</h1>
+                <h1 className="text-2xl">{typeTab === TabStatistic[0].value ? t('common:volume') : t('common:partners')}</h1>
                 <CardWrapper className="!p-4 my-6 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
@@ -250,11 +251,11 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
                 <h3 className="txtSecond-3">{t('common:details')}</h3>
                 <CardWrapper className="!p-4 mt-3 bg-gray-13">
                     <div className="flex items-center justify-between">
-                        <span className="txtSecond-4">{t('dw_partner:buy_volume')}</span>
+                        <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:buy_volume') : t('dw_partner:buy_commission')}</span>
                         <div>{formatNanNumber(buy, 0)} VNDC</div>
                     </div>
                     <div className="flex items-center justify-between mt-3">
-                        <span className="txtSecond-4">{t('dw_partner:sell_volume')}</span>
+                        <span className="txtSecond-4">{typeTab === TabStatistic[0].value ? t('dw_partner:sell_volume') : t('dw_partner:sell_commission')}</span>
                         <div>{formatNanNumber(sell, 0)} VNDC</div>
                     </div>
                 </CardWrapper>
