@@ -202,7 +202,7 @@ export default function () {
                     page={currentPage}
                     onChangePage={setCurrentPage}
                     tableStyle={{
-                        height: '64px',
+                        rowHeight: '64px',
                         fontSize: '1rem'
                     }}
                 />
