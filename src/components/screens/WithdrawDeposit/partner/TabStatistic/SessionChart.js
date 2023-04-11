@@ -31,7 +31,7 @@ const SessionChart = () => {
     const [filter, setFilter] = useState({
         range: {
             startDate: null,
-            endDate: Date.now(),
+            endDate: null,
             interval: 'd',
             key: 'selection'
         }

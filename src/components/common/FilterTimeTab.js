@@ -13,7 +13,7 @@ const FilterTimeTab = ({ filter, setFilter, className, positionCalendar, isTabAl
             setFilter({
                 range: {
                     startDate: null,
-                    endDate: Date.now(),
+                    endDate: null,
                     key: 'selection'
                 }
             });

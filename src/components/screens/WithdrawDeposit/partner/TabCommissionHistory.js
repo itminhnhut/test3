@@ -39,7 +39,7 @@ const TabCommissionHistory = () => {
     const [filter, setFilter] = useState({
         range: {
             startDate: null,
-            endDate: Date.now(),
+            endDate: null,
             key: 'selection'
         }
     });
