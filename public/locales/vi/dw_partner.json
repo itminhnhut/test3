@@ -61,7 +61,7 @@
     "deposit_withdraw_guide": "Hướng dẫn nạp/rút tài sản",
     "submit": "Gửi lên",
     "reselected": "Gửi lại bằng chứng",
-    "total_dw": "Tổng nạp/rút",
+    "total_dw": "Khối lượng",
     "pending_transaction": "Giao dịch đang chờ",
     "transaction_history": "Lịch sử giao dịch",
     "commission_history": "Lịch sử hoa hồng",
@@ -69,6 +69,7 @@
     "no_pending_transactions": "Không có giao dịch đang chờ",
     "report_commission": "Báo cáo hoa hồng",
     "total_commissions": "Tổng hoa hồng",
+    "commission_rate": "Tỷ lệ hoa hồng",
     "total_volume": "Tổng khối lượng",
     "notice_chart_details": "Nhấn vào từng cột để xem chi tiết",
     "buy_volume": "Khối lượng mua",
@@ -85,9 +86,9 @@
         "not_found_partner": "Đối tác không khả dụng"
     },
     "filter": {
-        "a_day": "1 Ngày",
-        "a_week": "1 Tuần",
-        "a_month": "1 Tháng",
+        "a_day": "1 ngày",
+        "a_week": "1 tuần",
+        "a_month": "1 tháng",
         "custom": "Tùy chỉnh",
         "not_found_partner": "Đối tác không khả dụng",
         "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác."
