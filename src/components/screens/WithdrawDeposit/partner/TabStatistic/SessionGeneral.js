@@ -56,7 +56,7 @@ const SessionGeneral = () => {
 
                         {/* bottom */}
                         <div>
-                            <h1 className="txtSecond-3">{t('reference:referral.commission_rate')}</h1>
+                            <h1 className="txtSecond-3">{t('dw_partner:commission_rate')}</h1>
                             <div className="pt-4 txtPri-5">{loading ? <Skeletor width="100px" /> : `${formatPercentage(data?.commissionRate * 100, 2)}%`}</div>
                         </div>
                     </div>

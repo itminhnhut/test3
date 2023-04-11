@@ -18,7 +18,7 @@ import { isNumber } from 'lodash';
 
 const TabStatistic = [
     { value: 'depositwithdraw', localized: 'dw_partner:total_dw' },
-    { value: 'commission', localized: 'reference:referral.total_commissions' }
+    { value: 'commission', localized: 'common:partners' }
 ];
 
 const SessionChart = () => {
@@ -187,8 +187,8 @@ const SessionChart = () => {
                 {/* Chu thich */}
                 <div className="flex justify-between items-center mt-6">
                     <div className="flex items-center gap-x-4">
-                        <Note iconClassName="bg-green-6" title={t('common:deposit')} />
-                        <Note iconClassName="bg-purple-1" title={t('common:withdraw')} />
+                        <Note iconClassName="bg-green-6" title={t('common:buy')} />
+                        <Note iconClassName="bg-purple-1" title={t('common:sell')} />
                     </div>
                     <DarkNote variants="secondary" title={t('dw_partner:notice_chart_details')} />
                 </div>
@@ -237,7 +237,7 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
         >
             <div>
                 <h1 className="text-2xl">{t('common:volume')}</h1>
-                <CardWrapper className="!p-4 my-6">
+                <CardWrapper className="!p-4 my-6 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('common:time')}</span>
                         <div>{formatTime(parsedDate, 'dd/MM/yyyy')}</div>
@@ -248,7 +248,7 @@ const ModalDetailChart = ({ onClose, isVisible, t, data, dateString }) => {
                     </div>
                 </CardWrapper>
                 <h3 className="txtSecond-3">{t('common:details')}</h3>
-                <CardWrapper className="!p-4 mt-3">
+                <CardWrapper className="!p-4 mt-3 bg-gray-13">
                     <div className="flex items-center justify-between">
                         <span className="txtSecond-4">{t('dw_partner:buy_volume')}</span>
                         <div>{formatNanNumber(buy, 0)} VNDC</div>
