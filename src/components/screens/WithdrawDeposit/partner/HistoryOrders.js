@@ -83,7 +83,7 @@ const getColumns = ({ t }) => [
         align: 'right',
         width: 152,
         render: (row, item) => {
-            return <div className="text-teal">{!row ? 0 : formatNumber(row, 4)}</div>;
+            return <div className="text-teal">{!row ? '-' : formatNumber(row, 4)}</div>;
         }
     },
     {
