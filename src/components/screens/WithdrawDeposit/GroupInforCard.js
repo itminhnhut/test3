@@ -59,8 +59,12 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                     )}
                                 </div>
                                 <div className="flex flex-col gap-y-3">
-                                    <span className="txtSecond-2">{t('common:time')}</span>
-                                    {!orderDetail ? <Skeletor width="100px" /> : <span>{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>}
+                                    <span className="txtSecond-2 ">{t('common:time')}</span>
+                                    {!orderDetail ? (
+                                        <Skeletor width="100px" />
+                                    ) : (
+                                        <span className="font-semibold">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
+                                    )}
                                 </div>
                             </div>
                             <div>
