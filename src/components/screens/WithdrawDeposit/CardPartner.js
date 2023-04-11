@@ -18,7 +18,10 @@ const PartnerInfo = dynamic(() => import('./components/PartnerInfo'), { ssr: fal
 const BankInfo = dynamic(() => import('./components/BankInfo'), { ssr: false });
 
 const CardPartner = () => {
-    const { t } = useTranslation();
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
 
     const { partner, partnerBank, accountBank, input, loadingPartner, minimumAllowed, maximumAllowed } = useSelector((state) => state.withdrawDeposit);
     const dispatch = useDispatch();
@@ -87,6 +90,7 @@ const CardPartner = () => {
                         loadingPartner={loadingPartner}
                         selectedPartner={partner}
                         t={t}
+                        language={language}
                     />
                     {side === SIDE.BUY && partner && (
                         <BankInfo

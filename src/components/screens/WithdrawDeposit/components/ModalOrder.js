@@ -24,18 +24,19 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                     <div className="text-dominant flex justify-center mb-6">{type.icon}</div>
                     <div className="txtPri-3 mb-4">{type.title(t, mode)}</div>
                     <div className="txtSecond-2 ">{type.description({ ...additionalData, mode, t })}</div>
-                    {type.showConfirm && isFunction(type.showConfirm)
-                        ? type.showConfirm({ router, t, assetId: additionalData?.assetId || 72, side: additionalData?.side || 'BUY', mode })
-                        : !type.isHideBtnConfirm && (
-                              <ButtonV2
-                                  loading={loading}
-                                  disabled={loading}
-                                  onClick={!onConfirm ? onClose : () => onConfirm?.()}
-                                  className="transition-all mt-10"
-                              >
-                                  {t('common:confirm')}
-                              </ButtonV2>
-                          )}
+                    {type.showConfirm &&
+                        (isFunction(type.showConfirm) ? (
+                            type.showConfirm({ router, t, assetId: additionalData?.assetId || 72, side: additionalData?.side || 'BUY' })
+                        ) : (
+                            <ButtonV2
+                                loading={loading}
+                                disabled={loading}
+                                onClick={!onConfirm ? onClose : () => onConfirm?.()}
+                                className="transition-all mt-10"
+                            >
+                                {t('common:confirm')}
+                            </ButtonV2>
+                        ))}
                 </div>
             )}
         </ModalV2>

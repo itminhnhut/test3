@@ -111,7 +111,6 @@ export const ORDER_TYPES = {
         showConfirm: true
     },
     TRANSFERRED_SUCCESS: {
-        isHideBtnConfirm: true,
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
         description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
@@ -138,7 +137,6 @@ export const ORDER_TYPES = {
         description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
         showConfirm: false
     },
-
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
         title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : 'Từ chối giao dịch'),
@@ -160,12 +158,38 @@ export const ORDER_TYPES = {
         },
         showConfirm: true
     },
+    CANCEL_SUCCESS: {
+        icon: ICONS['SUCCESS'],
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
+        description: ({ displayingId, amount, asset, side, t }) =>
+            t('dw_partner:cancel_order_success', {
+                orderId: displayingId,
+                amount: amount,
+                asset: asset,
+                side: t(`common:${side.toLowerCase()}`).toLowerCase()
+            }),
+        showConfirm: ({ router, t, assetId, side }) => {
+            return (
+                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
+                    {t('dw_partner:create_new_transaction')}
+                </ButtonV2>
+            );
+        }
+    },
+
     REPORT: {
         icon: ICONS['WARNING'],
         title: (t) => t('dw_partner:appeal'),
         description: ({ displayingId, t }) => t('dw_partner:appeal_description', { orderId: displayingId }),
         showConfirm: true
     },
+    REPORT_SUCCESS: {
+        icon: ICONS['SUCCESS'],
+        title: (t) => t('common:success'),
+        description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
+        showConfirm: false
+    },
+
     ERROR_MAXIMUM_LIMIT: {
         icon: ICONS['ERROR'],
         title: (t) => t('common:failure'),
