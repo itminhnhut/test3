@@ -44,11 +44,19 @@
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
-    "transfer_confirm_description": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
-    "take_money_confirm_description": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
+
+    "transfer_confirm_description": {
+        "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
+        "partner": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho người dùng, vui lòng kiểm tra kỹ số tiền và nội dung chuyển khoản trước khi thực hiện."
+    },
+    "take_money_confirm_description": {
+        "user": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
+        "partner": "Khi ấn vào nút xác nhận, bạn đã nhận tiển từ người dùng, vui lòng kiểm tra kỹ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện."
+    },
     "confirm_transfer_success": "Bạn vừa xác nhận thanh toán thành công.",
-    "cancel_order_buy_description": "Bạn có chắc chắc muốn hủy giao dịch Mua #{{orderId}} với khối lượng {{amount}} {{asset}}? Lưu ý: Số tiền đã chuyển sẽ không được hoàn lại khi hủy giao dịch sau khi đã chuyển khoản.",
-    "cancel_order_sell_description": "Bạn có chắc chắc muốn hủy giao dịch Bán #{{orderId}} với khối lượng {{amount}} {{asset}}?",
+    "cancel_order_buy_description": "Bạn có chắc chắc muốn hủy giao dịch Mua #{{orderId}} với khối lượng {{amount}} {{asset}}? {{note}}",
+    "cancel_order_note": "Lưu ý: Số tiền đã chuyển sẽ không được hoàn lại khi hủy giao dịch sau khi đã chuyển khoản.",
+    "cancel_order_sell_description": "Bạn có chắc chắc muốn hủy giao dịch Bán #{{orderId}} với khối lượng {{amount}} {{asset}}? {{note}}",
     "cancel_transaction": "Hủy giao dịch",
     "cancel_order_success": "Lệnh #{{orderId}} {{side}} {{amount}} {{asset}} đã huỷ thành công.",
     "create_new_transaction": "Tạo giao dịch mới",
@@ -82,12 +90,28 @@
     "information": "Thông tin",
     "search_bank": "Tìm ngân hàng",
     "order": "Lệnh",
+    "avg_process_time": "Thời gian xử lý trung bình",
+    "total_completed_order": "Tổng số lệnh hoàn thành",
+    "complete": "Thành công",
+    "buy_transaction": "Giao dịch mua",
+    "sell_transaction": "Giao dịch bán",
+    "order_vol_limit": "Giới hạn khối lượng lệnh:",
+    "buy_order_limit": "Giới hạn lệnh Mua",
+    "sell_order_limit": "Giới hạn lệnh Bán",
+    "activated_side": "Đã kích hoạt giao dịch {{side}}",
+    "deactivated_side": "Đã vô hiệu hoá giao dịch {{side}}",
+    "commission": "Hoa hồng",
+    "fiat_currency": "Tiền pháp định",
+    "placeholder": {
+        "enter_txid": "Nhập mã giao dịch"
+    },
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
         "miss_input": "Vui lòng nhập số lượng",
         "reach_limit_withdraw": "Số lượng bán {{asset}} trong ngày đã vượt giới hạn tối đa còn lại",
-        "not_found_partner": "Đối tác không khả dụng"
+        "not_found_partner": "Đối tác không khả dụng",
+        "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu"
     },
     "filter": {
         "a_day": "1 ngày",

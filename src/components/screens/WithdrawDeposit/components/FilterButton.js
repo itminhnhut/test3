@@ -3,7 +3,6 @@ import DateFilter from './DateFilter';
 import CommonFilter from './common/CommonFilter';
 import { fiatFilter, sideFilter, statusFilter } from '../constants';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { formatLocalTimezoneToUTC } from 'utils/helpers';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import { FilterWrapper } from 'components/screens/TransactionHistory/TransactionFilter';
 import { isNull } from 'lodash';
@@ -51,7 +50,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
                         isValueTrim={false}
                         wrapperClassname="!h-11"
                         value={search || ''}
-                        placeholder="Nhập mã lệnh"
+                        placeholder={t('dw_partner:placeholder.enter_txid')}
                         onChange={(value) => {
                             const regex = /[^A-Za-z0-9]+/g;
                             if (!regex.test(value)) setSearch(value);
@@ -79,7 +78,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
             <div className="p-3 lg:p-0 w-1/2 lg:w-[156px] z-[41] ">
                 <CommonFilter
                     t={t}
-                    subLabel={'Fiat'}
+                    subLabel={t('dw_partner:fiat_currency')}
                     boxLabel={filterLocalized?.assetId}
                     data={fiatFilter}
                     active={filter?.assetId}

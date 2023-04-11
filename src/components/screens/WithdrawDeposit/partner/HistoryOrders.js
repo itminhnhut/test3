@@ -22,7 +22,7 @@ const getColumns = ({ t }) => [
     {
         key: 'side',
         dataIndex: 'side',
-        title: 'Loại lệnh',
+        title: t('common:type'),
         align: 'center',
         width: 107,
         render: (row) => (
@@ -79,7 +79,7 @@ const getColumns = ({ t }) => [
     {
         key: 'commission',
         dataIndex: 'commission',
-        title: 'Hoa hồng',
+        title: t('dw_partner:commission'),
         align: 'right',
         width: 152,
         render: (row, item) => {
@@ -106,7 +106,7 @@ const getColumns = ({ t }) => [
 
                     break;
                 case PartnerOrderStatus.SUCCESS:
-                    text = t('common:success');
+                    text = t('dw_partner:complete');
                     className = 'text-teal';
                     break;
                 case PartnerOrderStatus.DISPUTED:

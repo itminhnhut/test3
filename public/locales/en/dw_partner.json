@@ -44,11 +44,18 @@
     "bank": "Bank",
     "no_bank": "No bank found",
     "transfer_description": "Description",
-    "transfer_confirm_description": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount received and the content of the transfer before making.",
-    "take_money_confirm_description": "When you click the confirm button, you will received the money from partner, please carefully check the amount received and the content of the transfer before making.",
+    "transfer_confirm_description": {
+        "user": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount received and the content of the transfer before making.",
+        "partner": "When you click the confirm button, you will transfer the money to the user, please carefully check the amount and the content of the transfer before making."
+    },
+    "take_money_confirm_description": {
+        "user": "When you click the confirm button, you will received the money from partner, please carefully check the amount received and the content of the transfer before making.",
+        "partner": "When you click the confirm button, you will received the money from the user, please carefully check the amount received and the content of the transfer before making."
+    },
     "confirm_transfer_success": "You have confirmed payment successfully.",
-    "cancel_order_buy_description": "Are you sure you want to cancel Buy transaction #{{orderId}} of {{amount}} {{asset}}? Note: Your money will not be reimbursed when canceling transaction after completing the transfer.",
-    "cancel_order_sell_description": "Are you sure you want to cancel Sell transaction #{{orderId}} of {{amount}} {{asset}}?",
+    "cancel_order_buy_description": "Are you sure you want to cancel Buy transaction #{{orderId}} of {{amount}} {{asset}}? {{note}}",
+    "cancel_order_note": "Note: Your money will not be reimbursed when canceling transaction after completing the transfer.",
+    "cancel_order_sell_description": "Are you sure you want to cancel Sell transaction #{{orderId}} of {{amount}} {{asset}}? {{note}}",
     "cancel_transaction": "Cancel transaction",
     "cancel_order_success": "Order #{{orderId}} to {{side}} {{amount}} {{asset}} has been cancelled successfully.",
     "create_new_transaction": "Create New Order",
@@ -63,7 +70,7 @@
     "reselected": "Upload again",
     "total_dw": "Volume",
     "pending_transaction": "Pending Transactions",
-    "transaction_history": "Transaction histories",
+    "transaction_history": "Transaction history",
     "commission_history": "Commission History",
     "achievement": "Achievement",
     "no_pending_transactions": "No pending transactions",
@@ -82,12 +89,28 @@
     "information": "Information",
     "search_bank": "Search bank",
     "order": "Order",
+    "avg_process_time": "Avg. process time",
+    "total_completed_order": "Total completed order",
+    "complete": "Completed",
+    "buy_transaction": "Buy Transaction",
+    "sell_transaction": "Sell Transaction",
+    "order_vol_limit": "Order Volume Limit:",
+    "buy_order_limit": "Buy Order Limit",
+    "sell_order_limit": "Sell Order Limit",
+    "activated_side": "{{side}} transaction has been activated",
+    "deactivated_side": "{{side}} transaction has been deactivated",
+    "commission": "Commission",
+    "fiat_currency": "Fiat Currency",
+    "placeholder": {
+        "enter_txid": "Enter transactionID"
+    },
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
         "max_amount": "Maximum amount is {{amount}} {{asset}}",
         "miss_input": "Please enter your amount",
         "reach_limit_withdraw": "The daily {{asset}} quantity sold has surpassed the remaining maximum limit",
-        "not_found_partner": "Partner not available"
+        "not_found_partner": "Partner not available",
+        "max_greater_min": "The maximum amount must be greater than the minimum amount"
     },
     "filter": {
         "a_day": "1 day",

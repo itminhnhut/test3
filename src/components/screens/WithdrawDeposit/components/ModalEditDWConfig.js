@@ -68,7 +68,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 }
                 if (+amount.max <= +amount.min) {
                     isValid = false;
-                    msg = 'Số lượng tối đa phải lơn hơn số lượng tối thiểu';
+                    msg = t('dw_partner:error.max_greater_min');
                 }
                 if (+amount.max > DEFAULT_PARTNER_MAX[side]) {
                     isValid = false;
@@ -95,7 +95,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
     const onConfirmHandler = async () => {
         +amount.min === partner?.orderConfig?.[side?.toLowerCase()]?.min && +amount.max === partner?.orderConfig?.[side?.toLowerCase()]?.max
             ? onClose()
-            : await onConfirm({ side: side.toLowerCase(), min: +amount.min, max: +amount.max });
+            : await onConfirm({ side: side?.toLowerCase(), min: +amount.min, max: +amount.max });
     };
 
     return (
@@ -105,7 +105,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
             onBackdropCb={loading ? undefined : () => onClose()}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            <div className="text-2xl font-semibold mb-6">Giới hạn lệnh {t(`common:${side}`)}</div>
+            <div className="text-2xl font-semibold mb-6">{t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
             <div className="space-y-4">
                 {['min', 'max'].map((key) => (
                     <div key={key}>
@@ -140,7 +140,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 className="disabled:cursor-default mt-10"
                 variants="primary"
             >
-                Lưu thay đổi
+                {t('common:save')}
             </Button>
         </ModalV2>
     );

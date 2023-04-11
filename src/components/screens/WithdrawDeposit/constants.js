@@ -94,31 +94,24 @@ export const ICONS = {
 export const ORDER_TYPES = {
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:confirm') : 'Xác nhận giao dịch'),
-        description: ({ mode = MODE.USER, t }) =>
-            mode === MODE.USER
-                ? t('dw_partner:transfer_confirm_description')
-                : 'Khi ấn vào nút xác nhận, bạn sẽ chuyển tiền cho người mua, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.',
+        title: (t, mode = MODE.USER) => t('common:confirm'),
+        description: ({ mode = MODE.USER, t }) => t(`dw_partner:transfer_confirm_description.${mode}`),
         showConfirm: true
     },
     CONFIRM_TAKE_MONEY: {
         icon: ICONS['INFO'],
         title: (t) => t('common:confirm'),
-        description: ({ mode = MODE.USER, t }) =>
-            mode === MODE.USER
-                ? t('dw_partner:take_money_confirm_description')
-                : 'Khi ấn vào nút xác nhận, bạn đã nhận được tiền từ người mua, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi xác nhận.',
+        description: ({ mode = MODE.USER, t }) => t(`dw_partner:take_money_confirm_description.${mode}`),
         showConfirm: true
     },
     TRANSFERRED_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
-        description: ({ token, amount, displayingId, mode = MODE.USER, t }) =>
-            mode === MODE.USER ? t('dw_partner:confirm_transfer_success') : 'Bạn vừa xác nhận thanh toán thành công'
+        description: ({ token, amount, displayingId, mode = MODE.USER, t }) => t('dw_partner:confirm_transfer_success')
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
+        title: (t, mode = MODE.USER) => t('common:success'),
         description: ({ displayingId, amount, asset, side, t }) =>
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
         showConfirm: ({ router, t, assetId, side, mode }) => {
@@ -139,42 +132,23 @@ export const ORDER_TYPES = {
     },
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : 'Từ chối giao dịch'),
+        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : t('common:deny')),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
-            if (mode === MODE.USER) {
-                if (side === 'BUY')
-                    return t('dw_partner:cancel_order_buy_description', {
-                        orderId: id,
-                        amount: amount,
-                        asset: token
-                    });
-                return t('dw_partner:cancel_order_sell_description', {
+            if (side === 'BUY')
+                return t('dw_partner:cancel_order_buy_description', {
                     orderId: id,
                     amount: amount,
-                    asset: token
+                    asset: token,
+                    note: mode === MODE.USER ? t('dw_partner:cancel_order_note') : ''
                 });
-            }
-            return `Bạn có chắc chắn từ chối giao dịch ${id}?`;
+            return t('dw_partner:cancel_order_sell_description', {
+                orderId: id,
+                amount: amount,
+                asset: token,
+                note: mode === MODE.PARTNER ? t('dw_partner:cancel_order_note') : ''
+            });
         },
         showConfirm: true
-    },
-    CANCEL_SUCCESS: {
-        icon: ICONS['SUCCESS'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('common:success') : 'Từ chối giao dịch thành công'),
-        description: ({ displayingId, amount, asset, side, t }) =>
-            t('dw_partner:cancel_order_success', {
-                orderId: displayingId,
-                amount: amount,
-                asset: asset,
-                side: t(`common:${side.toLowerCase()}`).toLowerCase()
-            }),
-        showConfirm: ({ router, t, assetId, side }) => {
-            return (
-                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
-                    {t('dw_partner:create_new_transaction')}
-                </ButtonV2>
-            );
-        }
     },
 
     REPORT: {
@@ -182,12 +156,6 @@ export const ORDER_TYPES = {
         title: (t) => t('dw_partner:appeal'),
         description: ({ displayingId, t }) => t('dw_partner:appeal_description', { orderId: displayingId }),
         showConfirm: true
-    },
-    REPORT_SUCCESS: {
-        icon: ICONS['SUCCESS'],
-        title: (t) => t('common:success'),
-        description: ({ displayingId, t }) => t('dw_partner:disputed_success', { orderId: displayingId }),
-        showConfirm: false
     },
 
     ERROR_MAXIMUM_LIMIT: {
@@ -270,7 +238,7 @@ export const statusFilter = [
     },
     {
         key: PartnerOrderStatus.SUCCESS,
-        localized: 'common:success'
+        localized: 'dw_partner:complete'
     },
     {
         key: PartnerOrderStatus.PENDING,

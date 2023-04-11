@@ -35,7 +35,7 @@ const DateFilter = ({ filter, setFilter, t }) => {
                         <span>
                             {filter.startDate && filter.endDate
                                 ? `${formatTime(filter.startDate, 'dd/MM/yyyy')} - ${formatTime(filter.endDate, 'dd/MM/yyyy')}`
-                                : 'Chọn thời gian'}
+                                : t('transaction-history:filter.select_time')}
                         </span>
                         {filter.startDate && filter.endDate ? (
                             <X

@@ -75,21 +75,21 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, loadingPartner, loading
             <hr className="my-4 border-divider dark:border-divider-dark" />
             <div className="flex flex-wrap justify-between -m-3 items-center">
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
-                    <div className="txtSecond-2 mb-3">Thời gian xử lý trung bình</div>
+                    <div className="txtSecond-2 mb-3">{t('dw_partner:avg_process_time')}</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px]">
                         ~{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}
                     </div>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
-                    <div className="txtSecond-2 mb-3">Tổng khối lượng GD</div>
+                    <div className="txtSecond-2 mb-3">{t('dw_partner:total_volume')}</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px] uppercase">
                         {numeral(partner?.analyticMetadata?.totalValue).format('0a')} VND
                     </div>
                 </div>
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
-                    <div className="txtSecond-2 mb-3">Số lệnh đã hoàn thành</div>
+                    <div className="txtSecond-2 mb-3">{t('dw_partner:total_completed_order')}</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px]">
-                        {formatNumber(partner?.analyticMetadata?.count)} lệnh
+                        {formatNumber(partner?.analyticMetadata?.count)} {t('dw_partner:order')} 
                     </div>
                 </div>
             </div>

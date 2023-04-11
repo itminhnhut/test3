@@ -391,5 +391,6 @@
     "convert_fail": "Conversion failed",
     "disputing": "Disputing",
     "denined": "Denied",
-    "processing": "Processing"
+    "processing": "Processing",
+    "deny": "Deny"
 }
