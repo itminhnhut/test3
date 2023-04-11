@@ -73,7 +73,7 @@ const getColumns = ({ t }) => [
         align: 'right',
         width: 152,
         render: (row, item) => {
-            return (item.side === SIDE.BUY ? '+' : '-') + formatBalance(row);
+            return (item.side === SIDE.SELL ? '+' : '-') + formatBalance(row);
         }
     },
     {

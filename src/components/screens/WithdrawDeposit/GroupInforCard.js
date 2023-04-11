@@ -41,7 +41,9 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                 {!orderDetail ? (
                                     <Skeletor width="200px" height="30px" />
                                 ) : (
-                                    `${side === 'BUY' ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, assetCode)} ${assetCode}`
+                                    `${
+                                        (side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER) ? '+' : '-'
+                                    }${formatBalanceFiat(orderDetail?.baseQty, assetCode)} ${assetCode}`
                                 )}
                             </div>
                         </div>
