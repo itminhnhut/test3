@@ -397,10 +397,9 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table td {
-        padding: 0 16px;
-        padding: ${({ padding }) => (padding ? padding : '0 16px')};
-        height: 52px;
-        max-height: 52px;
+        padding: ${({ padding }) => padding ?? '0 16px'};
+        height: ${({ rowHeight }) => rowHeight ?? '52px'};
+        /* max-height: 52px; */
     }
 
     .rc-table thead td,
