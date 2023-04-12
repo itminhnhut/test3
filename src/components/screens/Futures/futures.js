@@ -209,7 +209,7 @@ const Futures = () => {
 
     return (
         <>
-            <FuturesTermsModal />
+            {isMediumDevices && <FuturesTermsModal />}
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
