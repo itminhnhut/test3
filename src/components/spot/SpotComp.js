@@ -332,7 +332,7 @@ const SpotComp = () => {
     return (
         <MaldivesLayout hideFooter page="spot" changeLayoutCb={setLayoutMode} spotState={state} onChangeSpotState={setState} resetDefault={resetDefault}>
             <SpotHead symbol={symbol} />
-            <MobileView className="bg-white">
+            <MobileView>
                 <DefaultMobileView />
             </MobileView>
             <BrowserView className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark">

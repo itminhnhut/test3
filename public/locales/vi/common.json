@@ -384,5 +384,9 @@
     "amount_of_asset": "Số lượng tài sản",
     "amount_of_estimate_nami": "Số lượng NAMI ước tính",
     "view_detail": "Xem chi tiết",
-    "convert_fail": "Conversion failed"
+    "convert_fail": "Conversion failed",
+    "download_view": {
+        "title": "Tải ứng dụng ngay",
+        "desc": "Hơn 600 cặp tài sản với đòn bẩy lên đến x125"
+    }
 }
