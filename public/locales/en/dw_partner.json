@@ -117,14 +117,13 @@
         "miss_input": "Please enter your amount",
         "reach_limit_withdraw": "The daily {{asset}} quantity sold has surpassed the remaining maximum limit",
         "not_found_partner": "Partner not available",
+        "not_enough_money": "The partner's available balance is not enough to accept this order, please choose another partner",
         "max_greater_min": "The maximum amount must be greater than the minimum amount"
     },
     "filter": {
         "a_day": "1 day",
         "a_week": "1 week",
         "a_month": "1 month",
-        "custom": "Custom",
-        "not_found_partner": "Partner not available",
-        "not_enough_money": "The partner's available balance is not enough to accept this order, please choose another partner"
+        "custom": "Custom"
     }
 }
