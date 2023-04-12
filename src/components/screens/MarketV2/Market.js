@@ -17,6 +17,7 @@ import MaldivesLayout from 'components/common/layouts/MaldivesLayout'
 import LayoutMobile from 'components/common/layouts/LayoutMobile'
 import { useMemo } from 'react';
 import FetchApi from 'utils/fetch-api';
+import { orderBy } from 'lodash';
 
 const Market = () => {
     // * Initial State
@@ -41,22 +42,26 @@ const Market = () => {
     const { user: auth } = useSelector(state => state.auth) || null
     const exchangeConfig = useSelector(state => state.utils.exchangeConfig);
     const futuresConfigs = useSelector((state) => state?.futures?.pairConfigs);
-
+    
     let categories = useMemo(() => {
         const data = {
             MOST_TRADED: [],
             TOP_GAINER: [],
             TOP_LOSER: [],
             NEW_LISTING: []
-        }
-        exchangeConfig?.map(e => {
-            e?.tags?.map(tag => {
-                if (data[tag]?.some(e => e === e?.symbol)) return
-                data[tag]?.push(e.symbol)
-            })
-        })
-        return data
-    }, [exchangeConfig])
+        };
+        const configs = tab[state.tabIndex]?.key === 'exchange' ? exchangeConfig : futuresConfigs;
+        configs?.map((e) => {
+            e?.tags?.map((tag) => {
+                if (data[tag]?.some((e) => e === e?.symbol)) return;
+                data[tag]?.push({
+                    symbol: e.symbol,
+                    createdAt: e.createdAt
+                });
+            });
+        });
+        return data;
+    }, [exchangeConfig, state]);
 
     const [referencePrice, setReferencePrice] = useState([])
 
@@ -326,7 +331,15 @@ const Market = () => {
                         })
                         break;
                     default:
-                        watch = watch?.filter(e => categories[state.type]?.includes(e.s))
+                        watch = watch
+                            ?.filter((e) => categories[state.type]?.find((rs) => rs.symbol === e.s))
+                            .map((e) => {
+                                return {
+                                    createdAt: categories[state.type]?.find((rs) => rs.symbol === e.s)?.createdAt,
+                                    ...e
+                                };
+                            });
+                        watch = orderBy(watch, ['createdAt', 's'], 'desc');
                         break;
                 }
             }

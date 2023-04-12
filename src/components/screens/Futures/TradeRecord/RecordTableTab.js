@@ -9,7 +9,7 @@ const FuturesRecordTableTab = ({ tabActive, onChangeTab, isVndcFutures, countOrd
             <Tabs tab={tabActive} className='gap-6'>
                 {(isVndcFutures ? RECORD_TAB_VNDC : RECORD_TAB).map((tab, index) => (
                     <TabItem
-                        className='!text-left !px-0' value={tab.code}
+                        className='!text-left !px-0 !text-sm' value={tab.code}
                         onClick={() => onChangeTab(tab.code)}
                         isMobile
                     >

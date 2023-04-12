@@ -702,6 +702,37 @@ const Funding = ({ symbol }) => {
         }
     }, [symbol])
 
+    useEffect(() => {
+        const localKey = `notShowNetworkError`
+        const notShowNetworkError = localStorage.getItem(localKey)
+        if (notShowNetworkError?.length  ) {
+            if(Number(notShowNetworkError) >= Date.now()){
+                return
+            }else{
+                localStorage.removeItem(localKey)
+            }
+        }
+
+        const showWarning = true
+        if (showWarning) {
+            context.alert.show(
+                "warning",
+                t("futures:funding_history_tab:funding_warning"),
+                t("futures:funding_history_tab:network_warning_content"),
+                null,
+                () => {
+                    localStorage.setItem(localKey, (Date.now() + 12 * 60 * 60 * 1000).toString());
+                },
+                null,
+                {
+                    hideCloseButton: true,
+                    confirmTitle: t("futures:funding_history_tab:funding_warning_accept"),
+                    textClassname: '!text-left !text-white overflow-y-auto !max-h-[300px] yes-scrollbar',
+                    noUseOutside: true
+                });
+        }
+    }, [])
+
 
     return (
         <>

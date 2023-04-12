@@ -1,6 +1,7 @@
 import React from 'react';
 import { toast as rcToast } from 'react-toastify';
 import useDarkMode from 'hooks/useDarkMode';
+import { CloseIcon } from 'components/svg/SvgIcon';
 
 const types = {
     default: null,
@@ -25,12 +26,18 @@ const types = {
     error: {
         light: (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.953 2C6.465 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.493 2 11.953 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#1E1E1E" />
+                <path
+                    d="M16.707 2.293A.996.996 0 0 0 16 2H8a.996.996 0 0 0-.707.293l-5 5A.996.996 0 0 0 2 8v8c0 .266.105.52.293.707l5 5A.996.996 0 0 0 8 22h8c.266 0 .52-.105.707-.293l5-5A.996.996 0 0 0 22 16V8a.996.996 0 0 0-.293-.707l-5-5zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"
+                    fill="#F93636"
+                />
             </svg>
         ),
         dark: (
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.953 2C6.465 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.493 2 11.953 2zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z" fill="#E2E8F0" />
+                <path
+                    d="M16.707 2.293A.996.996 0 0 0 16 2H8a.996.996 0 0 0-.707.293l-5 5A.996.996 0 0 0 2 8v8c0 .266.105.52.293.707l5 5A.996.996 0 0 0 8 22h8c.266 0 .52-.105.707-.293l5-5A.996.996 0 0 0 22 16V8a.996.996 0 0 0-.293-.707l-5-5zM13 17h-2v-2h2v2zm0-4h-2V7h2v6z"
+                    fill="#F93636"
+                />
             </svg>
         )
     },
@@ -58,15 +65,26 @@ const NamiToast = ({ render, text, type }) => {
     const [themeMode] = useDarkMode();
     const content = render ? render(text) : text;
     return (
-        <div className="flex space-x-3 whitespace-nowrap">
-            <span className="mr-3">{types?.[type]?.[themeMode] ? types?.[type]?.[themeMode] : null}</span>
+        <div className="flex items-center space-x-3">
+            <span className="mr-4">{types?.[type]?.[themeMode] ? types?.[type]?.[themeMode] : null}</span>
             {content}
         </div>
     );
 };
 
-const toast = ({ text = '', render = undefined, type = 'default', duration = 1000 }) => {
-    return rcToast(<NamiToast render={render} text={text} type={type} />, { autoClose: duration });
+const toast = ({ text = '', render = undefined, type = 'default', duration = 5000 }) => {
+    return rcToast(<NamiToast render={render} text={text} type={type} />, {
+        className: 'flex items-center justify-between min-w-[375px] max-w-[756px]',
+        bodyClassName: 'flex items-center justify-center',
+        autoClose: duration,
+        pauseOnHover: true,
+        closeOnClick: false,
+        closeButton: ({ closeToast }) => (
+            <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
+                <CloseIcon size={24} color="currentColor" />
+            </button>
+        )
+    });
 };
 
 export default toast;

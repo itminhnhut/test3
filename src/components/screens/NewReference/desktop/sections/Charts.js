@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import RefCard from 'components/screens/NewReference/RefCard';
 import { FilterTabs } from 'components/screens/NewReference/mobile/index';
 import FetchApi from 'utils/fetch-api';
@@ -11,6 +11,8 @@ import { formatNumber } from 'redux/actions/utils';
 import DatePickerV2 from 'components/common/DatePicker/DatePickerV2';
 import classNames from 'classnames';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
+
+const MILLISECOND = 1;
 
 const Charts = ({ t, id }) => {
     const timeTabs = [
@@ -50,6 +52,12 @@ const Charts = ({ t, id }) => {
 
 export default Charts;
 
+<<<<<<< HEAD
+=======
+const borderRadius = 2;
+const borderRadiusAllCorners = { topLeft: borderRadius, topRight: borderRadius, bottomLeft: borderRadius, bottomRight: borderRadius };
+
+>>>>>>> master
 const RenderContent = ({ t, timeTabs, title, url, type }) => {
     const [currentTheme] = useDarkMode();
     const [timeTab, setTimeTab] = useState(timeTabs[0].value);
@@ -60,14 +68,18 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
     const [filter, setFilter] = useState({
         range: {
             startDate: null,
-            endDate: Date.now(),
+            endDate: null,
             key: 'selection'
         }
     });
+
+    const useTooltip = useRef(false);
     // const [showCustom, setShowCustom] = useState(false)
     const colors = ['#e8bf56', '#7c99f7', '#a3f5c7', '#4ae17b'];
 
     const fetchChartData = _.debounce(() => {
+        useTooltip.current = false;
+        // setDataSource(A1);
         FetchApi({
             // @ts-ignore
             url,
@@ -133,6 +145,33 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
         }
     }, [timeTab]);
 
+    const plugin = [
+        {
+            id: 'fillGaps',
+            beforeDatasetDraw(chart, args) {
+                if (args.index > 0 && chart.isDatasetVisible(args.index) && useTooltip.current === false) {
+                    args.meta.data.forEach(function (item) {
+                        if (item.$context.raw > 0) {
+                            item['base'] = item.base - 4;
+                        }
+                    });
+                }
+            }
+        }
+    ];
+
+    const handleChangeDate = (e) => {
+        const value = e?.selection || {};
+        const startDate = value?.startDate ? new Date(value?.startDate).getTime() : null;
+        const endDate = value?.endDate ? new Date(value?.endDate).getTime() + 86400000 - MILLISECOND : null;
+        setFilter((prev) => ({
+            ...prev,
+            range: {
+                startDate,
+                endDate
+            }
+        }));
+    };
     const renderChart = () => {
         // const getData = (level) => dataSource.data.map(e => e[level - 1]?.[tab === tags[0].value ? 'count' : 'volume'] ?? [])
         const getData = (level) => dataSource?.data?.map((e) => e[level - 1]?.[type]) ?? [];
@@ -143,45 +182,91 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     type: 'bar',
                     label: 'level1',
                     data: getData(1),
+<<<<<<< HEAD
                     backgroundColor: colors[0],
                     borderColor: colors[0],
                     maxBarThickness: 8,
                     borderRadius: 2,
                     barPercentage: 0.7,
                     order: 1
+=======
+                    borderWidth: 0,
+                    barPercentage: 7,
+                    maxBarThickness: 12,
+                    borderSkipped: false,
+                    borderColor: colors[0],
+                    backgroundColor: colors[0],
+                    borderRadius: borderRadiusAllCorners,
+                    fill: false
+>>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level2',
                     data: getData(2),
+<<<<<<< HEAD
                     backgroundColor: colors[1],
                     borderColor: colors[1],
                     maxBarThickness: 8,
                     borderRadius: 2,
                     barPercentage: 0.7,
                     order: 2
+=======
+                    borderWidth: 0,
+                    barPercentage: 7,
+                    maxBarThickness: 12,
+                    borderSkipped: false,
+                    borderColor: colors[1],
+                    backgroundColor: colors[1],
+                    borderRadius: borderRadiusAllCorners,
+                    padding: borderRadiusAllCorners,
+                    margin: borderRadiusAllCorners,
+                    fill: false
+>>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level3',
                     data: getData(3),
+<<<<<<< HEAD
                     backgroundColor: colors[2],
                     borderColor: colors[2],
                     maxBarThickness: 8,
                     borderRadius: 2,
                     barPercentage: 0.7,
                     order: 3
+=======
+                    borderWidth: 0,
+                    barPercentage: 0.7,
+                    maxBarThickness: 12,
+                    borderSkipped: false,
+                    borderColor: colors[2],
+                    backgroundColor: colors[2],
+                    borderRadius: borderRadiusAllCorners,
+                    fill: false
+>>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level4',
                     data: getData(4),
+<<<<<<< HEAD
                     backgroundColor: colors[3],
                     borderColor: colors[3],
                     maxBarThickness: 8,
                     borderRadius: 2,
                     barPercentage: 0.7,
                     order: 4
+=======
+                    borderWidth: 0,
+                    barPercentage: 0.7,
+                    maxBarThickness: 12,
+                    borderSkipped: false,
+                    borderColor: colors[3],
+                    backgroundColor: colors[3],
+                    borderRadius: borderRadiusAllCorners,
+                    fill: false
+>>>>>>> master
                 }
             ]
         };
@@ -190,8 +275,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
             maintainAspectRatio: false,
             plugins: {
                 tooltip: {
+                    mode: 'index',
+                    intersect: true,
                     callbacks: {
-                        label: function (context) {
+                        label: (context) => {
+                            useTooltip.current = true;
                             const index = context.dataIndex;
                             const datasetIndex = context.datasetIndex;
                             const data = dataSource.data[index][datasetIndex];
@@ -201,7 +289,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                             if (!data.volume) return [level, friends];
                             return [level, friends, commission];
                         },
-                        labelTextColor: function (context) {
+                        labelTextColor: (context) => {
                             return baseColors.gray[4];
                         }
                     },
@@ -215,7 +303,8 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     stacked: true,
                     ticks: {
                         color: baseColors.darkBlue5,
-                        showLabelBackdrop: false
+                        showLabelBackdrop: false,
+                        padding: 8
                     },
                     grid: {
                         display: false,
@@ -224,12 +313,18 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     }
                 },
                 y: {
+                    stacked: true,
                     ticks: {
+<<<<<<< HEAD
                         color: baseColors.darkBlue5
+=======
+                        color: baseColors.darkBlue5,
+                        padding: 8
+>>>>>>> master
                     },
                     grid: {
+                        drawTicks: false,
                         borderDash: [1, 4],
-                        // color: baseColors.divider.DEFAULT,
                         color: function (context) {
                             if (context.tick.value === 0) {
                                 return 'rgba(0, 0, 0, 0)';
@@ -238,6 +333,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                         },
                         drawBorder: false
                     }
+<<<<<<< HEAD
 
                     // ticks: {
                     //     callback: function(value) {
@@ -250,14 +346,62 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     // border: {
                     //     dash: [2, 4],
                     // },
+=======
+>>>>>>> master
                 }
             }
+            // scales: {
+            //     x: {
+            //         stacked: true,
+            // ticks: {
+            //     color: baseColors.darkBlue5,
+            //     showLabelBackdrop: false
+            // },
+            // grid: {
+            //     display: false,
+            //     drawBorder: true,
+            //     borderColor: currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT
+            // }
+            //     },
+            //     y: {
+            // ticks: {
+            //     color: baseColors.darkBlue5
+            // },
+            // grid: {
+            //     borderDash: [1, 4],
+            //     // color: baseColors.divider.DEFAULT,
+            //     color: function (context) {
+            //         if (context.tick.value === 0) {
+            //             return 'rgba(0, 0, 0, 0)';
+            //         }
+            //         return currentTheme === THEME_MODE.DARK ? baseColors.divider.dark : baseColors.divider.DEFAULT;
+            //     },
+            //     drawBorder: false
+            // }
+
+            //         // ticks: {
+            //         //     callback: function(value) {
+            //         //         return value + 'k';
+            //         //     }
+            //         // }
+            //         // grid: {
+            //         //     color: 'magenta',
+            //         // },
+            //         // border: {
+            //         //     dash: [2, 4],
+            //         // },
+            //     }
+            // }
         };
+<<<<<<< HEAD
         return (
             <>
                 <ChartJS type="bar" data={data} options={options} height="400px" />
             </>
         );
+=======
+        return <ChartJS type="bar" data={data} options={options} plugins={plugin} height="400px" />;
+>>>>>>> master
     };
     return (
         <RefCard wrapperClassName="!p-8 w-full h-auto bg-white dark:bg-dark-4" style={{ height: 'fit-content' }}>
@@ -280,6 +424,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     })}
                     <DatePickerV2
                         initDate={filter.range}
+<<<<<<< HEAD
                         onChange={(e) => {
                             setFilter({
                                 range: {
@@ -289,6 +434,9 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                                 }
                             });
                         }}
+=======
+                        onChange={handleChangeDate}
+>>>>>>> master
                         month={2}
                         hasShadow
                         position="right"
@@ -309,11 +457,21 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
             <div>
                 <div className="h-[350px]">{renderChart()}</div>
                 <div className="px-2 mt-4 flex flex-wrap items-center gap-4">
+<<<<<<< HEAD
                     {colors.map((color, index) => (
                         <div className="flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]" key={index}>
                             <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
                         </div>
                     ))}
+=======
+                    {colors
+                        .map((color, index) => (
+                            <div className="flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]" key={index}>
+                                <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
+                            </div>
+                        ))
+                        .reverse()}
+>>>>>>> master
                 </div>
             </div>
         </RefCard>

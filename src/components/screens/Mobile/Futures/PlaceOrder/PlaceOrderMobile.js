@@ -217,14 +217,13 @@ const PlaceOrder = ({ decimals, side, setSide, pair, isAuth, availableAsset, pai
         switch (mode) {
             case 'quoteQty':
                 const _min = pairConfig?.filters.find((item) => item.filterType === 'MIN_NOTIONAL')?.notional ?? (isVndcFutures ? 100000 : 5);
-                const _decimals = 0;
                 const _max = availableAsset / (1 / leverage + DefaultFuturesFee.NamiFrameOnus);
-                const _displayingMax = `${formatNumber(_max, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
-                const _displayingMin = `${formatNumber(_min, _decimals, 0, true)} ${pairConfig?.quoteAsset}`;
+                const _displayingMax = `${formatNumber(_max, decimalSymbol, 0, true)} ${pairConfig?.quoteAsset}`;
+                const _displayingMin = `${formatNumber(_min, decimalSymbol, 0, true)} ${pairConfig?.quoteAsset}`;
                 if (quoteQty < +_min) {
                     msg = `${t('futures:minimum_qty')} ${_displayingMin} `;
                     isValid = false;
-                } else if (quoteQty > +Number(_max).toFixed(_decimals)) {
+                } else if (quoteQty > +Number(_max).toFixed(decimalSymbol)) {
                     msg = `${t('futures:maximum_qty')} ${_displayingMax}`;
                     isValid = false;
                 }
