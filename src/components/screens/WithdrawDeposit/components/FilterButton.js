@@ -7,13 +7,14 @@ import SearchBoxV2 from 'components/common/SearchBoxV2';
 import { FilterWrapper } from 'components/screens/TransactionHistory/TransactionFilter';
 import { isNull } from 'lodash';
 import { useDebounce } from 'react-use';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
 const INITIAL_FILTER_LOCALIZED = {
     assetId: null,
     status: null,
     side: null
 };
-const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
+const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble, language }) => {
     const [filterLocalized, setFilterLocalized] = useState(INITIAL_FILTER_LOCALIZED);
 
     const [search, setSearch] = useState(null);
@@ -88,7 +89,7 @@ const FilterButton = ({ setFilter, filter, t, resetFilter, isResetAble }) => {
             <div className="p-3 lg:p-0 w-1/2 lg:w-[156px] z-40">
                 <CommonFilter
                     t={t}
-                    subLabel={t('common:global_label.type')}
+                    subLabel={language === LANGUAGE_TAG.VI ? 'Loại' : 'Method'}
                     boxLabel={filterLocalized?.side}
                     data={sideFilter}
                     active={filter?.side}

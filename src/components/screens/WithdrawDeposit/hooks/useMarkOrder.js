@@ -10,6 +10,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
             let type, additionalData;
             let isRejected = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
+            const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
 
             switch (userStatus) {
                 case PartnerPersonStatus.DISPUTED:
@@ -25,7 +26,8 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
                             additionalData = {
                                 displayingId: id,
                                 side,
-                                assetId
+                                asset: assetCode,
+                                amount
                             };
                             isRejected = true;
                             break;
@@ -35,7 +37,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
                     break;
                 case PartnerPersonStatus.TRANSFERRED:
                     type = ORDER_TYPES.TRANSFERRED_SUCCESS;
-                    additionalData = { displayingId: id, amount: formatBalance(baseQty, 0), token: assetCode };
+                    additionalData = { displayingId: id, amount, token: assetCode };
                     break;
 
                 default:
@@ -118,7 +120,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
                         break;
                     case DisputedType.REJECTED:
                         type = ORDER_TYPES.CANCEL_ORDER;
-                        additionalData = { token: assetCode, side, id };
+                        additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
                         break;
                     default:
                         break;

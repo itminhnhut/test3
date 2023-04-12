@@ -159,7 +159,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('cancel_order')
+                                    text: t('common:deny')
                                 };
                             } else {
                                 primaryBtn = {
@@ -215,7 +215,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('cancel_order')
+                                    text: t('common:deny')
                                 };
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),

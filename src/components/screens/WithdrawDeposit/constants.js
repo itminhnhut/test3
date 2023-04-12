@@ -107,13 +107,13 @@ export const ORDER_TYPES = {
     TRANSFERRED_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t) => t('common:success'),
-        description: ({ token, amount, displayingId, mode = MODE.USER, t }) => t('dw_partner:confirm_transfer_success')
+        description: ({ t }) => t('dw_partner:confirm_transfer_success')
     },
     CANCEL_SUCCESS: {
         icon: ICONS['SUCCESS'],
         title: (t, mode = MODE.USER) => t('common:success'),
         description: ({ displayingId, amount, asset, side, t }) =>
-            t('dw_partner:cancel_order_success', { orderId: displayingId, amount: amount, asset: asset, side: t(`common:${side.toLowerCase()}`) }),
+            t('dw_partner:cancel_order_success', { orderId: displayingId, amount, asset, side: t(`common:${side.toLowerCase()}`) }),
         showConfirm: ({ router, t, assetId, side, mode }) => {
             return mode === MODE.PARTNER ? (
                 <></>
@@ -132,7 +132,7 @@ export const ORDER_TYPES = {
     },
     CANCEL_ORDER: {
         icon: ICONS['WARNING'],
-        title: (t, mode = MODE.USER) => (mode === MODE.USER ? t('dw_partner:cancel_transaction') : t('common:deny')),
+        title: (t, mode = MODE.USER) => t('dw_partner:cancel_transaction'),
         description: ({ side, token, mode = MODE.USER, id, amount, t }) => {
             if (side === 'BUY')
                 return t('dw_partner:cancel_order_buy_description', {

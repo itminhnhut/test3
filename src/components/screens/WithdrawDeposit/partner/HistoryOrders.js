@@ -144,7 +144,7 @@ const HistoryOrders = () => {
     } = useTranslation();
     const router = useRouter();
 
-    const userSocket = useSelector((state) => state.socket.userSocket);
+    // const userSocket = useSelector((state) => state.socket.userSocket);
 
     const [state, set] = useState({
         data: [],
@@ -273,7 +273,7 @@ const HistoryOrders = () => {
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
                 <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
-                <FilterButton t={t} setFilter={onChangeFilter} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
+                <FilterButton language={language} t={t} setFilter={onChangeFilter} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
             </div>
 
             <TableV2
