@@ -6,7 +6,7 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 // time in seconds
-export const REPORT_ABLE_TIME = 3 * 60 * 1000;
+export const REPORT_ABLE_TIME = 5 * 60 * 1000;
 
 export const DisputedType = {
     REJECTED: 1,
