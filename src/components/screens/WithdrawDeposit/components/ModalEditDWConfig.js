@@ -105,43 +105,50 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
             onBackdropCb={loading ? undefined : () => onClose()}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            <div className="text-2xl font-semibold mb-6">{t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
-            <div className="space-y-4">
-                {['min', 'max'].map((key) => (
-                    <div key={key}>
-                        <label htmlFor={key} className="txtSecond-3 mb-2">
-                            {t(`common:${key}`)}
-                        </label>
-                        <TradingInputV2
-                            id={key}
-                            value={amount[key]}
-                            allowNegative={false}
-                            thousandSeparator={true}
-                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
-                            inputClassName="!text-left !ml-0"
-                            onValueChange={({ value }) => setAmount((prev) => ({ ...prev, [key]: value }))}
-                            validator={validator[key]()}
-                            errorTooltip={false}
-                            decimalScale={0}
-                            allowedDecimalSeparators={[',', '.']}
-                            clearAble
-                            placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
-                            errorEmpty
-                            renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <Button
-                loading={loading}
-                onClick={onConfirmHandler}
-                disabled={validator.max().isError || validator.min().isError}
-                className="disabled:cursor-default mt-10"
-                variants="primary"
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    onConfirmHandler();
+                }}
             >
-                {t('common:save')}
-            </Button>
+                <div className="text-2xl font-semibold mb-6">{side && t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
+                <div className="space-y-4">
+                    {['min', 'max'].map((key) => (
+                        <div key={key}>
+                            <label htmlFor={key} className="txtSecond-3 mb-2">
+                                {t(`common:${key}`)}
+                            </label>
+                            <TradingInputV2
+                                id={key}
+                                value={amount[key]}
+                                allowNegative={false}
+                                thousandSeparator={true}
+                                containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
+                                inputClassName="!text-left !ml-0"
+                                onValueChange={({ value }) => setAmount((prev) => ({ ...prev, [key]: value }))}
+                                validator={validator[key]()}
+                                errorTooltip={false}
+                                decimalScale={0}
+                                allowedDecimalSeparators={[',', '.']}
+                                clearAble
+                                placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
+                                errorEmpty
+                                renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <Button
+                    loading={loading}
+                    // onClick={}
+                    disabled={validator.max().isError || validator.min().isError}
+                    className="disabled:cursor-default mt-10"
+                    variants="primary"
+                >
+                    {t('common:save')}
+                </Button>
+            </form>
         </ModalV2>
     );
 };
