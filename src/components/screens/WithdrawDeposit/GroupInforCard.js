@@ -111,11 +111,13 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                                             {orderDetail?.partnerMetadata?.analyticMetadata?.count || 0} {t('dw_partner:order')}
                                                         </span>
                                                     </div>
-                                                    {orderDetail?.partnerMetadata?.analyticMetadata?.count && (
+                                                    {orderDetail?.partnerMetadata?.analyticMetadata?.count ? (
                                                         <div className="flex space-x-1 items-center">
                                                             <BxsTimeIcon size={16} />
                                                             <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
                                                         </div>
+                                                    ) : (
+                                                        <></>
                                                     )}
                                                 </>
                                             )}
