@@ -17,7 +17,6 @@ const MODE = {
 };
 
 const ModalUploadImage = ({ isVisible, onClose, className, mode = MODE.USER, orderId = '', originImage = '' }) => {
-    console.log('____here: ', originImage);
     if (!isVisible) return null;
 
     const { t } = useTranslation();

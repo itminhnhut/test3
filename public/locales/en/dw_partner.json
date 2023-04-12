@@ -7,8 +7,15 @@
     "transaction_bank_receipt": "Beneficiary Information",
     "transfer_already": "I have transferred",
     "take_money_already": "I have received Fiat",
-    "sell_asset_from_partners": "Sell {{asset}} via partner",
-    "buy_asset_from_partners": "Buy {{asset}} via partner",
+    "received_fiat": "Received Fiat",
+    "sell_asset_from_partners": {
+        "user": "Sell {{asset}} via partner",
+        "partner": "Sell {{asset}}"
+    },
+    "buy_asset_from_partners": {
+        "user": "Buy {{asset}} via partner",
+        "partner": "Buy {{asset}}"
+    },
     "upload_image_success": "Image proof uploaded",
     "upload_image_fail": "Upload image failed",
     "amount": "Amount",

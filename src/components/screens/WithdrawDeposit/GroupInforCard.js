@@ -28,7 +28,7 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                 <Skeletor width="200px" />
                             ) : (
                                 <h2 className="font-semibold">
-                                    {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners`, {
+                                    {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners.${mode}`, {
                                         asset: assetCode
                                     })}
                                 </h2>

@@ -112,7 +112,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
         width: 190,
         render: (order, item) => {
             const side = item.side;
-            const btnText = side === SIDE.BUY ? t('dw_partner:take_money_already') : t('common:confirm');
+            const btnText = side === SIDE.BUY ? t('dw_partner:received_fiat') : t('common:confirm');
             const btnDisabled =
                 side === SIDE.BUY ? order?.userStatus !== PartnerPersonStatus.TRANSFERRED : order?.partnerStatus !== PartnerPersonStatus?.PENDING;
             return (

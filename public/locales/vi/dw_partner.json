@@ -7,8 +7,15 @@
     "transaction_bank_receipt": "Thông tin chuyển khoản",
     "transfer_already": "Tôi đã chuyển khoản",
     "take_money_already": "Tôi đã nhận tiền",
-    "sell_asset_from_partners": "Bán {{asset}} qua đối tác",
-    "buy_asset_from_partners": "Mua {{asset}} qua đối tác",
+    "received_fiat": "Đã nhận tiền",
+    "sell_asset_from_partners": {
+        "user": "Bán {{asset}} qua đối tác",
+        "partner": "Bán {{asset}}"
+    },
+    "buy_asset_from_partners": {
+        "user": "Mua {{asset}} qua đối tác",
+        "partner": "Mua {{asset}}"
+    },
     "upload_image_success": "Gửi bằng chứng thành công",
     "upload_image_fail": "Tải ảnh lên thất bại",
     "amount": "Số lượng",
@@ -33,7 +40,7 @@
     "default": "Mặc định",
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
-    "user": "Khách hàng",
+    "user": "Người dùng",
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Tải lại bằng chứng",
