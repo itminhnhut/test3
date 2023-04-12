@@ -159,7 +159,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (theirStatus === PartnerPersonStatus.PENDING) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('cancel_order')
+                                    text: t('common:deny')
                                 };
                             } else {
                                 primaryBtn = {
@@ -215,7 +215,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (myStatus === PartnerPersonStatus.PENDING) {
                                 secondaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('cancel_order')
+                                    text: t('common:deny')
                                 };
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
@@ -223,14 +223,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 };
 
                                 return;
-                            }
-
-                            // transferred
-                            if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                primaryBtn = {
-                                    function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                };
                             }
                         } else {
                             // partner chua chuyen tien
@@ -264,7 +256,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
                                 function: () => setState({ isShowUploadImg: true }),
-                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                                text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                             };
                         }
                     }

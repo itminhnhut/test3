@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
 import { formatBalanceFiat, formatNumber } from 'redux/actions/utils';
-import { isEqual } from 'lodash';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfirm }) => {
     const [amount, setAmount] = useState({
@@ -14,16 +14,16 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
         max: ''
     });
     const { t } = useTranslation();
+    const orderConfig = useMemo(() => partner?.orderConfig?.[side?.toLowerCase() || SIDE.BUY], [partner?.orderConfig, side]);
 
     useEffect(() => {
-        if (partner && side) {
-            const { min, max } = partner?.orderConfig?.[side?.toLowerCase()];
+        if (orderConfig && side) {
             setAmount({
-                min,
-                max
+                min: orderConfig?.min,
+                max: orderConfig?.max
             });
         }
-    }, [partner, side]);
+    }, [orderConfig, side]);
 
     const validator = useMemo(
         () => ({
@@ -38,17 +38,17 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                         msg: t('dw_partner:error.miss_input')
                     };
                 }
-                if (+amount.min < DEFAULT_PARTNER_MIN[side]) {
+                if (+amount.min < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MIN[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
                         asset: 'VND'
                     });
                 }
-                if (+amount.min > DEFAULT_PARTNER_MAX[side]) {
+                if (+amount.min > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MAX[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
                         asset: 'VND'
                     });
                 }
@@ -70,18 +70,18 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                     isValid = false;
                     msg = t('dw_partner:error.max_greater_min');
                 }
-                if (+amount.max > DEFAULT_PARTNER_MAX[side]) {
+                if (+amount.max > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MAX[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
                         asset: 'VND'
                     });
                 }
 
-                if (+amount.max < DEFAULT_PARTNER_MIN[side]) {
+                if (+amount.max < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MIN[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
                         asset: 'VND'
                     });
                 }
@@ -89,7 +89,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 return { isValid, msg, isError: !isValid };
             }
         }),
-        [amount.min, amount.max]
+        [amount.min, amount.max, orderConfig]
     );
 
     const onConfirmHandler = async () => {
@@ -105,43 +105,50 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
             onBackdropCb={loading ? undefined : () => onClose()}
             className={classNames(`w-[90%] !max-w-[488px] overflow-y-auto select-none border-divider`)}
         >
-            <div className="text-2xl font-semibold mb-6">{t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
-            <div className="space-y-4">
-                {['min', 'max'].map((key) => (
-                    <div key={key}>
-                        <label htmlFor={key} className="txtSecond-3 mb-2">
-                            {t(`common:${key}`)}
-                        </label>
-                        <TradingInputV2
-                            id={key}
-                            value={amount[key]}
-                            allowNegative={false}
-                            thousandSeparator={true}
-                            containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
-                            inputClassName="!text-left !ml-0"
-                            onValueChange={({ value }) => setAmount((prev) => ({ ...prev, [key]: value }))}
-                            validator={validator[key]()}
-                            errorTooltip={false}
-                            decimalScale={0}
-                            allowedDecimalSeparators={[',', '.']}
-                            clearAble
-                            placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? DEFAULT_PARTNER_MIN[side] : DEFAULT_PARTNER_MAX[side], 0)} `}
-                            errorEmpty
-                            renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
-                        />
-                    </div>
-                ))}
-            </div>
-
-            <Button
-                loading={loading}
-                onClick={onConfirmHandler}
-                disabled={validator.max().isError || validator.min().isError}
-                className="disabled:cursor-default mt-10"
-                variants="primary"
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    onConfirmHandler();
+                }}
             >
-                {t('common:save')}
-            </Button>
+                <div className="text-2xl font-semibold mb-6">{side && t(`dw_partner:${side?.toLowerCase()}_order_limit`)}</div>
+                <div className="space-y-4">
+                    {['min', 'max'].map((key) => (
+                        <div key={key}>
+                            <label htmlFor={key} className="txtSecond-3 mb-2">
+                                {t(`common:${key}`)}
+                            </label>
+                            <TradingInputV2
+                                id={key}
+                                value={amount[key]}
+                                allowNegative={false}
+                                thousandSeparator={true}
+                                containerClassName="px-2.5 !bg-gray-12 dark:!bg-dark-2 w-full"
+                                inputClassName="!text-left !ml-0"
+                                onValueChange={({ value }) => setAmount((prev) => ({ ...prev, [key]: value }))}
+                                validator={validator[key]()}
+                                errorTooltip={false}
+                                decimalScale={0}
+                                allowedDecimalSeparators={[',', '.']}
+                                clearAble
+                                placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
+                                errorEmpty
+                                renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
+                            />
+                        </div>
+                    ))}
+                </div>
+
+                <Button
+                    loading={loading}
+                    // onClick={}
+                    disabled={validator.max().isError || validator.min().isError}
+                    className="disabled:cursor-default mt-10"
+                    variants="primary"
+                >
+                    {t('common:save')}
+                </Button>
+            </form>
         </ModalV2>
     );
 };
