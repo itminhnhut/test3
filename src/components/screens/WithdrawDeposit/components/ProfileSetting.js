@@ -86,6 +86,7 @@ const ProfileSetting = ({ partner, t, loadingPartner, refetchPartner }) => {
         },
         [partner, t]
     );
+    console.log('partner:', partner);
     return (
         <div className="mt-20">
             <div className="mb-8 text-txtPrimary dark:text-txtPrimary-dark text-2xl font-semibold">{t('common:status')}</div>

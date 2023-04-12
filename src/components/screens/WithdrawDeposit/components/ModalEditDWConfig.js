@@ -6,7 +6,7 @@ import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DEFAULT_PARTNER_MAX, DEFAULT_PARTNER_MIN } from 'redux/actions/const';
 import { formatBalanceFiat, formatNumber } from 'redux/actions/utils';
-import { isEqual } from 'lodash';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfirm }) => {
     const [amount, setAmount] = useState({
@@ -14,16 +14,16 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
         max: ''
     });
     const { t } = useTranslation();
+    const orderConfig = useMemo(() => partner?.orderConfig?.[side?.toLowerCase() || SIDE.BUY], [partner?.orderConfig, side]);
 
     useEffect(() => {
-        if (partner && side) {
-            const { min, max } = partner?.orderConfig?.[side?.toLowerCase()];
+        if (orderConfig && side) {
             setAmount({
-                min,
-                max
+                min: orderConfig?.min,
+                max: orderConfig?.max
             });
         }
-    }, [partner, side]);
+    }, [orderConfig, side]);
 
     const validator = useMemo(
         () => ({
@@ -38,17 +38,17 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                         msg: t('dw_partner:error.miss_input')
                     };
                 }
-                if (+amount.min < DEFAULT_PARTNER_MIN[side]) {
+                if (+amount.min < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MIN[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
                         asset: 'VND'
                     });
                 }
-                if (+amount.min > DEFAULT_PARTNER_MAX[side]) {
+                if (+amount.min > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MAX[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
                         asset: 'VND'
                     });
                 }
@@ -70,18 +70,18 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                     isValid = false;
                     msg = t('dw_partner:error.max_greater_min');
                 }
-                if (+amount.max > DEFAULT_PARTNER_MAX[side]) {
+                if (+amount.max > orderConfig?.partnerMax) {
                     isValid = false;
                     msg = t('dw_partner:error.max_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MAX[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMax, 'VND'),
                         asset: 'VND'
                     });
                 }
 
-                if (+amount.max < DEFAULT_PARTNER_MIN[side]) {
+                if (+amount.max < orderConfig?.partnerMin) {
                     isValid = false;
                     msg = t('dw_partner:error.min_amount', {
-                        amount: formatBalanceFiat(DEFAULT_PARTNER_MIN[side], 'VND'),
+                        amount: formatBalanceFiat(orderConfig?.partnerMin, 'VND'),
                         asset: 'VND'
                     });
                 }
@@ -89,7 +89,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                 return { isValid, msg, isError: !isValid };
             }
         }),
-        [amount.min, amount.max]
+        [amount.min, amount.max, orderConfig]
     );
 
     const onConfirmHandler = async () => {
@@ -125,7 +125,7 @@ const ModalEditDWConfig = ({ isVisible, partner, loading, onClose, side, onConfi
                             decimalScale={0}
                             allowedDecimalSeparators={[',', '.']}
                             clearAble
-                            placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? DEFAULT_PARTNER_MIN[side] : DEFAULT_PARTNER_MAX[side], 0)} `}
+                            placeHolder={`${t(`common:${key}`)} ${formatNumber(key === 'min' ? orderConfig?.partnerMin : orderConfig?.partnerMax, 0)} `}
                             errorEmpty
                             renderTail={<div className="text-txtSecondary dark:text-txtSecondary-dark">VND</div>}
                         />
