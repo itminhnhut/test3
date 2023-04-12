@@ -52,12 +52,9 @@ const Charts = ({ t, id }) => {
 
 export default Charts;
 
-<<<<<<< HEAD
-=======
 const borderRadius = 2;
 const borderRadiusAllCorners = { topLeft: borderRadius, topRight: borderRadius, bottomLeft: borderRadius, bottomRight: borderRadius };
 
->>>>>>> master
 const RenderContent = ({ t, timeTabs, title, url, type }) => {
     const [currentTheme] = useDarkMode();
     const [timeTab, setTimeTab] = useState(timeTabs[0].value);
@@ -182,14 +179,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     type: 'bar',
                     label: 'level1',
                     data: getData(1),
-<<<<<<< HEAD
-                    backgroundColor: colors[0],
-                    borderColor: colors[0],
-                    maxBarThickness: 8,
-                    borderRadius: 2,
-                    barPercentage: 0.7,
-                    order: 1
-=======
                     borderWidth: 0,
                     barPercentage: 7,
                     maxBarThickness: 12,
@@ -198,20 +187,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     backgroundColor: colors[0],
                     borderRadius: borderRadiusAllCorners,
                     fill: false
->>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level2',
                     data: getData(2),
-<<<<<<< HEAD
-                    backgroundColor: colors[1],
-                    borderColor: colors[1],
-                    maxBarThickness: 8,
-                    borderRadius: 2,
-                    barPercentage: 0.7,
-                    order: 2
-=======
                     borderWidth: 0,
                     barPercentage: 7,
                     maxBarThickness: 12,
@@ -222,20 +202,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     padding: borderRadiusAllCorners,
                     margin: borderRadiusAllCorners,
                     fill: false
->>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level3',
                     data: getData(3),
-<<<<<<< HEAD
-                    backgroundColor: colors[2],
-                    borderColor: colors[2],
-                    maxBarThickness: 8,
-                    borderRadius: 2,
-                    barPercentage: 0.7,
-                    order: 3
-=======
                     borderWidth: 0,
                     barPercentage: 0.7,
                     maxBarThickness: 12,
@@ -244,20 +215,11 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     backgroundColor: colors[2],
                     borderRadius: borderRadiusAllCorners,
                     fill: false
->>>>>>> master
                 },
                 {
                     type: 'bar',
                     label: 'level4',
                     data: getData(4),
-<<<<<<< HEAD
-                    backgroundColor: colors[3],
-                    borderColor: colors[3],
-                    maxBarThickness: 8,
-                    borderRadius: 2,
-                    barPercentage: 0.7,
-                    order: 4
-=======
                     borderWidth: 0,
                     barPercentage: 0.7,
                     maxBarThickness: 12,
@@ -266,7 +228,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     backgroundColor: colors[3],
                     borderRadius: borderRadiusAllCorners,
                     fill: false
->>>>>>> master
                 }
             ]
         };
@@ -315,12 +276,8 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                 y: {
                     stacked: true,
                     ticks: {
-<<<<<<< HEAD
-                        color: baseColors.darkBlue5
-=======
                         color: baseColors.darkBlue5,
                         padding: 8
->>>>>>> master
                     },
                     grid: {
                         drawTicks: false,
@@ -333,21 +290,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                         },
                         drawBorder: false
                     }
-<<<<<<< HEAD
-
-                    // ticks: {
-                    //     callback: function(value) {
-                    //         return value + 'k';
-                    //     }
-                    // }
-                    // grid: {
-                    //     color: 'magenta',
-                    // },
-                    // border: {
-                    //     dash: [2, 4],
-                    // },
-=======
->>>>>>> master
                 }
             }
             // scales: {
@@ -393,15 +335,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
             //     }
             // }
         };
-<<<<<<< HEAD
-        return (
-            <>
-                <ChartJS type="bar" data={data} options={options} height="400px" />
-            </>
-        );
-=======
         return <ChartJS type="bar" data={data} options={options} plugins={plugin} height="400px" />;
->>>>>>> master
     };
     return (
         <RefCard wrapperClassName="!p-8 w-full h-auto bg-white dark:bg-dark-4" style={{ height: 'fit-content' }}>
@@ -424,19 +358,7 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                     })}
                     <DatePickerV2
                         initDate={filter.range}
-<<<<<<< HEAD
-                        onChange={(e) => {
-                            setFilter({
-                                range: {
-                                    startDate: new Date(e?.selection?.startDate ?? null).getTime(),
-                                    endDate: new Date(e?.selection?.endDate ?? null).getTime(),
-                                    key: 'selection'
-                                }
-                            });
-                        }}
-=======
                         onChange={handleChangeDate}
->>>>>>> master
                         month={2}
                         hasShadow
                         position="right"
@@ -457,13 +379,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
             <div>
                 <div className="h-[350px]">{renderChart()}</div>
                 <div className="px-2 mt-4 flex flex-wrap items-center gap-4">
-<<<<<<< HEAD
-                    {colors.map((color, index) => (
-                        <div className="flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]" key={index}>
-                            <SmallCircle color={color} /> {t('reference:referral.level')} {index + 1}
-                        </div>
-                    ))}
-=======
                     {colors
                         .map((color, index) => (
                             <div className="flex items-center gap-2 leading-5 text-sm font-medium text-gray-1 min-w-[70px]" key={index}>
@@ -471,7 +386,6 @@ const RenderContent = ({ t, timeTabs, title, url, type }) => {
                             </div>
                         ))
                         .reverse()}
->>>>>>> master
                 </div>
             </div>
         </RefCard>
