@@ -501,6 +501,15 @@ export const getAssetFromCode = (assetCode) => {
     return null;
 };
 
+export const getAssetFromId = (assetId) => {
+    const configs = store().getState()?.utils?.assetConfig || null;
+    const assetConfig = find(configs, { id: assetId });
+    if (assetConfig) {
+        return assetConfig;
+    }
+    return null;
+};
+
 export function renderName(assetCode, configs) {
     const assetConfig = find(configs, { assetCode });
     if (assetConfig) {

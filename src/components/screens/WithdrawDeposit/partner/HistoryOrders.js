@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import FilterButton from '../components/FilterButton';
-import { formatBalance, formatNumber, formatTime, getAssetCode } from 'redux/actions/utils';
+import { formatBalance, formatNumber, formatTime, getAssetCode, getAssetFromId } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -77,13 +77,19 @@ const getColumns = ({ t }) => [
         }
     },
     {
-        key: 'commission',
-        dataIndex: 'commission',
+        key: 'commissionValue',
+        dataIndex: 'commissionValue',
         title: t('dw_partner:commission'),
         align: 'right',
         width: 152,
         render: (row, item) => {
-            return <div className="text-teal">{!row ? '-' : formatNumber(row, 4)}</div>;
+            const currency = getAssetFromId(item?.commissionCurrency);
+            const isNullCommission = !row || !currency || row < Math.pow(1, currency?.assetDigit * -1);
+            return (
+                <div className={`${isNullCommission ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-teal'} `}>
+                    {isNullCommission ? '-' : formatNumber(row, currency?.assetDigit) + ' ' + currency?.assetCode}
+                </div>
+            );
         }
     },
     {
@@ -273,7 +279,14 @@ const HistoryOrders = () => {
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
                 <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
-                <FilterButton language={language} t={t} setFilter={onChangeFilter} filter={state.params} resetFilter={resetFilter} isResetAble={isResetAble()} />
+                <FilterButton
+                    language={language}
+                    t={t}
+                    setFilter={onChangeFilter}
+                    filter={state.params}
+                    resetFilter={resetFilter}
+                    isResetAble={isResetAble()}
+                />
             </div>
 
             <TableV2
