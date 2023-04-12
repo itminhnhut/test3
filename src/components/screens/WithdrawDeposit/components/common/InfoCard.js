@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
 const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     return (
         <div className="flex items-center space-x-3">
-            <div style={{ width: imgSize, height: imgSize }}>
+            <div style={{ minWidth: imgSize, maxWidth: imgSize, minHeight: imgSize, maxHeight: imgSize, width: '100%', height: '100%' }}>
                 {image ?? <Image className="rounded-full" src={imageSrc || DefaultAvatar} width={imgSize} height={imgSize} objectFit="cover" />}
             </div>
 
@@ -34,6 +34,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
             {loading ? (
                 <CardContent
                     image={<Skeletor width={imgSize} height={imgSize} circle />}
+                    imgSize={imgSize}
                     mainContent={<Skeletor width="200px" height="20" />}
                     subContent={<Skeletor width="150px" height="10px" />}
                 />
@@ -44,6 +45,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
+                    imgSize={56}
                     mainContent={emptyContent?.mainContent}
                     subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />

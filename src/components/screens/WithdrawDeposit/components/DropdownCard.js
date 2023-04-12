@@ -56,7 +56,9 @@ const DropdownCard = ({
                                 loadingList ? (
                                     <Spinner size={20} color="currentColor" />
                                 ) : showDropdownIcon ? (
-                                    <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />
+                                    <div className="w-full h-full min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]">
+                                        <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />
+                                    </div>
                                 ) : null
                             }
                         />
