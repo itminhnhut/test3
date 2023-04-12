@@ -224,14 +224,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
                                 return;
                             }
-
-                            // transferred
-                            if (myStatus === PartnerPersonStatus.TRANSFERRED) {
-                                primaryBtn = {
-                                    function: () => setState({ isShowUploadImg: true }),
-                                    text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
-                                };
-                            }
                         } else {
                             // partner chua chuyen tien
                             if (theirStatus === PartnerPersonStatus.PENDING) {
@@ -264,7 +256,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         if (isPartner && myStatus === PartnerPersonStatus.TRANSFERRED) {
                             primaryBtn = {
                                 function: () => setState({ isShowUploadImg: true }),
-                                text: state.orderDetail?.userUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
+                                text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                             };
                         }
                     }
