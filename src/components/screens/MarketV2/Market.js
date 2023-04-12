@@ -23,7 +23,7 @@ const Market = () => {
     // * Initial State
     const [state, set] = useState({
         currentPage: 1,
-        tabIndex: 1,
+        tabIndex: 0,
         subTabIndex: 1,
         search: '',
         loadingTrend: false,
@@ -244,18 +244,18 @@ const Market = () => {
                 watch = convert?.futures
             }
 
-            if (subTab[state.subTabIndex].key === 'vndc') {
+            if (subTab?.[state?.subTabIndex]?.key === 'vndc') {
                 // log.d('Tab Exchange - VNDC')
                 watch = watch?.filter(e => e.q === 'VNDC')
-            } else if (subTab[state.subTabIndex].key === 'usdt') {
+            } else if (subTab?.[state.subTabIndex]?.key === 'usdt') {
                 // log.d('Tab Exchange - USDT')
                 watch = watch?.filter(e => e.q === 'USDT')
             }
         }
 
         // Exchange data handling
-        if (tab[state.tabIndex].key === 'exchange') {
-            if (subTab[state.subTabIndex].key === 'vndc' && state.exchangeMarket) {
+        if (tab?.[state?.tabIndex]?.key === 'exchange') {
+            if (subTab?.[state?.subTabIndex]?.key === 'vndc' && state.exchangeMarket) {
                 // log.d('Tab Exchange - VNDC')
                 watch = state.exchangeMarket.filter(e => e.q === 'VNDC')
             } else if (subTab[state.subTabIndex].key === 'usdt' && state.exchangeMarket) {
