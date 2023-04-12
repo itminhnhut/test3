@@ -107,7 +107,7 @@
         "transfer_source_wallet_issues": "Please select source wallet",
         "transfer_destination_wallet_issues": "Please select destination wallet",
         "invalid_amount": "Invalid amount",
-        "invalid_kyc_status": "You need to complete KYC process to use this function.",
+        "invalid_kyc_status": "Please verify your account to use this feature.",
         "decimal_scale_limit": "Please enter amount with no more than {{ value }} decimal places",
         "withdraw_disabled": "Withdrawal is currently under maintenance, please try again later.",
         "minimum_amount": "Minimum amount is {{min}}",
@@ -179,7 +179,7 @@
         "memo_tips": "Both a MEMO and an Address are required to successfully deposit your {{ tokenName }}. Nami will not handle any deposit which lacks information.",
         "memo_wdl_tips": "In some case, Memo is needed and Nami will not take any responsibility if you withdraw without Memo information and the withdrawal does not reach to your wallet."
     },
-    "convert_small": "Convert small balance to {{ asset }}",
+    "convert_small": "Convert small balances to {{ asset }}",
     "convert_small_mobile": "Convert to {{ asset }}",
     "convert_small_balance": "Convert small balance",
     "asset": "Asset",
@@ -199,5 +199,10 @@
         "btn_confirm_transfer": "Confirm Transfer"
     },
     "do_not_receive_email": "Didn't receive email code?",
-    "resend": "Resend code"
+    "resend": "Resend code",
+    "transfer_limit": {
+        "notice": "Notice",
+        "description": "You need to trade at least {{volume}} {{asset}}  to withdraw the rewards from {{campaign}}.",
+        "volume": "Current Volume: {{volume}} {{asset}}"
+    }
 }

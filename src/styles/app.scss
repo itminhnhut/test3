@@ -203,7 +203,7 @@ body {
         @apply font-semibold text-[20px] leading-[28px] md:text-[32px] md:leading-[38px]
         text-gray-15 dark:text-gray-4 tracking-normal;
     }
-    
+
     .txtSecond-1 { // [size, leading]: [12px, 16px] -> [16px, 24px], #768394 -> #8694b2
         @apply font-normal text-[12px] leading-[16px] md:text-base
         text-gray-1 dark:text-gray-7 tracking-normal;
@@ -447,6 +447,7 @@ input[type='number'] {
     @apply px-5 xl:px-20 2xl:px-0 2xl:max-w-screen-xl mx-auto w-full lg:px-10;
 }
 
+
 .terms-page,
 .policies-page {
     ul {
@@ -628,7 +629,7 @@ input[type='number'] {
     opacity: 0;
     transition: all 0.2s ease;
     z-index: 9999999998;
-  
+
 }
 
 .mal-overlay__active {
@@ -1050,7 +1051,6 @@ input:-webkit-autofill {
 
 
 
-  
 
-  
+
 

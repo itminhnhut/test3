@@ -70,6 +70,7 @@ const ReTable = memo(
         onRowClick,
         sorted,
         cbSort,
+        customSort,
         ...restProps
     }) => {
         // * Init State
@@ -139,7 +140,7 @@ const ReTable = memo(
 
             let _ = defaultSort;
 
-            if (Object.keys(sorter).length && !sorted) {
+            if (Object.keys(sorter).length && !sorted && !customSort) {
                 const _s = Object.entries(sorter)[0];
 
                 const customSort = ownColumns.find((e) => e.key === _s[0])?.sorter;
@@ -243,6 +244,7 @@ const ReTable = memo(
                                     onClick={() => {
                                         !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] });
                                         if (cbSort) cbSort(!sorter?.[`${c.key}`]);
+                                        if (customSort) customSort({...sorter, [`${c.key}`]: !sorter?.[`${c.key}`]})
                                     }}
                                 >
                                     {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
@@ -374,7 +376,9 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table thead th {
+        font-size: 14px;
         border-bottom: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
+        // border-top: ${({ isDark }) => `1px solid ${isDark ? colors.divider.dark : colors.divider.DEFAULT} !important`};
         //white-space: nowrap;
     }
 
@@ -387,6 +391,10 @@ const ReTableWrapperV2 = styled.div`
         border-top-width: 0;
         text-align: left;
         font-size: ${({ fontSize }) => (fontSize ? fontSize : '14px')};
+    }
+
+    .rc-table td {
+        font-size: 16px;
     }
 
     .rc-table th {

@@ -1,15 +1,15 @@
 import { IconLoading } from 'src/components/common/Icons';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import { getRecentTrade } from 'src/redux/actions/market';
-import { formatPrice, formatTime, getSymbolString } from 'src/redux/actions/utils';
+import { formatNumber, formatTime, getSymbolString, getDecimalPrice, getDecimalQty } from 'src/redux/actions/utils';
 
 let temp = [];
 const Trades = (props) => {
-    const { publicSocket, symbol, layoutConfig, isPro } = props;
+    const { publicSocket, symbol, layoutConfig, isPro, decimals } = props;
     const router = useRouter();
     const [recentTrade, setRecentTrade] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -101,10 +101,10 @@ const Trades = (props) => {
                         return (
                             <div className="flex py-[1px]  cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3" key={index}>
                                 <div className={'flex-1 text-xs font-medium leading-table ' + (side === 'SELL' ? 'text-red' : 'text-teal')}>
-                                    {formatPrice(price, 10)}
+                                    {formatNumber(price, decimals.price)}
                                 </div>
                                 <div className="flex-1 text-txtPrimary dark:text-txtPrimary-dark font-medium text-xs leading-table text-right">
-                                    {formatPrice(quantity, exchangeConfig, symbol?.base)}
+                                    {formatNumber(quantity, decimals.qty)}
                                 </div>
                                 <div className="flex-1 text-txtPrimary dark:text-txtPrimary-dark font-medium text-xs leading-table text-right">
                                     {formatTime(timestamp, 'HH:mm:ss')}

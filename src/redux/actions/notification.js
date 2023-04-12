@@ -17,24 +17,6 @@ function getSpinNotificationText() {
     return null;
 }
 
-export function getNotificationsUnreadCount() {
-    return async (dispatch) => {
-        try {
-            const { status, data } = await fetchAPI({
-                url: API_GET_NOTIFICATIONS_UNREAD_COUNT,
-                options: {
-                    method: 'GET'
-                }
-            });
-            if (status === ApiStatus.SUCCESS) {
-                dispatch({ type: SET_NOTIFICATION_UNREAD_COUNT, payload: data?.num_of_unread || 0 });
-            }
-        } catch (error) {
-            console.log('error:', error);
-        }
-    };
-}
-
 export function getNotifications({ lang, limit = 10, prevId }, cb) {
     return async (dispatch) => {
         try {

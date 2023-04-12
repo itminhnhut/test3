@@ -39,7 +39,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
                 <>
                     {isSearch ? isDark ? <NotFoundDarkIcon /> : <NotFoundLightIcon /> : isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
                     <span className={'text-txtSecondary dark:text-darkBlue-5 text-sm sm:text-base'}>
-                        {text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}
+                        {text ?? (isSearch ? t('common:no_results_found') : t('common:no_data'))}
                     </span>
                 </>
             )}
