@@ -333,7 +333,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
     }, [name, currentTheme, navTheme.color]);
 
     const renderUserControl = useCallback(() => {
-        const { avatar, code, kyc_status } = auth;
+        const { avatar, code, kyc_status, partner_type } = auth;
         const isNotVerified = kyc_status === KYC_STATUS.NO_KYC;
         const isVerified = kyc_status >= KYC_STATUS.APPROVED;
         const items = [];
@@ -351,6 +351,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
 
         USER_CP.map((item) => {
             if (item.hide) return null;
+            if (item.isPartner && partner_type === 0) return null;
             const Icon = NavbarIcons?.[item.localized === 'referral' ? 'profile_referral' : item.localized];
             items.push(
                 <Link key={`user_cp__${item.localized}`} href={item.localized === 'logout' ? buildLogoutUrl() : item.url}>
@@ -374,7 +375,7 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">
-                                <Image objectFit="cover" width={48} height={48} src={avatar || DefaultAvatar} alt="avatar_user" className="rounded-full" />
+                                <img width={48} height={48} className="rounded-full min-w-[48px] max-w-[48px] min-h-[48px] max-h-[48px] w-full h-full object-cover" src={avatar || DefaultAvatar} alt="avatar_user" />
                             </div>
                             <div className="mal-navbar__dropdown__user__info__summary">
                                 <div className="mal-navbar__dropdown__user__info__username"> {auth?.username || auth?.name || auth?.email}</div>

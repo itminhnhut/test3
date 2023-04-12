@@ -31,7 +31,9 @@
             "task_center": "Task Center",
             "referral": "Referral",
             "api_mng": "API Management",
-            "logout": "Log Out"
+            "logout": "Log Out",
+            "partner": "Partner",
+            "payment_method": "Payment Method"
         }
     },
     "submenu": {

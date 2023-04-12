@@ -12,7 +12,7 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
     const [search, setSearch] = useState('');
     const { user: auth } = useSelector((state) => state.auth) || null;
     const filterCategory = useMemo(
-        () => categoryConfig.filter((cate) => cate.content[language].toLowerCase().includes(search.toLowerCase())) || [],
+        () => categoryConfig.filter((cate) => cate?.content[language]?.toLowerCase().includes(search.toLowerCase())) || [],
         [search, categoryConfig, language]
     );
     return (

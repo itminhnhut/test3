@@ -813,6 +813,47 @@ const ArrowForwardIcon = ({ size = 24, color = '"#fff"' }) => (
     </svg>
 );
 
+const CalendarFillIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M3.333 14.667h9.334c.735 0 1.333-.598 1.333-1.334V4c0-.735-.598-1.333-1.333-1.333h-1.334V1.333H10v1.334H6V1.333H4.667v1.334H3.333C2.598 2.667 2 3.265 2 4v9.333c0 .736.598 1.334 1.333 1.334zm0-10h9.334V6H3.333V4.667z"
+            fill={color}
+        />
+    </svg>
+);
+
+const ContactIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <g clip-path="url(#2ocmtc1tna)">
+            <path
+                d="M10.307 2 9.9 5.513l1.68 1.68a10.03 10.03 0 0 1-4.393 4.394L5.5 9.9l-3.5.407v3.673C8.787 14.367 14.367 8.787 13.98 2h-3.673z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="2ocmtc1tna">
+                <path fill="#fff" transform="rotate(-90 8 8)" d="M0 0h16v16H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
+const PartnerIcon = ({ size = 24, color = 'currentColor' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none">
+        <g clip-path="url(#loddpdwmxa)">
+            <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.61 6.34c1.07 0 1.93.86 1.93 1.93 0 1.07-.86 1.93-1.93 1.93-1.07 0-1.93-.86-1.93-1.93-.01-1.07.86-1.93 1.93-1.93zm-6-1.58c1.3 0 2.36 1.06 2.36 2.36 0 1.3-1.06 2.36-2.36 2.36-1.3 0-2.36-1.06-2.36-2.36 0-1.31 1.05-2.36 2.36-2.36zm0 9.13v3.75c-2.4-.75-4.3-2.6-5.14-4.96 1.05-1.12 3.67-1.69 5.14-1.69.53 0 1.2.08 1.9.22-1.64.87-1.9 2.02-1.9 2.68zM12 20c-.27 0-.53-.01-.79-.04v-4.07c0-1.42 2.94-2.13 4.4-2.13 1.07 0 2.92.39 3.84 1.15C18.28 17.88 15.39 20 12 20z"
+                fill={color}
+            />
+        </g>
+        <defs>
+            <clipPath id="loddpdwmxa">
+                <path fill="#fff" d="M0 0h24v24H0z" />
+            </clipPath>
+        </defs>
+    </svg>
+);
+
 const OrderIcon = ({ size = 24, color = 'currentColor' }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
         <g clip-path="url(#g1zqepm55a)">
@@ -885,8 +926,8 @@ export {
     ShareIcon,
     FireIcon,
     SettingIcon,
-    BxsUserCircle,
     ArrowCompareIcon,
+    BxsUserCircle,
     TimeLapseIcon,
     BxsErrorIcon,
     CancelIcon,
@@ -895,6 +936,9 @@ export {
     CancelCircleFillIcon,
     BxsErrorAltIcon,
     ArrowForwardIcon,
+    CalendarFillIcon,
+    ContactIcon,
+    PartnerIcon,
     OrderIcon,
     BxsTimeIcon
 };
