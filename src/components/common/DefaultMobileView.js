@@ -17,7 +17,7 @@ const DefaultMobileView = (props, ref) => {
 
     return (
         <div
-            className={classNames('mt-4 md:mt-10 px-4 sm:px-0 max-w-[456px] m-auto flex flex-col ', {
+            className={classNames('py-4 md:pt-10 px-4 sm:px-0 max-w-[456px] m-auto flex flex-col', {
                 'absolute top-1/2 -translate-y-1/2 lg:flex-row lg:items-center lg:space-x-[76px] lg:px-10 lg:max-w-full': width >= 1024
             })}
         >
