@@ -186,21 +186,15 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.COPIEDABLE:
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
 
-                                        if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
-                                            if (
-                                                (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
-                                                (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
-                                            ) {
-                                                priorityKey = null;
-                                            }
-                                        }
                                         if (!priorityKey) formatKeyData = null;
-                                        formatKeyData = (
-                                            <TextCopyable
-                                                showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
-                                                text={priorityKey}
-                                            />
-                                        );
+                                        else {
+                                            formatKeyData = (
+                                                <TextCopyable
+                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
+                                                    text={priorityKey}
+                                                />
+                                            );
+                                        }
 
                                         break;
                                     case COLUMNS_TYPE.TIME:
@@ -293,6 +287,13 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     default:
                                         break;
+                                }
+                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                    if (
+                                        (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
+                                        (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
+                                    )
+                                        return null;
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
