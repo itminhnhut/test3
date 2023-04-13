@@ -304,7 +304,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 <GroupInforCard
                     mode={mode}
                     assetCode={assetCode}
-                    t={t}
                     orderDetail={state.orderDetail}
                     side={side}
                     setModalQr={() => setState({ isShowQr: true })}
