@@ -41,7 +41,6 @@ const mappingTokensRewardType = (detail) => {
 
 const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categoryConfig, language }) => {
     const [detailTx, setDetailTx] = useState(null);
-    console.log('detailTx:', detailTx);
     const [assetData, setAssetData] = useState(null);
     const [loading, setLoading] = useState(false);
     useEffect(() => {
@@ -76,6 +75,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
             source.cancel();
         };
     }, [id, assetConfig]);
+
+    const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(1, assetData?.assetDigit || 0 * -1);
+
     return (
         <ModalV2
             isVisible={isVisible}
@@ -155,13 +157,14 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 )}
                             </div>
                             <div className="mb-3">
-                                {`${detailTx?.result?.money_use > 0 ? '+' : ''} ${
-                                    // assetData?.assetCode === 'VNDC'
-                                    customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit, true)
-                                    // : assetData?.assetCode === 'USDT'
-                                    // ? customFormatBalance(detailTx?.result?.money_use, 4, true)
-                                    // : customFormatBalance(detailTx?.result?.money_use, assetData?.assetDigit || 0, true)
-                                } ${assetData?.assetCode}`}
+                                {!isMoneyUseOutofDigit
+                                    ? `${detailTx?.result?.money_use > 0 ? '+' : ''}${customFormatBalance(
+                                          detailTx?.result?.money_use,
+                                          assetData?.assetDigit,
+                                          true
+                                      )}`
+                                    : '--'}{' '}
+                                {assetData?.assetCode}
                             </div>
                             <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
                         </div>
@@ -281,7 +284,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         const side = get(detailTx, col.keys[0])?.toLowerCase() || NULL_ASSET;
                                         const type = get(detailTx, col.keys[1])?.toLowerCase() || NULL_ASSET;
                                         formatKeyData = (
-                                            <div className={classNames({ 'text-red-1': side === 'sell' }, { 'text-dominant': side === 'buy' })}>{`${t(
+                                            <div className={classNames({ 'text-red': side === 'sell' }, { 'text-dominant': side === 'buy' })}>{`${t(
                                                 'transaction-history:' + side
                                             )} ${t('transaction-history:' + type)}`}</div>
                                         );
