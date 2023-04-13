@@ -201,5 +201,10 @@
         "btn_confirm_transfer": "Xác nhận chuyển"
     },
     "do_not_receive_email": "Không nhận được mã xác thực email?",
-    "resend": "Gửi lại mã"
+    "resend": "Gửi lại mã",
+    "transfer_limit": {
+        "notice": "Lưu ý",
+        "description": "Bạn cần giao dịch tối thiểu {{volume}} {{asset}} để rút phần thưởng từ {{campaign}}.",
+        "volume": "Khối lượng hiện tại: {{volume}} {{asset}}"
+    }
 }

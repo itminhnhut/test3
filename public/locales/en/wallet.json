@@ -199,5 +199,10 @@
         "btn_confirm_transfer": "Confirm Transfer"
     },
     "do_not_receive_email": "Didn't receive email code?",
-    "resend": "Resend code"
+    "resend": "Resend code",
+    "transfer_limit": {
+        "notice": "Notice",
+        "description": "You need to trade at least {{volume}} {{asset}}  to withdraw the rewards from {{campaign}}.",
+        "volume": "Current Volume: {{volume}} {{asset}}"
+    }
 }

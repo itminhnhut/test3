@@ -112,7 +112,7 @@ export const API_SET_USER_AVATAR = API_PREFIX + 'user/set_avatar';
 //NOTE Notification
 export const API_MARK_NOTIFICATIONS_READ = API_V3_PREFIX + 'notifications/mark-read';
 export const API_GET_NOTIFICATIONS = API_V3_PREFIX + 'notifications/';
-export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread'
+export const API_GET_NOTIFICATIONS_UNREAD_COUNT = API_PREFIX + 'notifications/count_unread';
 
 export const API_WATCH_LIST = API_PREFIX + 'market/watch_list';
 export const API_METRIC_VIEW = API_V3_PREFIX + 'spot/view';
@@ -199,6 +199,7 @@ export const API_AUTH_USER_OTP = (service) => `${API_PREFIX}authenticated/${serv
 export const API_FUTURES_CAMPAIGN_STATUS = API_PREFIX + 'futures_campaign/onboarding/status';
 export const API_FUTURES_CAMPAIGN_ATTEND = API_PREFIX + 'futures_campaign/onboarding/attend';
 export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campaign/onboarding/withdrawStatus';
+export const API_FUTURES_CAMPAIGN_TRANSFER_STATUS = API_PREFIX + 'futures_campaign/onboarding/transferStatus';
 
 //NAO token
 export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
@@ -263,6 +264,7 @@ export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account'
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';
 
 // new referral
+export const API_POST_PARTNER = API_V3_PREFIX + 'users/partner';
 export const API_NEW_REFERRAL_CONFIG = API_V3_PREFIX + 'users/referral/commission-config';
 export const API_NEW_REFERRAL = API_V3_PREFIX + 'users/referral';
 export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + 'users/referral';
@@ -279,8 +281,10 @@ export const API_PARTNER_REGISTER = API_V3_PREFIX + 'users/partner';
 export const API_CHECK_REFERRAL = API_V3_PREFIX + 'users/referral/is-exist';
 
 //referal
-export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends';
+// export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends'; V1
+export const API_GET_LIST_FRIENDS = API_V3_PREFIX + 'users/referral/friends-v2';
 export const API_GET_COMMISSON_HISTORY = API_V3_PREFIX + 'users/referral/commission-history';
+export const API_GET_REFERRAL_FRIENDS_BY_CODE = API_V3_PREFIX + 'users/referral/:code/friends-detail';
 
 // convert small balance to Nami
 export const API_GET_NAMI_RATE = API_V3_PREFIX + 'convert/nami_asset_value';
