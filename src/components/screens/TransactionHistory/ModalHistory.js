@@ -188,10 +188,11 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
                                         if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
                                             if (
-                                                (detailTx.result.category === '4' && col.localized === 'modal_detail.to') ||
-                                                (detailTx.result.category === '5' && col.localized === 'modal_detail.from')
-                                            )
+                                                (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
+                                                (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
+                                            ) {
                                                 priorityKey = null;
+                                            }
                                         }
                                         if (!priorityKey) formatKeyData = null;
                                         formatKeyData = (
@@ -256,9 +257,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
-                                            <div className="">
-                                                {+keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]}
-                                            </div>
+                                            <div className="">{+keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]}</div>
                                         );
                                         break;
                                     case COLUMNS_TYPE.NAMI_SYSTEM:
