@@ -8,7 +8,7 @@ import { TrendIcon, TuneIcon } from 'components/svg/SvgIcon';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import Button from 'components/common/V2/ButtonV2/Button';
 import FullScreen from 'components/svg/FullScreen';
-import TextButton from 'components/common/V2/ButtonV2/TextButton'
+import TextButton from 'components/common/V2/ButtonV2/TextButton';
 
 const ListTimeFrame = [
     { value: '1', text: '1m' },
@@ -103,15 +103,15 @@ export default class TimeFrame extends Component {
         this.updateTimeFrame(initTimeFrame);
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const { initTimeFrame } = this.props;
-        if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
-            this.updateTimeFrame(this.props.initTimeFrame);
-        }
-        if (prevProps?.symbol !== this.props.symbol) {
-            this.setState({ selectedTime: '60' });
-        }
-    }
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     const { initTimeFrame } = this.props;
+    //     if (initTimeFrame && initTimeFrame !== prevProps.initTimeFrame) {
+    //         this.updateTimeFrame(this.props.initTimeFrame);
+    //     }
+    //     if (prevProps?.symbol !== this.props.symbol) {
+    //         this.setState({ selectedTime: '60' });
+    //     }
+    // }
 
     updateTimeFrame = (initTimeFrame) => {
         const { chartType, handleActiveTime } = this.props;
@@ -266,7 +266,9 @@ export default class TimeFrame extends Component {
                             >
                                 <Popover.Panel className="absolute z-10 mt-2">
                                     <div className="overflow-hidden rounded-lg shadow-lg bg-white dark:bg-darkBlue-3 border-[0.5px] border-divider dark:border-divider-dark p-4">
-                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">{this.t('common:select_intervals')}</div>
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-xs mb-4">
+                                            {this.t('common:select_intervals')}
+                                        </div>
                                         <div className="w-64 relative grid grid-cols-5 gap-3">
                                             {ListTimeFrame.map((item, index) => {
                                                 const { value, text } = item;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { API_GET_WALLET_CONFIG } from 'redux/actions/apis';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { formatNumber, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, walletLinkBuilder } from 'redux/actions/utils';
 import { BREAK_POINTS } from 'constants/constants';
 import { ApiStatus, WalletType } from 'redux/actions/const';
 import { useRouter } from 'next/router';
@@ -24,6 +24,8 @@ import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { useSelector } from 'react-redux';
 import WithdrawDepositList from 'components/screens/FeeSchedule/WithdrawDepositList';
 import NoResult from 'components/screens/Support/NoResult';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const INITIAL_STATE = {
     search: '',
@@ -234,10 +236,11 @@ const DepositWithdrawFee = () => {
                         return {
                             onClick: () =>
                                 router.push(
-                                    walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                                        type: 'crypto',
-                                        asset: record?.raw?.assetCode || record?.assetCode
-                                    })
+                                    // walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                                    //     type: 'crypto',
+                                    //     asset: record?.raw?.assetCode || record?.assetCode
+                                    // })
+                                    dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, record?.raw?.assetCode || record?.assetCode)
                                 )
                         };
                     }}
@@ -338,7 +341,7 @@ const ROW_SKELETON = {
 
 export const getStaticProps = async ({ locale }) => ({
     props: {
-        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet']))
+        ...(await serverSideTranslations(locale, ['common', 'navbar', 'fee-structure', 'wallet', 'dw_partner']))
     }
 });
 

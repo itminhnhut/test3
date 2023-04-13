@@ -63,6 +63,7 @@ const index = ({
     return (
         <div className={className}>
             <ReTable
+                fontSize={16}
                 reference={ref}
                 useRowHover={useRowHover}
                 data={loading ? loader : data}
@@ -78,11 +79,11 @@ const index = ({
                 isNamiV2
                 height={height}
                 loading={loading}
-                emptyText={<NoData loading={loading} isSearch={!!isSearch} text={props?.emptyTextContent} className="" />}
+                emptyText={<NoData loading={loading} isSearch={!!isSearch} className="!text-base" />}
                 onRowClick={onRowClick}
                 {...props}
             />
-            {(pagingPrevNext?.page !== 0 || pagingPrevNext?.hasNext || (totalPage > 1 && limit > 0)) && showPaging && (
+            {(pagingPrevNext || (totalPage > 1 && limit > 0)) && showPaging && (
                 <div className={`pt-8 pb-10 flex items-center justify-center border-t dark:border-divider-dark ${pagingClassName}`}>
                     <RePagination
                         total={total ?? data?.length}

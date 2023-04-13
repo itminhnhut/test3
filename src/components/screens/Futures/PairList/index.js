@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useEffect } from 'react';
+import { memo, useCallback, useState, useEffect, useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import FuturesPairListItemV2 from './PairListItemV2';
 import colors from 'styles/colors';
@@ -8,12 +8,15 @@ import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
 import styled from 'styled-components';
 import { orderBy, pick } from 'lodash';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
-import { API_GET_TRENDING } from '../../../../redux/actions/apis';
+import { API_GET_TRENDING, API_GET_FUTURES_MARKET_WATCH } from '../../../../redux/actions/apis';
 import Axios from 'axios';
 import Tabs, { TabItem } from 'components/common/Tabs/Tabs';
 import NoData from 'components/common/V2/TableV2/NoData';
-
+import fetchAPI from 'utils/fetch-api';
 import { SUGGESTED_SYMBOLS } from '../FavoritePairs';
+import FuturesMarketWatch from 'models/FuturesMarketWatch';
+import { searchSort } from 'redux/actions/utils';
+import useDebounce from 'hooks/useDebounce';
 
 const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectPair = null, className = '' }) => {
     const { t } = useTranslation();
@@ -21,15 +24,18 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
     const favoritePairs = useSelector((state) => state.futures.favoritePairs);
     const [theme] = useDarkMode();
     const isDark = theme === THEME_MODE.DARK;
-    const [curTab, setCurTab] = useState(TABS.FAVOURITE);
     const pairConfigs = useSelector((state) => state.futures.pairConfigs);
+    const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const auth = useSelector((state) => state.auth?.user) || null;
+    const deboundSearch = useDebounce(search, 500);
 
+    const [curTab, setCurTab] = useState(auth ? TABS.FAVOURITE : TABS.FUTURES);
     // Sort function:
     const [sortBy, setSortBy] = useState({}); // undefined = default, true => desc, false => asc
     // const [pairTicker, setPairTicker] = useState(null);
     const marketWatch = useSelector((state) => state.futures.marketWatch);
     const [dataTable, setDataTable] = useState([]);
-
+    const isTabAll = useRef(false);
     // Handle trendings:
     const [trendingPairs, setTrendingPairs] = useState([]);
 
@@ -57,83 +63,116 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
         getTrending();
     }, []);
 
-    // end handle trendings
+    useEffect(() => {
+        setCurTab(auth ? TABS.FAVOURITE : TABS.FUTURES);
+    }, [!!auth]);
+
+    const onHandleChange = async (key, value) => {
+        let data = await forceData(pairConfigs);
+        isTabAll.current = false;
+        setCurTab(key);
+        switch (key) {
+            case TABS.FUTURES:
+                break;
+            case TABS.TRENDING:
+                data = data?.filter((i) => trendingPairs.find((rs) => rs === i?.symbol));
+                break;
+            case TABS.GAINERS:
+                data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent > 0);
+                break;
+            case TABS.LOSERS:
+                data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent < 0);
+                break;
+            default:
+                break;
+        }
+        setDataTable(data);
+    };
 
     useEffect(() => {
-        try {
-            let data = pairConfigs.map((item) => pick(item, ['pair', 'symbol', 'baseAsset', 'quoteAsset', 'pricePrecision']));
+        const arr = pairConfigs.map((rs) => rs?.pair);
+        if (publicSocket && pairConfigs && pairConfigs.length > 0) publicSocket?.emit('subscribe:futures:ticker', arr);
 
-            data.forEach((item) => {
-                const pairTicker = marketWatch[item?.pair];
-                if (pairTicker && item) {
-                    item.lastPrice = pairTicker.lastPrice;
-                    item.priceChangePercent = pairTicker.priceChangePercent;
-                }
+        return () => {
+            if (publicSocket) publicSocket?.emit('unsubscribe:futures:ticker', arr);
+        };
+    }, [pairConfigs, publicSocket]);
+
+    const asyncValue = async (value, duration = 100) => {
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(value), duration);
+        });
+    };
+
+    const forceData = async (duration = 0) => {
+        return await Promise.all(
+            pairConfigs.map(async (item) => {
+                return {
+                    ...item,
+                    lastPrice: await asyncValue(marketWatch[item?.pair]?.lastPrice || 0, duration),
+                    priceChangePercent: await asyncValue(marketWatch[item?.pair]?.priceChangePercent || 0, duration)
+                };
+            })
+        );
+    };
+
+    const getMarketWatch = async () => {
+        const { data } = await fetchAPI({
+            url: API_GET_FUTURES_MARKET_WATCH
+        });
+        if (data) {
+            const dataSource = pairConfigs.map((item) => {
+                let ticker = data.find((rs) => rs.s === item.pair);
+                if (ticker) ticker = FuturesMarketWatch.create(ticker);
+                return {
+                    ...item,
+                    lastPrice: ticker?.lastPrice || 0,
+                    priceChangePercent: ticker?.priceChangePercent || 0
+                };
             });
-
-            if (mode === 'USDT' || mode === 'VNDC') {
-                data = data.filter((item) => item?.quoteAsset === mode);
-            }
-
-            switch (curTab) {
-                case TABS.FAVOURITE:
-                    const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
-                    if (_data?.length > 0) {
-                        data = _data;
-                    } else {
-                        data = data?.filter((i) => SUGGESTED_SYMBOLS?.find((rs) => rs.includes(i?.baseAsset)));
-                    }
-                    break;
-                case TABS.FUTURES:
-                    data = data;
-                    break;
-                case TABS.TRENDING:
-                    data = data?.filter((i) => trendingPairs.find((rs) => rs === i?.symbol));
-                    break;
-                case TABS.GAINERS:
-                    data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent > 0);
-                    break;
-                case TABS.LOSERS:
-                    data = data?.filter((i) => i.priceChangePercent && i?.priceChangePercent < 0);
-                    break;
-                default:
-                    break;
-            }
-
-            // sort by field
-            if (Object.keys(sortBy)?.length) {
-                const _s = Object.entries(sortBy)[0];
-                if (_s[1] !== undefined) {
-                    data = orderBy(
-                        data,
-                        [
-                            (o) => {
-                                const value = o[`${_s[0]}`];
-                                return value ? value : _s[1] ? 1000000 : -1000000;
-                            }
-                        ],
-                        [`${_s[1] ? 'asc' : 'desc'}`]
-                    );
-                }
-            }
-
-            // filter search
-            if (search) {
-                const _search = search?.replace('/', '').toLowerCase();
-                data = data?.filter((o) => o?.pair?.toLowerCase().includes(_search));
-            }
-            setDataTable(data);
-        } catch (error) {
-            console.log('error', error);
+            setDataTable(dataSource);
         }
-    }, [mode, curTab, favoritePairs, pairConfigs, sortBy, search]);
+    };
+
+    useEffect(() => {
+        if (pairConfigs) getMarketWatch();
+    }, [pairConfigs]);
+
+    useEffect(() => {
+        if (search) {
+            isTabAll.current = true;
+            setCurTab(TABS.FUTURES);
+        }
+    }, [search]);
+
+    const dataFilter = useMemo(() => {
+        let data = [...dataTable];
+        data = data.filter((item) => item?.quoteAsset === mode);
+        if (curTab === TABS.FAVOURITE) {
+            const _data = data?.filter((i) => favoritePairs.find((rs) => rs.replace('_', '') === i.symbol));
+            if (_data?.length > 0) {
+                data = _data;
+            } else {
+                data = data?.filter((i) => SUGGESTED_SYMBOLS?.includes(i?.baseAsset));
+            }
+        }
+        if (deboundSearch) {
+            if (isTabAll.current) data = pairConfigs.filter((item) => item?.quoteAsset === mode);
+            return searchSort(data, ['baseAsset', 'quoteAsset'], deboundSearch);
+        }
+        if (Object.keys(sortBy)?.length) {
+            const _s = Object.entries(sortBy)[0];
+            data = orderBy(data, [_s[0]], [`${_s[1] ? 'asc' : 'desc'}`]);
+        }
+        return data;
+    }, [dataTable, sortBy, mode, deboundSearch, curTab, favoritePairs, pairConfigs]);
 
     // End sort function,
     const renderPairListItemsV2 = useCallback(() => {
-        if (dataTable.length === 0) return <NoData isSearch={!!search} />;
-
-        return dataTable?.map((pair) => {
+        if (dataFilter.length === 0) return <NoData isAuth={true} isSearch={!!search} />;
+        return dataFilter?.map((pair) => {
             const isFavorite = favoritePairs.find((rs) => rs.replace('_', '') === pair.symbol);
+            // if (curTab === TABS.FAVOURITE && !isFavorite) return;
             return (
                 <FuturesPairListItemV2
                     key={`futures_pairListItems_${pair?.pair}`}
@@ -146,7 +185,7 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 />
             );
         });
-    }, [dataTable]);
+    }, [dataFilter, curTab, favoritePairs]);
 
     const setSorter = (key) => {
         setSortBy((prev) => (prev?.[key] === undefined ? { [key]: true } : prev?.[key] ? { [key]: false } : { [key]: undefined }));
@@ -194,13 +233,14 @@ const FuturesPairList = memo(({ mode, setMode, isAuth, activePairList, onSelectP
                 <div className="relative flex tracking-normal mx-4">
                     <Tabs key="tabs_pair_list_info" tab={curTab} className="border-b border-divider dark:border-divider-dark">
                         {Object.values(TABS).map((t) => {
+                            if (!auth && t === TABS.FAVOURITE) return;
                             return (
                                 <TabItem
                                     V2
                                     key={'tab_detail_pairlist_' + t}
                                     className={`!px-2 !text-sm`}
                                     value={t}
-                                    onClick={(isClick) => isClick && setCurTab(t)}
+                                    onClick={(isClick) => isClick && onHandleChange(t)}
                                 >
                                     {tabTitles[t]}
                                 </TabItem>

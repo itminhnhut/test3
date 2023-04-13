@@ -116,7 +116,8 @@ const MarketTable = ({
 
     useEffect(() => {
         setMobileLimit(15)
-    }, [restProps?.tabIndex, restProps?.subTabIndex, restProps?.favType])
+        parentState({ currentPage: 1 })
+    }, [restProps?.tabIndex, restProps?.subTabIndex, restProps?.favType, restProps?.type])
 
     useEffect(() => {
         if (!restProps.search?.length || restProps.tabIndex !== 0) return
@@ -559,7 +560,7 @@ const MarketTable = ({
                     <div className="w-[calc(100vw-196px)] sm:w-[368px]">
                         <InputV2
                             value={restProps.search}
-                            onChange={(value) => parentState({ search: value })}
+                            onChange={(value) => parentState({ search: value, type: 0 })}
                             placeholder={t('common:search')}
                             prefix={(<Search color={colors.darkBlue5} size={16} />)}
                             className='pb-0 w-full'
@@ -598,19 +599,22 @@ const MarketTable = ({
                                 <div className='space-y-4 w-full'>
                                     <TokenTypes type={type} setType={(index) => {
                                         parentState({
-                                            type: index
+                                            type: index,
+                                            search: ''
                                         })
                                     }} types={types.slice(0, 2)} lang={language} className='w-full !justify-between !flex-1' />
                                     <TokenTypes type={type} setType={(index) => {
                                         parentState({
-                                            type: index
+                                            type: index,
+                                            search: ''
                                         })
                                     }} types={types.slice(2, 6)} lang={language} className='w-full !justify-between !flex-1' />
                                 </div>
                                 :
                                 <TokenTypes type={type} setType={(index) => {
                                     parentState({
-                                        type: index
+                                        type: index,
+                                        search: ''
                                     })
                                 }} types={types} lang={language} />}
 

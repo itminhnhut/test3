@@ -378,7 +378,7 @@ const FuturesOrderHistoryVndc = ({ pairPrice, pairConfig, onForceUpdate, hideOth
                         'padding-top': '0px !important',
                         'padding-bottom': '0px !important'
                     },
-                    padding: '14px 16px'
+                    padding: '14px 16px',
                 }}
             />
         </>

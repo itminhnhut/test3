@@ -29,6 +29,7 @@ const { i18n } = require('./next-i18next.config');
 const sentryWebpackPluginOptions = {
     debug: true,
     authToken: SENTRY_AUTH_TOKEN,
+    hideSourceMaps: NODE_ENV !== 'dev',
     // Additional config options for the Sentry Webpack plugin. Keep in mind that
     // the following options are set automatically, and overriding them is not
     // recommended:
@@ -87,7 +88,10 @@ const moduleExports = withPlugins([[withBundleAnalyzer], [withFonts]], {
             'datav2.nami.exchange',
             'blog.nami.today',
             'data-test.bitbattle.io',
-            'nami-dev.sgp1.digitaloceanspaces.com'
+            'nami-dev.sgp1.digitaloceanspaces.com',
+            's3-ap-southeast-1.amazonaws.com',
+            'thao68.com',
+            'lh3.googleusercontent.com'
         ]
     },
     distDir: process.env.BUILD_DIR || 'build'

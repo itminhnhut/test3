@@ -11,21 +11,20 @@ import { ExchangeOrderEnum, PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { getOrderBook } from 'src/redux/actions/market';
 import { SET_SPOT_SELECTED_ORDER } from 'src/redux/actions/types';
-import { formatPrice, getFilter, getSymbolString, RefCurrency } from 'src/redux/actions/utils';
+import { formatNumber, getFilter, getSymbolString, RefCurrency, exponentialToDecimal, getDecimalPrice, getDecimalQty } from 'src/redux/actions/utils';
 import LastPrice from '../markets/LastPrice';
 import OrderBookAll from 'src/components/svg/OrderBookAll';
 import OrderBookBids from 'src/components/svg/OrderBookBids';
 import OrderBookAsks from 'src/components/svg/OrderBookAsks';
 import { ORDER_BOOK_MODE } from 'redux/actions/const';
 import SvgChevronDown from 'src/components/svg/ChevronDown';
-import { getDecimalScale } from 'redux/actions/utils';
 import { handleTickSize } from 'utils/MarketDepthMerger';
 import classNames from 'classnames';
 import PopoverV2 from 'components/common/V2/PopoverV2';
 
 const OrderBook = (props) => {
     const { t } = useTranslation(['common', 'spot']);
-    const { symbol, layoutConfig, parentState, isPro } = props;
+    const { symbol, layoutConfig, parentState, isPro, decimals } = props;
     const [orderBook, setOrderBook] = useState({ bids: [], asks: [] });
     const { base, quote } = props.symbol;
     const dispatch = useDispatch();
@@ -44,7 +43,6 @@ const OrderBook = (props) => {
     }, [base, quote]);
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
     const [tickSize, setTickSize] = useState(0.01);
-    const [decimal, setDecimal] = useState(2);
     const [tickSizeOptions, setTickSizeOptions] = useState([]);
     const [loadingAsks, setLoadingAsks] = useState(true);
     const [loadingBids, setLoadingBids] = useState(true);
@@ -109,15 +107,11 @@ const OrderBook = (props) => {
         const priceFilter = getFilter(ExchangeOrderEnum.Filter.PRICE_FILTER, currentExchangeConfig || []);
         const result = [];
         for (let i = 0; i < 5; i++) {
-            result.push(+priceFilter?.tickSize * 10 ** i);
+            result.push(exponentialToDecimal(+priceFilter?.tickSize * 10 ** i));
         }
         setTickSizeOptions(result);
         setTickSize(+priceFilter?.tickSize);
     }, [exchangeConfig, symbol]);
-
-    useEffect(() => {
-        setDecimal(getDecimalScale(tickSize));
-    }, [tickSize]);
 
     const divide = orderBookMode === ORDER_BOOK_MODE.ALL ? 2 : 1;
 
@@ -182,13 +176,13 @@ const OrderBook = (props) => {
             >
                 <div className="flex items-center flex-1">
                     <div className={`flex-1  text-xs font-medium leading-table ${side === 'buy' ? 'text-red' : 'text-teal'}`}>
-                        {p ? formatPrice(p, decimal || 8) : '-'}
+                        {p ? formatNumber(p, decimals.price) : '-'}
                     </div>
                     <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
-                        {q ? formatPrice(+q, exchangeConfig, symbolString) : '-'}
+                        {q ? formatNumber(+q, decimals.qty) : '-'}
                     </div>
                     <div className="flex-1 text-Primary dark:text-txtPrimary-dark text-xs font-medium leading-table text-right">
-                        {p > 0 ? formatPrice(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
+                        {p > 0 ? formatNumber(p * q, quoteAsset === 'VNDC' ? 0 : 2) : '-'}
                     </div>
                 </div>
                 <div className={`progress-bar ${side === 'buy' ? 'ask-bar' : 'bid-bar'} `} style={{ width: `${parseInt(percentage, 10)}%` }} />
@@ -234,10 +228,11 @@ const OrderBook = (props) => {
     const renderTickSizeOptions = () => {
         return (
             <PopoverV2
+                className="w-max"
                 ref={popover}
                 label={(open) => (
                     <div className="flex min-w-[63px] justify-between items-center h-6 rounded-[3px] bg-gray-10 dark:bg-dark-2 pl-2 pr-1 ">
-                        <span className="text-xs font-semibold text-txtPrimary dark:text-txtSecondary-dark mr-2 ">{tickSize}</span>
+                        <span className="text-xs font-semibold text-txtPrimary dark:text-txtSecondary-dark mr-2 ">{exponentialToDecimal(tickSize)}</span>
                         <SvgChevronDown className={`${open ? '!rotate-0' : ''}`} size={16} />
                     </div>
                 )}
@@ -254,7 +249,7 @@ const OrderBook = (props) => {
                                     }}
                                     key={index}
                                     className={classNames(
-                                        'h-8 leading-8 px-4 cursor-pointer w-full text-xs text-center text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
+                                        'h-8 leading-8 px-4 cursor-pointer w-max text-xs text-center text-txtSecondary dark:text-txtSecondary-dark hover:bg-gray-13 dark:hover:bg-hover-dark',
                                         { 'bg-opacity-10 dark:bg-opacity-10 !text-txtPrimary dark:!text-white font-semibold': isActive }
                                     )}
                                 >

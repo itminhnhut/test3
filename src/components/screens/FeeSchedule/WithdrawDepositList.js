@@ -2,10 +2,12 @@ import TextButton from 'components/common/V2/ButtonV2/TextButton';
 import AssetLogo from 'components/wallet/AssetLogo';
 import React, { useEffect, useState } from 'react';
 import NoResult from '../Support/NoResult';
-import { formatNumber, walletLinkBuilder } from 'redux/actions/utils';
+import { dwLinkBuilder, formatNumber, walletLinkBuilder } from 'redux/actions/utils';
 import Link from 'next/link';
 import { WalletType } from 'redux/actions/const';
 import { EXCHANGE_ACTION } from 'pages/wallet';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { TYPE_DW } from '../WithdrawDeposit/constants';
 
 const ROW_PER_PAGE = 6;
 const WithdrawDepositList = ({ t, paymentConfigs, search, configs }) => {
@@ -65,10 +67,11 @@ const PaymentFeeRow = ({ t, fee, assetDigit, lastIndex }) => (
             </div>
             <div className="flex mb-3 justify-between items-center" passHref>
                 <Link
-                    href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
-                        type: 'crypto',
-                        asset: fee?.assetCode
-                    })}
+                    href={dwLinkBuilder(TYPE_DW.CRYPTO, SIDE.BUY, fee?.assetCode)}
+                    // href={walletLinkBuilder(WalletType.SPOT, EXCHANGE_ACTION.DEPOSIT, {
+                    //     type: 'crypto',
+                    //     asset: fee?.assetCode
+                    // })}
                 >
                     <div className="text-base font-semibold flex items-center hover:!underline">
                         <AssetLogo assetCode={fee?.assetCode} size={20} />

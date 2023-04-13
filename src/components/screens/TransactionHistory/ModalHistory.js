@@ -16,7 +16,7 @@ import { WalletType, EarnWalletType } from 'redux/actions/const';
 import { ArrowCompareIcon } from '../../svg/SvgIcon';
 import { customFormatBalance } from '.';
 
-const WalletTypeById = {
+export const WalletTypeById = {
     0: WalletType.SPOT,
     1: WalletType.MARGIN,
     2: WalletType.FUTURES,
@@ -169,7 +169,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                             <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
                         </div>
                         <div className="mx-8 p-4 space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
-                            {modalDetailColumn[detailTx.type].map((col) => {
+                            {modalDetailColumn?.[detailTx.type]?.map((col) => {
                                 let additionalData;
 
                                 const keyData = col.keys

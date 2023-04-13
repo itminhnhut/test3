@@ -66,6 +66,7 @@ const ACCOUNT = {
     SECURITY: '/account/security',
     IDENTIFICATION: '/account/identification',
     REWARD_CENTER: '/account/reward-center',
+    PAYMENT_METHOD: '/account/payment-method',
     REFERRAL: getV1Url('/reference'),
     SETTINGS: '/account/settings'
 };
@@ -82,7 +83,32 @@ const FUTURES_V2 = {
 
 const TRANSACTION_HISTORY = {
     DEFAULT: '/transaction-history',
-    TYPE :(type) => `/transaction-history/${type}`
+    TYPE: (type) => `/transaction-history/${type}`
+};
+
+const WITHDRAW_DEPOSIT = {
+    DEFAULT: '/withdraw-deposit/crypto',
+    PARTNER: '/withdraw-deposit/partner',
+    DETAIL: '/withdraw-deposit/partner/details'
+};
+
+export const PARTNER_WD_TABS = {
+    OPEN_ORDER: 'opening-orders',
+    HISTORY_ORDER: 'history-orders',
+    STATS: 'stats',
+    PROFILE: 'profile',
+    HISTORY_REFERRAL: 'history-referral',
+    DETAILS: 'details'
+};
+
+const PARNER_WITHDRAW_DEPOSIT = {
+    DEFAULT: '/partner-dw/',
+    OPEN_ORDER: `/partner-dw/${PARTNER_WD_TABS.OPEN_ORDER}`,
+    HISTORY_ORDER: `/partner-dw/${PARTNER_WD_TABS.HISTORY_ORDER}`,
+    STATS: `/partner-dw/${PARTNER_WD_TABS.STATS}`,
+    PROFILE: `/partner-dw/${PARTNER_WD_TABS.PROFILE}`,
+    HISTORY_REFERRAL: `/partner-dw/${PARTNER_WD_TABS.HISTORY_REFERRAL}`,
+    DETAILS: `/partner-dw/${PARTNER_WD_TABS.DETAILS}`
 };
 
 export const PATHS = {
@@ -95,8 +121,9 @@ export const PATHS = {
     TERM_OF_SERVICES,
     REFERENCE,
     SUPPORT,
-    TRANSACTION_HISTORY
-
+    TRANSACTION_HISTORY,
+    WITHDRAW_DEPOSIT,
+    PARNER_WITHDRAW_DEPOSIT
     // Add news path here
 };
 

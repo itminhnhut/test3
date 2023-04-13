@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 import { find, isNumber } from 'lodash';
-import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber } from 'redux/actions/utils';
+import { countDecimals, eToNumber, formatWallet, shortHashAddress, formatNumber, dwLinkBuilder } from 'redux/actions/utils';
 import { WITHDRAW_RESULT, withdrawHelper } from 'redux/actions/helper';
 import { PATHS } from 'constants/paths';
 import MaldivesLayout from 'components/common/layouts/MaldivesLayout';
@@ -24,6 +24,8 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import toast from 'utils/toast';
 import { CopyIcon } from 'components/svg/SvgIcon';
 import Countdown from 'react-countdown-now';
+import { TYPE_DW } from 'components/screens/WithdrawDeposit/constants';
+import { SIDE } from 'redux/reducers/withdrawDeposit';
 
 const errorMessageMapper = (t, error) => {
     switch (error) {
@@ -452,14 +454,14 @@ const ExchangeWithdraw = () => {
             <Background isDark={currentTheme === THEME_MODE.DARK}>
                 <div className="mal-container px-4">
                     <div className="flex items-center justify-between mb-10">
-                        <span className="font-semibold text-[2rem] leading-[3rem]">{t('common:withdraw')}</span>
+                        <span className="font-semibold text-[2rem] leading-[3rem]">{`${t('common:sell')} Crypto`}</span>
                         <div
                             className="flex items-center font-semibold text-teal cursor-pointer"
                             onClick={() => {
-                                router.push(PATHS.WALLET.EXCHANGE.DEPOSIT + '?asset=' + selectedAsset?.assetCode);
+                                router.push(dwLinkBuilder(TYPE_DW.PARTNER, SIDE.SELL));
                             }}
                         >
-                            <span className="mr-2">{t('wallet:deposit_crypto')}</span>
+                            <span className="mr-2">{t('dw_partner:sell_title')}</span>
                             <ChevronRight size={16} color={colors.teal} />
                         </div>
                     </div>
