@@ -187,9 +187,13 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
 
                                         if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
-                                            // detailTx.result.category === '4'
-                                            // priorityKey = get(detailTx, 'result.categoy')
+                                            if (
+                                                (detailTx.result.category === '4' && col.localized === 'modal_detail.to') ||
+                                                (detailTx.result.category === '5' && col.localized === 'modal_detail.from')
+                                            )
+                                                priorityKey = null;
                                         }
+                                        if (!priorityKey) formatKeyData = null;
                                         formatKeyData = (
                                             <TextCopyable
                                                 showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
@@ -252,9 +256,8 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         break;
                                     case COLUMNS_TYPE.WALLET_TYPE:
                                         formatKeyData = (
-                                            <div className="uppercase">
-                                                {keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]?.toLowerCase()}
-                                                {/* {t('transaction-history:wallet', { wallet: WalletTypeById?.[keyData]?.toLowerCase() })} */}
+                                            <div className="">
+                                                {+keyData === 8 ? t('transaction-history:broker_wallet') : WalletTypeById?.[keyData]}
                                             </div>
                                         );
                                         break;
