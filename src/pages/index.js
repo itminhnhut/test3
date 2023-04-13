@@ -144,7 +144,6 @@ const Index = () => {
                 return (o?.is_new_listing ? -1 : 1) * (o?.listing_time || 0);
             }
         ]);
-        console.log('newListings:', newListings);
 
         setState({
             trendData: {
