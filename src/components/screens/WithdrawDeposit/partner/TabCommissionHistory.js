@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import TableV2 from 'components/common/V2/TableV2';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { ApiStatus, PartnerOrderStatus } from 'redux/actions/const';
-import { isEmpty, isNull } from 'lodash';
+import { find, isEmpty, isNull } from 'lodash';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_COMMISSION_HISTORY_PARTNER, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import TagV2 from 'components/common/V2/TagV2';
@@ -18,6 +18,20 @@ import axios from 'axios';
 import useFetchApi from 'hooks/useFetchApi';
 import FilterTimeTab from 'components/common/FilterTimeTab';
 import ModalCommissionHistory from './ModalCommissionHistory';
+import { useSelector } from 'react-redux';
+import Skeletor from 'components/common/Skeletor';
+import moment from 'moment-timezone';
+
+const timezone = moment.tz.guess(); // attempts to guess the user's timezone
+
+// do BE sai nen FE moi phai custom from to cua Filter
+const customTime = (input) => {
+    const startTimeLocale = moment(input).tz(timezone);
+    const startTimeLocaleTimestamp = startTimeLocale.valueOf();
+
+    console.log("startTimeLocaleTimestamp: ",startTimeLocaleTimestamp);
+    return startTimeLocaleTimestamp;
+};
 
 const LIMIT_ROW = 10;
 
@@ -26,6 +40,8 @@ const TabCommissionHistory = () => {
         t,
         i18n: { language }
     } = useTranslation();
+
+    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [state, set] = useState({
         data: [],
@@ -59,13 +75,17 @@ const TabCommissionHistory = () => {
         });
     }, []);
 
+    const temp = convertDateToMs(filter?.range?.startDate);
+
     const fetchOrder = async () => {
         setState({ loading: true });
         try {
             const { statusCode, data, message } = await FetchApi({
                 url: API_GET_COMMISSION_HISTORY_PARTNER,
                 params: {
+                    // from: customTime(convertDateToMs(filter?.range?.startDate)),
                     from: convertDateToMs(filter?.range?.startDate),
+                    // to: new Date(convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf')),
                     to: convertDateToMs(filter?.range?.endDate ? filter.range.endDate : Date.now(), 'endOf'),
                     skip: state.curPage * LIMIT_ROW,
                     limit: LIMIT_ROW,
@@ -124,10 +144,17 @@ const TabCommissionHistory = () => {
                 align: 'left',
                 width: 180,
                 render: (v) => {
-                    const assetCode = getAssetCode(+v);
-                    return (
+                    const assetConfig = find(configs, { id: +v });
+
+                    return assetConfig ? (
                         <div className="flex gap-2 items-center">
-                            <AssetLogo assetCode={assetCode} size={32} useNextImg /> <div>{assetCode}</div>
+                            <AssetLogo assetCode={assetConfig?.assetCode} size={32} useNextImg />
+                            <div>{assetConfig?.assetName || 'Unknown'}</div>
+                        </div>
+                    ) : (
+                        <div className="flex gap-2 items-center">
+                            <Skeletor width={32} />
+                            <Skeletor width={50} />
                         </div>
                     );
                 }
@@ -164,11 +191,10 @@ const TabCommissionHistory = () => {
                 // }
             }
         ],
-        [categoryConfig, t]
+        [categoryConfig]
     );
 
     const [openModalDetail, setOpenModalDetail] = useState(null);
-
     return (
         <div>
             <FilterTimeTab filter={filter} setFilter={setFilter} positionCalendar="left" className="mb-6" isTabAll />

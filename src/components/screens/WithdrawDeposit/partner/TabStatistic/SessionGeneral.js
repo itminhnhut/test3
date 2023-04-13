@@ -70,7 +70,7 @@ const SessionGeneral = () => {
                         </div>
                     </div>
                 </CardWrapper>
-                <CardWrapper className="flex-auto flex gap-x-6 justify-between">
+                <CardWrapper className="flex gap-x-6 justify-between">
                     <div className="max-w-[237px] flex flex-col">
                         <div className="txtPri-5 pb-4">{t('dw_partner:standard_partner')}</div>
                         <div className="txtSecond-3 text-left flex items-center flex-auto">{t('dw_partner:standard_partner_des')}</div>
@@ -78,8 +78,8 @@ const SessionGeneral = () => {
                     <div
                         className="min-w-[168px] min-h-[168px]"
                         style={{
-                            // backgroundImage: `url('${getS3Url('/images/reference/background_mobile.png')}')`,
-                            backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
+                            backgroundImage: `url('${getS3Url('/images/screen/partner/RegisterPartnerSuccess.png')}')`,
+                            // backgroundImage: `url('/images/screen/partner/RegisterPartnerSuccess.png')`,
                             backgroundSize: 'cover'
                         }}
                     ></div>
