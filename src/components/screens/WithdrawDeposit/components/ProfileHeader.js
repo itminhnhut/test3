@@ -10,8 +10,9 @@ import { PATHS } from 'constants/paths';
 
 import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-const ProfileHeader = ({ t, partner, bankDefault, banks, loadingPartner, loadingBankDefault }) => {
+const ProfileHeader = ({ t, partner, bankDefault, banks, language, loadingBankDefault }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
@@ -89,7 +90,8 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, loadingPartner, loading
                 <div className="w-full p-3 text-center sm:text-left sm:w-1/3">
                     <div className="txtSecond-2 mb-3">{t('dw_partner:total_completed_order')}</div>
                     <div className="text-txtPrimary dark:text-txtPrimary-dark font-semibold text-[18px]">
-                        {formatNumber(partner?.analyticMetadata?.count)} {t('dw_partner:order')} 
+                        {formatNumber(partner?.analyticMetadata?.count || 0)}{' '}
+                        {`${t('dw_partner:order')}${partner?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN ? 's' : ''}`}
                     </div>
                 </div>
             </div>
