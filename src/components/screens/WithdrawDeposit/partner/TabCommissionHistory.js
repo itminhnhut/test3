@@ -75,8 +75,6 @@ const TabCommissionHistory = () => {
         });
     }, []);
 
-    const temp = convertDateToMs(filter?.range?.startDate);
-
     const fetchOrder = async () => {
         setState({ loading: true });
         try {
