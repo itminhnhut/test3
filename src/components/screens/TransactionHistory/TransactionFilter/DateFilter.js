@@ -10,7 +10,6 @@ import { getWidthByBreakpoint } from 'src/utils/helpers';
 
 const DateFilter = ({ filter, setFilter, t }) => {
     const { width } = useWindowSize();
-    console.log('getWidthByBreakpoint(', getWidthByBreakpoint('md'))
 
     return (
         <FilterWrapper label={t('transaction-history:filter.time')} className="!max-w-[300px]">

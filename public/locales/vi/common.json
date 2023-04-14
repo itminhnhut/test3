@@ -389,5 +389,9 @@
     "disputing": "Đang tranh chấp",
     "denined": "Đã từ chối",
     "processing": "Đang xử lý",
-    "deny": "Từ chối"
+    "deny": "Từ chối",
+    "download_view": {
+        "title": "Tải ứng dụng ngay",
+        "desc": "Hơn 600 cặp tài sản với đòn bẩy lên đến x125"
+    }
 }

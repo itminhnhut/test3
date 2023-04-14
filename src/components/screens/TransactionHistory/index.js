@@ -8,7 +8,7 @@ import FetchApi from 'utils/fetch-api';
 import { API_GET_WALLET_TRANSACTION_HISTORY, API_GET_WALLET_TRANSACTION_HISTORY_CATEGORY } from 'redux/actions/apis';
 import { useTranslation } from 'next-i18next';
 import AssetLogo from 'components/wallet/AssetLogo';
-import { formatPrice, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
+import { formatBalance, formatTime, getAssetCode, shortHashAddress } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { WALLET_SCREENS } from 'pages/wallet';
 import { ApiStatus } from 'redux/actions/const';
@@ -25,6 +25,8 @@ const namiSystem = {
     en: 'Nami system',
     vi: 'Hệ thống Nami'
 };
+
+export const customFormatBalance = (number, digit, acceptNegative = true) => formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
 
 export const isFilterEmpty = (filter) => !filter.category && !filter.asset && isNull(filter.range.endDate);
 
@@ -200,12 +202,9 @@ const TransactionHistory = ({ id }) => {
                 width: 241,
                 render: (_row, item) => {
                     const config = assetConfig?.find((e) => e?.id === item?.currency);
-                    return (
-                        <div>
-                            {formatPrice(item?.amount || item?.money_use || item?.value, config?.assetDigit ?? 0)}
-                            {/* {config?.assetCode ?? 'VNDC'} */}
-                        </div>
-                    );
+                    const amount = item?.amount || item?.money_use || item?.value;
+                    const isOutofDigitAmount = Math.abs(+amount) < Math.pow(1, config?.assetDigit || 0 * -1);
+                    return <div>{!isOutofDigitAmount ? `${amount > 0 ? '+' : ''}${customFormatBalance(amount, config?.assetDigit ?? 0, true)}` : '--'}</div>;
                 }
             },
             category: {
@@ -214,7 +213,9 @@ const TransactionHistory = ({ id }) => {
                 title: t('transaction-history:category'),
                 align: 'left',
                 width: 208,
-                render: (row) => <div>{categoryConfig?.find((e) => e.category_id === row)?.content?.[language] ?? 'Unknown category'}</div>
+                render: (row) => (
+                    <div>{categoryConfig?.find((e) => e.category_id === row)?.content?.[language] ?? t('transaction-history:default_category')}</div>
+                )
             },
 
             status: {

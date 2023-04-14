@@ -29,6 +29,14 @@
     "wallet": "{{wallet}} Wallet",
     "click_on_transaction": "Click on each transaction to view detailed information.",
     "no_transaction_history": "No history",
+    "default_category": "Transaction",
+    "market": "Market",
+    "sell": "Sell",
+    "buy": "Buy",
+    "limit": "Limit",
+    "stop": "stop",
+    "broker_wallet": "Commission",
+    "nami_system": "NAMI System",
     "modal_detail": {
         "snapshot_value": "Snapshot value",
         "list_assets": "List of received assets",
@@ -46,6 +54,7 @@
         "close_price": "Close price",
         "type": "Type",
         "position_id": "Position ID",
-        "wallet_type": "Wallet Type"
+        "wallet_type": "Wallet Type",
+        "volume": "Volume"
     }
 }

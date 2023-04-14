@@ -29,6 +29,14 @@
     "wallet": "Ví {{wallet}}",
     "click_on_transaction": "Click vào từng giao dịch để xem thông tin chi tiết.",
     "no_transaction_history": "Không có lịch sử",
+    "default_category": "Giao dịch",
+    "market": "thị trường",
+    "sell": "Bán",
+    "buy": "Mua",
+    "limit": "giới hạn",
+    "stop": "stop",
+    "broker_wallet": "Ví hoa hồng",
+    "nami_system": "Hệ thống NAMI",
     "modal_detail": {
         "snapshot_value": "Giá trị tài sản",
         "list_assets": "Danh sách tài sản nhận được",
@@ -46,6 +54,7 @@
         "close_price": "Giá đóng",
         "type": "Loại",
         "position_id": "ID vị thế",
-        "wallet_type": "Loại ví"
+        "wallet_type": "Loại ví",
+        "volume": "Khối lượng giao dịch"
     }
 }

@@ -1,53 +1,42 @@
+import classNames from 'classnames';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 import { DOWNLOAD_APP_LINK } from 'src/redux/actions/const';
+import useWindowSize from 'hooks/useWindowSize';
 
 const DefaultMobileView = (props, ref) => {
     const { t } = useTranslation();
+    const { width } = useWindowSize();
+
+    const renderText = () => (
+        <div className={classNames('space-y-3 flex flex-col items-center mb-6 sm:mb-10')}>
+            <span className="text-3xl sm:text-4xl font-semibold text-center">{t('common:download_view:title')}</span>
+            <span className="text-sm sm:text-base">{t('common:download_view:desc')}</span>
+        </div>
+    );
+
     return (
-        <div className="inline-block py-8 w-full overflow-hidden text-left align-middle transition-all transform bg-white">
-            <div className="text-sm">
-                <div className="bg-blue-50">
-                    <img
-                        src={getS3Url(
-                            "/images/screen/homepage/journey_graphics2.png"
-                        )}
-                        alt=""
-                        className="mx-auto"
-                    />
-                </div>
-                <div className="px-6 py-8 text-center !font-bold">
-                    <div className="text-xl">
-                        {t("landing:download_app_hint")}
-                    </div>
-                    <div className="text-xl text-teal mb-[30px]">
-                        Nami Exchange
-                    </div>
-                    <div className="">
-                        <a
-                            href={DOWNLOAD_APP_LINK.IOS}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <button
-                                className="btn btn-black w-full mb-2"
-                                type="button"
-                                rel="noreferrer"
-                            >
-                                {t("landing:download_app_hint_appstore")}
-                            </button>
+        <div
+            className={classNames('py-4 md:pt-10 px-4 sm:px-0 max-w-[456px] m-auto flex flex-col', {
+                'absolute top-1/2 -translate-y-1/2 lg:flex-row lg:items-center lg:space-x-[76px] lg:px-10 lg:max-w-full': width >= 1024
+            })}
+        >
+            {width < 1024 && renderText()}
+            <div className="flex flex-col lg:flex-col-reverse ">
+                <img className="lg:mt-4" src={getS3Url('/images/screen/download/bg_banner.png')} />
+                <img className="px-12 mt-4 lg:mt-0" src={getS3Url('/images/screen/download/bg_chart.png')} />
+            </div>
+            <div className="w-full">
+                {width >= 1024 && renderText()}
+                <div className="flex items-center justify-center space-x-3 mt-6 sm:mt-12 lg:mt-10">
+                    <div className="w-full max-w-[200px] h-12">
+                        <a href={DOWNLOAD_APP_LINK.IOS} target="_blank" rel="noreferrer">
+                            <img className="w-full h-full object-contain" src={getS3Url('/images/screen/download/download_app_store.png')} />
                         </a>
-                        <a
-                            href={DOWNLOAD_APP_LINK.ANDROID}
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <button
-                                className="btn btn-primary w-full"
-                                type="button"
-                            >
-                                {t("landing:download_app_hint_googleplay")}
-                            </button>
+                    </div>
+                    <div className="w-full max-w-[200px] h-12">
+                        <a href={DOWNLOAD_APP_LINK.ANDROID} target="_blank" rel="noreferrer">
+                            <img className="w-full h-full object-contain" src={getS3Url('/images/screen/download/download_play_store.png')} />
                         </a>
                     </div>
                 </div>
