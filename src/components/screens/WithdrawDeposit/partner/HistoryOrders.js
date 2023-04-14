@@ -278,7 +278,7 @@ const HistoryOrders = () => {
     return (
         <div className="bg-white dark:bg-transparent border border-transparent dark:border-divider-dark rounded-lg ">
             <div className="mx-6 my-8">
-                <div className="text-2xl font-semibold mb-8 ">{t('dw_partner:order_history')}</div>
+                <div className="text-2xl font-semibold mb-8">{t('common:transaction_history')}</div>
                 <FilterButton
                     language={language}
                     t={t}

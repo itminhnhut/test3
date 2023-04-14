@@ -18,7 +18,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
             <div className="flex space-x-1 items-center">
                 <OrderIcon size={16} />
                 <span>
-                    {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 0 ? 's' : ''}`}
+                    {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
                 </span>
             </div>
             {totalOrder > 0 ? (

@@ -73,7 +73,6 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
                         });
                     }
                 });
-                console.log('__here: ', _listAsset.length);
                 setListAsset(_listAsset);
             }
         }
@@ -220,7 +219,7 @@ const TransferSmallBalanceToNami = ({ width, className, allAssets }) => {
         <>
             <button
                 onClick={() => (auth?.kyc_status !== 2 ? setIsOpenModalKyc(true) : setIsShowPoppup((prev) => !prev))}
-                className={`bg-gray-10 dark:bg-dark-2 flex items-center justify-between text-txtTabHover dark:text-white 
+                className={`bg-gray-10 dark:bg-dark-2 flex items-center justify-between text-txtTabHover dark:text-white
            text-sm gap-3 rounded-md px-4 py-3 cursor-pointer ${className}`}
             >
                 <LogoIcon />

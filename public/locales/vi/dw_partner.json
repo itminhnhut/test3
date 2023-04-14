@@ -53,7 +53,7 @@
     "transfer_description": "Nội dung chuyển khoản",
 
     "transfer_confirm_description": {
-        "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền nhận được và nội dung chuyển khoản trước khi thực hiện.",
+        "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền và nội dung chuyển khoản trước khi thực hiện.",
         "partner": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho người dùng, vui lòng kiểm tra kỹ số tiền và nội dung chuyển khoản trước khi thực hiện."
     },
     "take_money_confirm_description": {
