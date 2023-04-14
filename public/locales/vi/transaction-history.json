@@ -55,6 +55,7 @@
         "type": "Loại",
         "position_id": "ID vị thế",
         "wallet_type": "Loại ví",
-        "volume": "Khối lượng giao dịch"
+        "volume": "Khối lượng giao dịch",
+        "fee": "Phí giao dịch"
     }
 }

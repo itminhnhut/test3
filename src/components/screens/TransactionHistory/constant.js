@@ -90,6 +90,7 @@ export const COLUMNS_TYPE = {
     ADDITIONAL_FIELD: 'additional_field',
     SYMBOL: 'symbol',
     FUTURES_ORDER: 'futures_order',
+    DEPOSIT_WITHDRAW_FEE: 'deposit_withdraw_fee',
     NUMBER_OF_ASSETS: 'number_of_assets',
     WALLET_TYPE: 'wallet_type',
     NAMI_SYSTEM: 'nami_system',
@@ -120,6 +121,7 @@ export const modalDetailColumn = {
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
         { keys: ['additionalData.metadata.address'], localized: 'modal_detail.from', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['additionalData.to.address'], localized: 'modal_detail.to', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
+        { keys: ['additionalData.fee.value'], localized: 'modal_detail.fee',type:COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE },
         { keys: ['additionalData.network'], localized: 'modal_detail.network' },
         { keys: ['additionalData.metadata.txhash'], localized: 'modal_detail.txhash', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true }
     ],
@@ -164,7 +166,7 @@ export const modalDetailColumn = {
         { keys: ['result._id'], localized: 'ID', type: COLUMNS_TYPE.COPIEDABLE, isAddress: true },
         { keys: ['result.created_at'], localized: 'modal_detail.time', type: COLUMNS_TYPE.TIME },
         { keys: ['result.wallet_type'], localized: 'modal_detail.wallet_type', type: COLUMNS_TYPE.WALLET_TYPE },
-        { keys: ['nami_system'], localized: 'modal_detail.from', type: COLUMNS_TYPE.NAMI_SYSTEM },
+        { keys: ['nami_system'], localized: 'modal_detail.from', type: COLUMNS_TYPE.NAMI_SYSTEM }
         // { keys: ['additionalData.reward'], localized: 'modal_detail.assets_number', type: COLUMNS_TYPE.NUMBER_OF_ASSETS }
     ],
     [TRANSACTION_TYPES.STAKING]: [
