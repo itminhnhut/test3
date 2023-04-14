@@ -41,19 +41,21 @@ const DateFilter = ({ filter, setFilter, t }) => {
                                 : t('transaction-history:filter.select_time')}
                         </span>
                         {filter.range.startDate && filter.range.endDate ? (
-                            <X
-                                size={16}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setFilter({
-                                        range: {
-                                            startDate: null,
-                                            endDate: null,
-                                            key: 'selection'
-                                        }
-                                    });
-                                }}
-                            />
+                            <div className="text-gray-7">
+                                <X
+                                    size={16}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setFilter({
+                                            range: {
+                                                startDate: null,
+                                                endDate: null,
+                                                key: 'selection'
+                                            }
+                                        });
+                                    }}
+                                />
+                            </div>
                         ) : (
                             <Calendar size={16} />
                         )}
