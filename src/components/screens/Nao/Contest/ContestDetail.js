@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao, ButtonNaoVariants } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_GET_GROUP_MEMBER, API_CONTEST_CANCEL_INVITE, API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -266,7 +266,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 onusClassName={`${
                     isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'
                 } min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
-                containerClassName="!bg-nao-bgModal2/[0.9]"
+                containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             >
                 <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
@@ -551,7 +551,7 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                     )}
                 </div>
                 <div className="px-4 w-full mt-8 flex space-x-4 ">
-                    <ButtonNao border onClick={onClose} className="!rounded-md font-semibold w-full">
+                    <ButtonNao variant={ButtonNaoVariants.SECONDARY} onClick={onClose} className="!rounded-md font-semibold w-full">
                         {t('common:close')}
                     </ButtonNao>
                     {isPending.person && (

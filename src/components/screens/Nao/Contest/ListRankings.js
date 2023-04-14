@@ -84,7 +84,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const empty = () => {
         return (
             <div className={`pt-[148px] lg:pt-[172px] flex items-start justify-center flex-col m-auto`}>
-                <div className="text-tiny font-medium text-gray-1 dark:text-gray-7">{t('nao:contest:no_rank')}</div>
+                <div className="text-tiny font-medium text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:no_rank')}</div>
             </div>
         );
     };
@@ -108,15 +108,15 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                         <div className="leading-8">
                                             <div className="font-semibold">{item.name}</div>
                                         </div>
-                                        <div className="text-gray-15 dark:text-gray-4 font-normal text-sm ">{item.onus_user_id}</div>
+                                        <div className="text-txtPrimary dark:text-txtPrimary-dark font-normal text-sm ">{item.onus_user_id}</div>
                                         <div className="bg-rank-line h-[1px] my-6"></div>
 
                                         <div className="flex flex-row justify-between items-center">
-                                            <div className="text-gray-1 dark:text-gray-7 font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark font-normal leading-6 text-sm">{t('nao:contest:volume')}</div>
                                             <div className="font-semibold leading-8">{formatNumber(item?.total_volume, 0)}</div>
                                         </div>
                                         <div className="flex flex-row justify-between items-center mt-1">
-                                            <div className="text-gray-1 dark:text-gray-7 font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
+                                            <div className="text-txtSecondary dark:text-txtSecondary-dark font-normal leading-6 text-sm">{t('nao:contest:total_trades')}</div>
                                             <div className="text-teal font-semibold leading-8">{formatNumber(item?.total_order, 0)}</div>
                                         </div>
                                     </div>
@@ -127,7 +127,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                 ) : (
                     empty()
                 )}
-                <div className="mt-6 text-xs text-gray-1 dark:text-gray-7 font-medium">
+                <div className="mt-6 text-xs text-txtSecondary dark:text-txtSecondary-dark font-medium">
                     {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
                 </div>
             </>
@@ -136,7 +136,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
 
     const renderLastUpdate = () => {
         return (
-            <div className="mt-4 lg:mt-6 text-xs text-gray-1 dark:text-gray-7 font-medium">
+            <div className="mt-4 lg:mt-6 text-xs text-txtSecondary dark:text-txtSecondary-dark font-medium">
                 {t('nao:contest:last_updated_time_dashboard', { minute: 60 })}: {formatTime(data?.last_time_update, 'HH:mm:ss DD/MM/YYYY')}
             </div>
         );
@@ -150,7 +150,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                         <Table classWrapper="mt-[172px]" loading={loading} noItemsMessage={t('nao:contest:no_rank')} dataSource={data?.users || []}>
                             <Column
                                 minWidth={90}
-                                className="text-gray-1 dark:text-gray-7 font-medium"
+                                className="text-txtSecondary dark:text-txtSecondary-dark font-medium"
                                 title={t('nao:contest:rank')}
                                 fieldName="special_rank_metadata"
                                 cellRender={renderRank}
@@ -160,7 +160,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                 title={t('nao:contest:id_onus_futures')}
                                 minWidth={150}
                                 sortable={true}
-                                className="text-gray-15 dark:text-gray-4 capitalize"
+                                className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
                                 fieldName="onus_user_id"
                             />
                             <Column
@@ -194,7 +194,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
             <>
                 {data?.users?.length > 0 ? (
                     <CardNao noBg className="mt-[168px] !py-[1.125rem] !px-3 inline lg:hidden">
-                        <div className="flex mx-3 gap-4 sm:gap-6 text-gray-1 dark:text-gray-7 text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                        <div className="flex mx-3 gap-4 sm:gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
                             <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                             <div>{t('nao:contest:information')}</div>
                         </div>
@@ -207,7 +207,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                             <div className="flex flex-row justify-between">
                                                 <div className="leading-6 text-sm">
                                                     <div className="font-semibold ">{item.name}</div>
-                                                    <div className="text-gray-15 dark:text-gray-4 font-medium">ID: {truncate(item.onus_user_id, 15)}</div>
+                                                    <div className="text-txtPrimary dark:text-txtPrimary-dark font-medium">ID: {truncate(item.onus_user_id, 15)}</div>
                                                 </div>
                                                 <Image
                                                     className="!rounded-full"
@@ -217,11 +217,11 @@ const ListRankings = ({ isList, type, data, loading }) => {
                                                 />
                                             </div>
                                             <div className="mt-4 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-gray-15 dark:text-gray-4 ">{t('nao:contest:volume')}</div>
+                                                <div className="text-txtPrimary dark:text-txtPrimary-dark ">{t('nao:contest:volume')}</div>
                                                 <div className="">{formatNumber(item?.total_volume, 0)} VNDC</div>
                                             </div>
                                             <div className="mt-1 flex flex-row justify-between items-center text-sm leading-6 font-medium">
-                                                <div className="text-gray-15 dark:text-gray-4 ">{t('nao:contest:total_trades')}</div>
+                                                <div className="text-txtPrimary dark:text-txtPrimary-dark ">{t('nao:contest:total_trades')}</div>
                                                 <div className="text-right">{formatNumber(item?.total_order, 0)}</div>
                                             </div>
                                         </div>
@@ -251,7 +251,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
                 <div className="flex flex-row font-semibold leading-8 mt-4 justify-center">
                     <span className="text-teal mr-1">{config?.total}</span> {config.title[language]}
                 </div>
-                <div className="text-gray-15 dark:text-gray-4 text-sm font-normal text-center mt-1 leading-3">
+                <div className="text-txtPrimary dark:text-txtPrimary-dark text-sm font-normal text-center mt-1 leading-3">
                     {config.des[language]}: {config.total_klgd}
                 </div>
             </div>

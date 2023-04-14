@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext } from 'react';
 import Modal from 'components/common/ReModal';
-import { TextField, ButtonNao, Tooltip, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextField, ButtonNao, Tooltip, capitalize, ButtonNaoVariants } from 'components/screens/Nao/NaoStyle';
 import { getS3Url } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import _ from 'lodash';
@@ -216,7 +216,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
             onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !bg-nao-tooltip !overflow-hidden`}
-            containerClassName="!bg-nao-bgModal2/[0.9]"
+            containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
         >
             <div className="!px-4 text-2xl leading-8 font-semibold">{t('nao:contest:create_a_team')}</div>
@@ -247,7 +247,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 <div className="mt-8">
                     <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
                         backgroundColor={colors.nao.tooltip2} arrowColor="transparent" id="tooltip-list-team" >
-                        <div className="font-medium text-sm text-gray-1 dark:text-gray-72 "  >
+                        <div className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark2 "  >
                             {t('nao:contest:tooltip_create_team')}
                         </div>
                     </Tooltip>
@@ -270,7 +270,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 </div>
             </div>
             <div className='!px-4 flex items-center space-x-4 mt-8'>
-                <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
+                <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao>
                 <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md">
                     {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:create_team')}
                 </ButtonNao>

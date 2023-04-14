@@ -465,7 +465,7 @@ const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
             onClick={onClick}
         >
             <span className='text-txtSecondary dark:text-txtSecondary-dark text-xs leading-4'>{title}</span>
-            <SortIcon color={colors.onus.grey} activeColor={colors.dominant} direction={sortDirection} />
+            <SortIcon color={colors.onus.grey} activeColor={colors.teal} direction={sortDirection} />
         </div>
     )
 }

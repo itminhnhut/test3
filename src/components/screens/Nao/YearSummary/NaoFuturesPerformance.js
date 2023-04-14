@@ -83,21 +83,21 @@ function NaoFuturesPerformance() {
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
                 <span
-                    className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:volume_trades')}</span>
+                    className='text-lg text-txtPrimary dark:text-txtPrimary-dark font-medium leading-7'>{t('nao:year_summary:volume_trades')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.volume, 0)} {assetCodeFromId(filters.currency)}</span>
-                <span className='text-gray-1 dark:text-gray-7 text-sm mt-2'>${formatNumber(data.statistic?.volume_usdt, 0)}</span>
+                <span className='text-txtSecondary dark:text-txtSecondary-dark text-sm mt-2'>${formatNumber(data.statistic?.volume_usdt, 0)}</span>
             </div>
 
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
                 <span
-                    className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:order_number')}</span>
+                    className='text-lg text-txtPrimary dark:text-txtPrimary-dark font-medium leading-7'>{t('nao:year_summary:order_number')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_transaction, 0)}</span>
             </div>
 
             <div className='flex flex-col px-10 py-8 rounded-xl bg-nao/[.15]'>
-                <span className='text-lg text-gray-15 dark:text-gray-4 font-medium leading-7'>{t('nao:year_summary:user_count')}</span>
+                <span className='text-lg text-txtPrimary dark:text-txtPrimary-dark font-medium leading-7'>{t('nao:year_summary:user_count')}</span>
                 <span
                     className='text-xl font-semibold leading-8 mt-4'>{formatNumber(data.statistic?.num_of_user, 0)}</span>
             </div>
@@ -166,7 +166,7 @@ const RangePopover = ({
                                                 'first:rounded-t-xl last:rounded-b-xl hover:bg-gray-11 dark:hover:bg-dark-1'
                                             )}>
                                             <span>{getOptionString(option)}</span>
-                                            {isActive && <Check size={16} color={colors.dominant} />}
+                                            {isActive && <Check size={16} color={colors.teal} />}
                                         </div>
                                     );
                                 })

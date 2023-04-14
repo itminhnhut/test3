@@ -49,7 +49,7 @@ export default function Rank1Card({
                 {information.map((item, index) => {
                     const value = record[item.valueKey]
                     return <div key={index} className='flex justify-between'>
-                        <span className='text-sm text-gray-15 dark:text-gray-4'>{item.label}</span>
+                        <span className='text-sm text-txtPrimary dark:text-txtPrimary-dark'>{item.label}</span>
                         {item.render ? item.render(value, '!text-base'): value}
                     </div>;
                 })}

@@ -11,10 +11,13 @@ import { formatNumber, getS3Url } from "redux/actions/utils";
 import SvgCancelCircle from "components/svg/CancelCircle";
 import SvgChecked from "components/svg/Checked";
 import SvgSuccessfulCircle from "components/svg/SuccessfulCircle";
-import SvgTimeCircle from "components/svg/TimeCircle";
 import SvgTimeIC from "components/svg/TimeIC";
 import FetchApi from "utils/fetch-api";
 import SvgProgress from "components/svg/SvgEdit";
+import CheckCircle from "components/svg/CheckCircle";
+import TimeCircle from "components/svg/TimeIC";
+import SvgCross from "components/svg/Cross";
+import CrossCircle from "components/svg/CrossCircle";
 
 export default function NaoProposals({ listProposal, assetNao }) {
     const [dataUserVote, setDataUserVote] = useState("");
@@ -25,6 +28,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
                 url: API_USER_POOL,
                 options: { method: "GET" },
             });
+            console.log({ useVoteRes });
             setDataUserVote(useVoteRes ?? []);
         } catch (error) {
             console.log(error);
@@ -47,7 +51,7 @@ export default function NaoProposals({ listProposal, assetNao }) {
                         {t("nao:vote:title")}
                         {/* Proposals */}
                     </TextLiner>
-                    <span className="text-gray-1 dark:text-gray-7">
+                    <span className="text-txtSecondary dark:text-txtSecondary-dark">
                         {t("nao:vote:description")}
                         {/* Track proposal statuses and vote on changes. */}
                     </span>
@@ -82,29 +86,26 @@ const Proposal = ({ proposal, language, assetNao }) => {
             <div className="grid grid-cols-3 gap-4">
                 <div className="lg:col-span-2 col-span-3 flex flex-row gap-1 flex-1 items-center">
                     {status === "Processing" && (
-                        <SvgProgress size={24} className="min-w-[24px]" />
+                        <SvgProgress className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
                     )}
                     {status === "Executed" && (
-                        <SvgSuccessfulCircle
-                            size={24}
-                            className="min-w-[24px]"
-                        />
+                        <CheckCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
                     )}
                     {status === "Failed" && (
-                        <SvgTimeCircle size={24} className="min-w-[24px]" />
+                        <CrossCircle fill="blue" className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
                     )}
                     {status === "Canceled" && (
-                        <SvgCancelCircle size={24} className="min-w-[24px]" />
+                        <SvgCancelCircle className="md:w-6 md:h-6 w-4 h-4 flex-shrink-0" />
                     )}
 
-                    <span className="text-gray-15 dark:text-gray-4 font-medium sm:text-lg ml-2">
+                    <span className="text-txtPrimary dark:text-txtPrimary-dark font-medium sm:text-lg ml-2">
                         {voteName && voteName[language]}
                     </span>
                 </div>
                 <div className="lg:col-span-1 col-span-3 lg:max-w-[340px]">
                     <div className="flex flex-row justify-between mb-3">
                         <div>
-                            <span className="text-sm text-gray-1 dark:text-gray-7 leading-6">
+                            <span className="text-sm text-txtSecondary dark:text-txtSecondary-dark leading-6">
                                 {t("nao:vote:voted_for")}:
                             </span>
                             <span className="font-semibold ml-2">
@@ -117,7 +118,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         </div>
                         {status === "Executed" && (
                             <div className="flex flex-row justify-start items-center gap-2">
-                                <SvgChecked className="min-w-[0.75rem]" />
+                                <CheckCircle className="w-4 h-4 flex-shrink-0" />
 
                                 <span className="text-[0.875rem]">
                                     {statusText}
@@ -126,7 +127,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         )}
                         {status === "Failed" && (
                             <div className="flex flex-row justify-start items-center gap-2">
-                                <SvgTimeIC className="min-w-[0.75rem]" />
+                                <CrossCircle className="w-4 h-4 flex-shrink-0" />
                                 <span className="text-[0.875rem]">
                                     {statusText}
                                 </span>
@@ -141,7 +142,7 @@ const Proposal = ({ proposal, language, assetNao }) => {
                             </div>
                         )}
                     </div>
-                    <div className="bg-black relative rounded-lg mb-3">
+                    <div className="bg-gray-11 dark:bg-dark-1 relative rounded-lg mb-3">
                         <img
                             src={getS3Url("/images/nao/ic_caret_down.png")}
                             className="absolute bottom-2 inset-x-1/2"
@@ -158,21 +159,21 @@ const Proposal = ({ proposal, language, assetNao }) => {
                         />
                     </div>
                     <div className="flex flex-row justify-between">
-                        <span className="text-gray-1 dark:text-gray-7 text-[0.75rem] leading-6">
+                        <span className="text-txtSecondary dark:text-txtSecondary-dark text-[0.75rem] leading-6">
                             {t("nao:vote:vote_rating")}
                         </span>
                         <div className="flex flex-row gap-2">
                             <div className="flex flex-row items-center gap-2">
-                                <SvgChecked className="min-w-[0.75rem]" />
+                                <SvgChecked className="w-3 h-3 flex-shrink-0" />
 
-                                <span className="text-[0.75rem] text-white">{`${(
+                                <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${(
                                     (totalVoteYes / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>
                             </div>
                             <div className="flex flex-row items-center gap-2">
-                                <SvgTimeIC className="min-w-[0.75rem]" />
-                                <span className="text-[0.75rem] text-white">{`${(
+                                <SvgTimeIC className="w-3 h-3 flex-shrink-0" />
+                                <span className="text-[0.75rem] text-txtPrimary dark:text-txtPrimary-dark">{`${(
                                     (totalVoteNo / totalPool) *
                                     100
                                 ).toFixed()}%`}</span>

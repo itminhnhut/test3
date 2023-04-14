@@ -13,8 +13,11 @@ import { Check } from 'react-feather';
 import { assetCodeFromId, WalletCurrency } from 'utils/reference-utils';
 import { useRouter } from 'next/router';
 import useWindowSize from 'hooks/useWindowSize';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
+import SvgFilter from 'components/svg/SvgFilter';
+import CheckCircle from 'components/svg/CheckCircle';
 
-const days = [
+export const days = [
     {
         en: 'Today',
         vi: 'Hôm nay',
@@ -207,7 +210,7 @@ const NaoPerformance = memo(() => {
         <section id="nao_performance" className="pt-10 sm:pt-20">
             <div className="flex items-center flex-wrap justify-between gap-5">
                 <div>
-                    <TextLiner liner={width < 992} className="text-nao lg:text-white">
+                    <TextLiner liner={width < 992} className="">
                         {t('nao:onus_performance:title')}
                     </TextLiner>
                     <span className="text-sm sm:text-[1rem] text-grey-1 dark:text-gray-7">{t('nao:onus_performance:description')}</span>
@@ -245,8 +248,8 @@ const NaoPerformance = memo(() => {
                 </div>
             </div>
             <div className="pt-5 sm:pt-6 flex items-center flex-wrap gap-5">
-                <CardNao>
-                    <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
+                <CardNao className="rounded-lg">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_volume')}</label>
                     <div className="pt-4">
                         <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
                             {dataSource ? formatNumber(dataSource?.notionalValue, 0) + ` ${assetCodeFromId(filter.marginCurrency)}` : '-'}
@@ -258,8 +261,8 @@ const NaoPerformance = memo(() => {
                         </span>
                     </div>
                 </CardNao>
-                <CardNao>
-                    <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
+                <CardNao className="rounded-lg">
+                    <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_orders')}</label>
                     <div className="pt-4">
                         <div className="text-gray-15 dark:text-gray-7 text-[1.375rem] font-semibold pb-2 leading-8">
                             {dataSource ? formatNumber(dataSource?.count * 2, 0) : '-'}
@@ -269,16 +272,16 @@ const NaoPerformance = memo(() => {
                         </span>
                     </div>
                 </CardNao>
-                <CardNao noBg>
+                <CardNao noBg className='bg-bgPrimary dark:bg-bgPrimary-dark'>
                     <div className="flex items-center justify-between">
-                        <label className="text-gray-1 dark:text-gray-7 font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
+                        <label className="text-txtSecondary dark:text-txtSecondary-dark font-medium sm:text-lg">{t('nao:onus_performance:total_fee')}</label>
                         <Popover className="relative flex">
                             {({ open, close }) => (
                                 <>
                                     <Popover.Button>
-                                        <div className="text-sm px-2 py-1 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
+                                        <div className="text-sm px-2 py-1 bg-gray-12 dark:bg-dark-2 rounded-lg flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
                                             {filterFeeAsset.find((a) => a.id === fee)?.label || '--'}
-                                            <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16" />
+                                            <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                                         </div>
                                     </Popover.Button>
                                     <Transition
@@ -300,7 +303,7 @@ const NaoPerformance = memo(() => {
                                                         }}
                                                         key={index}
                                                         className={`py-[1px] my-[2px] cursor-pointer ${
-                                                            item?.assetCode === fee ? 'text-gray-15 dark:text-gray-7' : 'text-gray-1 dark:text-gray-7'
+                                                            item?.assetCode === fee ? 'text-gray-15 dark:text-gray-7' : 'text-txtSecondary dark:text-txtSecondary-dark'
                                                         }`}
                                                     >
                                                         {item?.assetCode}
@@ -328,7 +331,7 @@ const NaoPerformance = memo(() => {
     );
 });
 
-const RangePopover = ({
+export const RangePopover = ({
     language,
     active = {},
     onChange,
@@ -342,10 +345,8 @@ const RangePopover = ({
         }) => (
             <>
                 <Popover.Button>
-                    <div
-                        className="text-sm pl-4 pr-2 h-10 bg-gray-12 dark:bg-dark-2 rounded-md flex items-center justify-between text-gray-15 dark:text-gray-7 min-w-[72px]">
-                        <span className="mr-1">{active[language]}</span>
-                        <img alt="" src={getS3Url('/images/nao/ic_arrow_bottom.png')} height="16" width="16"/>
+                    <div className="pl-4 pr-2 h-10 flex justify-center items-center text-txtPrimary dark:text-txtPrimary-dark">
+                        <SvgFilter size={24} color="currentColor" className="" />
                     </div>
                 </Popover.Button>
                 <Transition
@@ -358,7 +359,7 @@ const RangePopover = ({
                     leaveTo="opacity-0 translate-y-1"
                 >
                     <Popover.Panel
-                        className="absolute min-w-[14.5rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-gray-12 dark:bg-dark-2 rounded-xl mt-3">
+                        className="absolute min-w-[8rem] shadow-onlyLight top-8 left-auto right-0 z-50 bg-bgPrimary dark:bg-dark-4 border-divider dark:border-divider-dark rounded-xl mt-3">
                         <div className="font-medium text-xs flex flex-col">
                             {days.map((day, index) => {
                                 const isActive = active.value === day.value;
@@ -371,10 +372,10 @@ const RangePopover = ({
                                         }}
                                         className={classNames(
                                             'flex justify-between items-center py-2 px-4 cursor-pointer leading-6',
-                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-gray-11 dark:hover:bg-dark-1',
+                                            'first:rounded-t-xl last:rounded-b-xl hover:bg-hover-1 dark:hover:bg-hover-dark'
                                         )}>
                                         <span>{day[language]}</span>
-                                        {isActive && <Check size={16} color={colors.dominant}/>}
+                                        {isActive && <CheckCircle color='currentColor' size={16} />}
                                     </div>
                                 );
                             })}
@@ -389,7 +390,7 @@ const RangePopover = ({
 const Days = styled.div.attrs({
     className: 'px-4 py-2 rounded-[6px] cursor-pointer text-gray-15 dark:text-gray-7 text-sm bg-gray-12 dark:bg-dark-2 select-none text-center'
 })`
-  background: ${({ active }) => active ? colors.dominant : ''};
+  background: ${({ active }) => active ? colors.teal : ''};
   font-weight: ${({ active }) => active ? '600' : '400'}
 `;
 

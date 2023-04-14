@@ -107,7 +107,7 @@ const CurrencyPopup = (props) => {
                                 <div className="leading-5 text-txtSecondary dark:text-txtSecondary-dark text-xs">
                                     {t(`futures:mobile:adjust_margin:available`)} {formatNumber(availableAsset, _assetConfigs.assetDigit)}
                                 </div>
-                                {/* <PlusCircle onClick={() => onBuyToken(item)} size={12} color={colors.dominant} /> */}
+                                {/* <PlusCircle onClick={() => onBuyToken(item)} size={12} color={colors.teal} /> */}
                             </div>
                         </div>
                     </div>

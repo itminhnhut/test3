@@ -147,7 +147,7 @@ const LayoutNaoToken = ({ children, isHeader = true }) => {
             <Head>
                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
             </Head>
-            <div className="bg-gray-13 dark:bg-dark-dark text-gray-15 dark:text-gray-7 min-h-full font-inter">
+            <div className="bg-bgPrimary dark:bg-bgPrimary-dark text-txtPrimary dark:text-txtPrimary-dark min-h-full font-inter">
 
                 <AlertContext.Provider value={{
                     alert: alert.current,

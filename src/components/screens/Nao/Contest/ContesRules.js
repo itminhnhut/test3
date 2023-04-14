@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 
 import Image from 'next/image';
 
-import { ButtonNao, CardNao } from 'components/screens/Nao/NaoStyle';
+import { ButtonNao, ButtonNaoVariants, CardNao } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 
 import { getS3Url } from 'redux/actions/utils';
@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { Popover, Transition } from '@headlessui/react';
 import orderBy from 'lodash/orderBy';
 import classNames from 'classnames';
+import { ArrowDropDownIcon } from 'components/svg/SvgIcon';
 const ContesRules = ({
     inHome = false,
     seasonConfig = '',
@@ -112,10 +113,10 @@ const ContesRules = ({
     }, [seasons]);
 
     return (
-        <section className="contest_rules pt-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
+        <section className="contest_rules py-[3.375rem] w-full flex flex-col mb:flex-row mb:justify-between">
             <div className="text-center mb:text-left flex flex-col flex-wrap mb:block">
-                <div className="font-semibold leading-[40px] mb:leading-[0px] text-[28px] mb:text-2xl mb:text-teal">{t('nao:contest:tournament')}</div>
-                <div className="font-semibold text-[24px] sm:text-[34px] leading-[48px] pt-4">
+                <div className="font-semibold mb:leading-[0px] text-lg mb:text-2xl text-teal">{t('nao:contest:tournament')}</div>
+                <div className="font-semibold text-lg sm:text-[44px] leading-[58px] pt-4">
                     <div>{title?.[language]}</div>
                     <div>{title_champion?.[language]}</div>
                 </div>
@@ -124,12 +125,12 @@ const ContesRules = ({
                     {t('nao:contest:description')}
                     <span className="text-teal font-semibold">{total_rewards}</span>
                 </div>
-                <div className="w-full border-[1px] border-dashed border-nao-grey rounded-[6px]  py-1 mt-4 mb:mt-3 flex flex-row items-center justify-center order-2">
+                <div className="w-full  rounded-[6px] bg-gray-13 dark:bg-dark-4  py-1 mt-4 mb:my-2 flex flex-row items-center justify-center">
                     {renderCountDown('!text-sm !font-normal leading-6 !mr-2', '!text-[16px] !font-semibold !leading-8')}
                 </div>
-                <div className="flex flex-row mt-9 mb:mt-12 justify-center mb:justify-start order-1 w-full">
+                <div className="flex flex-row mt-9 mb:mt-12 justify-center mb:justify-start w-full">
                     {inHome ? (
-                        <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3">
+                        <ButtonNao onClick={() => router.push('/contest')} className="px-[18px] text-sm font-semibold w-max !rounded-md mr-3" primary>
                             {t('nao:contest:ranking')}
                         </ButtonNao>
                     ) : (
@@ -151,7 +152,7 @@ const ContesRules = ({
                     />
                 ) : (
                     <Image
-                        src={getS3Url('/images/nao/contest/ic_contest_info.png')}
+                        src={getS3Url('/images/nao/contest/ic_contest_info.webp')}
                         width="300px"
                         height="292px"
                         title={title_champion?.[language]}
@@ -169,16 +170,16 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
         const start = new Date(item?.start).getTime();
         const end = new Date(item?.end).getTime();
         if (now < start && now < end) {
-            return <div className="text-yellow-2 bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:coming_soon_2')}</div>;
+            return <div className="text-yellow-2 bg-yellow-2/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-lg">{t('nao:coming_soon_2')}</div>;
         } else if (now > start && now < end) {
             return (
-                <div className="flex items-center space-x-1 bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px] w-max">
+                <div className="flex items-center space-x-1 bg-teal/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-lg w-max">
                     <img src={getS3Url('/images/nao/ic_nao_large.png')} width={16} height={16} />
                     <div className="text-teal ">{t('nao:going_on')}</div>
                 </div>
             );
         } else {
-            return <div className="text-txtSecondary dark:text-txtSecondary-dark bg-nao/[0.15] px-2 py-1 !pl-3 sm:!pl-2 rounded-[3px]">{t('nao:ended')}</div>;
+            return <div className="text-gray-7 bg-gray-7/[0.1] px-2 py-1 !pl-3 sm:!pl-2 rounded-lg">{t('nao:ended')}</div>;
         }
     };
 
@@ -187,9 +188,9 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
             {({ open, close }) => (
                 <>
                     <Popover.Button>
-                        <ButtonNao border className="px-[18px] text-sm font-semibold w-max !rounded-md flex items-center space-x-2">
+                        <ButtonNao variant={ButtonNaoVariants.SECONDARY} className="px-[18px] text-sm font-semibold w-max !rounded-md flex items-center space-x-2">
                             <span>{t('nao:contest:tournaments')}</span>
-                            <DropDonwIcon className={`transition-all ${open ? '' : 'rotate-180'}`} />
+                            <ArrowDropDownIcon size={16} color="currentColor" className={`transition-all ${open ? 'rotate-180' : ''}`} />
                         </ButtonNao>
                     </Popover.Button>
                     <Transition
@@ -212,7 +213,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
                                         key={index}
                                         className="px-3 sm:px-4 sm:space-x-2 py-2 hover:bg-gray-11 dark:hover:bg-dark-12 cursor-pointer flex sm:items-center flex-col space-y-2 sm:space-y-0 sm:flex-row"
                                     >
-                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] font-semibold whitespace-nowrap w-max">{progress(item)}</div>
+                                        <div className="-ml-4 sm:ml-0 text-[10px] leading-[12px] whitespace-nowrap w-max">{progress(item)}</div>
                                         <span className="leading-6">{item?.title_detail?.[language]} </span>
                                     </div>
                                 ))}
@@ -227,7 +228,7 @@ const DropdownPreSeason = ({ t, seasonsFilter, router, season, language }) => {
 
 const DropDonwIcon = ({ className = '' }) => (
     <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 6L12 10L4 10L8 6Z" fill="white" />
+        <path d="M8 6L12 10L4 10L8 6Z" fill="currentColor" />
     </svg>
 );
 

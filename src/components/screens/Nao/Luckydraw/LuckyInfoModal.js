@@ -15,7 +15,7 @@ const LuckyInfoModal = ({ visible = true, onClose, volume }) => {
         <Portal portalId='PORTAL_MODAL'>
             <div
                 className={classNames(
-                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'flex flex-col items-center justify-center fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden',
                     { invisible: !visible },
                     { visible: visible },
                 )}
@@ -24,11 +24,11 @@ const LuckyInfoModal = ({ visible = true, onClose, volume }) => {
                     <label className='text-[#02FFFE] text-xl leading-7 font-semibold'>{t('nao:luckydraw:conditions')}</label>
                     <div className='pt-[1.125rem]'>{t('nao:luckydraw:ticket_des', { vndc: '100,000,000', nao: '100' })}</div>
                     <div className='pt-10'>
-                        <div className="text-gray-15 dark:text-gray-42 text-sm leading-5">{t('nao:luckydraw:vol_trade')}</div>
+                        <div className="text-txtPrimary dark:text-txtPrimary-dark2 text-sm leading-5">{t('nao:luckydraw:vol_trade')}</div>
                         <div className="font-semibold leading-6 pt-2">{formatNumber(volume, 0)} VNDC</div>
                     </div>
                     <div className='pt-6 w-full'>
-                        <div className='flex items-center justify-between text-gray-15 dark:text-gray-42 text-xs pb-2'>
+                        <div className='flex items-center justify-between text-txtPrimary dark:text-txtPrimary-dark2 text-xs pb-2'>
                             <div>{formatNumber(volume, 0)}</div>
                             <div>100,000,000</div>
                         </div>

@@ -149,7 +149,7 @@ const View = styled.div.attrs({
 })`
     width: 294px;
 ${'' /* background-color:${colors.darkBlue1}; */}
-    border: 1px solid ${colors.dominant};
+    border: 1px solid ${colors.teal};
     opacity: 0.8;
     border-radius: 8px;
     padding: 16px;

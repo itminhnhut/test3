@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import Portal from 'components/hoc/Portal';
 import classNames from 'classnames';
-import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao } from 'components/screens/Nao/NaoStyle';
+import { TextLiner, CardNao, ButtonNao, Table, Column, getColor, renderPnl, useOutsideAlerter, capitalize, ImageNao, ButtonNaoVariants } from 'components/screens/Nao/NaoStyle';
 import { useTranslation } from 'next-i18next';
 import fetchApi from 'utils/fetch-api';
 import { API_CONTEST_POST_ACCEPT_INVITATION } from 'redux/actions/apis';
@@ -57,7 +57,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
             <Modal onusMode={true} center={!isMobile} isVisible={true} onBackdropCb={onClose}
                 modalClassName="z-[99999] flex justitfy-center h-full"
                 onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-[24px] !py-10 max-w-[668px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
-                containerClassName="!bg-nao-bgModal2/[0.9]">
+                containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]">
                 <div className={`bg-[#0E1D32] h-full w-full`}>
                     <div className="flex sm:items-center sm:justify-between min-h-[32px] !px-4 sm:px-[0px] mb-[32px] gap-2 flex-wrap lg:flex-row flex-col">
                         <div className="flex items-center gap-7">
@@ -95,7 +95,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <ButtonNao className="py-2 px-2 !rounded-md font-semibold w-full text-sm leading-6" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
-                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-2 px-2 w-full !rounded-md font-semibold text-sm leading-6">
                                                     {t('nao:contest:team_detail')}
                                                 </ButtonNao>
                                             </div>
@@ -119,7 +119,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
                                                 <ButtonNao className="py-[8px] px-[16px] !rounded-md font-semibold max-w-[250px] text-sm leading-6" onClick={() => onAccept(item)}>
                                                     {t('nao:contest:accept_invite')}
                                                 </ButtonNao>
-                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} border className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
+                                                <ButtonNao onClick={() => onShowDetail({ displaying_id: item?.group_displaying_id, isPending: true, ...item })} variant={ButtonNaoVariants.SECONDARY} className="py-[8px] px-[16px] !rounded-md font-semibold  max-w-[250px] text-sm leading-6">
                                                     {t('nao:contest:team_detail')}
                                                 </ButtonNao>
                                             </div>
@@ -131,7 +131,7 @@ const InvitationDetail = ({ visible = true, onClose, sortName = 'volume', data, 
 
 
                     <div className="mx-[16px] mt-5 sm:mt-10">
-                        <ButtonNao onClick={onClose} border className="py-2 px-11 !rounded-md font-semibold">{t('common:close')}</ButtonNao>
+                        <ButtonNao onClick={onClose} variant={ButtonNaoVariants.SECONDARY} className="py-2 px-11 !rounded-md font-semibold">{t('common:close')}</ButtonNao>
                     </div>
                 </div>
             </Modal>

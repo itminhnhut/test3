@@ -67,8 +67,8 @@ const Stake = () => {
 
     return (
         <LayoutNaoToken isHeader={false}>
-            <div className="bg-nao-bgShadow sticky top-0 z-10">
-                <BackgroundHeader className="stake_header">
+            <div className="sticky top-0 z-10">
+                <div className="stake_header bg-bgPrimary dark:bg-bgPrimary-dark relative z-[9]">
                     {/* <Drawer visible={visible} onClose={() => setVisible(false)} onChangeLang={onChangeLang}
                     language={language} t={t} />
                 <div className="flex items-center justify-between px-4 pt-6">
@@ -86,17 +86,21 @@ const Stake = () => {
                         </div>
                     }
                 </div> */}
-                    <div className='flex items-center justify-center py-4'>
-                        <div className='absolute left-5'>
+                    <div className="flex items-center justify-center py-4">
+                        <div className="absolute left-5">
                             <ArrowLeft onClick={() => router.back()} />
                         </div>
-                        <label className="text-[20px] font-semibold leading-[50px] text-teal">{t('nao:governance_pool')}</label>
+                        <label className="text-[20px] font-semibold leading-[50px]">{t('nao:governance_pool')}</label>
                     </div>
                     <Tabs tab={tab}>
-                        <TabItem onClick={() => setTab(0)} active={tab === 0}>{t("nao:pool:stake_nao")}</TabItem>
-                        <TabItem onClick={() => setTab(1)} active={tab === 1}>{t("nao:pool:performance")}</TabItem>
+                        <TabItem onClick={() => setTab(0)} active={tab === 0}>
+                            {t('nao:pool:stake_nao')}
+                        </TabItem>
+                        <TabItem onClick={() => setTab(1)} active={tab === 1}>
+                            {t('nao:pool:performance')}
+                        </TabItem>
                     </Tabs>
-                </BackgroundHeader>
+                </div>
             </div>
             <div className="h-full w-full px-4 py-6">
                 <div className={tab !== 0 ? 'hidden' : ''}>
@@ -141,7 +145,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
         <Portal portalId='PORTAL_MODAL'>
             <div
                 className={classNames(
-                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-nao-bgShadow/[0.9] overflow-hidden',
+                    'flex flex-col fixed top-0 right-0 h-full w-full z-[20] bg-black-800/[0.6] dark:bg-black-800/[0.8] overflow-hidden',
                     'ease-in-out transition-all flex items-end duration-300 z-30',
                     { invisible: !visible },
                     { visible: visible },
@@ -149,7 +153,7 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
                     { 'translate-x-0': visible },
                 )}
             >
-                <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-nao-bgModal'>
+                <div ref={wrapperRef} className='flex-1 w-[284px] min-h-0 bg-bgPrimary dark:bg-bgPrimary-dark'>
                     <div className="pt-[35px] px-5 flex justify-end">
                         <img className="cursor-pointer select-none" onClick={onClose} src={getS3Url('/images/nao/ic_close.png')} height='18' width='18' alt="" />
                     </div>
@@ -163,14 +167,14 @@ const Drawer = ({ visible, onClose, language, onChangeLang, t, scrollToView }) =
 }
 
 const Tabs = styled.div.attrs({
-    className: 'relative flex items-center border-b-4 border-nao-white/[0.1] '
+    className: 'relative flex items-center border-b-2 border-divider dark:border-divider-dark'
 })`
   &:after{
         content: "";
         position:absolute;
-        bottom:-4px;
-        height:4px;
-        background-color:${() => colors.nao.green};
+        bottom:-2px;
+        height:2px;
+        background-color:${() => colors.teal};
         transform:${({ tab }) => `translate(${tab * 100}%,0)`};
         width:50%;
         transition: all 0.2s;
@@ -178,7 +182,7 @@ const Tabs = styled.div.attrs({
 `
 
 const TabItem = styled.div.attrs(({ active }) => ({
-    className: `pb-3 w-full flex items-center justify-center text-sm leading-6 ${active ? 'text-teal font-semibold' : 'text-gray-15 dark:text-gray-4'}`
+    className: `pb-3 w-full flex items-center justify-center text-sm leading-6 ${active ? 'text-txtPrimary dark:text-txtPrimary-dark font-semibold' : 'text-txtSecondary dark:text-txtSecondary-dark'}`
 }))`
 
 `

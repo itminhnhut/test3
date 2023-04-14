@@ -266,7 +266,7 @@ function TabTransactionsHistory({
                 onClick={() => setVisibleCategoryPicker(true)}>
                 <span className="mr-1">{t(`futures:mobile:transaction_histories:categories:${category}`)}</span>
                 {visibleCategoryPicker ?
-                    <ChevronUp size={12} color={colors.dominant}/> :
+                    <ChevronUp size={12} color={colors.teal}/> :
                     <ChevronDown size={12} color={colors.onus.grey}/>}
             </div>
         </div>
@@ -324,7 +324,7 @@ const CategoryPicker = ({
                     <span className="text-txtPrimary dark:text-txtPrimary-dark leading-6 font-medium">
                         {t(`futures:mobile:transaction_histories:categories:${c}`)}
                     </span>
-                    {value === c && <Check size={16} color={colors.dominant}/>}
+                    {value === c && <Check size={16} color={colors.teal}/>}
                 </div>;
             })}
         </div>

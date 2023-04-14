@@ -420,8 +420,10 @@ module.exports = {
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
                 'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
                 'progress-gradient': `linear-gradient(101.26deg,${commonColors.lightTeal} -5.29%,${commonColors.teal} 100%)`,
-                'nao-corner': "url('/images/nao/bg-corner.webp')",
-                'nao-corner-mb': "url('/images/nao/bg-corner-mb.webp')"
+                'nao-corner': "url('/images/nao/bg-corner-light.webp')",
+                'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",
+                'nao-corner-dark': "url('/images/nao/bg-corner.webp')",
+                'nao-corner-mb-dark': "url('/images/nao/bg-corner-mb.webp')",
             },
             backgroundSize: {
                 auto: 'auto',

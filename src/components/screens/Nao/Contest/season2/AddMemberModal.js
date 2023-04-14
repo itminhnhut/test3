@@ -1,6 +1,6 @@
 import React, { useRef, useState, useContext } from 'react';
 import Modal from 'components/common/ReModal';
-import { TextField, ButtonNao, capitalize } from 'components/screens/Nao/NaoStyle';
+import { TextField, ButtonNao, capitalize, ButtonNaoVariants } from 'components/screens/Nao/NaoStyle';
 import { IconLoading } from 'components/common/Icons';
 import { useTranslation } from 'next-i18next';
 import colors from 'styles/colors';
@@ -99,7 +99,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
             onusClassName={`${isMobile ? '!px-6 pb-[3.75rem]' : '!p-8 max-w-[564px]'}  !bg-nao-tooltip !overflow-hidden`}
-            containerClassName="!bg-nao-bgModal2/[0.9]"
+            containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
         >
             <div className="text-2xl font-semibold leading-8 mb-6">{t('nao:contest:add_member')}</div>
@@ -107,7 +107,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
                 prefix={capitalize(fullname.current)}
                 error={error.error} helperText={error.message} onChange={onHandleChange} />
             <div className='flex items-center space-x-4 mt-6'>
-                <ButtonNao onClick={() => onClose()} border className="w-full !rounded-md">{t('common:close')}</ButtonNao>
+                <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao>
                 <ButtonNao onClick={onAddMember} disabled={disabled} className="w-full !rounded-md">
                     {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:add_member')}
                 </ButtonNao>

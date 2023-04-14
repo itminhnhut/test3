@@ -1,4 +1,7 @@
 {
+    "language": "Ngôn ngữ",
+    "get_on": "Tải ứng dụng trên",
+    "down_on": "Tải ứng dụng trên",
     "performance": "Thống kê",
     "governance_pool": "Pool quản trị",
     "announcement": "Thông báo",
@@ -28,6 +31,7 @@
         "revenue_history": "Lịch sử chia sẻ doanh thu",
         "stake_nao": "Stake NAO",
         "performance": "Thống kê",
+        "equivalent": "Giá quy đổi",
         "staking_token": "Stake NAO",
         "share_revenue": "Nhận được chia sẻ doanh thu và có quyền biểu quyết với dự án",
         "share_revenue_nodata": "Tham gia pool Quản trị để nhận 20% doanh thu từ phí giao dịch và có quyền biểu quyết",
@@ -121,7 +125,7 @@
         "title": "Mua token NAO",
         "description": "Sở hữu NAO token để có thể tham gia Pool Quản trị hoặc dùng làm phí nhận chiết khấu 40%",
         "nao_token": "Giá hiện tại",
-        "get_buy_now": "Tải app Onus để mua NAO ngay!"
+        "get_buy_now": "Tải app Nami Exchange để mua NAO ngay!"
     },
     "term": "Điều khoản sử dụng",
     "privacy_policy": "Chính sách bảo mật",

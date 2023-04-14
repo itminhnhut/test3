@@ -26,7 +26,7 @@ const Switcher = memo(({ active, loading = false, onChange, wrapperClass = '', a
             style={!active ? {
                 backgroundColor: onusMode ? (isDark ? colors.dark[2] : colors.gray[12]) : isDark ? 'rgba(123, 140, 178, 0.5)' : 'rgba(204, 204, 204, 0.2)'
             } : {
-                backgroundColor: onusMode ? colors.dominant : isDark ? 'rgba(0, 200, 188, 0.5)' : colors.lightTeal
+                backgroundColor: onusMode ? colors.teal : isDark ? 'rgba(0, 200, 188, 0.5)' : colors.lightTeal
             }}
             onClick={() => onChange && onChange()}>
             <div className={active ? `${className} ${onusMode ? 'top-[1px] left-[3px]' : ''} translate-x-full` : `${className} ${onusMode ? 'top-[1px] left-[1px]' : ''} translate-x-0 ${onusMode ? (isDark ? 'bg-gray-4' : 'bg-white') : '!bg-gray-2 dark:!bg-darkBlue-5'} `} />

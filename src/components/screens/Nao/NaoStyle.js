@@ -13,20 +13,21 @@ import _ from 'lodash';
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-gray-15 dark:text-gray-7'
 })`
-    background: ${({ liner }) => liner && colors.dominant};
+    background: ${({ liner }) => liner && colors.teal};
     -webkit-background-clip: ${({ liner }) => liner && `text`};
     -webkit-text-fill-color: ${({ liner }) => liner && `transparent`};
     background-clip: ${({ liner }) => liner && `text`};
     text-fill-color: ${({ liner }) => liner && `transparent`};
 `;
 
-export const CardNao = styled.div.attrs(({ noBg, customHeight }) => ({
+export const CardNao = styled.div.attrs(({ noBg, customHeight, bgCorner }) => ({
     className: classNames(
         `p-6 sm:px-10 sm:py-9 rounded-xl min-w-full sm:min-w-[372px] ${
             customHeight ? customHeight : 'sm:min-h-[180px]'
         } flex flex-col justify-between flex-1 relative`,
         // { 'border-dashed border-[0.5px] border-[#7686B1]': noBg },
-        { 'bg-white dark:bg-darkBlue-3': !noBg }
+        { 'bg-white dark:bg-darkBlue-3': !noBg && !bgCorner },
+        { 'bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full': !noBg && bgCorner }
     )
 }))`
     background-image: ${({ noBg, stroke = 0.8 }) =>
@@ -47,16 +48,19 @@ export const Divider = styled.div.attrs({
 })`
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%237686B1' stroke-width='2' stroke-dasharray='3 %2c 10' stroke-dashoffset='8' stroke-linecap='square'/%3e%3c/svg%3e");
 `;
-
-export const ButtonNao = styled.div.attrs(({ border, disabled }) => ({
+export const ButtonNaoVariants = {
+    PRIMARY: 'PRIMARY',
+    SECONDARY: 'SECONDARY',
+    DANGER: 'DANGER',
+};
+export const ButtonNao = styled.div.attrs(({ disabled, variant, active = true }) => ({
     className: classNames('text-center text-sm px-4 rounded-md font-semibold flex items-center justify-center select-none cursor-pointer h-10', {
-        'border border-teal !bg-gray-12 dark:!bg-dark-2 !text-gray-15 dark:!text-white': border,
-        'text-opacity-20 text-gray-15 dark:text-gray-7 !bg-gray-12 dark:bg-dark-2': disabled,
-        'bg-nao-bg4 text-white': !disabled
+        'bg-bgBtnPrimary text-txtBtnPrimary': active && (!variant || variant === ButtonNaoVariants.PRIMARY), // default theme is primary
+        'bg-gray-12 dark:bg-dark-2 text-gray-15 dark:text-gray-7': variant === ButtonNaoVariants.SECONDARY || active === false,
+        'bg-red-2 text-white': variant === ButtonNaoVariants.DANGER,
+        'opacity-30': disabled
     })
-}))`
-    background: ${({ active, isActive }) => (isActive ? (active ? colors.dominant : '') : colors.dominant)};
-`;
+}))``;
 
 export const BackgroundHeader = styled.div.attrs({
     className: 'relative z-[9]'
@@ -67,7 +71,7 @@ export const BackgroundHeader = styled.div.attrs({
 export const Progressbar = styled.div.attrs(({ height = 6 }) => ({
     className: `rounded-lg transition-all`
 }))`
-    background: ${({ background }) => (background ? background : colors.dominant)};
+    background: ${({ background }) => (background ? background : colors.teal)};
     width: ${({ percent }) => `${percent > 100 ? 100 : percent}%`};
     height: ${({ height }) => `${height || 6}px`};
 `;
@@ -185,7 +189,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ref={header}
                     className={classNames(
                         'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden min-w-max w-full',
-                        'px-3 nao-table-header flex items-center text-gray-1 dark:text-gray-7 text-sm font-medium justify-between',
+                        'px-3 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium justify-between',
                         // 'pr-7'
                         classHeader
                     )}
@@ -271,7 +275,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                     ) : (
                         <div className={`flex items-center justify-center flex-col m-auto`}>
                             <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
-                            <div className="text-xs text-gray-1 dark:text-gray-7 mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
+                            <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
                         </div>
                     )}
                 </div>
@@ -353,16 +357,16 @@ export const TextField = (props) => {
 
     return (
         <div className="w-full space-y-[6px]">
-            <div className="text-xs leading-6 text-gray-1 dark:text-gray-7">{label}</div>
+            <div className="text-xs leading-6 text-txtSecondary dark:text-txtSecondary-dark">{label}</div>
             <WrapInput error={error} focus={focus}>
                 <input
-                    className={`w-full text-sm ${readOnly ? 'text-gray-1 dark:text-gray-7' : ''} ${className}`}
+                    className={`w-full text-sm ${readOnly ? 'text-txtSecondary dark:text-txtSecondary-dark' : ''} ${className}`}
                     onFocus={onFocus}
                     onBlur={_onBlur}
                     readOnly={readOnly}
                     {...propsTextField}
                 />
-                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-gray-1 dark:text-gray-7 whitespace-nowrap`}>{prefix}</div>}
+                {prefix && <div className={`${prefixClassName} text-sm leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>{prefix}</div>}
             </WrapInput>
             {error && helperText && (
                 <div className="flex items-center space-x-2 text-xs text-nao-red">
@@ -385,7 +389,7 @@ export const WrapInput = styled.div.attrs(({ error }) => ({
         height: 1px;
         bottom: -1px;
         left: 0;
-        background-color: ${() => colors.dominant};
+        background-color: ${() => colors.teal};
         transform-origin: bottom left;
         transition: all 0.3s ease-out;
     }
@@ -442,7 +446,7 @@ export const TabsNao = styled.div.attrs({
         bottom: 0;
         height: 2px;
         width: 100%;
-        background: ${colors.dominant};
+        background: ${colors.teal};
     }
 `;
 
@@ -460,7 +464,7 @@ export const TabItemNao = styled.div.attrs({
         inset: 0;
         border-radius: 12px 12px 0px 0px;
         padding: 2px;
-        background: ${colors.dominant};
+        background: ${colors.teal};
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
@@ -476,7 +480,7 @@ export const TabItemNao = styled.div.attrs({
         border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
         height: ${({ active }) => (active ? 0 : '2px')};
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
-        background: ${colors.dominant};
+        background: ${colors.teal};
     }
     &::before {
         content: '';

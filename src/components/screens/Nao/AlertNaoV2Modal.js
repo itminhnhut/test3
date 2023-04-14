@@ -3,7 +3,7 @@ import Modal from 'components/common/ReModal';
 import Button from 'components/common/Button';
 import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
-import { ButtonNao, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
+import { ButtonNao, ButtonNaoVariants, useOutsideAlerter } from 'components/screens/Nao/NaoStyle';
 import useWindowSize from 'hooks/useWindowSize';
 
 const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
@@ -89,7 +89,7 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
         <Modal onusMode={true} isVisible={true} onBackdropCb={onCancel}
             modalClassName="z-[99999999999]"
             onusClassName={`${isMobile ? 'pb-[3.75rem] !px-6' : '!p-8 max-w-[420px]'} min-h-[304px] rounded-t-[16px] !bg-nao-tooltip `}
-            containerClassName="!bg-nao-bgModal2/[0.9]"
+            containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
             isAlertModal
         >
@@ -110,7 +110,7 @@ const AlertNaoV2Modal = memo(forwardRef((props, ref) => {
                 </div> */}
                 <div className='flex items-center w-full space-x-4'>
                     {!options.current?.hideCloseButton
-                        && <ButtonNao onClick={onCancel} border className="w-full !rounded-md">{options.current.closeTitle || t('common:close')}</ButtonNao>
+                        && <ButtonNao onClick={onCancel} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{options.current.closeTitle || t('common:close')}</ButtonNao>
                     }
                     {actions.current?.onConfirm &&
                         <ButtonNao onClick={onConfirm} className="w-full !rounded-md">

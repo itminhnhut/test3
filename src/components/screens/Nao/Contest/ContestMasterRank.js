@@ -303,7 +303,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                     <Column minWidth={200} className="font-semibold uppercase" title={t('nao:contest:team')} fieldName="name" cellRender={renderTeam} />
                     <Column
                         minWidth={150}
-                        className="text-gray-15 dark:text-gray-4 capitalize"
+                        className="text-txtPrimary dark:text-txtPrimary-dark capitalize"
                         title={t('nao:contest:captain')}
                         fieldName="leader_name"
                         cellRender={renderLeader}
