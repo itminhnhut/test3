@@ -33,7 +33,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
             <div className="bg-gray-13 dark:bg-dark-4 rounded-xl p-6 sm:px-8 sm:py-[26px] relative z-0 flex-1">
                 <div className="bg-nao-corner-mb sm:bg-nao-corner dark:bg-nao-corner-mb-dark sm:dark:bg-nao-corner-dark bg-full w-full h-full absolute z-0 left-0 top-0"></div>
                 <div className="relative z-10 flex sm:flex-none flex-col sm:flex-row">
-                    <div className="flex flex-col">
+                    <div className="flex flex-col w-full">
                         <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium sm:text-lg pb-2 leading-7">{t('nao:circulating_supply')}</label>
                         <div className="">
                             <div className="flex items-center justify-between">
@@ -52,7 +52,7 @@ const NaoInfo = ({ dataSource, assetNao, ammData }) => {
                         </div>
                     </div>
                     <div className="h-[1px] mx-0 sm:h-auto sm:w-[1px] bg-divider dark:bg-divider-dark sm:mx-6 my-6 sm:my-0"></div>
-                    <div className="flex flex-col justify-between gap-3">
+                    <div className="flex flex-col justify-between gap-3 w-full">
                         <div className="flex items-center justify-between text-sm space-x-10">
                             <label className="text-txtPrimary dark:text-txtPrimary-dark font-medium">{t('nao:holders_wallet')}</label>
                             <div className="flex items-center space-x-2">

@@ -7,7 +7,15 @@ import { debounce } from 'lodash/function';
 import { useTranslation } from 'next-i18next';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
-import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal, formatNumber } from 'redux/actions/utils';
+import {
+    formatCurrency,
+    formatPercentage,
+    getExchange24hPercentageChange,
+    scrollHorizontal,
+    formatNumber,
+    getDecimalPrice,
+    formatPrice
+} from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
 import SortIcon from 'components/screens/Mobile/SortIcon';
@@ -60,7 +68,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         active: TABS.FAVOURITE,
         tagActive: pairConfig?.quoteAsset || TAGS[TABS.FAVOURITE].VNDC,
     })
-
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
         field: 'volume24h',
@@ -250,6 +258,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
             active: t,
         })
     }
+
 
     const renderItem = (listItem) => {
         return listItem.map((item) => (
@@ -442,8 +451,8 @@ const InputSearch = ({ onChange }) => {
     </div>
 }
 
-const LastPrice = ({ price }) => {
-    const prevPrice = usePrevious(price)
+const LastPrice = ({ price, decimal = 0 }) => {
+    const prevPrice = usePrevious(price);
     return (
         <span
             className={cn('text-sm leading-5 font-medium', {
@@ -451,10 +460,10 @@ const LastPrice = ({ price }) => {
                 'text-green-2': price >= prevPrice,
             })}
         >
-            {formatPrice(price)}
+            {formatNumber(price, decimal)}
         </span>
-    )
-}
+    );
+};
 
 const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
     return (

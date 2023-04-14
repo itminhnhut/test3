@@ -77,7 +77,7 @@ export default function FundingHistory(props) {
                         </a>
                     </div>
                     <div className="sm:space-x-12 flex flex-col-reverse sm:flex-row justify-between">
-                        <Tabs tab={selectedTab} className="gap-8 border-b border-divider dark:border-divider-dark sm:w-max">
+                        <Tabs tab={selectedTab} className="gap-6 border-b border-divider dark:border-divider-dark sm:w-max">
                             {SCREEN_TAB_SERIES?.map((rs) => (
                                 <TabItem key={rs.key} V2 className="!px-0" value={rs.key} onClick={(isClick) => isClick && setSelectedTab(rs.key)}>
                                     {t(rs.localized)}

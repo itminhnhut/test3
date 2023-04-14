@@ -92,33 +92,27 @@ module.exports = {
             '3xl': [
                 '1.75rem',
                 {
-                    lineHeight: '2.5rem'
+                    lineHeight: '2.25rem'
                 }
             ], // Heading 4 28px
             '4xl': [
+                '2rem',
+                {
+                    lineHeight: '2.375rem',
+                },
+            ], //32px
+            '5xl': [
                 '2.25rem',
                 {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 3 36px
-            '5xl': [
-                '2.5rem',
-                {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 2 40px
+                    lineHeight: '3rem',
+                },
+            ], //36px
             '6xl': [
-                '4rem',
+                '2.75rem',
                 {
-                    lineHeight: '4.5rem'
-                }
-            ], // Heading 1 64px
-            '5.5xl': [
-                '3.5rem',
-                {
-                    lineHeight: '4.25rem'
-                }
-            ] // Heading 2 56px
+                    lineHeight: '3.625rem',
+                },
+            ], //44px
         },
         // TODO split text, background
         colors: {
@@ -210,6 +204,7 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
+                border_light: 'rgba(126, 229, 174, 0.1)',
                 ...commonColors.green
             },
             yellow: {
@@ -419,6 +414,8 @@ module.exports = {
                 'gradient-button-hover-dark': 'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%)',
                 'gradient-button-hover': `linear-gradient(0deg, ${commonColors.teal} 100%, ${commonColors.teal} 100%)`,
                 'refferal-v2-banner': "url('/images/reference/background_desktop_2.png')",
+                'tx-history-detail': "url('/images/screen/transaction-history/detail_bg-light.png')",
+                'tx-history-detail-dark': "url('/images/screen/transaction-history/detail_bg-dark.png')",
                 'progress-gradient': `linear-gradient(101.26deg,${commonColors.lightTeal} -5.29%,${commonColors.teal} 100%)`,
                 'nao-corner': "url('/images/nao/bg-corner-light.webp')",
                 'nao-corner-mb': "url('/images/nao/bg-corner-light-mb.webp')",

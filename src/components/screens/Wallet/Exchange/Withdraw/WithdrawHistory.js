@@ -201,6 +201,10 @@ export default function () {
                     limit={10}
                     page={currentPage}
                     onChangePage={setCurrentPage}
+                    tableStyle={{
+                        rowHeight: '64px',
+                        fontSize: '1rem'
+                    }}
                 />
             </div>
         </>

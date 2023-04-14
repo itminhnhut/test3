@@ -33,6 +33,7 @@ const SymbolList = (props) => {
     const [loading, setLoading] = useState(true);
 
     const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
+
     const user = useSelector((state) => state.auth.user) || null;
 
     const [currentTheme] = useDarkMode();

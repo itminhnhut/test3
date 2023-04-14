@@ -3,5 +3,22 @@
     "payment_method_add": "Thêm phương thức thanh toán",
     "account_number": "Số tài khoản",
     "bank_name": "Tài khoản ngân hàng",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "transaction_details": "Chi tiết giao dịch",
+    "depsit_from_partners": "Nạp {{asset}} qua ĐTKD",
+    "sell": "bán",
+    "buy": "nạp",
+    "buy_title": "Nạp qua ĐTKD",
+    "sell_title": "Bán qua ĐTKD",
+    "payment_method": "Phương thức thanh toán",
+    "privacy": "Chuyển khoản ngân hàng chỉ áp dụng cho người dùng Việt Nam, vui lòng sử dụng tài khoản ngân hàng trùng khớp với tên đầy đủ trong tài khoản Nami của bạn",
+    "input_bank_account": "Nhập số tài khoản của bạn",
+    "select_bank": "Chọn ngân hàng",
+    "owner_account": "Chủ tài khoản",
+    "add": "Thêm",
+    "error_add": "Lỗi thêm phương thức thanh toán",
+    "bank_account_not_found": "Không tìm thấy tài khoản tương ứng. Vui lòng kiểm tra lại",
+    "set_default_bank_success": "Đã thay đổi ngân hàng mặc định",
+    "please_input_account_num": "Vui lòng nhập số tài khoản",
+    "validate_input_account": "Số tài khoản không hợp lệ"
 }

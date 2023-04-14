@@ -133,8 +133,8 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                             {/* <span className="text-gray-15 dark:text-gray-7 mx-2 sm:hidden">•</span> */}
                             <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1">{t('nao:contest:team_label')}:&nbsp;
                                 {userData?.group_name ?
-                                    <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData })}
-                                        className={`${userData?.group_name ? 'text-teal uppercase' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span>
+                                    <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData },null,quoteAsset)}
+                                        className={`${userData?.group_name ? 'text-nao-green uppercase' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span>
                                     :
                                     invitations?.invites && invitations.invites.length !== 0 ?
                                         <span className="text-teal font-medium cursor-pointer underline"

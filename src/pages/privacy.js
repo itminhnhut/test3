@@ -13,7 +13,7 @@ const Privacy = () => {
             <div className="nami-container my-20 policies-page">
                 <>
                     <div className="text-center">
-                        <h1 className="text-4xl font-semibold mb-7 ">
+                        <h1 className="text-5xl font-semibold mb-7 ">
                             Nami Exchange Privacy Policy
                         </h1>
 

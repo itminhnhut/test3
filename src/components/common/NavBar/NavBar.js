@@ -369,8 +369,8 @@ const NavBar = ({ style, useOnly, name, page, changeLayoutCb, useGridSettings, s
         });
 
         return (
-            <div className="mal-navbar__dropdown">
-                <div className="mal-navbar__dropdown__wrapper  min-w-[436px] !p-6">
+            <div className="mal-navbar__dropdown z-50 ">
+                <div className="mal-navbar__dropdown__wrapper z-50  min-w-[436px] !p-6">
                     <div className="mal-navbar__dropdown__user__info justify-between items-center ">
                         <div className="flex items-center">
                             <div className="mal-navbar__dropdown__user__info__avt">

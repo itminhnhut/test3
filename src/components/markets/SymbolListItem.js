@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import Link from 'next/link';
 import debounce from 'lodash/debounce';
-import { formatPrice, render24hChange } from 'src/redux/actions/utils';
+import { formatNumber, render24hChange, getDecimalPrice } from 'src/redux/actions/utils';
 import { IconStar, IconStarFilled } from '../common/Icons';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import colors from '../../styles/colors';
@@ -60,6 +60,11 @@ const SymbolListItem = (props) => {
     const quote = symbolTicker?.q;
     const up = symbolTicker?.u;
 
+    const decimals = useMemo(() => {
+        const config = exchangeConfig.find((rs) => rs.symbol === `${base}${quote}`);
+        return { price: getDecimalPrice(config) };
+    }, [exchangeConfig, base, quote]);
+
     return (
         <div
             className={`px-4 h-5 flex items-center cursor-pointer hover:bg-teal-lightTeal dark:hover:bg-darkBlue-3 ${
@@ -79,7 +84,7 @@ const SymbolListItem = (props) => {
                         {base}/{quote}
                     </div>
                     <div className={`flex-1 text-xs leading-table text-right mr-4 ${!up ? 'text-teal' : 'text-red'}`}>
-                        {formatPrice(+symbolTicker?.p, exchangeConfig, quote)}
+                        {formatNumber(+symbolTicker?.p, decimals.price)}
                     </div>
                     <div className="flex-1 text-teal text-xs leading-table flex justify-end">{render24hChange(symbolTicker)}</div>
                 </div>

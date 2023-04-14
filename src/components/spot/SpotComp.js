@@ -5,7 +5,7 @@ import SimplePlaceOrderForm from 'src/components/trade/SimplePlaceOrderForm';
 import SymbolDetail from 'src/components/trade/SymbolDetail';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { BrowserView, MobileView } from 'react-device-detect';
 import RGL, { WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
@@ -21,7 +21,7 @@ import Trades from 'src/components/trade/Trades';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { getMarketWatch, postSymbolViews } from 'src/redux/actions/market';
-import { getSymbolString } from 'src/redux/actions/utils';
+import { getSymbolString, getDecimalPrice, getDecimalQty } from 'src/redux/actions/utils';
 import { useWindowSize } from 'utils/customHooks';
 import find from 'lodash/find';
 import useDarkMode from 'hooks/useDarkMode';
@@ -206,6 +206,7 @@ const SpotComp = () => {
     }
     const [symbol, setSymbol] = useState(symbolFromUrl);
     const publicSocket = useSelector((state) => state.socket.publicSocket);
+    const exchangeConfig = useSelector((state) => state.utils.exchangeConfig);
 
     // Spot layout
     const [lastSymbol, setLastSymbol] = useState(null);
@@ -326,13 +327,21 @@ const SpotComp = () => {
         }
     };
 
+    const decimals = useMemo(() => {
+        const config = exchangeConfig.find((rs) => rs.symbol === symbol?.base + symbol?.quote);
+        return {
+            price: getDecimalPrice(config),
+            qty: getDecimalQty(config)
+        };
+    }, [exchangeConfig, symbol]);
+
     if (!symbol) return null;
     const isPro = layoutMode === SPOT_LAYOUT_MODE.PRO;
 
     return (
         <MaldivesLayout hideFooter page="spot" changeLayoutCb={setLayoutMode} spotState={state} onChangeSpotState={setState} resetDefault={resetDefault}>
-            <SpotHead symbol={symbol} />
-            <MobileView className="bg-white">
+            <SpotHead symbol={symbol} decimals={decimals} />
+            <MobileView>
                 <DefaultMobileView />
             </MobileView>
             <BrowserView className="bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
@@ -387,7 +396,7 @@ const SpotComp = () => {
                                 hidden: !state.isShowSymbolDetail || fullScreen
                             })}
                         >
-                            <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} />
+                            <SymbolDetail isPro={isPro} layoutMode={layoutMode} symbol={symbol} publicSocket={publicSocket} decimals={decimals} />
                         </div>
 
                         <div
@@ -397,7 +406,7 @@ const SpotComp = () => {
                                 'border-r': isPro
                             })}
                         >
-                            <Trades isPro={isPro} symbol={symbol} publicSocket={publicSocket} layoutConfig={tradesLayout} />
+                            <Trades isPro={isPro} symbol={symbol} publicSocket={publicSocket} layoutConfig={tradesLayout} decimals={decimals} />
                         </div>
                         <div
                             key="placeOrderForm"
@@ -430,7 +439,7 @@ const SpotComp = () => {
                                 'border-l !border-t-0': isPro
                             })}
                         >
-                            <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} />
+                            <OrderBook isPro={isPro} symbol={symbol} parentState={setState} layoutConfig={orderBookLayout} decimals={decimals} />
                         </div>
                     </ReactGridLayout>
                 </div>

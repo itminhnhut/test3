@@ -229,10 +229,10 @@ const Wallet = () => {
                     })}
                 </Tabs>
                 <div className="absolute right-0 hidden md:block">
-                    <div />
-                    {/* <HrefButton variants="blank" className="w-auto !text-base" href={`${PATHS.WALLET.DEFAULT}/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
+                    {/* <div /> */}
+                    <HrefButton variants="blank" className="w-auto !text-base" href={`/${WALLET_SCREENS.TRANSACTION_HISTORY}`}>
                         {t('common:transaction_history')}
-                    </HrefButton> */}
+                    </HrefButton>
                 </div>
             </div>
         );

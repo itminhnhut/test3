@@ -1,4 +1,4 @@
-import AssetLogo from 'src/components/wallet/AssetLogo';
+import AssetLogo from 'components/wallet/AssetLogo';
 import colors from 'styles/colors';
 
 import { useCallback, useState } from 'react';

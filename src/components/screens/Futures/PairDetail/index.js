@@ -17,7 +17,7 @@ import { usePrevious } from 'react-use';
 import { roundTo } from 'round-to';
 
 import FuturesPairDetailItem from './PairDetailItem';
-import FuturesPairList from '../PairList';
+// import FuturesPairList from '../PairList';
 import InfoSlider from 'components/markets/InfoSlider';
 import classNames from 'classnames';
 import styled from 'styled-components';
@@ -31,6 +31,8 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import { ArrowDropDownIcon, BxsBookIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import PriceChangePercent from 'components/common/PriceChangePercent';
+import dynamic from 'next/dynamic';
+const FuturesPairList = dynamic(() => import('components/screens/Futures/PairList'), { ssr: false });
 
 const getPairPrice = createSelector([(state) => state.futures, (state, pair) => pair], (futures, pair) => futures.marketWatch[pair]);
 
@@ -41,7 +43,7 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
     const [lastPriceMinW, setLastPriceMinW] = useState(0);
 
     const [activePairList, setActivePairList] = useState(false);
-    const [pairListMode, setPairListMode] = useState('');
+    const [pairListMode, setPairListMode] = useState(pairConfig?.quoteAsset);
     const [isShowModalInfo, setIsShowModalInfo] = useState(false);
     const [isShowModalPriceList, setIsShowModalPriceList] = useState(false);
     // state, vars for information modal (Trading rules)
@@ -306,6 +308,10 @@ const FuturesPairDetail = ({ pairPrice, pairConfig, forceUpdateState, isVndcFutu
             setItemsPriceMinW((itemsPriceRef?.current?.clientWidth || 20) + 24);
         }
     }, [router.query, pairPrice?.symbol, itemsPriceRef, itemsPriceMinW]);
+
+    useEffect(() => {
+        setPairListMode(pairConfig?.quoteAsset);
+    }, [pairConfig?.quoteAsset]);
 
     const RenderInfoModal = () => {
         const renderContent = (title) => {

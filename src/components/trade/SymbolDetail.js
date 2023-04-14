@@ -1,20 +1,21 @@
 import ChevronDown from 'src/components/svg/ChevronDown';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { SPOT_LAYOUT_MODE } from 'redux/actions/const';
 import { PublicSocketEvent } from 'src/redux/actions/const';
 import Emitter from 'src/redux/actions/emitter';
 import { setUserSymbolList } from 'src/redux/actions/market';
-import { formatPrice, render24hChange, RefCurrency } from 'src/redux/actions/utils';
+import { formatPrice, render24hChange, RefCurrency, getDecimalPrice } from 'src/redux/actions/utils';
 import { IconLoading } from '../common/Icons';
 import SymbolList from './SymbolList';
 import { ChevronLeft } from 'react-feather';
 import useWindowSize from 'hooks/useWindowSize';
+import { formatNumber } from 'redux/actions/utils';
 
 const SymbolDetail = (props) => {
-    const { symbol, favorite, changeSymbolList, watchList, fullScreen, layoutConfig, publicSocket, layoutMode, isPro } = props;
+    const { symbol, favorite, changeSymbolList, watchList, fullScreen, layoutConfig, publicSocket, layoutMode, isPro, decimals } = props;
     const { t } = useTranslation('common');
     const [symbolTicker, setSymbolTicker] = useState(null);
     const [favoriteId, setFavoriteId] = useState('');
@@ -95,6 +96,7 @@ const SymbolDetail = (props) => {
             );
         }
     };
+
     return (
         <>
             <div className="h-full w-full flex flex-row items-center justify-start bg-bgSpotContainer dark:bg-bgSpotContainer-dark">
@@ -106,21 +108,21 @@ const SymbolDetail = (props) => {
                     <div className="flex flex-col min-w-[100px] max-w-[150px] items-center min-0 space-y-1 mx-4">
                         <div>
                             <div className={`block font-semibold ${symbolTicker?.u ? 'text-teal' : 'text-red'}`}>
-                                {formatPrice(symbolTicker?.p, exchangeConfig, symbol?.quote)}
+                                {formatNumber(symbolTicker?.p, decimals.price)}
                             </div>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark text-sm">
                                 <RefCurrency price={symbolTicker?.p} quoteAsset={symbolTicker.q} />
                             </span>
                         </div>
                     </div>
-                    <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} />
+                    <Detail symbolTicker={symbolTicker} exchangeConfig={exchangeConfig} symbol={symbol} t={t} decimals={decimals} />
                 </div>
             </div>
         </>
     );
 };
 
-const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
+const Detail = ({ symbolTicker, exchangeConfig, symbol, t, decimals }) => {
     const { width } = useWindowSize();
     const mouseDown = useRef(false);
     const startX = useRef(null);
@@ -223,27 +225,23 @@ const Detail = ({ symbolTicker, exchangeConfig, symbol, t, fullScreen }) => {
             </div>
             <div className="flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('high')} 24h</div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
-                    {formatPrice(symbolTicker?.h, exchangeConfig, symbol?.quote)}
-                </div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.h, decimals?.price)}</div>
             </div>
             <div className="flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">{t('low')} 24h</div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">
-                    {formatPrice(symbolTicker?.l, exchangeConfig, symbol?.quote)}
-                </div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.l, decimals?.price)}</div>
             </div>
             <div className="flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
                     {t('volume')} 24h ({symbolTicker?.b})
                 </div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatPrice(symbolTicker?.vb, 2)}</div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vb, 2)}</div>
             </div>
             <div className="2xl:flex flex-col min-w-max space-y-1">
                 <div className="block text-txtSecondary dark:text-txtSecondary-dark text-xs text-left ">
                     {t('volume')} 24h ({symbolTicker?.q})
                 </div>
-                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatPrice(symbolTicker?.vq, 2)}</div>
+                <div className="block text-txtPrimary dark:text-txtPrimary-dark text-xs font-semibold">{formatNumber(symbolTicker?.vq, 2)}</div>
             </div>
             <div
                 ref={btnRight}

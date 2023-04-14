@@ -239,7 +239,7 @@
 //}
 
 .mal-navbar__wrapper {
-  @apply relative z-30 dark:bg-dark bg-white w-full flex flex-row items-center justify-between border-b border-divider dark:border-divider-dark;
+  @apply relative z-50 dark:bg-dark bg-white w-full flex flex-row items-center justify-between border-b border-divider dark:border-divider-dark;
 
 
   height: $MOBILE_NAV_HEIGHT;

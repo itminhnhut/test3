@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux';
 import { getLoginUrl, getS3Url } from 'src/redux/actions/utils';
 import Spiner from 'components/common/V2/LoaderV2/Spiner';
 
-const NoData = ({ text, loading = false, isSearch = false, className = '' }) => {
+const NoData = ({ text, loading = false, isSearch = false, className = '', isAuth = false }) => {
     const { t } = useTranslation();
     const [currentTheme] = useDarkMode();
-    const user = useSelector((state) => state.auth.user);
+    const user = useSelector((state) => state.auth.user) || isAuth;
 
     const isDark = currentTheme === THEME_MODE.DARK;
     if (loading) return <Spiner isDark={isDark} />;
@@ -39,7 +39,7 @@ const NoData = ({ text, loading = false, isSearch = false, className = '' }) => 
                 <>
                     {isSearch ? isDark ? <NotFoundDarkIcon /> : <NotFoundLightIcon /> : isDark ? <NoDataDarkIcon /> : <NoDataLightIcon />}
                     <span className={'text-txtSecondary dark:text-darkBlue-5 text-sm sm:text-base'}>
-                        {text ?? isSearch ? t('common:no_results_found') : t('common:no_data')}
+                        {text ?? (isSearch ? t('common:no_results_found') : t('common:no_data'))}
                     </span>
                 </>
             )}

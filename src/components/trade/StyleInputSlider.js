@@ -91,7 +91,7 @@ export const Thumb = styled.div`
     border-radius: ${({ onusMode }) => (onusMode ? '50%' : '50%')};
     border: ${({ onusMode, naoMode }) => (onusMode && !naoMode ? '4px solid #47cc85' : 'none')};
     background: ${({ isZero, isDark, bgColorActive, naoMode }) =>
-        naoMode ? 'linear-gradient(101.26deg, #00144E -5.29%, #003A33 113.82%)' : bgColorActive ? bgColorActive : colors.teal};
+        naoMode ? colors.teal : bgColorActive ? bgColorActive : colors.teal};
     user-select: none;
     cursor: pointer;
     pointer-events: none;

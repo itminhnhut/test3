@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import colors from 'styles/colors';
 
-const Spiner = ({ isDark }) => {
+const Spiner = ({ isDark, isCustom }) => {
     return (
-        <Loader isDark={isDark}>
+        <Loader isDark={isDark} isCustom={isCustom}>
             <div className="spinner"></div>
         </Loader>
     );
@@ -34,7 +34,7 @@ const Loader = styled.div`
     .spinner::after {
         width: 85%;
         height: 85%;
-        background-color: ${({ isDark }) => (isDark ? colors.dark.dark : '#fff')};
+        background-color: ${({ isDark, isCustom }) => (isDark ? colors.dark.dark : isCustom ? '#6D6E72' : '#fff')};
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
