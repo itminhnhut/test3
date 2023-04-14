@@ -26,7 +26,9 @@ const namiSystem = {
     vi: 'Hệ thống Nami'
 };
 
-export const customFormatBalance = (number, digit, acceptNegative = true) => formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
+export const customFormatBalance = (number, digit, acceptNegative = true) => {
+    return formatBalance(+number < 0 ? Math.ceil(number) : number, digit, acceptNegative);
+};
 
 export const isFilterEmpty = (filter) => !filter.category && !filter.asset && isNull(filter.range.endDate);
 

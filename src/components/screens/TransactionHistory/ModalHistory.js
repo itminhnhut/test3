@@ -166,7 +166,9 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     : '--'}{' '}
                                 {assetData?.assetCode}
                             </div>
-                            <TagV2 type="success">{t('transaction-history:completed')}</TagV2>
+                            <TagV2 type="success">
+                                <div className="font-normal">{t('transaction-history:completed')}</div>
+                            </TagV2>
                         </div>
                         <div className="mx-8 p-4 space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                             {modalDetailColumn?.[detailTx.type]?.map((col) => {
@@ -283,16 +285,32 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             )} ${type ? t('transaction-history:' + type) : ''}`}</div>
                                         );
                                         break;
+                                    case COLUMNS_TYPE.DEPOSIT_WITHDRAW_FEE:
+                                        const fee = get(detailTx, col.keys[0]) || get(detailTx, 'result.metadata.fee.value') || 0;
+
+                                        formatKeyData = (
+                                            <div>
+                                                {customFormatBalance(+fee, assetData?.digit || 0)} {assetData?.assetCode}{' '}
+                                            </div>
+                                        );
+                                        break;
 
                                     default:
                                         break;
                                 }
                                 if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                    // not showing "To" on type deposit (nạp)
+                                    // not showing "From" on type withdraw (rút)
                                     if (
                                         (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
                                         (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
                                     )
                                         return null;
+
+                                    // not showing "Fee" on type deposit (nạp)
+                                    if (detailTx.result.category === 4 && col.localized === 'modal_detail.fee') {
+                                        return null;
+                                    }
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">
@@ -304,7 +322,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                                 '!text-dominant': col.primaryTeal
                                             })}
                                         >
-                                            {formatKeyData || '--'}
+                                            {formatKeyData || NULL_ASSET}
                                         </div>
                                     </div>
                                 );
@@ -316,18 +334,10 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                 <div className="p-4  space-y-1 rounded-xl dark:bg-darkBlue-3 bg-hover-1">
                                     {(detailTx?.additionalData?.assets || detailTx?.result?.metadata?.assets || []).map((asset) => {
                                         const _ = assetConfig.find((assetConf) => assetConf.id === asset.assetId);
-                                        const isUSDT = _.assetCode === 'USDT';
-                                        const isVNDC = _.assetCode === 'VNDC';
                                         return (
                                             <div key={_?.id} className="flex text-txtPrimary  dark:text-txtPrimary-dark justify-between py-3 items-center">
                                                 <div className="">{_?.assetCode || NULL_ASSET}</div>
-                                                <div className={classNames('font-semibold')}>
-                                                    {isVNDC
-                                                        ? customFormatBalance(asset.value, 0, true)
-                                                        : isUSDT
-                                                        ? customFormatBalance(asset.value, 4, true)
-                                                        : customFormatBalance(asset.value, _?.assetDigit || 0, true)}
-                                                </div>
+                                                <div className={classNames('font-semibold')}>{customFormatBalance(asset.value, _?.assetDigit || 0, true)}</div>
                                             </div>
                                         );
                                     })}
