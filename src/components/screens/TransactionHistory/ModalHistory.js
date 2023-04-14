@@ -150,8 +150,6 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                             </>
                                         )}
                                     </div>
-                                ) : detailTx.type === TRANSACTION_TYPES.CONVERTSMALLBALANCE ? (
-                                    <AssetLogo useNextImg={true} size={80} assetCode={'NAMI'} />
                                 ) : (
                                     <AssetLogo useNextImg={true} size={80} assetId={detailTx?.result?.currency || detailTx?.additionalData?.assetId} />
                                 )}
