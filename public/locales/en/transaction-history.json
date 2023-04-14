@@ -55,6 +55,7 @@
         "type": "Type",
         "position_id": "Position ID",
         "wallet_type": "Wallet Type",
-        "volume": "Volume"
+        "volume": "Volume",
+        "fee": "Fee"
     }
 }
