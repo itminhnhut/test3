@@ -186,21 +186,15 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                     case COLUMNS_TYPE.COPIEDABLE:
                                         let priorityKey = keyData || get(detailTx, 'additionalData.txId') || get(detailTx, 'additionalData.from.name');
 
-                                        if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
-                                            if (
-                                                (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
-                                                (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
-                                            ) {
-                                                priorityKey = null;
-                                            }
-                                        }
                                         if (!priorityKey) formatKeyData = null;
-                                        formatKeyData = (
-                                            <TextCopyable
-                                                showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
-                                                text={priorityKey}
-                                            />
-                                        );
+                                        else {
+                                            formatKeyData = (
+                                                <TextCopyable
+                                                    showingText={col.isAddress ? `${shortHashAddress(priorityKey, 10, 6)}` : undefined}
+                                                    text={priorityKey}
+                                                />
+                                            );
+                                        }
 
                                         break;
                                     case COLUMNS_TYPE.TIME:
@@ -226,8 +220,8 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         symbol = getSymbolObject(keyData);
                                         if (!symbol) {
                                             symbol = {
-                                                baseAsset: get(detailTx, 'additionalData.baseAsset'),
-                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset')
+                                                baseAsset: get(detailTx, 'additionalData.baseAsset') || get(detailTx, 'result.metadata.baseAsset'),
+                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset') || get(detailTx, 'result.metadata.quoteAsset')
                                             };
                                         }
                                         formatKeyData = `${symbol?.baseAsset || NULL_ASSET}/${symbol?.quoteAsset || NULL_ASSET}`;
@@ -236,16 +230,13 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         symbol = getSymbolObject(detailTx?.additionalData?.symbol);
                                         if (!symbol) {
                                             symbol = {
-                                                baseAsset: get(detailTx, 'additionalData.baseAsset'),
-                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset')
+                                                baseAsset: get(detailTx, 'additionalData.baseAsset') || get(detailTx, 'result.metadata.baseAsset'),
+                                                quoteAsset: get(detailTx, 'additionalData.quoteAsset') || get(detailTx, 'result.metadata.quoteAsset')
                                             };
                                         }
 
-                                        const { assetCode } = assetData;
-                                        formatKeyData = `${customFormatBalance(
-                                            keyData,
-                                            assetCode === 'VNDC' ? 0 : assetCode === 'USDT' ? 4 : assetData?.assetDigit || 0
-                                        )} ${symbol?.quoteAsset || NULL_ASSET}`;
+                                        const { assetDigit } = assetData;
+                                        formatKeyData = `${customFormatBalance(keyData, assetDigit)} ${symbol?.quoteAsset || NULL_ASSET}`;
                                         break;
                                     case COLUMNS_TYPE.NUMBER_OF_ASSETS:
                                         additionalData = detailTx?.additionalData || detailTx?.result?.metadata;
@@ -283,16 +274,25 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
                                         );
                                         break;
                                     case COLUMNS_TYPE.SIDETYPE:
-                                        const side = get(detailTx, col.keys[0])?.toLowerCase() || NULL_ASSET;
-                                        const type = get(detailTx, col.keys[1])?.toLowerCase() || NULL_ASSET;
+                                        const side =
+                                            get(detailTx, col.keys[0])?.toLowerCase() || get(detailTx, 'result.metadata.side')?.toLowerCase() || NULL_ASSET;
+                                        const type = get(detailTx, col.keys[1])?.toLowerCase() || get(detailTx, 'result.metadata.type')?.toLowerCase();
                                         formatKeyData = (
                                             <div className={classNames({ 'text-red': side === 'sell' }, { 'text-dominant': side === 'buy' })}>{`${t(
                                                 'transaction-history:' + side
-                                            )} ${t('transaction-history:' + type)}`}</div>
+                                            )} ${type ? t('transaction-history:' + type) : ''}`}</div>
                                         );
                                         break;
+
                                     default:
                                         break;
+                                }
+                                if (detailTx.type === TRANSACTION_TYPES.DEPOSITWITHDRAW) {
+                                    if (
+                                        (detailTx.result.category === 4 && col.localized === 'modal_detail.to') ||
+                                        (detailTx.result.category === 5 && col.localized === 'modal_detail.from')
+                                    )
+                                        return null;
                                 }
                                 return (
                                     <div key={col.localized} className="flex justify-between py-3 items-center">

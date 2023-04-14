@@ -35,13 +35,15 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
                         ) : (
                             <>
                                 <span>{category?.content[language]}</span>
-                                <X
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCategory(null);
-                                    }}
-                                    size={16}
-                                />
+                                <div className="text-gray-7">
+                                    <X
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setCategory(null);
+                                        }}
+                                        size={16}
+                                    />
+                                </div>
                             </>
                         )}
                     </div>

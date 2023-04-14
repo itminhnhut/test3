@@ -84,13 +84,15 @@ const AssetFilter = ({ asset, setAsset, t }) => {
                                     <AssetLogo useNextImg={true} size={24} assetCode={asset?.assetCode} />
                                     <span>{asset?.assetCode || asset?.assetName}</span>
                                 </div>
-                                <X
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setAsset(null);
-                                    }}
-                                    size={16}
-                                />
+                                <div className="text-gray-7">
+                                    <X
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setAsset(null);
+                                        }}
+                                        size={16}
+                                    />
+                                </div>
                             </>
                         )}
                     </div>
