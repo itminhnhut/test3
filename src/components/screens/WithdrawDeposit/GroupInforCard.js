@@ -13,9 +13,16 @@ import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Divider from 'components/common/Divider';
+import { useTranslation } from 'next-i18next';
+import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
+const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
     const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
+    const {
+        t,
+        i18n: { language }
+    } = useTranslation();
+
     return (
         <div className="flex -m-3 flex-wrap items-stretch">
             {/* Chi tiết giao dịch */}
@@ -109,6 +116,9 @@ const GroupInforCard = ({ t, orderDetail, side, setModalQr, status, assetCode, r
                                                         <OrderIcon size={16} />
                                                         <span>
                                                             {orderDetail?.partnerMetadata?.analyticMetadata?.count || 0} {t('dw_partner:order')}
+                                                            {orderDetail?.partnerMetadata?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN
+                                                                ? 's'
+                                                                : ''}
                                                         </span>
                                                     </div>
                                                     {orderDetail?.partnerMetadata?.analyticMetadata?.count ? (

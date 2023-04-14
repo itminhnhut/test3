@@ -52,7 +52,7 @@
     "no_bank": "No bank found",
     "transfer_description": "Description",
     "transfer_confirm_description": {
-        "user": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount received and the content of the transfer before making.",
+        "user": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount and the content of the transfer before making.",
         "partner": "When you click the confirm button, you will transfer the money to the user, please carefully check the amount and the content of the transfer before making."
     },
     "take_money_confirm_description": {

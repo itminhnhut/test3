@@ -77,7 +77,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
     {
         key: 'user',
         dataIndex: 'userMetadata',
-        title: t('common:from'),
+        title: t('dw_partner:user'),
         align: 'left',
         width: 165,
         render: (row) => {
