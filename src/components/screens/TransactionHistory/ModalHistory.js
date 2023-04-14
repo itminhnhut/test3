@@ -290,7 +290,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
 
                                         formatKeyData = (
                                             <div>
-                                                {customFormatBalance(+fee, assetData?.digit || 0)} {assetData?.assetCode}{' '}
+                                                {customFormatBalance(+fee, assetData?.assetDigit || 0)} {assetData?.assetCode}{' '}
                                             </div>
                                         );
                                         break;
