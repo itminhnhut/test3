@@ -85,10 +85,10 @@ const TransactionHistory = ({ id }) => {
             const { range, asset, category } = filter;
             const { startDate, endDate } = range;
 
-            const from = startDate && formatLocalTimezoneToUTC(startDate.getTime());
+            const from = startDate && startDate.getTime(); // formatLocalTimezoneToUTC(startDate.getTime());
 
             // Plus 1 more day on endDate if endDate !== null
-            const to = formatLocalTimezoneToUTC(!endDate ? new Date().getTime() : endDate.getTime());
+            const to = !endDate ? new Date().getTime() : endDate.getTime(); // formatLocalTimezoneToUTC();
 
             // custom type phai dat ben duoi [id] de overwrite lai
             // cac type deposit withdraw phai transform thanh depositwithdraw va phan biet bang isNegative
