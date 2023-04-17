@@ -49,6 +49,7 @@ const CardInput = () => {
         [side, assetId]
     );
 
+    console.log('limitWithdraw:', limitWithdraw);
     const {
         data: rate,
         loading: loadingRate,
@@ -104,7 +105,7 @@ const CardInput = () => {
                     amount: formatBalanceFiat(minimumAllowed, assetCode),
                     asset: assetCode
                 });
-            } else if (side === 'SELL' && +state.amount > limitWithdraw?.remain) {
+            } else if (side === SIDE.SELL && +state.amount > limitWithdraw?.remain) {
                 isValid = false;
                 msg = t('dw_partner:error.reach_limit_withdraw', {
                     asset: assetCode
@@ -181,7 +182,7 @@ const CardInput = () => {
                                 onClick={() => {
                                     router.push(
                                         {
-                                            pathname: PATHS.WITHDRAW_DEPOSIT.DEFAULT,
+                                            pathname: PATHS.WITHDRAW_DEPOSIT.PARTNER,
                                             query: { side, assetId: +assetId === 72 ? 22 : 72 }
                                         },
                                         undefined,
