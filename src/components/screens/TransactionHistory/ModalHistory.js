@@ -76,7 +76,7 @@ const ModalHistory = ({ onClose, isVisible, className, id, assetConfig, t, categ
         };
     }, [id, assetConfig]);
 
-    const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(1, assetData?.assetDigit || 0 * -1);
+    const isMoneyUseOutofDigit = detailTx?.result?.money_use && Math.abs(+detailTx?.result?.money_use) < Math.pow(10, (assetData?.assetDigit || 0) * -1);
 
     return (
         <ModalV2
