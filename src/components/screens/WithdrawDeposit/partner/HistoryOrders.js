@@ -26,7 +26,7 @@ const getColumns = ({ t, configs }) => [
         title: t('common:type'),
         align: 'center',
         width: 107,
-        fixed:'left',
+        fixed: 'left',
         render: (row) => (
             <div className="flex justify-center">
                 <TagV2 type={row === SIDE.BUY ? 'success' : 'failed'} icon={false}>
@@ -90,15 +90,12 @@ const getColumns = ({ t, configs }) => [
         title: t('dw_partner:commission'),
         align: 'right',
         width: 152,
-        render: (row, item) => {
-            const assetConfig = find(configs, { id: +row });
+        render: (v, item) => {
+            const assetConfig = find(configs, { id: +item?.commissionCurrency });
+            v = formatNumber(v, assetConfig?.assetDigit);
 
-            const isNullCommission = !row || !currency || row < Math.pow(1, currency?.assetDigit * -1);
-            return (
-                <div className={`${isNullCommission ? 'text-txtSecondary dark:text-txtSecondary-dark' : 'text-teal'} `}>
-                    {`+ ${formatNanNumber(row, +item?.commissionCurrency === 72 ? 0 : 4)} ${assetConfig?.assetCode}`}
-                </div>
-            );
+            const isNullCommission = !v || v === '0' || !assetConfig;
+            return <div className={`${!isNullCommission && 'text-teal'} `}>{isNullCommission ? '-' : `+${v} ${assetConfig?.assetCode}`}</div>;
         }
     },
     {
@@ -305,7 +302,7 @@ const HistoryOrders = () => {
                 skip={0}
                 useRowHover
                 data={state.data}
-                columns={getColumns({ t })}
+                columns={getColumns({ t, configs })}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={state.loading}
