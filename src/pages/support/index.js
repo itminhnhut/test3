@@ -19,14 +19,13 @@ import useDarkMode, { THEME_MODE } from "hooks/useDarkMode";
 import React from "react";
 import { useDispatch } from 'react-redux';
 import { reloadData } from 'redux/actions/heath';
-
+import Link from 'next/link';
 
 const Support = () => {
     // ? State
     const [loading, setLoading] = useState(false)
     const [lastedArticles, setLastedArticles] = useState([])
     const [highlightedArticles, setHighlightedArticles] = useState([])
-    const [currentTheme, onThemeSwitch, setTheme] = useDarkMode();
     const dispath = useDispatch();
 
     React.useEffect(() => {
@@ -75,21 +74,25 @@ const Support = () => {
                 gridTemplateColumns: "repeat(auto-fill, 280px)",
             }}>
                 {SupportCategories.faq[language].map((faq) => (
-                    <a href={
+                    <Link href={
                         (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.FAQ +
                         `/${faq.displaySlug}${isApp ? '?source=app' : ''}`
-                    }>
-                        <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
-                            <div className='h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10'>
-                                <Image
-                                    src={getSupportCategoryIcons(faq.id)}
-                                    width={24}
-                                    height={24}
-                                />
+                    }
+                        key={faq.displaySlug}
+                    >
+                        <a>
+                            <div className='flex gap-4 sm:p-4 w-full sm:w-[280px] h-[48px] sm:h-[68px] items-center sm:hover:!bg-hover sm:dark:hover:!bg-hover-dark rounded-xl text-txtPrimary dark:text-gray-4 font-normal text-sm sm:font-semibold sm:text-base' key={faq.id}>
+                                <div className='h-9 w-9 flex items-center justify-center rounded-full sm:bg-teal/10'>
+                                    <Image
+                                        src={getSupportCategoryIcons(faq.id)}
+                                        width={24}
+                                        height={24}
+                                    />
+                                </div>
+                                {faq?.title}
                             </div>
-                            {faq?.title}
-                        </div>
-                    </a>
+                        </a>
+                    </Link>
                 ))}
             </div>
         )
@@ -98,22 +101,23 @@ const Support = () => {
     const renderAnnouncementCategories = () => {
         return (
             SupportCategories.announcements[language].map((announcement) => (
-                <a
-                    href={
-                        (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT +
-                        `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
-                    }
-                    className={classNames({ 'w-[calc(50%-8px)]': isMobile, 'flex-1 min-w-[236px] w-full': !isMobile })}
+                <Link href={
+                    (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.ANNOUNCEMENT +
+                    `/${announcement.displaySlug}${isApp ? '?source=app' : ''}`
+                }
+                    key={announcement.displaySlug}
                 >
-                    <div key={announcement.id} className={classNames('w-full h-[140px]  sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none')}>
-                        <Image
-                            src={getSupportCategoryIcons(announcement.id)}
-                            width={isMobile ? 48 : 52}
-                            height={isMobile ? 48 : 52}
-                        />
-                        {announcement?.title || '--'}
-                    </div>
-                </a>
+                    <a className={classNames({ 'w-[calc(50%-8px)]': isMobile, 'flex-1 min-w-[236px] w-full': !isMobile })}>
+                        <div key={announcement.id} className={classNames('w-full h-[140px]  sm:h-[200px] flex flex-col items-center gap-6 justify-center rounded-xl bg-transparent dark:bg-darkBlue-3 truncate text-txtPrimary dark:text-gray-4 font-semibold sm:font-medium  text-sm sm:text-[20px] dark:hover:!bg-hover-dark border dark:border-none border-divider shadow-card_light dark:shadow-none')}>
+                            <Image
+                                src={getSupportCategoryIcons(announcement.id)}
+                                width={isMobile ? 48 : 52}
+                                height={isMobile ? 48 : 52}
+                            />
+                            {announcement?.title || '--'}
+                        </div>
+                    </a>
+                </Link>
             ))
         )
     }
@@ -122,16 +126,16 @@ const Support = () => {
         setLoading(true)
 
         const lastedArticles = await getLastedArticles(undefined, 5, 1, language)
-        const highlightedArticles = await getLastedArticles(
-            undefined,
-            5,
-            1,
-            language,
-            true
-        )
+        // const highlightedArticles = await getLastedArticles(
+        //     undefined,
+        //     5,
+        //     1,
+        //     language,
+        //     true
+        // )
 
         setLastedArticles(lastedArticles)
-        setHighlightedArticles(highlightedArticles)
+        // setHighlightedArticles(highlightedArticles)
 
         // const a = await ghost.tags.browse({ limit: 'all' })
         // console.log('namidev ', a)
@@ -267,23 +271,25 @@ export const LastedArticles = ({ lastedArticles, loading = false, language, isAp
                             <span className='rounded-full bg-gray-1 dark:bg-gray-4 h-2 w-2'>
                             </span>
                             <div>
-                                <a href={
+                                <Link href={
                                     (language === 'vi' ? '/vi' : '') + PATHS.SUPPORT.DEFAULT +
                                     `/${mode}/${topic}/${article.slug.toString()}${isApp ? '?source=app' : ''
                                     }`
                                 }>
-                                    <div className='flex flex-col grap-2'>
-                                        <div className='mr-2 text-txtPrimary dark:text-gray-4 text-sm sm:text-base font-normal hover:text-txtTextBtn active:text-txtTextBtn dark:hover:text-teal dark:active:text-teal'>
-                                            {article.title}
-                                            {!isMobile && index === 0 ?
-                                                <HighlightArticle t={t} className='ml-9' />
-                                                : null}
+                                    <a>
+                                        <div className='flex flex-col grap-2'>
+                                            <div className='mr-2 text-txtPrimary dark:text-gray-4 text-sm sm:text-base font-normal hover:text-txtTextBtn active:text-txtTextBtn dark:hover:text-teal dark:active:text-teal'>
+                                                {article.title}
+                                                {!isMobile && index === 0 ?
+                                                    <HighlightArticle t={t} className='ml-9' />
+                                                    : null}
+                                            </div>
+                                            <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-txtSecondary dark:text-darkBlue-5 whitespace-nowrap'>
+                                                {formatTime(article.created_at, 'dd/MM/yyyy')}
+                                            </div>
                                         </div>
-                                        <div className='mt-2 sm:mt-3 font-normal text-xs leading-4 text-txtSecondary dark:text-darkBlue-5 whitespace-nowrap'>
-                                            {formatTime(article.created_at, 'dd/MM/yyyy')}
-                                        </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </Link>
                             </div>
                         </div>
                     </div>

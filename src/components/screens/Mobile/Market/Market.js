@@ -7,7 +7,14 @@ import { debounce } from 'lodash/function';
 import { useTranslation } from 'next-i18next';
 import fetchAPI from 'utils/fetch-api';
 import { API_GET_FUTURES_MARKET_WATCH, API_GET_REFERENCE_CURRENCY, } from 'redux/actions/apis';
-import { formatCurrency, formatPercentage, formatPrice, getExchange24hPercentageChange, scrollHorizontal, formatNumber } from 'redux/actions/utils';
+import {
+    formatCurrency,
+    formatPercentage,
+    getExchange24hPercentageChange,
+    scrollHorizontal,
+    formatNumber,
+    getDecimalPrice
+} from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import usePrevious from 'hooks/usePrevious';
 import SortIcon from 'components/screens/Mobile/SortIcon';
@@ -60,7 +67,7 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         active: TABS.FAVOURITE,
         tagActive: pairConfig?.quoteAsset || TAGS[TABS.FAVOURITE].VNDC,
     })
-
+    const allPairConfigs = useSelector((state) => state?.futures?.pairConfigs);
     const [data, setData] = useState([])
     const [sort, setSort] = useState({
         field: 'volume24h',
@@ -251,58 +258,62 @@ export default ({ isRealtime = true, pair, pairConfig }) => {
         })
     }
 
+    
     const renderItem = (listItem) => {
-        return listItem.map((item) => (
-            <div
-                key={item.symbol}
-                className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-bg2' : ''}`}
-                onClick={() => {
-                    router.push(`/mobile/futures/${item.symbol}`)
-                }}
-            >
-                <div className='flex flex-1 items-center'>
-                    <AssetLogo assetCode={item.baseAsset} size={30} />
-                    <div className='ml-3'>
-                        <div className='flex items-center text-sm whitespace-nowrap leading-5 mr-2'>
-                            <span className='font-semibold text-onus-white'>{item.baseAsset}</span>
-                            {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
+        return listItem.map((item) => {
+            const config = allPairConfigs.find((rs) => rs.symbol === item.symbol);
+            const decimals = {
+                price: getDecimalPrice(config)
+            };
+            return (
+                <div
+                    key={item.symbol}
+                    className={`flex justify-between min-h-[3.375rem] items-center px-4 ${pair === item.symbol ? 'bg-onus-bg2' : ''}`}
+                    onClick={() => {
+                        router.push(`/mobile/futures/${item.symbol}`);
+                    }}
+                >
+                    <div className="flex flex-1 items-center">
+                        <AssetLogo assetCode={item.baseAsset} size={30} />
+                        <div className="ml-3">
+                            <div className="flex items-center text-sm whitespace-nowrap leading-5 mr-2">
+                                <span className="font-semibold text-onus-white">{item.baseAsset}</span>
+                                {/* <span className='text-txtSecondary dark:text-txtSecondary-dark'>
                                     /{item.quoteAsset}
                                 </span> */}
-                            {item.leverageMax && <div className="ml-2 bg-onus-bg3 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">{item.leverageMax}</div>}
+                                {item.leverageMax && (
+                                    <div className="ml-2 bg-onus-bg3 rounded-[2px] px-[0.375rem] h-[18px] text-xs font-medium">{item.leverageMax}</div>
+                                )}
+                            </div>
+                            <p className="text-xs text-onus-grey">${formatCurrency(item.volume24h, 1)}</p>
                         </div>
-                        <p className='text-xs text-onus-grey'>
-                            $
-                            {formatCurrency(item.volume24h, 1)}
-                        </p>
                     </div>
-
-                </div>
-                <div className='flex items-start justify-end'>
-                    <div className='flex flex-col text-right'>
-                        <LastPrice price={item.lastPrice} />
-                        <span className='text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap'>
-                            ${formatPrice(item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice, 4)}
-                        </span>
-                    </div>
-                    <div className='flex justify-end ml-6'>
-                        <div
-                            className={cn(
-                                'h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium',
-                                {
-                                    'bg-onus-red':
-                                        item.change24h < 0,
-                                    'bg-onus-green':
-                                        item.change24h >= 0,
-                                }
-                            )}
-                        >
-                            {item.change24h > 0 && '+'}
-                            {formatNumber(item.change24h, 2, 2, true)} %
+                    <div className="flex items-start justify-end">
+                        <div className="flex flex-col text-right">
+                            <LastPrice price={item.lastPrice} decimal={decimals.price} />
+                            <span className="text-xs text-onus-grey leading-[1.125rem] whitespace-nowrap">
+                                $
+                                {formatNumber(
+                                    item?.quoteAsset === 'VNDC' ? item.lastPrice / 23415 : referencePrice[`${item.quoteAsset}/USD`] * item.lastPrice,
+                                    4
+                                )}
+                            </span>
+                        </div>
+                        <div className="flex justify-end ml-6">
+                            <div
+                                className={cn('h-9 min-w-[4.375rem] flex items-center justify-center rounded-[4px] text-sm font-medium', {
+                                    'bg-onus-red': item.change24h < 0,
+                                    'bg-onus-green': item.change24h >= 0
+                                })}
+                            >
+                                {item.change24h > 0 && '+'}
+                                {formatNumber(item.change24h, 2, 2, true)} %
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        ))
+            );
+        })
 
     }
 
@@ -447,19 +458,19 @@ const InputSearch = ({ onChange }) => {
     </div>
 }
 
-const LastPrice = ({ price }) => {
-    const prevPrice = usePrevious(price)
+const LastPrice = ({ price, decimal = 0 }) => {
+    const prevPrice = usePrevious(price);
     return (
         <span
             className={cn('text-sm leading-5 font-medium', {
                 'text-onus-red': price < prevPrice,
-                'text-onus-green': price >= prevPrice,
+                'text-onus-green': price >= prevPrice
             })}
         >
-            {formatPrice(price)}
+            {formatNumber(price, decimal)}
         </span>
-    )
-}
+    );
+};
 
 const TitleHeadList = ({ title, className = '', onClick, sortDirection }) => {
     return (

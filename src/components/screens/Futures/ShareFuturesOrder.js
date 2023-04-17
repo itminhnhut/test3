@@ -133,7 +133,7 @@ const ShareFuturesOrder = ({
                                     </span>
                                 </div>
                                 <div className='py-2'>
-                                    <span className='text-5xl leading-10 font-semibold'>
+                                    <span className='text-6xl leading-10 font-semibold'>
                                         {percent}
                                     </span>
                                     <span className='text-lg leading-5 font-medium pl-3'>

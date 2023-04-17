@@ -70,6 +70,7 @@ const ReTable = memo(
         onRowClick,
         sorted,
         cbSort,
+        customSort,
         ...restProps
     }) => {
         // * Init State
@@ -139,7 +140,7 @@ const ReTable = memo(
 
             let _ = defaultSort;
 
-            if (Object.keys(sorter).length && !sorted) {
+            if (Object.keys(sorter).length && !sorted && !customSort) {
                 const _s = Object.entries(sorter)[0];
 
                 const customSort = ownColumns.find((e) => e.key === _s[0])?.sorter;
@@ -243,6 +244,7 @@ const ReTable = memo(
                                     onClick={() => {
                                         !c?.preventSort && setSorter({ [`${c.key}`]: !sorter?.[`${c.key}`] });
                                         if (cbSort) cbSort(!sorter?.[`${c.key}`]);
+                                        if (customSort) customSort({...sorter, [`${c.key}`]: !sorter?.[`${c.key}`]})
                                     }}
                                 >
                                     {c.title} {!c?.preventSort && <Sorter isUp={sorted ? undefined : sorter?.[`${c.key}`]} />}
@@ -403,10 +405,9 @@ const ReTableWrapperV2 = styled.div`
     }
 
     .rc-table td {
-        padding: 0 16px;
-        padding: ${({ padding }) => (padding ? padding : '0 16px')};
-        height: 52px;
-        max-height: 52px;
+        padding: ${({ padding }) => padding ?? '0 16px'};
+        height: ${({ rowHeight }) => rowHeight ?? '52px'};
+        /* max-height: 52px; */
     }
 
     .rc-table thead td,
@@ -432,6 +433,7 @@ const ReTableWrapperV2 = styled.div`
         z-index: 15;
         ::after {
             visibility: ${({ shadowWithFixedCol }) => (shadowWithFixedCol ? 'visible' : 'hidden')};
+            ${({ empty }) => (empty ? { height: '100%', minHeight: '0px !important' } : '')};
             /* box-shadow: ${({ isDark }) => (isDark ? 'inset -10px 0 8px -8px #263459' : 'inset -10px 0 8px -8px #f2f4f6')} !important; */
         }
     }
