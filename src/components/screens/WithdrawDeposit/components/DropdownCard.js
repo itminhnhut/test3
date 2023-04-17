@@ -36,6 +36,7 @@ const DropdownCard = ({
             ref={cardRef}
             open={isVisible}
             containerClassname={{ [containerClassname]: isVisible }}
+            hasSearchBox
             label={
                 <div className="bg-gray-12  dark:bg-dark-2 px-4 py-6 rounded-xl w-full">
                     <div className="txtSecond-2 mb-4"> {label}</div>
@@ -55,7 +56,9 @@ const DropdownCard = ({
                                 loadingList ? (
                                     <Spinner size={20} color="currentColor" />
                                 ) : showDropdownIcon ? (
-                                    <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />
+                                    <div className="w-full h-full min-w-[24px] min-h-[24px] max-w-[24px] max-h-[24px]">
+                                        <ChevronDown className={classNames({ 'rotate-0': isVisible })} color="currentColor" size={24} />
+                                    </div>
                                 ) : null
                             }
                         />

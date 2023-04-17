@@ -41,7 +41,7 @@ const styles = {
 const MAX_COUNTDOWN = 5 * 60 * 1000;
 const countDownStep = 10; // Smaller by smaller => Smooth but poor performance
 
-const CountdownTimer = ({ total, maxCountdown = MAX_COUNTDOWN, completed, size = 80, strokeWidth = 3 }) => {
+const CountdownTimer = ({ total, textSize = 16, maxCountdown = MAX_COUNTDOWN, completed, size = 80, strokeWidth = 3 }) => {
     const radius = size / 2;
     const circumference = size * Math.PI;
 
@@ -60,7 +60,9 @@ const CountdownTimer = ({ total, maxCountdown = MAX_COUNTDOWN, completed, size =
                 // style={Object.assign({}, countdownSizeStyles)}
             >
                 {/* time */}
-                <span className={`text-left text-lg font-semibold ${getColor(total / maxCountdown)}`}>{formatTime(total, 'mm:ss')}</span>
+                <span style={textSize && { fontSize: textSize }} className={`text-left text-lg font-semibold ${getColor(total / maxCountdown)}`}>
+                    {formatTime(total, 'mm:ss')}
+                </span>
 
                 {/* circle border back */}
                 <svg className="text-gray-12 dark:text-dark-2" style={styles.svg}>

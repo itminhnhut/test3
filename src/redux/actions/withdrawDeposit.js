@@ -5,8 +5,10 @@ import {
     API_CREATE_ORDER_WITH_OTP,
     API_GET_DEFAULT_PARTNER,
     API_GET_PARTNERS,
+    API_GET_PARTNER_PROFILE,
     API_MARK_PARTNER_ORDER,
     API_REJECT_PARTNER_ORDER,
+    API_SET_PARTNER_ORDER_CONFIG,
     API_SET_USER_BANK_ACCOUNT
 } from './apis';
 import { ApiStatus } from './const';
@@ -40,6 +42,7 @@ export const setAllowedAmount = (payload) => (dispatch) => {
 };
 
 export const setLoadingPartner = (payload) => (dispatch) => dispatch({ type: types.SET_LOADING_PARTNER, payload });
+
 export const getPartner = ({ params, cancelToken, callbackFn = () => {} }) => {
     return async (dispatch) => {
         try {
@@ -104,6 +107,17 @@ export const rejectOrder = async ({ displayingId, mode = 'user' }) => {
     const res = await Axios.post(API_REJECT_PARTNER_ORDER, {
         displayingId,
         mode
+    });
+
+    return res.data;
+};
+
+export const editPartnerConfig = async ({ side, min, max, status }) => {
+    const res = await Axios.post(API_SET_PARTNER_ORDER_CONFIG, {
+        side,
+        min,
+        max,
+        status
     });
 
     return res.data;

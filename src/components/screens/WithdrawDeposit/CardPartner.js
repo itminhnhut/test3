@@ -102,7 +102,7 @@ const CardPartner = () => {
                             t={t}
                             loadingBanks={loadingBanks}
                             showDropdownIcon={!loadingBanks && banks && banks.length > 1}
-                            disabled={!banks || banks?.length <= 1}
+                            disabled={!banks || banks?.length < 2}
                         />
                     )}
                 </div>

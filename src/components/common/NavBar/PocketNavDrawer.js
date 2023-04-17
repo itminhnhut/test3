@@ -183,14 +183,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                                     className=" max-w-[132px] !text-sm"
                                     variants="text"
                                     onClick={() => {
-                                        window.open(getLoginUrl('sso', 'login'),"_self");
+                                        window.open(getLoginUrl('sso', 'login'), '_self');
                                     }}
                                 >
                                     {t('common:sign_in')}
                                 </ButtonV2>
 
                                 <ButtonV2
-                                    onClick={() => window.open(getLoginUrl('sso', 'register'),"_self")}
+                                    onClick={() => window.open(getLoginUrl('sso', 'register'), '_self')}
                                     className="ml-4 py-2 max-w-[132px] !h-[36px] rounded-md !text-sm"
                                 >
                                     {t('common:sign_up')}
@@ -202,14 +202,14 @@ const PocketNavDrawer = memo(({ isActive, onClose, loadingVipLevel, vipLevel, pa
                     ) : (
                         <Link href={PATHS.ACCOUNT.PROFILE}>
                             <a className="flex items-center px-4 mb-6">
-                                <Image
+                                <img
                                     width={58}
                                     height={58}
-                                    objectFit="cover"
+                                    className="rounded-full min-w-[58px] max-w-[58px] min-h-[58px] max-h-[58px] w-full h-full object-cover"
                                     src={auth?.avatar || DefaultAvatar}
                                     alt="avatar_user"
-                                    className="rounded-full"
                                 />
+
                                 <div className="ml-3">
                                     <div className="flex text-sm items-center font-semibold text-txtPrimary dark:text-txtPrimary-dark mb-2">
                                         {auth?.username || auth?.name || auth?.email}

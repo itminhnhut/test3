@@ -12,7 +12,7 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
     const [search, setSearch] = useState('');
     const { user: auth } = useSelector((state) => state.auth) || null;
     const filterCategory = useMemo(
-        () => categoryConfig.filter((cate) => cate.content[language].toLowerCase().includes(search.toLowerCase())) || [],
+        () => categoryConfig.filter((cate) => cate.content?.[language]?.toLowerCase().includes(search.toLowerCase())) || [],
         [search, categoryConfig, language]
     );
     return (
@@ -35,13 +35,15 @@ const CategoryFilter = ({ category, setCategory, categoryConfig, language, t }) 
                         ) : (
                             <>
                                 <span>{category?.content[language]}</span>
-                                <X
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCategory(null);
-                                    }}
-                                    size={16}
-                                />
+                                <div className="text-gray-7">
+                                    <X
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setCategory(null);
+                                        }}
+                                        size={16}
+                                    />
+                                </div>
                             </>
                         )}
                     </div>
