@@ -10,7 +10,6 @@ import { PATHS } from 'constants/paths';
 const useMarkOrder = ({ mode, toggleRefetch }) => {
     const dispatch = useDispatch();
     const router = useRouter();
-    console.log('router:', router)
 
     const setModalState = (key, state) => dispatch(setPartnerModal({ key, state }));
 
