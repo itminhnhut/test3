@@ -184,7 +184,7 @@ const NetworkSelect = ({ t, selected, onSelect, networkList = [] }) => {
                         })}
                     >
                         <span className="font-semibold">{selected?.network || '--'}</span>
-                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{selected?.name || '--'}</span>
+                        <span className="ml-2 text-sm text-txtSecondary dark:text-txtSecondary-dark">{selected?.name  ? selected.name : (selected?.network && '--')}</span>
                     </div>
                     <ChevronDown className={open ? 'rotate-0' : ''} size={16} color={currentTheme === THEME_MODE.DARK ? colors.gray['4'] : colors.darkBlue} />
                 </div>
