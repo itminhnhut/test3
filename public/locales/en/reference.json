@@ -97,8 +97,8 @@
     },
     "withdrawal": {
         "title": "Deposit/Withdrawal Partner",
-        "content": "Deposit/Withdrawal Partner Registration success",
-        "success": "Congratulations, you have successfully registered as a Nami Deposit/Withdrawal Partner!"
+        "content": "Successfully registered",
+        "success": "Congratulations! You have successfully registered as a Deposit and Withdrawal Partner of Nami Exchange, please wait for the confirm notification from Nami."
     },
     "table": {
         "name": "Name",

@@ -26,7 +26,7 @@ const ModalFriendDetail = ({ isModal, detailFriend, options, toggle, level, onCh
     const totalOrderVol = useMemo(() => {
         const orderVolByAsset = (detailFriend?.order_vol || [])?.find((f) => f?.asset === options?.orderVol) || {};
         return orderVolByAsset?.total?.reduce((acc, curr) => {
-            acc = { spot: curr?.spot || 0, staking: curr?.staking || 0, futures: curr?.futures || 0 };
+            acc = { ...acc, ...curr };
             return acc;
         }, {});
     }, [detailFriend?.order_vol, options?.orderVol]);
