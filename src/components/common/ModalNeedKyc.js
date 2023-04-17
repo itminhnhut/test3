@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { getS3Url } from 'redux/actions/utils';
 import { WIDTH_MD } from 'components/screens/Wallet';
 import useWindowSize from 'hooks/useWindowSize';
+import { isFunction } from 'lodash';
 
 const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
     if (!isOpenModalKyc) return null;
@@ -20,7 +21,8 @@ const ModalNeedKyc = ({ isOpenModalKyc, onBackdropCb, isMobile }) => {
             onBackdropCb={onBackdropCb}
             className="!max-w-[488px]"
             wrapClassName="p-8 flex flex-col tracking-normal"
-            customHeader={() => <></>}
+            customHeader={isFunction(onBackdropCb) ? null : () => <></>}
+            btnCloseclassName="!pt-0"
         >
             <img width={isMobile ? 80 : 124} height={isMobile ? 80 : 124} src={getS3Url('/images/screen/account/kyc_require.png')} className="mx-auto mt-4" />
 

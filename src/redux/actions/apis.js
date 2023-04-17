@@ -70,7 +70,7 @@ export const API_DEFAULT_BANK_USER = API_V3_PREFIX + 'payment/default_user_bank_
 export const API_GET_USER_BANK_LIST = API_V3_PREFIX + 'payment/user_bank_accounts';
 export const API_GET_BANK_ACCOUNT_NAME = API_V3_PREFIX + 'payment/bank_account_name';
 export const API_GET_BANK_AVAILABLE = API_V3_PREFIX + 'payment/available_banks';
-export const API_ADD_USER_BANK_ACCOUNT = API_PREFIX + 'deposit/add_user_bank_account';
+export const API_ADD_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/user_bank_accounts';
 
 // Futures
 export const API_GET_FUTURES_MARKET_WATCH = API_V3_PREFIX + 'futures/ticker';
@@ -207,6 +207,7 @@ export const API_AUTH_USER_OTP = (service) => `${API_PREFIX}authenticated/${serv
 export const API_FUTURES_CAMPAIGN_STATUS = API_PREFIX + 'futures_campaign/onboarding/status';
 export const API_FUTURES_CAMPAIGN_ATTEND = API_PREFIX + 'futures_campaign/onboarding/attend';
 export const API_FUTURES_CAMPAIGN_WITHDRAW_STATUS = API_PREFIX + 'futures_campaign/onboarding/withdrawStatus';
+export const API_FUTURES_CAMPAIGN_TRANSFER_STATUS = API_PREFIX + 'futures_campaign/onboarding/transferStatus';
 
 //NAO token
 export const API_NAO_DASHBOARD_STATISTIC = API_V3_PREFIX + 'nao-dashboard/statistic';
@@ -271,6 +272,7 @@ export const API_PORTFOLIO_ACCOUNT = API_V3_PREFIX + 'portfolio/futures/account'
 export const API_PORTFOLIO_SUMMARY = API_V3_PREFIX + 'portfolio/futures/summary';
 
 // new referral
+export const API_POST_PARTNER = API_V3_PREFIX + 'users/partner';
 export const API_NEW_REFERRAL_CONFIG = API_V3_PREFIX + 'users/referral/commission-config';
 export const API_NEW_REFERRAL = API_V3_PREFIX + 'users/referral';
 export const API_NEW_REFERRAL_ADD_REF = API_V3_PREFIX + 'users/referral';

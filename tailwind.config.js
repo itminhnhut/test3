@@ -92,33 +92,27 @@ module.exports = {
             '3xl': [
                 '1.75rem',
                 {
-                    lineHeight: '2.5rem'
+                    lineHeight: '2.25rem'
                 }
             ], // Heading 4 28px
             '4xl': [
+                '2rem',
+                {
+                    lineHeight: '2.375rem',
+                },
+            ], //32px
+            '5xl': [
                 '2.25rem',
                 {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 3 36px
-            '5xl': [
-                '2.5rem',
-                {
-                    lineHeight: '3.5rem'
-                }
-            ], // Heading 2 40px
+                    lineHeight: '3rem',
+                },
+            ], //36px
             '6xl': [
-                '4rem',
+                '2.75rem',
                 {
-                    lineHeight: '4.5rem'
-                }
-            ], // Heading 1 64px
-            '5.5xl': [
-                '3.5rem',
-                {
-                    lineHeight: '4.25rem'
-                }
-            ] // Heading 2 56px
+                    lineHeight: '3.625rem',
+                },
+            ], //44px
         },
         // TODO split text, background
         colors: {
@@ -210,6 +204,7 @@ module.exports = {
             green: {
                 DEFAULT: '#22B02E',
                 opacity: 'rgba(34, 176, 46, 0.18)',
+                border_light: 'rgba(126, 229, 174, 0.1)',
                 ...commonColors.green
             },
             yellow: {

@@ -455,7 +455,7 @@ const ExchangeDeposit = () => {
                                 : 'font-bold text-sm hover:opacity-80 cursor-pointer invisible'
                         }
                     >
-                        {state.isCopying?.memo ? <Check size={16} /> : <Copy size={16} />}
+                        {state.isCopying?.memo ? <Check size={24} /> : <Copy size={24} />}
                     </span>
                 </CopyToClipboard>
             </div>
@@ -559,7 +559,7 @@ const ExchangeDeposit = () => {
                         <span
                             data-tip=""
                             data-for="wrongthings"
-                            className="inline-block text-sm cursor-pointer text-teal"
+                            className="inline-block text-sm cursor-pointer text-teal font-semibold"
                             onClick={() => window?.fcWidget?.open()}
                         >
                             {noteObj?.runItBackTitle}
@@ -722,6 +722,10 @@ const ExchangeDeposit = () => {
                 limit={10}
                 page={currentPage}
                 onChangePage={setCurrentPage}
+                tableStyle={{
+                    height: '64px',
+                    fontSize: '1rem'
+                }}
             />
         );
     }, [state.loadingHistory, state.histories, state.blockConfirm, width, status]);

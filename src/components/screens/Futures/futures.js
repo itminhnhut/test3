@@ -23,6 +23,7 @@ import { getDecimalPrice, getDecimalQty, getUnit } from 'redux/actions/utils';
 import FuturesMarginRatioVndc from './PlaceOrder/Vndc/MarginRatioVndc';
 import FuturesTermsModal from 'components/screens/Futures/FuturesModal/FuturesTermsModal';
 import classNames from 'classnames';
+import DefaultMobileView from 'src/components/common/DefaultMobileView';
 
 const GridLayout = WidthProvider(Responsive);
 
@@ -65,7 +66,7 @@ const Futures = () => {
     const ordersList = useSelector((state) => state?.futures?.ordersList);
     const router = useRouter();
     const { width } = useWindowSize();
-    const isMediumDevices = width >= BREAK_POINTS.md;
+    const isMediumDevices = width >= BREAK_POINTS.lg;
     const [filterLayout, setFilterLayout] = useState({ ...initFuturesComponent });
 
     // Memmoized Variable
@@ -208,7 +209,7 @@ const Futures = () => {
 
     return (
         <>
-            <FuturesTermsModal />
+            {isMediumDevices && <FuturesTermsModal />}
             <FuturesPageTitle pair={state.pair} price={state.pairPrice?.lastPrice} pricePrecision={pairConfig?.pricePrecision} />
             <DynamicNoSsr>
                 <MaldivesLayout
@@ -223,7 +224,7 @@ const Futures = () => {
                     resetDefault={resetDefault}
                 >
                     <div className="w-full">
-                        {isMediumDevices && (
+                        {isMediumDevices ? (
                             <GridLayout
                                 className="layout"
                                 layouts={state.layouts}
@@ -274,7 +275,7 @@ const Futures = () => {
                                     <FuturesChart
                                         chartKey="futures_containter_chart"
                                         pair={pairConfig?.pair}
-                                        initTimeFrame="1D"
+                                        initTimeFrame=""
                                         isVndcFutures={state.isVndcFutures}
                                         ordersList={ordersList}
                                     />
@@ -320,6 +321,8 @@ const Futures = () => {
                                     <FuturesMarginRatioVndc pairConfig={pairConfig} auth={auth} lastPrice={state.pairPrice?.lastPrice} decimals={decimals} />
                                 </div>
                             </GridLayout>
+                        ) : (
+                            <DefaultMobileView />
                         )}
                     </div>
                 </MaldivesLayout>

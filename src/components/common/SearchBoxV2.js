@@ -2,7 +2,7 @@ import { Search } from 'react-feather';
 import { useTranslation } from 'next-i18next';
 import { CloseIcon } from 'components/svg/SvgIcon';
 
-const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', isValueTrim = true, value, onChange, onFocus, width, placeholder }) => {
+const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', value, onChange, onFocus, width, placeholder }) => {
     const { t } = useTranslation();
 
     return (
@@ -19,15 +19,14 @@ const SearchBoxV2 = ({ wrapperClassname = '', inputClassname = '', isValueTrim =
                 }
                 value={value}
                 onChange={(e) => {
-                    const value = e.target.value;
-                    onChange(isValueTrim ? value.trim() : value);
+                    onChange(e?.target?.value);
                 }}
                 placeholder={placeholder || t('common:search')}
                 onFocus={onFocus}
             />
             <CloseIcon
                 size={width ? (width >= 768 ? 20 : 16) : 20}
-                className={`cursor-pointer ${value ? 'visible' : 'invisible'}`}
+                className={`cursor-pointer ${value ? 'opacity-100' : 'opacity-0'}`}
                 onClick={() => onChange('')}
             />
         </div>

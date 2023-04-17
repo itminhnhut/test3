@@ -2,13 +2,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { PublicSocketEvent } from 'redux/actions/const';
-import { debounce } from 'lodash';
 import { PATHS } from 'constants/paths';
-
 import FuturesMarketWatch from 'models/FuturesMarketWatch';
-import classNames from 'classnames';
 import Emitter from 'redux/actions/emitter';
-import { formatNumber } from 'redux/actions/utils';
+import { LastPrice } from 'redux/actions/utils';
 import { BxsStarIcon } from 'components/svg/SvgIcon';
 import colors from 'styles/colors';
 import { favoriteAction } from 'redux/actions/user';
@@ -20,8 +17,10 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
     const dispatch = useDispatch();
     const publicSocket = useSelector((state) => state.futures.publicSocket);
     const router = useRouter();
-
+    const [ticker, setTicker] = useState(null);
     const isClickFavorite = useRef(false);
+    const lastPrice = ticker?.lastPrice ?? pairConfig?.lastPrice;
+    const priceChangePercent = ticker?.priceChangePercent ?? pairConfig?.priceChangePercent;
 
     const handleSetFavorite = async () => {
         isClickFavorite.current = true;
@@ -32,17 +31,17 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
 
     useEffect(() => {
         if (pairConfig?.pair) {
-            Emitter.on(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair, async (data) => {
+            Emitter.on(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.pair, async (data) => {
                 if (data) {
                     const _pairTicker = FuturesMarketWatch.create(data, pairConfig?.quoteAsset);
-                    // if (_pairTicker?.symbol === pairConfig.pair) {
-                    //     setPairTicker(_pairTicker);
-                    // }
+                    if (_pairTicker?.symbol === pairConfig.pair) {
+                        setTicker(_pairTicker);
+                    }
                 }
             });
         }
 
-        return () => Emitter.off(PublicSocketEvent.FUTURES_MINI_TICKER_UPDATE + pairConfig.pair);
+        return () => Emitter.off(PublicSocketEvent.FUTURES_TICKER_UPDATE + pairConfig.pair);
     }, [publicSocket, pairConfig?.pair]);
 
     // useEffect(() => console.log('MinTicker => ', pairTicker), [pairTicker])
@@ -72,15 +71,8 @@ const FuturesPairListItemV2 = ({ pairConfig, isDark, isFavorite, isAuth, onSelec
                 )}
                 {pairConfig?.baseAsset + '/' + pairConfig?.quoteAsset}
             </div>
-            <div
-                style={{ flex: '1 1 0%' }}
-                className={classNames('justify-end text-right text-dominant', {
-                    '!text-red': pairConfig?.priceChangePercent < 0
-                })}
-            >
-                {pairConfig?.lastPrice ? formatNumber(pairConfig?.lastPrice, pairConfig?.pricePrecision) : '--'}
-            </div>
-            <PriceChangePercent priceChangePercent={pairConfig?.priceChangePercent} style={{ flex: '1 1 0%' }} />
+            <LastPrice price={lastPrice} style={{ flex: '1 1 0%' }} className="justify-end text-right" />
+            <PriceChangePercent priceChangePercent={priceChangePercent} style={{ flex: '1 1 0%' }} />
         </div>
     );
 };

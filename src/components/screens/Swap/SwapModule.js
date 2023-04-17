@@ -47,8 +47,8 @@ const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
 
 const DEFAULT_PAIR = {
-    fromAsset: 'USDT',
-    toAsset: 'BTC'
+    fromAsset: 'VNDC',
+    toAsset: 'USDT'
 };
 const REJECT_PREORDER = ['BROKER_ERROR', 'PRICE_CHANGED', 'INVALID_SWAP_REQUEST_ID', 'INSTRUMENT_NOT_LISTED_FOR_TRADING_YET'];
 
@@ -502,7 +502,7 @@ const SwapModule = ({ width, pair }) => {
             const leftUnit = state.changeEstRatePosition ? state.toAsset : state.fromAsset;
             const rightUnit = state.changeEstRatePosition ? state.fromAsset : state.toAsset;
 
-            if (state.loadingEstRate) {
+            if (state.loadingEstRate && !state.loadingPreOrder) {
                 return <Skeletor width={100} />;
             }
 
@@ -617,7 +617,7 @@ const SwapModule = ({ width, pair }) => {
     const renderPreOrderModal = useCallback(() => {
         const positiveLabel = swapTimer <= 0 ? t('common:refresh') : `${t('common:confirm')} (${swapTimer})`;
         return (
-            <ModalV2 className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
+            <ModalV2 loading={state.processingOrder} className="!max-w-[488px]" isVisible={state.openModal} onBackdropCb={onCloseSwapModal}>
                 <div className="my-6 text-left font-semibold text-[24px] leading-[30px] text-dark-2 dark:text-gray-4 hover:bg-transparent">
                     {t('convert:confirm')}
                 </div>
@@ -638,7 +638,9 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="flex items-end justify-between mt-4 text-base">
                     <span className="text-txtSecondary dark:text-txtSecondary-dark">{t('convert:rate')}:</span>
-                    {state.preOrder?.fromAsset === config?.displayPriceAsset ? (
+                    {state.loadingEstRate ? (
+                        <Skeletor width={100} />
+                    ) : state.preOrder?.fromAsset === config?.displayPriceAsset ? (
                         <span className="font-semibold">
                             1 {state.preOrder?.toAsset} = {formatPrice(state.preOrder?.displayingPrice)} {state.preOrder?.fromAsset}
                         </span>
@@ -655,6 +657,7 @@ const SwapModule = ({ width, pair }) => {
                 </div>
                 <div className="mt-10 w-full flex flex-row items-center justify-between">
                     <ButtonV2
+                        loading={state.processingOrder}
                         onClick={() =>
                             swapTimer
                                 ? onConfirmOrder(state.preOrder?.preOrderId)
@@ -666,10 +669,12 @@ const SwapModule = ({ width, pair }) => {
                 </div>
             </ModalV2>
         );
-    }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, swapTimer, config]);
+    }, [state.openModal, state.preOrder, state.fromAmount, state.toAsset, state.fromAmount, state.processingOrder, swapTimer, config]);
 
     const onOpenAlertResultSwap = ({ msg, type, title, duration }) => {
-        set((prevState) => ({ ...prevState, resultSwap: { msg, type, title, duration } }));
+        setTimeout(() => {
+            set((prevState) => ({ ...prevState, resultSwap: { msg, type, title, duration } }));
+        }, 100);
     };
 
     const onCloseAlertResultSwap = () => {
@@ -677,7 +682,7 @@ const SwapModule = ({ width, pair }) => {
     };
 
     const renderAlertNotification = useCallback(() => {
-        if (!state?.resultSwap) return null;
+        if (!state?.resultSwap || !state.resultSwap) return null;
 
         setTimeout(() => {
             onCloseAlertResultSwap();
@@ -922,7 +927,7 @@ const Input = styled.div.attrs(({ isFocus }) => ({
 }))``;
 
 const AssetList = styled.div.attrs(({ AssetListRef }) => ({
-    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl 
+    className: `absolute right-0 top-full py-4 mt-2 w-full max-w-[400px] z-20 rounded-xl
     border border-divider dark:border-divider-dark bg-white dark:bg-dark-4
     shadow-card_light dark:shadow-popover`,
     ref: AssetListRef
@@ -930,7 +935,7 @@ const AssetList = styled.div.attrs(({ AssetListRef }) => ({
 
 const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
     className: `text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3 
+    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3
     hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
     ${isChoosed && 'bg-hover dark:bg-hover-dark'} ${className}`,
     key: key,

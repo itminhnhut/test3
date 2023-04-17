@@ -267,15 +267,7 @@ const Terms = () => {
                             </p>
                             <Title3>b. Eligibility</Title3>
                             <p>
-                                By registering to use a Nami.Exchange Account, you represent and warrant that (i) as an individual, you are at least 18 or are
-                                of legal age to form a binding contract under applicable laws; (ii) as an individual, legal person, or other organization, you
-                                have full legal capacity and sufficient authorizations to enter into these Terms; (iii) you have not been previously suspended
-                                or removed from using Nami.Exchange Services; (iv) you do not currently have a Nami.Exchange Account; (v) you are a non-U.S
-                                User, unless you only log on to websites for U.S. Users and use Nami.Exchange Services for U.S. Users. If you act as an employee
-                                or agent of a legal entity, and enter into these Terms on their behalf, you represent and warrant that you have all the
-                                necessary rights and authorizations to bind such legal entity; (vi) your use of Nami.Exchange Services will not violate any and
-                                all laws and regulations applicable to you, including but not limited to regulations on anti-money laundering, anti-corruption,
-                                and counter-terrorist financing.
+                                By registering to use a Nami Exchange Account, you represent and warrant that: (i) as an individual, you are at least 18 or are of legal age to form a binding contract under applicable laws; (ii) as an individual, legal person, or other organization, you have full legal capacity and sufficient authorizations to enter into these Terms; (iii) you have not been previously suspended or removed from using the Nami Exchange Platform or the Nami Exchange Services; (iv) you do not have an existing Nami Exchange Account; (v) you are not resident, located in or otherwise attempting to access the Nami Exchange Platform or the Nami Exchange Services from, or otherwise acting on behalf of a person or legal entity that is resident or located in, a Restricted Location. For the purposes hereof, “Restricted Location” shall include the United States, Malaysia, Mainland China, Iran, North Korea, Cuba, Ontario (Canada), and such other locations as designated by Nami Exchange Operators from time to time as a “Restricted Location” for the purposes hereof; (vi) if you act as an employee or agent of a legal entity, and enter into these Terms on their behalf, you represent and warrant that you have all the necessary rights and authorizations to bind such legal entity and to access and use the Nami Exchange Platform and Nami Exchange Services on behalf of such legal entity; and (vii) your use of the Nami Exchange Platform and the Nami Exchange Services will not violate any and all laws and regulations applicable to you or the legal entity on whose behalf you are acting, including but not limited to regulations on anti-money laundering, anti-corruption, and counter-terrorist financing.
                             </p>
                             <Title3>c. User Identity Verification</Title3>
                             <p>
@@ -1349,15 +1341,7 @@ const Terms = () => {
                             </p>
                             <Title3>b. Điều kiện đăng ký tài khoản</Title3>
                             <p>
-                                Bằng cách đăng ký sử dụng Tài khoản Nami.Exchange, bạn tuyên bố và đảm bảo rằng (i) với tư cách là một có nhân, bạn từ 18 tuổi
-                                trở lên hoặc đủ tuổi hợp pháp để hình thành một hợp đồng ràng buộc theo luật hiện hành; (ii) với tư cách là một có nhân, pháp
-                                nhân hoặc tổ chức khác, bạn có đầy đủ năng lực pháp lý và đủ quyền để tham gia vào các Điều khoản này; (iii) trước đây bạn chưa
-                                bị đình chỉ hoặc bị loại khỏi việc sử dụng dịch vụ Nami.Exchange; (iv) bạn hiện không có Tài khoản Nami.Exchange; (v) bạn không
-                                phải là Người dùng Hoa Kỳ, trừ khi bạn chỉ đăng nhập vào các trang web dành cho Người dùng Hoa Kỳ và sử dụng Dịch vụ
-                                Nami.Exchange cho Người dùng Hoa Kỳ. Nếu bạn hoạt động với tư cách là nhân viên hoặc đại lý của một pháp nhân và thay mặt họ
-                                tham gia các Điều khoản này, bạn tuyên bố và đảm bảo rằng bạn có tất cả các quyền và ủy quyền cần thiết để ràng buộc pháp nhân
-                                đ&oacute;; (vi) việc bạn sử dụng Dịch vụ Nami.Exchange sẽ không vi phạm bất kỳ và tất cả các luật và quy định áp dụng cho bạn,
-                                bao gồm nhưng không giới hạn các quy định về chống rửa tiền, chống tham nhũng và chống tài trợ khủng bố.
+                                Bằng cách đăng ký sử dụng Tài khoản Nami Exchange, bạn đại diện và đảm bảo rằng: (i) với tư cách cá nhân, bạn ít nhất 18 tuổi hoặc đủ tuổi hợp pháp để ký kết hợp đồng ràng buộc theo luật hiện hành; (ii) với tư cách là một cá nhân, pháp nhân hoặc tổ chức khác, bạn có đầy đủ năng lực pháp lý và đủ quyền hạn để tham gia vào các Điều khoản này; (iii) trước đó bạn chưa từng bị đình chỉ hoặc xóa quyền sử dụng Nền tảng Nami Exchange hoặc Dịch vụ Nami Exchange; (iv) bạn không có Tài khoản Nami Exchange; (v) bạn không phải là cư dân, sinh sống tại hoặc cố gắng truy cập Nền tảng Nami Exchange hoặc Dịch vụ Nami Exchange từ, hoặc hành động thay mặt cho một người hoặc pháp nhân cư trú hoặc sinh sống tại một Địa điểm bị hạn chế. Đối với các mục đích của tài liệu này, “Địa điểm bị hạn chế” sẽ bao gồm Hoa Kỳ, Malaysia, Trung Quốc đại lục, Iran, Bắc Triều Tiên, Cuba, Ontario (Canada) và các địa điểm khác do Nhà điều hành Nami Exchange chỉ định tùy từng thời điểm; (vi) nếu bạn đóng vai trò là nhân viên hoặc đại lý của một pháp nhân và thay mặt họ ký kết các Điều khoản này, bạn đại diện và đảm bảo rằng bạn có tất cả các quyền và ủy quyền cần thiết để ràng buộc pháp nhân đó và để truy cập và sử dụng Nami Exchange Platform và Nami Exchange Services thay mặt cho pháp nhân đó; và (vii) việc bạn sử dụng Nền tảng Nami Exchange và các Dịch vụ của Nami Exchange sẽ không vi phạm bất kỳ và tất cả các luật và quy định áp dụng cho bạn hoặc pháp nhân mà bạn đang đại diện, bao gồm nhưng không giới hạn ở các quy định về chống rửa tiền chống tham nhũng, chống tài trợ khủng bố.
                             </p>
                             <Title3>c. Xác minh danh tính người dùng</Title3>
                             <p>

@@ -383,7 +383,12 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 render: (row, item) =>
                     marketWatch[row?.symbol] && (
                         <div className="text-txtPrimary dark:text-gray-4 text-sm font-normal">
-                            {formatNumber(marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'], row?.decimalScalePrice, 0, true)}
+                            {formatNumber(
+                                marketWatch[row?.symbol]?.[row?.side === VndcFutureOrderType.Side.BUY ? 'bid' : 'ask'],
+                                row?.decimalScalePrice,
+                                0,
+                                true
+                            )}
                         </div>
                     ),
                 sortable: false
@@ -402,9 +407,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 title: t('futures:order_table:last_price'),
                 align: 'right',
                 width: 138,
-                render: (row) =>
-                    marketWatch[row?.symbol] &&
-                    formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
+                render: (row) => marketWatch[row?.symbol] && formatNumber(marketWatch[row?.symbol]?.lastPrice, row?.decimalScalePrice, 0, true),
                 sortable: true
             },
             {
@@ -452,7 +455,11 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
 
     const fetchOrder = async (method = 'GET', params, cb) => {
         try {
-            const { status, data, message } = await fetchApi({
+            const {
+                status,
+                data,
+                message: msg
+            } = await fetchApi({
                 url: API_GET_FUTURES_ORDER,
                 options: { method },
                 params: params
@@ -465,7 +472,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
                 message.current = {
                     status: 'error',
                     title: t('common:failed'),
-                    message: message
+                    message: msg
                 };
             }
         } catch (e) {
@@ -556,7 +563,7 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
     };
 
     const onConfirmEdit = (params) => {
-        fetchOrder('PUT', params, () => {
+        fetchOrder('PUT', params, (e) => {
             localStorage.setItem('edited_id', params.displaying_id);
             setShowEditSLTP(false);
             setShowAlert(true);
@@ -615,7 +622,10 @@ const FuturesOpenOrdersVndc = ({ pairConfig, onForceUpdate, hideOther, isAuth, i
             />
             <FuturesCloseAllOrder
                 isVisible={showCloseAll}
-                onClose={() => { setShowCloseAll(false); setPage(0) }}
+                onClose={() => {
+                    setShowCloseAll(false);
+                    setPage(0);
+                }}
                 marketWatch={marketWatch}
                 pairConfig={pairConfig}
                 closeType={closeType}
