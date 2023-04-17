@@ -1,9 +1,19 @@
 import React, { useMemo } from 'react';
-import { ALLOWED_ASSET, ALLOWED_ASSET_ID, DisputedType, MODAL_TYPE, MODE, ORDER_TYPES, TranferreredType } from '../constants';
+import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
-import { formatBalance, getAssetCode } from 'redux/actions/utils';
-import { approveOrder, markOrder, rejectOrder } from 'redux/actions/withdrawDeposit';
-const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
+import { formatBalance } from 'redux/actions/utils';
+import { approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { useDispatch } from 'react-redux';
+import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
+import { useRouter } from 'next/router';
+import { PATHS } from 'constants/paths';
+const useMarkOrder = ({ mode, toggleRefetch }) => {
+    const dispatch = useDispatch();
+    const router = useRouter();
+    console.log('router:', router)
+
+    const setModalState = (key, state) => dispatch(setPartnerModal({ key, state }));
+
     const onMarkOrderHandler =
         (userStatus, statusType, { assetId, id, side, baseQty, assetCode }) =>
         async () => {
@@ -17,9 +27,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
                     switch (statusType) {
                         case DisputedType.REPORT:
                             type = ORDER_TYPES.REPORT_SUCCESS;
-                            additionalData = {
-                                displayingId: id
-                            };
+
                             break;
                         case DisputedType.REJECTED:
                             type = ORDER_TYPES.CANCEL_SUCCESS;
@@ -45,7 +53,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
             }
 
             try {
-                setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
+                setModalState(MODAL_TYPE.CONFIRM, {
                     loading: true
                 });
                 const data = isRejected
@@ -55,13 +63,18 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
                     : await markOrder({ displayingId: id, userStatus, mode });
                 if (data && data.status === ApiStatus.SUCCESS) {
                     // close confirm modal
-                    setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
+
+                    if (mode === MODE.PARTNER && type === ORDER_TYPES.TRANSFERRED_SUCCESS && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                        router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
+                    }
+
+                    setModalState(MODAL_TYPE.CONFIRM, {
                         loading: false,
                         visible: false
                     });
 
                     // open after confirm modal
-                    setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
+                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                         visible: true,
                         type,
                         additionalData
@@ -69,22 +82,22 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
 
                     toggleRefetch();
                 } else {
-                    setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
+                    setModalState(MODAL_TYPE.CONFIRM, {
                         loading: false,
                         visible: false
                     });
-                    setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
+                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                         visible: true,
                         type: ORDER_TYPES.ERROR,
                         additionalData: data?.status
                     });
                 }
             } catch (error) {
-                setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
+                setModalState(MODAL_TYPE.CONFIRM, {
                     loading: false,
                     visible: false
                 });
-                setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, {
+                setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                     visible: true,
                     type: ORDER_TYPES.ERROR,
                     additionalData: error
@@ -129,7 +142,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
             default:
                 break;
         }
-        setModalPropsWithKey(MODAL_TYPE.CONFIRM, {
+        setModalState(MODAL_TYPE.CONFIRM, {
             visible: true,
             type,
             additionalData,
@@ -143,7 +156,7 @@ const useMarkOrder = ({ setModalPropsWithKey, mode, toggleRefetch }) => {
         });
     };
 
-    return { onMarkWithStatus };
+    return { onMarkWithStatus, setModalState };
 };
 
 export default useMarkOrder;

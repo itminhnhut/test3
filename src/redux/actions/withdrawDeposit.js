@@ -27,6 +27,18 @@ export const setPartnerBank = (bank) => {
     };
 };
 
+export const setPartnerModal = ({ key, state }) => {
+    return (dispatch) => {
+        dispatch({
+            type: types.SET_PARTNER_MODAL,
+            payload: {
+                key,
+                state
+            }
+        });
+    };
+};
+
 export const setPartner = (partner) => {
     return (dispatch) => {
         dispatch({ type: types.SET_PARTNER, payload: partner });

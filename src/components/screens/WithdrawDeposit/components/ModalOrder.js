@@ -3,7 +3,7 @@ import ModalV2 from 'components/common/V2/ModalV2';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { isFunction } from 'redux/actions/utils';
 import classNames from 'classnames';
-import { ORDER_TYPES } from '../constants';
+import { MODE, ORDER_TYPES } from '../constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -26,7 +26,13 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                     <div className="txtSecond-2 ">{type.description({ ...additionalData, mode, t })}</div>
                     {type.showConfirm &&
                         (isFunction(type.showConfirm) ? (
-                            type.showConfirm({ router, t, assetId: additionalData?.assetId || 72, side: additionalData?.side || 'BUY', mode })
+                            type.showConfirm({
+                                router,
+                                t,
+                                assetId: additionalData?.assetId || 72,
+                                side: additionalData?.side || 'BUY',
+                                mode
+                            })
                         ) : (
                             <ButtonV2
                                 loading={loading}

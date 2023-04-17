@@ -8,14 +8,14 @@ import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import TagV2 from 'components/common/V2/TagV2';
 import TabV2 from 'components/common/V2/TabV2';
-import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_HISTORY_DW_PARTNERS, API_GET_OPENING_ORDER } from 'redux/actions/apis';
 import { ApiStatus, PartnerOrderStatus, PartnerPersonStatus, UserSocketEvent } from 'redux/actions/const';
-import { MODAL_TYPE, MODE, TranferreredType } from '../constants';
+import { MODE, TranferreredType } from '../constants';
 import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
@@ -141,6 +141,7 @@ const OpenOrderTable = () => {
         i18n: { language }
     } = useTranslation();
     const userSocket = useSelector((state) => state.socket.userSocket);
+    const { modal: modalProps } = useSelector((state) => state.withdrawDeposit);
 
     const router = useRouter();
     const [state, set] = useState({
@@ -159,27 +160,13 @@ const OpenOrderTable = () => {
     });
     const [refetch, toggleRefetch] = useBoolean();
 
-    const [modalProps, setModalProps] = useState({
-        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
-        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
-    });
-
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
     const dataRef = useRef([]);
     const currentSideRef = useRef(null);
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
-    const setModalPropsWithKey = (key, props) =>
-        setModalProps((prev) => ({
-            ...prev,
-            [key]: {
-                ...prev[key],
-                ...props
-            }
-        }));
 
-    const { onMarkWithStatus } = useMarkOrder({
-        setModalPropsWithKey,
+    const { onMarkWithStatus, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
         toggleRefetch: () => toggleRefetch()
     });
@@ -276,12 +263,7 @@ const OpenOrderTable = () => {
             <ModalConfirm
                 mode={MODE.PARTNER}
                 modalProps={modalProps[MODAL_TYPE.CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
-            />{' '}
-            <ModalConfirm
-                mode={MODE.PARTNER}
-                modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
+                onClose={() => setModalState(MODAL_TYPE.CONFIRM, { visible: false })}
             />{' '}
             <div>
                 <div className="mb-6">

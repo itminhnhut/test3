@@ -1,8 +1,12 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-case-declarations */
 
+// import { MODAL_TYPE } from 'components/screens/WithdrawDeposit/constants';
 import * as types from '../actions/types';
-
+export const MODAL_TYPE = {
+    CONFIRM: 'confirm',
+    AFTER_CONFIRM: 'afterConfirm'
+};
 export const SIDE = {
     BUY: 'BUY',
     SELL: 'SELL'
@@ -15,7 +19,11 @@ export const initialState = {
     partner: null,
     loadingPartner: false,
     minimumAllowed: 0,
-    maximumAllowed: 0
+    maximumAllowed: 0,
+    modal: {
+        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+    }
 };
 
 export default (state = initialState, action) => {
@@ -43,7 +51,18 @@ export default (state = initialState, action) => {
                 ...state,
                 partnerBank: action.payload
             };
-
+        case types.SET_PARTNER_MODAL:
+            console.log('action.payload:', action.payload);
+            return {
+                ...state,
+                modal: {
+                    ...state.modal,
+                    [action.payload.key]: {
+                        ...state.modal[action.payload.key],
+                        ...action.payload.state
+                    }
+                }
+            };
         default:
             return state;
     }

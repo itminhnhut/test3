@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import fetchApi from 'utils/fetch-api';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
@@ -10,8 +10,8 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
 import { getAssetCode } from 'redux/actions/utils';
 
-import { SIDE } from 'redux/reducers/withdrawDeposit';
-import { MODAL_TYPE, DisputedType, TranferreredType, MODE } from './constants';
+import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
+import { DisputedType, TranferreredType, MODE } from './constants';
 import useMarkOrder from './hooks/useMarkOrder';
 import classNames from 'classnames';
 import { useBoolean } from 'react-use';
@@ -33,6 +33,7 @@ const ModalUploadImage = dynamic(() => import('./components/ModalUploadImage', {
 const DetailOrder = ({ id, mode = MODE.USER }) => {
     const { t } = useTranslation();
     const userSocket = useSelector((state) => state.socket.userSocket);
+    const { modal: modalProps } = useSelector((state) => state.withdrawDeposit);
 
     const [currentTheme] = useDarkMode();
     const isDark = currentTheme === THEME_MODE.DARK;
@@ -42,11 +43,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         isShowQr: false,
         isShowUploadImg: false,
         firstLoad: true
-    });
-
-    const [modalProps, setModalProps] = useState({
-        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
-        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -65,17 +61,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
 
     const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
-    const setModalPropsWithKey = (key, props) =>
-        setModalProps((prev) => ({
-            ...prev,
-            [key]: {
-                ...prev[key],
-                ...props
-            }
-        }));
-
-    const { onMarkWithStatus } = useMarkOrder({
-        setModalPropsWithKey,
+    const { onMarkWithStatus, setModalState } = useMarkOrder({
         mode,
         toggleRefetch
     });
@@ -349,14 +335,22 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             <ModalConfirm
                 mode={mode}
                 modalProps={modalProps[MODAL_TYPE.CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_TYPE.CONFIRM, { visible: false })}
+                onClose={() =>
+                    setModalState(MODAL_TYPE.CONFIRM, {
+                        visible: false
+                    })
+                }
             />
 
             {/*Modal After confirm (success, error,...) */}
             <ModalConfirm
                 mode={mode}
                 modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
-                onClose={() => setModalPropsWithKey(MODAL_TYPE.AFTER_CONFIRM, { visible: false })}
+                onClose={() =>
+                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                        visible: false
+                    })
+                }
             />
 
             <ModalUploadImage

@@ -78,11 +78,6 @@ export const TABS = [
     }
 ];
 
-export const MODAL_TYPE = {
-    CONFIRM: 'confirm',
-    AFTER_CONFIRM: 'afterConfirm'
-};
-
 export const ICONS = {
     INFO: <BxsInfoCircle size={80} color="currentColor" />,
     SUCCESS: <CheckCircleIcon size={80} color="currentColor" />,
