@@ -1,23 +1,20 @@
-import React from 'react';
+import { useTranslation } from 'next-i18next';
+import React, { useMemo, useState } from 'react';
+import { Line } from 'components/screens/NewReference/mobile';
 import RefCard from 'components/screens/NewReference/RefCard';
-
-import classNames from 'classnames';
+import Link from 'next/link';
+import { theme } from '../../../../../../tailwind.config';
 
 const title = {
     en: 'FAQ',
     vi: 'Câu hỏi thường gặp'
 };
 
-const Terms = {
-    en: 'Terms and condition',
-    vi: 'Điều khoản và điều kiện'
-};
-
 const QnAData = [
     {
         q: {
-            vi: 'Chương trình giới thiệu là gì? Khi nào tôi nhận được hoa hồng thưởng?',
-            en: 'What is the referral program? When do I receive the reward of commission?'
+            vi: '1. Chương trình giới thiệu là gì? Khi nào tôi nhận được hoa hồng thưởng?',
+            en: '1. What is the referral program? When do I receive the reward of commission?'
         },
         a: {
             vi: 'Với mỗi người dùng mới được giới thiệu thành công và sử dụng các sản phẩm của Nami, người giới thiệu sẽ nhận được phần thưởng từ phí giao dịch của các sản phẩm Futures, Spot, Swap và lãi Staking khi người được giới thiệu phát sinh giao dịch. Hoa hồng sẽ được cộng gộp mỗi giờ một lần và chuyển trực tiếp vào ví người dùng.',
@@ -26,8 +23,8 @@ const QnAData = [
     },
     {
         q: {
-            vi: 'Liệu tôi có thể thay đổi / chỉnh sửa  mã giới thiệu không?',
-            en: 'Can I alter the referral code?'
+            vi: '2. Liệu tôi có thể thay đổi / chỉnh sửa  mã giới thiệu không?',
+            en: '2. Can I alter the referral code?'
         },
         a: {
             vi: 'Không, bạn không thể thay đổi, xóa mã giới thiệu hoặc đường dẫn giới thiệu sau khi đã thiết lập quan hệ giới thiệu. Thay vào đó, người dùng có thể tạo mới Mã giới thiệu với tuỳ chọn tỷ lệ phần thưởng nhận và chia sẻ. Mỗi người dùng được thiết lập tối đa 20 mã giới thiệu.',
@@ -36,8 +33,8 @@ const QnAData = [
     },
     {
         q: {
-            vi: 'Tài sản thanh toán của hoa hồng giới thiệu là gì?',
-            en: 'What is the unit of the payment for the referral commission?'
+            vi: '3. Tài sản thanh toán của hoa hồng giới thiệu là gì?',
+            en: '3. What is the unit of the payment for the referral commission?'
         },
         a: {
             vi: `Người giới thiệu nhận phần thưởng dựa trên đơn vị tính phí của giao dịch phát sinh.
@@ -48,8 +45,8 @@ const QnAData = [
     },
     {
         q: {
-            vi: 'Tôi có thể chia sẻ hoa hồng cho bạn bè gắn mã giới thiệu của mình không?',
-            en: 'Can I share the commission with my friends who use my referral code?'
+            vi: '4. Tôi có thể chia sẻ hoa hồng cho bạn bè gắn mã giới thiệu của mình không?',
+            en: '4. Can I share the commission with my friends who use my referral code?'
         },
         a: {
             vi: 'Có, bạn có thể chia sẻ hoa hồng của mình cho bạn bè bằng cách thiết lập tỷ lệ chia sẻ khi tạo mã giới thiệu, bạn không thể thay đổi tỷ lệ này sau khi đã thiết lập mã giới thiệu, nhưng luôn có thể tạo các mã giới thiệu mới, tối đa lên tới 20 mã giới thiệu cùng lúc',
@@ -58,8 +55,8 @@ const QnAData = [
     },
     {
         q: {
-            vi: 'Làm sao để đủ điều kiện nhận hoa hồng?',
-            en: 'What do I need to do to get a commission?'
+            vi: '5. Làm sao để đủ điều kiện nhận hoa hồng?',
+            en: '5. What do I need to do to get a commission?'
         },
         a: {
             vi: 'Chỉ cần bạn bè gắn mã giới thiệu của mình và sử dụng sản phẩm của Nami thì bạn đã có thể nhận hoa hồng từ phí giao dịch của bạn bè. Tuy nhiên, để nhận được tỷ lệ hoa hồng cao hơn, bạn cần đăng ký trở thành đối tác kinh doanh chính thức của Nami.',
@@ -72,19 +69,19 @@ const TermData = [
     {
         q: {
             vi: '1. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.',
-            en: 'What is the referral program? When do I receive the reward of commission?'
+            en: '1. What is the referral program? When do I receive the reward of commission?'
         }
     },
     {
         q: {
             vi: '2. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.',
-            en: 'What is the referral program? When do I receive the reward of commission?'
+            en: '1. What is the referral program? When do I receive the reward of commission?'
         }
     },
     {
         q: {
             vi: '3. Với mỗi lượt giới thiệu đủ điều kiện, bạn và người được giới thiệu sẽ nhận được bonus $20 bằng USDT. Lưu ý, không giới hạn số lượng bạn bè giới thiệu.',
-            en: 'What is the referral program? When do I receive the reward of commission?'
+            en: '1. What is the referral program? When do I receive the reward of commission?'
         }
     }
 ];
@@ -95,16 +92,15 @@ const QnA = ({ id, t, language }) => {
             ? 'https://nami.exchange/vi/support/announcement/tin-tuc-ve-nami/ra-mat-chuong-trinh-doi-tac-phat-trien-cong-dong-nami'
             : 'https://nami.exchange/support/announcement/nami-news/official-launching-of-nami-community-development-partnership-program';
 
-    const renderData = (dataSource, type = '') => {
-        const isBold = type === 'tern' || false;
+    const renderData = (dataSource) => {
         return (
             <div className="space-y-2">
-                {dataSource?.map((data, index) => {
+                {dataSource.map((data, index) => {
                     return (
-                        <div key={index} className="group leading-6 py-2 last:pb-0">
-                            <p className={classNames(' cursor-pointer mb-3', { 'font-semibold': !isBold, 'group-last:mb-0': isBold })}>{data.q[language]}</p>
+                        <div key={index} className="text-sm leading-6 py-4">
+                            <p className="font-semibold cursor-pointer mb-3 leading-5">{data.q[language]}</p>
                             <span className="text-txtSecondary dark:text-txtSecondary-dark text-justify" style={{ whiteSpace: 'pre-line' }}>
-                                {data?.a?.[language]}
+                                {data.a[language]}
                             </span>
                         </div>
                     );
@@ -113,12 +109,11 @@ const QnA = ({ id, t, language }) => {
         );
     };
     return (
-        <>
-            <div className="flex w-full gap-8" id={id}>
-                <RefCard wrapperClassName="w-full bg-light dark:bg-darkBlue-3">
-                    <div className="font-semibold text-2xl leading-6 mb-4">{title[language]}</div>
-                    {renderData(QnAData)}
-                    {/* <div className="text-teal underline font-medium text-center mt-8">
+        <div className="flex w-full gap-8" id={id}>
+            <RefCard wrapperClassName="!p-8 w-full bg-light dark:bg-darkBlue-3">
+                <div className="font-semibold text-[20px] leading-6 mb-4">{title[language]}</div>
+                {renderData(QnAData)}
+                <div className="text-teal underline font-medium text-sm text-center mt-8">
                     <Link href={policyLink}>
                         <a target="_blank">
                             {language === 'vi'
@@ -126,16 +121,9 @@ const QnA = ({ id, t, language }) => {
                                 : "Read more: Nami Exchange's policy on business partners"}
                         </a>
                     </Link>
-                </div> */}
-                </RefCard>
-            </div>
-            <div className="flex w-full gap-8 mt-[46px]" id={id}>
-                <RefCard wrapperClassName="w-full bg-light dark:bg-darkBlue-3">
-                    <div className="font-semibold text-2xl leading-6 mb-4">{Terms[language]}</div>
-                    {renderData(TermData, 'tern')}
-                </RefCard>
-            </div>
-        </>
+                </div>
+            </RefCard>
+        </div>
     );
 };
 

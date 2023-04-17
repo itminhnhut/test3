@@ -95,8 +95,8 @@
     },
     "withdrawal": {
         "title": "Đăng ký ĐTNR",
-        "content": "Đăng ký ĐTNR thành công",
-        "success": "Chúc mừng bạn đã thành công trở thành đối tác nạp rút của Nami Exchange."
+        "content": "Đăng ký đối tác Nạp Rút thành công",
+        "success": "Chúc mừng bạn đã đăng ký thành công trở thành Đối tác Nạp Rút của Nami Exchange, vui lòng chờ thông báo xác nhận từ Nami."
     },
     "table": {
         "name": "Tên",

@@ -120,7 +120,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
 
     const handleRegisterWithdrawal = async () => {
         try {
-            const { data } = await FetchApi({
+            const { data, message } = await FetchApi({
                 url: API_POST_PARTNER,
                 options: {
                     method: 'POST'
@@ -133,6 +133,8 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
             if (data) {
                 setIsModalWithDrawal(true);
                 setIsWithdrawal(true);
+            } else {
+                console.error('data', message);
             }
         } catch (err) {
             console.error(err);
@@ -201,8 +203,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <span className="ml-2">{t('reference:referral.partner.button')}</span>
                                     </button>
                                 )}
-                                {/* NOTE: ẩn đối tác kinh doanh */}
-                                {/* {!isWithdrawal && (
+                                {!isWithdrawal && (
                                     <button
                                         onClick={() => handleRegisterWithdrawal()}
                                         className="flex px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md font-semibold"
@@ -210,14 +211,13 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                                         <Image src="/images/reference/register_withdrawal.png" width="24" height="24" />
                                         <span className="ml-2">{t('reference:withdrawal.title')}</span>
                                     </button>
-                                )} */}
+                                )}
                                 <div
                                     className="px-4 py-3 border border-teal bg-teal/[.1] text-white rounded-md cursor-pointer font-semibold"
                                     onClick={() => router.push(policyLink)}
                                 >
                                     <span>{t('reference:referral.referral_policy')}</span>
                                 </div>
-                                {/* } */}
                             </div>
                         </div>
                     </div>
