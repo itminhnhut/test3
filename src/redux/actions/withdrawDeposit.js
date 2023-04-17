@@ -39,6 +39,14 @@ export const setPartnerModal = ({ key, state }) => {
     };
 };
 
+export const resetPartnerModal = () => {
+    return (dispatch) => {
+        dispatch({
+            type: types.RESET_PARTNER_MODAL
+        });
+    };
+};
+
 export const setPartner = (partner) => {
     return (dispatch) => {
         dispatch({ type: types.SET_PARTNER, payload: partner });

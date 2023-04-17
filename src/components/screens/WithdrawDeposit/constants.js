@@ -109,11 +109,17 @@ export const ORDER_TYPES = {
         title: (t, mode = MODE.USER) => t('common:success'),
         description: ({ displayingId, amount, asset, side, t }) =>
             t('dw_partner:cancel_order_success', { orderId: displayingId, amount, asset, side: t(`common:${side.toLowerCase()}`) }),
-        showConfirm: ({ router, t, assetId, side, mode }) => {
+        showConfirm: ({ router, t, assetId, side, mode, resetModalState }) => {
             return mode === MODE.PARTNER ? (
                 <></>
             ) : (
-                <ButtonV2 onClick={() => router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`)} className="transition-all mt-10">
+                <ButtonV2
+                    onClick={() => {
+                        router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`);
+                        resetModalState()
+                    }}
+                    className="transition-all mt-10"
+                >
                     {t('dw_partner:create_new_transaction')}
                 </ButtonV2>
             );

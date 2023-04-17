@@ -6,10 +6,15 @@ import classNames from 'classnames';
 import { MODE, ORDER_TYPES } from '../constants';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useDispatch } from 'react-redux';
+import { resetPartnerModal } from 'redux/actions/withdrawDeposit';
 
 const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONFIRM, additionalData, onConfirm }) => {
     const router = useRouter();
     const { t } = useTranslation();
+    const dispatch = useDispatch();
+
+    const resetModalState = () => dispatch(resetPartnerModal());
 
     return (
         <ModalV2
@@ -31,7 +36,8 @@ const ModalOrder = ({ mode, isVisible, onClose, loading, type = ORDER_TYPES.CONF
                                 t,
                                 assetId: additionalData?.assetId || 72,
                                 side: additionalData?.side || 'BUY',
-                                mode
+                                mode,
+                                resetModalState
                             })
                         ) : (
                             <ButtonV2

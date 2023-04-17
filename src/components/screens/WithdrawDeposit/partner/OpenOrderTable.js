@@ -168,30 +168,26 @@ const OpenOrderTable = () => {
 
     const { onMarkWithStatus, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
-        toggleRefetch: () => toggleRefetch()
+        toggleRefetch: () => {}
     });
 
     useEffect(() => {
         if (userSocket) {
             userSocket.on(UserSocketEvent.PARTNER_UPDATE_ORDER, (newOrder) => {
-                if (dataRef.current.length) {
-                    const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
-                    // if newOrder is not in the current data sets -> refetch table
-                    if (!existedOrder && newOrder?.side === currentSideRef.current) {
-                        toggleRefetch();
-                        return;
-                    }
-
-                    // else replace the the existed obj with the newOrder obj
-                    const newOrderList = [...dataRef.current]
-                        .map((order) => (order.displayingId === newOrder.displayingId ? newOrder : order))
-                        .filter((order) => order.status === PartnerOrderStatus.PENDING);
-                    setState({ data: newOrderList });
-                    dataRef.current = newOrderList;
+                const existedOrder = dataRef.current.find((order) => order.displayingId === newOrder.displayingId);
+                // if newOrder is not in the current data sets -> refetch table
+                if (!existedOrder && newOrder?.side === currentSideRef.current) {
+                    toggleRefetch();
                     return;
                 }
 
-                toggleRefetch();
+                // else replace the the existed obj with the newOrder obj
+                const newOrderList = [...dataRef.current]
+                    .map((order) => (order.displayingId === newOrder.displayingId ? newOrder : order))
+                    .filter((order) => order.status === PartnerOrderStatus.PENDING);
+                setState({ data: newOrderList });
+                dataRef.current = newOrderList;
+                return;
             });
         }
         return () => {

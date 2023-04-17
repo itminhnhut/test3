@@ -12,6 +12,11 @@ export const SIDE = {
     SELL: 'SELL'
 };
 
+const INITIAL_MODAL_STATE = {
+    [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
+    [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
+};
+
 export const initialState = {
     input: '',
     accountBank: null,
@@ -20,10 +25,7 @@ export const initialState = {
     loadingPartner: false,
     minimumAllowed: 0,
     maximumAllowed: 0,
-    modal: {
-        [MODAL_TYPE.CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null },
-        [MODAL_TYPE.AFTER_CONFIRM]: { type: null, visible: false, loading: false, onConfirm: null, additionalData: null }
-    }
+    modal: INITIAL_MODAL_STATE
 };
 
 export default (state = initialState, action) => {
@@ -52,7 +54,6 @@ export default (state = initialState, action) => {
                 partnerBank: action.payload
             };
         case types.SET_PARTNER_MODAL:
-            console.log('action.payload:', action.payload);
             return {
                 ...state,
                 modal: {
@@ -62,6 +63,11 @@ export default (state = initialState, action) => {
                         ...action.payload.state
                     }
                 }
+            };
+        case types.RESET_PARTNER_MODAL:
+            return {
+                ...state,
+                modal: INITIAL_MODAL_STATE
             };
         default:
             return state;
