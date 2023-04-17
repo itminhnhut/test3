@@ -318,12 +318,10 @@ export const Information = ({ min, max, fee, receive, assetCode, className = '' 
                     title: t('wallet:min_withdraw'),
                     value: min
                 },
-                {
-                    /* {
+                /* {
                     title: t('wallet:max_withdraw'),
                     value: max
                 }, */
-                },
                 {
                     title: t('wallet:withdraw_fee'),
                     value: fee
