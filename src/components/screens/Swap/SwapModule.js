@@ -459,20 +459,17 @@ const SwapModule = ({ width, pair }) => {
         const data = state.toAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { toAsset, filters } = data?.[i];
+            const { toAsset, available, filters } = data?.[i];
             const currentAssetConfig = find(assetConfig, { assetCode: toAsset });
-            const available = true;
 
             assetItems.push(
-                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={!available}>
-                    <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'}`}>
+                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={false}>
+                    <div className="flex items-center">
                             <div className="w-5 h-5">
                                 <AssetLogo assetCode={toAsset} size={20} />
                             </div>
-                        </div>
-                        <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
-                            <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
+                        <p>
+                            <span className={`mx-2 text-txtPrimary dark:text-txtPrimary-dark`}>{toAsset}</span>
                             <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
