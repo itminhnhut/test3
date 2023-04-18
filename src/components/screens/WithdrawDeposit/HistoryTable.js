@@ -14,10 +14,12 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Skeletor from 'components/common/Skeletor';
+import { find } from 'lodash';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, user, side) => [
+const getColumns = (t, user, side, configs) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
@@ -33,12 +35,21 @@ const getColumns = (t, user, side) => [
         title: t('common:asset'),
         align: 'left',
         width: 148,
-        render: (v) => (
-            <div className="flex items-center font-semibold">
-                {v && <AssetLogo assetId={v} size={32} />}
-                <div className="ml-2"> {getAssetCode(v)}</div>
-            </div>
-        )
+        render: (v) => {
+            const assetConfig = find(configs, { id: v });
+
+            return assetConfig ? (
+                <div className="flex gap-2 items-center">
+                    <AssetLogo assetCode={assetConfig?.assetCode} size={32} useNextImg />
+                    <div>{assetConfig?.assetName || 'Unknown'}</div>
+                </div>
+            ) : (
+                <div className="flex gap-2 items-center">
+                    <Skeletor width={32} />
+                    <Skeletor width={50} />
+                </div>
+            );
+        }
     },
     {
         key: 'createdAt',
@@ -60,7 +71,7 @@ const getColumns = (t, user, side) => [
         key: 'partnerMetadata',
         dataIndex: 'partnerMetadata',
         title: t('dw_partner:partner'),
-        align: 'left',
+        align: 'right',
         width: 189,
         render: (v) => (
             <>
@@ -69,26 +80,6 @@ const getColumns = (t, user, side) => [
             </>
         )
     },
-    // {
-    //     key: 'partnerMetadata',
-    //     dataIndex: 'partnerMetadata',
-    //     title: side === SIDE.BUY ? t('dw_partner:partner') : t('dw_partner:user'),
-    //     // title: t('common:to'),
-    //     align: 'left',
-    //     width: 185,
-    //     render: (v) =>
-    //         side === SIDE.BUY ? (
-    //             <>
-    //                 <div className="txtPri-2 mb-1">{v?.name}</div>
-    //                 <span className="txtSecond-3">{v?.code}</span>
-    //             </>
-    //         ) : (
-    //             <>
-    //                 <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-    //                 <span className="txtSecond-3">{user?.code}</span>
-    //             </>
-    //         )
-    // },
     {
         key: 'status',
         dataIndex: 'status',
@@ -105,6 +96,8 @@ const HistoryTable = () => {
         i18n: { language }
     } = useTranslation();
     const router = useRouter();
+
+    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [currentPage, setCurrentPage] = useState(0);
     const [activeTab, setActiveTab] = useState(TABS[0].key);
@@ -188,7 +181,7 @@ const HistoryTable = () => {
                 skip={0}
                 useRowHover
                 data={dataTable}
-                columns={getColumns(t, user, side)}
+                columns={getColumns(t, user, side, configs)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={loadingDataTable}
