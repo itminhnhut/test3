@@ -51,6 +51,8 @@ const useMakeOrder = ({ setState, input }) => {
                         toast({ text: t('dw_partner:error.not_enough_money'), type: 'warning' });
                     } else if (orderResponse?.status === ApiResultCreateOrder.INVALID_AMOUNT) {
                         toast({ text: t('dw_partner:error.reach_limit_withdraw', { asset: assetCode }), type: 'warning' });
+                    } else if (orderResponse?.status === ApiResultCreateOrder.EXCEEDING_PERMITTED_LIMIT) {
+                        toast({ text: t('dw_partner:error.exceeding_limit', { asset: assetCode }), type: 'warning' });
                     } else toast({ text: orderResponse?.status ?? t('common:global_notice.unknown_err'), type: 'warning' });
                 }
             }

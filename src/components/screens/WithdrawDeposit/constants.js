@@ -87,6 +87,12 @@ export const ICONS = {
 };
 
 export const ORDER_TYPES = {
+    ACCEPT_ORDER: {
+        icon: ICONS['INFO'],
+        title: (t, mode = MODE.USER) => t('common:confirm'),
+        description: ({ mode = MODE.USER, t }) => t(`dw_partner:transfer_confirm_description.${mode}`),
+        showConfirm: true
+    },
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
         title: (t, mode = MODE.USER) => t('common:confirm'),

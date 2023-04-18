@@ -6,7 +6,6 @@ import TextCopyable from 'components/screens/Account/TextCopyable';
 import { getAssetCode, formatTime, formatBalance } from 'redux/actions/utils';
 import AssetLogo from 'components/wallet/AssetLogo';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import TagV2 from 'components/common/V2/TagV2';
 import TabV2 from 'components/common/V2/TabV2';
 import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
 import { useTranslation } from 'next-i18next';
@@ -14,15 +13,15 @@ import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import FetchApi from 'utils/fetch-api';
 import { API_GET_HISTORY_DW_PARTNERS, API_GET_OPENING_ORDER } from 'redux/actions/apis';
-import { ApiStatus, PartnerOrderStatus, PartnerPersonStatus, UserSocketEvent } from 'redux/actions/const';
-import { MODE, TranferreredType } from '../constants';
+import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus, UserSocketEvent } from 'redux/actions/const';
+import { DisputedType, MODE, TranferreredType } from '../constants';
 import useMarkOrder from '../hooks/useMarkOrder';
 import { ModalConfirm } from '../DetailOrder';
 import { useSelector } from 'react-redux';
 import { useBoolean } from 'react-use';
 import axios from 'axios';
 
-const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
+const getColumns = ({ t, onMarkWithStatus, onProcessOrder, toggleRefetch }) => [
     {
         key: 'timeExpire',
         dataIndex: 'timeExpire',
@@ -89,21 +88,7 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
             );
         }
     },
-    // {
-    //     key: 'partner',
-    //     dataIndex: 'partnerMetadata',
-    //     title: t('common:to'),
-    //     align: 'left',
-    //     width: 165,
-    //     render: (row) => {
-    //         return (
-    //             <div>
-    //                 <div className="">{row?.name}</div>
-    //                 <div className="text-sm dark:text-txtSecondary-dark text-txtSecondary">{row?.code}</div>
-    //             </div>
-    //         );
-    //     }
-    // },
+
     {
         key: 'action',
         dataIndex: '',
@@ -112,22 +97,42 @@ const getColumns = ({ t, onMarkWithStatus, toggleRefetch }) => [
         width: 190,
         render: (order, item) => {
             const side = item.side;
-            const btnText = side === SIDE.BUY ? t('dw_partner:received_fiat') : t('common:confirm');
+            const isAcceptOrder = order?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED;
+            const btnText = !isAcceptOrder ? t('common:confirm') : side === SIDE.BUY ? t('dw_partner:received_fiat') : t('common:confirm');
             const btnDisabled =
-                side === SIDE.BUY ? order?.userStatus !== PartnerPersonStatus.TRANSFERRED : order?.partnerStatus !== PartnerPersonStatus?.PENDING;
+                isAcceptOrder && side === SIDE.BUY
+                    ? order?.userStatus !== PartnerPersonStatus.TRANSFERRED
+                    : order?.partnerStatus !== PartnerPersonStatus?.PENDING;
             return (
-                <ButtonV2
-                    disabled={btnDisabled}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        return order.side === SIDE.BUY
-                            ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE, order)
-                            : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED, order);
-                    }}
-                    // variants="secondary"
-                >
-                    {btnText}
-                </ButtonV2>
+                <div className="flex gap-2">
+                    <ButtonV2
+                        disabled={btnDisabled}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            return !isAcceptOrder
+                                ? onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, order)
+                                : order.side === SIDE.BUY
+                                ? onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TAKE, order)
+                                : onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType['partner'].TRANSFERRED, order);
+                        }}
+                        className="min-w-[150px]"
+                    >
+                        {btnText}
+                    </ButtonV2>
+                    {!isAcceptOrder && (
+                        <ButtonV2
+                            disabled={btnDisabled}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                return onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, order);
+                            }}
+                            variants="secondary"
+                            className="min-w-[100px]"
+                        >
+                            {t('common:deny')}
+                        </ButtonV2>
+                    )}
+                </div>
             );
         }
     }
@@ -166,7 +171,7 @@ const OpenOrderTable = () => {
     dataRef.current = [...state.data];
     currentSideRef.current = state.params.side;
 
-    const { onMarkWithStatus, setModalState } = useMarkOrder({
+    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
         mode: MODE.PARTNER,
         toggleRefetch: () => {}
     });
@@ -293,7 +298,7 @@ const OpenOrderTable = () => {
                     skip={0}
                     useRowHover
                     data={state.data}
-                    columns={getColumns({ t, onMarkWithStatus, toggleRefetch })}
+                    columns={getColumns({ t, onMarkWithStatus, onProcessOrder, toggleRefetch })}
                     rowKey={(item) => item?.key}
                     scroll={{ x: true }}
                     loading={state.loading}

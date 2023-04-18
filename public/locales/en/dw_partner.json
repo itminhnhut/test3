@@ -118,7 +118,8 @@
         "reach_limit_withdraw": "The daily {{asset}} quantity sold has surpassed the remaining maximum limit",
         "not_found_partner": "Partner not available",
         "not_enough_money": "The partner's available balance is not enough to accept this order, please choose another partner",
-        "max_greater_min": "The maximum amount must be greater than the minimum amount"
+        "max_greater_min": "The maximum amount must be greater than the minimum amount",
+        "exceeding_limit": "It is not possible to create more than 2 deposit and 2 withdrawal orders via Deposit and Withdrawal Partner, please complete pending transactions before creating a new order."
     },
     "filter": {
         "a_day": "1 day",

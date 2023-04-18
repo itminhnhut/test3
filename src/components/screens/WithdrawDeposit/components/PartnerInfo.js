@@ -7,25 +7,38 @@ import { API_GET_PARTNERS } from 'redux/actions/apis';
 import InfoCard from './common/InfoCard';
 import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
-import { BxsTimeIcon, OrderIcon } from 'components/svg/SvgIcon';
+import { BxsTimeIcon, OrderIcon, StarPurpleIcon } from 'components/svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
 
 export const PartnerSubcontent = ({ partner, t, language }) => {
     const totalOrder = partner?.analyticMetadata?.count || 0;
     return (
-        <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-            {/* <span>{formatPhoneNumber(partner?.phone)}</span> */}
-            <div className="flex space-x-1 items-center">
-                <OrderIcon size={16} />
-                <span>
-                    {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
-                </span>
-            </div>
-            {totalOrder > 0 ? (
-                <div className="flex space-x-1 items-center">
-                    <BxsTimeIcon size={16} />
-                    <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
+        <div className="flex items-center gap-2 text-txtSecondary dark:text-txtSecondary-dark">
+            <TagV2 icon={false} type={TYPES.WARNING}>
+                <div className="flex items-center text-sm gap-2 text-yellow-100">
+                    <span>{partner?.analyticMetadata?.rating || 0}</span>
+                    <StarPurpleIcon size={16} fill="currentColor" />
+                    <span>({partner?.analyticMetadata?.countRating || 0})</span>
                 </div>
+            </TagV2>
+
+            <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
+                <div className="flex gap-2 items-center">
+                    <OrderIcon size={16} />
+                    <span>
+                        {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
+                    </span>
+                </div>
+            </TagV2>
+
+            {totalOrder > 0 ? (
+                <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
+                    <div className="flex gap-2 items-center">
+                        <BxsTimeIcon size={16} />
+                        <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
+                    </div>
+                </TagV2>
             ) : (
                 <></>
             )}

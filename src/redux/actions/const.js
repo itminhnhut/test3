@@ -888,7 +888,8 @@ export const ApiResultCreateOrder = {
     TOO_MUCH_REQUEST: 'TOO_MUCH_REQUEST',
     NOT_FOUND_PARTNER: 'NOT_FOUND_PARTNER',
     NOT_ENOUGH_MONEY: 'NOT_ENOUGH_MONEY',
-    INVALID_AMOUNT: 'INVALID_AMOUNT'
+    INVALID_AMOUNT: 'INVALID_AMOUNT',
+    EXCEEDING_PERMITTED_LIMIT: 'EXCEEDING_PERMITTED_LIMIT'
 };
 
 export const DEFAULT_PARTNER_MIN = {
@@ -912,6 +913,12 @@ export const PartnerPersonStatus = {
     PENDING: 0,
     TRANSFERRED: 1,
     DISPUTED: 2
+};
+
+export const PartnerAcceptStatus = {
+    PENDING: PartnerPersonStatus.PENDING,
+    ACCEPTED: PartnerPersonStatus.TRANSFERRED,
+    DENIED: PartnerPersonStatus.DISPUTED
 };
 
 export const PartnerReasonDisputed = {

@@ -1,5 +1,6 @@
 import * as types from './types';
 import {
+    API_ACCEPT_ORDER,
     API_APPROVE_PARTNER_ORDER,
     API_CREATE_ORDER,
     API_CREATE_ORDER_WITH_OTP,
@@ -7,6 +8,7 @@ import {
     API_GET_PARTNERS,
     API_GET_PARTNER_PROFILE,
     API_MARK_PARTNER_ORDER,
+    API_RATING_ORDER,
     API_REJECT_PARTNER_ORDER,
     API_SET_PARTNER_ORDER_CONFIG,
     API_SET_USER_BANK_ACCOUNT
@@ -132,11 +134,29 @@ export const rejectOrder = async ({ displayingId, mode = 'user' }) => {
     return res.data;
 };
 
+export const ratingOrder = async ({ displayingId, rating }) => {
+    const res = await Axios.post(API_RATING_ORDER, {
+        displayingId,
+        rating
+    });
+
+    return res.data;
+};
+
 export const editPartnerConfig = async ({ side, min, max, status }) => {
     const res = await Axios.post(API_SET_PARTNER_ORDER_CONFIG, {
         side,
         min,
         max,
+        status
+    });
+
+    return res.data;
+};
+
+export const acceptPartnerOrder = async ({ displayingId, status }) => {
+    const res = await Axios.post(API_ACCEPT_ORDER, {
+        displayingId,
         status
     });
 

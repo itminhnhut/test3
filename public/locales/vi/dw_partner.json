@@ -119,7 +119,8 @@
         "reach_limit_withdraw": "Số lượng bán {{asset}} trong ngày đã vượt giới hạn tối đa còn lại",
         "not_found_partner": "Đối tác không khả dụng",
         "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác.",
-        "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu"
+        "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu",
+        "exceeding_limit": "Không thể tạo quá 2 lệnh nạp và 2 lệnh rút qua Đối tác Nạp Rút, vui lòng hoàn tất các giao dịch đã tạo trước khi tạo lệnh mới."
     },
     "filter": {
         "a_day": "1 ngày",

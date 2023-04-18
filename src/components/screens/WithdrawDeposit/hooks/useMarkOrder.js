@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
-import { ApiStatus, PartnerPersonStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
-import { approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { acceptPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
 import { useDispatch } from 'react-redux';
 import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
 import { useRouter } from 'next/router';
@@ -14,11 +14,12 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
     const setModalState = (key, state) => dispatch(setPartnerModal({ key, state }));
 
     const onMarkOrderHandler =
-        (userStatus, statusType, { assetId, id, side, baseQty, assetCode }) =>
+        (userStatus, statusType, { assetId, id, side, baseQty, assetCode, partnerAcceptStatus }) =>
         async () => {
             let type, additionalData;
-            let isRejected = false;
+            let isReject = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
+            const isAccept = mode === MODE.PARTNER && userStatus === PartnerAcceptStatus.ACCEPTED && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
             const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
 
             switch (userStatus) {
@@ -26,7 +27,6 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     switch (statusType) {
                         case DisputedType.REPORT:
                             type = ORDER_TYPES.REPORT_SUCCESS;
-
                             break;
                         case DisputedType.REJECTED:
                             type = ORDER_TYPES.CANCEL_SUCCESS;
@@ -36,7 +36,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                                 asset: assetCode,
                                 amount
                             };
-                            isRejected = true;
+                            isReject = true;
                             break;
                         default:
                             break;
@@ -55,7 +55,9 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 setModalState(MODAL_TYPE.CONFIRM, {
                     loading: true
                 });
-                const data = isRejected
+                const data = isAccept
+                    ? await acceptPartnerOrder({ displayingId: id, status: userStatus })
+                    : isReject
                     ? await rejectOrder({ displayingId: id, mode })
                     : isApprove
                     ? await approveOrder({ displayingId: id, mode })
@@ -63,7 +65,12 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 if (data && data.status === ApiStatus.SUCCESS) {
                     // close confirm modal
 
-                    if (mode === MODE.PARTNER && type === ORDER_TYPES.TRANSFERRED_SUCCESS && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                    if (
+                        // !isAccept &&
+                        //    && type === ORDER_TYPES.TRANSFERRED_SUCCESS &&
+                        mode === MODE.PARTNER &&
+                        !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)
+                    ) {
                         router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
                     }
 
@@ -92,6 +99,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     });
                 }
             } catch (error) {
+                console.log('error:', error);
                 setModalState(MODAL_TYPE.CONFIRM, {
                     loading: false,
                     visible: false
@@ -103,6 +111,38 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 });
             }
         };
+
+    const onProcessOrder = (partnerProcessStatus, statusType, orderDetail) => {
+        let type, additionalData;
+        const assetId = orderDetail?.baseAssetId;
+        const id = orderDetail?.displayingId;
+        const side = orderDetail?.side;
+        const baseQty = orderDetail?.baseQty;
+        const assetCode = ALLOWED_ASSET[+assetId];
+        const partnerAcceptStatus = orderDetail?.partnerAcceptStatus;
+
+        if (partnerProcessStatus === PartnerAcceptStatus.DENIED) {
+            type = ORDER_TYPES.CANCEL_ORDER;
+            additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
+        }
+        if (partnerProcessStatus === PartnerAcceptStatus.ACCEPTED) {
+            type = ORDER_TYPES.ACCEPT_ORDER;
+        }
+
+        setModalState(MODAL_TYPE.CONFIRM, {
+            visible: true,
+            type,
+            additionalData,
+            onConfirm: onMarkOrderHandler(partnerProcessStatus, statusType, {
+                assetId,
+                id,
+                side,
+                baseQty,
+                assetCode,
+                partnerAcceptStatus
+            })
+        });
+    };
 
     const onMarkWithStatus = (userStatus, statusType, orderDetail) => {
         let type, additionalData;
@@ -155,7 +195,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
         });
     };
 
-    return { onMarkWithStatus, setModalState };
+    return { onMarkWithStatus, onProcessOrder, setModalState };
 };
 
 export default useMarkOrder;

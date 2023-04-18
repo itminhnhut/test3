@@ -21,7 +21,7 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     );
 };
 
-const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, emptyContent }) => {
+const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, emptyContent }) => {
     const { t } = useTranslation();
 
     return (
@@ -45,7 +45,7 @@ const InfoCard = ({ imgSize = 58, content, endIcon, endIconPosition, loading, em
                             <BxsUserIcon size={24} color="currentColor" />
                         </div>
                     }
-                    imgSize={56}
+                    imgSize={52}
                     mainContent={emptyContent?.mainContent}
                     subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
                 />

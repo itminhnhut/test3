@@ -880,6 +880,21 @@ const BxsTimeIcon = ({ size = 24, color = 'currentColor' }) => (
     </svg>
 );
 
+const TimerIcon = ({ size = 24, color = '#47CC85' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+        <path
+            d="M10 .664H6v1.333h4V.664zM7.333 9.331h1.334v-4H7.333v4zm5.354-4.407.946-.947c-.286-.34-.6-.66-.94-.94l-.946.947A5.975 5.975 0 0 0 8 2.664a6 6 0 1 0 6 6 5.975 5.975 0 0 0-1.313-3.74zM8 13.331a4.663 4.663 0 0 1-4.667-4.667A4.663 4.663 0 0 1 8 3.997a4.663 4.663 0 0 1 4.667 4.667A4.663 4.663 0 0 1 8 13.331z"
+            fill={color}
+        />
+    </svg>
+);
+
+const StarPurpleIcon = ({ size, color = '#FFC632', ...props }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none" {...props}>
+        <path d="m8 11.516 4.12 2.487-1.094-4.687 3.64-3.153-4.793-.407L8 1.336l-1.874 4.42-4.793.407 3.64 3.153-1.093 4.687L8 11.516z" fill={color} />
+    </svg>
+);
+
 export {
     ArrowDownIcon,
     TrendIcon,
@@ -940,5 +955,7 @@ export {
     ContactIcon,
     PartnerIcon,
     OrderIcon,
-    BxsTimeIcon
+    BxsTimeIcon,
+    StarPurpleIcon,
+    TimerIcon
 };

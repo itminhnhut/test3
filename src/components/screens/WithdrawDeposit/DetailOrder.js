@@ -7,7 +7,7 @@ import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { API_GET_ORDER_DETAILS } from 'redux/actions/apis';
 import { BxsInfoCircle, FutureSupportIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent } from 'redux/actions/const';
+import { PartnerOrderStatus, PartnerPersonStatus, ApiStatus, UserSocketEvent, PartnerAcceptStatus } from 'redux/actions/const';
 import { getAssetCode } from 'redux/actions/utils';
 
 import { MODAL_TYPE, SIDE } from 'redux/reducers/withdrawDeposit';
@@ -20,6 +20,10 @@ import AppealButton from './components/AppealButton';
 import NeedLoginV2 from 'components/common/NeedLoginV2';
 import ModalNeedKyc from 'components/common/ModalNeedKyc';
 import DarkNote from 'components/common/DarkNote';
+import DetailOrderHeader from './components/DetailOrderHeader';
+import Skeletor from 'components/common/Skeletor';
+import OrderStatusTag from 'components/common/OrderStatusTag';
+import ModalRating from './components/ModalRating';
 
 export const ModalConfirm = ({ modalProps: { visible, type, loading, onConfirm, additionalData }, mode, onClose }) => {
     return <ModalOrder isVisible={visible} onClose={onClose} type={type} loading={loading} mode={mode} onConfirm={onConfirm} additionalData={additionalData} />;
@@ -42,7 +46,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         orderDetail: null,
         isShowQr: false,
         isShowUploadImg: false,
-        firstLoad: true
+        firstLoad: true,
+        isShowRating: false
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -54,14 +59,15 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         () => ({
             status: state.orderDetail?.status,
             userStatus: state.orderDetail?.userStatus,
-            partnerStatus: state.orderDetail?.partnerStatus
+            partnerStatus: state.orderDetail?.partnerStatus,
+            partnerAcceptStatus: state.orderDetail?.partnerAcceptStatus
         }),
         [state.orderDetail]
     );
 
     const assetCode = getAssetCode(state.orderDetail?.baseAssetId);
 
-    const { onMarkWithStatus, setModalState } = useMarkOrder({
+    const { onMarkWithStatus, onProcessOrder, setModalState } = useMarkOrder({
         mode,
         toggleRefetch
     });
@@ -75,6 +81,11 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         orderDetail: data
                     });
                     setIsRefetchOrderDetailAfterCountdown(false);
+                    if (data?.status === PartnerOrderStatus.SUCCESS && mode === MODE.USER) {
+                        setState({
+                            isShowRating: true
+                        });
+                    }
                 }
             });
         }
@@ -85,7 +96,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 });
             }
         };
-    }, [userSocket]);
+    }, [userSocket, mode]);
 
     useEffect(() => {
         const fetchData = async (id) => {
@@ -134,6 +145,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         const myStatus = state.orderDetail[`${mode}Status`];
         const theirStatus = state.orderDetail[`${isPartner ? MODE.USER : MODE.PARTNER}Status`];
         const orderStatus = state.orderDetail?.status;
+        const isPartnerAccepted = state.orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.ACCEPTED;
 
         ({
             [SIDE.BUY]: {
@@ -141,41 +153,59 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     if (orderStatus === PartnerOrderStatus.PENDING) {
                         // partner logic
                         if (isPartner) {
-                            //user chua chuyen tien
-                            if (theirStatus === PartnerPersonStatus.PENDING) {
+                            if (!isPartnerAccepted) {
+                                secondaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:cancel_order')
+                                };
+                                primaryBtn = {
+                                    function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
+                                    text: t('common:confirm')
+                                };
+                            } else {
+                                //user chua chuyen tien
+                                if (theirStatus === PartnerPersonStatus.PENDING) {
+                                    // primaryBtn = {
+                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                    //     text: t('common:deny')
+                                    // };
+                                } else {
+                                    primaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
+                                        text: t('dw_partner:take_money_already')
+                                    };
+                                    reportBtn = (
+                                        <AppealButton
+                                            onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                            timeDispute={state?.orderDetail?.countdownTimeDispute}
+                                            timeExpire={state.orderDetail?.timeExpire}
+                                        />
+                                    );
+                                }
+                            }
+                        }
+                        // user logic
+                        else {
+                            if (!isPartnerAccepted) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:deny')
                                 };
                             } else {
-                                primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
-                                    text: t('dw_partner:take_money_already')
-                                };
-                                reportBtn = (
-                                    <AppealButton
-                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
-                                        timeDispute={state?.orderDetail?.countdownTimeDispute}
-                                        timeExpire={state.orderDetail?.timeExpire}
-                                    />
-                                );
-                            }
-                        }
-                        // user logic
-                        else {
-                            if (theirStatus === PartnerPersonStatus.PENDING) {
-                                // user chua chuyen tien
-                                if (myStatus === PartnerPersonStatus.PENDING) {
-                                    secondaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                        text: t('common:cancel_order')
-                                    };
-                                    primaryBtn = {
-                                        function: () =>
-                                            onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
-                                        text: t('dw_partner:transfer_already')
-                                    };
-                                    return;
+                                if (theirStatus === PartnerPersonStatus.PENDING) {
+                                    // user chua chuyen tien
+                                    if (myStatus === PartnerPersonStatus.PENDING) {
+                                        // secondaryBtn = {
+                                        //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                        //     text: t('common:cancel_order')
+                                        // };
+                                        primaryBtn = {
+                                            function: () =>
+                                                onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
+                                            text: t('dw_partner:transfer_already')
+                                        };
+                                        return;
+                                    }
                                 }
                             }
                         }
@@ -197,18 +227,30 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     if (orderStatus === PartnerOrderStatus.PENDING) {
                         //partner logic
                         if (isPartner) {
-                            //partner chua chuyen tien
-                            if (myStatus === PartnerPersonStatus.PENDING) {
+                            if (!isPartnerAccepted) {
                                 secondaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
+                                    text: t('common:cancel_order')
                                 };
                                 primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
+                                    function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
                                     text: t('common:confirm')
                                 };
+                            } else {
+                                //partner chua chuyen tien
+                                if (myStatus === PartnerPersonStatus.PENDING) {
+                                    secondaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                        text: t('common:deny')
+                                    };
+                                    primaryBtn = {
+                                        function: () =>
+                                            onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
+                                        text: t('common:confirm')
+                                    };
 
-                                return;
+                                    return;
+                                }
                             }
                         } else {
                             // partner chua chuyen tien
@@ -285,8 +327,30 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
     // End handle not Login || not KYC
 
     return (
-        <div className="w-full h-full flex justify-center pt-20 pb-[120px] px-4">
+        <div className="w-full h-full pt-20 pb-[120px] px-4">
             <div className="max-w-screen-v3 2xl:max-w-screen-xxl m-auto text-base text-gray-15 dark:text-gray-4 tracking-normal w-full">
+                <div className="flex justify-between items-start mb-6">
+                    {!side ? (
+                        <Skeletor width="200px" />
+                    ) : (
+                        <h2 className="text-2xl font-semibold">
+                            {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners.${mode}`, {
+                                asset: assetCode
+                            })}
+                        </h2>
+                    )}
+                </div>
+                <DetailOrderHeader
+                    status={status}
+                    refetchOrderDetail={() => {
+                        toggleRefetch();
+                        setIsRefetchOrderDetailAfterCountdown(true);
+                    }}
+                    orderDetail={state.orderDetail}
+                    assetCode={assetCode}
+                    side={side}
+                    mode={mode}
+                />
                 <GroupInforCard
                     mode={mode}
                     assetCode={assetCode}
@@ -301,10 +365,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 />
                 {/* Lưu ý */}
                 {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
-                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6 mt-8">
+                    <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
-                            <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
+                            {state.orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING ? (
+                                `Lệnh đang chờ đối tác xác nhận. Vui lòng tiến hành thanh toán sau khi có thông tin đối tác xác nhận.`
+                            ) : (
+                                <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
+                            )}
                         </div>
                     </div>
                 )}
@@ -361,6 +429,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                 mode={mode}
             />
             <ModalLoading isVisible={isRefetchOrderDetailAfterCountdown} onBackdropCb={() => setIsRefetchOrderDetailAfterCountdown(false)} />
+            <ModalRating isVisible={state.isShowRating} onClose={() => setState({ isShowRating: false })} orderDetail={state.orderDetail} />
         </div>
     );
 };
