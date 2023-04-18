@@ -24,7 +24,6 @@ const Tables = ({ language, t, commisionConfig, id1, id2 }) => {
 
 export const TableFilter = ({ config, filter, setFilter, resetParentCode }) => {
     const DatePicker = ({ item, filter, key }) => {
-        console.log("___here: ", item, item?.position);
         const data = filter?.[key] || {};
         return (
             <DatePickerV2
