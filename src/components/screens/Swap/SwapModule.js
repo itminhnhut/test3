@@ -323,7 +323,7 @@ const SwapModule = ({ width, pair }) => {
     }, [state.fromAsset, auth]);
 
     const renderFromInput = useCallback(() => {
-        const decimalInput = getDecimalScale(+config.filters?.[0].stepSize)
+        const decimalInput = getDecimalScale(+config.filters?.[0].stepSize);
         return (
             <div className="flex items-center justify-between bg-transparent font-semibold text-base">
                 <div className="flex items-center justify-between">
@@ -376,9 +376,14 @@ const SwapModule = ({ width, pair }) => {
             const currentAssetConfig = find(assetConfig, { assetCode: fromAsset });
 
             assetItems.push(
-                <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
+                <AssetItem
+                    key={`asset_item___${i}`}
+                    isChoosed={state.fromAsset === fromAsset}
+                    onClick={() => onClickFromAsset(fromAsset)}
+                    isDisabled={!available}
+                >
                     <div className={`flex items-center  `}>
-                        <div className={`${!available && 'opacity-20'}`}>
+                        <div className={`${!available && 'opacity-20'} w-5 h-5`}>
                             <AssetLogo assetCode={fromAsset} size={20} />
                         </div>
                         <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
@@ -454,14 +459,17 @@ const SwapModule = ({ width, pair }) => {
         const data = state.toAssetList;
 
         for (let i = 0; i < data?.length; ++i) {
-            const { toAsset, available, filters } = data?.[i];
+            const { toAsset, filters } = data?.[i];
             const currentAssetConfig = find(assetConfig, { assetCode: toAsset });
+            const available = true;
 
             assetItems.push(
-                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)}>
+                <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)} isDisabled={!available}>
                     <div className={`flex items-center  `}>
                         <div className={`${!available && 'opacity-20'}`}>
-                            <AssetLogo assetCode={toAsset} size={20} />
+                            <div className="w-5 h-5">
+                                <AssetLogo assetCode={toAsset} size={20} />
+                            </div>
                         </div>
                         <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
                             <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
@@ -858,7 +866,8 @@ const SwapModule = ({ width, pair }) => {
                                     <div className="flex gap-2 items-center">
                                         <span>
                                             {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)} */}
-                                            {t('common:available_balance')}: {formatNumber(availabelAsset?.fromAsset, find(assetConfig, { assetCode: state?.fromAsset })?.assetDigit || 0 )}
+                                            {t('common:available_balance')}:{' '}
+                                            {formatNumber(availabelAsset?.fromAsset, find(assetConfig, { assetCode: state?.fromAsset })?.assetDigit || 0)}
                                         </span>
                                         <button
                                             onClick={(e) => {
@@ -890,7 +899,8 @@ const SwapModule = ({ width, pair }) => {
                                     <span>{t('common:to')}</span>
                                     <span>
                                         {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)} */}
-                                        {t('common:available_balance')}: {formatNumber(availabelAsset?.toAsset, find(assetConfig, { assetCode: state?.toAsset })?.assetDigit || 0 )}
+                                        {t('common:available_balance')}:{' '}
+                                        {formatNumber(availabelAsset?.toAsset, find(assetConfig, { assetCode: state?.toAsset })?.assetDigit || 0)}
                                     </span>
                                 </div>
                                 {renderToInput()}
@@ -937,13 +947,13 @@ const AssetList = styled.div.attrs(({ AssetListRef }) => ({
     ref: AssetListRef
 }))``;
 
-const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick }) => ({
+const AssetItem = styled.li.attrs(({ key, className, isChoosed, onClick, isDisabled }) => ({
     className: `text-txtSecondary dark:text-txtSecondary-dark text-left text-base
-    px-4 py-4 flex items-center justify-between cursor-pointer font-normal first:mt-0 mt-3
-    hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark
+    px-4 py-4 flex items-center justify-between cursor-not-allowed font-normal first:mt-0 mt-3
+    ${!isDisabled && 'hover:bg-hover focus:bg-hover dark:hover:bg-hover-dark dark:focus:bg-hover-dark !cursor-pointer'}
     ${isChoosed && 'bg-hover dark:bg-hover-dark'} ${className}`,
     key: key,
-    onClick: onClick
+    onClick: isDisabled ? null : onClick
 }))``;
 
 export default SwapModule;
