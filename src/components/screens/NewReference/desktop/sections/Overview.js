@@ -626,7 +626,7 @@ const ModalShareRefCode = ({ code, open, onClose, t }) => {
 
     return (
         <ModalV2 isVisible={open} onBackdropCb={onClose} className="w-[36.75rem]">
-            <p className="text-[22px] leading-6 font-semibold mb-6">{t('reference:referral.share.title')}</p>
+            <p className="text-2xl font-semibold mb-6">{t('reference:referral.share.title')}</p>
             <div ref={ref} className="h-[380px] w-[524px] rounded-xl p-6 py-4 relative overflow-hidden">
                 <img className="absolute inset-0" src={getS3Url('/images/reference/bg_share_ref_code.png')} alt="" />
                 <div className="absolute inset-x-4">
