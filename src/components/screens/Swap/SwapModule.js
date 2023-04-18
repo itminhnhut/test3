@@ -42,6 +42,7 @@ import styled from 'styled-components';
 import SearchBoxV2 from 'components/common/SearchBoxV2';
 import { TYPE_DW } from '../WithdrawDeposit/constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import { formatNumber } from 'utils/reference-utils';
 
 const FEE_RATE = 0 / 100;
 const DEBOUNCE_TIMEOUT = 500;
@@ -322,6 +323,7 @@ const SwapModule = ({ width, pair }) => {
     }, [state.fromAsset, auth]);
 
     const renderFromInput = useCallback(() => {
+        const decimalInput = getDecimalScale(+config.filters?.[0].stepSize)
         return (
             <div className="flex items-center justify-between bg-transparent font-semibold text-base">
                 <div className="flex items-center justify-between">
@@ -334,8 +336,8 @@ const SwapModule = ({ width, pair }) => {
                         onFocus={() => setState({ focus: 'from', inputHighlighted: 'from' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ fromAmount: value })}
-                        placeholder="0.0000"
-                        decimalScale={getDecimalScale(+config.filters?.[0].stepSize)}
+                        placeholder={(0).toFixed(decimalInput >= 0 ? decimalInput : 4)}
+                        decimalScale={decimalInput}
                     />
 
                     <button className={`border-r border-r-divider dark:border-r-divider-dark mr-3 pr-3 ${!!state.fromAmount ? 'visible' : 'invisible'}`}>
@@ -371,7 +373,7 @@ const SwapModule = ({ width, pair }) => {
 
         for (let i = 0; i < data?.length; ++i) {
             const { fromAsset, available, filters } = data?.[i];
-            const assetName = find(assetConfig, { assetCode: fromAsset })?.assetName;
+            const currentAssetConfig = find(assetConfig, { assetCode: fromAsset });
 
             assetItems.push(
                 <AssetItem key={`asset_item___${i}`} isChoosed={state.fromAsset === fromAsset} onClick={() => onClickFromAsset(fromAsset)}>
@@ -381,10 +383,10 @@ const SwapModule = ({ width, pair }) => {
                         </div>
                         <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
                             <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{fromAsset}</span>
-                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                            <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
-                    <div> {available ? formatWallet(available) : '0.0000'}</div>
+                    <div> {available ? formatNumber(available, currentAssetConfig?.assetDigit) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -426,7 +428,7 @@ const SwapModule = ({ width, pair }) => {
                         onFocus={() => setState({ focus: 'to', inputHighlighted: 'to' })}
                         onBlur={() => setState({ inputHighlighted: null })}
                         onValueChange={({ value }) => setState({ toAmount: value })}
-                        placeholder="0.0000"
+                        placeholder={(0).toFixed(find(assetConfig, { assetCode: state?.toAsset })?.assetDigit ?? 4)}
                     />
                 </div>
                 <div
@@ -453,7 +455,7 @@ const SwapModule = ({ width, pair }) => {
 
         for (let i = 0; i < data?.length; ++i) {
             const { toAsset, available, filters } = data?.[i];
-            const assetName = find(assetConfig, { assetCode: toAsset })?.assetName;
+            const currentAssetConfig = find(assetConfig, { assetCode: toAsset });
 
             assetItems.push(
                 <AssetItem key={`to_asset_item___${i}`} isChoosed={state.toAsset === toAsset} onClick={() => onClickToAsset(toAsset)}>
@@ -463,10 +465,10 @@ const SwapModule = ({ width, pair }) => {
                         </div>
                         <p className={`${!available && 'text-txtDisabled dark:text-txtDisabled-dark'}`}>
                             <span className={`mx-2 ${available && 'text-txtPrimary dark:text-txtPrimary-dark'}`}>{toAsset}</span>
-                            <span className="text-xs leading-4 text-left">{assetName}</span>
+                            <span className="text-xs leading-4 text-left">{currentAssetConfig?.assetName}</span>
                         </p>
                     </div>
-                    <div> {available ? formatWallet(available) : '0.0000'}</div>
+                    <div> {available ? formatNumber(available, currentAssetConfig?.assetDigit) : '0.0000'}</div>
                 </AssetItem>
             );
         }
@@ -855,7 +857,8 @@ const SwapModule = ({ width, pair }) => {
                                     <span>{t('common:from')}</span>
                                     <div className="flex gap-2 items-center">
                                         <span>
-                                            {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)}
+                                            {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.fromAsset)} */}
+                                            {t('common:available_balance')}: {formatNumber(availabelAsset?.fromAsset, find(assetConfig, { assetCode: state?.fromAsset })?.assetDigit || 0 )}
                                         </span>
                                         <button
                                             onClick={(e) => {
@@ -886,7 +889,8 @@ const SwapModule = ({ width, pair }) => {
                                 <div className="flex items-center justify-between pb-4 text-txtSecondary dark:text-txtSecondary-dark">
                                     <span>{t('common:to')}</span>
                                     <span>
-                                        {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)}
+                                        {/* {t('common:available_balance')}: {formatWallet(availabelAsset?.toAsset)} */}
+                                        {t('common:available_balance')}: {formatNumber(availabelAsset?.toAsset, find(assetConfig, { assetCode: state?.toAsset })?.assetDigit || 0 )}
                                     </span>
                                 </div>
                                 {renderToInput()}
