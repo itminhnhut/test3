@@ -49,78 +49,79 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
 
 export default NoData;
 
-export const NoDataDarkIcon = () => (
-    <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+const NoDataLightIcon = ({ size }) => (
+    <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#fff" d="M0 0h168v168H0z" />
         <path
-            opacity="0.8"
-            d="M103.343 96.6109L9.14743 101.878L6.85188 47.6588L6.50171 38.8562V38.6565C6.49827 38.5943 6.49827 38.532 6.50171 38.4698L6.20342 31.9081C6.17352 31.2361 6.41356 30.5798 6.87077 30.0835C7.32799 29.5873 7.96495 29.2916 8.64163 29.2615L48.2367 27.6259C48.5738 27.613 48.9102 27.6665 49.2264 27.7834C49.5426 27.9003 49.8324 28.0783 50.079 28.307C50.3256 28.5357 50.5241 28.8106 50.6631 29.1159C50.8021 29.4212 50.8788 29.7508 50.8889 30.0857L51.0769 34.5096L78.442 33.3827V42.7455H101.32L101.527 49.3459L103.343 96.6109Z"
-            fill="#F7FAFF"
+            d="m134.92 126.737-116.025 6.605-2.779-67.914-.463-11.017v-.263c0-.058-.029-.146-.029-.234l-.347-8.182c-.087-1.753 1.274-3.244 3.01-3.302l48.778-2.046c1.737-.058 3.184 1.286 3.271 3.04l.232 5.552 33.696-1.403V59.35h28.166l.261 8.27 2.229 59.117z"
+            fill="#E9EEF4"
         />
         <path
-            d="M117.738 51.3358L103.634 99.4057C103.482 99.8464 103.194 100.229 102.811 100.499C102.429 100.769 101.97 100.914 101.501 100.912L61.6401 102.381L59.8828 102.445L26.8761 103.656L11.8707 104.209C11.2327 104.266 10.5978 104.072 10.1012 103.671C9.60462 103.269 9.28558 102.691 9.21204 102.059V101.872L24.412 55.0384L24.8594 53.6668C25.0196 53.2415 25.3051 52.8739 25.6787 52.612C26.0523 52.3502 26.4967 52.2061 26.9539 52.1986H27.6024L101.527 49.3718L115.378 48.8502C116.928 48.76 118.095 50.0479 117.738 51.3358Z"
-            fill="url(#paint0_linear_1016_120213)"
+            d="m152.641 70.042-17.369 60.198c-.319 1.082-1.39 1.841-2.635 1.9h-.028l-49.126 1.841-2.17.088-40.673 1.519-18.469.702c-1.737.058-3.184-1.14-3.271-2.689v-.234l18.787-58.65.55-1.724v-.03c.348-1.022 1.39-1.752 2.577-1.81l.81-.03 91.042-3.536 17.051-.672c1.939-.088 3.387 1.49 2.924 3.127z"
+            fill="url(#ls10512bhaLightNoData01)"
         />
+        <path d="M132.434 59.3h-28.167V47.525l24.519-1.023c1.737-.087 3.185 1.286 3.271 3.01l.087 2.133.087 2.134.203 5.23v.293z" fill="url(#xhrnpzl8nbLightNoData02)" />
         <path
-            d="M101.321 42.7452H78.4432V33.3502L98.3445 32.5324C98.6788 32.5159 99.0131 32.5656 99.3279 32.6784C99.6427 32.7912 99.9319 32.965 100.179 33.1896C100.425 33.4142 100.625 33.6852 100.765 33.9869C100.906 34.2886 100.984 34.615 100.997 34.9471L101.068 36.6536L101.146 38.3471L101.314 42.5198L101.321 42.7452Z"
-            fill="url(#paint1_linear_1016_120213)"
+            d="M152.726 30.542v28.755h-20.292v-.292l-.203-5.23-.087-2.134-.087-2.133a3.11 3.11 0 0 0-3.271-3.01l-24.519 1.023V30.542h48.459z"
+            fill="#E9EEF4"
         />
-        <path
-            opacity="0.8"
-            d="M117.785 19.7822V42.745H101.321V42.5196L101.152 38.3469L101.075 36.6534L101.003 34.9469C100.991 34.6148 100.912 34.2884 100.772 33.9867C100.631 33.685 100.432 33.414 100.185 33.1894C99.9384 32.9648 99.6492 32.791 99.3344 32.6782C99.0195 32.5654 98.6853 32.5158 98.351 32.5322L78.4432 33.35V19.7822H117.785Z"
-            fill="#F7FAFF"
-        />
-        <path d="M102.63 22.7441H83.111V23.3108H102.63V22.7441Z" fill="white" />
-        <path d="M96.7546 25.1855H83.111V25.7522H96.7546V25.1855Z" fill="white" />
-        <path d="M96.7546 27.626H83.111V28.1926H96.7546V27.626Z" fill="white" />
+        <path d="M134.055 34.262H110v.701h24.055v-.701zM126.818 37.297H110V38h16.818v-.702zM126.818 40.37H110v.7h16.818v-.7z" fill="#fff" />
         <defs>
-            <linearGradient id="paint0_linear_1016_120213" x1="60.4859" y1="90.397" x2="75.0164" y2="21.5574" gradientUnits="userSpaceOnUse">
-                <stop offset="0.01" stopColor="#9FA4AB" />
-                <stop offset="0.26" stopColor="#9FA4AB" />
-                <stop offset="0.35" stopColor="#A2A7AE" stopOpacity="0.96" />
-                <stop offset="0.46" stopColor="#ABAFB6" stopOpacity="0.86" />
-                <stop offset="0.6" stopColor="#BABDC2" stopOpacity="0.7" />
-                <stop offset="0.74" stopColor="#CFD1D4" stopOpacity="0.47" />
-                <stop offset="0.89" stopColor="#E9EAEB" stopOpacity="0.18" />
-                <stop offset="0.98" stopColor="#F9F9F9" stopOpacity="0" />
+            <linearGradient id="ls10512bhaLightNoData01" x1="82.539" y1="106.923" x2="144.736" y2="30.209" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".22" stop-color="#D1D8E4" />
+                <stop offset=".315" stop-color="#D8DEE8" />
+                <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
+                <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
             </linearGradient>
-            <linearGradient id="paint1_linear_1016_120213" x1="70.104" y1="37.6388" x2="108.052" y2="37.6388" gradientUnits="userSpaceOnUse">
-                <stop offset="0.01" stopColor="#9FA4AB" />
-                <stop offset="0.19" stopColor="#9FA4AB" />
-                <stop offset="0.33" stopColor="#A5AAB0" />
-                <stop offset="0.52" stopColor="#B6BABF" />
-                <stop offset="0.74" stopColor="#D2D4D7" />
-                <stop offset="0.98" stopColor="#F9F9F9" />
+            <linearGradient id="xhrnpzl8nbLightNoData02" x1="103.243" y1="56.27" x2="146.839" y2="48.191" gradientUnits="userSpaceOnUse">
+                <stop offset=".008" stop-color="#C6CEDE" />
+                <stop offset=".017" stop-color="#C7CFDE" />
+                <stop offset=".65" stop-color="#EFF2F6" />
+                <stop offset=".977" stop-color="#fff" />
             </linearGradient>
         </defs>
     </svg>
 );
 
-export const NoDataLightIcon = () => (
-    <svg width="125" height="124" viewBox="0 0 125 124" fill="none" xmlns="http://www.w3.org/2000/svg">
+const NoDataDarkIcon = ({ size }) => (
+    <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
-            d="m100.083 93.545-85.637 4.874-2.051-50.126-.342-8.132v-.194c0-.043-.021-.108-.021-.172l-.257-6.04c-.064-1.294.94-2.394 2.223-2.437L50 29.808a2.34 2.34 0 0 1 2.414 2.243l.172 4.098 24.87-1.035v8.692h20.79l.192 6.104 1.645 43.635z"
-            fill="#E9EEF4"
+            d="m140.01 130.891-127.62 7.137-3.11-73.459-.475-11.926v-.27a2.286 2.286 0 0 1 0-.253l-.404-8.89c-.04-.91.285-1.8.904-2.472a3.471 3.471 0 0 1 2.4-1.114l53.645-2.216a3.485 3.485 0 0 1 2.496.923 3.438 3.438 0 0 1 1.097 2.41l.255 5.993 37.075-1.527v12.686h30.995l.282 8.942 2.46 64.036z"
+            fill="#E2E8F0"
         />
         <path
-            d="m113.163 51.697-12.82 44.433c-.235.798-1.026 1.359-1.945 1.402h-.021L62.118 98.89l-1.602.064-30.02 1.122-13.632.517c-1.282.044-2.35-.84-2.415-1.984v-.172l13.867-43.29.406-1.272v-.022c.256-.755 1.026-1.294 1.902-1.337l.598-.022 67.198-2.61 12.585-.496c1.431-.064 2.5 1.1 2.158 2.308z"
-            fill="url(#vkvonmtuaa)"
+            d="m159.513 69.552-19.108 65.126a3.024 3.024 0 0 1-1.116 1.482 3.06 3.06 0 0 1-1.775.56l-54.005 1.989-2.38.087-44.72 1.641-20.33.75a3.348 3.348 0 0 1-2.397-.73 3.3 3.3 0 0 1-1.205-2.184v-.253l20.594-63.452.606-1.858a3.065 3.065 0 0 1 1.11-1.43 3.099 3.099 0 0 1 1.728-.56h.879l100.155-3.83 18.766-.706c2.1-.122 3.682 1.623 3.198 3.368z"
+            fill="url(#ky4xxhhbvaDarkNoData01)"
         />
-        <path d="M98.249 43.769h-20.79v-8.693l18.097-.755c1.282-.064 2.35.95 2.415 2.222l.064 1.575.064 1.574.15 3.86v.217z" fill="url(#3p2js4giyb)" />
-        <path d="M113.227 22.543v21.224H98.249v-.216l-.15-3.86-.064-1.575-.064-1.575a2.296 2.296 0 0 0-2.415-2.221l-18.097.755V22.543h35.768z" fill="#E9EEF4" />
-        <path d="M99.445 25.29H81.69v.517h17.755v-.518zM94.103 27.53H81.69v.517h12.413v-.518zM94.103 29.797H81.69v.517h12.413v-.517z" fill="#fff" />
+        <path
+            d="M137.27 57.912h-30.996V45.184l26.963-1.108a3.453 3.453 0 0 1 2.485.89 3.39 3.39 0 0 1 1.109 2.381l.096 2.312.106 2.295.228 5.653.009.305z"
+            fill="url(#ot2ez301nbDarkNoData02)"
+        />
+        <path
+            d="M159.577 26.801v31.111H137.27v-.305l-.228-5.653-.106-2.295-.096-2.312a3.39 3.39 0 0 0-1.109-2.381 3.43 3.43 0 0 0-2.485-.89l-26.972 1.108V26.8h53.303z"
+            fill="#E2E8F0"
+        />
+        <path d="M139.043 30.814h-26.444v.768h26.444v-.768zM131.084 34.121h-18.485v.768h18.485v-.768zM131.084 37.428h-18.485v.768h18.485v-.768z" fill="#fff" />
         <defs>
-            <linearGradient id="vkvonmtuaa" x1="61.421" y1="78.919" x2="107.328" y2="22.297" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stopColor="#C6CEDE" />
-                <stop offset=".22" stopColor="#D1D8E4" />
-                <stop offset=".315" stopColor="#D8DEE8" />
-                <stop offset=".852" stopColor="#F7F8FA" stopOpacity=".513" />
-                <stop offset=".977" stopColor="#fff" stopOpacity=".4" />
+            <linearGradient id="ky4xxhhbvaDarkNoData01" x1="81.945" y1="122.473" x2="101.632" y2="29.207" gradientUnits="userSpaceOnUse">
+                <stop offset=".01" stop-color="#9FA4AB" />
+                <stop offset=".26" stop-color="#9FA4AB" />
+                <stop offset=".35" stop-color="#A2A7AE" stop-opacity=".96" />
+                <stop offset=".46" stop-color="#ABAFB6" stop-opacity=".86" />
+                <stop offset=".6" stop-color="#BABDC2" stop-opacity=".7" />
+                <stop offset=".74" stop-color="#CFD1D4" stop-opacity=".47" />
+                <stop offset=".89" stop-color="#E9EAEB" stop-opacity=".18" />
+                <stop offset=".98" stop-color="#F9F9F9" stop-opacity="0" />
             </linearGradient>
-            <linearGradient id="3p2js4giyb" x1="76.703" y1="41.531" x2="108.881" y2="35.569" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stopColor="#C6CEDE" />
-                <stop offset=".017" stopColor="#C7CFDE" />
-                <stop offset=".65" stopColor="#EFF2F6" />
-                <stop offset=".977" stopColor="#fff" />
+            <linearGradient id="ot2ez301nbDarkNoData02" x1="94.976" y1="50.994" x2="146.389" y2="50.994" gradientUnits="userSpaceOnUse">
+                <stop offset=".01" stop-color="#9FA4AB" />
+                <stop offset=".19" stop-color="#9FA4AB" />
+                <stop offset=".33" stop-color="#A5AAB0" />
+                <stop offset=".52" stop-color="#B6BABF" />
+                <stop offset=".74" stop-color="#D2D4D7" />
+                <stop offset=".98" stop-color="#F9F9F9" />
             </linearGradient>
         </defs>
     </svg>
