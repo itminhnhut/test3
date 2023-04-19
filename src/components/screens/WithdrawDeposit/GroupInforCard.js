@@ -4,7 +4,7 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import { ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
+import { BxsUserCircle, ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { DefaultAvatar, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
@@ -59,22 +59,25 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                         </div>
                                         <div className="flex gap-2">
                                             {/* hiện namiId hoặc phone */}
-                                            {!orderDetail ? (
-                                                <Skeletor width={80} />
-                                            ) : (
+
+                                            {orderDetail?.[`${otherMode}Metadata`]?.phone ? (
                                                 <TagV2 type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
                                                     <div className="flex space-x-2 items-center">
-                                                        {orderDetail?.[`${otherMode}Metadata`]?.phone ? (
-                                                            <>
-                                                                <ContactIcon color="currentColor" size={16} />
-                                                                <div>{formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)}</div>
-                                                            </>
-                                                        ) : (
-                                                            orderDetail?.[`${otherMode}Metadata`]?.code
-                                                        )}
+                                                        <ContactIcon color="currentColor" size={16} />
+                                                        <div>{formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)}</div>
+                                                    </div>
+                                                </TagV2>
+                                            ) : null}
+
+                                            {mode === MODE.PARTNER && orderDetail?.[`${otherMode}Metadata`]?.code && (
+                                                <TagV2 type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
+                                                    <div className="flex space-x-2 items-center">
+                                                        <BxsUserCircle fill="currentColor" size={16} />
+                                                        <div>{orderDetail?.[`${otherMode}Metadata`]?.code}</div>
                                                     </div>
                                                 </TagV2>
                                             )}
+
                                             {/* hiện tên hoặc phone */}
 
                                             {/* hien số lương orders và avg time chỉ giành cho màn hình user  */}

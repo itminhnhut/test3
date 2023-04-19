@@ -165,6 +165,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             } else {
                                 //user chua chuyen tien
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
+                                    primaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
+                                        text: t('dw_partner:take_money_already')
+                                    };
                                 } else {
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
@@ -255,16 +259,16 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     text: t('common:cancel_order')
                                 };
                             } else {
-                                // partner chua chuyen tien
+                                // hiện "tôi đã nhận tiền" khi partner chưa chuyển tiền
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
-                                    // primaryBtn = {
-                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    //     text: t('common:cancel_order')
-                                    // };
+                                    primaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
+                                        text: t('dw_partner:take_money_already')
+                                    };
 
                                     return;
                                 }
-                                // partner transferred
+                                // hiện "tôi đã nhận tiền" và "khiếu nại" khi partner đã TRANSFERRED
                                 if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
