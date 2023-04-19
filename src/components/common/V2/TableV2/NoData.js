@@ -49,41 +49,49 @@ const NoData = ({ text, loading = false, isSearch = false, className = '', isAut
 
 export default NoData;
 
+export const NoDataLightIcon = ({ size }) => {
+    const tempId = Date.now();
+    const tempId_01 = 'ls10512bha' + tempId;
+    const tempId_02 = 'xhrnpzl8nb' + tempId;
 
-export const NoDataLightIcon = ({ size }) => (
-    <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#fff" d="M0 0h168v168H0z" />
-        <path
-            d="m134.92 126.737-116.025 6.605-2.779-67.914-.463-11.017v-.263c0-.058-.029-.146-.029-.234l-.347-8.182c-.087-1.753 1.274-3.244 3.01-3.302l48.778-2.046c1.737-.058 3.184 1.286 3.271 3.04l.232 5.552 33.696-1.403V59.35h28.166l.261 8.27 2.229 59.117z"
-            fill="#E9EEF4"
-        />
-        <path
-            d="m152.641 70.042-17.369 60.198c-.319 1.082-1.39 1.841-2.635 1.9h-.028l-49.126 1.841-2.17.088-40.673 1.519-18.469.702c-1.737.058-3.184-1.14-3.271-2.689v-.234l18.787-58.65.55-1.724v-.03c.348-1.022 1.39-1.752 2.577-1.81l.81-.03 91.042-3.536 17.051-.672c1.939-.088 3.387 1.49 2.924 3.127z"
-            fill="url(#ls10512bhaLightNoData01)"
-        />
-        <path d="M132.434 59.3h-28.167V47.525l24.519-1.023c1.737-.087 3.185 1.286 3.271 3.01l.087 2.133.087 2.134.203 5.23v.293z" fill="url(#xhrnpzl8nbLightNoData02)" />
-        <path
-            d="M152.726 30.542v28.755h-20.292v-.292l-.203-5.23-.087-2.134-.087-2.133a3.11 3.11 0 0 0-3.271-3.01l-24.519 1.023V30.542h48.459z"
-            fill="#E9EEF4"
-        />
-        <path d="M134.055 34.262H110v.701h24.055v-.701zM126.818 37.297H110V38h16.818v-.702zM126.818 40.37H110v.7h16.818v-.7z" fill="#fff" />
-        <defs>
-            <linearGradient id="ls10512bhaLightNoData01" x1="82.539" y1="106.923" x2="144.736" y2="30.209" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stop-color="#C6CEDE" />
-                <stop offset=".22" stop-color="#D1D8E4" />
-                <stop offset=".315" stop-color="#D8DEE8" />
-                <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
-                <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
-            </linearGradient>
-            <linearGradient id="xhrnpzl8nbLightNoData02" x1="103.243" y1="56.27" x2="146.839" y2="48.191" gradientUnits="userSpaceOnUse">
-                <stop offset=".008" stop-color="#C6CEDE" />
-                <stop offset=".017" stop-color="#C7CFDE" />
-                <stop offset=".65" stop-color="#EFF2F6" />
-                <stop offset=".977" stop-color="#fff" />
-            </linearGradient>
-        </defs>
-    </svg>
-);
+    return (
+        <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id={tempId_01} x1="82.539" y1="106.923" x2="144.736" y2="30.209" gradientUnits="objectBoundingBox">
+                    <stop offset=".008" stop-color="#C6CEDE" />
+                    <stop offset=".22" stop-color="#D1D8E4" />
+                    <stop offset=".315" stop-color="#D8DEE8" />
+                    <stop offset=".852" stop-color="#F7F8FA" stop-opacity=".513" />
+                    <stop offset=".977" stop-color="#fff" stop-opacity=".4" />
+                </linearGradient>
+                <linearGradient id={tempId_02} x1="103.243" y1="56.27" x2="146.839" y2="48.191" gradientUnits="objectBoundingBox">
+                    <stop offset=".008" stop-color="#C6CEDE" />
+                    <stop offset=".017" stop-color="#C7CFDE" />
+                    <stop offset=".65" stop-color="#EFF2F6" />
+                    <stop offset=".977" stop-color="#fff" />
+                </linearGradient>
+            </defs>
+            <path fill="#fff" d="M0 0h168v168H0z" />
+            <path
+                d="m134.92 126.737-116.025 6.605-2.779-67.914-.463-11.017v-.263c0-.058-.029-.146-.029-.234l-.347-8.182c-.087-1.753 1.274-3.244 3.01-3.302l48.778-2.046c1.737-.058 3.184 1.286 3.271 3.04l.232 5.552 33.696-1.403V59.35h28.166l.261 8.27 2.229 59.117z"
+                fill="#E9EEF4"
+            />
+            <path
+                d="m152.641 70.042-17.369 60.198c-.319 1.082-1.39 1.841-2.635 1.9h-.028l-49.126 1.841-2.17.088-40.673 1.519-18.469.702c-1.737.058-3.184-1.14-3.271-2.689v-.234l18.787-58.65.55-1.724v-.03c.348-1.022 1.39-1.752 2.577-1.81l.81-.03 91.042-3.536 17.051-.672c1.939-.088 3.387 1.49 2.924 3.127z"
+                fill={`url(#${tempId_01})`}
+            />
+            <path
+                d="M132.434 59.3h-28.167V47.525l24.519-1.023c1.737-.087 3.185 1.286 3.271 3.01l.087 2.133.087 2.134.203 5.23v.293z"
+                fill={`url(#${tempId_02})`}
+            />
+            <path
+                d="M152.726 30.542v28.755h-20.292v-.292l-.203-5.23-.087-2.134-.087-2.133a3.11 3.11 0 0 0-3.271-3.01l-24.519 1.023V30.542h48.459z"
+                fill="#E9EEF4"
+            />
+            <path d="M134.055 34.262H110v.701h24.055v-.701zM126.818 37.297H110V38h16.818v-.702zM126.818 40.37H110v.7h16.818v-.7z" fill="#fff" />
+        </svg>
+    );
+};
 
 export const NoDataDarkIcon = ({ size }) => (
     <svg width={size ?? 124} height={size ?? 124} viewBox="0 0 168 168" fill="none" xmlns="http://www.w3.org/2000/svg">
