@@ -21,7 +21,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
             let isReject = false,
                 isResolveDispute = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
-            const isProgressOrderAction = mode === MODE.PARTNER && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
+            const isProcessOrderAction = mode === MODE.PARTNER && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
             const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
 
             switch (userStatus) {
@@ -65,7 +65,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 });
                 const data = isResolveDispute
                     ? await resolveDispute({ displayingId: id, mode })
-                    : isProgressOrderAction
+                    : isProcessOrderAction
                     ? await processPartnerOrder({ displayingId: id, status: userStatus })
                     : isReject
                     ? await rejectOrder({ displayingId: id, mode })
@@ -75,22 +75,17 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 if (data && data.status === ApiStatus.SUCCESS) {
                     // close confirm modal
 
-                    if (
-                        // !isAccept &&
-                        //    && type === ORDER_TYPES.TRANSFERRED_SUCCESS &&
-                        mode === MODE.PARTNER &&
-                        !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)
-                    ) {
-                        router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
-                    }
-
                     setModalState(MODAL_TYPE.CONFIRM, {
                         loading: false,
                         visible: false
                     });
 
+                    if (!isProcessOrderAction && mode === MODE.PARTNER && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                        router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
+                    }
+
                     // open after confirm modal
-                    if (type && additionalData) {
+                    if (!isProcessOrderAction && type && additionalData) {
                         setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                             visible: true,
                             type,

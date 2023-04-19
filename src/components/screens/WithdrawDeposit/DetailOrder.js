@@ -185,7 +185,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:deny')
+                                    text: t('common:cancel_order')
                                 };
                             } else {
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
