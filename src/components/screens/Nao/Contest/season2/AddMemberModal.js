@@ -98,7 +98,7 @@ const AddMemberModal = ({ onClose, contest_id }) => {
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
-            onusClassName={`${isMobile ? '!px-6 pb-[3.75rem]' : '!p-8 max-w-[564px]'}  !bg-nao-tooltip !overflow-hidden`}
+            onusClassName={`${isMobile ? '!px-6 pb-[3.75rem]' : '!p-8 max-w-[564px]'} !overflow-hidden`}
             containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
         >

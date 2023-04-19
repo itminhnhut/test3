@@ -471,7 +471,7 @@ export class MobileTradingView extends React.PureComponent {
                 editorFontsList: ['Inter', 'Sans'],
                 'volumePaneSize': 'tiny'
             },
-            custom_css_url: '/library/trading_view/custom_mobile_chart.css?version=5'
+            custom_css_url: '/library/trading_view/custom_mobile_chart.css?version=5.0.1'
         };
 
         // Clear to solve config when load saved chart
@@ -487,10 +487,10 @@ export class MobileTradingView extends React.PureComponent {
             this.widget.applyOverrides({
                 'mainSeriesProperties.priceAxisProperties.autoScale': true,
                 'scalesProperties.lineColor': this.chartBg,
-                'scalesProperties.textColor': isDark ? colors.gray[7] : colors.gray[1],
+                'scalesProperties.textColor': this.isDark ? colors.gray[7] : colors.gray[1],
                 'paneProperties.background': this.chartBg,
                 'paneProperties.vertGridProperties.color': this.chartBg,
-                'paneProperties.horzGridProperties.color': this.chartBg,
+                'paneProperties.horzGridProperties.color': this.isDark ? colors.divider.dark : colors.divider.DEFAULT,
 
                 'mainSeriesProperties.candleStyle.borderUpColor': colors.green[2],
                 'mainSeriesProperties.candleStyle.borderDownColor': colors.red[2],
@@ -501,7 +501,7 @@ export class MobileTradingView extends React.PureComponent {
                 'mainSeriesProperties.hollowCandleStyle.borderColor': colors.green[2],
                 'mainSeriesProperties.hollowCandleStyle.borderDownColor': colors.red[2],
 
-                'volumePaneSize': 'tiny'
+                volumePaneSize: 'tiny'
             });
             this.setState({ chartStatus: ChartStatus.LOADED });
             // if (this.props.isVndcFutures) {
@@ -543,7 +543,7 @@ export class MobileTradingView extends React.PureComponent {
                 .setText(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setTooltip(formatPrice(high[2], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
-                .setTextColor(isDark ? colors.gray[7] : colors.gray[1])
+                .setTextColor(this.isDark ? colors.gray[7] : colors.gray[1])
                 .setArrowHeight(7)
             const lowArrow = this.widget.chart().createExecutionShape({ disableUndo: false })
                 .setPrice(low[3])
@@ -552,7 +552,7 @@ export class MobileTradingView extends React.PureComponent {
                 .setText(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setTooltip(formatPrice(low[3], this.props.exchangeConfig, base).toString())
                 .setArrowColor('rgb(187,187,187)')
-                .setTextColor(isDark ? colors.gray[7] : colors.gray[1])
+                .setTextColor(this.isDark ? colors.gray[7] : colors.gray[1])
                 .setArrowHeight(7)
 
             this.drawnHighLowArrows = { highArrow, lowArrow };

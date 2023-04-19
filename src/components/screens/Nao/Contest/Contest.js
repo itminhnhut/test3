@@ -17,6 +17,7 @@ import { getS3Url } from 'redux/actions/utils';
 import Image from 'next/image';
 
 import classNames from 'classnames';
+import NaoHeader from '../NaoHeader';
 const ListRankings = dynamic(() => import('./ListRankings'));
 const currencies = [
     { label: 'VNDC', value: 'VNDC' },
@@ -342,6 +343,21 @@ const Contest = (props) => {
 
     const [KLGD5, KLGD3, KLGD2, KLGD1] = data;
 
+    const onDownload = (key) => {
+        let url = '';
+        switch (key) {
+            case 'app_store':
+                url = 'https://apps.apple.com/us/app/onus-invest-btc-eth-doge/id1498452975';
+                break;
+            case 'google_play':
+                url = 'https://play.google.com/store/apps/details?id=com.vndc';
+                break;
+            default:
+                break;
+        }
+        window.open(url, '_blank');
+    };
+
     const renderTab = () => {
         return (
             <ul className="tabMenu">
@@ -414,7 +430,7 @@ const Contest = (props) => {
         );
     };
     return (
-        <LayoutNaoToken>
+        <LayoutNaoToken isHeader={false}>
             {showDetail && <ContestDetail {...props} rowData={rowData.current} sortName={sortName.current} onClose={onCloseDetail} />}
             {showInvitations && (
                 <InvitationsDetail
@@ -425,18 +441,27 @@ const Contest = (props) => {
                     onClose={() => showShowInvitationst(false)}
                 />
             )}
-            <div className="nao_section">
-                <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
-                <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
-                {props?.season === SEASON_SPECIAL ? (
-                    <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
-                        {renderTab()}
-                        {renderContentTab1()}
-                        {renderContentTab2()}
+            <div className="min-h-screen">
+                <div className="px-4 nao:p-0 max-w-[72.5rem] w-full m-auto !mt-0">
+                    <NaoHeader onDownload={onDownload} />
+                </div>
+                <div className="nao_section">
+                    <div className="px-4">
+                        <ContesRules seasons={seasons} seasonConfig={SEASON_SPECIAL} {...props} />
                     </div>
-                ) : (
-                    renderContestRank()
-                )}
+                    <div className="bg-gray-12 dark:bg-bgPrimary-dark rounded-t-3xl px-4">
+                        <ContestInfo {...props} ref={refInfo} onShowDetail={onShowDetail} onShowInvitations={onShowInvitations} currencies={currencies} />
+                        {props?.season == SEASON_SPECIAL ? (
+                            <div className="tab1 overflow-hidden pt-[68px] lg:pt-[234px]">
+                                {renderTab()}
+                                {renderContentTab1()}
+                                {renderContentTab2()}
+                            </div>
+                        ) : (
+                            renderContestRank()
+                        )}
+                    </div>
+                </div>
             </div>
         </LayoutNaoToken>
     );

@@ -65,7 +65,7 @@ const StakeOrders = ({ assetConfig }) => {
             minutes = differenceInMinutes(date, new Date());
         }
         const title = status === 0 ? t('nao:pool:fail') : status === 1 ? t('nao:pool:unlock_status', { value: formatDate(minutes) }) : t('common:success');
-        const color = status === 0 ? 'text-nao-red' : status === 1 ? 'text-yellow-2' : 'text-teal';
+        const color = status === 0 ? 'text-red-2' : status === 1 ? 'text-yellow-2' : 'text-teal';
         return <div className={`font-medium ${color}`}>{title}</div>
     }
 

@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { getS3Url, formatNumber } from 'redux/actions/utils';
 import Skeletor from 'components/common/Skeletor';
 import _ from 'lodash';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 
 export const TextLiner = styled.div.attrs({
     className: 'text-[1.375rem] sm:text-2xl leading-8 font-semibold pb-[6px] w-max text-gray-15 dark:text-gray-7'
@@ -183,12 +184,12 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
     const isScroll = checkScrollBar(content.current, 'vertical');
     const _children = Children.toArray(children.filter((child) => child.props?.visible === true || child.props?.visible === undefined));
     return (
-        <CardNao id="nao-table" noBg className={classNames('mt-8 !p-6 !justify-start', classWrapper)}>
+        <CardNao id="nao-table" className={classNames('mt-8 !p-0 !justify-start', classWrapper)}>
             <div ref={content} className={classNames('overflow-auto nao-table-content min-h-[200px]')}>
                 <div
                     ref={header}
                     className={classNames(
-                        'z-10 py-3 border-b border-nao-grey/[0.2] bg-transparent overflow-hidden min-w-max w-full',
+                        'z-10 py-3 border-b border-divider dark:border-divider-dark bg-transparent overflow-hidden min-w-max w-full',
                         'px-3 nao-table-header flex items-center text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium justify-between',
                         // 'pr-7'
                         classHeader
@@ -219,7 +220,7 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                                     onClick={() => _onRowClick(item, index)}
                                     style={{ minWidth: 'fit-content' }}
                                     key={`row_${index}`}
-                                    className={classNames('px-3 flex items-center flex-1 w-full', { 'bg-nao/[0.15] rounded-lg': index % 2 !== 0 })}
+                                    className={classNames('px-3 flex items-center flex-1 w-full hover:bg-hover dark:hover:bg-hover-dark')}
                                 >
                                     {_children.map((child, indx) => {
                                         const width = child?.props?.width;
@@ -274,7 +275,12 @@ export const Table = ({ dataSource, children, classHeader = '', onRowClick, noIt
                         })
                     ) : (
                         <div className={`flex items-center justify-center flex-col m-auto`}>
-                            <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                            <div className="block dark:hidden">
+                                <NoDataLightIcon />
+                            </div>
+                            <div className="hidden dark:block">
+                                <NoDataDarkIcon />
+                            </div>
                             <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{noItemsMessage ? noItemsMessage : t('common:no_data')}</div>
                         </div>
                     )}
@@ -358,7 +364,7 @@ export const TextField = (props) => {
     return (
         <div className="w-full space-y-[6px]">
             <div className="text-xs leading-6 text-txtSecondary dark:text-txtSecondary-dark">{label}</div>
-            <WrapInput error={error} focus={focus}>
+            <WrapInput error={error} focus={focus} readOnly={readOnly}>
                 <input
                     className={`w-full text-sm ${readOnly ? 'text-txtSecondary dark:text-txtSecondary-dark' : ''} ${className}`}
                     onFocus={onFocus}
@@ -369,7 +375,7 @@ export const TextField = (props) => {
                 {prefix && <div className={`${prefixClassName} text-sm leading-6 text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap`}>{prefix}</div>}
             </WrapInput>
             {error && helperText && (
-                <div className="flex items-center space-x-2 text-xs text-nao-red">
+                <div className="flex items-center space-x-2 text-xs text-red-2">
                     <WarningIcon />
                     <span>{helperText}</span>
                 </div>
@@ -379,17 +385,25 @@ export const TextField = (props) => {
 };
 
 export const WrapInput = styled.div.attrs(({ error }) => ({
-    className: classNames('w-full border-b border-nao-grey pb-[5px] relative flex items-center justify-between', { 'border-b border-nao-red': error })
+    className: classNames('w-full relative flex items-center justify-between bg-gray-12 dark:bg-dark-2 px-3 py-2 rounded-md', { 'border border-red-2': error })
 }))`
+
+    :hover {
+        border: ${({readOnly}) => readOnly ? 'none' : `solid 1px ${colors.teal}`};
+        &::after {
+            display: none;
+        }
+    }
     &::after {
         content: '';
         position: absolute;
         width: 100%;
-        transform: ${({ error, focus }) => (!error && focus ? `scaleX(1)` : `scaleX(0)`)};
-        height: 1px;
+        visibility: ${({ error, focus, readOnly }) => (!readOnly && !error && focus ? `visible` : `hidden`)};
+        height: calc(100% + 2px);
         bottom: -1px;
         left: 0;
-        background-color: ${() => colors.teal};
+        border: solid 1px ${colors.teal};
+        border-radius: 0.375rem;
         transform-origin: bottom left;
         transition: all 0.3s ease-out;
     }
@@ -440,24 +454,24 @@ export const ImageNao = ({ src, fallBack, ...props }) => {
 export const TabsNao = styled.div.attrs({
     className: 'flex items-center space-x-4 relative mt-4'
 })`
-    &::after {
+    /* &::after {
         content: '';
         position: absolute;
         bottom: 0;
         height: 2px;
         width: 100%;
         background: ${colors.teal};
-    }
+    } */
 `;
 
-export const TabItemNao = styled.div.attrs({
-    className: 'px-8 py-6 cursor-pointer relative'
-})`
-    background: rgba(97, 144, 149, 0.15);
-    border-radius: 12px 12px 0px 0px;
-    color: ${({ active }) => (active ? colors.nao.white : colors.nao.grey)};
+export const TabItemNao = styled.div.attrs(({ active }) => ({
+    className: classNames('py-2 px-5 cursor-pointer relative rounded-3xl border', {
+        '!border-teal text-teal': active,
+        ' border-divider dark:border-divider-dark text-txtSecondary dark:text-txtSecondary-dark': !active
+    })
+}))`
     font-weight: 600;
-    &::after {
+    /* &::after {
         display: ${({ active }) => (active ? 'block' : 'none')};
         content: '';
         position: absolute;
@@ -473,7 +487,6 @@ export const TabItemNao = styled.div.attrs({
     &:first-child::before {
         content: '';
         position: absolute;
-        /* inset: 0; */
         left: 0;
         bottom: 0;
         z-index: 3;
@@ -491,5 +504,5 @@ export const TabItemNao = styled.div.attrs({
         border-bottom: ${({ active }) => `${active ? 2 : 0}px solid #000921`};
         height: ${({ active }) => (active ? '0' : '2px')};
         width: ${({ active }) => `calc(100% + ${active ? '-2px' : '18px'})`};
-    }
+    } */
 `;

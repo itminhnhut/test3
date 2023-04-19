@@ -10,6 +10,7 @@ import colors from 'styles/colors';
 import Skeletor from 'components/common/Skeletor';
 import TickFbIcon from 'components/svg/TickFbIcon';
 import RePagination from 'components/common/ReTable/RePagination';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
 
 const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, quoteAsset, lastUpdatedTime, sort, top_ranks_master }) => {
     const [tab, setTab] = useState(sort);
@@ -64,7 +65,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
     const renderTeam = (data, item) => {
         return (
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-[50%] bg-[#273446] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-[50%] bg-hover dark:bg-hover-dark flex items-center justify-center">
                     <ImageNao
                         className="object-cover rounded-[50%] min-w-[32px] min-h-[32px] max-w-[32px] max-h-[32px]"
                         src={item?.avatar}
@@ -152,7 +153,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             {top3.length > 0 && (
                 <div className="flex flex-wrap gap-5 sm:gap-[1.375rem] mt-[2.75rem]">
                     {top3.map((item, index) => (
-                        <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-nao-border2">
+                        <CardNao onClick={() => onShowDetail(item, tab)} key={index} className="!p-5 !bg-transparent border border-divider dark:border-divider-dark">
                             <div className="flex items-center justify-between flex-1 gap-5">
                                 <div className="flex items-center space-x-4">
                                     <div className="w-[3rem] h-[3rem] rounded-[50%] relative">
@@ -172,9 +173,9 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                                         </span>
                                     </div>
                                 </div>
-                                <TextLiner className="!text-[2.5rem] !leading-[50px] !pb-0" liner>
+                                <div className="text-5xl font-semibold pb-0">
                                     {item?.[rank] > 0 ? `#${index + 1}` : '-'}
-                                </TextLiner>
+                                </div>
                             </div>
                             <div className="h-[1px] bg-nao-grey/[0.2] w-full my-6"></div>
                             <div className="rounded-lg">
@@ -205,7 +206,7 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
             )}
             {width <= 640 ? (
                 <CardNao noBg className="mt-5 !py-[1.125rem] !px-3">
-                    <div className="flex mx-3 gap-4 sm:gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                    <div className="flex mx-3 gap-4 sm:gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-divider dark:border-divider-dark">
                         <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>
@@ -285,7 +286,12 @@ const ContestMasterRank = ({ onShowDetail, previous, contest_id, minVolumeTeam, 
                             })
                         ) : (
                             <div className={`flex items-center justify-center flex-col m-auto`}>
-                                <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                                <div className="block dark:hidden">
+                                    <NoDataLightIcon />
+                                </div>
+                                <div className="hidden dark:block">
+                                    <NoDataDarkIcon />
+                                </div>
                                 <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('nao:contest:no_rank')}</div>
                             </div>
                         )}

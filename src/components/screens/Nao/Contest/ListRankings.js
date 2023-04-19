@@ -67,7 +67,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
     const renderTeam = (data) => {
         return (
             <div className="flex flex-row">
-                <div className="w-6 h-6 rounded-full bg-[#273446] mr-6"></div>
+                <div className="w-6 h-6 rounded-full bg-hover dark:bg-hover-dark mr-6"></div>
                 <div className="text-sm font-semibold leading-6">{data}</div>
             </div>
         );
@@ -194,7 +194,7 @@ const ListRankings = ({ isList, type, data, loading }) => {
             <>
                 {data?.users?.length > 0 ? (
                     <CardNao noBg className="mt-[168px] !py-[1.125rem] !px-3 inline lg:hidden">
-                        <div className="flex mx-3 gap-4 sm:gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-nao-grey/[0.2]">
+                        <div className="flex mx-3 gap-4 sm:gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-divider dark:border-divider-dark">
                             <div className="min-w-[31px]">{t('nao:contest:rank')}</div>
                             <div>{t('nao:contest:information')}</div>
                         </div>

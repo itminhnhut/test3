@@ -77,7 +77,7 @@ function RankList({
             {width <= 640 ? (
                 <CardNao noBg className='mt-6 !py-[1.125rem] !px-3'>
                     <div
-                        className='flex mx-3 gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-nao-grey/[0.2]'>
+                        className='flex mx-3 gap-6 text-txtSecondary dark:text-txtSecondary-dark text-sm font-medium pb-2 border-b border-divider dark:border-divider-dark'>
                         <div className='min-w-[31px]'>{t('nao:contest:rank')}</div>
                         <div>{t('nao:contest:information')}</div>
                     </div>

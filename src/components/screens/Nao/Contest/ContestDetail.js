@@ -15,6 +15,8 @@ import AddMemberModal from './season2/AddMemberModal';
 import { IconLoading } from 'components/common/Icons';
 import colors from 'styles/colors';
 import TickFbIcon from 'components/svg/TickFbIcon';
+import { NoDataDarkIcon, NoDataLightIcon } from 'components/common/V2/TableV2/NoData';
+import SvgCross from 'components/svg/Cross';
 
 const statusMember = {
     PENDING: 0,
@@ -102,25 +104,26 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
 
     const renderStatusMember = (status) => {
         if (status === undefined) return '-';
+        const baseClass = 'rounded-[800px] px-2 text-xs font-medium py-[2px] whitespace-nowrap';
         let html = '';
         switch (status) {
             case statusMember.PENDING:
-                html = <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:status_pending')}</div>;
+                html = <div className={`${baseClass} text-yellow-2 bg-yellow-2/[0.1]`}>{t('nao:contest:status_pending')}</div>;
                 break;
             case statusMember.ACCEPTED:
-                html = <div className="text-green-2">{t('nao:contest:status_joined')}</div>;
+                html = <div className={`${baseClass} text-green-2 bg-green-2/[0.1]`}>{t('nao:contest:status_joined')}</div>;
                 break;
             case statusMember.DENIED:
-                html = <div className="text-red-2">{t('nao:contest:status_declined')}</div>;
+                html = <div className={`${baseClass} text-red-2 bg-red-2/[0.1]`}>{t('nao:contest:status_declined')}</div>;
                 break;
             case statusMember.CANCELED:
-                html = 'CANCELED';
+                html = <div className={`${baseClass} text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-dark-4/[0.5]`}>CANCELED</div>;
                 break;
             default:
                 html = '';
                 break;
         }
-        return <div className="bg-bgCondition rounded-[800px] px-2 text-xs font-medium leading-6 py-[2px] whitespace-nowrap">{html}</div>;
+        return html;
     };
 
     const validatorLeader = (item) => {
@@ -265,18 +268,19 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                 modalClassName="z-[99999]"
                 onusClassName={`${
                     isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[979px]'
-                } min-h-[304px] rounded-t-[16px] !bg-nao-tooltip !overflow-hidden `}
+                } min-h-[304px] rounded-t-[16px] !overflow-hidden `}
                 containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             >
-                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-[calc(100%-72px)]">
+                <SvgCross size={24} onClick={onClose} color="currentColor" className="ml-auto mb-2 cursor-pointer" />
+                <div className="pb-3 sm:pb-0 px-4 scrollbar-nao overflow-y-auto h-full">
                     <div className="flex sm:items-center sm:justify-between flex-wrap lg:flex-row flex-col">
                         {isMobile ? (
                             <div className="flex flex-col items-center justify-center">
                                 <div className="flex items-center space-x-[10px]">
                                     {dataSource?.[rank] ? (
-                                        <TextLiner className="!text-[2rem] !leading-[2.375rem] !pb-0" liner>
+                                        <span className="font-semibold text-5xl pb-0" liner>
                                             #{dataSource?.[rank]}
-                                        </TextLiner>
+                                        </span>
                                     ) : null}
                                     <div className="w-[58px] h-[58px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark">
                                         <ImageNao
@@ -301,8 +305,8 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                     (loading ? (
                                         <Skeletor onusMode width={50} height={24} />
                                     ) : (
-                                        <div className="bg-bgCondition rounded-[800px] px-2 mt-2">
-                                            <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-yellow-2' : 'text-nao-blue3'}`}>
+                                        <div className="bg-gray-13/[0.7] dark:bg-dark-4/[0.5] rounded-[800px] px-2 mt-2">
+                                            <span className={`text-xs font-medium leading-6 ${!dataSource?.status ? 'text-yellow-2' : 'text-txtSecondary dark:text-txtSecondary-dark'}`}>
                                                 {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
                                             </span>
                                         </div>
@@ -334,35 +338,32 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 (loading ? (
                                                     <Skeletor onusMode width={50} height={24} />
                                                 ) : (
-                                                    <div className="bg-bgCondition rounded-[800px] px-2">
-                                                        <span
-                                                            className={`text-xs font-medium leading-6 ${
-                                                                !dataSource?.status ? 'text-yellow-2' : 'text-nao-blue3'
-                                                            }`}
-                                                        >
-                                                            {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
-                                                        </span>
-                                                    </div>
+                                                    <span
+                                                        className={`text-xs font-medium leading-6 rounded-[800px] px-2 ${
+                                                            !dataSource?.status ? 'text-yellow-2 bg-yellow-2/[0.1]' : 'text-txtSecondary dark:text-txtSecondary-dark bg-gray-13/[0.7] dark:bg-dark-4/[0.5]'
+                                                        }`}
+                                                    >
+                                                        {dataSource?.status ? t('nao:contest:eligible') : t('nao:contest:not_eligible')}
+                                                    </span>
                                                 ))}
                                         </div>
                                     </div>
                                 </div>
                                 {dataSource?.[rank] ? (
-                                    <TextLiner className="!text-[4.125rem] !leading-[6.25rem] !pb-0" liner>
+                                    <div className="text-5xl font-semibold pb-0">
                                         #{dataSource?.[rank]}
-                                    </TextLiner>
+                                    </div>
                                 ) : null}
                             </div>
                         )}
 
                         {!isPending.group && (
-                            <CardNao className="!py-5 !px-[26px] mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px]">
+                            <CardNao noBg className="!py-5 !px-[26px] mt-8 !min-h-[92px] sm:flex-row w-full sm:min-w-[577px] dark:bg-none dark:bg-darkBlue-3">
                                 <div className="flex sm:flex-row sm:justify-around flex-col w-full">
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
                                         <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:pnl_ranking')}</label>
                                         <span className="font-semibold">#{dataSource?.current_rank_pnl}</span>
                                     </div>
-                                    <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
                                         <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:per_pnl')}</label>
                                         <span className={`font-semibold ${getColor(dataSource?.pnl)}`}>
@@ -374,7 +375,6 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                         <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">{t('nao:contest:volume_ranking')}</label>
                                         <span className="font-semibold">#{dataSource?.[rank]}</span>
                                     </div>
-                                    <div className="h-[1px] sm:h-auto w-full sm:min-w-[1px] sm:max-w-[1px] sm:w-[1px] bg-nao-grey/[0.2] sm:mx-6 my-2 sm:my-0 "></div>
                                     <div className="flex flex-row sm:flex-col-reverse gap-1 justify-between items-center">
                                         <label className="text-sm text-txtPrimary dark:text-txtPrimary-dark leading-6 whitespace-nowrap">
                                             {t('nao:contest:volume')} ({quoteAsset})
@@ -406,12 +406,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             ))} */}
                     </div>
                     {isMobile ? (
-                        <CardNao noBg className="mt-8 !py-6 !px-4">
+                        <div className="mt-8">
                             <div className="flex flex-col overflow-y-auto space-y-4">
                                 {Array.isArray(dataSource?.members) && dataSource?.members?.length > 0 ? (
                                     dataSource?.members.map((item, index) => {
                                         return (
-                                            <div key={index} className={'p-4 rounded-xl border border-nao-grey/[0.2]'}>
+                                            <CardNao key={index} className={'p-4 rounded-xl border border-divider dark:border-divider-dark'}>
                                                 <div className="flex items-center justify-between space-x-4">
                                                     <div className="flex items-center space-x-4">
                                                         <div className="bg-bgPrimary dark:bg-bgPrimary-dark rounded-[50%] min-w-[36px] min-h-[36px]">
@@ -433,12 +433,12 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                 <div className="flex flex-col text-sm space-y-2">
                                                     <div className="flex items-center justify-between leading-6">
                                                         <div className="text-txtSecondary dark:text-txtSecondary-dark">ID </div>
-                                                        <div className="font-medium">{item?.onus_user_id ?? '-'}</div>
+                                                        <div className="font-semibold">{item?.onus_user_id ?? '-'}</div>
                                                     </div>
                                                     {validatorLeader(item) && (
                                                         <div className="flex items-center justify-between leading-6">
                                                             <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:action')} </div>
-                                                            <div onClick={() => onActions(item, index)} className="text-txtSecondary dark:text-txtSecondary-dark underline cursor-pointer">
+                                                            <div onClick={() => onActions(item, index)} className="text-txtSecondary dark:text-txtSecondary-dark underline cursor-pointer font-semibold">
                                                                 {renderActions(null, item)}
                                                             </div>
                                                         </div>
@@ -447,44 +447,49 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                                                         <>
                                                             <div className="flex items-center justify-between leading-6">
                                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:trades')}</div>
-                                                                <span className="text-right">{formatNumber(item?.total_order, 0)}</span>
+                                                                <span className="text-right font-semibold">{formatNumber(item?.total_order, 0)}</span>
                                                             </div>
                                                             <div className="flex items-center justify-between leading-6">
                                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:volume')}</div>
-                                                                <span className="text-right">
+                                                                <span className="text-right font-semibold">
                                                                     {formatNumber(item?.total_volume, 0)} {quoteAsset}
                                                                 </span>
                                                             </div>
                                                             {!previous && (
                                                                 <div className="flex items-center justify-between leading-6">
                                                                     <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('common:ext_gate:time')}</div>
-                                                                    <span className="text-right">
+                                                                    <span className="text-right font-semibold">
                                                                         {formatNumber(item?.time, 2)} {t('common:hours')}
                                                                     </span>
                                                                 </div>
                                                             )}
                                                             <div className="flex items-center justify-between leading-6">
                                                                 <div className="text-txtSecondary dark:text-txtSecondary-dark">{t('nao:contest:per_pnl')}</div>
-                                                                <span className={`text-right ${getColor(item?.pnl)}`}>
+                                                                <span className={`text-right font-semibold ${getColor(item?.pnl)}`}>
                                                                     {`${item.pnl > 0 ? '+' : ''}${formatNumber(item.pnl, 2, 0, true)}%`}
                                                                 </span>
                                                             </div>
                                                         </>
                                                     )}
                                                 </div>
-                                            </div>
+                                            </CardNao>
                                         );
                                     })
                                 ) : (
                                     <div className={`flex items-center justify-center flex-col m-auto`}>
-                                        <img src={getS3Url(`/images/icon/icon-search-folder_dark.png`)} width={100} height={100} />
+                                        <div className="block dark:hidden">
+                                            <NoDataLightIcon />
+                                        </div>
+                                        <div className="hidden dark:block">
+                                            <NoDataDarkIcon />
+                                        </div>
                                         <div className="text-xs text-txtSecondary dark:text-txtSecondary-dark mt-1">{t('common:no_data')}</div>
                                     </div>
                                 )}
                             </div>
-                        </CardNao>
+                        </div>
                     ) : (
-                        <Table dataSource={dataSource?.members ?? []}>
+                        <Table dataSource={dataSource?.members ?? []} classWrapper="border border-divider dark:border-none">
                             <Column minWidth={50} className="text-txtSecondary dark:text-txtSecondary-dark font-medium" title={t('nao:contest:no')} fieldName={'index'} />
                             <Column
                                 minWidth={220}
@@ -549,17 +554,15 @@ const ContestDetail = ({ visible = true, onClose, sortName = 'volume', rowData, 
                             />
                         </Table>
                     )}
-                </div>
-                <div className="px-4 w-full mt-8 flex space-x-4 ">
-                    <ButtonNao variant={ButtonNaoVariants.SECONDARY} onClick={onClose} className="!rounded-md font-semibold w-full">
-                        {t('common:close')}
-                    </ButtonNao>
                     {isPending.person && (
-                        <ButtonNao onClick={onAccept} disabled={disabled} className="!rounded-md font-semibold w-full">
-                            {disabled && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:confirm_accept')}
-                        </ButtonNao>
+                        <div className="px-4 w-full mt-8 flex space-x-4">
+                            <ButtonNao onClick={onAccept} disabled={disabled} className="!rounded-md font-semibold w-full">
+                                {disabled && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:confirm_accept')}
+                            </ButtonNao>
+                        </div>
                     )}
                 </div>
+
             </Modal>
         </>
     );
@@ -588,19 +591,19 @@ const LeadIcon = () => {
             </g>
             <defs>
                 <linearGradient id="paint0_linear_14907_6665" x1="1.52708" y1="1.7257" x2="18.3726" y2="6.24598" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#093DD1" />
+                    <stop stopColor="#00dc68" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint1_linear_14907_6665" x1="2.02333" y1="1.44336" x2="2.02333" y2="16.0002" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#FFFBD5" />
+                    <stop stopColor="#000c06" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint2_linear_14907_6665" x1="2.02345" y1="0" x2="2.02345" y2="1.75686" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#FFFBD5" />
+                    <stop stopColor="#000c06" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <linearGradient id="paint3_linear_14907_6665" x1="2.02345" y1="0.878906" x2="2.02345" y2="1.75734" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#FFFBD5" />
+                    <stop stopColor="#000c06" />
                     <stop offset="1" stopColor="#49E8D5" />
                 </linearGradient>
                 <clipPath id="clip0_14907_6665">

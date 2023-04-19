@@ -794,18 +794,20 @@ input[type='number'] {
 
         /* Track */
         &::-webkit-scrollbar-track {
-            background: #0e1d32 !important;
+            @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
         }
 
         /* Handle */
         &::-webkit-scrollbar-thumb {
             @apply bg-teal;
+            background: #47cc85 !important;
             // background: linear-gradient(101.26deg, #093dd1 -5.29%, #49e8d5 113.82%) !important;
         }
 
         /* Handle on hover */
         &::-webkit-scrollbar-thumb:hover {
             @apply bg-teal;
+            background: #47cc85 !important;
         }
     }
 }
@@ -821,18 +823,20 @@ input[type='number'] {
 
     /* Track */
     &::-webkit-scrollbar-track {
-        background: #0e1d32 !important;
+       @apply bg-gray-11 dark:bg-darkBlue-6 rounded-md;
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
         @apply bg-teal;
+        background-color: #47cc85 !important;
         background-clip: padding-box;
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
         @apply bg-teal;
+        background-color: #47cc85 !important;
     }
 }
 

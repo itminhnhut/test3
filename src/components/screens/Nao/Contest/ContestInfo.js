@@ -18,6 +18,19 @@ import CreateTeamModal from 'components/screens/Nao/Contest/season2/CreateTeamMo
 import { ApiStatus } from 'redux/actions/const';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
 
+const mockUserData = {
+    group_name: 'group name',
+    time: 72000,
+    name: 'user name',
+    onus_user_id: '1111111111111111111',
+    group_displaying_id: '222222222222222222',
+    total_order: 20,
+    total_pnl: 40000000000,
+    total_volume: 50000000000000,
+    individual_rank_pnl: 200000000000,
+    individual_rank_volume: 300000000000,
+};
+
 const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, contest_id, time_to_create, currencies, quoteAsset: q, hasTabCurrency }, ref) => {
     const { t } = useTranslation();
     const user = useSelector(state => state.auth.user) || null;
@@ -134,7 +147,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                             <div className="flex text-txtSecondary dark:text-txtSecondary-dark leading-6 mt-1">{t('nao:contest:team_label')}:&nbsp;
                                 {userData?.group_name ?
                                     <span onClick={() => userData?.group_name && onShowDetail({ displaying_id: userData?.group_displaying_id, ...userData },null,quoteAsset)}
-                                        className={`${userData?.group_name ? 'text-nao-green uppercase' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span>
+                                        className={`${userData?.group_name ? 'text-teal uppercase' : ''} font-medium cursor-pointer`}>{userData?.group_name || t('nao:contest:not_invited')}</span>
                                     :
                                     invitations?.invites && invitations.invites.length !== 0 ?
                                         <span className="text-teal font-medium cursor-pointer underline"
@@ -182,7 +195,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                             <div className="flex items-center justify-between w-full md:w-1/2">
                                 <label className="text-txtPrimary dark:text-txtPrimary-dark/[0.6] text-sm leading-6 ">{t('nao:contest:total_pnl')}</label>
                                 <div
-                                    className={`font-semibold leading-8 text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-nao-red' : 'text-teal2')}`}>
+                                    className={`font-semibold leading-8 text-right ${!!userData?.total_pnl && (userData?.total_pnl < 0 ? 'text-red-2' : 'text-teal')}`}>
                                     {userData?.total_pnl ? formatNumber(userData?.total_pnl, 0, 0, true) + ` ${quoteAsset}` : '-'}
                                 </div>
                             </div>
@@ -209,7 +222,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
                                     </Tooltip>
                                 </label>
                                 <div
-                                    className={`font-semibold leading-8 text-right ${!!userData?.pnl && (userData?.pnl < 0 ? 'text-nao-red' : 'text-teal2')}`}>{userData?.pnl ? formatNumber(userData?.pnl, 2, 0, true) + '%' : '-'}
+                                    className={`font-semibold leading-8 text-right ${!!userData?.pnl && (userData?.pnl < 0 ? 'text-red-2' : 'text-teal')}`}>{userData?.pnl ? formatNumber(userData?.pnl, 2, 0, true) + '%' : '-'}
                                 </div>
                             </div>
 
@@ -233,7 +246,7 @@ const ContestInfo = forwardRef(({ onShowDetail, onShowInvitations, previous, con
             </section>
             {showCreateTeamModal && <CreateTeamModal contest_id={contest_id} userData={userData} onClose={onShowCreate} onShowDetail={onShowDetail} />}
             {
-                (!userData?.group_name && isValidCreate) && <div className="sm:hidden bottom-0 left-0 fixed bg-nao-tooltip px-4 py-6 z-10 w-full">
+                (!userData?.group_name && isValidCreate) && <div className="sm:hidden bottom-0 left-0 fixed bg-bgPrimary dark:bg-bgPrimary-dark px-4 py-6 z-10 w-full">
                     <ButtonNao onClick={() => onShowCreate()} className="!rounded-md">{t('nao:contest:create_team')}</ButtonNao>
                 </div>
             }

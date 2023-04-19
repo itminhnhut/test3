@@ -13,6 +13,8 @@ import colors from 'styles/colors';
 import { AlertContext } from 'components/common/layouts/LayoutNaoToken';
 import { IconLoading } from 'components/common/Icons';
 import useWindowSize from 'hooks/useWindowSize';
+import { BxsUserIcon } from 'components/svg/SvgIcon';
+import SvgCross from 'components/svg/Cross';
 
 const initMember = {
     member1: '',
@@ -215,28 +217,28 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
 
     return (
         <Modal onusMode={true} isVisible={true} onBackdropCb={() => onClose()}
-            onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !bg-nao-tooltip !overflow-hidden`}
+            onusClassName={`${isMobile ? '!px-2 pb-[3.75rem]' : '!px-8 !py-10 max-w-[484px]'} !overflow-hidden`}
             containerClassName="!bg-black-800/[0.6] dark:!bg-black-800/[0.8]"
             center={!isMobile}
         >
+            <SvgCross className="ml-auto" color="currentColor" size={24} onClick={onClose} />
             <div className="!px-4 text-2xl leading-8 font-semibold">{t('nao:contest:create_a_team')}</div>
             <div className="!px-4 scrollbar-nao form-team mt-8 overflow-y-auto max-h-[calc(100%-136px)]">
                 <div>
                     <div className="text-sm font-medium leading-6">{t('nao:contest:team_information')}</div>
-                    <div className="mt-4 flex items-center justify-between space-x-4">
+                    <div className="mt-4 flex items-center justify-between space-x-0 sm:space-x-4 flex-wrap sm:flex-nowrap">
                         <div onClick={onAddAvatar}
                             style={{ backgroundImage: avatar?.url ? `url(${avatar.url})` : null }}
                             className={classnames(
-                                `min-h-[58px] min-w-[58px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex flex-col items-center justify-center`,
+                                `min-h-[80px] min-w-[80px] rounded-[50%] bg-bgPrimary dark:bg-bgPrimary-dark flex flex-col items-center justify-center`,
                                 'bg-center bg-cover cursor-pointer',
                                 {
-                                    'border-[1px] border-dashed border-nao-blue2': !avatar.url,
+                                    'border-[1px] border-dashed border-teal': !avatar.url,
                                     'bg-origin-padding': avatar.url,
                                 },
                             )}>
                             {!avatar.url && <>
-                                <div className="mt-[7px]"> <UploadIcon /></div>
-                                <span className="text-[11px] leading-6">{t('nao:contest:add')}</span>
+                                <div className="text-teal"> <BxsUserIcon size={16} /></div>
                             </>
                             }
                         </div>
@@ -247,7 +249,7 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 <div className="mt-8">
                     <Tooltip className="!p-[10px] sm:min-w-[282px] sm:!max-w-[282px]"
                         backgroundColor={colors.nao.tooltip2} arrowColor="transparent" id="tooltip-list-team" >
-                        <div className="font-medium text-sm text-txtSecondary dark:text-txtSecondary-dark2 "  >
+                        <div className="font-medium text-sm"  >
                             {t('nao:contest:tooltip_create_team')}
                         </div>
                     </Tooltip>
@@ -270,9 +272,9 @@ const CreateTeamModal = ({ isVisible, onClose, userData, onShowDetail, contest_i
                 </div>
             </div>
             <div className='!px-4 flex items-center space-x-4 mt-8'>
-                <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao>
+                {/* <ButtonNao onClick={() => onClose()} variant={ButtonNaoVariants.SECONDARY} className="w-full !rounded-md">{t('common:close')}</ButtonNao> */}
                 <ButtonNao onClick={onSubmit} disabled={disabled || loading || isLoading.current} className="w-full !rounded-md">
-                    {loading && <IconLoading className="!m-0" color={colors.nao.grey} />} {t('nao:contest:create_team')}
+                    {loading && <IconLoading className="!m-0" color="currentColor" />} {t('nao:contest:create_team')}
                 </ButtonNao>
             </div>
         </Modal>

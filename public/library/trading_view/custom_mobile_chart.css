@@ -2,7 +2,7 @@
     --primary-color: #ffffff;
 }
 .theme-dark {
-    --primary-color: #1B222D;
+    --primary-color: #0c0e14;
 }
 
 html, body {
@@ -11,7 +11,7 @@ html, body {
 }
 
 html.theme-dark .chart-page {
-    background-color: #1B222D !important;
+    background-color: #0c0e14 !important;
 }
 
 ._tv-dialog {
@@ -42,10 +42,10 @@ html .pane-legend-title__details {
 }
 
 html.theme-dark .drawingToolbar-U3_QXRof- {
-    background-color: #1B222D !important;
-    border-right: 3px solid #2B3247 !important;
+    background-color: #0c0e14 !important;
+    border-right: 3px solid #222940 !important;
 }
 
 html.theme-dark .group-2JyOhh7Z-{
-    background-color: #1B222D !important;
+    background-color: #0c0e14 !important;
 }
