@@ -108,7 +108,7 @@ const Overview = ({ data, refreshData, commisionConfig, t, width, user, loading 
                 if (dataPartner?.status === STATUS_OK) {
                     const { phone, social_link, status } = dataPartner?.data || {};
                     if (phone && social_link) {
-                        status === 1 ? setIsWithdrawal(true) : setIsWithdrawal(false);
+                        status >= 1 ? setIsWithdrawal(true) : setIsWithdrawal(false);
                     } else {
                         setIsPartner(false);
                     }
