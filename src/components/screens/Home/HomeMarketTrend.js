@@ -114,7 +114,6 @@ const TokenTypes = ({ type, setType, types, lang, width, setState, t }) => {
 };
 
 const HomeMarketTrend = ({ trendData }) => {
-    console.log('trendData:', trendData)
     // * Initial State
     const [type, setType] = useState(types[0]);
     const [state, set] = useState({
