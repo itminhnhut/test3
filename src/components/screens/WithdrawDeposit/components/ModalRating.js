@@ -40,7 +40,7 @@ const ModalRating = ({ isVisible, onClose, orderDetail }) => {
                     <div className="txtPri-3 mb-6">{t('dw_partner:rating_modal.title')}</div>
                     <div className="flex flex-col items-center mb-6">
                         <img src={orderDetail?.[`partnerMetadata`]?.avatar || DefaultAvatar} className="mb-4 w-20 h-20 rounded-full" />
-                        <div className="txtPri-1 capitalize font-semibold mb-3">{orderDetail && orderDetail?.[`partnerMetadata`]?.name?.toLowerCase()}</div>
+                        <div className="txtPri-5 capitalize font-semibold">{orderDetail && orderDetail?.[`partnerMetadata`]?.name?.toLowerCase()}</div>
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <div className="txtSecond-2 mb-4">{t('dw_partner:rating_modal.description')}</div>
