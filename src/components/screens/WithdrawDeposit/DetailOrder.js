@@ -47,7 +47,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         isShowQr: false,
         isShowUploadImg: false,
         firstLoad: true,
-        isShowRating: false
+        isShowRating: true
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));

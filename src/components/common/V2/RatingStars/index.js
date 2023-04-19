@@ -3,9 +3,9 @@ import { StarPurpleIcon } from 'components/svg/SvgIcon';
 import React, { useState } from 'react';
 import { isFunction } from 'redux/actions/utils';
 
-const index = ({ wrapClassname, starLength = 5, children }) => {
+const index = ({ wrapClassname, starLength = 5, defaultStar = 0, children }) => {
     const [state, set] = useState({
-        hoverStars: 0,
+        hoverStars: defaultStar,
         isRated: false
     });
 
@@ -14,10 +14,10 @@ const index = ({ wrapClassname, starLength = 5, children }) => {
     return (
         <>
             <div
-                onMouseLeave={() => {
-                    if (state.isRated) return;
-                    setRatingState({ hoverStars: 0 });
-                }}
+                // onMouseLeave={() => {
+                //     if (state.isRated) return;
+                //     setRatingState({ hoverStars: 0 });
+                // }}
                 className={classNames('flex gap-4', wrapClassname)}
             >
                 {[...Array(starLength).keys()].map((star) => (

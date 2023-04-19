@@ -44,7 +44,7 @@ const ModalRating = ({ isVisible, onClose, orderDetail }) => {
                     </div>
                     <div className="flex flex-col items-center justify-center">
                         <div className="txtSecond-2 mb-4">{t('dw_partner:rating_modal.description')}</div>
-                        <RatingStars>
+                        <RatingStars defaultStar={5}>
                             {(hoverStars) => (
                                 <div className="mt-10 w-full">
                                     <Button loading={loading} disabled={!hoverStars} onClick={() => onRatingHandler(hoverStars)}>

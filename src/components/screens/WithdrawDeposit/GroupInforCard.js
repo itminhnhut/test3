@@ -203,12 +203,15 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                         </div>
                                         <div className="flex items-center justify-between">
                                             <span className="txtSecond-2">{t('common:amount')}</span>
-
-                                            <TextCopyable
-                                                className="gap-x-1 txtPri-1 "
-                                                showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
-                                                text={orderDetail?.quoteQty}
-                                            />
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable
+                                                    className="gap-x-1  txtPri-1 "
+                                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
+                                                    text={orderDetail?.quoteQty}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 </div>

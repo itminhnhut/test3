@@ -46,14 +46,14 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 <div className="flex gap-12 justify-between md:justify-center order-3 md:order-2 w-full md:w-1/3 p-3 md:border-l md:border-r border-divider dark:border-divider-dark">
                     <div className="">
                         <div className="txtSecond-2 mb-3">{t('common:transaction_id')}</div>
-                        {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />}
+                        {!orderDetail ? <Skeletor width="100px" /> : <TextCopyable className="gap-x-1 txtPri-1" text={orderDetail?.displayingId} />}
                     </div>
                     <div className="">
                         <div className="txtSecond-2 mb-3 ">{t('common:time')}</div>
                         {!orderDetail ? (
                             <Skeletor width="100px" />
                         ) : (
-                            <div className="font-semibold">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
+                            <div className="txtPri-1">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</div>
                         )}
                     </div>
                 </div>
