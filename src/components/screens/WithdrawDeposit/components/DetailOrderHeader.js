@@ -25,7 +25,7 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                                 <Skeletor width="150px" />
                             ) : status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
                                 <TagV2 icon={true} type={TYPES.WARNING}>
-                                    {t('common:waiting_confirmation')}
+                                    {t('dw_partner:wait_confirmation')}
                                 </TagV2>
                             ) : (
                                 <OrderStatusTag className="!ml-0" status={status?.status} />

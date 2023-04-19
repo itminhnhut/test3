@@ -41,16 +41,28 @@
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
     "user": "Người dùng",
+    "wait_confirmation":"Chờ xác nhận",
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Gửi lại bằng chứng",
     "notes": "<li>Kiểm tra đúng thông tin tên tài khoản, số tài khoản và nội dung chuyển khoản</li><li>Chuyển đủ và đúng số lượng, không làm tròn, không bớt số lẻ</li><li>Hoàn tất chuyển khoản trong vòng 10 phút sau khi ấn \"Tôi đã chuyển khoản\" để không bị huỷ lệnh</li>",
+    "note_waiting_confirm": "Chỉ tiến hành thanh toán khi giao dịch được đối tác xác nhận",
+    "note_complete_dispute": "Giao dịch đang trong trạng thái khiếu nại. Bằng việc ấn \"Hoàn tất\", bạn tự động xử lý khiếu nại và chuyển trạng thái thành Thành công",
+    "complete_dispute": "Hoàn tất",
+    "resolve_dispute_title": "Xử lý khiếu nại",
+    "resolve_dispute_description": "Bằng việc ấn \"Xác nhận\", bạn đã nhận đủ số tiền từ người dùng/đối tác. Trạng thái giao dịch sẽ được cập nhật thành Thành Công",
     "beneficiary": "Người thụ hưởng",
     "download": "Tải xuống",
     "payment_infor": "Thông tin thanh toán",
     "bank": "Ngân hàng",
     "no_bank": "Không tìm thấy ngân hàng",
     "transfer_description": "Nội dung chuyển khoản",
+    "rating_modal": {
+        "title": "Đánh giá đối tác",
+        "description": "Bạn có hài lòng khi giao dịch với đối tác này không?",
+        "submit": "Gửi đánh giá",
+        "rated_success": "Xin cảm ơn, đánh giá của bạn đã được chúng tôi ghi nhận để nâng cao chất lượng dịch vụ mỗi ngày."
+    },
 
     "transfer_confirm_description": {
         "user": "Khi ấn vào nút xác nhận, bạn sẽ chuyển tiển cho đối tác, vui lòng kiểm tra kĩ số tiền và nội dung chuyển khoản trước khi thực hiện.",
@@ -73,7 +85,11 @@
     "set_as_default": "Đặt làm mặc định",
     "disputed_success": "Bạn đã khiếu nại thành công giao dịch #{{orderId}}",
     "dw_title": "Nạp/Rút",
-    "deposit_withdraw_guide": "Hướng dẫn nạp/rút tài sản",
+    "deposit_withdraw_guide": {
+        "crypto": "Hướng dẫn nạp/rút tài sản",
+        "partner_buy": "Hướng dẫn nạp qua đối tác",
+        "partner_sell": "Hướng dẫn rút qua đối tác"
+    },
     "submit": "Gửi lên",
     "reselected": "Gửi lại bằng chứng",
     "total_dw": "Khối lượng",

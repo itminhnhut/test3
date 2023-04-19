@@ -17,8 +17,10 @@ const ModalRating = ({ isVisible, onClose, orderDetail }) => {
             setLoading(true);
             const data = await ratingOrder({ displayingId: orderDetail?.displayingId, rating });
             if (data && data?.status === ApiStatus.SUCCESS) {
-                toast({ text: 'Chúc mừng, bạn đã đánh giá thành công', type: 'success' });
+                toast({ text: t('dw_partner:rating_modal.rated_success'), type: 'success' });
                 onClose();
+            } else {
+                toast({ text: t('common:global_notice.unknown_error'), type: 'success' });
             }
         } catch (error) {
             toast({ text: t('common:global_notice.unknown_error'), type: 'success' });
@@ -35,18 +37,18 @@ const ModalRating = ({ isVisible, onClose, orderDetail }) => {
         >
             {orderDetail && (
                 <>
-                    <div className="txtPri-3 mb-6">Đánh giá đối tác </div>
+                    <div className="txtPri-3 mb-6">{t('dw_partner:rating_modal.title')}</div>
                     <div className="flex flex-col items-center mb-6">
                         <img src={orderDetail?.[`partnerMetadata`]?.avatar || DefaultAvatar} className="mb-4 w-20 h-20 rounded-full" />
                         <div className="txtPri-1 capitalize font-semibold mb-3">{orderDetail && orderDetail?.[`partnerMetadata`]?.name?.toLowerCase()}</div>
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                        <div className="txtSecond-2 mb-4">Giao dịch của bạn thế nào?</div>
+                        <div className="txtSecond-2 mb-4">{t('dw_partner:rating_modal.description')}</div>
                         <RatingStars>
                             {(hoverStars) => (
                                 <div className="mt-10 w-full">
                                     <Button loading={loading} disabled={!hoverStars} onClick={() => onRatingHandler(hoverStars)}>
-                                        {t('common:confirm')}
+                                        {t('dw_partner:rating_modal.submit')}
                                     </Button>
                                 </div>
                             )}

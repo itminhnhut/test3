@@ -11,7 +11,8 @@ import {
     API_RATING_ORDER,
     API_REJECT_PARTNER_ORDER,
     API_SET_PARTNER_ORDER_CONFIG,
-    API_SET_USER_BANK_ACCOUNT
+    API_SET_USER_BANK_ACCOUNT,
+    API_RESOLVE_PARTNER_ORDER
 } from './apis';
 import { ApiStatus } from './const';
 import FetchApi from 'utils/fetch-api';
@@ -127,6 +128,15 @@ export const approveOrder = async ({ displayingId, mode = 'user' }) => {
 
 export const rejectOrder = async ({ displayingId, mode = 'user' }) => {
     const res = await Axios.post(API_REJECT_PARTNER_ORDER, {
+        displayingId,
+        mode
+    });
+
+    return res.data;
+};
+
+export const resolveDispute = async ({ displayingId, mode = 'user' }) => {
+    const res = await Axios.post(API_RESOLVE_PARTNER_ORDER, {
         displayingId,
         mode
     });

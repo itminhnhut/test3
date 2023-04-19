@@ -10,7 +10,8 @@ export const REPORT_ABLE_TIME = 5 * 60 * 1000;
 
 export const DisputedType = {
     REJECTED: 1,
-    REPORT: 2
+    REPORT: 2,
+    RESOLVE_DISPUTE: 3
 };
 
 export const MODE = {
@@ -93,6 +94,13 @@ export const ORDER_TYPES = {
         description: ({ mode = MODE.USER, t }) => t(`dw_partner:transfer_confirm_description.${mode}`),
         showConfirm: true
     },
+    RESOLVE_DISPUTE: {
+        icon: ICONS['INFO'],
+        title: (t, mode = MODE.USER) => t('dw_partner:resolve_dispute_title'),
+        description: ({ mode = MODE.USER, t }) => t(`dw_partner:resolve_dispute_description`),
+        showConfirm: true
+    },
+
     CONFIRM_TRANSFERRED: {
         icon: ICONS['INFO'],
         title: (t, mode = MODE.USER) => t('common:confirm'),
@@ -122,7 +130,7 @@ export const ORDER_TYPES = {
                 <ButtonV2
                     onClick={() => {
                         router.push(`${PATHS.WITHDRAW_DEPOSIT.PARTNER}?side=${side}&assetId=${assetId}`);
-                        resetModalState()
+                        resetModalState();
                     }}
                     className="transition-all mt-10"
                 >

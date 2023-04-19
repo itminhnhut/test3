@@ -13,19 +13,24 @@ import TagV2, { TYPES } from 'components/common/V2/TagV2';
 
 export const PartnerSubcontent = ({ partner, t, language }) => {
     const totalOrder = partner?.analyticMetadata?.count || 0;
+    const countRating = partner?.analyticMetadata?.countRating || 0;
     return (
         <div className="flex items-center gap-2 text-txtSecondary dark:text-txtSecondary-dark">
-            <TagV2 icon={false} type={TYPES.WARNING}>
-                <div className="flex items-center text-sm gap-2 text-yellow-100">
-                    <span>{partner?.analyticMetadata?.rating || 0}</span>
-                    <StarPurpleIcon size={16} fill="currentColor" />
-                    <span>({partner?.analyticMetadata?.countRating || 0})</span>
-                </div>
-            </TagV2>
+            {countRating > 0 && (
+                <TagV2 icon={false} type={TYPES.WARNING}>
+                    <div className="flex items-center text-sm gap-2 text-yellow-100">
+                        <span>{partner?.analyticMetadata?.rating || 0}</span>
+                        <StarPurpleIcon size={16} fill="currentColor" />
+                        <span>({partner?.analyticMetadata?.countRating})</span>
+                    </div>
+                </TagV2>
+            )}
 
             <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
                 <div className="flex gap-2 items-center">
-                    <OrderIcon size={16} />
+                    <div className="w-4 h-4">
+                        <OrderIcon size={16} />
+                    </div>
                     <span>
                         {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
                     </span>
@@ -35,7 +40,9 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
             {totalOrder > 0 ? (
                 <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
                     <div className="flex gap-2 items-center">
-                        <BxsTimeIcon size={16} />
+                        <div className="w-4 h-4">
+                            <BxsTimeIcon size={16} />
+                        </div>
                         <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
                     </div>
                 </TagV2>

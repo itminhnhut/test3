@@ -165,10 +165,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             } else {
                                 //user chua chuyen tien
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
-                                    // primaryBtn = {
-                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    //     text: t('common:deny')
-                                    // };
                                 } else {
                                     primaryBtn = {
                                         function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
@@ -195,10 +191,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 if (theirStatus === PartnerPersonStatus.PENDING) {
                                     // user chua chuyen tien
                                     if (myStatus === PartnerPersonStatus.PENDING) {
-                                        // secondaryBtn = {
-                                        //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                        //     text: t('common:cancel_order')
-                                        // };
                                         primaryBtn = {
                                             function: () =>
                                                 onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
@@ -220,6 +212,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             };
                         }
                     }
+
+                    // resolve dispute button for partner mode
+                    if (orderStatus === PartnerOrderStatus.DISPUTED && isPartner) {
+                        primaryBtn = {
+                            function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
+                            text: t('dw_partner:complete_dispute')
+                        };
+                    }
                 }
             },
             [SIDE.SELL]: {
@@ -239,10 +239,6 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             } else {
                                 //partner chua chuyen tien
                                 if (myStatus === PartnerPersonStatus.PENDING) {
-                                    // secondaryBtn = {
-                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                    //     text: t('common:deny')
-                                    // };
                                     primaryBtn = {
                                         function: () =>
                                             onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
@@ -294,6 +290,14 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 text: state.orderDetail?.partnerUploadImage ? t('dw_partner:upload_proof_again') : t('dw_partner:upload_proof')
                             };
                         }
+                    }
+
+                    // resolve dispute button for user mode
+                    if (orderStatus === PartnerOrderStatus.DISPUTED && !isPartner) {
+                        primaryBtn = {
+                            function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.RESOLVE_DISPUTE, state.orderDetail),
+                            text: t('dw_partner:complete_dispute')
+                        };
                     }
                 }
             }
@@ -376,13 +380,21 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
                             {state.orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING ? (
-                                `Lệnh đang chờ đối tác xác nhận. Vui lòng tiến hành thanh toán sau khi có thông tin đối tác xác nhận.`
+                                t('dw_partner:note_waiting_confirm')
                             ) : (
                                 <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
                             )}
                         </div>
                     </div>
                 )}
+                {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) &&
+                    status?.status === PartnerOrderStatus.DISPUTED && (
+                        <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
+                            <DarkNote title={t('wallet:note')} />
+                            <div className="txtSecond-2 mt-2">{t('dw_partner:note_complete_dispute')}</div>
+                        </div>
+                    )}
+
                 {/* Actions */}
 
                 <div className="flex items-center justify-between mt-8">

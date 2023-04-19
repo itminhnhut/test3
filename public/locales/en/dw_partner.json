@@ -41,16 +41,28 @@
     "partner": "Partner",
     "no_partner": "No partner found",
     "user": "User",
+    "wait_confirmation":"Wait for confirmation",
     "appeal": "Appeal",
     "upload_proof": "Upload Proof (Optional)",
     "upload_proof_again": "Upload again",
     "notes": "<li>Check the right account name, account number, and description</li><li>Transfer the right and exact amount; do not round or remove unusual numbers.</li><li>Finish the transfer within 10 minutes of pressing \"I have transferred\" so that the order is not canceled.</li>",
+    "note_waiting_confirm": "Payment is only made when the order is confirmed by the partner",
+    "note_complete_dispute": "Transaction is currently in dispute. By pressing \"Success\" you resolve the dispute effortlessly and update its status to Success.",
+    "complete_dispute": "Success",
+    "resolve_dispute_title": "Resolving dispute",
+    "resolve_dispute_description": "By pressing \"Confirm\", you have received the full amount from the user/partner. Order status will be updated to Success",
     "beneficiary": "Beneficiary",
     "download": "Download",
     "payment_infor": "Payment Information",
     "bank": "Bank",
     "no_bank": "No bank found",
     "transfer_description": "Description",
+    "rating_modal": {
+        "title": "Partner Review",
+        "description": "How satisfied are you with this partner's transaction?",
+        "submit": "Submit",
+        "rated_success": "Thank you, we have acknowledged your feedback to continuously improve the quality of our service every day."
+    },
     "transfer_confirm_description": {
         "user": "When you click the confirm button, you will transfer the money to the partner, please carefully check the amount and the content of the transfer before making.",
         "partner": "When you click the confirm button, you will transfer the money to the user, please carefully check the amount and the content of the transfer before making."
@@ -72,7 +84,11 @@
     "set_as_default": "Set as Default",
     "disputed_success": "Transaction #{{orderId}} has been disputed successfully",
     "dw_title": "Deposit/Withdraw",
-    "deposit_withdraw_guide": "Deposit and withdraw guides",
+    "deposit_withdraw_guide": {
+        "crypto": "Deposit and withdraw guides",
+        "partner_buy": "Deposit via Partner guides",
+        "partner_sell": "Withdraw via Partner guides"
+    },
     "submit": "Submit",
     "reselected": "Upload again",
     "total_dw": "Volume",

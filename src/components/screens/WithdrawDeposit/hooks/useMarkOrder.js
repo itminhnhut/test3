@@ -2,11 +2,12 @@ import React, { useMemo } from 'react';
 import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
-import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal, resolveDispute } from 'redux/actions/withdrawDeposit';
 import { useDispatch } from 'react-redux';
 import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
+import toast from 'utils/toast';
 const useMarkOrder = ({ mode, toggleRefetch }) => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -17,7 +18,8 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
         (userStatus, statusType, { assetId, id, side, baseQty, assetCode, partnerAcceptStatus }) =>
         async () => {
             let type, additionalData;
-            let isReject = false;
+            let isReject = false,
+                isResolveDispute = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
             const isProgressOrderAction = mode === MODE.PARTNER && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
             const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
@@ -41,6 +43,9 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                             };
                             isReject = true;
                             break;
+                        case DisputedType.RESOLVE_DISPUTE:
+                            isResolveDispute = true;
+                            break;
                         default:
                             break;
                     }
@@ -58,7 +63,9 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 setModalState(MODAL_TYPE.CONFIRM, {
                     loading: true
                 });
-                const data = isProgressOrderAction
+                const data = isResolveDispute
+                    ? await resolveDispute({ displayingId: id, mode })
+                    : isProgressOrderAction
                     ? await processPartnerOrder({ displayingId: id, status: userStatus })
                     : isReject
                     ? await rejectOrder({ displayingId: id, mode })
@@ -83,11 +90,13 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     });
 
                     // open after confirm modal
-                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                        visible: true,
-                        type,
-                        additionalData
-                    });
+                    if (type && additionalData) {
+                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                            visible: true,
+                            type,
+                            additionalData
+                        });
+                    }
 
                     toggleRefetch();
                 } else {
@@ -177,6 +186,8 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         type = ORDER_TYPES.CANCEL_ORDER;
                         additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
                         break;
+                    case DisputedType.RESOLVE_DISPUTE:
+                        type = ORDER_TYPES.RESOLVE_DISPUTE;
                     default:
                         break;
                 }

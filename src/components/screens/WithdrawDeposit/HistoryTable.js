@@ -7,13 +7,14 @@ import { getAssetCode, formatTime, formatNumber, formatNanNumber } from 'redux/a
 import Axios from 'axios';
 import { TABS, data } from './constants';
 import { API_GET_HISTORY_DW_PARTNERS } from 'redux/actions/apis';
-import { ApiStatus } from 'redux/actions/const';
+import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import { useSelector } from 'react-redux';
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import OrderStatusTag from 'components/common/OrderStatusTag';
 import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
 
 const LIMIT_ROW = 10;
 
@@ -95,7 +96,15 @@ const getColumns = (t, user, side) => [
         title: <span className="mr-[10px]">{t('common:status')}</span>,
         align: 'right',
         width: 185,
-        render: (v) => <OrderStatusTag status={v} icon={false} />
+        render: (v, item) => {
+            return item?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && v === PartnerOrderStatus.PENDING ? (
+                <TagV2 icon={true} type={TYPES.WARNING} className="ml-auto">
+                    {t('dw_partner:wait_confirmation')}
+                </TagV2>
+            ) : (
+                <OrderStatusTag status={v} icon={false} />
+            );
+        }
     }
 ];
 

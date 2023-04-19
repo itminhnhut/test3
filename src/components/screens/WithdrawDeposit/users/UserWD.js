@@ -63,7 +63,9 @@ const UserWD = ({ type, children, side }) => {
                         <div className="sm:border-b border-divider dark:border-divider-dark flex justify-center ">
                             <HrefButton variants="blank" target="_blank" className="!w-auto !py-4 !text-base" href={getLinkSupport(language === 'vi')}>
                                 <BxsBookIcon size={16} isButton={true} className="mr-2" />
-                                {t('dw_partner:deposit_withdraw_guide')}
+                                {type === 'partner'
+                                    ? t(`dw_partner:deposit_withdraw_guide.partner_${side?.toLowerCase()}`)
+                                    : t(`dw_partner:deposit_withdraw_guide.crypto`)}
                             </HrefButton>
                         </div>
                     </div>
