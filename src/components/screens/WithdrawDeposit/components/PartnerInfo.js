@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { formatPhoneNumber, filterSearch, formatTimePartner } from 'redux/actions/utils';
+import { filterSearch, formatTimePartner } from 'redux/actions/utils';
 import { setPartner } from 'redux/actions/withdrawDeposit';
 import CheckCircle from 'components/svg/CheckCircle';
 import { API_GET_PARTNERS } from 'redux/actions/apis';
 import InfoCard from './common/InfoCard';
 import DropdownCard from './DropdownCard';
 import useFetchApi from 'hooks/useFetchApi';
-import { BxsTimeIcon, OrderIcon, StarPurpleIcon } from 'components/svg/SvgIcon';
+import { OrderIcon, StarPurpleIcon, TimerIcon } from 'components/svg/SvgIcon';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 
@@ -41,7 +41,7 @@ export const PartnerSubcontent = ({ partner, t, language }) => {
                 <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
                     <div className="flex gap-2 items-center">
                         <div className="w-4 h-4">
-                            <BxsTimeIcon size={16} />
+                            <TimerIcon size={16} />
                         </div>
                         <span>{formatTimePartner(t, partner?.analyticMetadata?.avgTime)}</span>
                     </div>

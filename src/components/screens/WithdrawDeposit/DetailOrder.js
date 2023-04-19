@@ -81,7 +81,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         orderDetail: data
                     });
                     setIsRefetchOrderDetailAfterCountdown(false);
-                    if (data?.status === PartnerOrderStatus.SUCCESS && mode === MODE.USER) {
+                    if (data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode && mode === MODE.USER) {
                         setState({
                             isShowRating: true
                         });

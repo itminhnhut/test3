@@ -4,8 +4,7 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import InfoCard from './components/common/InfoCard';
-import { BxsTimeIcon, ContactIcon, OrderIcon, QrCodeScannIcon } from 'components/svg/SvgIcon';
+import { ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import { DefaultAvatar, PartnerAcceptStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
@@ -88,7 +87,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                                     {totalOrder > 0 ? (
                                                         <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
                                                             <div className="flex gap-2 items-center">
-                                                                <BxsTimeIcon size={16} />
+                                                                <TimerIcon size={16} />
                                                                 <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
                                                             </div>
                                                         </TagV2>
