@@ -36,7 +36,16 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                             <div className="flex  flex-col  min-h-full">
                                 <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 flex flex-col">
                                     {/* {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && ( */}
-                                    <div className="txtPri-1 mb-4">{t(`dw_partner:${otherMode}`)}</div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
+
+                                        {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
+                                            <ButtonV2 onClick={setModalQr} className="!py-0 flex ml-auto items-center gap-x-2 w-auto" variants="text">
+                                                <QrCodeScannIcon />
+                                                QR Code
+                                            </ButtonV2>
+                                        )}
+                                    </div>
                                     {/* )} */}
                                     <div className="w-full flex flex-col items-center text-center ">
                                         {!orderDetail ? (
@@ -105,7 +114,6 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                         {/* Thông tin chuyển khoản */}
                         <div className="w-full md:w-3/5 p-3">
                             <div className="flex flex-col min-h-full">
-                                {/* <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_bank_receipt')}</h1> */}
                                 <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6">
                                     {/* {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
                                     <div className="txtSecond-3 mb-4">{t(`dw_partner:${otherMode}`)}</div>
@@ -151,12 +159,12 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                         }}
                                     /> */}
 
-                                        {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
+                                        {/* {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
                                             <ButtonV2 onClick={setModalQr} className="flex ml-auto items-center gap-x-2 w-auto" variants="text">
                                                 <QrCodeScannIcon />
                                                 QR Code
                                             </ButtonV2>
-                                        )}
+                                        )} */}
                                     </div>
 
                                     {/* Divider */}
