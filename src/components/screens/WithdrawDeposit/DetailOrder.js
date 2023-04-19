@@ -379,7 +379,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                     <div className="w-full rounded-md border border-divider dark:border-divider-dark py-4 px-6">
                         <DarkNote title={t('wallet:note')} />
                         <div className="txtSecond-2 mt-2">
-                            {state.orderDetail?.partnerAcceptStatus === PartnerAcceptStatus.PENDING ? (
+                            {status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
                                 t('dw_partner:note_waiting_confirm')
                             ) : (
                                 <ul className="list-disc ml-6 marker:text-xs" dangerouslySetInnerHTML={notes} />
