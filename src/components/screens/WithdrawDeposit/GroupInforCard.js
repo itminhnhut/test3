@@ -6,7 +6,7 @@ import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, format
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import { ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { DefaultAvatar, PartnerAcceptStatus } from 'redux/actions/const';
+import { DefaultAvatar, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
@@ -28,7 +28,7 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
         <div>
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
             {/* Không hiển thị thông tin lệnh đôi với màn USER khi đối tác chưa accept */}
-            {mode === MODE.USER && status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING ? null : (
+            {mode === MODE.USER && status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? null : (
                 <div className="mb-6">
                     <div className="flex -m-3 flex-wrap items-stretch">
                         {/* Chi tiết giao dịch */}
