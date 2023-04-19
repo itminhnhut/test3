@@ -156,7 +156,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:cancel_order')
+                                    text: t('common:deny')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
@@ -230,7 +230,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             if (!isPartnerAccepted) {
                                 secondaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.DENIED, DisputedType.REJECTED, state.orderDetail),
-                                    text: t('common:cancel_order')
+                                    text: t('common:deny')
                                 };
                                 primaryBtn = {
                                     function: () => onProcessOrder(PartnerAcceptStatus.ACCEPTED, null, state.orderDetail),
@@ -239,10 +239,10 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                             } else {
                                 //partner chua chuyen tien
                                 if (myStatus === PartnerPersonStatus.PENDING) {
-                                    secondaryBtn = {
-                                        function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
-                                        text: t('common:deny')
-                                    };
+                                    // secondaryBtn = {
+                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                    //     text: t('common:deny')
+                                    // };
                                     primaryBtn = {
                                         function: () =>
                                             onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TRANSFERRED, state.orderDetail),
@@ -253,28 +253,35 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                 }
                             }
                         } else {
-                            // partner chua chuyen tien
-                            if (theirStatus === PartnerPersonStatus.PENDING) {
+                            if (!isPartnerAccepted) {
                                 primaryBtn = {
                                     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
                                     text: t('common:cancel_order')
                                 };
+                            } else {
+                                // partner chua chuyen tien
+                                if (theirStatus === PartnerPersonStatus.PENDING) {
+                                    // primaryBtn = {
+                                    //     function: () => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REJECTED, state.orderDetail),
+                                    //     text: t('common:cancel_order')
+                                    // };
 
-                                return;
-                            }
-                            // partner transferred
-                            if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
-                                primaryBtn = {
-                                    function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
-                                    text: t('dw_partner:take_money_already')
-                                };
-                                reportBtn = (
-                                    <AppealButton
-                                        onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
-                                        timeDispute={state?.ordeDetail?.countdownTimeDispute}
-                                        timeExpire={state.orderDetail?.timeExpire}
-                                    />
-                                );
+                                    return;
+                                }
+                                // partner transferred
+                                if (theirStatus === PartnerPersonStatus.TRANSFERRED) {
+                                    primaryBtn = {
+                                        function: () => onMarkWithStatus(PartnerPersonStatus.TRANSFERRED, TranferreredType[mode].TAKE, state.orderDetail),
+                                        text: t('dw_partner:take_money_already')
+                                    };
+                                    reportBtn = (
+                                        <AppealButton
+                                            onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
+                                            timeDispute={state?.ordeDetail?.countdownTimeDispute}
+                                            timeExpire={state.orderDetail?.timeExpire}
+                                        />
+                                    );
+                                }
                             }
                         }
                     }

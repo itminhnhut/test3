@@ -12,7 +12,7 @@ import { CalendarFillIcon, ContactIcon } from 'components/svg/SvgIcon';
 import { useRouter } from 'next/router';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 
-const ProfileHeader = ({ t, partner, bankDefault, banks, language, loadingBankDefault }) => {
+const ProfileHeader = ({ t, partner, bankDefault, banks, language, loading }) => {
     const router = useRouter();
     return (
         <div className="rounded-xl bg-white dark:bg-darkBlue-3 p-8">
@@ -39,8 +39,8 @@ const ProfileHeader = ({ t, partner, bankDefault, banks, language, loadingBankDe
                         className="p-4 bg-gray-12 dark:bg-dark-2 rounded-md w-full cursor-pointer flex items-center justify-between"
                     >
                         <InfoCard
-                            loading={loadingBankDefault}
-                            imgSize={loadingBankDefault || bankDefault ? 40 : 24}
+                            loading={loading}
+                            imgSize={loading || bankDefault ? 52 : 24}
                             content={{
                                 mainContent: !bankDefault ? t('dw_partner:payment_method') : <div className="max-w-[280px]">{bankDefault?.bankName}</div>,
                                 subContent: bankDefault && (

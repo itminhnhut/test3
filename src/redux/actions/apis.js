@@ -313,7 +313,7 @@ export const API_CREATE_ORDER = API_V3_PREFIX + 'dw_partner/partner_order_v4';
 export const API_SET_USER_BANK_ACCOUNT = API_V3_PREFIX + 'payment/default_user_bank_accounts';
 export const API_SET_PARTNER_ORDER_CONFIG = API_V3_PREFIX + 'dw_partner/partner_order_config';
 export const API_MARK_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/mark_partner_order';
-export const API_ACCEPT_ORDER = API_V3_PREFIX + 'dw_partner/process_partner_order';
+export const API_PROCESS_ORDER = API_V3_PREFIX + 'dw_partner/process_partner_order';
 export const API_RATING_ORDER = API_V3_PREFIX + 'dw_partner/rating_partner_order';
 export const API_APPROVE_PARTNER_ORDER = API_V3_PREFIX + 'dw_partner/approve_partner_order';
 

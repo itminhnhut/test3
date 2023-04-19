@@ -1,6 +1,6 @@
 import * as types from './types';
 import {
-    API_ACCEPT_ORDER,
+    API_PROCESS_ORDER,
     API_APPROVE_PARTNER_ORDER,
     API_CREATE_ORDER,
     API_CREATE_ORDER_WITH_OTP,
@@ -148,14 +148,15 @@ export const editPartnerConfig = async ({ side, min, max, status }) => {
         side,
         min,
         max,
-        status
+        status,
+        assetId: 72
     });
 
     return res.data;
 };
 
-export const acceptPartnerOrder = async ({ displayingId, status }) => {
-    const res = await Axios.post(API_ACCEPT_ORDER, {
+export const processPartnerOrder = async ({ displayingId, status }) => {
+    const res = await Axios.post(API_PROCESS_ORDER, {
         displayingId,
         status
     });

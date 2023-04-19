@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
 import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
-import { acceptPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
+import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal } from 'redux/actions/withdrawDeposit';
 import { useDispatch } from 'react-redux';
 import { MODAL_TYPE } from 'redux/reducers/withdrawDeposit';
 import { useRouter } from 'next/router';
@@ -19,7 +19,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
             let type, additionalData;
             let isReject = false;
             const isApprove = statusType === TranferreredType[mode].TAKE;
-            const isAccept = mode === MODE.PARTNER && userStatus === PartnerAcceptStatus.ACCEPTED && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
+            const isProgressOrderAction = mode === MODE.PARTNER && partnerAcceptStatus === PartnerAcceptStatus.PENDING;
             const amount = formatBalance(baseQty, assetId === 72 ? 0 : 4);
 
             switch (userStatus) {
@@ -27,6 +27,9 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                     switch (statusType) {
                         case DisputedType.REPORT:
                             type = ORDER_TYPES.REPORT_SUCCESS;
+                            additionalData = {
+                                displayingId: id
+                            };
                             break;
                         case DisputedType.REJECTED:
                             type = ORDER_TYPES.CANCEL_SUCCESS;
@@ -55,8 +58,8 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                 setModalState(MODAL_TYPE.CONFIRM, {
                     loading: true
                 });
-                const data = isAccept
-                    ? await acceptPartnerOrder({ displayingId: id, status: userStatus })
+                const data = isProgressOrderAction
+                    ? await processPartnerOrder({ displayingId: id, status: userStatus })
                     : isReject
                     ? await rejectOrder({ displayingId: id, mode })
                     : isApprove
