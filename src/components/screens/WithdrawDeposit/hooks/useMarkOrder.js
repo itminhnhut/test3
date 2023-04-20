@@ -80,17 +80,23 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         visible: false
                     });
 
-                    if (!isProcessOrderAction && mode === MODE.PARTNER && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
+                    // push to detail page when partner accept order on 'Opening Order' page
+                    if (isProcessOrderAction && userStatus === PartnerAcceptStatus.ACCEPTED && !router.asPath.includes(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS)) {
                         router.push(PATHS.PARNER_WITHDRAW_DEPOSIT.DETAILS + '/' + id);
                     }
 
                     // open after confirm modal
-                    if (!isProcessOrderAction && type && additionalData) {
-                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                            visible: true,
-                            type,
-                            additionalData
-                        });
+                    if (type && additionalData) {
+                        // if it's partner accept order action
+                        if (isProcessOrderAction && userStatus === PartnerAcceptStatus.ACCEPTED) {
+                            // do nothing
+                        } else {
+                            setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                                visible: true,
+                                type,
+                                additionalData
+                            });
+                        }
                     }
 
                     toggleRefetch();
@@ -119,8 +125,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
             }
         };
 
-    const onProcessOrder = (partnerProcessStatus, statusType, orderDetail) => {
-        let type, additionalData;
+    const onProcessOrder = async (partnerProcessStatus, statusType, orderDetail) => {
         const assetId = orderDetail?.baseAssetId;
         const id = orderDetail?.displayingId;
         const side = orderDetail?.side;
@@ -128,27 +133,26 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
         const assetCode = ALLOWED_ASSET[+assetId];
         const partnerAcceptStatus = orderDetail?.partnerAcceptStatus;
 
+        const onConfirm = onMarkOrderHandler(partnerProcessStatus, statusType, {
+            assetId,
+            id,
+            side,
+            baseQty,
+            assetCode,
+            partnerAcceptStatus
+        });
+
         if (partnerProcessStatus === PartnerAcceptStatus.DENIED) {
-            type = ORDER_TYPES.CANCEL_ORDER;
-            additionalData = { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id };
+            setModalState(MODAL_TYPE.CONFIRM, {
+                visible: true,
+                type: ORDER_TYPES.CANCEL_ORDER,
+                additionalData: { token: assetCode, amount: formatBalance(baseQty, assetCode === 72 ? 0 : 4), side, id },
+                onConfirm
+            });
         }
         if (partnerProcessStatus === PartnerAcceptStatus.ACCEPTED) {
-            type = ORDER_TYPES.ACCEPT_ORDER;
+            onConfirm();
         }
-
-        setModalState(MODAL_TYPE.CONFIRM, {
-            visible: true,
-            type,
-            additionalData,
-            onConfirm: onMarkOrderHandler(partnerProcessStatus, statusType, {
-                assetId,
-                id,
-                side,
-                baseQty,
-                assetCode,
-                partnerAcceptStatus
-            })
-        });
     };
 
     const onMarkWithStatus = (userStatus, statusType, orderDetail) => {

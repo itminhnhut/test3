@@ -27,15 +27,14 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
     return (
         <div>
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
-            {/* Không hiển thị thông tin lệnh đôi với màn USER khi đối tác chưa accept */}
-            {mode === MODE.USER && status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? null : (
+            {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
+            {mode === MODE.USER && side === SIDE.BUY && status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? null : (
                 <div className="mb-6">
                     <div className="flex -m-3 flex-wrap items-stretch">
                         {/* Chi tiết giao dịch */}
                         <div className="w-full md:w-2/5 p-3">
                             <div className="flex  flex-col  min-h-full">
                                 <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 flex flex-col">
-                                    {/* {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && ( */}
                                     <div className="flex justify-between items-center mb-4">
                                         <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
 
@@ -46,7 +45,6 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                             </ButtonV2>
                                         )}
                                     </div>
-                                    {/* )} */}
                                     <div className="w-full flex flex-col items-center text-center ">
                                         {!orderDetail ? (
                                             <Skeletor circle width={80} height={80} />
@@ -58,8 +56,6 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                             {orderDetail && orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}
                                         </div>
                                         <div className="flex gap-2">
-                                            {/* hiện namiId hoặc phone */}
-
                                             {orderDetail?.[`${otherMode}Metadata`]?.phone ? (
                                                 <TagV2 type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
                                                     <div className="flex space-x-2 items-center">

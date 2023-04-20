@@ -47,7 +47,8 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
         isShowQr: false,
         isShowUploadImg: false,
         firstLoad: true,
-        isShowRating: false
+        isShowRating: false,
+        needRating: false
     });
 
     const setState = (_state) => set((prev) => ({ ...prev, ..._state }));
@@ -81,10 +82,16 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                         orderDetail: data
                     });
                     setIsRefetchOrderDetailAfterCountdown(false);
-                    if (data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode && mode === MODE.USER) {
-                        setState({
-                            isShowRating: true
-                        });
+                    if (mode === MODE.USER && data?.status === PartnerOrderStatus.SUCCESS && !data?.reasonDisputedCode) {
+                        if (data?.side === SIDE.BUY) {
+                            setState({
+                                isShowRating: true
+                            });
+                        } else {
+                            setState({
+                                needRating: true
+                            });
+                        }
                     }
                 }
             });
@@ -437,11 +444,18 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
             <ModalConfirm
                 mode={mode}
                 modalProps={modalProps[MODAL_TYPE.AFTER_CONFIRM]}
-                onClose={() =>
+                onClose={() => {
                     setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                         visible: false
-                    })
-                }
+                    });
+
+                    // show rating modal only if user is on SELL mode then after close AFTER_CONFIRM modal
+                    if (state.needRating) {
+                        setState({
+                            isShowRating: true
+                        });
+                    }
+                }}
             />
 
             <ModalUploadImage
