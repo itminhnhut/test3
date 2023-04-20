@@ -112,7 +112,6 @@ const CardInput = () => {
                     asset: assetCode
                 });
             } else if (side === SIDE.SELL && +state.amount > limitWithdraw?.remain / rate) {
-                console.log('limitWithdraw?.remain / rate:', limitWithdraw?.remain / rate);
                 isValid = false;
                 msg = t('dw_partner:error.reach_limit_withdraw', {
                     asset: assetCode
