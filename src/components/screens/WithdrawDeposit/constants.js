@@ -55,16 +55,17 @@ export const TABS = [
     },
     {
         key: 1,
-        localized: 'transaction-history:completed',
-        status: PartnerOrderStatus.SUCCESS,
-        type: TYPES.SUCCESS
-    },
-    {
-        key: 2,
         localized: 'common:processing',
         status: PartnerOrderStatus.PENDING,
         type: TYPES.WARNING
     },
+    {
+        key: 2,
+        localized: 'transaction-history:completed',
+        status: PartnerOrderStatus.SUCCESS,
+        type: TYPES.SUCCESS
+    },
+    
     {
         key: 3,
         localized: 'common:denined',
