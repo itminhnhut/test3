@@ -21,7 +21,7 @@ const CardContent = ({ image, imageSrc, imgSize, mainContent, subContent }) => {
     );
 };
 
-const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, emptyContent }) => {
+const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, emptyContent, showDropdownIcon }) => {
     const { t } = useTranslation();
 
     return (
@@ -39,16 +39,19 @@ const InfoCard = ({ imgSize = 52, content, endIcon, endIconPosition, loading, em
                     subContent={<Skeletor width="150px" height="10px" />}
                 />
             ) : !content ? (
-                <CardContent
-                    image={
-                        <div className="w-14 h-14 text-txtSecondary dark:text-txtSecondary-dark dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
-                            <BxsUserIcon size={24} color="currentColor" />
-                        </div>
-                    }
-                    imgSize={52}
-                    mainContent={emptyContent?.mainContent}
-                    subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
-                />
+                <>
+                    <CardContent
+                        image={
+                            <div className="w-14 h-14 text-txtSecondary dark:text-txtSecondary-dark dark:bg-bgBtnV2-dark_disabled bg-gray-11 rounded-full flex items-center justify-center">
+                                <BxsUserIcon size={24} color="currentColor" />
+                            </div>
+                        }
+                        imgSize={52}
+                        mainContent={emptyContent?.mainContent}
+                        subContent={emptyContent?.subContent || t('dw_partner:no_partner')}
+                    />
+                    {showDropdownIcon ? endIcon : null}
+                </>
             ) : (
                 <>
                     <CardContent
