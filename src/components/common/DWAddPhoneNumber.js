@@ -64,6 +64,12 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
 
     const onValidatePhoneNumber = (value) => {
         try {
+            // TODO: invalid phone
+            if (!value) {
+                setHelperText(t('dw_partner:error.missing_phone'));
+                return;
+            }
+
             if (phoneNumberPattern.test(value)) {
                 setIsValidating(true);
                 FetchApi({
@@ -74,13 +80,13 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                     params: { phone: toRegionPhone(value) }
                 })
                     .then(({ data, status, message }) => {
-                        if (status !== ApiStatus.SUCCESS) setHelperText('Phone number existed.');
+                        if (status !== ApiStatus.SUCCESS) setHelperText(t('dw_partner:error.phone_existed'));
                         else setHelperText('');
                     })
                     .finally(() => {
                         setIsValidating(false);
                     });
-            } else setHelperText('Invalid phone number.');
+            } else setHelperText(t('dw_partner:error.invalid_phone'));
         } catch (e) {
             console.log(e);
         }
@@ -96,12 +102,12 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
         })
             .then(({ data, status, message }) => {
                 if (status !== ApiStatus.SUCCESS) {
-                    if (message === 'PHONE_EXSITED') setHelperText('Phone number existed.');
+                    if (message === 'PHONE_EXSITED') setHelperText(setHelperText(t('dw_partner:error.phone_existed')));
                 } else {
                     // Open modal OTP code
                     if (isResend) {
                         toast({
-                            text: 'A new OTP has been sent to your phone number.',
+                            text: t('dw_partner:resend_otp_success'),
                             type: 'success'
                         });
                     } else {
@@ -176,18 +182,15 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
             >
                 {curAction === actionModal.PHONE_INPUT && (
                     <>
-                        <h1 className="!text-2xl txtPri-3">Thêm số điện thoại</h1>
-                        <div className="mt-4 mb-6">
-                            Để hỗ trợ thực hiện giao dịch thông qua đối tác nạp rút của Nami Exchange. Vui lòng bạn cung cấp số điện thoại để giao dịch tốt
-                            nhất.
-                        </div>
+                        <h1 className="!text-2xl txtPri-3">{t('dw_partner:add_phone')}</h1>
+                        <div className="mt-4 mb-6">{t('dw_partner:add_phone_description')}</div>
                         <InputV2
                             onHitEnterButton={onSubmitPhoneNumber}
                             className="!pb-10"
                             value={phoneNumber}
                             onChange={handleChangePhoneNumber}
-                            label={t('reference:referral.partner.phone')}
-                            placeholder="Vui lòng nhập số điện thoại"
+                            label={t('dw_partner:phone')}
+                            placeholder={t('dw_partner:phone_placeholder')}
                             allowClear={true}
                             error={helperText}
                             type="number"
@@ -200,7 +203,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 {curAction === actionModal.VERIFY_OTP && (
                     <>
                         <h1 className="!text-2xl txtPri-3">{t('dw_partner:verify')}</h1>
-                        <div className="mt-4 mb-6">Vui lòng nhập mã xác minh đã được gửi đến số điện thoại của bạn để thực hiện.</div>
+                        <div className="mt-4 mb-6">{t('dw_partner:verify_phone_description')}</div>
                         <OtpInput
                             value={otp}
                             onChange={handleChangeOtp}
@@ -214,9 +217,9 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                             )}
                         />
                         <div className="mt-4 mb-10 py-3 flex items-center gap-x-2">
-                            <span>Không nhận được?</span>
+                            <span>{t('dw_partner:not_received_otp')}</span>
                             <ButtonV2 variants="text" className="w-auto" onClick={() => onSubmitPhoneNumber({ isResend: true })}>
-                                Gửi lại mã
+                                {t('dw_partner:resend_otp')}
                             </ButtonV2>
                         </div>
                         <ButtonV2 disabled={helperText || isValidating || otp?.length < otpLength} loading={isValidating} onClick={onSubmitOtp}>
@@ -234,7 +237,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 }}
                 type="success"
                 title={t('common:success')}
-                message="Bạn đã xác minh thành công số điện thoại của mình. Vui lòng tiếp tục thực hiện lệnh của mình."
+                message={t('dw_partner:add_phone_success')}
             />
         </>
     );
