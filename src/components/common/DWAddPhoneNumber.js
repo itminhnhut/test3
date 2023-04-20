@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { ArrowForwardIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { ApiStatus } from 'redux/actions/const';
@@ -195,7 +195,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                             error={helperText}
                             type="number"
                         />
-                        <ButtonV2 loading={isValidating} onClick={onSubmitPhoneNumber}>
+                        <ButtonV2 disabled={!!helperText || isValidating} loading={isValidating} onClick={onSubmitPhoneNumber}>
                             {t('common:confirm')}
                         </ButtonV2>
                     </>
@@ -222,7 +222,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                                 {t('dw_partner:resend_otp')}
                             </ButtonV2>
                         </div>
-                        <ButtonV2 disabled={helperText || isValidating || otp?.length < otpLength} loading={isValidating} onClick={onSubmitOtp}>
+                        <ButtonV2 disabled={!!helperText || isValidating || otp?.length < otpLength} loading={isValidating} onClick={onSubmitOtp}>
                             {t('common:confirm')}
                         </ButtonV2>
                     </>
