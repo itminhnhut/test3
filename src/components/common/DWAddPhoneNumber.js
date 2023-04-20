@@ -92,7 +92,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
         }
     };
 
-    const onSubmitPhoneNumber = ({ isResend }) => {
+    const onSubmitPhoneNumber = (isResend = false) => {
         FetchApi({
             url: API_SET_PHONE_REQUEST,
             options: {
@@ -185,7 +185,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         <h1 className="!text-2xl txtPri-3">{t('dw_partner:add_phone')}</h1>
                         <div className="mt-4 mb-6">{t('dw_partner:add_phone_description')}</div>
                         <InputV2
-                            onHitEnterButton={onSubmitPhoneNumber}
+                            onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber() : null)}
                             className="!pb-10"
                             value={phoneNumber}
                             onChange={handleChangePhoneNumber}
@@ -218,7 +218,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         />
                         <div className="mt-4 mb-10 py-3 flex items-center gap-x-2">
                             <span>{t('dw_partner:not_received_otp')}</span>
-                            <ButtonV2 variants="text" className="w-auto" onClick={() => onSubmitPhoneNumber({ isResend: true })}>
+                            <ButtonV2 variants="text" className="w-auto" onClick={() => onSubmitPhoneNumber(true)}>
                                 {t('dw_partner:resend_otp')}
                             </ButtonV2>
                         </div>
