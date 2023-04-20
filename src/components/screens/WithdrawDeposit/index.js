@@ -9,34 +9,21 @@ import NeedLoginV2 from 'components/common/NeedLoginV2';
 import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
 
 const WithdrawDeposit = () => {
-    const auth = useSelector((state) => state.auth.user) || null;
-
-    const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
-
-    useEffect(() => {
-        setIsOpenModalAddPhone(!auth?.phone);
-    }, [auth]);
-
     return (
-        <>
-            {auth?.phone && (
-                <div>
-                    {/* <Header /> */}
-                    <div className="mb-20">
-                        <div className="flex -m-3 flex-wrap">
-                            <div className="w-full md:w-1/2 flex p-3">
-                                <CardInput />
-                            </div>
-                            <div className="w-full md:w-1/2 flex p-3">
-                                <CardPartner />
-                            </div>
-                        </div>
+        <div>
+            {/* <Header /> */}
+            <div className="mb-20">
+                <div className="flex -m-3 flex-wrap">
+                    <div className="w-full md:w-1/2 flex p-3">
+                        <CardInput />
                     </div>
-                    <HistoryTable />
+                    <div className="w-full md:w-1/2 flex p-3">
+                        <CardPartner />
+                    </div>
                 </div>
-            )}
-            <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
-        </>
+            </div>
+            <HistoryTable />
+        </div>
     );
 };
 
