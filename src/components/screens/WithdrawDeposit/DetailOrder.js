@@ -284,7 +284,7 @@ const DetailOrder = ({ id, mode = MODE.USER }) => {
                                     reportBtn = (
                                         <AppealButton
                                             onMarkWithStatus={() => onMarkWithStatus(PartnerPersonStatus.DISPUTED, DisputedType.REPORT, state.orderDetail)}
-                                            timeDispute={state?.ordeDetail?.countdownTimeDispute}
+                                            timeDispute={state?.orderDetail?.countdownTimeDispute}
                                             timeExpire={state.orderDetail?.timeExpire}
                                         />
                                     );
