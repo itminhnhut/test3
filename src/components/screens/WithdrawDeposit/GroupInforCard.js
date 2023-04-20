@@ -15,6 +15,38 @@ import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
 import { CountdownClock } from './components/common/CircleCountdown';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
+import { get } from 'lodash';
+
+const RENDER_INFORMATION = [
+    {
+        key: 'phone',
+        icon: <ContactIcon color="currentColor" size={16} />,
+        mode: [MODE.PARTNER, MODE.USER],
+        render: ({ data }) => (data ? formatPhoneNumber(data) : null)
+    },
+    {
+        key: 'code',
+        icon: <BxsUserCircle color="currentColor" size={16} />,
+        mode: [MODE.PARTNER],
+        render: ({ data }) => data || null
+    },
+    {
+        key: 'analyticMetadata.count',
+        icon: <OrderIcon color="currentColor" size={16} />,
+        mode: [MODE.USER],
+        render: ({ t, totalOrder, language }) => (
+            <>
+                {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
+            </>
+        )
+    },
+    {
+        key: 'analyticMetadata.avgTime',
+        icon: <TimerIcon color="currentColor" size={16} />,
+        mode: [MODE.USER],
+        render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
+    }
+];
 
 const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
     const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
@@ -28,7 +60,10 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
         <div>
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
             {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
-            {mode === MODE.USER && side === SIDE.BUY && status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? null : (
+            {mode === MODE.USER &&
+            side === SIDE.BUY &&
+            status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING &&
+            status?.status === PartnerOrderStatus.PENDING ? null : (
                 <div className="mb-6">
                     <div className="flex -m-3 flex-wrap items-stretch">
                         {/* Chi tiết giao dịch */}
@@ -53,58 +88,29 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                                         )}
 
                                         <div className="txtPri-1 capitalize font-semibold mb-3">
-                                            {orderDetail && orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}
+                                            {!orderDetail ? <Skeletor width={150} /> : orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}
                                         </div>
                                         <div className="flex gap-2">
-                                            {orderDetail?.[`${otherMode}Metadata`]?.phone ? (
-                                                <TagV2 type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
-                                                    <div className="flex space-x-2 items-center">
-                                                        <ContactIcon color="currentColor" size={16} />
-                                                        <div>{formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)}</div>
-                                                    </div>
-                                                </TagV2>
-                                            ) : null}
-
-                                            {mode === MODE.PARTNER && orderDetail?.[`${otherMode}Metadata`]?.code && (
-                                                <TagV2 type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
-                                                    <div className="flex space-x-2 items-center">
-                                                        <BxsUserCircle fill="currentColor" size={16} />
-                                                        <div>{orderDetail?.[`${otherMode}Metadata`]?.code}</div>
-                                                    </div>
-                                                </TagV2>
-                                            )}
-
-                                            {/* hiện tên hoặc phone */}
-
-                                            {/* hien số lương orders và avg time chỉ giành cho màn hình user  */}
-                                            {mode === MODE.USER && (
-                                                <>
-                                                    {!orderDetail ? (
-                                                        <Skeletor width={80} />
-                                                    ) : (
-                                                        <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
-                                                            <div className="flex gap-2 items-center">
-                                                                <OrderIcon size={16} />
-                                                                <span>
-                                                                    {totalOrder}{' '}
-                                                                    {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
-                                                                </span>
+                                            {RENDER_INFORMATION.map((item) => {
+                                                const renderData = item.render({
+                                                    t,
+                                                    language,
+                                                    data: get(orderDetail, `${otherMode}Metadata.${item.key}`),
+                                                    totalOrder
+                                                });
+                                                return item.mode.includes(mode) ? (
+                                                    !orderDetail ? (
+                                                        <Skeletor width={100} height={25} />
+                                                    ) : renderData ? (
+                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
+                                                            <div className="flex space-x-2 items-center">
+                                                                {item.icon}
+                                                                <div>{renderData}</div>
                                                             </div>
                                                         </TagV2>
-                                                    )}
-                                                    {totalOrder > 0 ? (
-                                                        <TagV2 icon={false} type={TYPES.DEFAULT} className="dark:!bg-divider-dark">
-                                                            <div className="flex gap-2 items-center">
-                                                                <TimerIcon size={16} />
-                                                                <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
-                                                            </div>
-                                                        </TagV2>
-                                                    ) : (
-                                                        <></>
-                                                    )}
-                                                </>
-                                            )}
-                                            {/* hien số lương orders và avg time chỉ giành cho màn hình user  */}
+                                                    ) : null
+                                                ) : null;
+                                            })}
                                         </div>
                                     </div>
                                 </div>
@@ -114,65 +120,9 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
                         <div className="w-full md:w-3/5 p-3">
                             <div className="flex flex-col min-h-full">
                                 <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6">
-                                    {/* {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
-                                    <div className="txtSecond-3 mb-4">{t(`dw_partner:${otherMode}`)}</div>
-                                )} */}
                                     <div className="flex justify-between mb-4 items-center">
                                         <div className="txtPri-1">{t('dw_partner:payment_method')}</div>
-                                        {/* <InfoCard
-                                        loading={!orderDetail}
-                                        content={{
-                                            mainContent: orderDetail && orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase(),
-                                            subContent: (
-                                                <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                                    <span>
-                                                        {orderDetail?.[`${otherMode}Metadata`]?.phone
-                                                            ? formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)
-                                                            : orderDetail?.[`${otherMode}Metadata`]?.code}
-                                                    </span>
-
-                                                    {mode === MODE.USER && (
-                                                        <>
-                                                            <div className="flex space-x-1 items-center">
-                                                                <OrderIcon size={16} />
-                                                                <span>
-                                                                    {orderDetail?.partnerMetadata?.analyticMetadata?.count || 0} {t('dw_partner:order')}
-                                                                    {orderDetail?.partnerMetadata?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN
-                                                                        ? 's'
-                                                                        : ''}
-                                                                </span>
-                                                            </div>
-                                                            {orderDetail?.partnerMetadata?.analyticMetadata?.count ? (
-                                                                <div className="flex space-x-1 items-center">
-                                                                    <BxsTimeIcon size={16} />
-                                                                    <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
-                                                                </div>
-                                                            ) : (
-                                                                <></>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </div>
-                                            ),
-                                            imgSrc: orderDetail?.[`${otherMode}Metadata`]?.avatar
-                                        }}
-                                    /> */}
-
-                                        {/* {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
-                                            <ButtonV2 onClick={setModalQr} className="flex ml-auto items-center gap-x-2 w-auto" variants="text">
-                                                <QrCodeScannIcon />
-                                                QR Code
-                                            </ButtonV2>
-                                        )} */}
                                     </div>
-
-                                    {/* Divider */}
-                                    {/* {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
-                                    <div>
-                                        <Divider className="w-full !my-4" />
-                                        <div className="txtSecond-3">{t('dw_partner:transaction_bank_receipt')}</div>
-                                    </div>
-                                )} */}
 
                                     {/* Phương thức nhận tiền */}
                                     <div className="flex flex-col gap-y-4">
