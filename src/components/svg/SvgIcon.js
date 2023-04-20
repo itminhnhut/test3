@@ -807,8 +807,8 @@ const BxsErrorAltIcon = ({ size = 16, color = '#F93636' }) => (
     </svg>
 );
 
-const ArrowForwardIcon = ({ size = 24, color = '"#fff"' }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none">
+const ArrowForwardIcon = ({ size = 24, color = '#fff', className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 16 16" fill="none" className={className}>
         <path d="m8 2.667-.94.94 3.72 3.726H2.665v1.333h8.113l-3.72 3.727.94.94L13.333 8 7.999 2.667z" fill={color} />
     </svg>
 );
