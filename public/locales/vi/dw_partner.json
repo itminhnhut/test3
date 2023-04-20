@@ -153,6 +153,6 @@
         "custom": "Tùy chỉnh",
         "invalid_phone": "Số điện thoại không đúng định dạng",
         "phone_existed": "Số điện thoại đã tồn tại",
-        "missing_phone": "Vui lòng nhập giá trị"
+        "missing_phone": "Trường thông tin bắt buộc"
     }
 }

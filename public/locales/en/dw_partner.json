@@ -152,6 +152,6 @@
         "custom": "Custom",
         "invalid_phone": "Invalid phone",
         "phone_existed": "Phone already exists",
-        "missing_phone": "Required phone to enter"
+        "missing_phone": "This field is required"
     }
 }
