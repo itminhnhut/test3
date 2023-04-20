@@ -139,7 +139,7 @@ const CardInput = () => {
             })
                 .then(({ status, data }) => {
                     if (status === 'ok') {
-                        !auth?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler();
+                        !data?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler();
                     }
                 })
                 .finally(() => setState({ loadingConfirm: false }));
@@ -320,7 +320,7 @@ const CardInput = () => {
                 </ButtonV2>
             </Card>
 
-            <DWAddPhoneNumber isVisible={isOpenModalAddPhone && !auth?.phone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
+            <DWAddPhoneNumber isVisible={isOpenModalAddPhone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
 
             <ModalOtp
                 onConfirm={(otp) => onMakeOrderHandler(otp)}
