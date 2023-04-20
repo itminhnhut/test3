@@ -145,7 +145,8 @@
         "exceeding_limit": "It is not possible to create more than 2 deposit and 2 withdrawal orders via Deposit and Withdrawal Partner, please complete pending transactions before creating a new order.",
         "invalid_phone": "Invalid phone",
         "phone_existed": "Phone already exists",
-        "missing_phone": "This field is required"
+        "missing_phone": "This field is required",
+        "not_found_order": "Order #{displayingId} not found or being processed, please reload or contact support."
     },
     "filter": {
         "a_day": "1 day",

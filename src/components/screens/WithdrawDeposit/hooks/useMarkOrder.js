@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { ALLOWED_ASSET, DisputedType, MODE, ORDER_TYPES, TranferreredType } from '../constants';
-import { ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
+import { ApiResultCreateOrder, ApiStatus, PartnerAcceptStatus, PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
 import { formatBalance } from 'redux/actions/utils';
 import { processPartnerOrder, approveOrder, markOrder, rejectOrder, setPartnerModal, resolveDispute } from 'redux/actions/withdrawDeposit';
 import { useDispatch } from 'react-redux';
@@ -105,11 +105,19 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         loading: false,
                         visible: false
                     });
-                    setModalState(MODAL_TYPE.AFTER_CONFIRM, {
-                        visible: true,
-                        type: ORDER_TYPES.ERROR,
-                        additionalData: data?.status
-                    });
+                    if (data?.status === ApiResultCreateOrder.NOT_FOUND_PARTNER) {
+                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                            visible: true,
+                            type: ORDER_TYPES.ERROR_NOT_FOUND_ORDER,
+                            additionalData: { displayingId: id }
+                        });
+                    } else {
+                        setModalState(MODAL_TYPE.AFTER_CONFIRM, {
+                            visible: true,
+                            type: ORDER_TYPES.ERROR,
+                            additionalData: data?.status
+                        });
+                    }
                 }
             } catch (error) {
                 console.log('error:', error);

@@ -48,12 +48,11 @@ const CardInput = () => {
     }, [minimumAllowed]);
 
     const { data: limitWithdraw, loading: loadingLimitWithdraw } = useFetchApi(
-        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: assetId } },
-        Boolean(side) && Boolean(assetId),
-        [side, assetId]
+        { url: API_CHECK_LIMIT_WITHDRAW, params: { side: side, assetId: 72 } },
+        Boolean(side),
+        [side]
     );
 
-    console.log('limitWithdraw:', limitWithdraw);
     const {
         data: rate,
         loading: loadingRate,
@@ -71,6 +70,9 @@ const CardInput = () => {
 
     const onMaxHandler = () => {
         let max = maximumAllowed;
+        if (rate && max > limitWithdraw?.remain / rate) {
+            max = limitWithdraw?.remain / rate;
+        }
         if (availableAsset < max) {
             max = availableAsset;
         }
@@ -109,7 +111,8 @@ const CardInput = () => {
                     amount: formatBalanceFiat(minimumAllowed, assetCode),
                     asset: assetCode
                 });
-            } else if (side === SIDE.SELL && +state.amount > limitWithdraw?.remain) {
+            } else if (side === SIDE.SELL && +state.amount > limitWithdraw?.remain / rate) {
+                console.log('limitWithdraw?.remain / rate:', limitWithdraw?.remain / rate);
                 isValid = false;
                 msg = t('dw_partner:error.reach_limit_withdraw', {
                     asset: assetCode
@@ -118,7 +121,7 @@ const CardInput = () => {
         }
 
         return { isValid, msg, isError: !isValid };
-    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode, hasRendered, limitWithdraw]);
+    }, [orderConfig, state.amount, availableAsset, minimumAllowed, maximumAllowed, assetCode, hasRendered, limitWithdraw, rate]);
 
     const handleFocusInput = () => {
         if (!hasRendered) {
@@ -266,9 +269,9 @@ const CardInput = () => {
                                     ) : !limitWithdraw ? (
                                         '--'
                                     ) : (
-                                        formatBalanceFiat(limitWithdraw?.limit, assetCode)
+                                        formatBalanceFiat(limitWithdraw?.limit, 'VNDC')
                                     )}
-                                    <span className="ml-1">{assetCode}</span>
+                                    <span className="ml-1">{'VNDC'}</span>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between ">
@@ -279,9 +282,9 @@ const CardInput = () => {
                                     ) : !limitWithdraw ? (
                                         '--'
                                     ) : (
-                                        formatBalanceFiat(limitWithdraw?.remain, assetCode)
+                                        formatBalanceFiat(limitWithdraw?.remain, 'VNDC')
                                     )}{' '}
-                                    <span className="ml-1">{assetCode}</span>
+                                    <span className="ml-1">{'VNDC'}</span>
                                 </div>
                             </div>
                         </>
@@ -313,7 +316,7 @@ const CardInput = () => {
                         loadingPartner ||
                         !validator?.isValid ||
                         (!partnerBank && side === SIDE.BUY) ||
-                        (side === SIDE.SELL && (+state.amount > availableAsset || +state.amount > limitWithdraw?.remain || !accountBank))
+                        (side === SIDE.SELL && (+state.amount > availableAsset || !accountBank))
                     }
                     className="disabled:cursor-default"
                 >

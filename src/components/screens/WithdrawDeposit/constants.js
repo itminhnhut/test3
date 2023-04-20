@@ -65,7 +65,7 @@ export const TABS = [
         status: PartnerOrderStatus.SUCCESS,
         type: TYPES.SUCCESS
     },
-    
+
     {
         key: 3,
         localized: 'common:denined',
@@ -184,6 +184,12 @@ export const ORDER_TYPES = {
         icon: ICONS['ERROR'],
         title: () => 'Không thể thực hiện',
         description: ({ errMsg }) => errMsg,
+        showConfirm: false
+    },
+    ERROR_NOT_FOUND_ORDER: {
+        icon: ICONS['ERROR'],
+        title: (t) => t('common:error'),
+        description: ({ displayingId }) => t('dw_partner:error.not_found_order', { displayingId }),
         showConfirm: false
     }
 };

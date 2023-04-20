@@ -108,10 +108,10 @@ const OrderCard = memo(({ orderDetail, assetConfig, t, router, onProcessOrder })
 
                 <div className="border-divider hidden lg:block dark:border-divider-dark border-r" />
 
-                <div className=" p-2 flex w-full xxs:w-1/2 lg:!w-auto flex-col xxs:items-end">
+                <div className="p-2 w-full xxs:w-1/2 lg:!w-auto">
                     <div>
                         <div className="txtSecond-2 xxs:text-right mb-3">{t('dw_partner:amount')}</div>
-                        <div className="mt-3 txtPri-3 font-semibold">
+                        <div className="mt-3 txtPri-3 xxs:text-right font-semibold">
                             {`${orderDetail?.side === SIDE.SELL ? '+' : '-'}${formatBalanceFiat(orderDetail?.baseQty, 'VNDC')}`}
                         </div>
                     </div>
@@ -245,7 +245,7 @@ const OpenOrderTable = () => {
                 }
             />
             {/* AFTER_CONFIRM */}
-            
+
             <div>
                 <div className="mb-6">
                     <TabV2

@@ -147,7 +147,8 @@
         "exceeding_limit": "Không thể tạo quá 2 lệnh nạp và 2 lệnh rút qua Đối tác Nạp Rút, vui lòng hoàn tất các giao dịch đã tạo trước khi tạo lệnh mới.",
         "invalid_phone": "Số điện thoại không đúng định dạng",
         "phone_existed": "Số điện thoại đã tồn tại",
-        "missing_phone": "Trường thông tin bắt buộc"
+        "missing_phone": "Trường thông tin bắt buộc",
+        "not_found_order": "Không tìm thấy lệnh #{displayingId} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ"
     },
     "filter": {
         "a_day": "1 ngày",
