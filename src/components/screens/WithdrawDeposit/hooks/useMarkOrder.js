@@ -105,7 +105,7 @@ const useMarkOrder = ({ mode, toggleRefetch }) => {
                         loading: false,
                         visible: false
                     });
-                    if (data?.status === ApiResultCreateOrder.NOT_FOUND_PARTNER) {
+                    if (data?.status === ApiResultCreateOrder.NOT_FOUND_ORDER) {
                         setModalState(MODAL_TYPE.AFTER_CONFIRM, {
                             visible: true,
                             type: ORDER_TYPES.ERROR_NOT_FOUND_ORDER,
