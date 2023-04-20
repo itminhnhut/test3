@@ -78,6 +78,6 @@
         "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác.",
         "invalid_phone": "Số điện thoại không đúng định dạng",
         "phone_existed": "Số điện thoại đã tồn tại",
-        "missing_phone": "Vui lòng nhập giá trị"
+        "missing_phone": "Trường thông tin bắt buộc"
     }
 }

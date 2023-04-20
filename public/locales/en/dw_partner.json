@@ -78,6 +78,6 @@
         "not_enough_money": "The partner's available balance is not enough to accept this order, please choose another partner",
         "invalid_phone": "Invalid phone",
         "phone_existed": "Phone already exists",
-        "missing_phone": "Required phone to enter"
+        "missing_phone": "This field is required"
     }
 }
