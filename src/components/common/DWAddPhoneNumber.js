@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { ArrowForwardIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { ApiStatus } from 'redux/actions/const';
@@ -10,17 +10,14 @@ import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
 import { useRouter } from 'next/router';
 import InputV2 from './V2/InputV2';
 import FetchApi from 'utils/fetch-api';
-import OtpInput from 'react-otp-input';
-import classNames from 'classnames';
 import toast from 'utils/toast';
 import { X } from 'react-feather';
 import colors from 'styles/colors';
-
-const otpLength = 6;
+import CustomOtpInput from 'components/screens/WithdrawDeposit/components/CustomOtpInput';
 
 const phoneNumberPattern = /^\d{10}$/;
 
-const toRegionPhone = (phoneNumber) => '+84' + phoneNumber.slice(1);
+const toRegionPhone = (phoneNumber) => (phoneNumber ? '+84' + phoneNumber.slice(1) : '');
 
 const actionModal = {
     PHONE_INPUT: 1,
@@ -55,7 +52,8 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
 
     const [isValidating, setIsValidating] = useState(false);
 
-    const [otp, setOtp] = useState(null);
+    const [otpInfo, setOtpInfo] = useState(null);
+    const [loadingResend, setLoadingResend] = useState(false);
 
     const handleChangePhoneNumber = (value = '') => {
         onValidatePhoneNumber(value);
@@ -64,7 +62,6 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
 
     const onValidatePhoneNumber = (value) => {
         try {
-            // TODO: invalid phone
             if (!value) {
                 setHelperText(t('dw_partner:error.missing_phone'));
                 return;
@@ -92,7 +89,8 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
         }
     };
 
-    const onSubmitPhoneNumber = (isResend = false) => {
+    const onSubmitPhoneNumber = () => {
+        if (curAction === actionModal.VERIFY_OTP) setLoadingResend(true);
         FetchApi({
             url: API_SET_PHONE_REQUEST,
             options: {
@@ -105,19 +103,13 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                     if (message === 'PHONE_EXSITED') setHelperText(setHelperText(t('dw_partner:error.phone_existed')));
                 } else {
                     // Open modal OTP code
-                    if (isResend) {
-                        toast({
-                            text: t('dw_partner:resend_otp_success'),
-                            type: 'success'
-                        });
-                    } else {
-                        setOtp(null);
-                        setCurAction(actionModal.VERIFY_OTP);
-                    }
+                    setOtpInfo(data);
+                    setCurAction(actionModal.VERIFY_OTP);
                 }
             })
             .finally(() => {
                 setIsValidating(false);
+                setLoadingResend(false);
             });
     };
 
@@ -131,40 +123,24 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
         }
     };
 
-    const onSubmitOtp = () => {
+    const onSubmitOtp = async (code) => {
         setIsValidating(true);
-        FetchApi({
-            url: API_SET_PHONE_VERIFY,
-            options: {
-                method: 'POST'
-            },
-            params: { phone: toRegionPhone(phoneNumber), code: otp }
-        })
-            .then(({ data, status, message }) => {
-                if (status === 'ok') {
-                    setIsShowAlert(true);
-                } else {
-                    // setOtp('');
-                    setHelperText('error');
-                    toast({
-                        text: t('wallet:errors.wrong_otp'),
-                        type: 'error'
-                    });
-                }
-            })
-            .finally(() => {
-                setIsValidating(false);
+        try {
+            const response = await FetchApi({
+                url: API_SET_PHONE_VERIFY,
+                options: {
+                    method: 'POST'
+                },
+                params: { phone: toRegionPhone(phoneNumber), code: code?.phone }
             });
-    };
-
-    const handleChangeOtp = (value) => {
-        if (helperText) setHelperText('');
-
-        const formatedValue = value.replace(/\D/g, '');
-        setOtp(formatedValue);
-        // if (formatedValue.length === otpLength && !helperText && !isValidating) {
-        //     onSubmitOtp();
-        // }
+            if (response?.status === ApiStatus.SUCCESS) setIsShowAlert(true);
+            else toast({text: t('dw_partner:error.invalid_otp'), type: 'error', duration: 2000})
+            return response;
+        } catch (error) {
+            console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
+        } finally {
+            setIsValidating(false);
+        }
     };
 
     if (!isVisible) return null;
@@ -185,7 +161,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         <h1 className="!text-2xl txtPri-3">{t('dw_partner:add_phone')}</h1>
                         <div className="mt-4 mb-6">{t('dw_partner:add_phone_description')}</div>
                         <InputV2
-                            onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber() : null)}
+                            onHitEnterButton={() => (!helperText && !isValidating ? onSubmitPhoneNumber(false) : null)}
                             className="!pb-10"
                             value={phoneNumber}
                             onChange={handleChangePhoneNumber}
@@ -195,37 +171,21 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                             error={helperText}
                             type="number"
                         />
-                        <ButtonV2 disabled={!!helperText || isValidating} loading={isValidating} onClick={onSubmitPhoneNumber}>
+                        <ButtonV2 disabled={!!helperText || isValidating || !phoneNumber} loading={isValidating} onClick={() => onSubmitPhoneNumber(false)}>
                             {t('common:confirm')}
                         </ButtonV2>
                     </>
                 )}
+
                 {curAction === actionModal.VERIFY_OTP && (
-                    <>
-                        <h1 className="!text-2xl txtPri-3">{t('dw_partner:verify')}</h1>
-                        <div className="mt-4 mb-6">{t('dw_partner:verify_phone_description')}</div>
-                        <OtpInput
-                            value={otp}
-                            onChange={handleChangeOtp}
-                            numInputs={otpLength}
-                            placeholder={'------'}
-                            isInputNum
-                            containerStyle="mt-4 w-full justify-between"
-                            inputStyle={classNames(
-                                '!h-[48px] !w-[48px] sm:!h-[64px] sm:!w-[64px] text-txtPrimary dark:text-gray-4 font-semibold text-[22px] dark:border border-divider-dark rounded-[4px] bg-gray-10 dark:bg-dark-2 focus:!border-teal',
-                                { 'border-red': helperText }
-                            )}
-                        />
-                        <div className="mt-4 mb-10 py-3 flex items-center gap-x-2">
-                            <span>{t('dw_partner:not_received_otp')}</span>
-                            <ButtonV2 variants="text" className="w-auto" onClick={() => onSubmitPhoneNumber(true)}>
-                                {t('dw_partner:resend_otp')}
-                            </ButtonV2>
-                        </div>
-                        <ButtonV2 disabled={!!helperText || isValidating || otp?.length < otpLength} loading={isValidating} onClick={onSubmitOtp}>
-                            {t('common:confirm')}
-                        </ButtonV2>
-                    </>
+                    <CustomOtpInput
+                        otpExpireTime={otpInfo?.expiredAt - otpInfo?.remaining_time * 4}
+                        loading={isValidating}
+                        onConfirm={(otp) => onSubmitOtp(otp)}
+                        loadingResend={loadingResend}
+                        onResend={onSubmitPhoneNumber}
+                        modeOtp="phone"
+                    />
                 )}
             </ModalV2>
 

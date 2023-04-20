@@ -77,7 +77,7 @@ const toast = ({ text = '', render = undefined, type = 'default', duration = 500
         className: 'flex items-center justify-between min-w-[375px] max-w-[756px]',
         bodyClassName: 'flex items-center justify-center',
         autoClose: duration,
-        pauseOnHover: true,
+        // pauseOnHover: true,
         closeOnClick: false,
         closeButton: ({ closeToast }) => (
             <button className="ml-4 text-gray-15  dark:text-gray-4" onClick={closeToast}>
