@@ -15,10 +15,12 @@ import { useRouter } from 'next/router';
 import { PATHS } from 'constants/paths';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
+import Skeletor from 'components/common/Skeletor';
+import { find } from 'lodash';
 
 const LIMIT_ROW = 10;
 
-const getColumns = (t, user, side) => [
+const getColumns = (t, user, side, configs) => [
     {
         key: 'displayingId',
         dataIndex: 'displayingId',
@@ -34,12 +36,21 @@ const getColumns = (t, user, side) => [
         title: t('common:asset'),
         align: 'left',
         width: 148,
-        render: (v) => (
-            <div className="flex items-center font-semibold">
-                {v && <AssetLogo assetId={v} size={32} />}
-                <div className="ml-2"> {getAssetCode(v)}</div>
-            </div>
-        )
+        render: (v) => {
+            const assetConfig = find(configs, { id: +v });
+
+            return assetConfig ? (
+                <div className="flex gap-2 items-center">
+                    <AssetLogo assetCode={assetConfig?.assetCode} size={32} useNextImg />
+                    <div>{assetConfig?.assetName || 'Unknown'}</div>
+                </div>
+            ) : (
+                <div className="flex gap-2 items-center">
+                    <Skeletor width={32} />
+                    <Skeletor width={50} />
+                </div>
+            );
+        }
     },
     {
         key: 'createdAt',
@@ -70,26 +81,6 @@ const getColumns = (t, user, side) => [
             </>
         )
     },
-    // {
-    //     key: 'partnerMetadata',
-    //     dataIndex: 'partnerMetadata',
-    //     title: side === SIDE.BUY ? t('dw_partner:partner') : t('dw_partner:user'),
-    //     // title: t('common:to'),
-    //     align: 'left',
-    //     width: 185,
-    //     render: (v) =>
-    //         side === SIDE.BUY ? (
-    //             <>
-    //                 <div className="txtPri-2 mb-1">{v?.name}</div>
-    //                 <span className="txtSecond-3">{v?.code}</span>
-    //             </>
-    //         ) : (
-    //             <>
-    //                 <div className="txtPri-2 mb-1">{user?.username ?? user?.name ?? user?.email}</div>
-    //                 <span className="txtSecond-3">{user?.code}</span>
-    //             </>
-    //         )
-    // },
     {
         key: 'status',
         dataIndex: 'status',
@@ -122,6 +113,7 @@ const HistoryTable = () => {
     const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
+    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
 
@@ -197,7 +189,7 @@ const HistoryTable = () => {
                 skip={0}
                 useRowHover
                 data={dataTable}
-                columns={getColumns(t, user, side)}
+                columns={getColumns(t, user, side, configs)}
                 rowKey={(item) => item?.key}
                 scroll={{ x: true }}
                 loading={loadingDataTable}

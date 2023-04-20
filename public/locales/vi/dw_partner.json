@@ -41,7 +41,7 @@
     "partner": "Đối tác",
     "no_partner": "Không tìm thấy đối tác",
     "user": "Người dùng",
-    "wait_confirmation":"Chờ xác nhận",
+    "wait_confirmation": "Chờ xác nhận",
     "appeal": "Khiếu nại",
     "upload_proof": "Gửi bằng chứng (không bắt buộc)",
     "upload_proof_again": "Gửi lại bằng chứng",
@@ -128,6 +128,14 @@
     "placeholder": {
         "enter_txid": "Nhập mã giao dịch"
     },
+    "add_phone": "Thêm số điện thoại",
+    "add_phone_description": "Để bắt đầu giao dịch qua ĐTNR, vui lòng cung cấp số điện thoai của bạn.",
+    "phone": "Số điện thoại",
+    "phone_placeholder": "Vui lòng nhập số điện thoại của bạn",
+    "verify_phone_description": "Vui lòng nhập 6 kí tự đã được gửi đến số điện thoại của bạn.",
+    "add_phone_success": "Chúc mừng! Bạn đã xác minh số điện thoại thành công. Giờ đây, bạn đã có thể mở giao dịch qua ĐTNR.",
+    "resend_otp_success": "Một mã OTP mới đã được gửi đến số điện thoại của bạn.",
+
     "error": {
         "min_amount": "Số lượng tối thiểu là {{amount}} {{asset}}",
         "max_amount": "Số lượng tối đa là {{amount}} {{asset}}",
@@ -136,7 +144,10 @@
         "not_found_partner": "Đối tác không khả dụng",
         "not_enough_money": "Số dư khả dụng của đối tác không đủ để nhận lệnh này, vui lòng chọn đối tác khác.",
         "max_greater_min": "Số lượng tối đa phải lớn hơn số lượng tối thiểu",
-        "exceeding_limit": "Không thể tạo quá 2 lệnh nạp và 2 lệnh rút qua Đối tác Nạp Rút, vui lòng hoàn tất các giao dịch đã tạo trước khi tạo lệnh mới."
+        "exceeding_limit": "Không thể tạo quá 2 lệnh nạp và 2 lệnh rút qua Đối tác Nạp Rút, vui lòng hoàn tất các giao dịch đã tạo trước khi tạo lệnh mới.",
+        "invalid_phone": "Số điện thoại không đúng định dạng",
+        "phone_existed": "Số điện thoại đã tồn tại",
+        "missing_phone": "Trường thông tin bắt buộc"
     },
     "filter": {
         "a_day": "1 ngày",
