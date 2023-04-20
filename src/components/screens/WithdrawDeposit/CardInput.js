@@ -9,12 +9,14 @@ import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import Skeletor from 'components/common/Skeletor';
 import { useRouter } from 'next/router';
 import useFetchApi from 'hooks/useFetchApi';
-import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW } from 'redux/actions/apis';
+import { API_GET_ORDER_PRICE, API_CHECK_LIMIT_WITHDRAW, API_GET_ME } from 'redux/actions/apis';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { PATHS } from 'constants/paths';
 import { useTranslation } from 'next-i18next';
 import useMakeOrder from './hooks/useMakeOrder';
 import useGetPartner from './hooks/useGetPartner';
+import DWAddPhoneNumber from 'components/common/DWAddPhoneNumber';
+import FetchApi from 'utils/fetch-api';
 
 const ModalOtp = dynamic(() => import('./components/ModalOtp'));
 const RecommendAmount = dynamic(() => import('./components/RecommendAmount'));
@@ -23,7 +25,9 @@ const CardInput = () => {
     const { t } = useTranslation();
     const { input, partner, partnerBank, accountBank, loadingPartner, maximumAllowed, minimumAllowed } = useSelector((state) => state.withdrawDeposit);
     const wallets = useSelector((state) => state.wallet.SPOT);
+    const auth = useSelector((state) => state.auth.user) || null;
 
+    const [isOpenModalAddPhone, setIsOpenModalAddPhone] = useState(false);
     const router = useRouter();
 
     const [state, set] = useState({
@@ -118,6 +122,33 @@ const CardInput = () => {
     const handleFocusInput = () => {
         if (!hasRendered) {
             setHasRendered(true);
+        }
+    };
+
+    const handleSubmitOrder = () => {
+        setState({ loadingConfirm: true });
+        try {
+            FetchApi({
+                url: API_GET_ME,
+                options: {
+                    method: 'GET'
+                },
+                params: {
+                    resetCache: true
+                }
+            })
+                .then(({ status, data }) => {
+                    if (status === 'ok') {
+                        !auth?.phone ? setIsOpenModalAddPhone(true) : onMakeOrderHandler();
+                    }
+                })
+                .finally(() => setState({ loadingConfirm: false }));
+        } catch (error) {
+            console.error('ERROR WHEN HANDLE SUBMIT ORDER: ', error);
+            toast({
+                text: 'System error, please try again in a few minutes',
+                type: 'error'
+            });
         }
     };
 
@@ -275,7 +306,7 @@ const CardInput = () => {
                 </div>
                 <ButtonV2
                     loading={state.loadingConfirm || loadingPartner}
-                    onClick={() => onMakeOrderHandler()}
+                    onClick={handleSubmitOrder}
                     disabled={
                         !partner ||
                         loadingPartner ||
@@ -288,6 +319,8 @@ const CardInput = () => {
                     {t(`common:${side.toLowerCase()}`) + ` ${assetCode}`}
                 </ButtonV2>
             </Card>
+
+            <DWAddPhoneNumber isVisible={isOpenModalAddPhone && !auth?.phone} onBackdropCb={() => setIsOpenModalAddPhone(false)} />
 
             <ModalOtp
                 onConfirm={(otp) => onMakeOrderHandler(otp)}

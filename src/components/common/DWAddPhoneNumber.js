@@ -1,35 +1,15 @@
 import { useTranslation } from 'next-i18next';
-import { LogoIcon, BxChevronDown, ArrowForwardIcon } from 'components/svg/SvgIcon';
+import { ArrowForwardIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import { useState, useEffect } from 'react';
-import * as Error from 'redux/actions/apiError';
-import CheckBox from 'components/common/CheckBox';
-import { formatNumber as formatWallet, CopyText } from 'redux/actions/utils';
+import { useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import Spiner from 'components/common/V2/LoaderV2/Spiner';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
-// import { NoDataDarkIcon } from 'components/common/V2/TableV2/NoData';
-import { find, isEmpty, isFunction, keys, pickBy } from 'lodash';
-import NamiCircle from 'components/svg/NamiCircle';
-import TagV2 from 'components/common/V2/TagV2';
 import { ApiStatus } from 'redux/actions/const';
-import fetchAPI from 'utils/fetch-api';
-import {
-    API_CHECK_PHONE_NUMBER_DUPLICATE,
-    API_CONFIRM_ORDER_CONVERT_SMALL_BALANCE,
-    API_GET_NAMI_RATE,
-    API_PREFETCH_ORDER_CONVERT_SMALL_BALANCE,
-    API_SET_PHONE_REQUEST,
-    API_SET_PHONE_VERIFY
-} from '../../redux/actions/apis';
+import { API_CHECK_PHONE_NUMBER_DUPLICATE, API_SET_PHONE_REQUEST, API_SET_PHONE_VERIFY } from '../../redux/actions/apis';
 import AlertModalV2 from 'components/common/V2/ModalV2/AlertModalV2';
-import ModalNeedKyc from 'components/common/ModalNeedKyc';
-import { useSelector } from 'react-redux';
-import router, { useRouter } from 'next/router';
-import { WALLET_SCREENS } from 'pages/wallet';
+import { useRouter } from 'next/router';
 import InputV2 from './V2/InputV2';
 import FetchApi from 'utils/fetch-api';
-import ModalOtp from 'components/screens/WithdrawDeposit/components/ModalOtp';
 import OtpInput from 'react-otp-input';
 import classNames from 'classnames';
 import toast from 'utils/toast';
@@ -62,17 +42,7 @@ const CustomHeader = ({ onBackAction, onClose, isDark, couldBack }) => (
 
 const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
     const { t } = useTranslation();
-    const [isShowPoppup, setIsShowPoppup] = useState(false);
-    const [isCheckAll, setIsCheckAll] = useState(false);
     const [currentTheme] = useDarkMode();
-    const [listCheck, setListCheck] = useState([]);
-    const [listAsset, setListAsset] = useState([]);
-    const [isShowModalConfirm, setIsShowModalConfirm] = useState(false);
-    const [isShowModalSuccess, setIsShowModalSuccess] = useState(false);
-    const [namiRate, setNamiRate] = useState(null);
-    const [isOpenModalKyc, setIsOpenModalKyc] = useState(false);
-    const auth = useSelector((state) => state.auth.user) || null;
-
     const isDark = currentTheme === THEME_MODE.DARK;
 
     const router = useRouter();
@@ -116,7 +86,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
         }
     };
 
-    const onSubmitPhoneNumber = () => {
+    const onSubmitPhoneNumber = ({ isResend }) => {
         FetchApi({
             url: API_SET_PHONE_REQUEST,
             options: {
@@ -129,8 +99,15 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                     if (message === 'PHONE_EXSITED') setHelperText('Phone number existed.');
                 } else {
                     // Open modal OTP code
-                    setOtp(null);
-                    setCurAction(actionModal.VERIFY_OTP);
+                    if (isResend) {
+                        toast({
+                            text: 'A new OTP has been sent to your phone number.',
+                            type: 'success'
+                        });
+                    } else {
+                        setOtp(null);
+                        setCurAction(actionModal.VERIFY_OTP);
+                    }
                 }
             })
             .finally(() => {
@@ -160,7 +137,6 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
             .then(({ data, status, message }) => {
                 if (status === 'ok') {
                     setIsShowAlert(true);
-                    if (onBackdropCb) onBackdropCb();
                 } else {
                     // setOtp('');
                     setHelperText('error');
@@ -176,12 +152,16 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
     };
 
     const handleChangeOtp = (value) => {
+        if (helperText) setHelperText('');
+
         const formatedValue = value.replace(/\D/g, '');
         setOtp(formatedValue);
         // if (formatedValue.length === otpLength && !helperText && !isValidating) {
         //     onSubmitOtp();
         // }
     };
+
+    if (!isVisible) return null;
 
     return (
         <>
@@ -202,6 +182,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                             nhất.
                         </div>
                         <InputV2
+                            onHitEnterButton={onSubmitPhoneNumber}
                             className="!pb-10"
                             value={phoneNumber}
                             onChange={handleChangePhoneNumber}
@@ -234,7 +215,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                         />
                         <div className="mt-4 mb-10 py-3 flex items-center gap-x-2">
                             <span>Không nhận được?</span>
-                            <ButtonV2 variants="text" className="w-auto" onClick={() => {}}>
+                            <ButtonV2 variants="text" className="w-auto" onClick={() => onSubmitPhoneNumber({ isResend: true })}>
                                 Gửi lại mã
                             </ButtonV2>
                         </div>
