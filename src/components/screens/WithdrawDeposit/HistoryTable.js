@@ -114,7 +114,6 @@ const HistoryTable = () => {
     const [curSort, setCurSort] = useState({});
     const user = useSelector((state) => state.auth.user) || null;
     const { side } = router.query;
-    const configs = useSelector((state) => state.utils?.assetConfig);
 
     const [loadingDataTable, setLoadingDataTable] = useState(false);
 
