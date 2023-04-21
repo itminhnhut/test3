@@ -129,10 +129,10 @@
         "enter_txid": "Nhập mã giao dịch"
     },
     "add_phone": "Thêm số điện thoại",
-    "add_phone_description": "Để bắt đầu giao dịch qua ĐTNR, vui lòng cung cấp số điện thoai của bạn.",
+    "add_phone_description": "Để bắt đầu giao dịch qua ĐTNR, vui lòng cung cấp số điện thoại của bạn.",
     "phone": "Số điện thoại",
     "phone_placeholder": "Vui lòng nhập số điện thoại của bạn",
-    "verify_phone_description": "Vui lòng nhập 6 kí tự đã được gửi đến số điện thoại của bạn.",
+    "otp_code_send_to_phone": "Vui lòng nhập 6 kí tự đã được gửi đến số điện thoại của bạn.",
     "add_phone_success": "Chúc mừng! Bạn đã xác minh số điện thoại thành công. Giờ đây, bạn đã có thể mở giao dịch qua ĐTNR.",
     "resend_otp_success": "Một mã OTP mới đã được gửi đến số điện thoại của bạn.",
 
@@ -148,7 +148,8 @@
         "invalid_phone": "Số điện thoại không đúng định dạng",
         "phone_existed": "Số điện thoại đã tồn tại",
         "missing_phone": "Trường thông tin bắt buộc",
-        "not_found_order": "Không tìm thấy lệnh #{displayingId} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ"
+        "not_found_order": "Không tìm thấy lệnh #{displayingId} hoặc đang được xử lý, vui lòng tải lại hoặc liên hệ hỗ trợ",
+        "invalid_otp": "Mã OTP không hợp lệ. Vui lòng thử lại."
     },
     "filter": {
         "a_day": "1 ngày",

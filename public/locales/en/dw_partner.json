@@ -131,7 +131,7 @@
     "add_phone_description": "Please provide us with your telephone number to begin using our service.",
     "phone": "Phone",
     "phone_placeholder": "Enter your phone",
-    "verify_phone_description": "Enter the 6 digit code sent to your phone.",
+    "otp_code_send_to_phone": "Enter the 6 digit code sent to your phone.",
     "add_phone_success": "Congrats! You have successfully verified your phone number. You can now create new orders via DTNR.",
     "resend_otp_success": "A new OTP has been sent to your phone number.",
     "error": {
@@ -146,7 +146,8 @@
         "invalid_phone": "Invalid phone",
         "phone_existed": "Phone already exists",
         "missing_phone": "This field is required",
-        "not_found_order": "Order #{displayingId} not found or being processed, please reload or contact support."
+        "not_found_order": "Order #{displayingId} not found or being processed, please reload or contact support.",
+        "invalid_otp": "OTP is invalid. Please try again."
     },
     "filter": {
         "a_day": "1 day",
