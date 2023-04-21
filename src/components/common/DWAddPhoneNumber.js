@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { ArrowForwardIcon } from 'components/svg/SvgIcon';
 import ModalV2 from 'components/common/V2/ModalV2';
-import {  useState } from 'react';
+import { useState } from 'react';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
 import useDarkMode, { THEME_MODE } from 'hooks/useDarkMode';
 import { ApiStatus } from 'redux/actions/const';
@@ -103,8 +103,8 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                     if (message === 'PHONE_EXSITED') setHelperText(setHelperText(t('dw_partner:error.phone_existed')));
                 } else {
                     // set OTP if not in remaining
-                    if(data?.success){
-                        setOtpInfo(data)
+                    if (data?.success) {
+                        setOtpInfo(data);
                     }
                     // Open modal OTP code
                     setCurAction(actionModal.VERIFY_OTP);
@@ -137,7 +137,7 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 params: { phone: toRegionPhone(phoneNumber), code: code?.phone }
             });
             if (response?.status === ApiStatus.SUCCESS) setIsShowAlert(true);
-            else toast({text: t('dw_partner:error.invalid_otp'), type: 'error', duration: 2000})
+            else toast({ text: t('dw_partner:error.invalid_otp'), type: 'error', duration: 2000 });
             return response;
         } catch (error) {
             console.error('ERROR WHEN SUBMIT OTP CODE: ', error);
@@ -196,7 +196,9 @@ const DWAddPhoneNumber = ({ isVisible, onBackdropCb }) => {
                 isVisible={isShowAlert}
                 onClose={() => {
                     setIsShowAlert(false);
-                    onBackdropCb();
+                    setTimeout(() => {
+                        onBackdropCb();
+                    }, 200);
                 }}
                 type="success"
                 title={t('common:success')}
