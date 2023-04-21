@@ -261,3 +261,9 @@ export const BINANCE_LEVERAGE_MARGIN = [
         amount: 199703
     }
 ]
+
+export const MODE_OTP = {
+    PHONE: 'phone',
+    EMAIL: 'email',
+    TFA: 'tfa'
+};

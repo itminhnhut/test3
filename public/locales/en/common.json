@@ -165,6 +165,7 @@
     "resend": "Resend",
     "close": "Close",
     "error_code": "Code",
+    "error": "Error",
     "scan": "Scan",
     "important_notes": "Important notes",
     "common_status": {

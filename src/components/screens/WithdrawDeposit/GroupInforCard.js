@@ -4,202 +4,179 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
-import InfoCard from './components/common/InfoCard';
-import { BxsTimeIcon, OrderIcon, QrCodeScannIcon } from 'components/svg/SvgIcon';
+import { BxsUserCircle, ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { PartnerOrderStatus, PartnerPersonStatus } from 'redux/actions/const';
-import Countdown from 'react-countdown';
+import { DefaultAvatar, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import Divider from 'components/common/Divider';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { CountdownClock } from './components/common/CircleCountdown';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
+import { get } from 'lodash';
+
+const RENDER_INFORMATION = [
+    {
+        key: 'phone',
+        icon: <ContactIcon color="currentColor" size={16} />,
+        mode: [MODE.PARTNER, MODE.USER],
+        render: ({ data }) => (data ? formatPhoneNumber(data) : null)
+    },
+    {
+        key: 'code',
+        icon: <BxsUserCircle color="currentColor" size={16} />,
+        mode: [MODE.PARTNER],
+        render: ({ data }) => data || null
+    },
+    {
+        key: 'analyticMetadata.count',
+        icon: <OrderIcon color="currentColor" size={16} />,
+        mode: [MODE.USER],
+        render: ({ t, totalOrder, language }) => (
+            <>
+                {totalOrder} {`${t('dw_partner:order')}${language === LANGUAGE_TAG.EN && totalOrder > 1 ? 's' : ''}`}
+            </>
+        )
+    },
+    {
+        key: 'analyticMetadata.avgTime',
+        icon: <TimerIcon color="currentColor" size={16} />,
+        mode: [MODE.USER],
+        render: ({ t, data, totalOrder }) => (totalOrder > 0 ? formatTimePartner(t, data) : null)
+    }
+];
 
 const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refetchOrderDetail, mode = MODE.USER }) => {
     const otherMode = mode === MODE.PARTNER ? MODE.USER : MODE.PARTNER;
+    const totalOrder = orderDetail?.partnerMetadata?.analyticMetadata?.count || 0;
     const {
         t,
         i18n: { language }
     } = useTranslation();
 
     return (
-        <div className="flex -m-3 flex-wrap items-stretch">
-            {/* Chi tiết giao dịch */}
-            <div className="w-full md:w-2/5 p-3">
-                <div className="flex  flex-col  min-h-full">
-                    <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_detail')}</h1>
-                    <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6 flex flex-col">
-                        <div className="flex justify-between items-start">
-                            {!side ? (
-                                <Skeletor width="200px" />
-                            ) : (
-                                <h2 className="font-semibold">
-                                    {t(`dw_partner:${side?.toLowerCase()}_asset_from_partners.${mode}`, {
-                                        asset: assetCode
-                                    })}
-                                </h2>
-                            )}
-                            {!orderDetail ? <Skeletor width="150px" /> : <OrderStatusTag status={status?.status} />}
-                        </div>
-                        <div className="mt-14">
-                            <span className="txtSecond-2">{t('dw_partner:amount')}</span>
-                            <div className="mt-3 text-2xl font-semibold">
-                                {!orderDetail ? (
-                                    <Skeletor width="200px" height="30px" />
-                                ) : (
-                                    `${
-                                        (side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER) ? '+' : '-'
-                                    }${formatBalanceFiat(orderDetail?.baseQty, assetCode)} ${assetCode}`
-                                )}
-                            </div>
-                        </div>
+        <div>
+            <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
+            {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
+            {mode === MODE.USER &&
+            side === SIDE.BUY &&
+            status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING &&
+            status?.status === PartnerOrderStatus.PENDING ? null : (
+                <div className="mb-6">
+                    <div className="flex -m-3 flex-wrap items-stretch">
+                        {/* Chi tiết giao dịch */}
+                        <div className="w-full md:w-2/5 p-3">
+                            <div className="flex  flex-col  min-h-full">
+                                <div className="flex-1   overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 flex flex-col">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <div className="txtPri-1 ">{t(`dw_partner:${otherMode}`)}</div>
 
-                        <div className="flex items-end gap-x-6 justify-between mt-[36px]">
-                            <div className="flex items-end gap-x-6">
-                                <div className="flex flex-col gap-y-3">
-                                    <span className="txtSecond-2">{t('common:transaction_id')}</span>
-                                    {!orderDetail ? (
-                                        <Skeletor width="100px" />
-                                    ) : (
-                                        <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.displayingId} />
-                                    )}
+                                        {((side === SIDE.BUY && mode === MODE.USER) || (side === SIDE.SELL && mode === MODE.PARTNER)) && (
+                                            <ButtonV2 onClick={setModalQr} className="!py-0 flex ml-auto items-center gap-x-2 w-auto" variants="text">
+                                                <QrCodeScannIcon />
+                                                QR Code
+                                            </ButtonV2>
+                                        )}
+                                    </div>
+                                    <div className="w-full flex flex-col items-center text-center ">
+                                        {!orderDetail ? (
+                                            <Skeletor circle width={80} height={80} />
+                                        ) : (
+                                            <img src={orderDetail?.[`${otherMode}Metadata`]?.avatar || DefaultAvatar} className="mb-6 w-20 h-20 rounded-full" />
+                                        )}
+
+                                        <div className="txtPri-1 capitalize font-semibold mb-3">
+                                            {!orderDetail ? <Skeletor width={150} /> : orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase()}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {RENDER_INFORMATION.map((item) => {
+                                                const renderData = item.render({
+                                                    t,
+                                                    language,
+                                                    data: get(orderDetail, `${otherMode}Metadata.${item.key}`),
+                                                    totalOrder
+                                                });
+                                                return item.mode.includes(mode) ? (
+                                                    !orderDetail ? (
+                                                        <Skeletor width={100} height={25} />
+                                                    ) : renderData ? (
+                                                        <TagV2 key={item.key} type={TYPES.DEFAULT} icon={false} className="dark:!bg-divider-dark">
+                                                            <div className="flex space-x-2 items-center">
+                                                                {item.icon}
+                                                                <div>{renderData}</div>
+                                                            </div>
+                                                        </TagV2>
+                                                    ) : null
+                                                ) : null;
+                                            })}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex flex-col gap-y-3">
-                                    <span className="txtSecond-2 ">{t('common:time')}</span>
-                                    {!orderDetail ? (
-                                        <Skeletor width="100px" />
-                                    ) : (
-                                        <span className="font-semibold">{formatTime(orderDetail?.createdAt, 'HH:mm:ss dd/MM/yyyy')}</span>
-                                    )}
-                                </div>
-                            </div>
-                            <div>
-                                {status?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
-                                    <Countdown
-                                        date={new Date(orderDetail?.timeExpire).getTime()}
-                                        renderer={({ props, ...countdownProps }) => props.children(countdownProps)}
-                                        onComplete={() => refetchOrderDetail()}
-                                    >
-                                        {(props) => <CountdownTimer maxCountdown={orderDetail?.countdownTime} {...props} />}
-                                    </Countdown>
-                                )}
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            {/* Thông tin chuyển khoản */}
-            <div className="w-full md:w-3/5 p-3">
-                <div className="flex flex-col min-h-full">
-                    <h1 className="text-2xl font-semibold">{t('dw_partner:transaction_bank_receipt')}</h1>
-                    <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6 mt-6">
-                        {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
-                            <div className="txtSecond-3 mb-4">{t(`dw_partner:${otherMode}`)}</div>
-                        )}
-                        <div className="flex justify-between items-start">
-                            <InfoCard
-                                loading={!orderDetail}
-                                content={{
-                                    mainContent: orderDetail && orderDetail?.[`${otherMode}Metadata`]?.name?.toLowerCase(),
-                                    subContent: (
-                                        <div className="flex items-center space-x-4 text-txtSecondary dark:text-txtSecondary-dark">
-                                            <span>
-                                                {orderDetail?.[`${otherMode}Metadata`]?.phone
-                                                    ? formatPhoneNumber(orderDetail?.[`${otherMode}Metadata`]?.phone)
-                                                    : orderDetail?.[`${otherMode}Metadata`]?.code}
-                                            </span>
+                        {/* Thông tin chuyển khoản */}
+                        <div className="w-full md:w-3/5 p-3">
+                            <div className="flex flex-col min-h-full">
+                                <div className="flex-1 overflow-auto rounded-xl bg-white dark:bg-dark-4 border border-divider dark:border-transparent p-6">
+                                    <div className="flex justify-between mb-4 items-center">
+                                        <div className="txtPri-1">{t('dw_partner:payment_method')}</div>
+                                    </div>
 
-                                            {mode === MODE.USER && (
-                                                <>
-                                                    <div className="flex space-x-1 items-center">
-                                                        <OrderIcon size={16} />
-                                                        <span>
-                                                            {orderDetail?.partnerMetadata?.analyticMetadata?.count || 0} {t('dw_partner:order')}
-                                                            {orderDetail?.partnerMetadata?.analyticMetadata?.count > 1 && language === LANGUAGE_TAG.EN
-                                                                ? 's'
-                                                                : ''}
-                                                        </span>
-                                                    </div>
-                                                    {orderDetail?.partnerMetadata?.analyticMetadata?.count ? (
-                                                        <div className="flex space-x-1 items-center">
-                                                            <BxsTimeIcon size={16} />
-                                                            <span>{formatTimePartner(t, orderDetail?.partnerMetadata?.analyticMetadata?.avgTime)}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <></>
-                                                    )}
-                                                </>
+                                    {/* Phương thức nhận tiền */}
+                                    <div className="flex flex-col gap-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('dw_partner:transfer_description')}</span>
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.transferMetadata?.note} />
                                             )}
                                         </div>
-                                    ),
-                                    imgSrc: orderDetail?.[`${otherMode}Metadata`]?.avatar
-                                }}
-                            />
-                            {(side === SIDE.BUY && mode === MODE.USER) ||
-                                (side === SIDE.SELL && mode === MODE.PARTNER && (
-                                    <ButtonV2 onClick={setModalQr} className="flex items-center gap-x-2 w-auto" variants="text">
-                                        <QrCodeScannIcon />
-                                        QR Code
-                                    </ButtonV2>
-                                ))}
-                        </div>
-
-                        {/* Divider */}
-                        {((side === SIDE.SELL && mode === MODE.USER) || (side === SIDE.BUY && mode === MODE.PARTNER)) && (
-                            <div>
-                                <Divider className="w-full !my-4" />
-                                <div className="txtSecond-3">{t('dw_partner:transaction_bank_receipt')}</div>
-                            </div>
-                        )}
-
-                        {/* Phương thức nhận tiền */}
-                        <div className="flex flex-col mt-6 gap-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">{t('dw_partner:transfer_description')}</span>
-                                {!orderDetail ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.note} />
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">{t('dw_partner:bank')}</span>
-                                {!orderDetail ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    <TextCopyable className="gap-x-1 text-right font-semibold" text={orderDetail?.transferMetadata?.bankName} />
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">{t('wallet:account_number')}</span>
-                                {!orderDetail ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    <TextCopyable className="gap-x-1  font-semibold" text={orderDetail?.transferMetadata?.accountNumber} />
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">{t('dw_partner:beneficiary')}</span>
-                                {!orderDetail ? (
-                                    <Skeletor width="100px" />
-                                ) : (
-                                    <TextCopyable className="gap-x-1 font-semibold" text={orderDetail?.transferMetadata?.accountName} />
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="txtSecond-2">{t('common:amount')}</span>
-
-                                <TextCopyable
-                                    className="gap-x-1 font-semibold"
-                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
-                                    text={orderDetail?.quoteQty}
-                                />
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('dw_partner:bank')}</span>
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable className="gap-x-1 txtPri-1 text-right " text={orderDetail?.transferMetadata?.bankName} />
+                                            )}
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('wallet:account_number')}</span>
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable className="gap-x-1 txtPri-1  " text={orderDetail?.transferMetadata?.accountNumber} />
+                                            )}
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('dw_partner:beneficiary')}</span>
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable className="gap-x-1 txtPri-1 " text={orderDetail?.transferMetadata?.accountName} />
+                                            )}
+                                        </div>
+                                        <div className="flex items-center justify-between">
+                                            <span className="txtSecond-2">{t('common:amount')}</span>
+                                            {!orderDetail ? (
+                                                <Skeletor width="100px" />
+                                            ) : (
+                                                <TextCopyable
+                                                    className="gap-x-1  txtPri-1 "
+                                                    showingText={`${formatBalance(orderDetail?.quoteQty, 0)} VND`}
+                                                    text={orderDetail?.quoteQty}
+                                                />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };
