@@ -1201,7 +1201,7 @@ export const copy = (text, cb) => {
     }
 };
 
-export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label }) => {
+export const CopyText = memo(({ text = '', setText, value, className = '', size = 16, label, CustomCopyIcon, textClass, copyClass, checkedClass }) => {
     const [copied, setCopied] = useState(false);
     const title = label ?? text;
     useEffect(() => {
@@ -1215,6 +1215,13 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
             }, 3000);
     }, [copied]);
 
+    const renderCopyIcon = () => {
+        if (CustomCopyIcon) {
+            return <CustomCopyIcon size={size} className={copyClass}  />;
+        }
+        return <CopyIcon size={size} />;
+    };
+
     return (
         <div
             className={`flex items-center space-x-2 cursor-pointer ${className}`}
@@ -1225,8 +1232,8 @@ export const CopyText = memo(({ text = '', setText, value, className = '', size 
                 })
             }
         >
-            <span>{title}</span>
-            {!copied ? <CopyIcon size={size} /> : <CheckedIcon size={size} color={colors.teal} />}
+            <span className={textClass}>{title}</span>
+            {!copied ? renderCopyIcon() : <CheckedIcon size={size} color={colors.teal} className={checkedClass} />}
         </div>
     );
 });

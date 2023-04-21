@@ -11,13 +11,12 @@ import { concat, filter, keyBy, last, range } from 'lodash';
 import { IconLoading } from 'components/common/Icons';
 import AssetLogo from 'components/wallet/AssetLogo';
 import { useSelector } from 'react-redux';
-import { formatNumber } from 'redux/actions/utils';
+import { CopyText, formatNumber } from 'redux/actions/utils';
 import { useTranslation } from 'next-i18next';
 import { CopyToClipboard } from 'react-copy-to-clipboard/lib/Component';
 import TableNoData from 'components/common/table.old/TableNoData';
 import { TransactionCategory } from '../../../../../redux/actions/const';
 import useLanguage, { LANGUAGE_TAG } from 'hooks/useLanguage';
-import CopyComponent from 'components/common/V2/ButtonV2/CopyComponent';
 
 const categories = [
     'all',// "All",
@@ -388,7 +387,7 @@ const TransactionDetail = ({
                 <span className="text-txtSecondary dark:text-txtSecondary-dark mr-2 whitespace-nowrap">
                     {t('futures:mobile:transaction_histories:id')}
                 </span>
-                <CopyComponent
+                <CopyText
                     text={transaction?._id}
                     size={14}
                     className="flex-nowrap min-w-0"
@@ -396,13 +395,14 @@ const TransactionDetail = ({
                     copyClass="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"
                     checkedClass="flex-shrink-0"
                     textClass="block truncate"
+                    CustomCopyIcon={Copy}
                 />
             </div>
             <div className="flex justify-between text-sm leading-[1.375rem]">
                 <span
                     className="text-txtSecondary dark:text-txtSecondary-dark whitespace-nowrap mr-2">{transaction?.category === 612 ? t('futures:mobile:transaction_histories:note') : t('futures:mobile:transaction_histories:order_id')}</span>
                 {transaction?.category !== 612 ? (
-                    <CopyComponent
+                    <CopyText
                         text={orderId}
                         size={14}
                         className="flex-nowrap min-w-0"
@@ -410,6 +410,7 @@ const TransactionDetail = ({
                         copyClass="text-txtSecondary dark:text-txtSecondary-dark flex-shrink-0"
                         checkedClass="flex-shrink-0"
                         textClass="block truncate"
+                        CustomCopyIcon={Copy}
                     />
                 ) : (
                     <div className='block truncate min-w-0'>{orderId}</div>

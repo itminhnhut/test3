@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { ArrowRight } from 'react-feather';
+import { ArrowRight, Copy } from 'react-feather';
 import {
     fees,
     getTypesLabel,
@@ -8,7 +8,7 @@ import {
     VndcFutureOrderType
 } from 'components/screens/Futures/PlaceOrder/Vndc/VndcFutureOrderType';
 import styled from 'styled-components';
-import { countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
+import { CopyText, countDecimals, emitWebViewEvent, formatNumber, formatTime, getS3Url } from 'redux/actions/utils';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import OrderOpenDetail from './OrderOpenDetail';
@@ -23,7 +23,6 @@ import { ApiStatus, ChartMode, DefaultFuturesFee } from 'redux/actions/const';
 import colors from 'styles/colors';
 import get from 'lodash/get';
 import QuestionMarkIcon from 'components/svg/QuestionMarkIcon';
-import CopyComponent from 'components/common/V2/ButtonV2/CopyComponent';
 
 const MobileTradingView = dynamic(
     () => import('components/TVChartContainer/MobileTradingView').then(mode => mode.MobileTradingView),
@@ -521,7 +520,13 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
+                    <CopyText
+                        color="currentColor"
+                        copyClass="text-txtSecondary dark:text-txtSecondary-dark"
+                        size={16}
+                        text={order?.displaying_id}
+                        CustomCopyIcon={Copy}
+                    />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -533,8 +538,9 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:to')}</Label>
-                    <Span className="text-teal"
-                          onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>#{id_to}</Span>
+                    <Span className="text-teal" onClick={() => redirect(`/mobile/futures/order/${id_to}`)}>
+                        #{id_to}
+                    </Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:open_price')}</Label>
@@ -542,8 +548,7 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
-                    <Span>{getTypesLabel(String(order?.type)
-                        .toUpperCase(), t)}</Span>
+                    <Span>{getTypesLabel(String(order?.type).toUpperCase(), t)}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:volume')}</Label>
@@ -572,7 +577,13 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
+                    <CopyText
+                        color="currentColor"
+                        copyClass="text-txtSecondary dark:text-txtSecondary-dark"
+                        size={16}
+                        text={order?.displaying_id}
+                        CustomCopyIcon={Copy}
+                    />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:open_time')}</Label>
@@ -584,13 +595,13 @@ const OrderDetail = ({
                 </Row>
                 <Row>
                     <Label>{t('common:from')}</Label>
-                    <Span className="text-teal"
-                          onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>#{from_id}</Span>
+                    <Span className="text-teal" onClick={() => redirect(`/mobile/futures/order/${from_id}`)}>
+                        #{from_id}
+                    </Span>
                 </Row>
                 <Row>
                     <Label>{t('common:order_type')}</Label>
-                    <Span>{getTypesLabel(String(order?.type)
-                        .toUpperCase(), t)}</Span>
+                    <Span>{getTypesLabel(String(order?.type).toUpperCase(), t)}</Span>
                 </Row>
                 <Row>
                     <Label>{t('futures:order_table:close_price')}</Label>
@@ -613,13 +624,7 @@ const OrderDetail = ({
                     <Span>{formatNumber(order?.margin, decimalSymbol)}</Span>
                 </Row>
                 <Row className="flex-col items-start w-full">
-                    <FeeMeta
-                        mode="open_fee"
-                        order={order}
-                        allAssets={allAssets}
-                        t={t}
-                        isVndcFutures={isVndcFutures}
-                    />
+                    <FeeMeta mode="open_fee" order={order} allAssets={allAssets} t={t} isVndcFutures={isVndcFutures} />
                 </Row>
                 <Row>
                     <Label>{t('futures:mobile:close_fee')}</Label>
@@ -628,7 +633,9 @@ const OrderDetail = ({
                 <Row>
                     <Label>PNL</Label>
                     <Span className={+order?.profit > 0 ? 'text-green-2' : 'text-red-2'}>
-                        {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} ({formatNumber(Math.abs(order?.profit / order?.margin) * 100, 2, 0, true)}%)</Span>
+                        {formatNumber(order?.profit, isVndcFutures ? decimalUsdt : decimalUsdt + 2, 0, true)} (
+                        {formatNumber(Math.abs(order?.profit / order?.margin) * 100, 2, 0, true)}%)
+                    </Span>
                 </Row>
             </>
         );
@@ -650,7 +657,13 @@ const OrderDetail = ({
             <>
                 <Row>
                     <Label>ID</Label>
-                    <CopyComponent color="currentColor" copyClass="text-txtSecondary dark:text-txtSecondary-dark" size={16} text={order?.displaying_id} />
+                    <CopyText
+                        color="currentColor"
+                        copyClass="text-txtSecondary dark:text-txtSecondary-dark"
+                        size={16}
+                        text={order?.displaying_id}
+                        CustomCopyIcon={Copy}
+                    />
                 </Row>
                 <Row>
                     <Label>{t('futures:leverage:leverage')}</Label>
