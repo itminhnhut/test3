@@ -1,15 +1,19 @@
 import React from 'react';
-import { formatPhoneNumber, formatBalance, formatTimePartner } from 'redux/actions/utils';
+import CountdownTimer from '../../common/CountdownTimer';
+import OrderStatusTag from 'components/common/OrderStatusTag';
+import { formatTime, formatPhoneNumber, formatBalance, formatBalanceFiat, formatTimePartner } from 'redux/actions/utils';
 
 import TextCopyable from 'components/screens/Account/TextCopyable';
 import { BxsUserCircle, ContactIcon, OrderIcon, QrCodeScannIcon, TimerIcon } from 'components/svg/SvgIcon';
 import ButtonV2 from 'components/common/V2/ButtonV2/Button';
-import { DefaultAvatar, PartnerOrderStatus } from 'redux/actions/const';
+import { DefaultAvatar, PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { MODE } from './constants';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
+import Divider from 'components/common/Divider';
 import { useTranslation } from 'next-i18next';
 import { LANGUAGE_TAG } from 'hooks/useLanguage';
+import { CountdownClock } from './components/common/CircleCountdown';
 import TagV2, { TYPES } from 'components/common/V2/TagV2';
 import { get } from 'lodash';
 
@@ -56,7 +60,10 @@ const GroupInforCard = ({ orderDetail, side, setModalQr, status, assetCode, refe
         <div>
             <h1 className="text-[18px] font-semibold mb-6">{t('dw_partner:transaction_bank_receipt')}</h1>
             {/* Không hiển thị thông tin lệnh đôi với màn USER - BUY khi đối tác chưa accept */}
-            {mode === MODE.USER && side === SIDE.BUY && status?.status === PartnerOrderStatus.WATING_CONFIRM ? null : (
+            {mode === MODE.USER &&
+            side === SIDE.BUY &&
+            status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING &&
+            status?.status === PartnerOrderStatus.PENDING ? null : (
                 <div className="mb-6">
                     <div className="flex -m-3 flex-wrap items-stretch">
                         {/* Chi tiết giao dịch */}

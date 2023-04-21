@@ -1,6 +1,6 @@
 import React from 'react';
 import Card from './common/Card';
-import { PartnerOrderStatus } from 'redux/actions/const';
+import { PartnerAcceptStatus, PartnerOrderStatus } from 'redux/actions/const';
 import Skeletor from 'components/common/Skeletor';
 import { formatBalanceFiat, formatTime } from 'redux/actions/utils';
 import TextCopyable from 'components/screens/Account/TextCopyable';
@@ -9,6 +9,7 @@ import OrderStatusTag from 'components/common/OrderStatusTag';
 import { SIDE } from 'redux/reducers/withdrawDeposit';
 import { MODE } from '../constants';
 import { CountdownClock } from './common/CircleCountdown';
+import TagV2, { TYPES } from 'components/common/V2/TagV2';
 
 const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetchOrderDetail }) => {
     const { t } = useTranslation();
@@ -19,9 +20,19 @@ const DetailOrderHeader = ({ orderDetail, status, side, mode, assetCode, refetch
                 <div className="w-1/2 md:w-1/3 p-3  ">
                     <div className="txtSecond-2 mb-3">{t('common:status')}</div>
                     <div className="flex -m-1 flex-wrap items-center">
-                        <div className="p-1">{!orderDetail ? <Skeletor width="150px" /> : <OrderStatusTag className="!ml-0" status={status?.status} />}</div>
+                        <div className="p-1">
+                            {!orderDetail ? (
+                                <Skeletor width="150px" />
+                            ) : status?.partnerAcceptStatus === PartnerAcceptStatus.PENDING && status?.status === PartnerOrderStatus.PENDING ? (
+                                <TagV2 type={TYPES.DEFAULT}>
+                                    {t('dw_partner:wait_confirmation')}
+                                </TagV2>
+                            ) : (
+                                <OrderStatusTag className="!ml-0" status={status?.status} />
+                            )}
+                        </div>
 
-                        {(status?.status === PartnerOrderStatus.PENDING || status?.status === PartnerOrderStatus.WATING_CONFIRM) && orderDetail?.timeExpire && (
+                        {status?.status === PartnerOrderStatus.PENDING && orderDetail?.timeExpire && (
                             <div className="p-1">
                                 <CountdownClock
                                     countdownTime={orderDetail?.countdownTime}
