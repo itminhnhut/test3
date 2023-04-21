@@ -132,7 +132,7 @@
     "phone": "Phone",
     "phone_placeholder": "Enter your phone",
     "otp_code_send_to_phone": "Enter the 6 digit code sent to your phone.",
-    "add_phone_success": "Congrats! You have successfully verified your phone number. You can now create new orders via DTNR.",
+    "add_phone_success": "Congrats! You have successfully verified your phone number. You can now create new orders via partner.",
     "resend_otp_success": "A new OTP has been sent to your phone number.",
     "error": {
         "min_amount": "Minimum amount is {{amount}} {{asset}}",
