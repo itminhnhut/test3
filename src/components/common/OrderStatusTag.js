@@ -11,11 +11,15 @@ const OrderStatusTag = ({ icon = true, className, status }) => {
     // if(!status) return null;
     const { t } = useTranslation();
 
-    const { PENDING, SUCCESS, REJECTED, DISPUTED } = PartnerOrderStatus;
+    const { PENDING, SUCCESS, REJECTED, DISPUTED, WATING_CONFIRM } = PartnerOrderStatus;
     let type = '';
     let label = '';
 
     switch (status) {
+        case WATING_CONFIRM:
+            type = TYPES.DEFAULT;
+            label = t('dw_partner:wait_confirmation');
+            break;
         case PENDING:
             type = TYPES.WARNING;
             label = t('common:processing');
